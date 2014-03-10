@@ -1,0 +1,185 @@
+.jui {
+  .datepicker {
+    width: 190px;
+    height: 168px;
+    .border-radius(5px);
+
+    > .head {
+      font-size: 14px;
+      font-weight: bold;
+      height: 26px;
+
+      > .prev, .next {
+        border-style: solid;
+        border-width: 6px;
+        margin-top: 7px;
+        width: 0;
+        height: 0;
+        cursor: pointer;
+      }
+
+      > .prev {
+        float: left;
+        margin-left: 3px;
+      }
+
+      > .title {
+        float: left;
+        text-align: center;
+        width: 160px;
+        padding-top: 5px;
+        height: 21px;
+      }
+
+      > .next {
+        float: right;
+        margin-right: 3px;
+      }
+    }
+
+    > table.body {
+      border-spacing: 0;
+
+      th, td {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      tr:last-child td {
+        border-bottom-width: 0px;
+        
+        &:first-child {
+          .border-bottom-left-radius(5px);
+        }
+
+        &:last-child {
+          .border-bottom-right-radius(5px);
+        }
+      }
+      
+      td {
+        &:last-child {
+          border-right-width: 0px;
+        }
+
+        &:not(.none) {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .datepicker-white;
+    .datepicker-normal;
+  }
+
+
+  // Calendar Sizes
+  // --------------------------------------------------
+
+  .datepicker-normal {
+    > table.body {
+      th {
+        font-size: 9px;
+        padding-top: 3px;
+        height: 17px;
+      }
+
+      td {
+        font-size: 12px;
+        width: 26px;
+        height: 17px;
+        line-height: 17px;
+      }
+    }
+  }
+
+  .datepicker-large {
+    > table.body {
+      td {
+        width: 60.6px;
+        height: 32px;
+      }
+      
+      tr:first-child td {
+        height: 33px;
+      }
+    }
+  }
+  
+  
+  // Calendar Colors
+  // --------------------------------------------------
+
+  .datepicker-white {
+    border: 1px solid #cdcdcd;
+    background: #fff;
+
+    > .head {
+      border-bottom: 1px solid #ebebeb;
+      .box-shadow(~"rgba(0, 0, 0, 0.1) 0 1px 2px");
+
+      > .prev {
+        border-color: transparent #dcdcdc transparent transparent;
+      }
+      > .next {
+        border-color: transparent transparent transparent #dcdcdc;
+      }
+
+      > .title {
+        color: #333;
+      }
+    }
+
+    > table.body {
+      th, td {
+        border-bottom: 1px solid #ebebeb;
+      }
+
+      th {
+        color: #868686;
+
+        &:first-child {
+          color: #ff7470;
+        }
+
+        &:last-child {
+          color: #3191f3;
+        }
+      }
+
+      td {
+        color: #333;
+        border-right: 1px solid #ebebeb;
+
+        &.none {
+          color: #c2c2c2;
+        }
+
+        &.now {
+          color: #6600cc;
+          font-weight: bold;
+        }
+
+        &.active {
+          color: #fff;
+          background-color: #9167ca;
+          .box-shadow(~"inset rgba(0, 0, 0, 0.1) 0 1px 2px");
+        }
+
+        &:hover:not(.active):not(.none) {
+          background-color: #f8f3ff;
+        }
+      }
+    }
+  }
+  
+  
+  // Caledar Layer
+  // --------------------------------------------------
+
+  .datepicker-layer {
+    position: absolute;
+    z-index: 1000;
+    display: none;
+  }
+}

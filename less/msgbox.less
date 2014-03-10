@@ -1,0 +1,137 @@
+.jui {
+	.msgbox {
+    position: absolute;
+    margin: 0 auto;
+    z-index: 2000;
+    min-width: 250px;
+    min-height: 150px;
+    font-size: 12px;
+    .border-radius(5px);
+    .box-shadow(0 2px 6px rgba(0,0,0,0.25));
+    
+	  > .head {
+      position: relative;
+      padding: 7px 12px 7px 15px; 
+	    font-weight: bold;
+	    max-height: 30px;
+      .border-radius(5px 5px 0 0);
+      
+       > .close {
+         position: absolute;
+         right: 12px;
+      }
+	  }
+	  
+	  > .body {
+	    display: block;
+	    overflow: hidden;
+      position: absolute;
+	    padding: 15px 15px 18px 15px;
+	    top: 31px;
+	    bottom: 0px; // default, 48px
+	    left: 0px;
+	    right: 0px;
+	    word-break: break-all;
+	  }
+	  
+	  .msgbox-default;
+	}
+	
+	
+	// Colors
+  // ---------------------------
+	.msgbox-default { // Black & White
+    color: #333;
+    border: 1px solid #cacaca;
+      background-color: #fff;
+    
+    > .head {
+      color: #fff;
+      border-bottom: 1px solid #f2f2f2;
+      background-color: #464646;
+    }
+    
+    > .body {
+      background-color: inherit;
+    }
+	}
+	
+	.msgbox-black {
+    color: #fff;
+    border: 1px solid #5a5a5a;
+    background-color: #545454;
+    
+    > .head {
+      border-bottom: 1px solid #5a5a5a;
+      background-color: #464646;
+    }
+    
+    > .body {
+      background-color: inherit;
+    }
+	}
+	
+	.msgbox-white {
+    color: #333;
+    border: 1px solid #cacaca;
+      background-color: #fff;
+    
+    > .head {
+      color: #333;
+      border-bottom: 1px solid #ebebeb;
+      background-color: #f7f7f7;
+    }
+    
+    > .body {
+      background-color: inherit;
+    }
+	}
+
+	.msgbox-yellow {
+    color: #fff;
+    border: 1px solid #f9c664;
+      background-color: #fff3d1;
+    
+    > .head {
+      border-bottom: 1px solid #fff9ea;
+      background-color: #ff9704;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #a56500;
+    }
+	}
+
+	.msgbox-red {
+    color: #fff;
+    border: 1px solid #efb5b5;
+      background-color: #f4dede;
+    
+    > .head {
+      border-bottom: 1px solid #ffeaea;
+      background-color: #ef180b;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #ba0000;
+    }
+	}
+
+	.msgbox-green {
+    color: #fff;
+    border: 1px solid #a2d27f;
+      background-color: #e8f5d3;
+    
+    > .head {
+      border-bottom: 1px solid #f4fae9;
+      background-color: #2aa11a;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #496f0a;
+    }
+	}
+}

@@ -1,0 +1,97 @@
+.jui {
+	.panel {
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    .box-sizing(border-box);
+	    
+		> * {
+			width: auto;
+		}
+		
+		> .head, > .foot {
+		  overflow: visible;
+		}
+		
+		> .body {
+			.text-default();
+		}
+		
+		// Default
+		.panel-normal;
+		.panel-white;
+	}
+	
+	
+	// Panel Customizing
+	// --------------------------------------------------
+	.panel {
+    > .table-classic, 
+    > .xtable > .table-classic {
+      > thead {
+        th:first-child { 
+          .border-top-left-radius(0px); 
+        }
+        th:last-child {
+          .border-top-right-radius(0px);
+        }
+      }
+      
+      .border-bottom-radius(5px);
+    }
+	}
+
+	
+	// Panel Close
+	// --------------------------------------------------
+	
+	.panel-close {
+		> .head {
+			.border-bottom-radius(5px);
+		}
+		
+		> *:not(.head) {
+			display: none;
+		}
+	}
+	
+	
+	// Panel Sizes
+	// --------------------------------------------------
+  
+	.panel-normal {
+		font-size: 12px;
+		
+		> .head, > .foot {
+		  height: 24px;
+		  line-height: 22px;
+			padding: 4px 15px;
+		}
+		
+		> .body {
+			padding: 15px;
+		}
+		
+		> .body.fit {
+		  padding: 0px !important;
+		}
+	}
+
+	
+	// Panel Colors
+	// --------------------------------------------------
+  	
+	.panel-white {
+		color: #333;
+		
+		> .head, > .foot {
+			.buttonBackground2Color(#f5f5f5, #f1f1f1);
+			border: 1px solid #dcdcdc;
+		}
+		
+		> .body {
+			background-color: #fff;
+			border: 1px solid #dcdcdc;
+		}
+	}
+}

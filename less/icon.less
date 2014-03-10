@@ -1,0 +1,230 @@
+//
+// Sprites
+// --------------------------------------------------
+
+
+// ICONS
+// -----
+
+// All icons receive the styles of the <i> tag with a base class
+// of .i and are then given a unique class to add width, height,
+// and background-position. Your resulting HTML will look like
+// <i class="icon-inbox"></i>.
+
+// For the white version of the icons, just add the .icon-white class:
+// <i class="icon-inbox icon-white"></i>
+
+.jui {
+  .settingIconSize(@icon-size) {
+    width: @icon-size;
+    height: @icon-size;
+    line-height: @icon-size;
+    background-position: @icon-size @icon-size;
+    
+    &.icon-new-window    { background-position: 0                    0; }
+    &.icon-gear          { background-position: -(@icon-size * 1)    0; }
+    &.icon-calendar      { background-position: -(@icon-size * 2)    0; }
+    &.icon-download      { background-position: -(@icon-size * 3)    0; }
+    &.icon-upload        { background-position: -(@icon-size * 4)    0; }
+    &.icon-hide          { background-position: -(@icon-size * 5)    0; }
+    &.icon-refresh       { background-position: -(@icon-size * 6)    0; }
+    &.icon-printer       { background-position: -(@icon-size * 7)    0; }
+    &.icon-search        { background-position: -(@icon-size * 8)    0; }
+    &.icon-home          { background-position: -(@icon-size * 9)    0; }
+    
+    &.icon-pause         { background-position: 0                    -(@icon-size * 1); }
+    &.icon-play          { background-position: -(@icon-size * 1)    -(@icon-size * 1); }
+    &.icon-check         { background-position: -(@icon-size * 2)    -(@icon-size * 1); }
+    &.icon-chevron-right { background-position: -(@icon-size * 3)    -(@icon-size * 1); }
+    &.icon-chevron-left  { background-position: -(@icon-size * 4)    -(@icon-size * 1); }
+    &.icon-plus          { background-position: -(@icon-size * 5)    -(@icon-size * 1); }
+    &.icon-trashcan      { background-position: -(@icon-size * 6)    -(@icon-size * 1); }
+    &.icon-edit          { background-position: -(@icon-size * 7)    -(@icon-size * 1); }
+    &.icon-help          { background-position: -(@icon-size * 8)    -(@icon-size * 1); }
+    &.icon-return        { background-position: -(@icon-size * 9)    -(@icon-size * 1); }
+    
+    &.icon-dashboardlist { background-position: 0                    -(@icon-size * 2); }
+    &.icon-realtime      { background-position: -(@icon-size * 1)    -(@icon-size * 2); }
+    &.icon-arrow2        { background-position: -(@icon-size * 2)    -(@icon-size * 2); }
+    &.icon-arrow1        { background-position: -(@icon-size * 3)    -(@icon-size * 2); }
+    &.icon-close         { background-position: -(@icon-size * 4)    -(@icon-size * 2); }
+    &.icon-left          { background-position: -(@icon-size * 5)    -(@icon-size * 2); }
+    &.icon-right         { background-position: -(@icon-size * 6)    -(@icon-size * 2); }
+    &.icon-resize        { background-position: -(@icon-size * 7)    -(@icon-size * 2); }
+    &.icon-exit          { background-position: -(@icon-size * 8)    -(@icon-size * 2); }
+    &.icon-arrow3        { background-position: -(@icon-size * 9)    -(@icon-size * 2); }
+
+    &.icon-more          { background-position: 0                    -(@icon-size * 3); }
+    &.icon-chart         { background-position: -(@icon-size * 1)    -(@icon-size * 3); }
+    &.icon-link          { background-position: -(@icon-size * 2)    -(@icon-size * 3); }
+    &.icon-image         { background-position: -(@icon-size * 3)    -(@icon-size * 3); }
+    &.icon-table         { background-position: -(@icon-size * 4)    -(@icon-size * 3); }
+    &.icon-html          { background-position: -(@icon-size * 5)    -(@icon-size * 3); }
+    &.icon-align-left    { background-position: -(@icon-size * 6)    -(@icon-size * 3); }
+    &.icon-align-center  { background-position: -(@icon-size * 7)    -(@icon-size * 3); }
+    &.icon-align-right   { background-position: -(@icon-size * 8)    -(@icon-size * 3); }
+    &.icon-orderedlist   { background-position: -(@icon-size * 9)    -(@icon-size * 3); }
+
+    &.icon-unorderedlist { background-position: 0                    -(@icon-size * 4); }
+    &.icon-textcolor     { background-position: -(@icon-size * 1)    -(@icon-size * 4); }
+    &.icon-underline     { background-position: -(@icon-size * 2)    -(@icon-size * 4); }
+    &.icon-italic        { background-position: -(@icon-size * 3)    -(@icon-size * 4); }
+    &.icon-bold          { background-position: -(@icon-size * 4)    -(@icon-size * 4); }
+    &.icon-text          { background-position: -(@icon-size * 5)    -(@icon-size * 4); }
+    &.icon-preview       { background-position: -(@icon-size * 6)    -(@icon-size * 4); }
+    &.icon-document      { background-position: -(@icon-size * 7)    -(@icon-size * 4); }
+    &.icon-refresh2      { background-position: -(@icon-size * 8)    -(@icon-size * 4); }
+    &.icon-add-dir       { background-position: -(@icon-size * 9)    -(@icon-size * 4); }
+
+    &.icon-add-dir2      { background-position: 0                    -(@icon-size * 5); }
+    &.icon-stop          { background-position: -(@icon-size * 1)    -(@icon-size * 5); }
+  }
+  
+  [class^="icon-"],[class*=" icon-"] {
+    display: inline-block;
+    background-image: url("@{icon-list}");
+    background-repeat: no-repeat;
+    .ie7-restore-right-whitespace();
+    .settingIconSize(16px);
+    
+    &.icon-white {
+      background-image: url("@{icon-list-white}");
+    } 
+
+    &.icon-gray {
+      background-image: url("@{icon-list-gray}");
+    } 
+
+    &.icon-purple {
+      background-image: url("@{icon-list-purple}");
+    } 
+    
+    &.icon-large {
+      background-image: url("@{icon-list-large}");
+      .settingIconSize(20px);
+      
+      &.icon-white {
+        background-image: url("@{icon-list-white-large}");
+      } 
+
+      &.icon-gray {
+        background-image: url("@{icon-list-gray-large}");
+      } 
+
+      &.icon-purple {
+        background-image: url("@{icon-list-purple-large}");
+      } 
+    }
+  }
+  
+  .icon-color { 
+    width: 10px; height: 10px; border: 1px solid #fff; margin-top: 1px !important; margin-right: 2px;
+  }
+
+  
+  /* Icon Position (Absolute) */
+
+  .icon-edge {
+    position: absolute !important;
+    margin: auto !important;
+    top: 0; 
+    bottom: 0; 
+    right: 5px;
+    z-index: 0;
+  }
+
+  
+  /* Icon Sizes */
+  
+  .btn, .label {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-bottom: -0.219em; // -3.5px
+    }
+  }
+
+  .btn-small, .label-small {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-bottom: -0.250em; // -4px
+    }
+  }
+  
+  .btn-mini, .label-mini {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-bottom: -0.297em; // -4.75px
+    }
+  }
+  
+  .btn-large, .label-large {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-bottom: -0.313em; // -5px
+    }
+  }
+
+  .dropdown li {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-top: 0.125em; // 2px
+    }
+  }
+
+  .dropdown-large li {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-top: 0;
+    }
+  }
+
+  .tab li > a, .pill li > a {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-top: -0.219em; // -3.5px
+    }
+  }
+
+  .table th, .table td, .dropdown li, 
+  .tab li > a, .pill li > a { // 로우 밀리는 현상 제거 코드
+    > [class^="icon-"], [class*=" icon-"] {
+      vertical-align: top;
+    }
+  }
+  
+  .panel > .head, .panel > .foot {
+    > [class^="icon-"], [class*=" icon-"] {
+      margin-bottom: -0.219em; // -3.5px
+      margin-left: -0.297em; // -4.75px
+    }
+  }
+  
+  
+  /* Buttons Exception */
+  
+  .btn-black-gray.active > [class^="icon-"], 
+  .btn-black-gray:active > [class^="icon-"] {
+    background-image: url("@{icon-list}");
+    
+    &.icon-large {
+      background-image: url("@{icon-list-large}");
+      .settingIconSize(20px);
+    }
+  }
+
+  .btn-gray-black.active > [class^="icon-"], 
+  .btn-gray-black:active > [class^="icon-"],
+  .btn-purple-black.active > [class^="icon-"], 
+  .btn-purple-black:active > [class^="icon-"] {
+    background-image: url("@{icon-list-white}");
+    
+    &.icon-large {
+      background-image: url("@{icon-list-white-large}");
+      .settingIconSize(20px);
+    }
+  }
+  
+  
+  /* Tab Exception */
+  
+  .pill li.active [class^="icon-"],
+  .pill li.menu-keep [class^="icon-"], .tab li.menu-keep [class^="icon-"] {
+  	background-image: url("@{icon-list-white}");
+  }
+}
+
+
+
