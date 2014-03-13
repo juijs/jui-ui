@@ -523,6 +523,37 @@
 			
 			return csv;
 		},
+		dataToCsv2: function(options) {
+			var csv = "";
+			var opts = $.extend({
+				fields: null, // required
+				rows: null, // required
+				names: null,
+				count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
+			}, options);
+			
+			for(var i = -1; i < opts.count; i++) {
+				var tmpArr = [];
+				
+				for(var j = 0; j < opts.fields.length; j++) {
+					if(opts.fields[j]) {
+						if(i == -1) {
+							if(opts.names && opts.names[j]) {
+								tmpArr.push(opts.names[j]);
+							} else {
+								tmpArr.push(opts.fields[j]);
+							}
+						} else {
+							tmpArr.push(opts.rows[i][opts.fields[j]]);
+						}
+					}
+				}
+				
+				csv += tmpArr.join(",") + "\n";
+			}
+			
+			return csv;
+		},
 		fileToCsv: function(file, callback) {
 			var reader = new FileReader();
 			

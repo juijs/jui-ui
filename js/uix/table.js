@@ -1213,6 +1213,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				options: {
 					fields: null,
 					csv: null,
+					csvNames: null,
 					rows: [],
 					colshow: false,
 					scroll: false,
@@ -1716,7 +1717,11 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				dataList.push(rows[i].data);
 			}
 			
-			return _.dataToCsv(fields, dataList);
+			return _.dataToCsv2({
+				fields: fields,
+				rows: dataList,
+				names: this.options.csvNames
+			});
 		}
 		
 		this.getCsvBase64 = function(isTree) {
