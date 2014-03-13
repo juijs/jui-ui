@@ -453,13 +453,15 @@
 			function check(type, value) {
 				return {
 					"string": (typeof(value) == "string") ? true : false,
-					"integer": (typeof(value) != "string" && !isNaN(value) && value !== true && value !== false) ? true : false,
+					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
+					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
+					"number": (typeof(value) == "number") ? true : false,
 					"object": (typeof(value) == "object") ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
-					"array": (typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
-					"boolean"	: (value === true || value === false) ? true : false, 
-					"undefined": (value === undefined) ? true: false,
-					"null": (value === null) ? true: false
+					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
+					"boolean"	: (typeof(value) == "boolean") ? true : false, 
+					"undefined": (typeof(value) == "undefined") ? true: false,
+					"null": (value === null) ? true : false
 				}[type];
 			}
 			
