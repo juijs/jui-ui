@@ -116,8 +116,6 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 					move.disX = e.pageX - target.offset().left;
 					move.disY = e.pageY - target.offset().top;
 				});
-			} else {
-				$win_head.css("cursor", "default");
 			}
 			
 			// 윈도우 리사이징

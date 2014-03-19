@@ -2839,7 +2839,6 @@
 .jui .window > .head {
   position: relative;
   height: 32px;
-  cursor: move;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
@@ -4532,7 +4531,6 @@
   position: relative;
   padding: 7px 12px 7px 15px;
   font-weight: bold;
-  cursor: move;
   -webkit-border-radius: 3px 3px 0 0;
   -moz-border-radius: 3px 3px 0 0;
   border-radius: 3px 3px 0 0;
