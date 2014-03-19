@@ -6,33 +6,44 @@
     min-width: 250px;
     min-height: 150px;
     font-size: 12px;
-    .border-radius(5px);
+    .border-radius(3px);
     .box-shadow(0 2px 6px rgba(0,0,0,0.25));
     
 	  > .head {
       position: relative;
       padding: 7px 12px 7px 15px; 
 	    font-weight: bold;
-	    max-height: 30px;
-      .border-radius(5px 5px 0 0);
+	    cursor: move;
+      .border-radius(3px 3px 0 0);
       
-       > .close {
+      > .title {
+        display: inline-block;
+      }
+
+      > .detail {
+        display: block;
+      }
+      
+      > .close {
          position: absolute;
+         cursor: pointer;
          right: 12px;
       }
 	  }
 	  
 	  > .body {
-	    display: block;
-	    overflow: hidden;
-      position: absolute;
+	    position: relative;
+      overflow: auto;
 	    padding: 15px 15px 18px 15px;
-	    top: 31px;
-	    bottom: 0px; // default, 48px
-	    left: 0px;
-	    right: 0px;
 	    word-break: break-all;
 	  }
+	  
+	  > .resize {
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      cursor: nw-resize;
+    }
 	  
 	  .msgbox-default;
 	}
@@ -43,7 +54,7 @@
 	.msgbox-default { // Black & White
     color: #333;
     border: 1px solid #cacaca;
-      background-color: #fff;
+    background-color: #fff;
     
     > .head {
       color: #fff;
@@ -74,7 +85,7 @@
 	.msgbox-white {
     color: #333;
     border: 1px solid #cacaca;
-      background-color: #fff;
+    background-color: #fff;
     
     > .head {
       color: #333;
@@ -90,7 +101,7 @@
 	.msgbox-yellow {
     color: #fff;
     border: 1px solid #f9c664;
-      background-color: #fff3d1;
+    background-color: #fff3d1;
     
     > .head {
       border-bottom: 1px solid #fff9ea;
@@ -106,7 +117,7 @@
 	.msgbox-red {
     color: #fff;
     border: 1px solid #efb5b5;
-      background-color: #f4dede;
+    background-color: #f4dede;
     
     > .head {
       border-bottom: 1px solid #ffeaea;
@@ -122,7 +133,7 @@
 	.msgbox-green {
     color: #fff;
     border: 1px solid #a2d27f;
-      background-color: #e8f5d3;
+    background-color: #e8f5d3;
     
     > .head {
       border-bottom: 1px solid #f4fae9;
@@ -134,4 +145,71 @@
       color: #496f0a;
     }
 	}
+	
+	
+	// Detail Styles
+  // ---------------------------
+  .msgbox-detail {
+    > .head {
+      margin: 0 20px;
+      padding: 15px 0;
+      
+      > .detail {
+        margin-top: 4px;
+      }
+      
+      > .close {
+        top: 15px;
+        right: 0px;
+      }
+    }  
+    
+    > .body {
+      padding: 15px 20px 20px 20px;
+    }
+    
+    .msgbox-detail.msgbox-white;
+  }
+  
+  .msgbox-detail.msgbox-white {
+    color: #666;
+    background-color: #fff;
+    
+    > .head {
+      border-bottom: 1px solid #eaeaea;
+      background-color: inherit;
+      color: #333;
+      
+      > .detail {
+        color: #666;
+        font-weight: normal;
+      }
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: inherit;
+    }
+  }
+
+  .msgbox-detail.msgbox-black {
+    color: #b0b0b0;
+    background-color: #3f3f3f;
+    
+    > .head {
+      border-bottom: 1px solid #505050;
+      background-color: inherit;
+      color: #fff;
+      
+      > .detail {
+        color: #b0b0b0;
+        font-weight: normal;
+      }
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: inherit;
+    }
+  }
 }

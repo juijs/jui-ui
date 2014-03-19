@@ -18,7 +18,8 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 		 *
 		 */
 		function setBodyResize() {
-			info.$body.outerHeight(info.$root.outerHeight() - info.$head.outerHeight() - info.$foot.outerHeight() - 3);
+			var bottom = (info.$foot.length < 1) ? parseInt(info.$root.css("border-radius")) : info.$foot.outerHeight();
+			info.$body.outerHeight(info.$root.outerHeight() - info.$head.outerHeight() - bottom);
 		}
 		
 		
@@ -116,7 +117,7 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 					move.disY = e.pageY - target.offset().top;
 				});
 			} else {
-				$win_head.find(".left").css("cursor", "default");
+				$win_head.css("cursor", "default");
 			}
 			
 			// 윈도우 리사이징
@@ -182,10 +183,12 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 			// 기본 타입 설정
 			this.type = "hide";
 			
+			// 바디 리사이징
+			setBodyResize();
+			
 			// Init
 			setTimeout(function() {
 				$win_root.hide();
-				setBodyResize();
 				
 				if(opts.modal) {
 					var modalOpts = (opts.modalIndex > 0) ? { index: opts.modalIndex } : {};
@@ -224,13 +227,17 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 		}
 		
 		this.setTitle = function(html) {
-			info.$head.find(".left").empty().html(html);
+			info.$head.find(".title").empty().html(html);
 		}
 		
 		this.setSize = function(w, h) {
 			info.$root.width(w);
 			info.$root.height(h);
 			
+			setBodyResize();
+		}
+		
+		this.resize = function() {
 			setBodyResize();
 		}
 	}
