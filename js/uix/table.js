@@ -1229,13 +1229,13 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				},
 				valid: {
 					update: [ [ "integer", "string", "array" ], "object" ],
+					updateTree: [ "array" ],
 					append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
 					insert: [ [ "integer", "string" ], [ "object", "array" ] ],
 					select: [ [ "integer", "string" ] ],
 					remove: [ [ "integer", "string" ] ],
 					move: [ [ "integer", "string" ], [ "integer", "string" ] ],
 					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
-					order: [ [ "integer", "string" ], "string" ],
 					scroll: [ "integer" ],
 					open: [ [ "integer", "string" ] ],
 					fold: [ [ "integer", "string" ] ],
@@ -1266,6 +1266,12 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 								if(!_.browser.webkit && !_.browser.mozilla) return;
 								animateUpdate(this, this.listAll());
 							}
+						}
+					},
+					updateTree: {
+						after: function() {
+							if(!_.browser.webkit && !_.browser.mozilla) return;
+							animateUpdate(this, this.listAll());
 						}
 					},
 					remove: {
@@ -1372,6 +1378,17 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					this.sort(this.options.sortIndex, this.options.sortOrder, null);
 				}
 			}
+		}
+		
+		this.updateTree = function(rows) { // index & data 조합의 객체 배열 
+			this.uit.removeRows();
+			
+			for(var i = 0; i < rows.length; i++) {
+				this.uit.insertRow(rows[i].index, rows[i].data);
+			}
+			
+			setUpdateInit(this, true);
+			setEventRows(this);
 		}
 		
 		this.append = function() {
