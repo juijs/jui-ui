@@ -52,6 +52,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 	var UIRow = function(data, tplFunc, pRow) {
 		var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 		
+		
 		/**
 		 * Public Properties
 		 * 
@@ -134,12 +135,6 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				} else {
 					$(c_row.element).remove();
 				}
-			}
-		}
-
-		function reloadChildAll() {
-			for(var i = 0; i < self.childrens.length; i++) {
-				self.childrens[i].reload(i);
 			}
 		}
 		
@@ -235,7 +230,6 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			preRows.push(row);
 			
 			this.childrens = preRows.concat(this.childrens);
-			reloadChildAll();
 		}
 		
 		this.removeChild = function(index) {
@@ -247,8 +241,6 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					removeChildAll(row);
 				}
 			}
-			
-			reloadChildAll();
 		}
 
 		this.lastChild = function() {
