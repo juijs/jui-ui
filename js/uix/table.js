@@ -52,7 +52,6 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 	var UIRow = function(data, tplFunc, pRow) {
 		var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 		
-		
 		/**
 		 * Public Properties
 		 * 
@@ -137,6 +136,12 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				}
 			}
 		}
+
+		function reloadChildAll() {
+			for(var i = 0; i < self.childrens.length; i++) {
+				self.childrens[i].reload(i);
+			}
+		}
 		
 		
 		/**
@@ -209,7 +214,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			this.childrens.push(row);
 		}
 
-		this.insertChild = function(rownum, row) {
+		this.insertChild = function(rownum, row, isReload) {
 			var lastElem = this.element;
 			
 			if(rownum > 0) {
@@ -230,6 +235,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			preRows.push(row);
 			
 			this.childrens = preRows.concat(this.childrens);
+			reloadChildAll();
 		}
 		
 		this.removeChild = function(index) {
@@ -241,6 +247,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					removeChildAll(row);
 				}
 			}
+			
+			reloadChildAll();
 		}
 
 		this.lastChild = function() {
@@ -764,14 +772,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		
 		this.getRowParent = function(index) { // 트리 구조의 키에서 키 로우의 부모를 가져오는 함수
 			if(!iParser.isIndexDepth(index)) return null;
-			var keys = iParser.getIndexList(index);
-			
-			if(keys.length == 2) {
-				return this.getRow(keys[0]);
-			} else if(keys.length > 2) {
-				keys.pop();
-				return this.getRow(keys.join("."));
-			}
+			return this.getRow(iParser.getParentIndex(index));
 		}
 		
 		this.setColumn = function(index, column) {
@@ -1373,10 +1374,20 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		}
 		
 		this.updateTree = function(rows) { // index & data 조합의 객체 배열 
+			var iParser = _.index();
+			
+			// 전체 로우 제거
 			this.uit.removeRows();
 			
+			// 트리 로우 추가
 			for(var i = 0; i < rows.length; i++) {
-				this.uit.insertRow(rows[i].index, rows[i].data);
+				var pIndex = iParser.getParentIndex(rows[i].index);
+				
+				if(pIndex == null) {
+					this.uit.appendRow(rows[i].data);
+				} else {
+					this.uit.appendRow(pIndex, rows[i].data);
+				}
 			}
 			
 			setUpdateInit(this, true);
