@@ -107,9 +107,9 @@ jui.define('ui.dropdown', [], function() {
 				},
 				valid: {
 					update: [ "array" ],
-					show: [ "integer", "integer" ],
-					move: [ "integer", "integer" ],
-					hove: [ "integer" ]
+					show: [ "number", "number" ],
+					move: [ "number", "number" ],
+					hover: [ "integer" ]
 				}
 			}
 		}
