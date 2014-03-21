@@ -584,7 +584,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 
 			for(var key in folds) {
 				if(folds[key] !== false) {
-					this.getRow(folds[key]).fold();
+					var foldRow = this.getRow(folds[key]);
+					if(foldRow != null) foldRow.fold();
 				}
 			}
 		}
