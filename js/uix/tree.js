@@ -349,10 +349,11 @@ jui.define('uix.tree', [ 'util' ], function(_) {
 			var nodes = root.childrens;
 			
 			if(nodes.length > 0) {
-				this.removeNode(nodes[0].index);
-			}
-			
-			if(nodes.length > 0) {
+				var node = nodes.pop();
+				
+				node.parent = null;
+				node.destroy();
+				
 				this.removeNodes();
 			}
 		}
