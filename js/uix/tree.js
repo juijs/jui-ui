@@ -349,10 +349,11 @@ jui.define('uix.tree', [ 'util' ], function(_) {
 			var nodes = root.childrens;
 			
 			if(nodes.length > 0) {
-				this.removeNode(nodes[0].index);
-			}
-			
-			if(nodes.length > 0) {
+				var node = nodes.pop();
+				
+				node.parent = null;
+				node.destroy();
+				
 				this.removeNodes();
 			}
 		}
@@ -707,8 +708,8 @@ jui.define('uix.tree', [ 'util' ], function(_) {
 					select: [ "string" ],
 					remove: [ "string" ],
 					move: [ "string", "string" ],
-					open: [ "string", [ "object", "undefined" ] ],
-					fold: [ "string", [ "object", "undefined" ] ],
+					open: [ [ "string", "null" ], [ "object", "undefined" ] ],
+					fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
 					openAll: [ "string" ],
 					foldAll: [ "string" ],
 					listParents: [ "string" ],

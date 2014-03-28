@@ -230,6 +230,8 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 				options: {
 					fields: null,
 					csv: null,
+					csvNames: null,
+					csvCount: 10000,
 					rows: [],
 					colshow: false,
 					expand: false,
@@ -237,7 +239,6 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 					scrollHeight: 200, // xtable 전용 옵션
 					buffer: "scroll",
 					bufferCount: 100,
-					csvCount: 10000,
 					sort: false,
 					sortLoading: false,
 					sortCache: false,
@@ -611,7 +612,12 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 			var fields = _.getCsvFields(this.options.fields, this.options.csv),
 				len = (rows.length > this.options.csvCount) ? this.options.csvCount : rows.length;
 			
-			return _.dataToCsv(fields, rows, len);
+			return _.dataToCsv2({
+				fields: fields,
+				rows: rows,
+				count: len,
+				names: this.options.csvNames
+			});
 		}
 		
 		this.getCsvBase64 = function() {

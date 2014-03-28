@@ -103,6 +103,18 @@
 			indexList.push(no);
 			return indexList.join(".");
 		}
+		
+		this.getParentIndex = function(index) {
+			if(!this.isIndexDepth(index)) return null;
+			var keys = this.getIndexList(index);
+			
+			if(keys.length == 2) {
+				return "" + keys[0];
+			} else if(keys.length > 2) {
+				keys.pop();
+				return keys.join(".");
+			}
+		}
 	}
 	
 	/**
@@ -453,13 +465,15 @@
 			function check(type, value) {
 				return {
 					"string": (typeof(value) == "string") ? true : false,
-					"integer": (typeof(value) != "string" && !isNaN(value) && value !== true && value !== false) ? true : false,
+					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
+					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
+					"number": (typeof(value) == "number") ? true : false,
 					"object": (typeof(value) == "object") ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
-					"array": (typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
-					"boolean"	: (value === true || value === false) ? true : false, 
-					"undefined": (value === undefined) ? true: false,
-					"null": (value === null) ? true: false
+					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
+					"boolean"	: (typeof(value) == "boolean") ? true : false, 
+					"undefined": (typeof(value) == "undefined") ? true: false,
+					"null": (value === null) ? true : false
 				}[type];
 			}
 			
@@ -512,6 +526,37 @@
 							tmpArr.push(keys[j]);
 						} else {
 							tmpArr.push(dataList[i][keys[j]]);
+						}
+					}
+				}
+				
+				csv += tmpArr.join(",") + "\n";
+			}
+			
+			return csv;
+		},
+		dataToCsv2: function(options) {
+			var csv = "";
+			var opts = $.extend({
+				fields: null, // required
+				rows: null, // required
+				names: null,
+				count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
+			}, options);
+			
+			for(var i = -1; i < opts.count; i++) {
+				var tmpArr = [];
+				
+				for(var j = 0; j < opts.fields.length; j++) {
+					if(opts.fields[j]) {
+						if(i == -1) {
+							if(opts.names && opts.names[j]) {
+								tmpArr.push(opts.names[j]);
+							} else {
+								tmpArr.push(opts.fields[j]);
+							}
+						} else {
+							tmpArr.push(opts.rows[i][opts.fields[j]]);
 						}
 					}
 				}

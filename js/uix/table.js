@@ -214,7 +214,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			this.childrens.push(row);
 		}
 
-		this.insertChild = function(rownum, row) {
+		this.insertChild = function(rownum, row, isReload) {
 			var lastElem = this.element;
 			
 			if(rownum > 0) {
@@ -584,7 +584,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 
 			for(var key in folds) {
 				if(folds[key] !== false) {
-					this.getRow(folds[key]).fold();
+					var foldRow = this.getRow(folds[key]);
+					if(foldRow != null) foldRow.fold();
 				}
 			}
 		}
@@ -772,14 +773,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		
 		this.getRowParent = function(index) { // 트리 구조의 키에서 키 로우의 부모를 가져오는 함수
 			if(!iParser.isIndexDepth(index)) return null;
-			var keys = iParser.getIndexList(index);
-			
-			if(keys.length == 2) {
-				return this.getRow(keys[0]);
-			} else if(keys.length > 2) {
-				keys.pop();
-				return this.getRow(keys.join("."));
-			}
+			return this.getRow(iParser.getParentIndex(index));
 		}
 		
 		this.setColumn = function(index, column) {
@@ -1213,6 +1207,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				options: {
 					fields: null,
 					csv: null,
+					csvNames: null,
 					rows: [],
 					colshow: false,
 					scroll: false,
@@ -1228,13 +1223,13 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				},
 				valid: {
 					update: [ [ "integer", "string", "array" ], "object" ],
+					updateTree: [ "array" ],
 					append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
 					insert: [ [ "integer", "string" ], [ "object", "array" ] ],
 					select: [ [ "integer", "string" ] ],
 					remove: [ [ "integer", "string" ] ],
 					move: [ [ "integer", "string" ], [ "integer", "string" ] ],
 					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
-					order: [ [ "integer", "string" ], "string" ],
 					scroll: [ "integer" ],
 					open: [ [ "integer", "string" ] ],
 					fold: [ [ "integer", "string" ] ],
@@ -1265,6 +1260,12 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 								if(!_.browser.webkit && !_.browser.mozilla) return;
 								animateUpdate(this, this.listAll());
 							}
+						}
+					},
+					updateTree: {
+						after: function() {
+							if(!_.browser.webkit && !_.browser.mozilla) return;
+							animateUpdate(this, this.listAll());
 						}
 					},
 					remove: {
@@ -1371,6 +1372,27 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					this.sort(this.options.sortIndex, this.options.sortOrder, null);
 				}
 			}
+		}
+		
+		this.updateTree = function(rows) { // index & data 조합의 객체 배열 
+			var iParser = _.index();
+			
+			// 전체 로우 제거
+			this.uit.removeRows();
+			
+			// 트리 로우 추가
+			for(var i = 0; i < rows.length; i++) {
+				var pIndex = iParser.getParentIndex(rows[i].index);
+				
+				if(pIndex == null) {
+					this.uit.appendRow(rows[i].data);
+				} else {
+					this.uit.appendRow(pIndex, rows[i].data);
+				}
+			}
+			
+			setUpdateInit(this, true);
+			setEventRows(this);
 		}
 		
 		this.append = function() {
@@ -1716,7 +1738,11 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				dataList.push(rows[i].data);
 			}
 			
-			return _.dataToCsv(fields, dataList);
+			return _.dataToCsv2({
+				fields: fields,
+				rows: dataList,
+				names: this.options.csvNames
+			});
 		}
 		
 		this.getCsvBase64 = function(isTree) {
