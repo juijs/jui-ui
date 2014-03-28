@@ -47,7 +47,7 @@ jui.ready(function(ui, uix, _) {
 			}
 		}
 	});
-	
+
 	ui_table_log = uix.table("#mng_log_table", {
 		expand: true,
 		resize: true,
@@ -63,15 +63,15 @@ jui.ready(function(ui, uix, _) {
 		scroll: true,
 		scrollHeight: 400
 	});
-	
+
 	// VO Setting & Template Setting
 	ui_bind = $(".jui").jbinder();
 	template = _.template;
-	
+
 	setTimeout(function() {
 		juiSetTotalCount();
 		juiSetTypeCount();
-		
+
 		ui_tab.show(0);
 	}, 1000);
 });
@@ -79,19 +79,19 @@ jui.ready(function(ui, uix, _) {
 // Functions
 function juiSetTotalCount() {
 	var o_cnt = 0, e_cnt = 0, c_cnt = 0;
-	
+
 	for(var i = 0; i < p_jui.size(); i++) {
 		var ui_list = p_jui.get(i).list;
 		o_cnt += ui_list.length;
-		
+
 		for(var j = 0; j < ui_list.length; j++) {
 			var ui = ui_list[j];
-			
+
 			e_cnt += ui.listen.size();
 			c_cnt += ui.event.length;
 		}
 	}
-	
+
 	ui_bind.s_total(0, p_jui.size());
 	ui_bind.s_total(1, o_cnt);
 	ui_bind.s_total(2, e_cnt);
@@ -104,20 +104,20 @@ function juiSetTypeCount() {
 		"autocomplete", "tab", "table", "tree", "window", "xtable" 
 	],
 	counts = {};
-	
+
 	for(var i = 0; i < types.length; i++) {
 		var uiList = p_jui.get(types[i]);
-		
+
 		counts[types[i]] = { 
 			caller: uiList.length,
 			obj: 0
 		}
-		
+
 		for(var j = 0; j < uiList.length; j++) {
 			counts[types[i]].obj += uiList[j].list.length;
 		}
 	}
-	
+
 	$("#mng_sum_table_type").html(
 		template($("#tpl_sum_type").html(), { counts: counts })
 	);
@@ -132,14 +132,14 @@ function juiSetUiInfo() {
 function log(log, args) {
 	var no = ui_table_log.uit.getRowCount();
 	ui_table_log.append($.extend({ no: (!no) ? 0 : no }, log));
-	
+
 	// 로그가 15개가 되면 스크롤 적용
 	if(no == 15) ui_table_log.scroll();
 	if(no >= 15) {
 		var objDiv = $(ui_table_log.root).find("tbody").get(0);
 		objDiv.scrollTop = objDiv.scrollHeight;
 	}
-	
+
 	// 로그 기록 저장
 	log_expand[no] = args;
 }
@@ -175,7 +175,7 @@ h3 {
 		<li><a href="#info">Information</a></li>
 		<li class="active"><a href="#log">Log</a></li>
 	</ul>
-	
+
 	<div id="mng_tab_cont" class="tab-contents">
 		<div id="summary">
 			<div class="row">
@@ -251,7 +251,7 @@ h3 {
 					<a href="javascript:ui_table_log.reset()" class="btn btn-gray btn-small"><i class="icon-trashcan"></i></a>
 				</div>
 			</div>
-			
+
 			<table id="mng_log_table" class="table table-classic table-stripeless">
 				<thead>
 					<tr>
@@ -281,10 +281,10 @@ h3 {
 			</script>
 		</div>
 	</div>
-	
+
 	<script id="tpl_expand" type="text/template">
 		<h3>Arguments (<!= args.length !>)</h3>
-		
+
 		<table class="table table-simple table-small">
 			<thead>
 				<tr>
@@ -310,7 +310,7 @@ h3 {
 			</tbody>
 		</table>
 	</script>
-	
+
 	<script id="tpl_sum_type" type="text/template">
 		<table class="table table-classic">
 			<thead>
