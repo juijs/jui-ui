@@ -1,0 +1,31 @@
+{
+  "name": "JUI",
+  "version": "1.0.0",
+  "description": "HTML5 Based JENNIFER UI Library (CSS, JavaScript)",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seogi1004/jui.git"
+  },
+  "keywords": [
+    "jui",
+    "html5",
+    "jennifersoft",
+    "jennifer"
+  ],
+  "author": "seogi1004",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seogi1004/jui/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-less": "~0.11.0",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
