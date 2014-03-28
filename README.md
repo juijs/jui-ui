@@ -10,7 +10,7 @@ JUI는 제니퍼소프트의 차기작인 HTML5 기반의 APM 솔루션인 JENNI
 
 ## Building 
 
-Web use Grunt as build tool.
+Use Grunt as build tool.
 
 Grunt will do the following:
 
@@ -33,7 +33,7 @@ Created by Alvin(alvin@jennifersoft.com) and Yoha.
 
 MIT License 
 
-Copyright (C) 2014 (JenniferSoft Inc.)
+Copyright (C) 2014 (```JenniferSoft Inc.```)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
