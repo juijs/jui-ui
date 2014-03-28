@@ -5,7 +5,7 @@ JUI는 제니퍼소프트의 차기작인 HTML5 기반의 APM 솔루션인 JENNI
 
 ## Documentation
 
-**[Manual & Demo]** - http://seogi1004.github.io/jui/
+http://seogi1004.github.io/jui/
 
 
 ## Building 
@@ -27,7 +27,7 @@ To use Grunt
 
 ## Maintainers
 
-Created by Alvin(alvin@jennifersoft.com) and Yoha.
+Created by Alvin and Yoha.
 
 ## License
 
