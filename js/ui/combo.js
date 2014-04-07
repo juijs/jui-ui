@@ -29,6 +29,7 @@ jui.define('ui.combo', [], function() {
 	 */
 	var UI = function() {
 		var ui_list = null, ui_data = null;
+		var index = -1;
 					
 		/**
 		 * Private Methods
@@ -66,6 +67,63 @@ jui.define('ui.combo', [], function() {
 			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
 		}
 		
+		function setEventKeydown(self) {
+			if(!self.options.keydown) return;
+			
+			self.addEvent(window, "keydown", function(e) {
+				if(self.type == "hide") return;
+				var $list = ui_list["drop"].children("li");
+				
+				if(e.which == 38) { // up
+					if(index < 1) index = $list.size() - 1;
+					else index--;
+					
+					selectItem(self, function() {
+						index--;
+						selectItem(self);
+					});
+					
+					return false;
+				}
+				
+				if(e.which == 40) { // down
+					if(index < $list.size() - 1) index++;
+					else index = 0;
+					
+					selectItem(self, function() {
+						index++;
+						selectItem(self);
+					});
+					
+					return false;
+				}
+				
+				if(e.which == 13) { // enter
+					$list.eq(index).trigger("click");
+					index = -1;
+				}
+			});
+		}
+		
+		function selectItem(self, callback) {
+			var $list = ui_list["drop"].children("li"),
+				$target = $list.eq(index);
+			
+			$list.removeClass("hover");
+
+			if(!$target.hasClass("divider")) {
+				$target.addClass("hover");
+				
+				if(self.options.scroll) {
+					ui_list["drop"].scrollTop(index * $target.outerHeight());
+				}
+			} else {
+				if(typeof(callback) == "function") {
+					callback();
+				}
+			}
+		}
+		
 		
 		/**
 		 * Public Methods & Options
@@ -79,6 +137,7 @@ jui.define('ui.combo', [], function() {
 					width: 0,
 					height: 100,
 					scroll: true,
+					keydown: false,
 					position: "bottom"
 				},
 				valid: {
@@ -145,6 +204,9 @@ jui.define('ui.combo', [], function() {
 
 			this.type = "fold"; // 기본 타입 설정
 			this.reload();
+			
+			//  Key up/down event
+			setEventKeydown(this);
 			
 			return this;
 		}

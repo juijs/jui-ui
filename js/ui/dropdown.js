@@ -69,10 +69,14 @@ jui.define('ui.dropdown', [], function() {
 				var $list = ui_list.menu.find("li");
 				
 				if(e.which == 38) { // up
-					if(index < 0) index = $list.size() - 1;
+					if(index < 1) index = $list.size() - 1;
 					else index--;
 					
-					self.hover(index);
+					selectItem(self, function() {
+						index--;
+						selectItem(self);
+					});
+					
 					return false;
 				}
 				
@@ -80,7 +84,11 @@ jui.define('ui.dropdown', [], function() {
 					if(index < $list.size() - 1) index++;
 					else index = 0;
 					
-					self.hover(index);
+					selectItem(self, function() {
+						index++;
+						selectItem(self);
+					});
+					
 					return false;
 				}
 				
@@ -89,6 +97,21 @@ jui.define('ui.dropdown', [], function() {
 					index = -1;
 				}
 			});
+		}
+		
+		function selectItem(self, callback) {
+			var $list = ui_list.menu.find("li"),
+				$target = $list.eq(index);
+			
+			$list.removeClass("hover");
+			
+			if(!$target.hasClass("divider")) {
+				$target.addClass("hover");
+			} else {
+				if(typeof(callback) == "function") {
+					callback();
+				}
+			}
 		}
 		
 		
@@ -108,8 +131,7 @@ jui.define('ui.dropdown', [], function() {
 				valid: {
 					update: [ "array" ],
 					show: [ "number", "number" ],
-					move: [ "number", "number" ],
-					hover: [ "integer" ]
+					move: [ "number", "number" ]
 				}
 			}
 		}
@@ -174,13 +196,6 @@ jui.define('ui.dropdown', [], function() {
 		this.move = function(x, y) {
 			if(x) ui_list.root.css("left", x);
 			if(y) ui_list.root.css("top", y);
-		}
-		
-		this.hover = function(index) {
-			var $list = ui_list.menu.find("li");
-			
-			$list.removeClass("hover");
-			$list.eq(index).addClass("hover");
 		}
 	}
 	
