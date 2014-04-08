@@ -194,7 +194,7 @@ jui.define('core', function(_) {
 			if(e.type.toLowerCase().indexOf("animation") != -1) 
 				settingEventAnimation(e);
 			else {
-				if(e.target != "body") { // body일 경우에만 이벤트 중첩이 가능
+				if(e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
 					$(e.target).unbind(e.type);
 				}
 				

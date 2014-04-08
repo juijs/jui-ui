@@ -105,8 +105,12 @@ jui.define('ui.dropdown', [], function() {
 			
 			$list.removeClass("hover");
 			
-			if(!$target.hasClass("divider")) {
+			if($target.val() != "" || $target.html() != "") {
 				$target.addClass("hover");
+				
+				if(self.options.height > 0) {
+					ui_list.menu.scrollTop(index * $target.outerHeight());
+				}
 			} else {
 				if(typeof(callback) == "function") {
 					callback();
@@ -126,7 +130,9 @@ jui.define('ui.dropdown', [], function() {
 					keydown: false,
 					list: [],
 					left: 0,
-					top: 0
+					top: 0,
+					width: 0,
+					height: 0
 				},
 				valid: {
 					update: [ "array" ],
@@ -148,6 +154,16 @@ jui.define('ui.dropdown', [], function() {
 
 			// Size
 			ui_list.root.outerWidth(ui_list.menu.outerWidth());
+			
+			// Width
+			if(opts.width > 0) {
+				$dd_menu.outerWidth(opts.width);
+			}
+			
+			// Height
+			if(opts.height > 0) {
+				$dd_menu.css({ "maxHeight": opts.height, "overflow": "auto" });
+			}
 			
 			// Select
 			this.update(opts.list);

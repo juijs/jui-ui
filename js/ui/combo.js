@@ -111,10 +111,10 @@ jui.define('ui.combo', [], function() {
 			
 			$list.removeClass("hover");
 
-			if(!$target.hasClass("divider")) {
+			if($target.val() != "" || $target.html() != "") {
 				$target.addClass("hover");
 				
-				if(self.options.scroll) {
+				if(self.options.height > 0) {
 					ui_list["drop"].scrollTop(index * $target.outerHeight());
 				}
 			} else {
@@ -136,7 +136,6 @@ jui.define('ui.combo', [], function() {
 					value: "",
 					width: 0,
 					height: 100,
-					scroll: true,
 					keydown: false,
 					position: "bottom"
 				},
@@ -169,7 +168,7 @@ jui.define('ui.combo', [], function() {
 			}
 			
 			// Height
-			if(opts.scroll !== false) {
+			if(opts.height > 0) {
 				$combo_drop.css({ "maxHeight": opts.height, "overflow": "auto" });
 			}
 			
