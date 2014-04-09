@@ -5157,12 +5157,7 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 					
 					$obj.tbody.css({
 						"display": "",
-						"overflow": "",
-						"width": ""
-					});
-					
-					$obj.tbody.find("tr td:last-child").css({
-						"border-right-width": "",
+						"overflow": ""
 					});
 				} else {
 					$obj.table.css({
@@ -5171,12 +5166,7 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 					
 					$obj.tbody.css({
 						"display": "block",
-						"overflow": "auto",
-						"width": "100%"
-					});
-					
-					$obj.tbody.find("tr td:last-child").css({
-						"border-right-width": "0 !important",
+						"overflow": "auto"
 					});
 				}
 				
