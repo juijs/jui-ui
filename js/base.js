@@ -372,17 +372,14 @@
 	var utility = {
 			
 		//-- Properties
-			
 		browser: {
 			webkit: (window.webkitURL) ? true : false,
 			mozilla: (window.mozInnerScreenX) ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-		scrollSize: (window.webkitURL) ? 10 : 17, // 맥인지 윈도우인지에 따라 크기가 다를 수 있음
 				
 		//-- Functions
-		
 		inherit: function(ctor, superCtor) {
 			ctor.super_ = superCtor;
 			ctor.prototype = new superCtor;

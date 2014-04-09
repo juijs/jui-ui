@@ -372,17 +372,14 @@
 	var utility = {
 			
 		//-- Properties
-			
 		browser: {
 			webkit: (window.webkitURL) ? true : false,
 			mozilla: (window.mozInnerScreenX) ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-		scrollSize: (window.webkitURL) ? 10 : 17, // 맥인지 윈도우인지에 따라 크기가 다를 수 있음
 				
 		//-- Functions
-		
 		inherit: function(ctor, superCtor) {
 			ctor.super_ = superCtor;
 			ctor.prototype = new superCtor;
@@ -4549,7 +4546,7 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 				if($(colInfo.element).css("display") == "none") {}
 				else {
 					if(!isLastCheck) {
-						thWidth = thWidth - _.scrollSize;
+						thWidth = thWidth - getScrollSize();
 						isLastCheck = true;
 					}
 				}
@@ -4820,12 +4817,25 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 				
 				// 스크롤 옵션일 경우, 별도 처리
 				if(self.options.scroll) {
-					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollSize : 0);
+					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? getScrollSize() : 0);
 					
 					$(col.list[0]).outerWidth($(col.element).outerWidth());
 					$(colNext.list[0]).outerWidth(colLastWidth);
 				}
 			}
+		}
+		
+		function getScrollSize() {
+			var isJUI = ($(".jui").size() > 0 && _.browser.webkit) ? true : false;
+			
+			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
+			$('body').append(div); 
+			var w1 = $('div', div).innerWidth(); 
+			div.css('overflow-y', 'auto'); 
+			var w2 = $('div', div).innerWidth(); 
+			$(div).remove(); 
+		    
+			return (isJUI) ? 10 : (w1 - w2) - 1;
 		}
 		
 		
@@ -5142,9 +5152,33 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 			
 			setTimeout(function() {
 				if($obj.tbody.outerHeight() < h) {
-					$obj.table.removeClass("table-scroll");
+					$obj.table.css({
+						"table-layout": ""
+					});
+					
+					$obj.tbody.css({
+						"display": "",
+						"overflow": "",
+						"width": ""
+					});
+					
+					$obj.tbody.find("tr td:last-child").css({
+						"border-right-width": "",
+					});
 				} else {
-					$obj.table.addClass("table-scroll");
+					$obj.table.css({
+						"table-layout": "fixed"
+					});
+					
+					$obj.tbody.css({
+						"display": "block",
+						"overflow": "auto",
+						"width": "100%"
+					});
+					
+					$obj.tbody.find("tr td:last-child").css({
+						"border-right-width": "0 !important",
+					});
 				}
 				
 				setScrollResize(self);
