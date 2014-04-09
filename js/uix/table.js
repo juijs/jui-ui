@@ -897,7 +897,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				if($(colInfo.element).css("display") == "none") {}
 				else {
 					if(!isLastCheck) {
-						thWidth = thWidth - getScrollSize();
+						thWidth = thWidth - _.scrollWidth();
 						isLastCheck = true;
 					}
 				}
@@ -1168,25 +1168,12 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				
 				// 스크롤 옵션일 경우, 별도 처리
 				if(self.options.scroll) {
-					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? getScrollSize() : 0);
+					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollWidth() : 0);
 					
 					$(col.list[0]).outerWidth($(col.element).outerWidth());
 					$(colNext.list[0]).outerWidth(colLastWidth);
 				}
 			}
-		}
-		
-		function getScrollSize() {
-			var isJUI = ($(".jui").size() > 0 && _.browser.webkit) ? true : false;
-			
-			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
-			$('body').append(div); 
-			var w1 = $('div', div).innerWidth(); 
-			div.css('overflow-y', 'auto'); 
-			var w2 = $('div', div).innerWidth(); 
-			$(div).remove(); 
-		    
-			return (isJUI) ? 10 : (w1 - w2) - 1;
 		}
 		
 		

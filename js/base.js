@@ -380,6 +380,18 @@
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 				
 		//-- Functions
+		scrollWidth: function() {
+			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
+			
+			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
+			$('body').append(div); 
+			var w1 = $('div', div).innerWidth(); 
+			div.css('overflow-y', 'auto'); 
+			var w2 = $('div', div).innerWidth(); 
+			$(div).remove(); 
+		    
+			return (isJUI) ? 10 : (w1 - w2);
+		},
 		inherit: function(ctor, superCtor) {
 			ctor.super_ = superCtor;
 			ctor.prototype = new superCtor;
