@@ -1,13 +1,5 @@
 .jui {
   .xtable {
-    position: relative;
-    
-    > .head {
-      position: absolute;
-      top: 0;
-      border-bottom-width: 0 !important;
-    }
-
     > .body {
       .border-radius(5px);
     }
@@ -19,6 +11,8 @@
       background-repeat: no-repeat;
       background-image: url("@{xtable-loading}");
     }
+    
+    .xtable-white;
   }
 
   
@@ -40,33 +34,9 @@
   }
 
   
-  // xTable Scroll
-  // --------------------------------------------------
-  .xtable-scroll {
-    > .body {
-      overflow-y: scroll !important;
-      overflow-x: hidden !important;
-      
-      > table { 
-        border-bottom-width: 0 !important;
-        
-        > tbody {
-          > tr {
-            > td:last-child {
-              border-right-width: 0 !important;
-            }
-          }
-        }
-      }
-    }
-    
-    .xtable-scroll.xtable-white;
-  }
-  
-  
   // xTable Colors
   // --------------------------------------------------
-  .xtable-scroll.xtable-white { 
+  .xtable-white { 
     > .body {
       border-bottom: 1px solid #dfdce3 !important;
       .xtable-scroll-white;
@@ -76,7 +46,6 @@
   
   // xTable Scroller
   // --------------------------------------------------
-  
   .xtable-scroll-white {
     &::-webkit-scrollbar-track {
       .buttonBackground2Color(#f2f2f2, #fff, left);

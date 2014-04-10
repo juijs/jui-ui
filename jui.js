@@ -6094,9 +6094,10 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 			var exceptOpts = [ "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", "event", "rows" ];
 			
 			body = jui.create("table", $(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
-			setTableStyle(self, body); // X-Table 생성 및 마크업 설정
+			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
 			
 			head = jui.create("table", $(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+			setTableAllStyle(self, head, body);
 			
 			// 테이블 옵션 필터링 함수
 			function getExceptOptions(self, exceptOpts) {
@@ -6111,8 +6112,22 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 				return options;
 			}
 			
-			// 모든 테이블 스타일 정의
-			function setTableStyle(self, body) {
+			function setTableAllStyle(self, head, body) {
+				$(self.root).css({ "position": "relative" });
+
+				$(head.root).css({ 
+					"position": "absolute",
+					"top": "0",
+					"border-bottom-width": "0",
+					"margin": "0"
+				});
+				
+				$(body.root).css({ 
+					"margin": "0"
+				});
+			}
+			
+			function setTableBodyStyle(self, body) {
 				var $table =  $(body.root).clone(),
 					cols = body.listColumn();
 				
@@ -6373,7 +6388,16 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 			
 			// 스크롤/페이지-스크롤 옵션
 			if(opts.buffer != "page") {
-				$(this.root).addClass("xtable-scroll");
+				var $body = $(this.root).children(".body");
+
+				$body.css({
+					"overflow-y": "scroll",
+					"overflow-x": "hidden"
+				});
+				
+				$body.children("table").css({
+					"border-bottom-width": "0"
+				});
 			}
 			
 			// 스크롤 버퍼 이벤트

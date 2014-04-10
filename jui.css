@@ -4051,14 +4051,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.jui .table-scroll > tbody {
-  display: block;
-  overflow: auto;
-  width: 100%;
-}
-.jui .table-scroll > tbody tr td:last-child {
-  border-right-width: 0 !important;
-}
 .jui .table-scroll-white::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -4079,14 +4071,6 @@
   background: #8a8a8a;
   border: 1px solid #737373;
 }
-.jui .xtable {
-  position: relative;
-}
-.jui .xtable > .head {
-  position: absolute;
-  top: 0;
-  border-bottom-width: 0 !important;
-}
 .jui .xtable > .body {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -4099,6 +4083,32 @@
   background-repeat: no-repeat;
   background-image: url("img/xtable-loading.gif");
 }
+.jui .xtable > .body {
+  border-bottom: 1px solid #dfdce3 !important;
+}
+.jui .xtable > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #e6e6e6;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .xtable-nowrap > .body > table > tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4109,20 +4119,10 @@
   -moz-border-radius: 0px !important;
   border-radius: 0px !important;
 }
-.jui .xtable-scroll > .body {
-  overflow-y: scroll !important;
-  overflow-x: hidden !important;
-}
-.jui .xtable-scroll > .body > table {
-  border-bottom-width: 0 !important;
-}
-.jui .xtable-scroll > .body > table > tbody > tr > td:last-child {
-  border-right-width: 0 !important;
-}
-.jui .xtable-scroll > .body {
+.jui .xtable-white > .body {
   border-bottom: 1px solid #dfdce3 !important;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-track {
+.jui .xtable-white > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
   background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -4134,40 +4134,14 @@
   border-radius: 3px;
   border: 1px solid #e6e6e6;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-thumb {
+.jui .xtable-white > .body::-webkit-scrollbar-thumb {
   background: #c8c8c8;
   border: 1px solid #b8b8b8;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .xtable-scroll.xtable-white > .body {
-  border-bottom: 1px solid #dfdce3 !important;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  border: 1px solid #e6e6e6;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-thumb:hover {
+.jui .xtable-white > .body::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
 }
