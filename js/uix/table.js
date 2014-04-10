@@ -1012,7 +1012,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				data = (column.name) ? column.data[row.index] : $(elem).html(),
 				colkeys = (!target) ? self.options.editCell : self.options.editRow;
 			
-			var $input = $("<input type='text' class='input-cell' />").val(data);
+			var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
 			$(elem).html($input);
 			
 			if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {

@@ -165,6 +165,10 @@ jui.define('ui.dropdown', [], function() {
 				$dd_menu.css({ "maxHeight": opts.height, "overflow": "auto" });
 			}
 			
+			// Default Styles
+			$dd_root.css({ "position": "absolute", "display": "none" });
+			$dd_menu.css({ "display": "block" });
+			
 			// Select
 			this.update(opts.list);
 			this.move(opts.left, opts.top);
