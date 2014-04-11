@@ -4827,7 +4827,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				.attr("colspan", $obj.thead.find("tr:last > th:visible").size())
 				.html(this.tpl["expand"](obj));
 
-			// 확장 영역에 VO 설정
+			// 스크롤 및 VO 적용
+			this.scroll();
 			this.setVo();
 			
 			// 커스텀 이벤트 호출
@@ -4844,6 +4845,9 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			$('#EXPAND_' + this.timestamp).parent().hide();
 			$obj.tbody.find("tr").removeClass("open");
 
+			// 스크롤 적용
+			this.scroll();
+			
 			// 커스텀 이벤트 호출
 			rowIndex = null;
 			this.emit("expandend", [ (index) ? this.get(index) : null, e ]);
