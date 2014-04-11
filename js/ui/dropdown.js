@@ -27,7 +27,7 @@ jui.define('ui.dropdown', [], function() {
 	}
 	
 	$(function() { 
-		$("body").bind("click", function(e) {
+		$("body").on("click", function(e) {
 			var tn = e.target.tagName;
 			
 			if(tn != "LI" && tn != "INPUT" && tn != "A" && tn != "BUTTON" && tn != "I") {
@@ -68,7 +68,7 @@ jui.define('ui.dropdown', [], function() {
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
 				var target = e.currentTarget;
-				self.emit("change", [ { text: $(target).html(), element: target, value: $(target).val() }, e ]);
+				self.emit("change", [ { text: $(target).text(), element: target, value: $(target).val() }, e ]);
 				
 				// close가 true일 경우, 전체 드롭다운 숨기기
 				if(self.options.close) hideAll();
@@ -145,11 +145,11 @@ jui.define('ui.dropdown', [], function() {
 				options: {
 					close: true,
 					keydown: false,
-					list: [],
 					left: 0,
 					top: 0,
 					width: 0,
-					height: 0
+					height: 0,
+					list: []
 				},
 				valid: {
 					update: [ "array" ],
@@ -186,13 +186,22 @@ jui.define('ui.dropdown', [], function() {
 				$dd_menu.css({ "maxHeight": opts.height, "overflow": "auto" });
 			}
 			
+			// Left
+			if(opts.left > 0) {
+				$dd_root.css("left", opts.left);
+			}
+
+			// Top
+			if(opts.top > 0) {
+				$dd_root.css("top", opts.top);
+			}
+			
 			// Default Styles
-			$dd_root.css({ "position": "absolute", "display": "none" });
 			$dd_menu.css({ "display": "block" });
+			$dd_root.css({ "position": "absolute", "display": "none" });
 			
 			// Select
 			this.update(opts.list);
-			this.move(opts.left, opts.top);
 			this.type = "hide"; // 기본 타입 설정
 			
 			return this;
@@ -222,20 +231,22 @@ jui.define('ui.dropdown', [], function() {
 			
 			ui_list.root.show();
 			
-			// Options
+			// Anchor 옵션 처리
 			if(ui_list.anchor.size() > 0) 
 				ui_list.root.css("margin-top", "10px");
 			
-			//
-			if(x || y) this.move(x, y);
+			// x, y 값이 있을 경우
+			if(arguments.length == 2) {
+				this.move(x, y);
+			}
 			
 			this.emit("show");
 			this.type = "show";
 		}
 		
 		this.move = function(x, y) {
-			if(x) ui_list.root.css("left", x);
-			if(y) ui_list.root.css("top", y);
+			ui_list.root.css("left", x);
+			ui_list.root.css("top", y);
 		}
 		
 		this.wheel = function(key, callback) {

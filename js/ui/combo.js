@@ -17,7 +17,7 @@ jui.define('ui.combo', [], function() {
 	}
 	
 	$(function() { 
-		$("body").bind("click", function(e) {
+		$("body").on("click", function(e) {
 			hideAll();
 		});
 	});

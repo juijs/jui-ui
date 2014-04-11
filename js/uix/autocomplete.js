@@ -32,10 +32,8 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 				top: pos.top + $(self.root).outerHeight(),
 				event: {
 					change: function(data, e) {
-						var word = $(e.target).text();
-						
-						$(target).val(word);
-						self.emit("change", [ word ]);
+						$(target).val(data.text);
+						self.emit("change", [ data.text, e ]);
 						
 						return false;
 					}
