@@ -2628,7 +2628,7 @@ jui.define('ui.paging', [], function() {
 	 */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
-		var $obj = { prev: null, list: null, next: null };
+		var $main = null;
 		
 		
 		/**
@@ -2636,21 +2636,19 @@ jui.define('ui.paging', [], function() {
 		 * 
 		 */
 		function setEventAction(self) {
-			self.addEvent($obj.prev, "click", function(e) {
+			self.addEvent($(self.root).find(".prev"), "click", function(e) {
 				self.prev();
 				return false;
 			});
 			
-			self.addEvent($obj.next, "click", function(e) {
+			self.addEvent($(self.root).find(".next"), "click", function(e) {
 				self.next();
 				return false;
 			});
 		}
 		
 		function setEventPage(self) {
-			var $list = $obj.list.children(".page");
-			
-			self.addEvent($list, "click", function(e) {
+			self.addEvent($main.find(".page"), "click", function(e) {
 				var page = parseInt($(e.currentTarget).text());
 				self.page(page);
 				
@@ -2659,7 +2657,7 @@ jui.define('ui.paging', [], function() {
 		}
 		
 		function setPageStyle(self, page) {
-			var $list = $obj.list.children(".page");
+			var $list = $main.find(".page");
 			
 			$list.each(function(i) {
 				if($(this).text() == page) {
@@ -2692,15 +2690,11 @@ jui.define('ui.paging', [], function() {
 		this.init = function() {
 			var self = this, opts = this.options;
 			
-			// 페이징 요소 설정
-			$obj.prev = $(self.root).children(".prev");
-			$obj.list = $(self.root).children(".list");
-			$obj.next = $(self.root).children(".next");
+			// 페이징 메인 설정, 없을 경우에는 root가 메인이 됨
+			$main = $(self.root).find(".list");
+			$main = ($main.size() == 0) ? $(self.root) : $main;
 			
-			// Prev / Next 버튼 이벤트
-			setEventAction(this);
-			
-			//
+			// 페이지 리로드
 			this.reload();
 			
 			return this;
@@ -2739,8 +2733,9 @@ jui.define('ui.paging', [], function() {
 			}
 			
 			// 템플릿 적용
-			$obj.list.html(this.tpl["pages"]({ pages: pages, lastPage: lastPage }));
+			$main.html(this.tpl["pages"]({ pages: pages, lastPage: lastPage }));
 			
+			setEventAction(this);
 			setEventPage(this);
 			setPageStyle(this, activePage);
 			
