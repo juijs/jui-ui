@@ -1039,9 +1039,9 @@
 .jui .dropup ul > li:focus:not(.divider),
 .jui .dropdown ul > li:focus:not(.divider),
 .jui .combo ul > li:focus:not(.divider),
-.jui .dropup ul > li.hover,
-.jui .dropdown ul > li.hover,
-.jui .combo ul > li.hover {
+.jui .dropup ul > li.active,
+.jui .dropdown ul > li.active,
+.jui .combo ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1168,7 +1168,7 @@
 }
 .jui .dropdown-white ul > li:hover:not(.divider),
 .jui .dropdown-white ul > li:focus:not(.divider),
-.jui .dropdown-white ul > li.hover {
+.jui .dropdown-white ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1232,7 +1232,7 @@
 }
 .jui .dropdown-black ul > li:hover:not(.divider),
 .jui .dropdown-black ul > li:focus:not(.divider),
-.jui .dropdown-black ul > li.hover {
+.jui .dropdown-black ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1385,7 +1385,7 @@
 }
 .jui .combo-black ul > li:hover:not(.divider),
 .jui .combo-black ul > li:focus:not(.divider),
-.jui .combo-black ul > li.hover {
+.jui .combo-black ul > li.active {
   background-color: #865de1 !important;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6) !important;
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6)) !important;

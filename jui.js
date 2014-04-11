@@ -2105,15 +2105,25 @@ jui.define('ui.dropdown', [], function() {
 	 * 
 	 */
 	var hideAll = function() {
+		var dd = getDropdown();
+		
+		if(dd != null) {
+			dd.hide();
+		}
+	}
+	
+	var getDropdown = function() {
 		var call_list = jui.get("dropdown");
 		
 		for(var i = 0; i < call_list.length; i++) {
 			var ui_list = call_list[i].list;
 			
 			for(var j = 0; j < ui_list.length; j++) {
-				if(ui_list[j].type == "show") ui_list[j].hide();
+				if(ui_list[j].type == "show") return ui_list[j];
 			}
 		}
+		
+		return null;
 	}
 	
 	$(function() { 
@@ -2122,6 +2132,16 @@ jui.define('ui.dropdown', [], function() {
 			
 			if(tn != "LI" && tn != "INPUT" && tn != "A" && tn != "BUTTON" && tn != "I") {
 				hideAll();
+			}
+		});
+		
+		$(window).on("keydown", function(e) {
+			var dd = getDropdown();
+			
+			if(dd != null) {
+				dd.wheel(e.which, function() {
+					e.preventDefault();
+				});
 			}
 		});
 	});
@@ -2156,7 +2176,7 @@ jui.define('ui.dropdown', [], function() {
 			
 			// 마우스 오버시 hover 클래스 제거
 			self.addEvent($list, "hover", function(e) {
-				$list.removeClass("hover");
+				$list.removeClass("active");
 			});
 		}
 		
@@ -2165,7 +2185,6 @@ jui.define('ui.dropdown', [], function() {
 			
 			self.addEvent(window, "keydown", function(e) {
 				if(self.type == "hide") return;
-				
 				var $list = ui_list.menu.find("li");
 				
 				if(e.which == 38) { // up
@@ -2176,8 +2195,6 @@ jui.define('ui.dropdown', [], function() {
 						index--;
 						selectItem(self);
 					});
-					
-					return false;
 				}
 				
 				if(e.which == 40) { // down
@@ -2188,14 +2205,14 @@ jui.define('ui.dropdown', [], function() {
 						index++;
 						selectItem(self);
 					});
-					
-					return false;
 				}
 				
 				if(e.which == 13) { // enter
 					$list.eq(index).trigger("click");
 					index = -1;
 				}
+				
+				return false;
 			});
 		}
 		
@@ -2203,10 +2220,10 @@ jui.define('ui.dropdown', [], function() {
 			var $list = ui_list.menu.find("li"),
 				$target = $list.eq(index);
 			
-			$list.removeClass("hover");
+			$list.removeClass("active");
 			
 			if($target.val() != "" || $target.html() != "") {
-				$target.addClass("hover");
+				$target.addClass("active");
 				
 				if(self.options.height > 0) {
 					ui_list.menu.scrollTop(index * $target.outerHeight());
@@ -2237,7 +2254,8 @@ jui.define('ui.dropdown', [], function() {
 				valid: {
 					update: [ "array" ],
 					show: [ "number", "number" ],
-					move: [ "number", "number" ]
+					move: [ "number", "number" ],
+					wheel: [ "integer", "function" ]
 				}
 			}
 		}
@@ -2246,8 +2264,11 @@ jui.define('ui.dropdown', [], function() {
 			var self = this, opts = this.options;
 			
 			var $dd_root = $(this.root),
-				$dd_menu = $dd_root.children("ul"),
-				$dd_anchor = $dd_root.children(".anchor");
+				$dd_menu = $dd_root.find("ul"),
+				$dd_anchor = $dd_root.find(".anchor");
+			
+			// 메인 설정, 없을 경우에는 root가 메인이 됨
+			$dd_menu = ($dd_menu.size() == 0) ? $dd_root : $dd_menu;
 			
 			// UI 객체 추가
 			ui_list = { root: $dd_root, menu: $dd_menu, anchor: $dd_anchor };
@@ -2278,16 +2299,15 @@ jui.define('ui.dropdown', [], function() {
 		}
 		
 		this.update = function(list) {
-			if(typeof(list) == "object" && this.tpl.li) {
+			if(typeof(list) == "object" && this.tpl.node) {
 				$(ui_list.menu).empty();
 				
 				for(var i = 0; i < list.length; i++) {
-					$(ui_list.menu).append(this.tpl.li(list[i]));
+					$(ui_list.menu).append(this.tpl.node(list[i]));
 				}
 			}
 			
 			setEvent(this);
-			setEventKeydown(this);
 		}
 		
 		this.hide = function() {
@@ -2316,6 +2336,49 @@ jui.define('ui.dropdown', [], function() {
 		this.move = function(x, y) {
 			if(x) ui_list.root.css("left", x);
 			if(y) ui_list.root.css("top", y);
+		}
+		
+		this.wheel = function(key, callback) {
+			if(!this.options.keydown) return;
+			
+			var self = this,
+				$list = ui_list.menu.find("li");
+			
+			if(key == 38 || key == -1) { // up
+				if(index < 1) index = $list.size() - 1;
+				else index--;
+				
+				selectItem(this, function() {
+					index--;
+					selectItem(self);
+				});
+				
+				if(callback) callback();
+			}
+			
+			if(key == 40 || key == 1) { // down
+				if(index < $list.size() - 1) index++;
+				else index = 0;
+				
+				selectItem(self, function() {
+					index++;
+					selectItem(self);
+				});
+				
+				if(callback) callback();
+			}
+			
+			if(key == 13 || key == 0 || !key) { // enter
+				$list.eq(index).trigger("click");
+				index = -1;
+				
+				if(callback) callback();
+			}
+		}
+		
+		this.reload = function() {
+			this.init();
+			this.emit("reload");
 		}
 	}
 	
@@ -2907,37 +2970,52 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 		 * Private Methods
 		 * 
 		 */
-		function createDropdown(self) {
-			var $ddObj = $(self.tpl.words());
+		function createDropdown(self, words) {
+			if(words.length == 0) {
+				if(ddUi) ddUi.hide();
+				return;
+			} else {
+				if(ddUi) $(ddUi.root).remove();
+			}
+			
+			var pos = $(self.root).offset(),
+				$ddObj = $(self.tpl.words({ words: words }));
+
 			$("body").append($ddObj);
 			
-			ddUi = dropdown($ddObj, { 
+			ddUi = dropdown($ddObj, {
 				keydown: true,
-				tpl: {
-					li: "<li><!= word !></li>"
-				},
+				width: $(self.root).outerWidth(),
+				left: pos.left,
+				top: pos.top + $(self.root).outerHeight(),
 				event: {
 					change: function(data, e) {
-						$(target).val(data.text);
-						self.emit("change", [ data.text ]);
+						var word = $(e.target).text();
+						
+						$(target).val(word);
+						self.emit("change", [ word ]);
 						
 						return false;
 					}
 				}
 			});
+			
+			ddUi.show();
 		}
 		
 		function getFilteredWords(self, word) {
 			var words = self.options.words,
 				result = [];
 			
-			for(var i = 0; i < words.length; i++) {
-				var origin = words[i],
-					a = words[i].toLowerCase(),
-					b = word.toLowerCase();
-				
-				if(a.indexOf(b) != -1) {
-					result.push({ word: origin });
+			if(word != "") {
+				for(var i = 0; i < words.length; i++) {
+					var origin = words[i],
+						a = words[i].toLowerCase(),
+						b = word.toLowerCase();
+					
+					if(a.indexOf(b) != -1) {
+						result.push(origin);
+					}
 				}
 			}
 			
@@ -2945,25 +3023,10 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 		}
 		
 		function setEventKeyup(self) {
-			$(target).unbind("keyup");
-			
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
-				if($(this).val() == "") {
-					ddUi.hide();
-					return;
-				}
 				
-				var words = getFilteredWords(self, $(this).val());
-				ddUi.update(words);
-				
-				if(words.length > 0) {
-					var pos = $(self.root).offset();
-					
-					ddUi.move(pos.left, pos.top + $(self.root).outerHeight());
-					ddUi.show();
-				} else ddUi.hide();
-				
+				createDropdown(self, getFilteredWords(self, $(this).val()));
 				return false;
 			});
 		}
@@ -2988,11 +3051,8 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 		this.init = function() {
 			var self = this, opts = this.options;
 			
-			// 타겟 설정
+			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
-			
-			// 드롭다운 UI 생성
-			createDropdown(this);
 			
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
