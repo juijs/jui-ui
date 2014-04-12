@@ -2457,7 +2457,8 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 		}
 		
 		function getModalInfo(self) {
-			var x = "auto", y = "auto";
+			var x = "auto", y = "auto", h = 0;
+			
 			var target = self.options.target, 
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
@@ -2466,8 +2467,11 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 			x = ($(hTarget).width() / 2) - ($(self.root).width() / 2);
 			y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
 			
+			h = $(target).outerHeight();
+			h = (h > 0) ? h : $(hTarget).outerHeight();
+			
 			return {
-				x: x, y: y, pos: pos, tPos: tPos, h: $(target).outerHeight()
+				x: x, y: y, pos: pos, tPos: tPos, h: h
 			}
 		}
 		
