@@ -44,14 +44,15 @@ jui.define('ui.combo', [], function() {
 			$combo_list.each(function(i) {
 				var elem = getElement(this),
 					value = $(elem).attr("value"),
-					text = $(elem).html();
+					text = $(elem).text();
+				
 				if(!value) { 
 					value = text;
 					$(elem).attr("value", value);
 				}
 				
 				if((type == "index" && data == i) || (type == "value" && data == value)) {
-					ui_data = { value: value, text: text, element: elem };
+					ui_data = { index: i, value: value, text: text };
 					
 					$combo_root.attr("value", value);
 					$combo_text.html(text);
