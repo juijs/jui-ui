@@ -109,9 +109,9 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 				for(var j = cols.length - 1; j >= 0; j--) {
 					var hw = $(cols[j].element).outerWidth();
 					
-					// 조건 (스크롤, 컬럼보이기, 마지막컬럼, No-IE)
+					// 조건 (스크롤, 컬럼보이기, 마지막컬럼)
 					// 조건이 명확하지 않으니 차후에 변경
-					if(self.options.buffer != "page" && cols[j].type == "show" && !isLast && !_.browser.msie) {
+					if(self.options.buffer != "page" && cols[j].type == "show" && !isLast) {
 						$(bodyCols[j].element).outerWidth("auto");
 						isLast = true;
 					} else {
