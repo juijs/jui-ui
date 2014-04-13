@@ -1,24 +1,10 @@
+## Introduction 
+
+![IMAGE](http://seogi1004.github.io/jui/res/img3/jui_info_3.jpg)
+
 ## Documentation
 
 http://seogi1004.github.io/jui/
-
-
-## Building 
-
-Use Grunt as build tool.
-
-Grunt will do the following:
-
-* Concatenate JS files 
-* Uglify and minify JS files
-* Concatenate and minify CSS files
-
-To use Grunt 
-
-1. ```npm install grunt-cli -g```
-2. ```cd jui```
-3. ```npm install```
-4. ```grunt```
 
 ## Maintainers
 
