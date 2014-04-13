@@ -1100,7 +1100,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				
 				$resizeBar.css({
 					position: "absolute",
-			        width: "4px",
+			        width: "8px",
 			        height: "100%", 
 			        left: ($colElem.outerWidth() + pos.left - 1) + "px",
 			        top: pos.top + "px",
