@@ -2824,11 +2824,10 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window > .head {
@@ -2940,7 +2939,6 @@
 }
 .jui .window-default {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window-default > .head {
@@ -2986,7 +2984,6 @@
 }
 .jui .window-black {
   color: #fff;
-  border: 1px solid #cacaca;
   background-color: #545454;
 }
 .jui .window-black > .head {
@@ -3031,7 +3028,6 @@
 }
 .jui .window-white {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window-white > .head {
@@ -4488,11 +4484,10 @@
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox > .head {
@@ -4536,7 +4531,6 @@
 }
 .jui .msgbox-default {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox-default > .head {
@@ -4561,7 +4555,6 @@
 }
 .jui .msgbox-white {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox-white > .head {
