@@ -1366,6 +1366,8 @@ jui.define('ui.button', [], function() {
 			this.ui.addEvent(self.element, "click", ".btn", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
+				
+				e.preventDefault();
 			});
 			
 			// Init
@@ -2174,17 +2176,37 @@ jui.define('ui.dropdown', [], function() {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				var target = e.currentTarget;
-				self.emit("change", [ { text: $(target).text(), element: target, value: $(target).val() }, e ]);
+				var index = getTargetIndex(e.currentTarget),
+					text = $(e.currentTarget).text(),
+					value = $(e.currentTarget).attr("value");
+				
+				self.emit("change", [ { index: index, value: value, text: text }, e ]);
 				
 				// close가 true일 경우, 전체 드롭다운 숨기기
 				if(self.options.close) hideAll();
+				
+				// A 태그일 경우에는 이벤트 막기
+				if(e.target.tagName == "A") {
+					e.preventDefault();
+				}
 			});
 			
 			// 마우스 오버시 hover 클래스 제거
 			self.addEvent($list, "hover", function(e) {
 				$list.removeClass("active");
 			});
+			
+			function getTargetIndex(elem) {
+				var result = 0;
+				
+				$list.each(function(i) {
+					if(elem == this) {
+						result = i;
+					}
+				});
+				
+				return result;
+			}
 		}
 		
 		function setEventKeydown(self) {
@@ -3014,8 +3036,6 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 					change: function(data, e) {
 						$(target).val(data.text);
 						self.emit("change", [ data.text, e ]);
-						
-						return false;
 					}
 				}
 			});
@@ -3120,7 +3140,7 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		}
 		
 		function showMenu(elem) {
-			var pos = $(elem).position();
+			var pos = $(elem).offset();
 			
 			$(elem).parent().addClass("menu-keep");
 			ui_menu.show(pos.left, pos.top + info.$root.height());
@@ -3159,7 +3179,7 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			// 드롭다운 메뉴 
 			if(this.tpl.menu) {
 				var $menu = $(this.tpl.menu());
-				$menu.insertAfter(self.root);
+				$menu.insertAfter(info.$root);
 				
 				ui_menu = dropdown($menu, {
 					event: {
@@ -3193,16 +3213,18 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			
 				// 이벤트 설정
 				self.addEvent($(this), "click", "a", function(e) {
+					var text = $(e.currentTarget).text();
+					
 					if(i != index) { 
 						if(opts.target != "") 
 							showTarget(opts.target, this);
 						
-						self.emit("change", [ { text: $(e.currentTarget).html(), index: i }, e ]);
+						self.emit("change", [ { index: i, text: text }, e ]);
 						self.show(i);
 						
 						info.activeIndex = i;
 					} else {
-						self.emit("menu", [ { text: $(e.currentTarget).html() }, e ]);
+						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(this);
 					}
 					

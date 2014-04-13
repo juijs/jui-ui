@@ -49,6 +49,8 @@ jui.define('ui.button', [], function() {
 			this.ui.addEvent(self.element, "click", ".btn", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
+				
+				e.preventDefault();
 			});
 			
 			// Init

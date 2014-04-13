@@ -31,7 +31,7 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		}
 		
 		function showMenu(elem) {
-			var pos = $(elem).position();
+			var pos = $(elem).offset();
 			
 			$(elem).parent().addClass("menu-keep");
 			ui_menu.show(pos.left, pos.top + info.$root.height());
@@ -70,7 +70,7 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			// 드롭다운 메뉴 
 			if(this.tpl.menu) {
 				var $menu = $(this.tpl.menu());
-				$menu.insertAfter(self.root);
+				$menu.insertAfter(info.$root);
 				
 				ui_menu = dropdown($menu, {
 					event: {
@@ -104,16 +104,18 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			
 				// 이벤트 설정
 				self.addEvent($(this), "click", "a", function(e) {
+					var text = $(e.currentTarget).text();
+					
 					if(i != index) { 
 						if(opts.target != "") 
 							showTarget(opts.target, this);
 						
-						self.emit("change", [ { text: $(e.currentTarget).html(), index: i }, e ]);
+						self.emit("change", [ { index: i, text: text }, e ]);
 						self.show(i);
 						
 						info.activeIndex = i;
 					} else {
-						self.emit("menu", [ { text: $(e.currentTarget).html() }, e ]);
+						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(this);
 					}
 					

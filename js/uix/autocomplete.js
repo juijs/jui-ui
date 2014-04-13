@@ -34,8 +34,6 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 					change: function(data, e) {
 						$(target).val(data.text);
 						self.emit("change", [ data.text, e ]);
-						
-						return false;
 					}
 				}
 			});

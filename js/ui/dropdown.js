@@ -67,17 +67,37 @@ jui.define('ui.dropdown', [], function() {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				var target = e.currentTarget;
-				self.emit("change", [ { text: $(target).text(), element: target, value: $(target).val() }, e ]);
+				var index = getTargetIndex(e.currentTarget),
+					text = $(e.currentTarget).text(),
+					value = $(e.currentTarget).attr("value");
+				
+				self.emit("change", [ { index: index, value: value, text: text }, e ]);
 				
 				// close가 true일 경우, 전체 드롭다운 숨기기
 				if(self.options.close) hideAll();
+				
+				// A 태그일 경우에는 이벤트 막기
+				if(e.target.tagName == "A") {
+					e.preventDefault();
+				}
 			});
 			
 			// 마우스 오버시 hover 클래스 제거
 			self.addEvent($list, "hover", function(e) {
 				$list.removeClass("active");
 			});
+			
+			function getTargetIndex(elem) {
+				var result = 0;
+				
+				$list.each(function(i) {
+					if(elem == this) {
+						result = i;
+					}
+				});
+				
+				return result;
+			}
 		}
 		
 		function setEventKeydown(self) {
