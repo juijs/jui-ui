@@ -229,17 +229,21 @@ jui.define('core', function(_) {
 			var vo = null;
 			
 			this.emit = function(type, args) {
+				var result = null;
+				
 				for(var i = 0; i < this.event.length; i++) {
 					var tmpEvent = this.event[i];
 					
 					if(tmpEvent.type == type.toLowerCase()) {
 						if(typeof(args) == "object" && args.length != undefined) {
-							tmpEvent.callback.apply(this, args);
+							result = tmpEvent.callback.apply(this, args);
 						} else {
-							tmpEvent.callback.call(this, args);
+							result = tmpEvent.callback.call(this, args);
 						}
 					}
 				}
+				
+				return result;
 			}
 			
 			this.on = function(type, callback) {

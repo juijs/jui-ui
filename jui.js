@@ -1059,17 +1059,21 @@ jui.define('core', function(_) {
 			var vo = null;
 			
 			this.emit = function(type, args) {
+				var result = null;
+				
 				for(var i = 0; i < this.event.length; i++) {
 					var tmpEvent = this.event[i];
 					
 					if(tmpEvent.type == type.toLowerCase()) {
 						if(typeof(args) == "object" && args.length != undefined) {
-							tmpEvent.callback.apply(this, args);
+							result = tmpEvent.callback.apply(this, args);
 						} else {
-							tmpEvent.callback.call(this, args);
+							result = tmpEvent.callback.call(this, args);
 						}
 					}
 				}
+				
+				return result;
 			}
 			
 			this.on = function(type, callback) {
@@ -4242,7 +4246,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 								setEventEditCell(self, e.currentTarget, row, colIndex);
 							}
 							
-							self.emit("editcell", [ { row: row, column: self.getColumn(colIndex) }, e ]);
+							self.emit("editstart", [ row, e ]);
 						});
 					})(i);
 				});
@@ -4251,17 +4255,36 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			if(self.options.fields && self.options.editRow) {
 				self.addEvent(row.element, "dblclick", function(e) {
 					if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-						$(row.element).find("td").each(function(i) {
-							setEventEditCell(self, this, row, i, e.target);
+						var $cells = $(row.element).find("td");
+						
+						$cells.each(function(i) {
+							setEventEditCell(self, this, row, i, e.target, function() {
+								var data = {};
+								
+								$cells.each(function(colIndex) {
+									var column = self.getColumn(colIndex);
+									
+									if(column.name != null) {
+										data[column.name] = $(this).find(".edit").val();
+									}
+								});
+								
+								var res = self.emit("editend", [ data ]);
+								
+								// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+								if(res !== false) {
+									self.update(row.index, data);
+								}
+							});
 						});
 
-						self.emit("editrow", [ row, e ]);
+						self.emit("editstart", [ row, e ]);
 					}
 				});
 			}
 		}
 		
-		function setEventEditCell(self, elem, row, colIndex, target) {
+		function setEventEditCell(self, elem, row, colIndex, target, callback) {
 			var column = self.getColumn(colIndex),
 				data = (column.name) ? column.data[row.index] : $(elem).html(),
 				colkeys = (!target) ? self.options.editCell : self.options.editRow;
@@ -4280,24 +4303,32 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			// 엔터 키 이벤트 발생시 업데이트
 			self.addEvent($input, "keypress", function(e) {
 				if(e.which == 13) {
-					update();
+					update(e);
 				}
 			});
 			
 			// 포커스가 바뀌었을 경우 업데이트
 			self.addEvent($obj.tbody.find("tr"), "click", function(e) {
 				if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-					update();
+					update(e);
 				}
 			});
 			
-			function update() {
-				var data = {};
-				
-				data[column.name] = $input.val();
-				self.update(row.index, data);
-				
-				$input.remove();
+			function update(e) {
+				if(typeof(callback) == "function") { // editRow일 경우
+					callback();
+				} else {
+					var data = {};
+					data[column.name] = $input.val();
+
+					var res = self.emit("editend", [ data ]);
+					
+					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+					if(res !== false) {
+						self.update(row.index, data);
+						$input.remove();
+					}
+				}
 			}
 		}
 
