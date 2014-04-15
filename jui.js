@@ -1609,10 +1609,10 @@ jui.define('ui.combo', [], function() {
 			var $list = ui_list["drop"].children("li"),
 				$target = $list.eq(index);
 			
-			$list.removeClass("hover");
+			$list.removeClass("active");
 
 			if($target.val() != "" || $target.html() != "") {
-				$target.addClass("hover");
+				$target.addClass("active");
 				
 				if(self.options.height > 0) {
 					ui_list["drop"].scrollTop(index * $target.outerHeight());

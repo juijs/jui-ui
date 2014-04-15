@@ -1224,11 +1224,11 @@
   border-bottom: 9px solid #ffffff;
 }
 .jui .dropdown-black ul {
-  background-color: #434343 !important;
-  border: 1px solid #000000 !important;
+  background-color: #434343;
+  border: 1px solid #000000;
 }
 .jui .dropdown-black ul > li {
-  color: #fff !important;
+  color: #fff;
 }
 .jui .dropdown-black ul > li:hover:not(.divider),
 .jui .dropdown-black ul > li:focus:not(.divider),
@@ -1377,11 +1377,11 @@
   width: 100%;
 }
 .jui .combo-black ul {
-  background-color: #434343 !important !important;
-  border: 1px solid #000000 !important !important;
+  background-color: #434343 !important;
+  border: 1px solid #000000 !important;
 }
 .jui .combo-black ul > li {
-  color: #fff !important !important;
+  color: #fff !important;
 }
 .jui .combo-black ul > li:hover:not(.divider),
 .jui .combo-black ul > li:focus:not(.divider),
