@@ -5593,6 +5593,30 @@
   background-color: #fff;
   border: 1px solid #dcdcdc;
 }
+.jui .pgroup {
+  width: 100%;
+}
+.jui .pgroup > .panel {
+  width: auto;
+}
+.jui .pgroup > .panel.group {
+  width: 100%;
+}
+.jui .pgroup > .panel:not(:first-child) {
+  margin-top: 0px;
+  margin-left: -10px;
+}
+.jui .pgroup > .panel:not(:first-child) > .head {
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+}
+.jui .pgroup > .panel:not(:first-child) > .body,
+.jui .pgroup > .panel:not(:first-child) > .foot {
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+}
 .jui .panel > .table-classic,
 .jui .panel > .xtable > .table-classic {
   -webkit-border-bottom-right-radius: 5px;

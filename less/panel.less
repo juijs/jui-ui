@@ -23,6 +23,34 @@
 	}
 	
 	
+	// Panel Group
+	// --------------------------------------------------
+  .pgroup {
+    width: 100%;
+    
+    > .panel {
+      width: auto;
+      
+      &.group {
+        width: 100%;
+      }
+        
+      &:not(:first-child) {
+        margin-top: 0px;
+        margin-left: -10px;
+        
+        > .head {
+          .border-top-left-radius(0px);
+        }
+    
+        > .body, > .foot {
+          .border-bottom-left-radius(0px);
+        }
+      }
+    }
+  }
+	
+	
 	// Panel Customizing
 	// --------------------------------------------------
 	.panel {
