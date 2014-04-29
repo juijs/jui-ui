@@ -55,8 +55,8 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 					animate: false
 				},
 				valid: {
-					show: [ "integer", "integer" ],
-					move: [ "integer", "integer" ],
+					show: [ "number", "number" ],
+					move: [ "number", "number" ],
 					update: [ "string" ],
 					setTitle: [ "string" ],
 					setSize: [ "integer", "integer" ]

@@ -5,8 +5,8 @@
 <META charset="UTF-8">
 <link rel="stylesheet" href="jui.min.css" />
 
-<script src="test/jquery-1.8.3.min.js"></script>
-<script src="test/jquery.binder.js"></script>
+<script src="lib/jquery-1.8.3.min.js"></script>
+<script src="lib/jquery.binder.js"></script>
 
 <script src="js/base.js"></script>
 <script src="js/core.js"></script>
@@ -26,12 +26,14 @@
 <script>
 
 var ui_bind, ui_tab, ui_table_log, ui_table_info;
-var p_jui = opener.jui;
+var p_jui = (opener) ? opener.jui : null;
 var log_expand = {};
 var template = null;
 
 // Init..
 jui.ready(function(ui, uix, _) {
+	if(p_jui == null) alert("Execution path is invalid.");
+	
 	// UI Setting
 	ui_tab = uix.tab("#mng_tab", {
 		target: "#mng_tab_cont",

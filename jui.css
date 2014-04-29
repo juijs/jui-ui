@@ -1039,9 +1039,9 @@
 .jui .dropup ul > li:focus:not(.divider),
 .jui .dropdown ul > li:focus:not(.divider),
 .jui .combo ul > li:focus:not(.divider),
-.jui .dropup ul > li.hover,
-.jui .dropdown ul > li.hover,
-.jui .combo ul > li.hover {
+.jui .dropup ul > li.active,
+.jui .dropdown ul > li.active,
+.jui .combo ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1168,7 +1168,7 @@
 }
 .jui .dropdown-white ul > li:hover:not(.divider),
 .jui .dropdown-white ul > li:focus:not(.divider),
-.jui .dropdown-white ul > li.hover {
+.jui .dropdown-white ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1224,15 +1224,15 @@
   border-bottom: 9px solid #ffffff;
 }
 .jui .dropdown-black ul {
-  background-color: #434343 !important;
-  border: 1px solid #000000 !important;
+  background-color: #434343;
+  border: 1px solid #000000;
 }
 .jui .dropdown-black ul > li {
-  color: #fff !important;
+  color: #fff;
 }
 .jui .dropdown-black ul > li:hover:not(.divider),
 .jui .dropdown-black ul > li:focus:not(.divider),
-.jui .dropdown-black ul > li.hover {
+.jui .dropdown-black ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -1377,15 +1377,15 @@
   width: 100%;
 }
 .jui .combo-black ul {
-  background-color: #434343 !important !important;
-  border: 1px solid #000000 !important !important;
+  background-color: #434343 !important;
+  border: 1px solid #000000 !important;
 }
 .jui .combo-black ul > li {
-  color: #fff !important !important;
+  color: #fff !important;
 }
 .jui .combo-black ul > li:hover:not(.divider),
 .jui .combo-black ul > li:focus:not(.divider),
-.jui .combo-black ul > li.hover {
+.jui .combo-black ul > li.active {
   background-color: #865de1 !important;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6) !important;
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6)) !important;
@@ -2824,11 +2824,10 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window > .head {
@@ -2940,7 +2939,6 @@
 }
 .jui .window-default {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window-default > .head {
@@ -2986,7 +2984,6 @@
 }
 .jui .window-black {
   color: #fff;
-  border: 1px solid #cacaca;
   background-color: #545454;
 }
 .jui .window-black > .head {
@@ -3031,7 +3028,6 @@
 }
 .jui .window-white {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .window-white > .head {
@@ -3151,12 +3147,11 @@
 .jui table.table > tbody td {
   word-break: break-all;
 }
-.jui table.table > tbody td > .input-cell {
+.jui table.table > tbody td > .edit {
   display: inline-block;
   padding: 3px 4px;
   vertical-align: middle;
   font-size: 11px;
-  width: 100%;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -4001,7 +3996,7 @@
 .jui .table-simple.table-hover > tbody > tr:hover {
   background: #efebf5;
 }
-.jui .table > tbody td > .input-cell {
+.jui .table > tbody td > .edit {
   background-color: #fff;
   border: 1px solid #c8c8c8;
   -webkit-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
@@ -4009,7 +4004,7 @@
   box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
   color: #333333;
 }
-.jui .table > tbody td > .input-cell:focus {
+.jui .table > tbody td > .edit:focus {
   border-color: #b08bfc;
   outline: 0;
   -webkit-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
@@ -4052,14 +4047,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.jui .table-scroll > tbody {
-  display: block;
-  overflow: auto;
-  width: 100%;
-}
-.jui .table-scroll > tbody tr td:last-child {
-  border-right-width: 0 !important;
-}
 .jui .table-scroll-white::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -4080,14 +4067,6 @@
   background: #8a8a8a;
   border: 1px solid #737373;
 }
-.jui .xtable {
-  position: relative;
-}
-.jui .xtable > .head {
-  position: absolute;
-  top: 0;
-  border-bottom-width: 0 !important;
-}
 .jui .xtable > .body {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -4100,6 +4079,32 @@
   background-repeat: no-repeat;
   background-image: url("img/xtable-loading.gif");
 }
+.jui .xtable > .body {
+  border-bottom: 1px solid #dfdce3 !important;
+}
+.jui .xtable > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #e6e6e6;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .xtable-nowrap > .body > table > tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4110,20 +4115,10 @@
   -moz-border-radius: 0px !important;
   border-radius: 0px !important;
 }
-.jui .xtable-scroll > .body {
-  overflow-y: scroll !important;
-  overflow-x: hidden !important;
-}
-.jui .xtable-scroll > .body > table {
-  border-bottom-width: 0 !important;
-}
-.jui .xtable-scroll > .body > table > tbody > tr > td:last-child {
-  border-right-width: 0 !important;
-}
-.jui .xtable-scroll > .body {
+.jui .xtable-white > .body {
   border-bottom: 1px solid #dfdce3 !important;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-track {
+.jui .xtable-white > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
   background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -4135,40 +4130,14 @@
   border-radius: 3px;
   border: 1px solid #e6e6e6;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-thumb {
+.jui .xtable-white > .body::-webkit-scrollbar-thumb {
   background: #c8c8c8;
   border: 1px solid #b8b8b8;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .xtable-scroll > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .xtable-scroll.xtable-white > .body {
-  border-bottom: 1px solid #dfdce3 !important;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  border: 1px solid #e6e6e6;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .xtable-scroll.xtable-white > .body::-webkit-scrollbar-thumb:hover {
+.jui .xtable-white > .body::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
 }
@@ -4515,11 +4484,10 @@
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox > .head {
@@ -4563,7 +4531,6 @@
 }
 .jui .msgbox-default {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox-default > .head {
@@ -4588,7 +4555,6 @@
 }
 .jui .msgbox-white {
   color: #333;
-  border: 1px solid #cacaca;
   background-color: #fff;
 }
 .jui .msgbox-white > .head {
@@ -5626,6 +5592,30 @@
 .jui .panel > .body {
   background-color: #fff;
   border: 1px solid #dcdcdc;
+}
+.jui .pgroup {
+  width: 100%;
+}
+.jui .pgroup > .panel {
+  width: auto;
+}
+.jui .pgroup > .panel.group {
+  width: 100%;
+}
+.jui .pgroup > .panel:not(:first-child) {
+  margin-top: 0px;
+  margin-left: -10px;
+}
+.jui .pgroup > .panel:not(:first-child) > .head {
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+}
+.jui .pgroup > .panel:not(:first-child) > .body,
+.jui .pgroup > .panel:not(:first-child) > .foot {
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
 }
 .jui .panel > .table-classic,
 .jui .panel > .xtable > .table-classic {

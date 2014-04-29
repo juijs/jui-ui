@@ -30,7 +30,10 @@ jui.define('ui.button', [], function() {
 			});
 			
 			function on(i, elem) {
-				self.data = { index: i, value: $(elem).attr("value"), element: elem };
+				var value = $(elem).attr("value"),
+					text = $(elem).text();
+				
+				self.data = { index: i, value: value, text: text };
 				$(elem).addClass(className);
 			}
 			
@@ -46,6 +49,8 @@ jui.define('ui.button', [], function() {
 			this.ui.addEvent(self.element, "click", ".btn", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
+				
+				e.preventDefault();
 			});
 			
 			// Init
@@ -86,7 +91,10 @@ jui.define('ui.button', [], function() {
 			});
 			
 			function on(i, elem) {
-				self.data[i] = { index: i, value: $(elem).attr("value"), element: elem };
+				var value = $(elem).attr("value"),
+					text = $(elem).text();
+			
+				self.data[i] = { index: i, value: value, text: text };
 				$(elem).addClass(className);
 			}
 			

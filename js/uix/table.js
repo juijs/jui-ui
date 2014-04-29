@@ -897,7 +897,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				if($(colInfo.element).css("display") == "none") {}
 				else {
 					if(!isLastCheck) {
-						thWidth = thWidth - _.scrollSize;
+						thWidth = thWidth - _.scrollWidth();
 						isLastCheck = true;
 					}
 				}
@@ -959,13 +959,15 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				// 1. 공통 이벤트 발생
 				self.emit("select", [ row, e ]);
 
-				// 2. 확장영역 옵션 처리
-				if(self.options.expand == "auto") {
+				// 2. 확장영역 자동 이벤트 처리
+				if(self.options.expand) {
+					if(self.options.expandEvent === false) return;
+					
 					if(rowIndex === row.index) {
-						self.hideExpand(rowIndex, e);
+						self.hideExpand(e);
 					} else {
 						if(rowIndex != null) {
-							self.hideExpand(rowIndex, e);
+							self.hideExpand(e);
 						}
 						
 						self.showExpand(row.index, undefined, e);
@@ -979,6 +981,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			});
 			
 			if(self.options.fields && self.options.editCell) {
+				if(self.options.editEvent === false) return;
+				
 				$(row.element).find("td").each(function(i) {
 					var cell = this;
 					
@@ -988,62 +992,67 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 								setEventEditCell(self, e.currentTarget, row, colIndex);
 							}
 							
-							self.emit("editcell", [ { row: row, column: self.getColumn(colIndex) }, e ]);
+							self.emit("editstart", [ row, e ]);
 						});
 					})(i);
 				});
 			}
 
 			if(self.options.fields && self.options.editRow) {
+				if(self.options.editEvent === false) return;
+				
 				self.addEvent(row.element, "dblclick", function(e) {
 					if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-						$(row.element).find("td").each(function(i) {
-							setEventEditCell(self, this, row, i, e.target);
-						});
-
-						self.emit("editrow", [ row, e ]);
+						self.showEditRow(row.index, e);
 					}
 				});
 			}
 		}
 		
-		function setEventEditCell(self, elem, row, colIndex, target) {
+		function setEventEditCell(self, elem, row, colIndex, event, callback) {
 			var column = self.getColumn(colIndex),
 				data = (column.name) ? column.data[row.index] : $(elem).html(),
-				colkeys = (!target) ? self.options.editCell : self.options.editRow;
+				colkeys = (!callback) ? self.options.editCell : self.options.editRow;
 			
-			var $input = $("<input type='text' class='input-cell' />").val(data);
+			var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
 			$(elem).html($input);
 			
 			if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
 				$input.attr("disabled", true);
 			}
 			
-			// 이벤트 발생시 포커스 맞추기
-			if(!target) $input.focus();
-			if(elem == target) $input.focus();
+			// 클릭 엘리먼트에 포커스 맞추기
+			if(event && event.target == elem) $input.focus();
 
 			// 엔터 키 이벤트 발생시 업데이트
 			self.addEvent($input, "keypress", function(e) {
 				if(e.which == 13) {
-					update();
+					update(e);
 				}
 			});
 			
 			// 포커스가 바뀌었을 경우 업데이트
 			self.addEvent($obj.tbody.find("tr"), "click", function(e) {
 				if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-					update();
+					update(e);
 				}
 			});
 			
-			function update() {
-				var data = {};
-				
-				data[column.name] = $input.val();
-				self.update(row.index, data);
-				
-				$input.remove();
+			function update(e) {
+				if(typeof(callback) == "function") { // editRow일 경우
+					callback();
+				} else {
+					var data = {};
+					data[column.name] = $input.val();
+
+					var res = self.emit("editend", [ data ]);
+					
+					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+					if(res !== false) {
+						self.update(row.index, data);
+						$input.remove();
+					}
+				}
 			}
 		}
 
@@ -1100,7 +1109,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				
 				$resizeBar.css({
 					position: "absolute",
-			        width: "4px",
+			        width: "8px",
 			        height: "100%", 
 			        left: ($colElem.outerWidth() + pos.left - 1) + "px",
 			        top: pos.top + "px",
@@ -1168,7 +1177,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				
 				// 스크롤 옵션일 경우, 별도 처리
 				if(self.options.scroll) {
-					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollSize : 0);
+					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollWidth() : 0);
 					
 					$(col.list[0]).outerWidth($(col.element).outerWidth());
 					$(colNext.list[0]).outerWidth(colLastWidth);
@@ -1213,8 +1222,10 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					scroll: false,
 					scrollHeight: 200,
 					expand: false,
+					expandEvent: true,
 					editCell: false,
 					editRow: false,
+					editEvent: true,
 					resize: false,
 					sort: false,
 					sortIndex: null,
@@ -1240,7 +1251,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
 					initColumns: [ "array" ],
 					showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
-					hideExpand: [ [ "integer", "string" ], [ "object", "undefined" ] ],
+					hideExpand: [ [ "object", "undefined" ] ],
+					showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
 					setCsv: [ "string", "string" ],
 					setCsvFile: [ [ "string", "object" ], "object" ],
 					getCsv: [ [ "boolean", "undefined" ] ],
@@ -1249,14 +1261,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				animate: {
 					update: {
 						after: function() {
-							if(arguments.length != 1) {
-								var row = this.get(arguments[0]);
-								
-								$(row.element).addClass("flipInX")
-								.css({
-									"animation-duration":  "750ms"
-								});
-							} else {
+							if(arguments.length == 1) {
 								if(!_.browser.webkit && !_.browser.mozilla) return;
 								animateUpdate(this, this.listAll());
 							}
@@ -1432,9 +1437,24 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		
 		this.select = function(index) {
 			var row = this.get(index);
-			
+
+			// 초기화
+			this.hideExpand();
+			this.hideEditRow();
+
 			$(row.element).parent().find(".selected").removeClass("selected");
 			$(row.element).addClass("selected");
+			
+			rowIndex = index;
+			return row;
+		}
+		
+		this.unselect = function() {
+			if(rowIndex == null) return;
+			var row = this.get(rowIndex);
+			
+			$(row.element).removeClass("selected");
+			rowIndex = null;
 			
 			return row;
 		}
@@ -1490,9 +1510,23 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			
 			setTimeout(function() {
 				if($obj.tbody.outerHeight() < h) {
-					$obj.table.removeClass("table-scroll");
+					$obj.table.css({
+						"table-layout": ""
+					});
+					
+					$obj.tbody.css({
+						"display": "",
+						"overflow": ""
+					});
 				} else {
-					$obj.table.addClass("table-scroll");
+					$obj.table.css({
+						"table-layout": "fixed"
+					});
+					
+					$obj.tbody.css({
+						"display": "block",
+						"overflow": "auto"
+					});
 				}
 				
 				setScrollResize(self);
@@ -1649,6 +1683,10 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		this.showExpand = function(index, obj, e) {
 			if(!this.options.expand) return;
 			
+			// 초기화
+			this.unselect();
+			this.hideEditRow();
+			
 			var expandSel = "#EXPAND_" + this.timestamp,
 				row = this.get(index),
 				obj = (typeof(obj) != "object") ? $.extend({ row: row }, row.data) : obj,
@@ -1661,7 +1699,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 				.attr("colspan", $obj.thead.find("tr:last > th:visible").size())
 				.html(this.tpl["expand"](obj));
 
-			// 확장 영역에 VO 설정
+			// 스크롤 및 VO 적용
+			this.scroll();
 			this.setVo();
 			
 			// 커스텀 이벤트 호출
@@ -1669,22 +1708,83 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			this.emit("expand", [ row, e ]);
 		}
 		
-		this.hideExpand = function(index, e) {
+		this.hideExpand = function(e) {
 			if(!this.options.expand) return;
+			if(rowIndex == null) return;
 			
-			// 인덱스 설정, 지정되지 않았을 경우에는 현재 열린 로우의 인덱스를 가져옴
-			var index = (index) ? index : rowIndex;
-
+			var row = this.get(rowIndex);
+			
 			$('#EXPAND_' + this.timestamp).parent().hide();
 			$obj.tbody.find("tr").removeClass("open");
 
+			// 스크롤 적용
+			this.scroll();
+			
 			// 커스텀 이벤트 호출
 			rowIndex = null;
-			this.emit("expandend", [ (index) ? this.get(index) : null, e ]);
+			this.emit("expandend", [ row, e ]);
 		}
 		
 		this.getExpand = function() {
 			if(!this.options.expand) return;
+
+			if(rowIndex == null) return null;
+			return this.get(rowIndex);
+		}
+		
+		this.showEditRow = function(index, e) {
+			if(!this.options.editRow) return;
+			
+			// 초기화
+			this.unselect();
+			this.hideExpand();
+			
+			var self = this,
+				row = this.get(index);
+			var $cells = $(row.element).find("td");
+			
+			$cells.each(function(i) {
+				setEventEditCell(self, this, row, i, e, function() {
+					var data = {};
+					
+					$cells.each(function(colIndex) {
+						var column = self.getColumn(colIndex);
+						
+						if(column.name != null) {
+							data[column.name] = $(this).find(".edit").val();
+						}
+					});
+					
+					var res = self.emit("editend", [ data ]);
+					
+					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+					if(res !== false) {
+						self.update(row.index, data);
+					}
+				});
+				
+			});
+
+			rowIndex = index;
+			self.emit("editstart", [ row, e ]);
+		}
+		
+		this.hideEditRow = function() {
+			if(!this.options.editRow) return;
+			if(rowIndex == null) return;
+			
+			var row = this.get(rowIndex);
+			
+			// 커스텀 이벤트 호출
+			rowIndex = null;
+			
+			// 수정 상태 이전의 로우 데이터로 변경
+			this.emit("editend", [ row.data ]);
+			this.update(row.index, row.data);
+		}
+		
+		this.getEditRow = function() {
+			if(!this.options.editRow) return;
 
 			if(rowIndex == null) return null;
 			return this.get(rowIndex);
@@ -1749,6 +1849,10 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			if(!this.options.fields && !this.options.csv) return;
 			
 			return _.csvToBase64(this.getCsv(isTree));
+		}
+		
+		this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
+			return rowIndex;
 		}
 	}
 	
