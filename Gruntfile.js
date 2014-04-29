@@ -19,6 +19,7 @@ module.exports = function(grunt) {
       			"js/ui/notify.js",
       			"js/ui/paging.js",
       			"js/ui/tooltip.js",
+      			"js/ui/layout.js",
       			
       			// uix
       			"js/uix/autocomplete.js",

@@ -397,7 +397,7 @@ jui.define('core', function(_) {
 					checkedOptions(defOptions, options);
 					
 					// Default Options Setting
-					var opts = $.extend(defOptions, options);
+					var opts = $.extend(true, defOptions, options);
 						opts.tpl = (opts.tpl) ? opts.tpl : {};
 					
 					// Pulbic Properties

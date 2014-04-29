@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+	<script src="/jui/jui.min.js"></script>
+	<script src="/jui/js/ui/layout.js"></script>
+	<style>
+		html, body {
+			padding: 0px;
+			margin : 0px;
+		}
+		
+		#container {
+		  position: relative;
+		  width: 500px;
+		  height: 500px;
+		}
+	</style>
+</head>
+<body class='jui'>
+	<div id="container">
+		<div class='layout-left'>left</div>
+		<div class='layout-center'>center</div>
+	</div>
+	<script >
+		jui.ready(function(ui, uix, _) {
+			ui.layout('#container');
+		})
+	</script>	
+</body>
+</html>
