@@ -66,6 +66,14 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 			h = $(target).outerHeight();
 			h = (h > 0) ? h : $(hTarget).outerHeight();
 			
+			// inner modal일 경우
+			if(tPos != null) {
+				var sh = $(hTarget)[0].scrollHeight;
+				
+				h = (sh > h) ? sh : h;
+				y = y + $(hTarget).scrollTop();
+			}
+			
 			return {
 				x: x, y: y, pos: pos, tPos: tPos, h: h
 			}
