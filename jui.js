@@ -1806,12 +1806,12 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
             if(opts.type == "daily") {
             	var m = (month < 10) ? "0" + month : month,
             		d = (no < 10) ? "0" + no : no;
-                selDate = new Date(year + "-" + m + "-" + d);
+                selDate = new Date(year + "-" + m + "-" + d + " 00:00:00");
             } else if(opts.type == "monthly") {
             	var m = (month < 10) ? "0" + month : month;
-                selDate = new Date(year + "-" + m + "-01");
+                selDate = new Date(year + "-" + m + "-01" + " 00:00:00");
             } else if(opts.type == "yearly") {
-                selDate = new Date(no + "-01-01");
+                selDate = new Date(no + "-01-01 00:00:00");
             }
         }
 
@@ -1861,10 +1861,6 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
                     setCalendarDate(self, obj.objs[i].no);
                     self.emit("select", [ self.getFormat(), e ]);
                 });
-                
-                if(obj.objs[i].type == "now") {
-                	setCalendarDate(self, obj.objs[i].no);
-                }
                 
                 if(obj.objs[i].type != "none") {
                 	items[obj.objs[i].no] = this;
@@ -2013,6 +2009,7 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
 
             // 화면 초기화
             this.page(year, month);
+            this.select();
 
             return this;
         }
@@ -2024,7 +2021,7 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
             if(opts.type == "daily") {
                 year = y;
                 month = m;
-
+                
                 $body.find("tr:not(:first-child)").remove();
                 $body.append(getCalendarHtml(this, getDateList(year, month)));
             } else if(opts.type == "monthly") {
@@ -2045,17 +2042,17 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
         this.prev = function(e) {
             var opts = this.options;
 
-        	if(opts.type == "daily") {
+            if(opts.type == "daily") {
                 var y = (month == 1) ? year - 1 : year,
                     m = (month == 1) ? 12 : month - 1;
-
+                
                 this.page(y, m);
             } else if(opts.type == "monthly") {
                 this.page(year - 1);
             } else if(opts.type == "yearly") {
                 this.page(year - 12);
             }
-
+            
             this.emit("prev", [ e ]);
         }
         
@@ -2108,7 +2105,8 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
         }
         
         this.addTime = function(time) {
-        	this.select(this.getTime() + time);
+        	selDate = new Date(this.getTime() + time);
+        	this.select(this.getTime());
         }
 
         this.getDate = function() {
