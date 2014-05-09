@@ -1968,6 +1968,7 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
             	valid: {
             		page: [ "integer", "integer" ],
             		select: [ "integer", "integer", "integer" ],
+            		addTime: [ "integer" ],
             		getFormat: [ "string" ]
             	},
             	animate: {
@@ -2075,13 +2076,23 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
             this.emit("next", [ e ]);
         }
         
-        this.select = function(y, m, d) {
-        	var opts = this.options;
+        this.select = function() {
+        	var opts = this.options,
+        		args = arguments;
 
-        	if(arguments.length == 0) {
+        	if(args.length == 0) {
         		y = year;
         		m = month;
         		d = date;
+        	} else if(args.length == 3) {
+        		y = args[0];
+        		m = args[1];
+        		d = args[2];
+        	} else if(args.length == 1) {
+        		var time = new Date(args[0]);
+        		y = time.getFullYear();
+        		m = time.getMonth() + 1;
+        		d = time.getDate();
         	}
 
             if(opts.type == "daily") {
@@ -2094,6 +2105,10 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
                 this.page(y);
                 $(items[y]).trigger("click");
             }
+        }
+        
+        this.addTime = function(time) {
+        	this.select(this.getTime() + time);
         }
 
         this.getDate = function() {
