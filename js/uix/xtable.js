@@ -250,6 +250,7 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 					rows: [],
 					colshow: false,
 					expand: false,
+					expandEvent: true,
 					resize: false, 
 					scrollHeight: 200, // xtable 전용 옵션
 					buffer: "scroll",
