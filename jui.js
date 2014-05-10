@@ -4599,7 +4599,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 	 */
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
-		var rowIndex = null;
+		var rowIndex = null, checkedList = {};
 		
 		
 		/**
@@ -4757,7 +4757,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 		function setEventRow(self, row) {
 			self.addEvent(row.element, "click", function(e) {
 				// 1. 공통 이벤트 발생
-				self.emit("select", [ row, e ]);
+				self.emit("select", [ row, e ]); // deprecated
+				self.emit("click", [ row, e ]);
 
 				// 2. 확장영역 자동 이벤트 처리
 				if(self.options.expand) {
@@ -4773,6 +4774,11 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 						self.showExpand(row.index, undefined, e);
 					}
 				} 
+			});
+			
+			self.addEvent(row.element, "dblclick", function(e) {
+				self.emit("dblclick", [ row, e ]);
+				return false;
 			});
 			
 			self.addEvent(row.element, "contextmenu", function(e) {
@@ -5038,6 +5044,8 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 					append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
 					insert: [ [ "integer", "string" ], [ "object", "array" ] ],
 					select: [ [ "integer", "string" ] ],
+					check: [ [ "integer", "string" ] ],
+					uncheck: [ [ "integer", "string" ] ],
 					remove: [ [ "integer", "string" ] ],
 					move: [ [ "integer", "string" ], [ "integer", "string" ] ],
 					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
@@ -5241,6 +5249,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			// 초기화
 			this.hideExpand();
 			this.hideEditRow();
+			this.uncheckAll();
 
 			$(row.element).parent().find(".selected").removeClass("selected");
 			$(row.element).addClass("selected");
@@ -5257,6 +5266,30 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 			rowIndex = null;
 			
 			return row;
+		}
+		
+		this.check = function(index) {
+			var row = this.get(index);
+			
+			// 초기화
+			this.hideExpand();
+			this.hideEditRow();
+			this.unselect();
+			
+			checkedList[index] = row;
+			$(row.element).addClass("checked");
+		}
+		
+		this.uncheck = function(index) {
+			var row = this.get(index);
+			
+			checkedList[index] = null;
+			$(row.element).removeClass("checked");
+		}
+
+		this.uncheckAll = function() {
+			checkedList = {};
+			$obj.tbody.find(".checked").removeClass("checked");
 		}
 		
 		this.remove = function(index) {
@@ -5389,6 +5422,18 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 
 		this.listAll = function() {
 			return this.uit.getRowAll();
+		}
+		
+		this.listChecked = function() {
+			var list = [];
+			
+			for(var row in checkedList) {
+				if(checkedList[row] != null) {
+					list.push(checkedList[row]);
+				}
+			}
+			
+			return list;
 		}
 		
 		this.listColumn = function() {

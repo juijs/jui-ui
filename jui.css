@@ -3281,6 +3281,12 @@
 .jui .table-classic.table-white > tbody > tr.selected > td {
   color: #fff;
 }
+.jui .table-classic.table-white > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-classic.table-white > tbody > tr.checked > td {
+  color: #fff;
+}
 .jui .table-classic.table-white > tbody tr.open,
 .jui .table-classic.table-white > tbody tr.expand {
   background-color: #ffffff !important;
@@ -3399,6 +3405,12 @@
   background: #aa8bc6;
 }
 .jui .table-classic > tbody > tr.selected > td {
+  color: #fff;
+}
+.jui .table-classic > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-classic > tbody > tr.checked > td {
   color: #fff;
 }
 .jui .table-classic > tbody tr.open,
@@ -3560,6 +3572,12 @@
 .jui .table-expand.table-white > tbody > tr.selected > td {
   color: #fff;
 }
+.jui .table-expand.table-white > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-expand.table-white > tbody > tr.checked > td {
+  color: #fff;
+}
 .jui .table-expand.table-white > tbody tr.open,
 .jui .table-expand.table-white > tbody tr.expand {
   background-color: #ffffff !important;
@@ -3680,6 +3698,12 @@
 .jui .table-expand > tbody > tr.selected > td {
   color: #fff;
 }
+.jui .table-expand > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-expand > tbody > tr.checked > td {
+  color: #fff;
+}
 .jui .table-expand > tbody tr.open,
 .jui .table-expand > tbody tr.expand {
   background-color: #ffffff !important;
@@ -3778,6 +3802,17 @@
 .jui .table-expand > tbody > tr.selected > td {
   color: #000 !important;
 }
+.jui .table-expand > tbody > tr.checked {
+  background-color: #faf8ff !important;
+  background-image: -moz-linear-gradient(top, #faf8ff 0%, #cfb4e7 100%) !important;
+  background-image: linear-gradient(top, #faf8ff 0%, #cfb4e7 100%) !important;
+  background-image: -webkit-linear-gradient(top, #faf8ff 0%, #cfb4e7 100%) !important;
+  background-image: -o-linear-gradient(top, #faf8ff 0%, #cfb4e7 100%) !important;
+  background-image: -ms-linear-gradient(top, #faf8ff 0%, #cfb4e7 100%) !important;
+}
+.jui .table-expand > tbody > tr.checked > td {
+  color: #000 !important;
+}
 .jui .table-expand > thead > tr > th {
   padding: 6px !important;
 }
@@ -3837,6 +3872,12 @@
   background: #aa8bc6;
 }
 .jui .table-simple.table-white > tbody > tr.selected > td {
+  color: #fff;
+}
+.jui .table-simple.table-white > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-simple.table-white > tbody > tr.checked > td {
   color: #fff;
 }
 .jui .table-simple.table-white > tbody tr.open,
@@ -3929,6 +3970,12 @@
   background: #aa8bc6;
 }
 .jui .table-simple > tbody > tr.selected > td {
+  color: #fff;
+}
+.jui .table-simple > tbody > tr.checked {
+  background: #cfb4e7;
+}
+.jui .table-simple > tbody > tr.checked > td {
   color: #fff;
 }
 .jui .table-simple > tbody tr.open,

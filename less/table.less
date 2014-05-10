@@ -184,8 +184,16 @@
             border-bottom-width: 0px;
           }
           
-          &.selected { // hover 占썩몿��
+          &.selected {
             background: #aa8bc6;
+            
+            > td { 
+              color: #fff;
+            }
+          }
+
+          &.checked {
+            background: #cfb4e7;
             
             > td { 
               color: #fff;
@@ -237,8 +245,16 @@
       > tr {
         .buttonBackground2Color(#fff, #f5f5f5) !important;
         
-        &.selected { // hover 占썩몿��
+        &.selected {
           .buttonBackground2Color(#faf8ff, #aa8bc6) !important;
+          
+          > td { 
+            color: #000 !important;
+          }
+        }
+
+        &.checked {
+          .buttonBackground2Color(#faf8ff, #cfb4e7) !important;
           
           > td { 
             color: #000 !important;
@@ -299,8 +315,16 @@
             border-bottom-width: 0px;
           }
          
-          &.selected { // hover 占썩몿��
+          &.selected {
             background: #aa8bc6;
+            
+            > td { 
+              color: #fff;
+            }
+          }
+
+          &.checked {
+            background: #cfb4e7;
             
             > td { 
               color: #fff;
