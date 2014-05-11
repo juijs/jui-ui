@@ -1806,12 +1806,12 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
             if(opts.type == "daily") {
             	var m = (month < 10) ? "0" + month : month,
             		d = (no < 10) ? "0" + no : no;
-                selDate = new Date(year + "-" + m + "-" + d + " 00:00:00");
+                selDate = new Date(year + "/" + m + "/" + d);
             } else if(opts.type == "monthly") {
             	var m = (month < 10) ? "0" + month : month;
-                selDate = new Date(year + "-" + m + "-01" + " 00:00:00");
+                selDate = new Date(year + "/" + m + "/01");
             } else if(opts.type == "yearly") {
-                selDate = new Date(no + "-01-01 00:00:00");
+                selDate = new Date(no + "/01/01");
             }
         }
 
@@ -1821,9 +1821,9 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
         	
         	if(opts.type == "daily") {
         		var m = (month < 10) ? "0" + month : month;
-        		tmpDate = new Date(year + "-" + m + "-01");
+        		tmpDate = new Date(year + "/" + m + "/01");
         	} else if(opts.type == "monthly") {
-        		tmpDate = new Date(year + "-01-01");
+        		tmpDate = new Date(year + "/01/01");
         	} else if(opts.type == "yearly") {
         		tmpDate = new Date();
         	}
