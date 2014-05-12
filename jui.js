@@ -990,21 +990,23 @@ jui.define('core', function(_) {
 		}
 		
 		function settingEventTouch(e) {
-			var eTypes = {
+			if(e.callback && !e.children) {
+				$(e.target).on(getEventTouchType(e.type), e.callback);
+			} else {
+				$(e.target).on(getEventTouchType(e.type), e.children, e.callback);
+			}
+			
+			list.push(e);
+		}
+		
+		function getEventTouchType(type) {
+			return {
 				"click": "touchstart",
 				"dblclick": "touchend",
 				"mousedown": "touchstart",
 				"mousemove": "touchmove",
 				"mouseup": "touchend"
-			};
-			
-			if(e.callback && !e.children) {
-				$(e.target).on(eTypes[e.type], e.callback);
-			} else {
-				$(e.target).on(eTypes[e.type], e.children, e.callback);
-			}
-			
-			list.push(e);
+			}[type];
 		}
 		
 		/**
@@ -1034,6 +1036,10 @@ jui.define('core', function(_) {
 					settingEvent(e);
 				}
 			}
+		}
+		
+		this.trigger = function(selector, type) {
+			$(selector).trigger((_.isTouch) ? getEventTouchType(type) : type);
 		}
 		
 		this.get = function(index) {
@@ -1083,6 +1089,10 @@ jui.define('core', function(_) {
 			
 			this.addEvent = function() {
 				this.listen.add(arguments);
+			}
+			
+			this.addTrigger = function(selector, type) {
+				this.listen.trigger(selector, type);
 			}
 			
 			this.addValid = function(name, params) {
@@ -2094,13 +2104,13 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
 
             if(opts.type == "daily") {
             	this.page(y, m);
-            	$(items[d]).trigger("click");
+            	this.addTrigger(items[d], "click");
             } else if(opts.type == "monthly") {
             	this.page(y);
-            	$(items[m]).trigger("click");
+            	this.addTrigger(items[m], "click");
             } else if(opts.type == "yearly") {
                 this.page(y);
-                $(items[y]).trigger("click");
+                this.addTrigger(items[y], "click");
             }
         }
         
@@ -3050,29 +3060,25 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				
 				var $shadow = $resizer.clone();
 				
-				$shadow.addClass('ui-resizer-shadow');
 				$resizer.data('shadow', $shadow);
 				$resizer.after($shadow);
 				
 				down.call(this, e);
-				
 				$shadow.css('opacity', 0.3);
 				
 				$(document).on('mousemove', move);
 				$(document).on('mouseup', function mouseUp(e) {
-
-					
 					$(document).off('mousemove', move);
 					$(document).off('mouseup', mouseUp);
 						
 					up.call(this, e);
           			$resizer.data('mousedown', false);					
-					//$resizer.css('opacity', 1.0);
-					$('.ui-resizer-shadow').remove();
-					$("body :not(.layout-resizer)").css({ 'user-select' : '' })						
+          			
+					$shadow.remove();
+					$("body :not(.resize)").css({ 'user-select' : '' })						
 				});
 				
-				$("body :not(.layout-resizer)").css({ 'user-select' : 'none' })
+				$("body :not(.resize)").css({ 'user-select' : 'none' })
 				
 				
 			})
@@ -3274,20 +3280,20 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			
 			$root = $(this.root);
 			
-			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .layout-top");				
+			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");				
 			if ($top.length == 0) $top = null; 
 			
-			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .layout-left");
+			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
 			if ($left.length == 0) $left = null;
 
 			
-			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .layout-right"); 
+			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right"); 
 			if ($right.length == 0) $right = null;
 			
-			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .layout-bottom"); 
+			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom"); 
 			if ($bottom.length == 0) $bottom = null;
 			
-			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .layout-center"); 
+			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center"); 
 			if ($center.length == 0) $center = null;
 			
 			ui_layout = { 
@@ -3316,14 +3322,12 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				var direct = ui_layout[directions[i]];
 				
 				if (direct) {
-					direct.addClass("layout-" + directions[i]);
-					
 					ui_layout.root.append(direct);
 					
 					if (directions[i] != 'center') {
 						if (ui_options[directions[i]].resizable) {
 							if (!direct.resizer) {
-								direct.resizer = $("<div class='layout-resizer layout-resizer-" + directions[i] + "' />");
+								direct.resizer = $("<div class='resize " + directions[i] + "' />");
 							}
 
 							ui_layout.root.append(direct.resizer);		
