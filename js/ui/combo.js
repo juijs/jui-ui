@@ -100,7 +100,7 @@ jui.define('ui.combo', [], function() {
 				}
 				
 				if(e.which == 13) { // enter
-					$list.eq(index).trigger("click");
+					self.addTrigger($list.eq(index), "click");
 					index = -1;
 				}
 			});

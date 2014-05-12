@@ -128,7 +128,7 @@ jui.define('ui.dropdown', [], function() {
 				}
 				
 				if(e.which == 13) { // enter
-					$list.eq(index).trigger("click");
+					self.addTrigger($list.eq(index), "click");
 					index = -1;
 				}
 				
@@ -300,7 +300,7 @@ jui.define('ui.dropdown', [], function() {
 			}
 			
 			if(key == 13 || key == 0 || !key) { // enter
-				$list.eq(index).trigger("click");
+				self.addTrigger($list.eq(index), "click");
 				index = -1;
 				
 				if(callback) callback();
