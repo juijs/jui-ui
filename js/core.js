@@ -160,21 +160,23 @@ jui.define('core', function(_) {
 		}
 		
 		function settingEventTouch(e) {
-			var eTypes = {
+			if(e.callback && !e.children) {
+				$(e.target).on(getEventTouchType(e.type), e.callback);
+			} else {
+				$(e.target).on(getEventTouchType(e.type), e.children, e.callback);
+			}
+			
+			list.push(e);
+		}
+		
+		function getEventTouchType(type) {
+			return {
 				"click": "touchstart",
 				"dblclick": "touchend",
 				"mousedown": "touchstart",
 				"mousemove": "touchmove",
 				"mouseup": "touchend"
-			};
-			
-			if(e.callback && !e.children) {
-				$(e.target).on(eTypes[e.type], e.callback);
-			} else {
-				$(e.target).on(eTypes[e.type], e.children, e.callback);
-			}
-			
-			list.push(e);
+			}[type];
 		}
 		
 		/**
@@ -204,6 +206,10 @@ jui.define('core', function(_) {
 					settingEvent(e);
 				}
 			}
+		}
+		
+		this.trigger = function(selector, type) {
+			$(selector).trigger((_.isTouch) ? getEventTouchType(type) : type);
 		}
 		
 		this.get = function(index) {
@@ -253,6 +259,10 @@ jui.define('core', function(_) {
 			
 			this.addEvent = function() {
 				this.listen.add(arguments);
+			}
+			
+			this.addTrigger = function(selector, type) {
+				this.listen.trigger(selector, type);
 			}
 			
 			this.addValid = function(name, params) {

@@ -318,13 +318,13 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
 
             if(opts.type == "daily") {
             	this.page(y, m);
-            	$(items[d]).trigger("click");
+            	this.addTrigger(items[d], "click");
             } else if(opts.type == "monthly") {
             	this.page(y);
-            	$(items[m]).trigger("click");
+            	this.addTrigger(items[m], "click");
             } else if(opts.type == "yearly") {
                 this.page(y);
-                $(items[y]).trigger("click");
+                this.addTrigger(items[y], "click");
             }
         }
         
