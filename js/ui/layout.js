@@ -23,29 +23,25 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				
 				var $shadow = $resizer.clone();
 				
-				$shadow.addClass('ui-resizer-shadow');
 				$resizer.data('shadow', $shadow);
 				$resizer.after($shadow);
 				
 				down.call(this, e);
-				
 				$shadow.css('opacity', 0.3);
 				
 				$(document).on('mousemove', move);
 				$(document).on('mouseup', function mouseUp(e) {
-
-					
 					$(document).off('mousemove', move);
 					$(document).off('mouseup', mouseUp);
 						
 					up.call(this, e);
           			$resizer.data('mousedown', false);					
-					//$resizer.css('opacity', 1.0);
-					$('.ui-resizer-shadow').remove();
-					$("body :not(.layout-resizer)").css({ 'user-select' : '' })						
+          			
+					$shadow.remove();
+					$("body :not(.resize)").css({ 'user-select' : '' })						
 				});
 				
-				$("body :not(.layout-resizer)").css({ 'user-select' : 'none' })
+				$("body :not(.resize)").css({ 'user-select' : 'none' })
 				
 				
 			})
@@ -247,20 +243,20 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			
 			$root = $(this.root);
 			
-			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .layout-top");				
+			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");				
 			if ($top.length == 0) $top = null; 
 			
-			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .layout-left");
+			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
 			if ($left.length == 0) $left = null;
 
 			
-			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .layout-right"); 
+			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right"); 
 			if ($right.length == 0) $right = null;
 			
-			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .layout-bottom"); 
+			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom"); 
 			if ($bottom.length == 0) $bottom = null;
 			
-			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .layout-center"); 
+			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center"); 
 			if ($center.length == 0) $center = null;
 			
 			ui_layout = { 
@@ -289,14 +285,12 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				var direct = ui_layout[directions[i]];
 				
 				if (direct) {
-					direct.addClass("layout-" + directions[i]);
-					
 					ui_layout.root.append(direct);
 					
 					if (directions[i] != 'center') {
 						if (ui_options[directions[i]].resizable) {
 							if (!direct.resizer) {
-								direct.resizer = $("<div class='layout-resizer layout-resizer-" + directions[i] + "' />");
+								direct.resizer = $("<div class='resize " + directions[i] + "' />");
 							}
 
 							ui_layout.root.append(direct.resizer);		
