@@ -3344,7 +3344,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 		}
 		
 		this.resize = function() {
-			var $obj = null, $option = null, sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0 ;
+			var $obj = null, $option = null, sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
 			
 			$obj = ui_layout.top;
 			$option = this.options.top;
@@ -3472,8 +3472,17 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			$obj = ui_layout.right;
 			$option = this.options.right;
 			
-
-      
+			var max_width = ui_layout.root.width();
+		    var content_width = max_width;
+		    
+		    if (ui_layout.left) {
+		    	content_width -= ui_layout.left.width();
+		    	if (ui_layout.left.resizer) {
+		    		content_width -= ui_layout.left.resizer.width();
+		    	}
+		    }			
+		    
+	    
 			
 			if ($obj) {
 				$obj.css({
@@ -3484,8 +3493,6 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					'width' : $option.size || $option.min  ,
 					'max-width' : '100%'
 				})
-				
-				sizeRight = $obj.width();
 				
 				if ($option.resizable) {
 				
@@ -3504,32 +3511,18 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					}					
 				}		
 				
-
+		    	content_width -= ui_layout.right.width();
+		    	if (ui_layout.right.resizer) {
+		    		content_width -= ui_layout.right.resizer.width();
+		    	}
 		        
-		        $obj.resizer.css({ left : (sizeLeft + sizeCenter) + "px" });
-		        $obj.css({left : (sizeLeft + sizeCenter + $obj.resizer.width()) + "px"})
+		        $obj.resizer.css({ left : (sizeLeft + content_width) + "px" });
+		        $obj.css({left : (sizeLeft + content_width + $obj.resizer.width()) + "px"})
 											
 			}									
 			
 			$obj = ui_layout.center;
 			$option = this.options.center;
-			
-			var max_width = ui_layout.root.width();
-		    var content_width = max_width;
-		    
-		    if (ui_layout.left) {
-		    	content_width -= ui_layout.left.width();
-		    	if (ui_layout.left.resizer) {
-		    		content_width -= ui_layout.left.resizer.width();
-		    	}
-		    }			
-		    
-		    if (ui_layout.right) {
-		    	content_width -= ui_layout.right.width();
-		    	if (ui_layout.right.resizer) {
-		    		content_width -= ui_layout.right.resizer.width();
-		    	}
-		    }			
 			
 			if ($obj) {
 				$obj.css({
