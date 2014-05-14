@@ -1653,13 +1653,13 @@ jui.define('ui.combo', ["util"], function(_) {
 				
 					$combo_root.find("ul").after($select);					
 								
-					$select.empty();					
-								
 					$select.on('change', function(e) {
 						var elem = $(e.currentTarget).find("option:selected").data('elem')
 						
 						$(elem).trigger('touchstart');
 					})
+					
+					$combo_root.select = $select;
 				}
 
 				
@@ -1671,7 +1671,7 @@ jui.define('ui.combo', ["util"], function(_) {
 				})
 				
 				
-				$combo_root.select = $select;
+				
 				
 				//$combo_root.hide();
 			}
