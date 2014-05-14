@@ -3109,10 +3109,18 @@ jui.define('ui.tooltip', [], function() {
 jui.define("ui.layout", [ "util" ], function(_) {
 	
 	var UI = function() {
-	var ui_layout = null, ui_options = {}, directions = ['top','left','right','bottom','center'];
-	var resizerIcons = { top : 'n-resize', bottom : 'n-resize', right : 'e-resize', left : 'e-resize' } 
+		var ui_layout = null, 
+			ui_options = {}, 
+			directions = [ 'top','left','right','bottom','center' ];
 		
-		function setEvent ($resizer, move, down, up) {
+		var resizerIcons = { 
+			top: 'n-resize', 
+			bottom: 'n-resize', 
+			right: 'e-resize', 
+			left: 'e-resize' 
+		};
+		
+		function setEvent($resizer, move, down, up) {
 			$resizer.mousedown(function(e) {
 				$resizer.data('mousedown', true);
 				
@@ -3137,31 +3145,28 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				});
 				
 				$("body :not(.resize)").css({ 'user-select' : 'none' })
-				
-				
-			})
+			});
 		}
 		
 		function setPosition(height, first, arr, second) {
 			arr = arr || [];
 			
-			if (ui_layout[height]) {
+			if(ui_layout[height]) {
 				ui_layout[height].height(first);
 			}
 			
-			if (typeof arr == 'string') arr = [arr];
-			if (arr.length == 0) return;
+			if(typeof arr == 'string') arr = [arr];
+			if(arr.length == 0) return;
 			
 			for(var i = 0, len = arr.length; i < len; i++) {
 				var $obj = ui_layout[arr[i]];
 				
-				if ($obj) {
+				if($obj) {
 					$obj.css({ top : second })
-					if ($obj.resizer) $obj.resizer.css({ top : second })					
+					if($obj.resizer) $obj.resizer.css({ top : second })					
 				}
 			}
 		}
-
 		
 		function setResizer(direction) {
 			var $first, $second, $layout, $resizer, options;
@@ -3173,25 +3178,25 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				cursor : resizerIcons[direction]
 			})			
 			
-			if ($resizer.data('event')) return; 
+			if($resizer.data('event')) return; 
 			
-			if (direction == 'top') {
+			if(direction == 'top') {
 				setEvent($resizer, function(e) {
-					if (!$resizer.data('mousedown')) return; 
+					if(!$resizer.data('mousedown')) return; 
 					
 					var top = e.clientY - $resizer.data('current');
 					var min = ui_options.top.min;
 					var max = ui_options.top.max;
-					if (min <= top && top < max) {
+					if(min <= top && top < max) {
 						$resizer.css({top : top + 'px'});
 					}
 					
 				}, function(e) {
-					var top = $resizer.offset().top;										 
+					var top = $resizer.position().top;										 
 					$resizer.data('current', e.clientY - top);
 				}, function(e) {
 
-					var top = $resizer.offset().top;					
+					var top = $resizer.position().top;					
 					var height = $resizer.height();					
 	
 					var first = top;
@@ -3201,7 +3206,6 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					ui_layout.top.height(first);
 					
 					var dh = pre_height - first;
-					
 					var new_height = ui_layout.center.height() + dh;
 					
 					ui_layout.center.css({top : second}).height(new_height);			
@@ -3209,38 +3213,32 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					ui_layout.left.resizer.css({top : second}).height(new_height);			
 					ui_layout.right.css({top : second}).height(new_height);			
 					ui_layout.right.resizer.css({top : second}).height(new_height);			
-
-
 				});
 		
-			} else if (direction == 'bottom') {
+			} else if(direction == 'bottom') {
 				setEvent($resizer, function(e) {
-					if (!$resizer.data('mousedown')) return; 
+					if(!$resizer.data('mousedown')) return; 
 					
 					var top = e.clientY - $resizer.data('current');
 					var min = ui_options.bottom.min;
 					var max = ui_options.bottom.max;
 					
-					
-					var dh =  $layout.offset().top - (top + ui_options.barSize);
+					var dh =  $layout.position().top - (top + ui_options.barSize);
 					var real_height = dh + $layout.height();
 					
-					if (min <= real_height && real_height <= max ) {
+					if(min <= real_height && real_height <= max ) {
 						$resizer.css({top : top + 'px'});	
 					}
-					
-					
 				}, function(e) {
-					var top = $resizer.offset().top;										 
+					var top = $resizer.position().top;										 
 					$resizer.data('current', e.clientY - top);
 				}, function(e) {
-					var top = $resizer.offset().top + $resizer.height();
+					var top = $resizer.position().top + $resizer.height();
 					
 					var max = ui_layout.root.height();
-					var dh = parseFloat(ui_layout.bottom.offset().top) - top;
+					var dh = parseFloat(ui_layout.bottom.position().top) - top;
 					
 					ui_layout.bottom.css({ top : top + "px"});
-					
 					ui_layout.bottom.height(ui_layout.bottom.height() + dh);
 					
 					var new_height = ui_layout.center.height() - dh;
@@ -3251,23 +3249,23 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					ui_layout.right.height(new_height);			
 					ui_layout.right.resizer.height(new_height);		
 				});				
-			} else if (direction == 'left') {
+			} else if(direction == 'left') {
 				setEvent($resizer, function(e) {
-					if (!$resizer.data('mousedown')) return; 
+					if(!$resizer.data('mousedown')) return; 
 					
 					var left = e.clientX - $resizer.data('current');
 					var min = ui_options.left.min;
 					var max = ui_options.left.max;
-					if (min <= left && left < max) {
+					if(min <= left && left < max) {
 						$resizer.css({left : left + 'px'});
 					}
 				}, function(e) {
-					var left = $resizer.offset().left;										 
+					var left = $resizer.position().left;										 
 					$resizer.data('left', left).data('current', e.clientX - left);
 				}, function(e) {
-          			if (!$resizer.data('mousedown')) return; 
+          			if(!$resizer.data('mousedown')) return; 
           					
-					var left = $resizer.offset().left;
+					var left = $resizer.position().left;
 					var pre_left = $resizer.data('left');
 					var dw = pre_left - left;
 					
@@ -3275,30 +3273,28 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					ui_layout.center.css({ left : (left + ui_options.barSize ) + "px" });
           			ui_layout.center.width(ui_layout.center.width() + dw);
 				});	
-			} else if (direction == 'right') {
+			} else if(direction == 'right') {
         		setEvent($resizer, function(e) {
-		          if (!$resizer.data('mousedown')) return; 
-		          
-		          var left = e.clientX - $resizer.data('current');
-		          var min = ui_options.right.min;
-		          var max = ui_options.right.max;
-		          
-		          var sizeLeft = ui_layout.left.width() + ui_layout.left.resizer.width();
-		          var sizeCenter = ui_layout.center.width();
-		          var current = $layout.width() - (left - (sizeLeft + sizeCenter));
-		          
-		          if (min <= current && current < max) {
-		            $resizer.css({left : left + 'px'});  
-		          }
-		          
-		                    
+					if(!$resizer.data('mousedown')) return; 
+					  
+					var left = e.clientX - $resizer.data('current');
+					var min = ui_options.right.min;
+					var max = ui_options.right.max;
+					  
+					var sizeLeft = ui_layout.left.width() + ui_layout.left.resizer.width();
+					var sizeCenter = ui_layout.center.width();
+					var current = $layout.width() - (left - (sizeLeft + sizeCenter));
+					  
+					if(min <= current && current < max) {
+						$resizer.css({left : left + 'px'});  
+					}
 		        }, function(e) {
-		          var left = $resizer.offset().left;                     
-		          $resizer.data('left', left).data('current', e.clientX - left);
+		        	var left = $resizer.position().left;                     
+		        	$resizer.data('left', left).data('current', e.clientX - left);
 		        }, function(e) {
-		          if (!$resizer.data('mousedown')) return; 
-		
-					var left = $resizer.offset().left;
+					if(!$resizer.data('mousedown')) return; 
+					
+					var left = $resizer.position().left;
 					var pre_left = $resizer.data('left');
 					var dw = pre_left - left;
 					
@@ -3306,7 +3302,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 						left : (left + $resizer.width()) + 'px',
 						width : (ui_layout.right.width() + dw) + "px"
 					});
-          			ui_layout.center.width(ui_layout.center.width() - dw);		          
+					ui_layout.center.width(ui_layout.center.width() - dw);		          
 		        });			  
 			}
 			
@@ -3322,7 +3318,9 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			return {
 				options: {
 					barColor : '#d6d6d6',
-					barSize : 5,
+					barSize : 3,
+					width	: null,
+					height	: null,
 					top		: { el : null, size : null, min : 50, max : 200, resizable : true },
 					left	: { el : null, size : null, min : 50, max : 200, resizable : true },
 					right	: { el : null, size : null, min : 50, max : 200, resizable : true },
@@ -3336,23 +3334,31 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			var self = this, opts = this.options;
 			var $root, $top, $left, $right, $bottom, $center;
 			
-			$root = $(this.root);
+			$root = $(this.root).css("position", "relative");
+			
+			if(opts.width != null) {
+				$root.outerWidth(opts.width);
+			}
+
+			if(opts.height != null) {
+				$root.outerHeight(opts.height);
+			}
 			
 			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");				
-			if ($top.length == 0) $top = null; 
+			if($top.length == 0) $top = null; 
 			
 			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
-			if ($left.length == 0) $left = null;
+			if($left.length == 0) $left = null;
 
 			
 			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right"); 
-			if ($right.length == 0) $right = null;
+			if($right.length == 0) $right = null;
 			
 			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom"); 
-			if ($bottom.length == 0) $bottom = null;
+			if($bottom.length == 0) $bottom = null;
 			
 			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center"); 
-			if ($center.length == 0) $center = null;
+			if($center.length == 0) $center = null;
 			
 			ui_layout = { 
 				root 	: $root, 
@@ -3361,11 +3367,9 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				right 	: $right, 
 				bottom 	: $bottom,
 				center	: $center
-				
 			};
 			
 			ui_options = opts;
-			
 			this.update();
 			
 			$(window).on('resize', function(e) {
@@ -3379,22 +3383,19 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			for(var i = 0, len = directions.length; i < len; i++) {
 				var direct = ui_layout[directions[i]];
 				
-				if (direct) {
+				if(direct) {
 					ui_layout.root.append(direct);
 					
-					if (directions[i] != 'center') {
-						if (ui_options[directions[i]].resizable) {
-							if (!direct.resizer) {
+					if(directions[i] != 'center') {
+						if(ui_options[directions[i]].resizable) {
+							if(!direct.resizer) {
 								direct.resizer = $("<div class='resize " + directions[i] + "' />");
 							}
 
 							ui_layout.root.append(direct.resizer);		
-							
 							setResizer(directions[i]);
 						}
-						
 					}
-					
 				}
 			}
 			
@@ -3407,19 +3408,18 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			$obj = ui_layout.top;
 			$option = this.options.top;
 
-			if ($obj) {
+			if($obj) {
 				$obj.css({
 					'position' : 'absolute',
 					'top' : '0px',
 					'left' : '0px',
 					'width' : '100%',
 					'height' : $option.size || $option.min  
-				})
+				});
 				
 				sizeTop = $obj.height();
 				
-				if ($option.resizable) {
-					
+				if($option.resizable) {
 					$obj.resizer.css({
 						'position' : 'absolute',
 						'top': sizeTop,
@@ -3431,31 +3431,28 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					
 					sizeTop += this.options.barSize;
 				} else {
-					if ($obj.resizer) {
+					if($obj.resizer) {
 						$obj.resizer.remove();
 					}
 				}
 			}
-			
 
 			$obj = ui_layout.bottom;
 			$option = this.options.bottom;
 			
 			var max = ui_layout.root.height();			
 			
-			if ($obj) {
+			if($obj) {
 				$obj.css({
 					'position' : 'absolute',
 					'left' : '0px',
 					'width' : '100%',
 					'height' : $option.size || $option.min  
-				})
+				});
 				
-
 				var bottom_top = (sizeTop -  $obj.height()) + sizeTop;
 				
-				if ($option.resizable) {
-					
+				if($option.resizable) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: bottom_top,
@@ -3463,11 +3460,11 @@ jui.define("ui.layout", [ "util" ], function(_) {
 						'width' 	: '100%',
 						"background": this.options.barColor,
 						"height" 	: this.options.barSize
-					})					
+					});					
 					
 					bottom_top += this.options.barSize;
 				} else {
-					if ($obj.resizer) {
+					if($obj.resizer) {
 						$obj.resizer.remove();
 					}
 				}		
@@ -3480,22 +3477,21 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			
 			var content_height = max ;
 			
-			if (ui_layout.top) {
+			if(ui_layout.top) {
 				content_height -= ui_layout.top.height();
-				if (ui_layout.top.resizer) {
+				if(ui_layout.top.resizer) {
 					content_height -= ui_layout.top.resizer.height();	
 				}
 			}
 			
-			if (ui_layout.bottom) {
+			if(ui_layout.bottom) {
 				content_height -= ui_layout.bottom.height();
-				if (ui_layout.bottom.resizer) {
+				if(ui_layout.bottom.resizer) {
 					content_height -= ui_layout.bottom.resizer.height();	
 				}
 			}							
 			
-			if ($obj) {
-				
+			if($obj) {
 				$obj.css({
 					'position' : 'absolute',
 					'top' : sizeTop,
@@ -3504,12 +3500,11 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					'width' : $option.size || $option.min,
 					'max-width' : '100%',
 					'overflow' : 'auto'
-				})
+				});
 				
 				sizeLeft = $obj.width();
 				
-				if ($option.resizable) {
-				
+				if($option.resizable) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: sizeTop,
@@ -3517,11 +3512,11 @@ jui.define("ui.layout", [ "util" ], function(_) {
 						'left' 		: sizeLeft,
 						"background": this.options.barColor,
 						"width" 	: this.options.barSize
-					})				
+					});			
 					
 					sizeLeft += this.options.barSize;
 				} else {
-					if ($obj.resizer) {
+					if($obj.resizer) {
 						$obj.resizer.remove();
 					}					
 				}					
@@ -3533,16 +3528,14 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			var max_width = ui_layout.root.width();
 		    var content_width = max_width;
 		    
-		    if (ui_layout.left) {
+		    if(ui_layout.left) {
 		    	content_width -= ui_layout.left.width();
-		    	if (ui_layout.left.resizer) {
+		    	if(ui_layout.left.resizer) {
 		    		content_width -= ui_layout.left.resizer.width();
 		    	}
 		    }			
-		    
-	    
 			
-			if ($obj) {
+			if($obj) {
 				$obj.css({
 					'position' : 'absolute',
 					'top' : sizeTop,
@@ -3550,10 +3543,9 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					'height' : content_height,
 					'width' : $option.size || $option.min  ,
 					'max-width' : '100%'
-				})
+				});
 				
-				if ($option.resizable) {
-				
+				if($option.resizable) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: sizeTop,
@@ -3564,13 +3556,13 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					
 					sizeRight += this.options.barSize;
 				} else {
-					if ($obj.resizer) {
+					if($obj.resizer) {
 						$obj.resizer.remove();
 					}					
 				}		
 				
 		    	content_width -= ui_layout.right.width();
-		    	if (ui_layout.right.resizer) {
+		    	if(ui_layout.right.resizer) {
 		    		content_width -= ui_layout.right.resizer.width();
 		    	}
 		        
@@ -3582,7 +3574,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 			$obj = ui_layout.center;
 			$option = this.options.center;
 			
-			if ($obj) {
+			if($obj) {
 				$obj.css({
 					'position' 	: 'absolute',
 					'top' 		: sizeTop,
@@ -3590,9 +3582,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					'left' 		: sizeLeft,
 					'width'   : content_width,
 					'overflow' : 'auto'
-				})
-		
-				
+				});
 			}			
 		}
 	}
