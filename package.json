@@ -26,23 +26,35 @@
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-less": "~0.11.0",
     "load-grunt-tasks": "~0.2.0",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0"
   },
-  "categories" : ["Frameworks", "UI"],
-  "maintainers" : [
-  	{ "name" : "Alvin", "email" : "alvin@jennifersoft.com" }
+  "categories": [
+    "Frameworks",
+    "UI"
   ],
-  "contributors" : [
-  	{ "name" : "Jayden", "email" : "jayden@jennifersoft.com" }
+  "maintainers": [
+    {
+      "name": "Alvin",
+      "email": "alvin@jennifersoft.com"
+    }
   ],
-  "jam" : {
+  "contributors": [
+    {
+      "name": "Jayden",
+      "email": "jayden@jennifersoft.com"
+    }
+  ],
+  "jam": {
     "dependencies": {
       "jquery": ">1.4.2"
     },
-    "main" : "jui.min.js",
-    "shim" : {
-    	"deps" : ["jquery"],
-    	"exports" : "jui"
+    "main": "jui.min.js",
+    "shim": {
+      "deps": [
+        "jquery"
+      ],
+      "exports": "jui"
     }
   }
 }
