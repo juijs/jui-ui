@@ -18,7 +18,7 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 		 *
 		 */
 		function setBodyResize() {
-			var bottom = (info.$foot.length < 1) ? parseInt(info.$root.css("border-radius")) : info.$foot.outerHeight();
+			var bottom = (info.$foot.length < 1) ? 5 : info.$foot.outerHeight();
 			info.$body.outerHeight(info.$root.outerHeight() - info.$head.outerHeight() - bottom);
 		}
 		

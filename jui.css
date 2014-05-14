@@ -2998,17 +2998,17 @@
   background-color: #545454;
 }
 .jui .window-black > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
 }
 .jui .window-black > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
+  background: #7a7a7a;
+  border: 1px solid #636363;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -3093,17 +3093,17 @@
   border: 1px solid #737373;
 }
 .jui .window-scroll-black::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
 }
 .jui .window-scroll-black::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
+  background: #7a7a7a;
+  border: 1px solid #636363;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -4576,6 +4576,26 @@
 .jui .msgbox > .body {
   background-color: inherit;
 }
+.jui .msgbox > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-default {
   color: #333;
   background-color: #fff;
@@ -4587,6 +4607,26 @@
 }
 .jui .msgbox-default > .body {
   background-color: inherit;
+}
+.jui .msgbox-default > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-default > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-default > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }
 .jui .msgbox-black {
   color: #fff;
@@ -4600,6 +4640,26 @@
 .jui .msgbox-black > .body {
   background-color: inherit;
 }
+.jui .msgbox-black > .body::-webkit-scrollbar-track {
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
+}
+.jui .msgbox-black > .body::-webkit-scrollbar-thumb {
+  background: #7a7a7a;
+  border: 1px solid #636363;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-black > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-white {
   color: #333;
   background-color: #fff;
@@ -4611,6 +4671,26 @@
 }
 .jui .msgbox-white > .body {
   background-color: inherit;
+}
+.jui .msgbox-white > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-white > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-white > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }
 .jui .msgbox-yellow {
   color: #fff;
@@ -4625,6 +4705,26 @@
   background-color: inherit;
   color: #a56500;
 }
+.jui .msgbox-yellow > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-yellow > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-yellow > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-red {
   color: #fff;
   border: 1px solid #efb5b5;
@@ -4638,6 +4738,26 @@
   background-color: inherit;
   color: #ba0000;
 }
+.jui .msgbox-red > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-red > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-red > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-green {
   color: #fff;
   border: 1px solid #a2d27f;
@@ -4650,6 +4770,26 @@
 .jui .msgbox-green > .body {
   background-color: inherit;
   color: #496f0a;
+}
+.jui .msgbox-green > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-green > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-green > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }
 .jui .msgbox-detail {
   color: #666;
@@ -4682,6 +4822,26 @@
   background-color: inherit;
   color: inherit;
 }
+.jui .msgbox-detail > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-detail > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-detail > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-detail.msgbox-white {
   color: #666;
   background-color: #fff;
@@ -4699,6 +4859,26 @@
   background-color: inherit;
   color: inherit;
 }
+.jui .msgbox-detail.msgbox-white > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-detail.msgbox-white > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-detail.msgbox-white > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
 .jui .msgbox-detail.msgbox-black {
   color: #b0b0b0;
   background-color: #3f3f3f;
@@ -4715,6 +4895,66 @@
 .jui .msgbox-detail.msgbox-black > .body {
   background-color: inherit;
   color: inherit;
+}
+.jui .msgbox-detail.msgbox-black > .body::-webkit-scrollbar-track {
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
+}
+.jui .msgbox-detail.msgbox-black > .body::-webkit-scrollbar-thumb {
+  background: #7a7a7a;
+  border: 1px solid #636363;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-detail.msgbox-black > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
+.jui .msgbox-scroll-white::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox-scroll-white::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-scroll-white::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
+.jui .msgbox-scroll-black::-webkit-scrollbar-track {
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
+}
+.jui .msgbox-scroll-black::-webkit-scrollbar-thumb {
+  background: #7a7a7a;
+  border: 1px solid #636363;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox-scroll-black::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }
 .jui .row:before,
 .jui .row:after {
