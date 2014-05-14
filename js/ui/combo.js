@@ -134,7 +134,7 @@ jui.define('ui.combo', ["util"], function(_) {
 				$combo_root = $combo_root || ui_list["root"];
 				
 				if ($combo_root.select && $combo_root.select.length > 0) {
-					$combo_root.select.empty();
+					var $select = $combo_root.select;
 				} else {
 					var $select = $("<select></select>").css({
 						position: "absolute",
@@ -153,6 +153,7 @@ jui.define('ui.combo', ["util"], function(_) {
 					$combo_root.select = $select;
 				}
 
+				$($select).empty();
 				
 				$combo_root.find("ul > li").each(function(i, elem) {
 					var value = $(elem).data('value');
