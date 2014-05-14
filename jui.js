@@ -1507,7 +1507,7 @@ jui.define('ui.button', [], function() {
 	
 	return UI;
 });
-jui.define('ui.combo', [], function() {
+jui.define('ui.combo', ["util"], function(_) {
 	
 	/**
 	 * Common Logic
@@ -1565,6 +1565,10 @@ jui.define('ui.combo', [], function() {
 					
 					$combo_root.attr("value", value);
 					$combo_text.html(text);
+					
+					if ($combo_root.select.length) {
+						$combo_root.select[0].selectedIndex = i;
+					}
 				}
 			});
 			
@@ -1609,7 +1613,7 @@ jui.define('ui.combo', [], function() {
 				}
 				
 				if(e.which == 13) { // enter
-					self.addTrigger($list.eq(index), "click");
+					$list.eq(index).trigger("click");
 					index = -1;
 				}
 			});
@@ -1664,6 +1668,32 @@ jui.define('ui.combo', [], function() {
 				$combo_toggle 	= $combo_root.children(".btn-toggle"),
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
+			
+			if (_.isTouch) {
+				var $select = $("<select></select>").css({
+					position: "absolute",
+					opacity : 0.01
+				});
+				$combo_root.find("ul").after($select);
+				
+				$combo_root.find("ul > li").each(function(i, elem) {
+					var value = $(elem).data('value');
+					var text = $(elem).text();
+					
+					$select.append($("<option></option>").val(value).text(text).data('elem', elem));
+				})
+				
+				$select.on('change', function(e) {
+					var elem = $(e.currentTarget).find("option:selected").data('elem')
+					
+					$(elem).trigger('touchstart');
+				})
+				
+				$combo_root.select = $select;
+				
+				//$combo_root.hide();
+			}
+			
 					
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
 			$combo_drop.insertAfter($combo_text);
@@ -1684,10 +1714,16 @@ jui.define('ui.combo', [], function() {
 			
 			// Show
 			this.addEvent($combo_click, "click", function(e) {
-				if(self.type == "open") return;
+				if (_.isTouch) {
+					$combo_root.select.focus();
+				} else {
+					if(self.type == "open") return;
+					
+					hideAll();
+					self.open(e);					
+				}
 				
-				hideAll();
-				self.open(e);
+
 				
 				return false;
 			});
