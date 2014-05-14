@@ -226,10 +226,10 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					barSize : 3,
 					width	: null,
 					height	: null,
-					top		: { el : null, size : null, min : 50, max : 200, resizable : true },
-					left	: { el : null, size : null, min : 50, max : 200, resizable : true },
-					right	: { el : null, size : null, min : 50, max : 200, resizable : true },
-					bottom	: { el : null, size : null, min : 50, max : 200, resizable : true },
+					top		: { el : null, size : null, min : 50, max : 200, resize : true },
+					left	: { el : null, size : null, min : 50, max : 200, resize : true },
+					right	: { el : null, size : null, min : 50, max : 200, resize : true },
+					bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
 					center	: { el : null }
 				}
 			}
@@ -292,7 +292,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					ui_layout.root.append(direct);
 					
 					if(directions[i] != 'center') {
-						if(ui_options[directions[i]].resizable) {
+						if(ui_options[directions[i]].resize) {
 							if(!direct.resizer) {
 								direct.resizer = $("<div class='resize " + directions[i] + "' />");
 							}
@@ -324,7 +324,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				
 				sizeTop = $obj.height();
 				
-				if($option.resizable) {
+				if($option.resize) {
 					$obj.resizer.css({
 						'position' : 'absolute',
 						'top': sizeTop,
@@ -357,7 +357,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				
 				var bottom_top = (sizeTop -  $obj.height()) + sizeTop;
 				
-				if($option.resizable) {
+				if($option.resize) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: bottom_top,
@@ -409,7 +409,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 				
 				sizeLeft = $obj.width();
 				
-				if($option.resizable) {
+				if($option.resize) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: sizeTop,
@@ -450,7 +450,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 					'max-width' : '100%'
 				});
 				
-				if($option.resizable) {
+				if($option.resize) {
 					$obj.resizer.css({
 						'position' 	: 'absolute',
 						'top' 		: sizeTop,
