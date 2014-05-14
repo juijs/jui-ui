@@ -57,7 +57,7 @@ jui.define('ui.combo', ["util"], function(_) {
 					$combo_root.attr("value", value);
 					$combo_text.html(text);
 					
-					if ($combo_root.select.length) {
+					if ($combo_root.select && $combo_root.select[0] ) {
 						$combo_root.select[0].selectedIndex = i;
 					}
 				}
