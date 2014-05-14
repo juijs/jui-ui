@@ -1638,11 +1638,11 @@ jui.define('ui.combo', ["util"], function(_) {
 			}
 		}
 		
-		function makeSelect($combo_root) {
+		function makeSelect() {
 			if (_.isTouch) {
-				$combo_root = $combo_root || ui_list["root"];
+				var $combo_root = ui_list["root"];
 				
-				if ($combo_root.select && $combo_root.select.length > 0) {
+				if ($combo_root.select) {
 					var $select = $combo_root.select;
 				} else {
 					var $select = $("<select></select>").css({
@@ -1710,7 +1710,7 @@ jui.define('ui.combo', ["util"], function(_) {
 				$combo_drop 	= $combo_root.children("ul");
 			
 			// hidden select 
-			makeSelect($combo_root);
+			//makeSelect($combo_root);
 			
 					
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
