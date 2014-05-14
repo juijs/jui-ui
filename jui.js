@@ -1638,6 +1638,45 @@ jui.define('ui.combo', ["util"], function(_) {
 			}
 		}
 		
+		function makeSelect($combo_root) {
+			if (_.isTouch) {
+				$combo_root = $combo_root || ui_list["root"];
+				
+				if ($combo_root.select && $combo_root.select.length > 0) {
+					$combo_root.select.empty();
+				} else {
+					var $select = $("<select></select>").css({
+						position: "absolute",
+						opacity : 0.01
+					});
+					
+				
+					$combo_root.find("ul").after($select);					
+								
+					$select.empty();					
+								
+					$select.on('change', function(e) {
+						var elem = $(e.currentTarget).find("option:selected").data('elem')
+						
+						$(elem).trigger('touchstart');
+					})
+				}
+
+				
+				$combo_root.find("ul > li").each(function(i, elem) {
+					var value = $(elem).data('value');
+					var text = $(elem).text();
+					
+					$select.append($("<option></option>").val(value).text(text).data('elem', elem));
+				})
+				
+				
+				$combo_root.select = $select;
+				
+				//$combo_root.hide();
+			}
+		}
+		
 		
 		/**
 		 * Public Methods & Options
@@ -1669,30 +1708,8 @@ jui.define('ui.combo', ["util"], function(_) {
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
 			
-			if (_.isTouch) {
-				var $select = $("<select></select>").css({
-					position: "absolute",
-					opacity : 0.01
-				});
-				$combo_root.find("ul").after($select);
-				
-				$combo_root.find("ul > li").each(function(i, elem) {
-					var value = $(elem).data('value');
-					var text = $(elem).text();
-					
-					$select.append($("<option></option>").val(value).text(text).data('elem', elem));
-				})
-				
-				$select.on('change', function(e) {
-					var elem = $(e.currentTarget).find("option:selected").data('elem')
-					
-					$(elem).trigger('touchstart');
-				})
-				
-				$combo_root.select = $select;
-				
-				//$combo_root.hide();
-			}
+			// hidden select 
+			makeSelect($combo_root);
 			
 					
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
@@ -1814,7 +1831,11 @@ jui.define('ui.combo', ["util"], function(_) {
 				load("index", this.options.index);
 			}
 			
+			// check remake select
+			makeSelect(); 
+						
 			this.emit("reload", ui_data);
+			
 		}
 	}
 	
