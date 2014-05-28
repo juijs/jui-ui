@@ -129,44 +129,36 @@ jui.define('ui.combo', ["util"], function(_) {
 			}
 		}
 		
-		function makeSelect() {
-			if (_.isTouch) {
-				var $combo_root = ui_list["root"];
+		function makeSelectTouch(self) {
+			if(!_.isTouch) return;
+			
+			var $combo_root = ui_list["root"];
+			
+			if ($combo_root.select && $combo_root.select[0]) {
+				var $select = $combo_root.select;
+				$select.empty();
+			} else {
+				var $select = $("<select></select>").css({
+					position: "absolute",
+					opacity : 0.01
+				});
 				
-				if ($combo_root.select && $combo_root.select[0]) {
-					var $select = $combo_root.select;
-					$select.empty();
-				} else {
-					var $select = $("<select></select>").css({
-						position: "absolute",
-						opacity : 0.01
-					});
-					
+				$combo_root.find("ul").after($select);					
 				
-					$combo_root.find("ul").after($select);					
-								
-					$select.on('change', function(e) {
-						var elem = $(e.currentTarget).find("option:selected").data('elem')
-						
-						$(elem).trigger('touchstart');
-					})
-					
-					$combo_root.select = $select;
-				}
-
+				self.addEvent($select, "change", function(e) {
+					var elem = $(e.currentTarget).find("option:selected").data("elem");
+					self.addTrigger(elem, "touchstart");
+				});
 				
-				$combo_root.find("ul > li").each(function(i, elem) {
-					var value = $(elem).data('value');
-					var text = $(elem).text();
-					
-					$select.append($("<option></option>").val(value).text(text).data('elem', elem));
-				})
-				
-				
-				
-				
-				//$combo_root.hide();
+				$combo_root.select = $select;
 			}
+
+			$combo_root.find("ul > li").each(function(i, elem) {
+				var value = $(elem).data('value');
+				var text = $(elem).text();
+				
+				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
+			});
 		}
 		
 		
@@ -200,10 +192,6 @@ jui.define('ui.combo', ["util"], function(_) {
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
 			
-			// hidden select 
-			//makeSelect($combo_root);
-			
-					
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
 			$combo_drop.insertAfter($combo_text);
 			
@@ -231,8 +219,6 @@ jui.define('ui.combo', ["util"], function(_) {
 					hideAll();
 					self.open(e);					
 				}
-				
-
 				
 				return false;
 			});
@@ -267,10 +253,12 @@ jui.define('ui.combo', ["util"], function(_) {
 		
 		this.setIndex = function(index) {
 			load("index", index);
+			this.emit("change", [ ui_data ]);
 		}
 
 		this.setValue = function(value) {
 			load("value", value);
+			this.emit("change", [ ui_data ]);
 		}
 		
 		this.getData = function() {
@@ -323,11 +311,9 @@ jui.define('ui.combo', ["util"], function(_) {
 				load("index", this.options.index);
 			}
 			
-			// check remake select
-			makeSelect(); 
-						
-			this.emit("reload", ui_data);
+			makeSelectTouch(this);
 			
+			this.emit("reload", ui_data);
 		}
 	}
 	

@@ -686,6 +686,10 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 		this.getPage = function() {
 			return page - 1;
 		}
+		
+		this.activeIndex = function() {
+			return body.activeIndex();
+		}
 	}
 	
 	return UI;
