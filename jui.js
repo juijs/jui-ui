@@ -1,5 +1,6 @@
 (function(exports) {
-	var core = null, ui = {}, uix = {};
+	var core = null, ui = {};
+	//var core = null, ui = {}, uix = {};
 	
 	/**
 	 * Private Classes
@@ -709,42 +710,26 @@
         atob: Base64.decode
 	}
 	
-	var getDepends = function(depends, level) {
+	var getDepends = function(depends) {
 		var args = [];
 		
 		for(var i = 0; i < depends.length; i++) {
-			if(level > 0 && depends[i] == "util") {
-				args[i] = utility;
-			} 
+			var name = depends[i];
 			
-			if(level > 1 && depends[i] == "ui") {
-				args[i] = ui;
-			} 
-			
-			if(level > 1 && depends[i].indexOf("ui.") != -1) {
-				var uiKey = depends[i].replace("ui.", ""),
-					uiObj = ui[uiKey];
+			if(name.indexOf(".") != -1) {
+				var keys = name.split(".");
 				
-				if(!uiObj) {
-					throw new Error("JUI_CRITICAL_ERR: UI(" + depends[i] + ") is not loaded");
+				args[i] = ui[keys[0]][keys[1]];
+			} else {
+				if(name == "util") {
+					args[i] = utility;
+				} else {
+					args[i] = ui[name];
 				}
-				
-				args[i] = uiObj;
 			}
 			
-			if(level > 2 && depends[i] == "uix") {
-				args[i] = uix;
-			} 
-			
-			if(level > 2 && depends[i].indexOf("uix.") != -1) {
-				var uiKey = depends[i].replace("uix.", ""),
-					uiObj = uix[uiKey];
-				
-				if(!uiObj) {
-					throw new Error("JUI_CRITICAL_ERR: UIX(" + depends[i] + ") is not loaded");
-				}
-				
-				args[i] = uiObj;
+			if(!args[i]) {
+				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
 			}
 		}
 		
@@ -761,57 +746,47 @@
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
 				depends = (arguments.length == 2) ? arguments[0] : null;
+				
+			if(!utility.typeCheck([ "array", "null" ], depends) || 
+					!utility.typeCheck("function", callback)) {
+			
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+			}
 
 			$(function() { 
 				if(depends) {
-					args = getDepends(depends, 3);
+					args = getDepends(depends);
 				} else {
-					args = [ ui, uix, utility ];
+					args = [ ui["ui"], ui["uix"], utility ];
 				}
 				
 				callback.apply(null, args);
 			});
 		},
-		define: function() {
-			var tmpUi = [], tmpUix = [];
+		define: function(name, depends, callback) {
+			if(!utility.typeCheck("string", name) || 
+					!utility.typeCheck("array", depends) || 
+					!utility.typeCheck("function", callback)) {
 			
-			var name = arguments[0],
-				callback = (arguments.length == 3) ? arguments[2] : arguments[1],
-				depends = (arguments.length == 3) ? arguments[1] : null;
-				
-			// Core 객체 생성
-			if(name == "core") { 
-				core = callback(utility);
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 			
-			// UI 함수 추가
-			if(name.indexOf("ui.") != -1) {
-				var args = [], 
-					key = name.replace("ui.", "");
-				
-				// UIX에 UI 디펜던시 추가
-				if(depends) {
-					args = getDepends(depends, 1);
-				} else {
-					args = [ utility ];
-				}
+			if(name == "core") {
+				core = callback(utility);
+			} else {
+				var args = getDepends(depends);
+
+				if(name.indexOf(".") != -1) {
+					var keys = name.split(".");
 					
-				ui[key] = core.init({ type: key, func: callback.apply(null, args) });
-			} 
-			
-			// UIX 함수 추가
-			if(name.indexOf("uix.") != -1) {
-				var args = [],
-					key = name.replace("uix.", "");
-				
-				// UIX에 UI 디펜던시 추가
-				if(depends) {
-					args = getDepends(depends, 2);
+					if(!ui[keys[0]]) {
+						ui[keys[0]] = {};
+					}
+					
+					ui[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
 				} else {
-					args = [ utility, ui ];
+					ui[name] = callback(args);
 				}
-				
-				uix[key] = core.init({ type: key, func: callback.apply(null, args) });
 			}
 		},
 		log: function() {
@@ -830,7 +805,7 @@
 		logUrl: "jui.mng.html"
 	};
 })(window);
-jui.define('core', function(_) {
+jui.define('core', [ "util" ], function(_) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1509,7 +1484,7 @@ jui.define('ui.button', [], function() {
 	
 	return UI;
 });
-jui.define('ui.combo', ["util"], function(_) {
+jui.define('ui.combo', [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic

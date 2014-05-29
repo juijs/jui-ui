@@ -1,4 +1,4 @@
-jui.define('core', function(_) {
+jui.define('core', [ "util" ], function(_) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
