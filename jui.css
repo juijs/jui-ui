@@ -31,43 +31,48 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #eee;
-  border: 1px solid #c8c8c8;
-  color: #333;
+  background-color: #f7f7f7;
+  border: 1px solid #ececec;
+  color: #666;
   font-size: 14px;
   padding: 0 12px;
   height: 28px;
   line-height: 28px;
 }
 .jui .label-gray {
-  background-color: #eee;
-  border: 1px solid #c8c8c8;
-  color: #333;
+  background-color: #f7f7f7;
+  border: 1px solid #ececec;
+  color: #666;
 }
 .jui .label-black {
-  background-color: #212121 !important;
-  border: 1px solid #000 !important;
-  color: #fff !important;
+  background-color: #212121;
+  border: 1px solid #000;
+  color: #fff;
 }
 .jui .label-blue {
-  background-color: #428bca !important;
-  border: 1px solid #428bca !important;
-  color: #fff !important;
+  background-color: #428bca;
+  border: 1px solid #428bca;
+  color: #fff;
 }
 .jui .label-red {
-  background-color: #d9534f !important;
-  border: 1px solid #d9534f !important;
-  color: #fff !important;
+  background-color: #d9534f;
+  border: 1px solid #d9534f;
+  color: #fff;
 }
 .jui .label-green {
-  background-color: #5cb85c !important;
-  border: 1px solid #5cb85c !important;
-  color: #fff !important;
+  background-color: #5cb85c;
+  border: 1px solid #5cb85c;
+  color: #fff;
 }
 .jui .label-purple {
-  background-color: #6836c4 !important;
-  border: 1px solid #6836c4 !important;
-  color: #fff !important;
+  background-color: #6836c4;
+  border: 1px solid #6836c4;
+  color: #fff;
+}
+.jui .label-orange {
+  background-color: #fffaee;
+  border: 1px solid #fce5bb;
+  color: #666;
 }
 .jui .label-rect {
   -webkit-border-radius: 0 !important;
