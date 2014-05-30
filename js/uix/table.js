@@ -1172,7 +1172,7 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			}
 			
 			function colResizeWidth(self, disWidth) {
-				var colMinWidth = 30;
+				var colMinWidth = 50;
 				
 				// 최소 크기 체크
 				if(colWidth + disWidth < colMinWidth || colNextWidth - disWidth < colMinWidth)
