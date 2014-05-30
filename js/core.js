@@ -1,4 +1,4 @@
-jui.define('core', [ "util" ], function(_) {
+jui.define("core", [ "util" ], function(_) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -400,7 +400,7 @@ jui.define('core', [ "util" ], function(_) {
 					
 				$root.each(function(index) {
 					var obj = new UI.func(),
-						setting = obj.setting();
+						setting = (obj.setting) ? obj.setting() : {};
 					var defOptions = (typeof(setting.options) == "object") ? setting.options : {};
 						
 					// Options Check

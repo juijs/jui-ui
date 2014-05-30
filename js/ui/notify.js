@@ -1,4 +1,4 @@
-jui.define('ui.notify', [], function() {
+jui.define("ui.notify", [], function() {
 
     /**
      * UI Class

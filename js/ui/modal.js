@@ -1,4 +1,4 @@
-jui.define('ui.modal', [ 'util' ], function(_) {
+jui.define("ui.modal", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic

@@ -1,4 +1,4 @@
-jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
+jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
 	
 	/**
 	 * Common Logic
@@ -34,10 +34,10 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 		function createTableList(self) { // 2
 			var exceptOpts = [ "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", "event", "rows" ];
 			
-			body = jui.create("table", $(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
+			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
 			
-			head = jui.create("table", $(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+			head = table($(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
 			setTableAllStyle(self, head, body);
 			
 			// 테이블 옵션 필터링 함수

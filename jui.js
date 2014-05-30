@@ -1,5 +1,5 @@
 (function(exports) {
-	var core = null, ui = {};
+	var global = {};
 	//var core = null, ui = {}, uix = {};
 	
 	/**
@@ -719,16 +719,18 @@
 			if(name.indexOf(".") != -1) {
 				var keys = name.split(".");
 				
-				args[i] = ui[keys[0]][keys[1]];
+				args[i] = global[keys[0]][keys[1]];
 			} else {
 				if(name == "util") {
 					args[i] = utility;
+				} else if(name == "core") {
+					args[i] = core;
 				} else {
-					args[i] = ui[name];
+					args[i] = global[name];
 				}
 			}
 			
-			if(!args[i]) {
+			if(utility.typeCheck([ "null" ], args[i])) {
 				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
 			}
 		}
@@ -757,35 +759,34 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ ui["ui"], ui["uix"], utility ];
+					args = [ global["ui"], global["uix"], utility ];
 				}
 				
 				callback.apply(null, args);
 			});
 		},
 		define: function(name, depends, callback) {
-			if(!utility.typeCheck("string", name) || 
-					!utility.typeCheck("array", depends) || 
-					!utility.typeCheck("function", callback)) {
+			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || 
+				!utility.typeCheck("function", callback)) {
 			
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 			
+			var args = getDepends(depends);
+			
 			if(name == "core") {
-				core = callback(utility);
+				core = callback.apply(null, args);
 			} else {
-				var args = getDepends(depends);
-
 				if(name.indexOf(".") != -1) {
 					var keys = name.split(".");
 					
-					if(!ui[keys[0]]) {
-						ui[keys[0]] = {};
+					if(!global[keys[0]]) {
+						global[keys[0]] = {};
 					}
-					
-					ui[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
+
+					global[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
 				} else {
-					ui[name] = callback(args);
+					global[name] = core.init({ type: name, func: callback.apply(null, args) });
 				}
 			}
 		},
@@ -805,7 +806,7 @@
 		logUrl: "jui.mng.html"
 	};
 })(window);
-jui.define('core', [ "util" ], function(_) {
+jui.define("core", [ "util" ], function(_) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1207,7 +1208,7 @@ jui.define('core', [ "util" ], function(_) {
 					
 				$root.each(function(index) {
 					var obj = new UI.func(),
-						setting = obj.setting();
+						setting = (obj.setting) ? obj.setting() : {};
 					var defOptions = (typeof(setting.options) == "object") ? setting.options : {};
 						
 					// Options Check
@@ -1306,7 +1307,7 @@ jui.define('core', [ "util" ], function(_) {
 	
 	return UICore;
 });
-jui.define('ui.button', [], function() {
+jui.define("ui.button", [], function() {
 	
 	var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -1484,7 +1485,7 @@ jui.define('ui.button', [], function() {
 	
 	return UI;
 });
-jui.define('ui.combo', [ "util" ], function(_) {
+jui.define("ui.combo", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic
@@ -1805,7 +1806,7 @@ jui.define('ui.combo', [ "util" ], function(_) {
 	
 	return UI;
 });
-jui.define('ui.datepicker', [ "util" ], function(_) {
+jui.define("ui.datepicker", [ "util" ], function(_) {
 
     /**
      * UI Class
@@ -2155,7 +2156,7 @@ jui.define('ui.datepicker', [ "util" ], function(_) {
 
     return UI;
 });
-jui.define('ui.dropdown', [], function() {
+jui.define("ui.dropdown", [], function() {
 	
 	/**
 	 * Common Logic
@@ -2472,7 +2473,7 @@ jui.define('ui.dropdown', [], function() {
 	
 	return UI;
 });
-jui.define('ui.modal', [ 'util' ], function(_) {
+jui.define("ui.modal", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic
@@ -2651,7 +2652,7 @@ jui.define('ui.modal', [ 'util' ], function(_) {
 	
 	return UI;
 });
-jui.define('ui.notify', [], function() {
+jui.define("ui.notify", [], function() {
 
     /**
      * UI Class
@@ -2783,7 +2784,7 @@ jui.define('ui.notify', [], function() {
 
     return UI;
 });
-jui.define('ui.paging', [], function() {
+jui.define("ui.paging", [], function() {
 	
 	/**
 	 * UI Class
@@ -2925,7 +2926,7 @@ jui.define('ui.paging', [], function() {
 	
 	return UI;
 });
-jui.define('ui.tooltip', [], function() {
+jui.define("ui.tooltip", [], function() {
 	
 	/**
 	 * UI Class
@@ -3554,7 +3555,7 @@ jui.define("ui.layout", [ "util" ], function(_) {
 	
 })
 
-jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
+jui.define("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3661,7 +3662,7 @@ jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) 
 	
 	return UI;
 });
-jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
+jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3806,7 +3807,7 @@ jui.define('uix.tab', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 	
 	return UI;
 });
-jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
+jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * Common Logic
@@ -5711,7 +5712,7 @@ jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
 	
 	return UI;
 });
-jui.define('uix.tree', [ 'util' ], function(_) {
+jui.define("uix.tree", [ "util" ], function(_) {
 	
 	/**
 	 * UI Core Class
@@ -6599,7 +6600,7 @@ jui.define('uix.tree', [ 'util' ], function(_) {
 	
 	return UI;
 });
-jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
+jui.define("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	
 	/**
 	 * UI Class
@@ -6843,7 +6844,7 @@ jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
 	
 	return UI;
 });
-jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
+jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
 	
 	/**
 	 * Common Logic
@@ -6879,10 +6880,10 @@ jui.define('uix.xtable', [ 'util', 'ui.modal' ], function(_, modal) {
 		function createTableList(self) { // 2
 			var exceptOpts = [ "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", "event", "rows" ];
 			
-			body = jui.create("table", $(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
+			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
 			
-			head = jui.create("table", $(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+			head = table($(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
 			setTableAllStyle(self, head, body);
 			
 			// 테이블 옵션 필터링 함수

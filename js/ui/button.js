@@ -1,4 +1,4 @@
-jui.define('ui.button', [], function() {
+jui.define("ui.button", [], function() {
 	
 	var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };

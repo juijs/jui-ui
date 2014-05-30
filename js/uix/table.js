@@ -1,4 +1,4 @@
-jui.define('uix.table', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
+jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * Common Logic

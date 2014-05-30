@@ -1,4 +1,4 @@
-jui.define('uix.autocomplete', [ 'util', 'ui.dropdown' ], function(_, dropdown) {
+jui.define("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * UI Class

@@ -1,5 +1,5 @@
 (function(exports) {
-	var core = null, ui = {};
+	var global = {};
 	//var core = null, ui = {}, uix = {};
 	
 	/**
@@ -719,16 +719,18 @@
 			if(name.indexOf(".") != -1) {
 				var keys = name.split(".");
 				
-				args[i] = ui[keys[0]][keys[1]];
+				args[i] = global[keys[0]][keys[1]];
 			} else {
 				if(name == "util") {
 					args[i] = utility;
+				} else if(name == "core") {
+					args[i] = core;
 				} else {
-					args[i] = ui[name];
+					args[i] = global[name];
 				}
 			}
 			
-			if(!args[i]) {
+			if(utility.typeCheck([ "null" ], args[i])) {
 				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
 			}
 		}
@@ -757,35 +759,34 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ ui["ui"], ui["uix"], utility ];
+					args = [ global["ui"], global["uix"], utility ];
 				}
 				
 				callback.apply(null, args);
 			});
 		},
 		define: function(name, depends, callback) {
-			if(!utility.typeCheck("string", name) || 
-					!utility.typeCheck("array", depends) || 
-					!utility.typeCheck("function", callback)) {
+			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || 
+				!utility.typeCheck("function", callback)) {
 			
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 			
+			var args = getDepends(depends);
+			
 			if(name == "core") {
-				core = callback(utility);
+				core = callback.apply(null, args);
 			} else {
-				var args = getDepends(depends);
-
 				if(name.indexOf(".") != -1) {
 					var keys = name.split(".");
 					
-					if(!ui[keys[0]]) {
-						ui[keys[0]] = {};
+					if(!global[keys[0]]) {
+						global[keys[0]] = {};
 					}
-					
-					ui[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
+
+					global[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
 				} else {
-					ui[name] = callback(args);
+					global[name] = core.init({ type: name, func: callback.apply(null, args) });
 				}
 			}
 		},

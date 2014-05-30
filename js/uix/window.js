@@ -1,4 +1,4 @@
-jui.define('uix.window', [ 'util', 'ui.modal' ], function(_, modal) {
+jui.define("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	
 	/**
 	 * UI Class

@@ -1,4 +1,4 @@
-jui.define('ui.tooltip', [], function() {
+jui.define("ui.tooltip", [], function() {
 	
 	/**
 	 * UI Class
