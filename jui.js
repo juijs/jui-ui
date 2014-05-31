@@ -2225,9 +2225,11 @@ jui.define("ui.dropdown", [], function() {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				var index = getTargetIndex(e.currentTarget),
-					text = $(e.currentTarget).text(),
-					value = $(e.currentTarget).attr("value");
+				if($(this).hasClass("divider")) return;
+				
+				var index = getTargetIndex(this),
+					text = $(this).text(),
+					value = $(this).attr("value");
 				
 				self.emit("change", [ { index: index, value: value, text: text }, e ]);
 				
