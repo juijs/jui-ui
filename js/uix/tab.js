@@ -42,6 +42,15 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			$menuTab.removeClass("menu-keep");
 		}
 		
+		function changeTab(self, index) {
+			hideAll();
+			
+			var $tab = info.$list.eq(index).addClass("active");
+			
+			info.$anchor.appendTo($tab);
+			showTarget(self.options.target, $tab[0]);
+		}
+		
 		
 		/**
 		 * Public Methods & Options
@@ -94,7 +103,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 						info.$anchor.appendTo($(tmpObj));
 						info.activeIndex = i;
 						
-						self.show(i);
+						changeTab(self, i);
 					}, 10);
 				}
 				
@@ -111,7 +120,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 							showTarget(opts.target, this);
 						
 						self.emit("change", [ { index: i, text: text }, e ]);
-						self.show(i);
+						changeTab(self, i);
 						
 						info.activeIndex = i;
 					} else {
@@ -127,13 +136,9 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		this.show = function(index) {
-			hideAll();
+			changeTab(self, index);
 			
-			var $tab = info.$list.eq(index);
-			$tab.addClass("active");
-			
-			info.$anchor.appendTo($tab);
-			showTarget(this.options.target, $tab.find("a").get(0));
+			this.emit("show", [ index ]);
 		}
 		
 		this.activeIndex = function() {
