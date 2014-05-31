@@ -169,7 +169,7 @@ jui.define("ui.dropdown", [], function() {
 					top: 0,
 					width: 0,
 					height: 0,
-					list: []
+					nodes: []
 				},
 				valid: {
 					update: [ "array" ],
@@ -221,7 +221,7 @@ jui.define("ui.dropdown", [], function() {
 			$dd_root.css({ "position": "absolute", "display": "none" });
 			
 			// Select
-			this.update(opts.list);
+			this.update(opts.nodes);
 			this.type = "hide"; // 기본 타입 설정
 			
 			return this;
