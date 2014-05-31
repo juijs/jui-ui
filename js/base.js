@@ -786,7 +786,7 @@
 
 					global[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
 				} else {
-					global[name] = core.init({ type: name, func: callback.apply(null, args) });
+					global[name] = callback.apply(null, args);
 				}
 			}
 		},
