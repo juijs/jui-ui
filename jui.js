@@ -2832,6 +2832,35 @@ jui.define("ui.paging", [], function() {
 			});
 		}
 		
+		function changePage(self, pNo) {
+			var pages = [], 
+				end = (lastPage < self.options.screenCount) ? lastPage : self.options.screenCount,
+				start = pNo - Math.ceil(end / 2) + 1,
+				start = (start < 1) ? 1 : start;
+			
+			activePage = (pNo > lastPage) ? lastPage : pNo;
+			activePage = (pNo < 1) ? 1 : pNo;
+			
+			if(lastPage < start + end + 1) {
+				for(var i = lastPage - end + 1; i < lastPage + 1; i++) {
+					pages.push(i);
+				}
+				
+				if(activePage > lastPage) activePage = lastPage;
+			} else {
+				for(var i = start; i < start + end; i++) {
+					pages.push(i);
+				}
+			}
+			
+			// 템플릿 적용
+			$main.html(self.tpl["pages"]({ pages: pages, lastPage: lastPage }));
+			
+			setEventAction(self);
+			setEventPage(self);
+			setPageStyle(self, activePage);
+		}
+		
 		
 		/**
 		 * Public Methods & Options
@@ -2845,8 +2874,8 @@ jui.define("ui.paging", [], function() {
 					screenCount: 5	// 페이지 개수
 				},
 				valid: {
-					reload: [ "integer" ],
-					page: [ "integer" ]
+					reload: [ "integer", "null" ],
+					page: [ "integer", "null" ]
 				}
 			}
 		}
@@ -2870,40 +2899,14 @@ jui.define("ui.paging", [], function() {
 			activePage = 1;
 			lastPage = Math.ceil(count / this.options.pageCount);
 			
-			this.page(activePage);
+			changePage(this, activePage);
+			this.emit("reload");
 		}
 		
 		this.page = function(pNo) {
 			if(!pNo) return activePage;
 			
-			var pages = [], 
-				end = (lastPage < this.options.screenCount) ? lastPage : this.options.screenCount,
-				start = pNo - Math.ceil(end / 2) + 1,
-				start = (start < 1) ? 1 : start;
-			
-			activePage = (pNo > lastPage) ? lastPage : pNo;
-			activePage = (pNo < 1) ? 1 : pNo;
-			
-			if(lastPage < start + end + 1) {
-				for(var i = lastPage - end + 1; i < lastPage + 1; i++) {
-					pages.push(i);
-				}
-				
-				if(activePage > lastPage) activePage = lastPage;
-			} else {
-				for(var i = start; i < start + end; i++) {
-					pages.push(i);
-				}
-			}
-			
-			// 템플릿 적용
-			$main.html(this.tpl["pages"]({ pages: pages, lastPage: lastPage }));
-			
-			setEventAction(this);
-			setEventPage(this);
-			setPageStyle(this, activePage);
-			
-			// 커스텀 이벤트 발생
+			changePage(this, pNo);
 			this.emit("page", [ activePage ]);
 		}
 
