@@ -222,20 +222,23 @@ jui.define("ui.dropdown", [], function() {
 			$dd_menu.css({ "display": "block" });
 			$dd_root.css({ "position": "absolute", "display": "none" });
 			
-			// Select
-			this.update(opts.nodes);
+			// 드롭다운 목록 갱신
+			if(opts.nodes.length > 0) {
+				this.update(opts.nodes);
+			}
+
 			this.type = "hide"; // 기본 타입 설정
 			
 			return this;
 		}
 		
-		this.update = function(list) {
-			if(typeof(list) == "object" && this.tpl.node) {
-				$(ui_list.menu).empty();
-				
-				for(var i = 0; i < list.length; i++) {
-					$(ui_list.menu).append(this.tpl.node(list[i]));
-				}
+		this.update = function(nodes) {
+			if(!this.tpl.node) return;
+			
+			$(ui_list.menu).empty();
+			
+			for(var i = 0; i < nodes.length; i++) {
+				$(ui_list.menu).append(this.tpl.node(nodes[i]));
 			}
 			
 			setEvent(this);
