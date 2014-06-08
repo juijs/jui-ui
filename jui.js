@@ -5132,6 +5132,7 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 					colshow: false,
 					scroll: false,
 					scrollHeight: 200,
+					width: 0,
 					expand: false,
 					expandEvent: true,
 					editCell: false,
@@ -5255,6 +5256,10 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				this.update(opts.rows);
 			} else {
 				this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
+			}
+			
+			if(opts.width > 0) {
+				$obj.table.outerWidth(opts.width);
 			}
 			
 			if(!opts.fields) {
@@ -6974,7 +6979,10 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 		 * 
 		 */
 		function createTableList(self) { // 2
-			var exceptOpts = [ "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", "event", "rows" ];
+			var exceptOpts = [ 
+                   "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", 
+                   "event", "rows", "scrollWidth", "width"
+               ];
 			
 			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
@@ -6996,6 +7004,8 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 			}
 			
 			function setTableAllStyle(self, head, body) {
+				var opts = self.options;
+				
 				$(self.root).css({ "position": "relative" });
 
 				$(head.root).css({ 
@@ -7008,6 +7018,22 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 				$(body.root).css({ 
 					"margin": "0"
 				});
+				
+				if(opts.width > 0) {
+					$(self.root).outerWidth(opts.width);
+				}
+				
+				if(opts.scrollWidth > 0) {
+					var rootWidth = $(self.root).outerWidth();
+					
+					$(self.root).css({ 
+						"max-width": self.options.scrollWidth,
+						"overflow-x": "auto"
+					});
+					
+					$(head.root).outerWidth(rootWidth);
+					$(body.root).parent().outerWidth(rootWidth);
+				}
 			}
 			
 			function setTableBodyStyle(self, body) {
@@ -7194,7 +7220,9 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 					expand: false,
 					expandEvent: true,
 					resize: false, 
-					scrollHeight: 200, // xtable 전용 옵션
+					scrollHeight: 200,
+					scrollWidth: 0,
+					width: 0,
 					buffer: "scroll",
 					bufferCount: 100,
 					sort: false,
@@ -7307,6 +7335,12 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 				
 				// 기본 로딩 시간 (ms)
 				opts.sortLoading = (opts.sortLoading === true) ? 500 : opts.sortLoading; 
+			}
+			
+			// 컬럼 리사이징 위치 조정
+			if(opts.resize) {
+				head.resizeColumns();
+				head.resize();
 			}
 			
 			return this;

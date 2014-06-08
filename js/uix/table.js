@@ -1227,6 +1227,7 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 					colshow: false,
 					scroll: false,
 					scrollHeight: 200,
+					width: 0,
 					expand: false,
 					expandEvent: true,
 					editCell: false,
@@ -1350,6 +1351,10 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				this.update(opts.rows);
 			} else {
 				this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
+			}
+			
+			if(opts.width > 0) {
+				$obj.table.outerWidth(opts.width);
 			}
 			
 			if(!opts.fields) {
