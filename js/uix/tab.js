@@ -219,6 +219,20 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			setEventNodes(this);
 		}
 		
+		this.move = function(index, targetIndex) {
+			if(index == targetIndex) return;
+			
+			var $tabs = $(this.root).children("li");
+			
+			if(targetIndex == $tabs.size() - 1) {
+				$tabs.eq(index).insertAfter($tabs.eq(targetIndex));
+			} else {
+				$tabs.eq(index).insertBefore($tabs.eq(targetIndex + 1));
+			}
+			
+			setEventNodes(this);
+		}
+		
 		this.show = function(index) {
 			changeTab(this, index);
 			this.emit("show", [ index ]);
