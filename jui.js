@@ -2217,7 +2217,7 @@ jui.define("ui.dropdown", [], function() {
 		 * Private Methods
 		 * 
 		 */
-		function setEvent(self) {
+		function setEventNodes(self) {
 			var $list = $(ui_list.menu).find("li");
 			
 			// 이벤트 걸린거 초기화
@@ -2383,6 +2383,8 @@ jui.define("ui.dropdown", [], function() {
 			// 드롭다운 목록 갱신
 			if(opts.nodes.length > 0) {
 				this.update(opts.nodes);
+			} else {
+				setEventNodes(this);
 			}
 
 			this.type = "hide"; // 기본 타입 설정
@@ -2399,7 +2401,7 @@ jui.define("ui.dropdown", [], function() {
 				$(ui_list.menu).append(this.tpl.node(nodes[i]));
 			}
 			
-			setEvent(this);
+			setEventNodes(this);
 		}
 		
 		this.hide = function() {
