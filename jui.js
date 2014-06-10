@@ -3718,6 +3718,20 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			showTarget(self.options.target, $tab[0]);
 		}
 		
+		function showTarget(target, elem, isInit) {
+			var hash = $(elem).find("[href*=\#]").attr("href");
+			
+			$(target).children("*").each(function(i) {
+				var self = this;
+				
+				if(("#" + self.id) == hash) {
+					$(self).show();
+				} else {
+					$(self).hide();
+				}
+			});
+		}
+		
 		function setEventNodes(self) {
 			var $list = $(self.root).children("li");
 			
@@ -3745,7 +3759,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				}
 			
 				// 이벤트 설정
-				self.addEvent($(this), "click", "a", function(e) {
+				self.addEvent(this, "click", "a", function(e) {
 					var text = $(e.currentTarget).text();
 					
 					if(i != menuIndex) {
@@ -3761,22 +3775,64 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 						if(ui_menu.type != "show") showMenu(self, this);
 					}
 					
-					e.preventDefault();
+					return false;
 				});
 			});
+			
+			setEventDragNodes(self);
 		}
 		
-		function showTarget(target, elem, isInit) {
-			var hash = $(elem).find("[href*=\#]").attr("href");
+		function setEventDragNodes(self) {
+			if(!self.options.drag) return;
 			
-			$(target).children("*").each(function(i) {
-				var self = this;
+			var $tabs = $(self.root).children("li"),
+				$origin = null,
+				$clone = null;
+			
+			var index = null,
+				targetIndex = null;
+			
+			$tabs.each(function(i) {
+				self.addEvent(this, "mousedown", function(e) {
+					$origin = $(this);
+					$clone = $origin.clone().css("opacity", "0.5");
+					
+					index = i;
+					return false;
+				});
+
+				self.addEvent(this, "mousemove", function(e) {
+					if(index == null) return;
+					targetIndex = i;
+					
+					if(index > targetIndex) { // move 로직과 동일
+						if(targetIndex == 0) {
+							$clone.insertBefore($tabs.eq(0));
+						} else {
+							$clone.insertAfter($tabs.eq(targetIndex - 1));
+						}
+					} else {
+						if(targetIndex == $tabs.size() - 1) {
+							$clone.insertAfter($tabs.eq(targetIndex));
+						} else {
+							$clone.insertBefore($tabs.eq(targetIndex + 1));
+						}
+					}
+					
+					$origin.hide();
+				});
+			});
+			
+			self.addEvent(self.root, "mouseup", function(e) {
+				if($origin != null) $origin.show();
+				if($clone != null) $clone.remove();
 				
-				if(("#" + self.id) == hash) {
-					$(self).show();
-				} else {
-					$(self).hide();
+				if(index != null && targetIndex != null) {
+					self.move(index, targetIndex);
 				}
+
+				index = null;
+				targetIndex =  null;
 			});
 		}
 		
@@ -3790,6 +3846,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				options: {
 					target: "", 
 					index: 0,
+					drag: false,
 					nodes: []
 				},
 				valid: {
@@ -3894,20 +3951,36 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		this.move = function(index, targetIndex) {
 			if(index == targetIndex) return;
 			
-			var $tabs = $(this.root).children("li");
+			var $tabs = $(this.root).children("li"),
+				$target = $tabs.eq(index);
 			
-			if(targetIndex == $tabs.size() - 1) {
-				$tabs.eq(index).insertAfter($tabs.eq(targetIndex));
+			if(index > targetIndex) {
+				if(targetIndex == 0) {
+					$target.insertBefore($tabs.eq(0));
+				} else {
+					$target.insertAfter($tabs.eq(targetIndex - 1));
+				}
 			} else {
-				$tabs.eq(index).insertBefore($tabs.eq(targetIndex + 1));
+				if(targetIndex == $tabs.size() - 1) {
+					$target.insertAfter($tabs.eq(targetIndex));
+				} else {
+					$target.insertBefore($tabs.eq(targetIndex + 1));
+				}
 			}
+			
+			// 활성화 탭 변경
+			this.options.index = targetIndex;
 			
 			setEventNodes(this);
 		}
 		
 		this.show = function(index) {
 			changeTab(this, index);
-			this.emit("show", [ index ]);
+			
+			this.emit("change", [{ 
+				index: index, 
+				text: $(this.root).children("li").eq(index).children("a").text() 
+			}]);
 		}
 		
 		this.activeIndex = function() {
