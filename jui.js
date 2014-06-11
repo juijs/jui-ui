@@ -3735,26 +3735,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		function setEventNodes(self) {
-			var $list = $(self.root).children("li");
-			
-			// 해당 인덱스가 리스트보다 클 경우
-			if(self.options.index > $list.size() - 1) {
-				self.options.index = 0;
-			}
-			
-			$list.each(function(i) {
-				// 인덱스 설정
-				if($(this).attr("class") == "active" || self.options.index == i) { 
-					var tmpObj = this;
-					
-					setTimeout(function() { // 최초에 숨겨진 컨텐츠 영역 처리
-						$anchor.appendTo($(tmpObj));
-						activeIndex = i;
-						
-						changeTab(self, i);
-					}, 10);
-				}
-				
+			$(self.root).children("li").each(function(i) {
 				// 메뉴 설정
 				if($(this).hasClass("menu")) {
 					menuIndex = i;
@@ -3781,6 +3762,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				});
 			});
 			
+			setActiveNode(self);
 			setEventDragNodes(self);
 		}
 		
@@ -3838,6 +3820,21 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			});
 		}
 		
+		function setActiveNode(self) {
+			var $list = $(self.root).children("li"),
+				$markupNode = $list.filter(".active"),
+				$indexNode = $list.eq(activeIndex),
+				$node = ($indexNode.size() == 1) ? $indexNode : $markupNode;
+			
+			// 노드가 없을 경우, 맨 첫번째 노드를 활성화
+			if($node.size() == 0) {
+				$node = $list.eq(0);
+			}
+			
+			$anchor.appendTo($node);
+			changeTab(self, $list.index($node));
+		}
+		
 		
 		/**
 		 * Public Methods & Options
@@ -3864,6 +3861,9 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		
 		this.init = function() {
 			var self = this, opts = this.options;
+			
+			// 활성화 인덱스 설정
+			activeIndex = opts.index;
 			
 			// 컴포넌트 요소 세팅
 			$anchor = $("<div class='anchor'></div>");
@@ -3970,9 +3970,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				}
 			}
 			
-			// 활성화 탭 변경
-			this.options.index = targetIndex;
-			
+			activeIndex = targetIndex;
 			setEventNodes(this);
 		}
 		
