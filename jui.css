@@ -6524,6 +6524,78 @@
   background-color: #fff3f3 !important;
   border: 1px solid #ff7f7f !important;
 }
+.jui .h {
+  display: block;
+  font-weight: 500;
+  color: #333;
+}
+.jui .h > small,
+.jui .h .sub {
+  color: #9a9a9a;
+  font-size: 75%;
+}
+.jui .h1 {
+  font-size: 32px;
+}
+.jui .h1 > small,
+.jui .h1 .sub {
+  font-size: 65%;
+}
+.jui .h2 {
+  font-size: 26px;
+}
+.jui .h2 > small,
+.jui .h2 .sub {
+  font-size: 65%;
+}
+.jui .h3 {
+  font-size: 20px;
+}
+.jui .h3 > small,
+.jui .h3 .sub {
+  font-size: 65%;
+}
+.jui .h4 {
+  font-size: 16px;
+}
+.jui .h5 {
+  font-size: 14px;
+}
+.jui .h6 {
+  font-size: 12px;
+}
+.jui .hr {
+  display: block;
+  height: 1px;
+  background: #f0f0f0;
+}
+.jui .h1 + .hr,
+.jui .h2 + .hr,
+.jui .h3 + .hr {
+  margin: 10px 0 24px 0;
+}
+.jui .h4 + .hr,
+.jui .h5 + .hr,
+.jui .h6 + .hr {
+  margin: 8px 0 20px 0;
+}
+.jui .blockquote {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  padding: 10px 20px;
+  border-left: 1px solid #8c4fdf;
+  background-color: #f9f6fd;
+}
+.jui .blockquote > small {
+  font-size: 12px;
+  color: #666;
+}
+.jui .blockquote-reverse {
+  text-align: right;
+  border-right: 1px solid #8c4fdf;
+  border-left-width: 0;
+}
 .jui label,
 .jui input,
 .jui button,
