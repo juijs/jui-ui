@@ -31,18 +31,18 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #f7f7f7;
-  border: 1px solid #ececec;
-  color: #666;
+  background-color: #eee;
+  border: 1px solid #c8c8c8;
+  color: #333;
   font-size: 14px;
   padding: 0 12px;
   height: 28px;
   line-height: 28px;
 }
 .jui .label-gray {
-  background-color: #f7f7f7;
-  border: 1px solid #ececec;
-  color: #666;
+  background-color: #eee;
+  border: 1px solid #c8c8c8;
+  color: #333;
 }
 .jui .label-black {
   background-color: #212121;
