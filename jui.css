@@ -6524,13 +6524,28 @@
   background-color: #fff3f3 !important;
   border: 1px solid #ff7f7f !important;
 }
-.jui .h {
+.jui .h1,
+.jui .h2,
+.jui .h3,
+.jui .h4,
+.jui .h5,
+.jui .h6 {
   display: block;
   font-weight: 500;
   color: #333;
 }
-.jui .h > small,
-.jui .h .sub {
+.jui .h1 > small,
+.jui .h2 > small,
+.jui .h3 > small,
+.jui .h4 > small,
+.jui .h5 > small,
+.jui .h6 > small,
+.jui .h1 .sub,
+.jui .h2 .sub,
+.jui .h3 .sub,
+.jui .h4 .sub,
+.jui .h5 .sub,
+.jui .h6 .sub {
   color: #9a9a9a;
   font-size: 75%;
 }
