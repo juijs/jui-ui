@@ -108,6 +108,8 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 					$clone = $origin.clone().css("opacity", "0.5");
 					
 					index = i;
+					self.emit("dragstart", [ index, e ]);
+					
 					return false;
 				});
 
@@ -139,6 +141,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				
 				if(index != null && targetIndex != null) {
 					self.move(index, targetIndex);
+					self.emit("dragend", [ targetIndex, e ]);
 				}
 
 				index = null;

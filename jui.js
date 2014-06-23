@@ -3782,6 +3782,8 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 					$clone = $origin.clone().css("opacity", "0.5");
 					
 					index = i;
+					self.emit("dragstart", [ index, e ]);
+					
 					return false;
 				});
 
@@ -3813,6 +3815,7 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				
 				if(index != null && targetIndex != null) {
 					self.move(index, targetIndex);
+					self.emit("dragend", [ targetIndex, e ]);
 				}
 
 				index = null;
@@ -6464,6 +6467,7 @@ jui.define("uix.tree", [ "util" ], function(_) {
 						
 						if(dragIndex.start == null) {
 							dragIndex.start = node.index;
+							self.emit("dragstart", [ node.index, e ]);
 						}
 						
 						return false;
@@ -6478,6 +6482,7 @@ jui.define("uix.tree", [ "util" ], function(_) {
 									endIndex = (cNode) ? iParser.getNextIndex(cNode.index) : node.index + ".0";
 								
 								self.move(dragIndex.start, endIndex);
+								self.emit("dragend", [ endIndex, e ]);
 							}
 						}
 						
@@ -6492,7 +6497,10 @@ jui.define("uix.tree", [ "util" ], function(_) {
 
 						if(self.options.dragChild !== false) {
 							if(dragIndex.start) {
-								self.move(dragIndex.start, ("" + root.childrens.length));
+								var endIndex = "" + root.childrens.length;
+								
+								self.move(dragIndex.start, endIndex);
+								self.emit("dragend", [ endIndex, e ]);
 							}
 						}
 						
@@ -6507,6 +6515,7 @@ jui.define("uix.tree", [ "util" ], function(_) {
 			self.addEvent("body", "mouseup", function(e) {
 				if(dragIndex.start && dragIndex.end) {
 					self.move(dragIndex.start, dragIndex.end);
+					self.emit("dragend", [ dragIndex.end, e ]);
 				}
 				
 				dragIndex.start = null;
