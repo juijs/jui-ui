@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (function(exports) {
 	var global = {};
 	//var core = null, ui = {}, uix = {};
@@ -1806,6 +1807,2037 @@ jui.define("ui.combo", [ "util" ], function(_) {
 	
 	return UI;
 });
+=======
+(function(exports) {
+	var global = {};
+	//var core = null, ui = {}, uix = {};
+	
+	/**
+	 * Private Classes
+	 * 
+	 */
+	var QuickSort = function(array, isClone) { // isClone이면, 해당 배열을 참조하지 않고 복사해서 처리
+        var compareFunc = null,
+        	array = (isClone) ? array.slice(0) : array;
+  
+        function swap(indexA, indexB) {
+            var temp = array[indexA];
+            
+            array[indexA] = array[indexB];
+            array[indexB] = temp;
+        }
+
+        function partition(pivot, left, right) {
+            var storeIndex = left, pivotValue = array[pivot];
+            swap(pivot, right);
+
+            for(var v = left; v < right; v++) {
+            	if(compareFunc(array[v], pivotValue) || !compareFunc(pivotValue, array[v]) && v%2 == 1) {
+                	swap(v, storeIndex);
+                    storeIndex++;
+                }
+            }
+    
+            swap(right, storeIndex);
+
+            return storeIndex;
+        }
+  
+        this.setCompare = function(func) {
+        	compareFunc = func;
+        }
+
+        this.run = function(left, right) {
+            var pivot = null;
+
+            if (typeof left !== 'number') {
+                left = 0;
+            }
+
+            if (typeof right !== 'number') {
+                right = array.length - 1;
+            }
+
+            if (left < right) {
+                pivot = left + Math.ceil((right - left) * 0.5);
+                newPivot = partition(pivot, left, right);
+
+                this.run(left, newPivot - 1);
+                this.run(newPivot + 1, right);
+            }
+            
+            return array;
+        }
+	}
+	
+	var IndexParser = function() {
+		this.isIndexDepth = function(index) {
+			if(typeof(index) == "string" && index.indexOf(".") != -1) {
+				return true;
+			}
+			
+			return false;
+		}
+		
+		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
+			var resIndex = [], strIndex = "" + index;
+			
+			if(strIndex.length == 1) {
+				resIndex[0] = parseInt(index);
+			} else {
+				var keys = strIndex.split(".");
+				
+				for(var i = 0; i < keys.length; i++) {
+					resIndex[i] = parseInt(keys[i]);
+				}
+			}
+			
+			return resIndex;
+		}
+		
+		this.changeIndex = function(index, targetIndex, rootIndex) {
+			var rootIndexLen = this.getIndexList(rootIndex).length,
+				indexList = this.getIndexList(index),
+				tIndexList = this.getIndexList(targetIndex);
+			
+			for(var i = 0; i < rootIndexLen; i++) {
+				indexList.shift();
+			}
+
+			return tIndexList.concat(indexList).join(".");
+		}
+		
+		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
+			var indexList = this.getIndexList(index),
+				no = indexList.pop() + 1;
+				
+			indexList.push(no);
+			return indexList.join(".");
+		}
+		
+		this.getParentIndex = function(index) {
+			if(!this.isIndexDepth(index)) return null;
+			var keys = this.getIndexList(index);
+			
+			if(keys.length == 2) {
+				return "" + keys[0];
+			} else if(keys.length > 2) {
+				keys.pop();
+				return keys.join(".");
+			}
+		}
+	}
+	
+	/**
+	 * Private Static Classes
+	 * 
+	 */
+	var Base64 = {
+			 
+	    // private property
+	    _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+	 
+	    // public method for encoding
+	    encode : function (input) {
+	        var output = "";
+	        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+	        var i = 0;
+	 
+	        input = Base64._utf8_encode(input);
+	 
+	        while (i < input.length) {
+	 
+	            chr1 = input.charCodeAt(i++);
+	            chr2 = input.charCodeAt(i++);
+	            chr3 = input.charCodeAt(i++);
+	 
+	            enc1 = chr1 >> 2;
+	            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+	            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+	            enc4 = chr3 & 63;
+	 
+	            if (isNaN(chr2)) {
+	                enc3 = enc4 = 64;
+	            } else if (isNaN(chr3)) {
+	                enc4 = 64;
+	            }
+	 
+	            output = output +
+	            Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
+	            Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
+	 
+	        }
+	 
+	        return output;
+	    },
+	 
+	    // public method for decoding
+	    decode : function (input) {
+	        var output = "";
+	        var chr1, chr2, chr3;
+	        var enc1, enc2, enc3, enc4;
+	        var i = 0;
+	 
+	        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+	 
+	        while (i < input.length) {
+	 
+	            enc1 = Base64._keyStr.indexOf(input.charAt(i++));
+	            enc2 = Base64._keyStr.indexOf(input.charAt(i++));
+	            enc3 = Base64._keyStr.indexOf(input.charAt(i++));
+	            enc4 = Base64._keyStr.indexOf(input.charAt(i++));
+	 
+	            chr1 = (enc1 << 2) | (enc2 >> 4);
+	            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+	            chr3 = ((enc3 & 3) << 6) | enc4;
+	 
+	            output = output + String.fromCharCode(chr1);
+	 
+	            if (enc3 != 64) {
+	                output = output + String.fromCharCode(chr2);
+	            }
+	            if (enc4 != 64) {
+	                output = output + String.fromCharCode(chr3);
+	            }
+	 
+	        }
+	 
+	        output = Base64._utf8_decode(output);
+	 
+	        return output;
+	 
+	    },
+	 
+	    // private method for UTF-8 encoding
+	    _utf8_encode : function (string) {
+	        string = string.replace(/\r\n/g,"\n");
+	        
+	        // BOM 코드 적용 (UTF-8 관련)
+	        var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
+	 
+	        for (var n = 0; n < string.length; n++) {
+	 
+	            var c = string.charCodeAt(n);
+	 
+	            if (c < 128) {
+	                utftext += String.fromCharCode(c);
+	            }
+	            else if((c > 127) && (c < 2048)) {
+	                utftext += String.fromCharCode((c >> 6) | 192);
+	                utftext += String.fromCharCode((c & 63) | 128);
+	            }
+	            else {
+	                utftext += String.fromCharCode((c >> 12) | 224);
+	                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+	                utftext += String.fromCharCode((c & 63) | 128);
+	            }
+	 
+	        }
+	 
+	        return utftext;
+	    },
+	 
+	    // private method for UTF-8 decoding
+	    _utf8_decode : function (utftext) {
+	        var string = "";
+	        var i = 0;
+	        var c = c1 = c2 = 0;
+	 
+	        while ( i < utftext.length ) {
+	 
+	            c = utftext.charCodeAt(i);
+	 
+	            if (c < 128) {
+	                string += String.fromCharCode(c);
+	                i++;
+	            }
+	            else if((c > 191) && (c < 224)) {
+	                c2 = utftext.charCodeAt(i+1);
+	                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+	                i += 2;
+	            }
+	            else {
+	                c2 = utftext.charCodeAt(i+1);
+	                c3 = utftext.charCodeAt(i+2);
+	                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+	                i += 3;
+	            }
+	 
+	        }
+	 
+	        return string;
+	    }
+	}
+	
+	/**
+	 * Private Functions
+	 * 
+	 */
+	var template = function(text, data, settings) {
+		var _ = {},
+			breaker = {};
+	
+		var ArrayProto = Array.prototype,
+			slice = ArrayProto.slice,
+			nativeForEach = ArrayProto.forEach;
+		
+		var escapes = {
+			'\\' : '\\',
+			"'" : "'",
+			'r' : '\r',
+			'n' : '\n',
+			't' : '\t',
+			'u2028' : '\u2028',
+			'u2029' : '\u2029'
+		};
+	
+		for (var p in escapes)
+		escapes[escapes[p]] = p;
+		
+		var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g,
+			unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g,
+			noMatch = /.^/;
+		
+		var unescape = function(code) {
+			return code.replace(unescaper, function(match, escape) {
+				return escapes[escape];
+			});
+		};
+	
+		var each = _.each = _.forEach = function(obj, iterator, context) {
+			if (obj == null)
+				return;
+			if (nativeForEach && obj.forEach === nativeForEach) {
+				obj.forEach(iterator, context);
+			} else if (obj.length === +obj.length) {
+				for (var i = 0, l = obj.length; i < l; i++) {
+					if ( i in obj && iterator.call(context, obj[i], i, obj) === breaker)
+						return;
+				}
+			} else {
+				for (var key in obj) {
+					if (_.has(obj, key)) {
+						if (iterator.call(context, obj[key], key, obj) === breaker)
+							return;
+					}
+				}
+			}
+		};
+	
+		_.has = function(obj, key) {
+			return hasOwnProperty.call(obj, key);
+		};
+	
+		_.defaults = function(obj) {
+			each(slice.call(arguments, 1), function(source) {
+				for (var prop in source) {
+					if (obj[prop] == null)
+						obj[prop] = source[prop];
+				}
+			});
+			return obj;
+		};
+	
+		_.templateSettings = {
+			evaluate : /<\!([\s\S]+?)\!>/g,
+			interpolate : /<\!=([\s\S]+?)\!>/g,
+			escape : /<\!-([\s\S]+?)\!>/g
+		};
+	
+		_.template = function(text, data, settings) {
+			settings = _.defaults(settings || {}, _.templateSettings);
+	
+			var source = "__p+='" + text.replace(escaper, function(match) {
+				return '\\' + escapes[match];
+			}).replace(settings.escape || noMatch, function(match, code) {
+				return "'+\n_.escape(" + unescape(code) + ")+\n'";
+			}).replace(settings.interpolate || noMatch, function(match, code) {
+				return "'+\n(" + unescape(code) + ")+\n'";
+			}).replace(settings.evaluate || noMatch, function(match, code) {
+				return "';\n" + unescape(code) + "\n;__p+='";
+			}) + "';\n";
+	
+			if (!settings.variable)
+				source = 'with(obj||{}){\n' + source + '}\n';
+	
+			source = "var __p='';" + "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + source + "return __p;\n";
+	
+			var render = new Function(settings.variable || 'obj', '_', source);
+			if (data)
+				return render(data, _);
+			var template = function(data) {
+				return render.call(this, data, _);
+			};
+	
+			template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+	
+			return template;
+		};
+		
+		return _.template(text, data, settings);
+	}
+	
+	
+	/**
+	 * Public Utility Classes
+	 * 
+	 */
+	var utility = {
+			
+		//-- Properties
+		browser: {
+			webkit: (window.webkitURL) ? true : false,
+			mozilla: (window.mozInnerScreenX) ? true : false,
+			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
+		},
+		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+				
+		//-- Functions
+		scrollWidth: function() {
+			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
+			
+			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
+			$('body').append(div); 
+			var w1 = $('div', div).innerWidth(); 
+			div.css('overflow-y', 'auto'); 
+			var w2 = $('div', div).innerWidth(); 
+			$(div).remove(); 
+		    
+			return (isJUI) ? 10 : (w1 - w2);
+		},
+		inherit: function(ctor, superCtor) {
+			ctor.super_ = superCtor;
+			ctor.prototype = new superCtor;
+			ctor.prototype.constructor = ctor;
+		},
+		extend: function(origin, add) {
+			// Don't do anything if add isn't an object
+			if (!add || typeof add !== 'object') return origin;
+			
+			var keys = Object.keys(add);
+			var i = keys.length;
+			while (i--) {
+				origin[keys[i]] = add[keys[i]];
+			}
+			
+			return origin;
+		},
+		pxToInt: function(px) {
+			if(typeof(px) == "string" && px.indexOf("px") != -1) {
+				return parseInt(px.split("px").join(""));
+			}
+			
+			return px;
+		},
+		clone: function(obj) {
+			var clone = ($.isArray(obj)) ? [] : {};
+			
+	        for(var i in obj) {
+	            if(typeof(obj[i]) == "object")
+	                clone[i] = this.clone(obj[i]);
+	            else
+	                clone[i] = obj[i];
+	        }
+	        
+	        return clone;
+		},
+		sort: function(array) {
+			return new QuickSort(array);
+		},
+		runtime: function(name, callback) {
+			var nStart = new Date().getTime();
+			callback();
+			var nEnd = new Date().getTime(); 
+			
+			console.log(name + " : " + (nEnd - nStart) + "ms");
+		},
+		template: function(html, obj) {
+			if(!obj) return template(html);
+			else return template(html, obj);
+		},
+		resize: function(callback, ms) {
+			var after_resize = (function(){
+				var timer = 0;
+				
+				return function() {
+				    clearTimeout(timer);
+				    timer = setTimeout(callback, ms);
+				}
+			})();
+			
+			$(window).resize(function() {
+				after_resize();
+			});
+		},
+		index: function() {
+			return new IndexParser();
+		},
+		chunk: function(arr, len) {
+		  var chunks = [],
+		      i = 0,
+		      n = arr.length;
+		
+		  while (i < n) {
+		    chunks.push(arr.slice(i, i += len));
+		  }
+		
+		  return chunks;
+		},
+		typeCheck: function(t, v) {
+			function check(type, value) {
+				return {
+					"string": (typeof(value) == "string") ? true : false,
+					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
+					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
+					"number": (typeof(value) == "number") ? true : false,
+					"object": (typeof(value) == "object") ? true : false,
+					"function": (typeof(value) == "function") ? true : false,
+					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
+					"boolean"	: (typeof(value) == "boolean") ? true : false, 
+					"undefined": (typeof(value) == "undefined") ? true: false,
+					"null": (value === null) ? true : false
+				}[type];
+			}
+			
+			if(typeof(t) == "object" && t.length) {
+				var typeList = t;
+				
+				for(var i = 0; i < typeList.length; i++) {
+					if(check(typeList[i], v)) return true;
+				}
+				
+				return false;
+			} else {
+				return check(t, v);
+			}
+		},
+		typeCheckObj: function(uiObj, list) {
+			if(typeof(uiObj) != "object") return;
+			var self = this;
+			
+			for(var key in uiObj) {
+				var func = uiObj[key];
+				
+				if(typeof(func) == "function") {
+					(function(funcName, funcObj) {
+						uiObj[funcName] = function() {
+							var args = arguments,
+								params = list[funcName];
+							
+							for(var i = 0; i < args.length; i++) {
+								if(!self.typeCheck(params[i], args[i])) {
+									throw new Error("JUI_CRITICAL_ERR: the " + i + "th parameter is not a " + params[i] + " (" + name + ")");
+								}
+							}
+							
+							return funcObj.apply(this, args);
+						}
+					})(key, func);
+				}
+			}
+		},
+		dataToCsv: function(keys, dataList, dataSize) {
+			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
+			
+			for(var i = -1; i < len; i++) {
+				var tmpArr = [];
+				
+				for(var j = 0; j < keys.length; j++) {
+					if(keys[j]) {
+						if(i == -1) {
+							tmpArr.push(keys[j]);
+						} else {
+							tmpArr.push(dataList[i][keys[j]]);
+						}
+					}
+				}
+				
+				csv += tmpArr.join(",") + "\n";
+			}
+			
+			return csv;
+		},
+		dataToCsv2: function(options) {
+			var csv = "";
+			var opts = $.extend({
+				fields: null, // required
+				rows: null, // required
+				names: null,
+				count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
+			}, options);
+			
+			for(var i = -1; i < opts.count; i++) {
+				var tmpArr = [];
+				
+				for(var j = 0; j < opts.fields.length; j++) {
+					if(opts.fields[j]) {
+						if(i == -1) {
+							if(opts.names && opts.names[j]) {
+								tmpArr.push(opts.names[j]);
+							} else {
+								tmpArr.push(opts.fields[j]);
+							}
+						} else {
+							tmpArr.push(opts.rows[i][opts.fields[j]]);
+						}
+					}
+				}
+				
+				csv += tmpArr.join(",") + "\n";
+			}
+			
+			return csv;
+		},
+		fileToCsv: function(file, callback) {
+			var reader = new FileReader();
+			
+	        reader.onload = function(readerEvt) {
+	            if(typeof(callback) == "function") {
+	            	callback(readerEvt.target.result);
+	            }
+	        };
+	
+	        reader.readAsText(file);
+		},
+		csvToBase64: function(csv) {
+			return "data:application/octet-stream;base64," + Base64.encode(csv);
+		},
+		csvToData: function(keys, csv) {
+			var dataList = [],
+				tmpRowArr = csv.split("\n");
+				
+			for(var i = 1; i < tmpRowArr.length; i++) {
+				if(tmpRowArr[i] != "") {
+					var tmpArr = tmpRowArr[i].split(","),
+						data = {};
+					
+					for(var j = 0; j < keys.length; j++) {
+						data[keys[j]] = tmpArr[j];
+					}
+					
+					dataList.push(data);
+				}
+			}
+			
+			return dataList;
+		},
+		getCsvFields: function(fields, csvFields) {
+			var tmpFields = (csvFields) ? csvFields : fields;
+			
+			for(var i = 0; i < tmpFields.length; i++) {
+				if(!isNaN(tmpFields[i])) {
+					tmpFields[i] = fields[tmpFields[i]];
+				}
+			}
+			
+			return tmpFields;
+		},
+        dateFormat: function(date, format, utc) {
+            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var ddd = ["\x03", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            function ii(i, len) {
+                var s = i + "";
+                len = len || 2;
+                while (s.length < len) s = "0" + s;
+                return s;
+            }
+
+            var y = utc ? date.getUTCFullYear() : date.getFullYear();
+            format = format.replace(/(^|[^\\])yyyy+/g, "$1" + y);
+            format = format.replace(/(^|[^\\])yy/g, "$1" + y.toString().substr(2, 2));
+            format = format.replace(/(^|[^\\])y/g, "$1" + y);
+
+            var M = (utc ? date.getUTCMonth() : date.getMonth()) + 1;
+            format = format.replace(/(^|[^\\])MMMM+/g, "$1" + MMMM[0]);
+            format = format.replace(/(^|[^\\])MMM/g, "$1" + MMM[0]);
+            format = format.replace(/(^|[^\\])MM/g, "$1" + ii(M));
+            format = format.replace(/(^|[^\\])M/g, "$1" + M);
+
+            var d = utc ? date.getUTCDate() : date.getDate();
+            format = format.replace(/(^|[^\\])dddd+/g, "$1" + dddd[0]);
+            format = format.replace(/(^|[^\\])ddd/g, "$1" + ddd[0]);
+            format = format.replace(/(^|[^\\])dd/g, "$1" + ii(d));
+            format = format.replace(/(^|[^\\])d/g, "$1" + d);
+
+            var H = utc ? date.getUTCHours() : date.getHours();
+            format = format.replace(/(^|[^\\])HH+/g, "$1" + ii(H));
+            format = format.replace(/(^|[^\\])H/g, "$1" + H);
+
+            var h = H > 12 ? H - 12 : H == 0 ? 12 : H;
+            format = format.replace(/(^|[^\\])hh+/g, "$1" + ii(h));
+            format = format.replace(/(^|[^\\])h/g, "$1" + h);
+
+            var m = utc ? date.getUTCMinutes() : date.getMinutes();
+            format = format.replace(/(^|[^\\])mm+/g, "$1" + ii(m));
+            format = format.replace(/(^|[^\\])m/g, "$1" + m);
+
+            var s = utc ? date.getUTCSeconds() : date.getSeconds();
+            format = format.replace(/(^|[^\\])ss+/g, "$1" + ii(s));
+            format = format.replace(/(^|[^\\])s/g, "$1" + s);
+
+            var f = utc ? date.getUTCMilliseconds() : date.getMilliseconds();
+            format = format.replace(/(^|[^\\])fff+/g, "$1" + ii(f, 3));
+            f = Math.round(f / 10);
+            format = format.replace(/(^|[^\\])ff/g, "$1" + ii(f));
+            f = Math.round(f / 10);
+            format = format.replace(/(^|[^\\])f/g, "$1" + f);
+
+            var T = H < 12 ? "AM" : "PM";
+            format = format.replace(/(^|[^\\])TT+/g, "$1" + T);
+            format = format.replace(/(^|[^\\])T/g, "$1" + T.charAt(0));
+
+            var t = T.toLowerCase();
+            format = format.replace(/(^|[^\\])tt+/g, "$1" + t);
+            format = format.replace(/(^|[^\\])t/g, "$1" + t.charAt(0));
+
+            var tz = -date.getTimezoneOffset();
+            var K = utc || !tz ? "Z" : tz > 0 ? "+" : "-";
+            if (!utc) {
+                tz = Math.abs(tz);
+                var tzHrs = Math.floor(tz / 60);
+                var tzMin = tz % 60;
+                K += ii(tzHrs) + ":" + ii(tzMin);
+            }
+            format = format.replace(/(^|[^\\])K/g, "$1" + K);
+
+            var day = (utc ? date.getUTCDay() : date.getDay()) + 1;
+            format = format.replace(new RegExp(dddd[0], "g"), dddd[day]);
+            format = format.replace(new RegExp(ddd[0], "g"), ddd[day]);
+
+            format = format.replace(new RegExp(MMMM[0], "g"), MMMM[M]);
+            format = format.replace(new RegExp(MMM[0], "g"), MMM[M]);
+
+            format = format.replace(/\\(.)/g, "$1");
+
+            return format;
+        },
+        btoa: Base64.encode,
+        atob: Base64.decode
+	}
+	
+	var getDepends = function(depends) {
+		var args = [];
+		
+		for(var i = 0; i < depends.length; i++) {
+			var name = depends[i];
+			
+			if(name.indexOf(".") != -1) {
+				var keys = name.split(".");
+				
+				args[i] = global[keys[0]][keys[1]];
+			} else {
+				if(name == "util") {
+					args[i] = utility;
+				} else if(name == "core") {
+					args[i] = core;
+				} else {
+					args[i] = global[name];
+				}
+			}
+			
+			if(utility.typeCheck([ "null" ], args[i])) {
+				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
+			}
+		}
+		
+		return args;
+	}
+	
+	/**
+	 * Global Object
+	 * 
+	 */
+	exports.jui = {
+		
+		ready: function() {
+			var args = [],
+				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
+				depends = (arguments.length == 2) ? arguments[0] : null;
+				
+			if(!utility.typeCheck([ "array", "null" ], depends) || 
+					!utility.typeCheck("function", callback)) {
+			
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+			}
+
+			$(function() { 
+				if(depends) {
+					args = getDepends(depends);
+				} else {
+					args = [ global["ui"], global["uix"], utility, global['chart'] ];
+				}
+				
+				callback.apply(null, args);
+			});
+		},
+		define: function(name, depends, callback) {
+			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || 
+				!utility.typeCheck("function", callback)) {
+			
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+			}
+			
+			var args = getDepends(depends);
+			
+			if(name == "core") {
+				core = callback.apply(null, args);
+			} else {
+				if(name.indexOf(".") != -1) {
+					var keys = name.split(".");
+					
+					if(!global[keys[0]]) {
+						global[keys[0]] = {};
+					}
+
+					global[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
+				} else {
+					global[name] = callback.apply(null, args);
+				}
+			}
+		},
+		log: function() {
+			var jui_mng = window.open(
+	    		this.logUrl, 
+	    		"JUIM",
+	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
+	    	);
+	    	
+	    	jui.debugAll(function(log, str) {
+	    		jui_mng.log(log, str);
+	    	});
+	    	
+	    	return jui_mng;
+		},
+		logUrl: "jui.mng.html"
+	};
+})(window);
+jui.define("core", [ "util" ], function(_) {
+	
+	var UIManager = new function() {
+		var instances = [], classes = [];
+		
+		/**
+		 * Public Methods, Instance
+		 * 
+		 */
+		this.add = function(uiIns) {
+			instances.push(uiIns);
+		}
+		
+		this.get = function(key) {
+			var result = [];
+
+			if(!isNaN(key)) {
+				return instances[key];
+			} else if(typeof(key) == "string") {
+				for(var i = 0; i < instances.length; i++) {
+					if(key == instances[i].type) {
+						result.push(instances[i]);
+					}
+				}
+			}
+			
+			return result;
+		}
+		
+		this.getAll = function() {
+			return instances;
+		}
+		
+		this.size = function() {
+			return instances.length;
+		}
+		
+		this.debug = function(uiObj, i, j, callback) {
+			if(!uiObj.__proto__) return;
+			var exFuncList = [ "emit", "on", "addEvent", "addValid", "callBefore", 
+			                   "callAfter", "callDelay", "setTpl", "setVo", "setOption" ];
+			
+			for(var key in uiObj) {
+				var func = uiObj[key];
+				
+				if(typeof(func) == "function" && $.inArray(key, exFuncList) == -1) {
+					(function(funcName, funcObj, funcIndex, funcChildIndex) {
+						uiObj.__proto__[funcName] = function() {
+							var nStart = Date.now();
+							var resultObj = funcObj.apply(this, arguments);
+							var nEnd = Date.now(); 
+							
+							if(typeof(callback) == "function") {
+								callback({
+									type: jui.get(i).type,
+									name: funcName,
+									c_index: funcIndex,
+									u_index: funcChildIndex,
+									time: nEnd - nStart
+								}, arguments);
+							} else {
+								if(!isNaN(funcIndex) && !isNaN(funcChildIndex)) {
+									console.log(
+											"TYPE(" + jui.get(i).type + "), " + 
+											"NAME(" + funcName + "), " + 
+											"INDEX(" + funcIndex + ":" + funcChildIndex + "), " + 
+											"TIME(" + (nEnd - nStart) + "ms), " + 
+											"ARGUMENTS..."
+									);
+								} else {
+									console.log( 
+											"NAME(" + funcName + "), " + 
+											"TIME(" + (nEnd - nStart) + "ms), " + 
+											"ARGUMENTS..."
+									);
+								}
+								
+								console.log(arguments);
+								console.log("");
+							}
+							
+							
+							return resultObj;
+						}
+					})(key, func, i, j);
+				}
+			}
+		}
+		
+		this.debugAll = function(callback) {
+			for(var i = 0; i < instances.length; i++) {
+				var uiList = instances[i].list;
+				
+				for(var j = 0; j < uiList.length; j++) {
+					this.debug(uiList[j], i, j, callback);
+				}
+			}
+		}
+		
+		/**
+		 * Public Methods, Class
+		 * 
+		 */
+		this.addClass = function(uiCls) {
+			classes.push(uiCls);
+		}
+		
+		this.getClass = function(key) {
+			if(!isNaN(key)) {
+				return classes[key];
+			} else if(typeof(key) == "string") {
+				for(var i = 0; i < classes.length; i++) {
+					if(key == classes[i].type) {
+						return classes[i];
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		this.getClassAll = function() {
+			return classes;
+		}
+		
+		this.create = function(type, selector, options) {
+			var clsFunc = UIManager.getClass(type)["class"];
+			return clsFunc(selector, options);
+		}
+	}
+	
+	var UIListener = function(obj) {
+		var list = [];
+		
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function settingEventAnimation(e) {
+			var pfx = ["webkit", "moz", "MS", "o", ""];
+			
+			for(var p = 0; p < pfx.length; p++) {
+				var type = e.type;
+				
+				if(!pfx[p]) type = type.toLowerCase();
+				$(e.target).on(pfx[p] + type, e.callback);
+			}
+			
+			list.push(e);
+		}
+		
+		function settingEvent(e) {
+			if(e.callback && !e.children) {
+				$(e.target).on(e.type, e.callback);
+			} else {
+				$(e.target).on(e.type, e.children, e.callback);
+			}
+			
+			list.push(e);
+		}
+		
+		function settingEventTouch(e) {
+			if(e.callback && !e.children) {
+				$(e.target).on(getEventTouchType(e.type), e.callback);
+			} else {
+				$(e.target).on(getEventTouchType(e.type), e.children, e.callback);
+			}
+			
+			list.push(e);
+		}
+		
+		function getEventTouchType(type) {
+			return {
+				"click": "touchstart",
+				"dblclick": "touchend",
+				"mousedown": "touchstart",
+				"mousemove": "touchmove",
+				"mouseup": "touchend"
+			}[type];
+		}
+		
+		/**
+		 * Public Methods
+		 * 
+		 */
+		this.add = function(args) {
+			var e = { target: args[0], type: args[1] };
+			
+			if(typeof(args[2]) == "function") {
+				e = $.extend(e, { callback: args[2] });
+			} else if(typeof(args[2]) == "string") {
+				e = $.extend(e, { children: args[2], callback: args[3] });
+			}
+			
+			// 이벤트 유형에 따른 이벤트 설정
+			if(e.type.toLowerCase().indexOf("animation") != -1) 
+				settingEventAnimation(e);
+			else {
+				if(e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+					$(e.target).unbind(e.type);
+				}
+				
+				if(_.isTouch) {
+					settingEventTouch(e);
+				} else {
+					settingEvent(e);
+				}
+			}
+		}
+		
+		this.trigger = function(selector, type) {
+			$(selector).trigger((_.isTouch) ? getEventTouchType(type) : type);
+		}
+		
+		this.get = function(index) {
+			return list[index];
+		}
+		
+		this.getAll = function() {
+			return list;
+		}
+		
+		this.size = function() {
+			return list.length;
+		}
+	}
+	
+	
+	/** 
+	 * 각각의 UI별 공통 메소드 (메모리 공유)
+	 * 예를 들어 테이블 UI 객체일 경우에 해당되는 모든 요소는 UI 객체에 공유된다.
+	 */
+	var UICore = function() {
+		this.base = function() {
+			var vo = null;
+			
+			this.emit = function(type, args) {
+				var result = null;
+				
+				for(var i = 0; i < this.event.length; i++) {
+					var tmpEvent = this.event[i];
+					
+					if(tmpEvent.type == type.toLowerCase()) {
+						if(typeof(args) == "object" && args.length != undefined) {
+							result = tmpEvent.callback.apply(this, args);
+						} else {
+							result = tmpEvent.callback.call(this, args);
+						}
+					}
+				}
+				
+				return result;
+			}
+			
+			this.on = function(type, callback) {
+				if(typeof(type) != "string" && typeof(callback) != "object") return;
+				this.event.push({ type: type.toLowerCase(), callback: callback });
+			}
+			
+			this.addEvent = function() {
+				this.listen.add(arguments);
+			}
+			
+			this.addTrigger = function(selector, type) {
+				this.listen.trigger(selector, type);
+			}
+			
+			this.addValid = function(name, params) {
+				if(!this.__proto__) return;
+				var ui = this.__proto__[name];
+				
+				this.__proto__[name] = function() {
+					var args = arguments;
+					
+					for(var i = 0; i < args.length; i++) {
+						if(!_.typeCheck(params[i], args[i])) {
+							throw new Error("JUI_CRITICAL_ERR: the " + i + "th parameter is not a " + params[i] + " (" + name + ")");
+						}
+					}
+
+					return ui.apply(this, args);
+				}
+			}
+			
+			this.callBefore = function(name, callback) {
+				if(!this.__proto__) return;
+				var ui = this.__proto__[name];
+				
+				this.__proto__[name] = function() {
+					var args = arguments;
+					
+					if(typeof(callback) == "function") {
+						// before 콜백이 false가 이날 경우에만 실행 한다.
+						if(callback.apply(this, args) !== false) {
+							return ui.apply(this, args);
+						}
+					} else {
+						return ui.apply(this, args);
+					}
+				}
+			}
+			
+			this.callAfter = function(name, callback) {
+				if(!this.__proto__) return;
+				var ui = this.__proto__[name];
+				
+				this.__proto__[name] = function() {
+					var args = arguments,
+						obj = ui.apply(this, args);
+					
+					// 실행 함수의 리턴 값이 false일 경우에는 after 콜백을 실행하지 않는다.
+					if(typeof(callback) == "function" && obj !== false) {
+						callback.apply(this, args);
+					}
+					
+					return obj;
+				}
+			}
+			
+			this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
+				if(!this.__proto__) return;
+				
+				var ui = this.__proto__[name],
+					delay = (!isNaN(callObj.delay)) ? callObj.delay : 0;
+				
+				this.__proto__[name] = function() {
+					var self = this,
+						args = arguments;
+					
+					if(typeof(callObj.before) == "function") {
+						callObj.before.apply(self, args);
+					}
+					
+					if(delay > 0) {
+						setTimeout(function() {
+							callFunc(self, args);
+						}, delay);
+					} else {
+						callFunc(self, args);
+					}
+				}
+				
+				function callFunc(self, args) {
+					var obj = ui.apply(self, args);
+					
+					if(typeof(callObj.after) == "function" && obj !== false) { // callAfter와 동일
+						callObj.after.apply(self, args);
+					}
+				}
+			}
+			
+			this.setTpl = function(name, html) {
+				this.tpl[name] = _.template(html);
+			}
+			
+			this.setVo = function() {
+				if(!this.options.vo) return;
+				
+				if(vo != null) vo.reload();
+				vo = $(this.selector).jbinder();
+				
+				this.bind = vo;
+			}
+			
+			this.setOption = function(key, value) {
+				if(typeof(key) == "object") {
+					for(var k in key) {
+						this.options[k] = key[k];
+					}
+				} else {
+					this.options[key] = value;
+				}
+			}
+		}
+		
+		this.build = function(UI) {
+			_.inherit(UI.func, this.base);
+			
+			// 세팅 메소드에 정의되지 않은 옵션을 사용할 경우에 에러 발생
+			function checkedOptions(defOpts, opts) {
+				var exceptOpts = [ "event", "tpl", "vo" ],
+					defOptKeys = [],
+					optKeys = [];
+				
+				for(var key in defOpts) { defOptKeys.push(key); }
+				for(var key in opts) { optKeys.push(key); }
+				
+				for(var i = 0; i < optKeys.length; i++) {
+					var name = optKeys[i];
+					
+					if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
+						throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
+					}
+				}
+			}
+			
+			return function(selector, options) {
+				var list = [], 
+					$root = $(selector);
+					
+				$root.each(function(index) {
+					var obj = new UI.func(),
+						setting = (obj.setting) ? obj.setting() : {};
+					var defOptions = (typeof(setting.options) == "object") ? setting.options : {};
+						
+					// Options Check
+					checkedOptions(defOptions, options);
+					
+					// Default Options Setting
+					var opts = $.extend(true, defOptions, options);
+						opts.tpl = (opts.tpl) ? opts.tpl : {};
+					
+					// Pulbic Properties
+					obj.init.prototype = obj;
+					obj.init.prototype.selector = $root.selector;
+					obj.init.prototype.root = this;
+					obj.init.prototype.options = opts;
+					obj.init.prototype.tpl = {};
+					obj.init.prototype.event = new Array(); // Custom Event
+					obj.init.prototype.listen = new UIListener(); // DOM Event
+					obj.init.prototype.timestamp = Date.now();
+					obj.init.prototype.index = ($root.size() == 0) ? null : index;
+					
+					// Template Setting (Markup)
+					$("script").each(function(i) {
+						if(selector == $(this).data("jui") || selector == $(this).data("vo")) {
+							var tplName = $(this).data("tpl");
+							
+							if(tplName == "") {
+								throw new Error("JUI_CRITICAL_ERR: 'data-tpl' property is required");
+							}	
+							
+							opts.tpl[tplName] = $(this).html();
+						}
+					});
+					
+					// Template Setting (Script)
+					if(opts.tpl) {
+						for(var name in opts.tpl) {
+							var tplHtml = opts.tpl[name];
+							
+							if(typeof(tplHtml) == "string" && tplHtml != "") {
+								obj.init.prototype.tpl[name] = _.template(tplHtml);
+							}
+						}
+					}
+					
+					var uiObj = new obj.init();
+					var validFunc = (typeof(setting.valid) == "object") ? setting.valid : {},
+						animateFunc = (typeof(setting.animate) == "object") ? setting.animate : {};
+					
+					// Event Setting 
+					if(typeof(uiObj.options.event) == "object") {
+						for(var key in uiObj.options.event) {
+							uiObj.on(key, uiObj.options.event[key]);
+						}
+					}
+					
+					// Type-Valid Check
+					for(var key in validFunc) {
+						uiObj.addValid(key, validFunc[key]);
+					}
+
+					// Call-Animate Functions
+					if(opts.animate) {
+						for(var key in animateFunc) {
+							if(typeof(animateFunc[key]) == "object") {
+								uiObj.callDelay(key, animateFunc[key]);
+							}
+						}
+					}
+					
+					list[index] = uiObj;
+				});
+				
+				// UIManager에 데이터 입력
+				UIManager.add({ type: UI.type, list: list, selector: selector, options: options, index: UIManager.size() });
+				
+				return (list.length == 1) ? list[0] : list;
+			}
+		}
+	};
+	
+	UICore.init = function(UI) {
+		var uiObj = null;
+		
+		if(typeof(UI) === "object") {
+			var core = new UICore();
+			uiObj = core.build(UI);
+			
+			UIManager.addClass({ type: UI.type, "class": uiObj });
+		}
+		
+		return uiObj;
+	}
+	
+	// UIManager는 Global 객체로 정의
+	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;
+	
+	return UICore;
+});
+jui.define("svg", [ "util" ], function(_) {
+	
+	var _tagList = [
+	
+		// animation 
+		'animate', 'animatecolor', 'animatemotion', 'animatetransform', 'mpath', 'set',
+	
+		// Shape
+		'circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect', 'text', 'image',
+		
+		
+		// Container
+		'a', 'defs', 'glyph', 'g', 'marker', 'mask', 'pattern', 'svg', 'switch', 'symbol', 'use',
+		
+		// Descriptive
+		'desc', 'metadata', 'title',
+		
+		
+		// Filter  
+		'feblend', 'fecolormatrix', 'fecomponenttransfer', 'fecomposite', 
+		'feconvolvematrix', 'fediffuselighting', 'fedisplacementmap', 'feflood',
+		'fefunca', 'fefuncb', 'fefuncg', 'fefuncr','fegaussianblur', 
+		'feimage', 'femerge', 'femergenode', 'femorphology', 'feoffset', 
+		'fespecularlighting', 'fetile', 'feturbulence',
+		
+		// Font 
+		'font', 'font-face', 'font-face-format', 'font-face-name', 
+		'font-face-src', 'font-face-uri', 'hkern', 'vkern',
+		
+		// Gradient 
+		'lineargradient', 'radialgradient', 'stop',
+
+		// Text
+		 'altglyph', 'textpath', 'tref', 'tspan',
+		
+		 
+		'clippath', 'color-profile', 'cursor', 'filter', 'foreignobject', 'script', 'style', 'view'
+	]
+	
+	/**
+	 * SVG Generator
+	 */
+	var SVG = function(tagName, namespace) {
+		namespace = namespace || "http://www.w3.org/2000/svg";
+		this.$el = $(document.createElementNS(namespace, tagName));
+	}
+	
+	SVG.prototype = {
+
+		create : function(tagName, namespace) {
+			return new SVG(tagName, namespace);
+		},
+		
+		add : function(tagName, namespace) {
+			var element = this.create(tagName, namespace)
+			this.append(element);
+			return element; 
+		},
+		
+		append : function(element) {
+			this.$el.append(element.$el || element);
+			return this; 
+		},
+		
+		text : function(text) {
+			this.$el.text(text);
+			return this; 
+		},
+		
+		  attr : function(attrs) {
+		  
+		    for(var key in attrs) {
+		    
+		      if (this[key]) { 
+		        this[key].call(this, attrs[key]);      
+		      } else {
+		        this.set(key, attrs[key]);
+		      }
+		    }
+		  
+		    return this; 
+		  },		
+		
+		get : function(key) {
+			return this.$el.attr(key);
+		},
+	
+		set : function(key, value, namespace) {
+			namespace = namespace || null; 
+	    	this.$el[0].setAttributeNS(namespace, key, value);
+	    	return this; 
+		},
+	
+		i : function(key) { 
+    		return parseInt(this.get(key) || 0);
+  		},
+  
+  		f : function(key) { 
+    		return parseFloat(this.get(key) || 0);
+  		},
+  		
+		fill : function(color) { 
+			return this.set('fill', color); 
+		},
+		
+		stroke : function(stroke) { 
+			return this.set('stroke', stroke); 
+		},
+		
+		strokeWidth : function(width) { 
+			return this.set('stroke-width', width); 
+		},
+		
+		fontSize : function(size) { 
+			return this.set('font-size', size); 
+		},
+		
+		fontFamily : function(font) { 
+			return this.set('font-family', font); 
+		},
+		plus : function(key, value) {  
+			return this.set(key, parseInt(this.get(key)) + value); 
+		},
+		minus : function(key, value) {  
+			return this.set(key, parseInt(this.get(key)) - value); 
+		},
+		transform : function(value) { 
+			return this.set('transform', value); 
+		},
+		  
+		translate : function(x, y) { 
+			return this.transform("translate(" + x + ", " + y + ")"); 
+		},
+		  
+		go : function(x, y) {
+			this.x(x).y(y);
+		  	return this.translate(x, y);
+		},
+		
+		rx : function(rx) { 
+			return this.set('rx', rx); 
+		},
+		ry : function(ry) { 
+			return this.set('ry', ry); 
+		},
+		x1 : function(x1) { 
+			return this.set('x1', x1); 
+		},
+		x2 : function(x2) { 
+			return this.set('x2', x2); 
+		},
+		y1 : function(y1) { 
+			return this.set('y1', y1); 
+		},
+		y2 : function(y2) { 
+			return this.set('y2', y2); 
+		},
+		  
+		cx : function(x) {  
+			return this.set('cx', x); 
+		},
+		cy : function(y) { 
+			return this.set('cy', y);  
+		},
+		r : function(r) { 
+			return this.set('r', r); 
+		},
+		 
+		x : function(x) { 
+			return this.set('x', x); 
+		}, 
+		y : function(y) { 
+			return this.set('y', y); 
+		},  
+		width : function(width) { 
+			return this.set('width', width); 
+		},  
+		height : function(height) { 
+			return this.set('height', height); 
+		},
+		    
+		href : function(href) {
+			return this.set('href', href, "http://www.w3.org/1999/xlink");  
+		},  
+		  
+		bound : function() {
+		  
+		  try {
+		    var obj = this.el.getBBox();  
+		    
+		    return obj;      
+		  } catch(e) {
+		    return {
+	         x : this.el.clientLeft,
+	         y: this.el.clientTop,
+	         width: this.el.clientWidth,
+	         height: this.el.clientHeight
+		   	};
+		  }
+		
+		}
+	};
+	
+	/*
+	for(var i = 0, len = _tagList.length; i < len; i++) {
+		var tag = _tagList[i];
+		SVG.prototype[tag] = (function(_tag) {
+			
+			return function(attrs) {
+				return this.add(_tag).attr(attrs);
+			};
+			
+		})(tag);
+	} */
+	
+	return {
+		build: function(tagName, namespace) {
+			return new SVG(tagName, namespace);
+		}
+	}
+});
+jui.define("ui.button", [], function() {
+	
+	var UIRadio = function(ui, element, options) {
+		this.data = { index: 0, value: "", elem: null };
+		
+		this.ui = ui;
+		this.element = element;
+		this.options = $.extend({ index: 0, value: "" }, options);
+		
+		// Private
+		this._setting = function(type, e, order) {
+			var self = this,
+				className = "active",
+				index = this.options.index,
+				value = this.options.value;
+			
+			$(self.element).find(".btn").each(function(i) {
+				if(type == "event") {
+					if(e.currentTarget == this) on(i, this);
+					else off(this);
+				} else if(type == "init") {
+					if(order == "value") {
+						if(value == $(this).attr("value")) on(i, this);
+						else off(this);
+					} else {
+						if(index == i) on(i, this);
+						else off(this);
+					}
+				}
+			});
+			
+			function on(i, elem) {
+				var value = $(elem).attr("value"),
+					text = $(elem).text();
+				
+				self.data = { index: i, value: value, text: text };
+				$(elem).addClass(className);
+			}
+			
+			function off(elem) {
+				$(elem).removeClass(className);
+			}
+		}
+		
+		this.init = function() {
+			var self = this;
+			
+			// Event
+			this.ui.addEvent(self.element, "click", ".btn", function(e) {
+				self._setting("event", e);
+				self.ui.emit("change", [ self.data, e ]);
+				
+				e.preventDefault();
+			});
+			
+			// Init
+			if(this.options.value != "") {
+				this._setting("init", this.options.value, "value");
+			} else {
+				this._setting("init", this.options.index, "index");
+			}
+		}
+	}
+
+	var UICheck = function() {
+		this.data = [];
+		this.options = $.extend({ index: [], value: [] }, this.options);
+		
+		// Private
+		this._setting = function(type, e, order) {
+			var self = this,
+				className = "active",
+				index = this.options.index,
+				value = this.options.value;
+				
+			$(self.element).find(".btn").each(function(i) {
+				if(type == "init") {
+					if(order == "value") {
+						if(inArray(value, $(this).attr("value"))) on(i, this);
+						else off(i, this);
+					} else {
+						if(inArray(index, i)) on(i, this);
+						else off(i, this);
+					}
+				} else {
+					if(e.currentTarget == this) {
+						if(!$(this).hasClass("active")) on(i, this);
+						else off(i, this);
+					}
+				}
+			});
+			
+			function on(i, elem) {
+				var value = $(elem).attr("value"),
+					text = $(elem).text();
+			
+				self.data[i] = { index: i, value: value, text: text };
+				$(elem).addClass(className);
+			}
+			
+			function off(i, elem) {
+				self.data[i] = null;
+				$(elem).removeClass(className);
+			}
+			
+			function inArray(arr, val) {
+				for(var i = 0; i < arr.length; i++) {
+					if(arr[i] == val) return true;
+				}
+				
+				return false;
+			}
+		}
+	}
+	
+	var UI = function() {
+		var ui_list = {};
+		
+		
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					type: "radio",
+					index: 0,
+					value: ""
+				},
+				valid: {
+					setIndex: [ [ "integer", "array" ] ],
+					setValue: [ [ "integer", "string", "array", "boolean" ] ]
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			
+			if(opts.type == "radio") {
+				ui_list[opts.type] = new UIRadio(self, this.root, self.options);
+				ui_list[opts.type].init();
+			} else if(opts.type == "check") {
+				UICheck.prototype = new UIRadio(self, this.root, self.options);
+				
+				ui_list[opts.type] = new UICheck();
+				ui_list[opts.type].init();
+			}
+			
+			return this;
+		}
+		
+		this.setIndex = function(indexList) {
+			ui_list[this.options.type].options.index = indexList;
+			ui_list[this.options.type]._setting("init", null, "index");
+		}
+
+		this.setValue = function(valueList) {
+			ui_list[this.options.type].options.value = valueList;
+			ui_list[this.options.type]._setting("init", null, "value");
+		}
+		
+		this.getData = function() {
+			return ui_list[this.options.type].data;
+		}
+		
+		this.getValue = function() {
+			return ui_list[this.options.type].data.value;
+		}
+
+		this.reload = function() {
+			ui_list[this.options.type]._setting("init");
+		}
+	}
+	
+	return UI;
+});
+jui.define("ui.combo", [ "util" ], function(_) {
+	
+	/**
+	 * Common Logic
+	 * 
+	 */
+	var hideAll = function() {
+		var call_list = jui.get("combo");
+		
+		for(var i = 0; i < call_list.length; i++) {
+			var ui_list = call_list[i].list;
+			
+			for(var j = 0; j < ui_list.length; j++) {
+				if(ui_list[j].type == "open") ui_list[j].fold();
+			}
+		}
+	}
+	
+	$(function() { 
+		$("body").on("click", function(e) {
+			hideAll();
+		});
+	});
+	
+	
+	/**
+	 * UI Class
+	 * 
+	 */
+	var UI = function() {
+		var ui_list = null, ui_data = null;
+		var index = -1;
+					
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function load(type, data) {
+			var $combo_root = ui_list["root"],
+				$combo_text = ui_list["text"],
+				$combo_drop = ui_list["drop"],
+				$combo_list = $combo_drop.children("li");
+			
+			$combo_list.each(function(i) {
+				var elem = getElement(this),
+					value = $(elem).attr("value"),
+					text = $(elem).text();
+				
+				if(!value) { 
+					value = text;
+					$(elem).attr("value", value);
+				}
+				
+				if((type == "index" && data == i) || (type == "value" && data == value)) {
+					ui_data = { index: i, value: value, text: text };
+					
+					$combo_root.attr("value", value);
+					$combo_text.html(text);
+					
+					if ($combo_root.select && $combo_root.select[0] ) {
+						$combo_root.select[0].selectedIndex = i;
+					}
+				}
+			});
+			
+			if($combo_list.size() == 0) {
+				ui_data = null;
+			}
+		}
+		
+		function getElement(target) {
+			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
+		}
+		
+		function setEventKeydown(self) {
+			if(!self.options.keydown) return;
+			
+			self.addEvent(window, "keydown", function(e) {
+				if(self.type == "hide") return;
+				var $list = ui_list["drop"].children("li");
+				
+				if(e.which == 38) { // up
+					if(index < 1) index = $list.size() - 1;
+					else index--;
+					
+					selectItem(self, function() {
+						index--;
+						selectItem(self);
+					});
+					
+					return false;
+				}
+				
+				if(e.which == 40) { // down
+					if(index < $list.size() - 1) index++;
+					else index = 0;
+					
+					selectItem(self, function() {
+						index++;
+						selectItem(self);
+					});
+					
+					return false;
+				}
+				
+				if(e.which == 13) { // enter
+					$list.eq(index).trigger("click");
+					index = -1;
+				}
+			});
+		}
+		
+		function selectItem(self, callback) {
+			var $list = ui_list["drop"].children("li"),
+				$target = $list.eq(index);
+			
+			$list.removeClass("active");
+
+			if($target.val() != "" || $target.html() != "") {
+				$target.addClass("active");
+				
+				if(self.options.height > 0) {
+					ui_list["drop"].scrollTop(index * $target.outerHeight());
+				}
+			} else {
+				if(typeof(callback) == "function") {
+					callback();
+				}
+			}
+		}
+		
+		function makeSelectTouch(self) {
+			if(!_.isTouch) return;
+			
+			var $combo_root = ui_list["root"];
+			
+			if ($combo_root.select && $combo_root.select[0]) {
+				var $select = $combo_root.select;
+				$select.empty();
+			} else {
+				var $select = $("<select></select>").css({
+					position: "absolute",
+					opacity : 0.01
+				});
+				
+				$combo_root.find("ul").after($select);					
+				
+				self.addEvent($select, "change", function(e) {
+					var elem = $(e.currentTarget).find("option:selected").data("elem");
+					self.addTrigger(elem, "touchstart");
+				});
+				
+				$combo_root.select = $select;
+			}
+
+			$combo_root.find("ul > li").each(function(i, elem) {
+				var value = $(elem).data('value');
+				var text = $(elem).text();
+				
+				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
+			});
+		}
+		
+		
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					index: 0,
+					value: "",
+					width: 0,
+					height: 100,
+					keydown: false,
+					position: "bottom"
+				},
+				valid: {
+					setIndex: [ "integer" ],
+					setValue: [ [ "integer", "string", "boolean" ] ]
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			
+			var $combo_root 	= $(this.root),
+				$combo_text 	= $combo_root.children(".btn").not(".btn-toggle"),
+				$combo_toggle 	= $combo_root.children(".btn-toggle"),
+				$combo_click	= $combo_root.children(".btn"),
+				$combo_drop 	= $combo_root.children("ul");
+			
+			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
+			$combo_drop.insertAfter($combo_text);
+			
+			// Width
+			if(opts.width > 0) {
+				$combo_text.outerWidth(opts.width - $combo_toggle.outerWidth() + 1);
+				$combo_text.css({
+					"overflow": "hidden",
+					"white-space": "nowrap"
+				});
+			}
+			
+			// Height
+			if(opts.height > 0) {
+				$combo_drop.css({ "maxHeight": opts.height, "overflow": "auto" });
+			}
+			
+			// Show
+			this.addEvent($combo_click, "click", function(e) {
+				if (_.isTouch) {
+					$combo_root.select.focus();
+				} else {
+					if(self.type == "open") return;
+					
+					hideAll();
+					self.open(e);					
+				}
+				
+				return false;
+			});
+			
+			// Select
+			this.addEvent($combo_drop, "click", "li", function(e) {
+				hideAll();
+				
+				var elem = getElement(e.target),
+					value = $(elem).attr("value"),
+					text = $(elem).html();
+					
+				ui_data = { value: value, text: text, element: elem };
+				$combo_text.html(text);
+				$combo_root.attr("value", value);
+				
+				self.emit("change", [ ui_data, e ]);
+				e.preventDefault();
+			});
+			
+			// Init
+			ui_list = { root: $combo_root, text: $combo_text, drop: $combo_drop, toggle: $combo_toggle };
+
+			this.type = "fold"; // 기본 타입 설정
+			this.reload();
+			
+			//  Key up/down event
+			setEventKeydown(this);
+			
+			return this;
+		}
+		
+		this.setIndex = function(index) {
+			load("index", index);
+			this.emit("change", [ ui_data ]);
+		}
+
+		this.setValue = function(value) {
+			load("value", value);
+			this.emit("change", [ ui_data ]);
+		}
+		
+		this.getData = function() {
+			return ui_data;
+		}
+		
+		this.getValue = function() {
+			return (ui_data != null) ? ui_data["value"] : null;
+		}
+
+		this.getText = function() {
+			return (ui_data != null) ? ui_data["text"] : null;
+		}
+		
+		this.open = function(e) {
+			ui_list["toggle"].addClass("active");
+			ui_list["drop"].outerWidth(ui_list["root"].outerWidth() - 1);
+
+			if(this.options.position == "top") {
+				var h = ui_list["drop"].outerHeight();
+				
+				ui_list["drop"].animate({
+				    top: "-" + h,
+				    height: "toggle"
+				}, 100);
+			} else {
+				ui_list["drop"].slideDown(100);
+			}
+
+			this.emit("open", e);
+			this.type = "open";
+		}
+		
+		this.fold = function() {
+			ui_list["drop"].hide();
+			ui_list["toggle"].removeClass("active");
+			
+			if(this.options.position == "top") {
+				ui_list["drop"].css("top", 0);
+			}
+			
+			this.emit("fold");
+			this.type = "fold";
+		}
+		
+		this.reload = function() {
+			if(this.options.value != "") {
+				load("value", this.options.value);
+			} else {
+				load("index", this.options.index);
+			}
+			
+			makeSelectTouch(this);
+			
+			this.emit("reload", ui_data);
+		}
+	}
+	
+	return UI;
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
 jui.define("ui.datepicker", [ "util" ], function(_) {
 
     /**
@@ -2155,6 +4187,7 @@ jui.define("ui.datepicker", [ "util" ], function(_) {
     }
 
     return UI;
+<<<<<<< HEAD
 });
 jui.define("ui.dropdown", [], function() {
 	
@@ -2480,6 +4513,333 @@ jui.define("ui.dropdown", [], function() {
 	
 	return UI;
 });
+=======
+});
+jui.define("ui.dropdown", [], function() {
+	
+	/**
+	 * Common Logic
+	 * 
+	 */
+	var hideAll = function() {
+		var dd = getDropdown();
+		
+		if(dd != null) {
+			dd.hide();
+		}
+	}
+	
+	var getDropdown = function() {
+		var call_list = jui.get("dropdown");
+		
+		for(var i = 0; i < call_list.length; i++) {
+			var ui_list = call_list[i].list;
+			
+			for(var j = 0; j < ui_list.length; j++) {
+				if(ui_list[j].type == "show") return ui_list[j];
+			}
+		}
+		
+		return null;
+	}
+	
+	$(function() { 
+		$("body").on("click", function(e) {
+			var tn = e.target.tagName;
+			
+			if(tn != "LI" && tn != "INPUT" && tn != "A" && tn != "BUTTON" && tn != "I") {
+				hideAll();
+			}
+		});
+		
+		$(window).on("keydown", function(e) {
+			var dd = getDropdown();
+			
+			if(dd != null) {
+				dd.wheel(e.which, function() {
+					e.preventDefault();
+				});
+			}
+		});
+	});
+	
+	
+	/**
+	 * UI Class
+	 * 
+	 */
+	var UI = function() {
+		var ui_list = null, index = -1;
+		
+		
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function setEventNodes(self) {
+			var $list = $(ui_list.menu).find("li");
+			
+			// 이벤트 걸린거 초기화
+			$list.unbind("click").unbind("hover");
+			
+			// 클릭 이벤트 설정
+			self.addEvent($list, "click", function(e) {
+				if($(this).hasClass("divider")) return;
+				
+				var index = getTargetIndex(this),
+					text = $(this).text(),
+					value = $(this).attr("value");
+				
+				self.emit("change", [ { index: index, value: value, text: text }, e ]);
+				
+				// close가 true일 경우, 전체 드롭다운 숨기기
+				if(self.options.close) hideAll();
+				
+				// A 태그일 경우에는 이벤트 막기
+				if(e.target.tagName == "A") {
+					e.preventDefault();
+				}
+			});
+			
+			// 마우스 오버시 hover 클래스 제거
+			self.addEvent($list, "hover", function(e) {
+				$list.removeClass("active");
+			});
+			
+			function getTargetIndex(elem) {
+				var result = 0;
+				
+				$list.each(function(i) {
+					if(elem == this) {
+						result = i;
+					}
+				});
+				
+				return result;
+			}
+		}
+		
+		function setEventKeydown(self) {
+			if(!self.options.keydown) return;
+			
+			self.addEvent(window, "keydown", function(e) {
+				if(self.type == "hide") return;
+				var $list = ui_list.menu.find("li");
+				
+				if(e.which == 38) { // up
+					if(index < 1) index = $list.size() - 1;
+					else index--;
+					
+					selectItem(self, function() {
+						index--;
+						selectItem(self);
+					});
+				}
+				
+				if(e.which == 40) { // down
+					if(index < $list.size() - 1) index++;
+					else index = 0;
+					
+					selectItem(self, function() {
+						index++;
+						selectItem(self);
+					});
+				}
+				
+				if(e.which == 13) { // enter
+					self.addTrigger($list.eq(index), "click");
+					index = -1;
+				}
+				
+				return false;
+			});
+		}
+		
+		function selectItem(self, callback) {
+			var $list = ui_list.menu.find("li"),
+				$target = $list.eq(index);
+			
+			$list.removeClass("active");
+			
+			if($target.val() != "" || $target.html() != "") {
+				$target.addClass("active");
+				
+				if(self.options.height > 0) {
+					ui_list.menu.scrollTop(index * $target.outerHeight());
+				}
+			} else {
+				if(typeof(callback) == "function") {
+					callback();
+				}
+			}
+		}
+		
+		
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					close: true,
+					keydown: false,
+					left: 0,
+					top: 0,
+					width: 0,
+					height: 0,
+					nodes: []
+				},
+				valid: {
+					update: [ "array" ],
+					show: [ "number", "number" ],
+					move: [ "number", "number" ],
+					wheel: [ "integer", "function" ]
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			
+			var $dd_root = $(this.root),
+				$dd_menu = $dd_root.find("ul"),
+				$dd_anchor = $dd_root.find(".anchor");
+			
+			// 메인 설정, 없을 경우에는 root가 메인이 됨
+			$dd_menu = ($dd_menu.size() == 0) ? $dd_root : $dd_menu;
+			
+			// UI 객체 추가
+			ui_list = { root: $dd_root, menu: $dd_menu, anchor: $dd_anchor };
+
+			// Size
+			ui_list.root.outerWidth(ui_list.menu.outerWidth());
+			
+			// Width
+			if(opts.width > 0) {
+				$dd_menu.outerWidth(opts.width);
+			}
+			
+			// Height
+			if(opts.height > 0) {
+				$dd_menu.css({ "maxHeight": opts.height, "overflow": "auto" });
+			}
+			
+			// Left
+			if(opts.left > 0) {
+				$dd_root.css("left", opts.left);
+			}
+
+			// Top
+			if(opts.top > 0) {
+				$dd_root.css("top", opts.top);
+			}
+			
+			// Default Styles
+			$dd_menu.css({ "display": "block" });
+			$dd_root.css({ "position": "absolute", "display": "none" });
+			
+			// 드롭다운 목록 갱신
+			if(opts.nodes.length > 0) {
+				this.update(opts.nodes);
+			} else {
+				setEventNodes(this);
+			}
+
+			this.type = "hide"; // 기본 타입 설정
+			
+			return this;
+		}
+		
+		this.update = function(nodes) {
+			if(!this.tpl.node) return;
+			
+			$(ui_list.menu).empty();
+			
+			for(var i = 0; i < nodes.length; i++) {
+				$(ui_list.menu).append(this.tpl.node(nodes[i]));
+			}
+			
+			setEventNodes(this);
+		}
+		
+		this.hide = function() {
+			ui_list.root.hide();
+			
+			this.emit("hide");
+			this.type = "hide";
+		}
+		
+		this.show = function(x, y) {
+			hideAll();
+			
+			ui_list.root.show();
+			
+			// Anchor 옵션 처리
+			if(ui_list.anchor.size() > 0) 
+				ui_list.root.css("margin-top", "10px");
+			
+			// x, y 값이 있을 경우
+			if(arguments.length == 2) {
+				this.move(x, y);
+			}
+			
+			this.emit("show");
+			this.type = "show";
+		}
+		
+		this.move = function(x, y) {
+			ui_list.root.css("left", x);
+			ui_list.root.css("top", y);
+		}
+		
+		this.wheel = function(key, callback) {
+			if(!this.options.keydown) return;
+			
+			var self = this,
+				$list = ui_list.menu.find("li");
+			
+			if(key == 38 || key == -1) { // up
+				if(index < 1) index = $list.size() - 1;
+				else index--;
+				
+				selectItem(this, function() {
+					index--;
+					selectItem(self);
+				});
+				
+				if(callback) callback();
+			}
+			
+			if(key == 40 || key == 1) { // down
+				if(index < $list.size() - 1) index++;
+				else index = 0;
+				
+				selectItem(self, function() {
+					index++;
+					selectItem(self);
+				});
+				
+				if(callback) callback();
+			}
+			
+			if(key == 13 || key == 0 || !key) { // enter
+				self.addTrigger($list.eq(index), "click");
+				index = -1;
+				
+				if(callback) callback();
+			}
+		}
+		
+		this.reload = function() {
+			this.init();
+			this.emit("reload");
+		}
+	}
+	
+	return UI;
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
 jui.define("ui.modal", [ "util" ], function(_) {
 	
 	/**
@@ -2658,7 +5018,11 @@ jui.define("ui.modal", [ "util" ], function(_) {
 	}
 	
 	return UI;
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
 jui.define("ui.notify", [], function() {
 
     /**
@@ -2790,7 +5154,11 @@ jui.define("ui.notify", [], function() {
     }
 
     return UI;
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
 jui.define("ui.paging", [], function() {
 	
 	/**
@@ -2935,7 +5303,11 @@ jui.define("ui.paging", [], function() {
 	}
 	
 	return UI;
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
 jui.define("ui.tooltip", [], function() {
 	
 	/**
@@ -3066,6 +5438,7 @@ jui.define("ui.tooltip", [], function() {
 	}
 	
 	return UI;
+<<<<<<< HEAD
 });
 
 /*
@@ -3986,6 +6359,1998 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			}]);
 
 			changeTab(this, index);
+		}
+		
+		this.activeIndex = function() {
+			return activeIndex;
+		}
+	}
+	
+	return UI;
+});
+jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
+	
+	/**
+	 * Common Logic
+	 * 
+	 */
+	_.resize(function() {
+		var call_list = jui.get("table");
+		
+		for(var i = 0; i < call_list.length; i++) {
+			var ui_list = call_list[i].list;
+			
+			for(var j = 0; j < ui_list.length; j++) {
+				ui_list[j].resize();
+			}
+		}
+	}, 1000);
+
+	
+	/**
+	 * UI Core Class
+	 * 
+	 */
+	var UIColumn = function(index) {
+		var self = this;
+		
+		this.element = null;
+		this.list = []; // 자신의 컬럼 로우 TD 태그 목록
+		this.order = "asc";
+		this.name = null;
+		this.data = [];
+		this.index = index;
+		this.type = "show";
+		this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
+		
+		
+		/**
+		 * Public Methods
+		 * 
+		 */
+		this.hide = function() {
+			this.type = "hide";
+			$(this.element).hide();
+		}
+		
+		this.show = function() {
+			this.type = "show";
+			$(this.element).show();
+		}
+	}
+	
+	var UIRow = function(data, tplFunc, pRow) {
+		var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
+		
+		/**
+		 * Public Properties
+		 * 
+		 */
+		this.data = data;
+		this.rownum = null;		// 현재 뎁스에서의 인덱스 키값
+		this.index = null;		// 계층적 구조를 수용할 수 있는 키값
+		this.element = null;
+		this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
+		
+		this.parent = (pRow) ? pRow : null;
+		this.childrens = [];
+		this.depth = 0;
+		this.type = "fold";
+
+		
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function setIndex(rownum) {
+			self.rownum = (!isNaN(rownum)) ? rownum : self.rownum;
+			
+			if(!self.parent) self.index = "" + self.rownum;
+			else self.index = self.parent.index + "." + self.rownum;
+			
+			// 뎁스 체크
+			if(self.parent && typeof(self.index) == "string") {
+				self.depth = self.index.split(".").length - 1;
+			}
+			
+			// 자식 인덱스 체크
+			if(!self.isLeaf()) {
+				setIndexChild(self);
+			}
+		}
+		
+		function setIndexChild(row) {
+			var clist = row.childrens;
+			
+			for(var i = 0; i < clist.length; i++) {
+				clist[i].reload(i);
+				
+				if(!clist[i].isLeaf()) { 
+					setIndexChild(clist[i]);
+				}
+			}
+		}
+		
+		function setElementCells() {
+			self.list = [];
+			
+			$(self.element).find("td").each(function(i) {
+				self.list[i] = this;
+				
+				if(cellkeys[i]) {
+					this.style.display = "none";
+				}
+			});
+		}
+		
+		function getElement() {
+			if(!tplFunc) return self.element;
+			
+			var element = $(tplFunc(
+				$.extend({ row: { index: self.index, data: self.data, depth: self.depth } }, self.data))
+			).get(0);
+			
+			return element;
+		}
+		
+		function removeChildAll(row) {
+			$(row.element).remove();
+			
+			for(var i = 0; i < row.childrens.length; i++) {
+				var c_row = row.childrens[i];
+				
+				if(!c_row.isLeaf()) {
+					removeChildAll(c_row);
+				} else {
+					$(c_row.element).remove();
+				}
+			}
+		}
+
+		function reloadChildAll() {
+			for(var i = 0; i < self.childrens.length; i++) {
+				self.childrens[i].reload(i);
+			}
+		}
+		
+		
+		/**
+		 * Public Methods
+		 * 
+		 */
+		
+		//-- 자신과 관련된 메소드
+
+		this.reload = function(rownum, isUpdate, columns) {
+			if(!isUpdate) setIndex(rownum); // 노드 인덱스 설정
+			
+			if(this.element != null) {
+				var newElem = getElement();
+				
+				$(newElem).insertAfter(this.element);
+				$(this.element).remove();
+				
+				this.element = newElem;
+			} else {
+				this.element = getElement();
+			}
+			
+			if(columns != null) { // 컬럼 정보가 있을 경우, 숨기기 설정
+				this.hideCells(columns);
+			}
+			
+			setElementCells();
+		}
+		
+		this.destroy = function() {
+			if(this.parent != null) { // 부모가 있을 경우, 연결관계 끊기
+				this.parent.removeChild(this.index);
+			} else {
+				removeChildAll(this);
+				$(this.element).remove();
+			}
+		}
+		
+		this.isLeaf = function() {
+			return (this.childrens.length == 0) ? true : false;
+		}
+		
+		this.fold = function() {
+			this.type = "fold";
+
+			for(var i = 0; i < this.childrens.length; i++) {
+				var c_row = this.childrens[i];
+				$(c_row.element).hide();
+				
+				if(!c_row.isLeaf()) c_row.fold();
+			}
+		}
+		
+		this.open = function() {
+			this.type = "open";
+
+			for(var i = 0; i < this.childrens.length; i++) {
+				var c_row = this.childrens[i];
+				$(c_row.element).show();
+				
+				if(!c_row.isLeaf()) c_row.open();
+			}
+		}
+		
+		this.appendChild = function(row) {
+			var lastElem = (this.isLeaf()) ? this.element : this.lastChildLeaf().element;
+			$(row.element).insertAfter(lastElem);
+			
+			this.childrens.push(row);
+		}
+
+		this.insertChild = function(rownum, row, isReload) {
+			var lastElem = this.element;
+			
+			if(rownum > 0) {
+				var cRow = this.childrens[rownum - 1];
+				
+				// 마지막 자식이거나 대상 로우가 자식이 있을 경우
+				if(!cRow.isLeaf() || this.childrens.length == rownum + 1) {
+					lastElem = cRow.lastChildLeaf().element;
+				} else {
+					lastElem = cRow.element;
+				}
+				
+			}
+			
+			$(row.element).insertAfter(lastElem);
+			
+			var preRows = this.childrens.splice(0, rownum);
+			preRows.push(row);
+			
+			this.childrens = preRows.concat(this.childrens);
+			reloadChildAll();
+		}
+		
+		this.removeChild = function(index) {
+			for(var i = 0; i < this.childrens.length; i++) {
+				var row = this.childrens[i];
+				
+				if(row.index == index) {
+					this.childrens.splice(i, 1); // 배열에서 제거
+					removeChildAll(row);
+				}
+			}
+			
+			reloadChildAll();
+		}
+
+		this.lastChild = function() {
+			if(!this.isLeaf())
+				return this.childrens[this.childrens.length - 1];
+				
+			return null;
+		}
+		
+		this.lastChildLeaf = function(lastRow) {
+			var row = (!lastRow) ? this.lastChild() : lastRow;
+			
+			if(row.isLeaf()) return row;
+			else {
+				return this.lastChildLeaf(row.lastChild());
+			}
+		}
+		
+		this.showCell = function(index) {
+			cellkeys[index] = false;
+			$(this.list[index]).show();
+		}
+		
+		this.hideCell = function(index) {
+			cellkeys[index] = true;
+			$(this.list[index]).hide();
+		}
+		
+		this.hideCells = function(columns) {
+			for(var i = 0; i < columns.length; i++) {
+				if(columns[i].type == "hide") {
+					this.hideCell(i);
+				}
+			}
+		}
+	}
+	
+	var UITable = function(handler, fields) {
+		var self = this;
+		
+		var $obj = handler.$obj,
+			$tpl = handler.$tpl;
+		
+		var columns = [],
+			rows = [],
+			folds = {};
+		
+		var isNone = false,
+			iParser = _.index();
+		
+		
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function init() {
+			toggleRowNone();
+			initColumns();
+		}
+		
+		function initColumns() {
+			var tmpColumns = [];
+			
+			$obj.thead.find("tr:last > th").each(function(i) {
+				tmpColumns.push(this);
+			});
+			
+			for(var i = 0; i < tmpColumns.length; i++) {
+				var column = new UIColumn(i);
+				
+				if(columns[i]) { // 기존의 컬럼 정보가 있을 경우에는 리스트만 초기화 한다.
+					column.element = columns[i].element;
+					column.order = columns[i].order;
+					column.name = columns[i].name;
+					column.data = columns[i].data;
+					column.type = columns[i].type;
+					column.width = columns[i].width;
+				} else {
+					column.element = tmpColumns[i];
+					
+					if($(column.element).attr("width") || (
+							$(column.element).attr("style") && 
+							$(column.element).attr("style").indexOf("width") != -1)) {
+						column.width = $(column.element).outerWidth();
+					}
+					
+					if(fields && fields[i]) {
+						column.name = fields[i];
+					}
+				}
+				
+				for(var j = 0; j < rows.length; j++) {
+					column.list.push(rows[j].list[i]);
+					column.data.push(rows[j].data[column.name]);
+				}
+				
+				columns[i] = column;
+			}
+		}
+		
+		function initColumnRows(type, row) {
+			if(type == "reload") {
+				for(var i = 0; i < columns.length; i++) {
+					columns[i].list[row.index] = row.list[i];
+					columns[i].data[row.index] = row.data[columns[i].name];
+				}
+			} else if(type == "append") {
+				for(var i = 0; i < columns.length; i++) {
+					columns[i].list.push(row.list[i]);
+					columns[i].data.push(row.data[columns[i].name]);
+				}
+			} else if(type == "remove") {
+				for(var i = 0; i < columns.length; i++) {
+					columns[i].list.splice(row.index, 1);
+					columns[i].data.splice(row.index, 1);
+				}
+			} else {
+				initColumns();
+			}
+		}
+		
+		function createRow(data, no, pRow) {
+			var row = new UIRow(data, $tpl.row, pRow);
+			row.reload(no, false, columns);
+			
+			return row;
+		}
+		
+		function setRowChildAll(dataList, row) {
+			var c_rows = row.childrens;
+			
+			if(c_rows.length > 0) {
+				for(var i = 0; i < c_rows.length; i++) {
+					dataList.push(c_rows[i]);
+					
+					if(c_rows[i].childrens.length > 0) {
+						setRowChildAll(dataList, c_rows[i]);
+					}
+				}
+			}
+		}
+		
+		function getRowChildLeaf(keys, row) {
+			if(!row) return null;
+			var tmpKey = keys.shift();
+			
+			if(tmpKey == undefined) {
+				return row;
+			} else {
+				return getRowChildLeaf(keys, row.childrens[tmpKey]);
+			}
+		}
+		
+		function reloadRows() {
+			var index = arguments[0], callback = arguments[1];
+			
+			if(typeof(index) == "function") { 
+				callback = index;
+				index = 0;
+			} else {
+				index = (!isNaN(index)) ? index : 0;
+			}
+			
+			for(var i = index; i < rows.length; i++) {
+				rows[i].reload(i);
+				initColumnRows("reload", rows[i]);
+				
+				if(typeof(callback) == "function") {
+					callback(i);
+				}
+			}
+		}
+		
+		function insertRowData(index, data) {
+			var row = createRow(data, index), preRows = row;
+			
+			if(rows.length == index && !(index == 0 && rows.length == 1)) {
+				var tRow = rows[index - 1];
+				$(row.element).insertAfter((tRow.childrens.length == 0) ? tRow.element : tRow.lastChildLeaf().element);
+			} else {
+				$(row.element).insertBefore(rows[index].element);
+			}
+			
+			// Rows 데이터 갱신
+			preRows = rows.splice(0, index);
+			preRows.push(row);
+			rows = preRows.concat(rows);
+			
+			// Rows UI 갱신
+			reloadRows(index);
+			
+			return row;
+		}
+		
+		function insertRowDataChild(index, data) {
+			var keys = iParser.getIndexList(index);
+			
+			var pRow = self.getRowParent(index),
+				rownum = keys[keys.length - 1];
+				row = createRow(data, rownum, pRow);
+			
+			// 데이터 갱신
+			pRow.insertChild(rownum, row);	
+			
+			return row;
+		}
+		
+		function appendRowData(data) {
+			// Row 배열 세팅
+			var row = createRow(data, rows.length);
+			rows.push(row);
+			
+			// 실제 HTML에 추가
+			$obj.tbody.append(row.element);
+			
+			// Column 배열 세팅
+			initColumnRows("append", row);
+			
+			return row;
+		}
+		
+		function appendRowDataChild(index, data) {
+			var pRow = self.getRow(index), 
+				cRow = createRow(data, pRow.childrens.length, pRow);
+				
+			pRow.appendChild(cRow);
+			
+			return cRow;
+		}
+		
+		function toggleRowNone() {
+			if(typeof($tpl.none) != "function") return false;
+			
+			if(isNone) {
+				if(rows.length > 0) {
+					$obj.tbody.find("tr:first").remove();
+					isNone = false;
+				}
+			} else {
+				if(rows.length == 0) {
+					$obj.tbody.html($tpl.none());
+					isNone = true;
+				}
+			}
+			
+			return true;
+		}
+		
+		
+		/**
+		 * Public Methods
+		 * 
+		 */
+		this.appendRow = function() {
+			var index = arguments[0], data = arguments[1];
+			var result = null;
+			
+			if(!data) result = appendRowData(index);
+			else result = appendRowDataChild(index, data);
+			
+			toggleRowNone();
+			return result;
+		}
+		
+		this.insertRow = function(index, data) {
+			var result = null;
+			
+			if(iParser.isIndexDepth(index)) {
+				result = insertRowDataChild(index, data);
+			} else {
+				if(rows.length == 0 && parseInt(index) == 0) {
+					result = this.appendRow(data);
+				} else {
+					result = insertRowData(index, data);
+				}
+			}
+
+			toggleRowNone();
+			return result;
+		}
+
+		this.updateRow = function(index, data) {
+			var row = this.getRow(index);
+			
+			for(var key in data) {
+				row.data[key] = data[key];
+			}
+			
+			row.reload(null, true);
+			initColumnRows("reload", row);
+			
+			return row;
+		}
+		
+		this.moveRow = function(index, targetIndex) {
+			if(index == targetIndex) return;
+			
+			var rows = this.getRowAll(index),
+				row = rows[0],
+				data = _.clone(row.data);
+			
+			if(rows.length > 1) {
+				for(var i = 0; i < rows.length; i++) {
+					var index = iParser.changeIndex(rows[i].index, targetIndex, rows[0].index);
+					this.insertRow(index, rows[i].data);
+				}
+			} else {
+				this.insertRow(targetIndex, data);
+			}
+			
+			this.removeRow(row.index);
+		}
+		
+		this.removeRow = function(index) {
+			var row = this.getRow(index);		// 자신 객체
+			
+			if(!iParser.isIndexDepth(index)) {
+				row.destroy();
+				
+				initColumnRows("remove", rows[index]);
+				rows.splice(index, 1);
+				reloadRows(index);
+			} else {
+				row.destroy();
+			}
+			
+			toggleRowNone();
+		}
+		
+		this.openRow = function(index) {
+			this.getRow(index).open();
+			folds[index] = false;
+
+			for(var key in folds) {
+				if(folds[key] !== false) {
+					var foldRow = this.getRow(folds[key]);
+					if(foldRow != null) foldRow.fold();
+				}
+			}
+		}
+		
+		this.openRowAll = function() {
+			var tmpRows = this.getRowAll();
+			
+			for(var i = 0; i < tmpRows.length; i++) {
+				if(!tmpRows[i].isLeaf()) {
+					tmpRows[i].open();
+					folds[tmpRows[i].index] = false;
+				}
+			}
+		}
+		
+		this.foldRow = function(index) {
+			this.getRow(index).fold();
+			folds[index] = index;
+		}
+		
+		this.foldRowAll = function() {
+			var tmpRows = this.getRowAll();
+			
+			for(var i = 0; i < tmpRows.length; i++) {
+				if(!tmpRows[i].isLeaf()) {
+					tmpRows[i].fold();
+					folds[tmpRows[i].index] = tmpRows[i].index;
+				}
+			}
+		}
+		
+		this.removeRows = function() {
+			rows = [];
+			
+			if(!toggleRowNone()) {
+				$obj.tbody.html("");
+			}
+			
+			initColumnRows();
+		}
+		
+		this.sortRows = function(name, isDesc) {
+			var self = this, qs = _.sort(rows);
+			
+			if(isDesc) {
+				qs.setCompare(function(a, b) {
+					return (getValue(a) > getValue(b)) ? true : false;
+				});
+			} else {
+				qs.setCompare(function(a, b) {
+					return (getValue(a) < getValue(b)) ? true : false;
+				});
+			}
+			
+			// 정렬 후, 데이터 갱신
+			qs.run();
+			$obj.tbody.html("");
+
+			// 정렬 후, 화면 갱신
+			reloadRows(function(i) {
+				$obj.tbody.append(rows[i].element);
+			});
+			
+		    // 해당 컬럼에 해당하는 값 가져오기
+		    function getValue(row) {
+		    	var value = row.data[name];
+		    	
+    			if(!isNaN(value) && value != null) {
+    				return parseInt(value);
+    			} 
+    			
+    			if(typeof(value) == "string") {
+    				return value.toLowerCase();
+    			}
+    			
+    			return "";
+		    }
+		}
+		
+		this.appendColumn = function(tplType, dataList) {
+			var columLength = columns.length,
+				$columnRows = $($tpl[tplType]({ rows: dataList }));
+			var $theadTrList = $columnRows.filter("thead").find("tr");
+			
+			$theadTrList.each(function(i) {
+				var $tr = $obj.thead.find("tr").eq(i);
+				
+				$(this).find("th").each(function(j) {
+					$tr.append(this);
+					
+					if($theadTrList.size() - 1 == i) {
+						columns.push({ element: this, list: [] });
+					}
+				});
+			});
+			
+			for(var k = 0; k < rows.length; k++) {
+				$columnRows.filter("tbody").find("tr").eq(k).find("td").each(function(i) {
+					$(rows[k].element).append(this);
+					
+					columns[columLength + i].list.push(this);
+					rows[k].list.push(this);
+					
+					$.extend(rows[k].data, dataList[k]);
+				});
+			}
+		}
+		
+		this.removeColumn = function(index) {
+			for(var i = 0; i < columns[index].list.length; i++) {
+				$(columns[index].element).remove();
+				$(columns[index].list[i]).remove();
+			}
+			
+			for(var j = 0; j < rows.length; j++) {
+				rows[j].list.splice(index, 1);
+			}
+			
+			columns.splice(index, 1);
+		}
+		
+		this.hideColumn = function(index) {
+			if(columns[index].type == "hide") return;
+			
+			var rows = this.getRowAll();
+			for(var i = 0; i < rows.length; i++) {
+				rows[i].hideCell(index);
+			}
+
+			columns[index].hide();
+		}
+		
+		this.showColumn = function(index) {
+			if(columns[index].type == "show") return;
+			
+			var rows = this.getRowAll();
+			for(var i = 0; i < rows.length; i++) {
+				rows[i].showCell(index);
+			}
+
+			columns[index].show();
+		}
+		
+		this.getColumnCount = function() {
+			return columns.length;
+		}
+
+		this.getRowCount = function() {
+			return rows.length;
+		}
+
+		this.getColumn = function(index) {
+			if(index == null) return columns;
+			else return columns[index];
+		}
+		
+		this.getRow = function(index) {
+			if(index == null) return rows;
+			else {
+				if(iParser.isIndexDepth(index)) {
+					var keys = iParser.getIndexList(index);
+					return getRowChildLeaf(keys, rows[keys.shift()]);
+				} else {
+					return (rows[index]) ? rows[index] : null;
+				}
+			}
+		}
+		
+		this.getRowAll = function(index) {
+			var dataList = [],
+				tmpRows = (index == null) ? rows : [ this.getRow(index) ];
+			
+			for(var i = 0; i < tmpRows.length; i++) {
+				if(tmpRows[i]) {
+					dataList.push(tmpRows[i]);
+					
+					if(tmpRows[i].childrens.length > 0) {
+						setRowChildAll(dataList, tmpRows[i]);
+					}
+				}
+			}
+			
+			return dataList;
+		}
+		
+		this.getRowParent = function(index) { // 트리 구조의 키에서 키 로우의 부모를 가져오는 함수
+			if(!iParser.isIndexDepth(index)) return null;
+			return this.getRow(iParser.getParentIndex(index));
+		}
+		
+		this.setColumn = function(index, column) {
+			columns[index] = column;
+		}
+		
+		this.setRow = function(index, row) {
+			rows[index] = row;
+		}
+		
+		this.printInfo = function() {
+			console.log(columns);
+			console.log(rows);
+		}
+		
+		init();
+	}
+	
+	
+	/**
+	 * UI Main Class
+	 * 
+	 */
+	var UI = function() {
+		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
+		var rowIndex = null, checkedList = {};
+		
+		
+		/**
+		 * Private Methods
+		 *
+		 */
+		function getExpandHtml(self) {
+			return "<tr class='expand' style='display: none;'><td id='EXPAND_" + self.timestamp + "'></td></tr>";
+		}
+		
+		function getColumnIndexes(self, colkeys) {
+			var indexList = [];
+			
+			for(var i = 0; i < colkeys.length; i++) {
+				if(typeof(colkeys[i]) == "string") {
+					var column = self.getColumn(colkeys[i]);
+					indexList.push(column.index);
+				} else {
+					indexList.push(colkeys[i]);
+				}
+			}
+			
+			return indexList;
+		}
+		
+		function setColumnStatus(self) {
+			var colkeys = self.options.colshow,
+				len = self.uit.getColumnCount();
+				
+			if(colkeys === true) {
+				self.options.colshow = colkeys = [];
+				
+				for(var i = 0; i < len; i++) {
+					colkeys.push(i);
+				}
+			} else {
+				colkeys = getColumnIndexes(self, colkeys);
+			}
+			
+			for(var i = 0; i < len; i++) {
+				if($.inArray(i, colkeys) == -1) 
+					self.uit.hideColumn(i);
+				else 
+					self.uit.showColumn(i);
+			}
+		}
+		
+		function setColumnMenu(self) {
+			var $ddObj = null;
+			var columns = self.listColumn(),
+				columnNames = [];
+				
+			for(var i = 0; i < columns.length; i++) {
+				columnNames.push($(columns[i].element).text());
+			}
+			
+			$ddObj = $(self.tpl.menu({ columns: columnNames }));
+			
+			$("body").append($ddObj);
+			ddUi = dropdown($ddObj, { close: false });
+			
+			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
+				if(columns[i].type == "show") this.checked = true;
+				else this.checked = false;
+				
+				self.addEvent(this, "click", function(e) {
+					var ckCount = $(ddUi.root).find("input[type=checkbox]:checked").size();
+					
+					if(this.checked) {
+						self.showColumn(i, e);
+					} else {
+						if(ckCount > 0) {
+							self.hideColumn(i, e);
+						} else {
+							this.checked = true;
+						}
+					}
+					
+					self.hideExpand();
+					self.scroll();
+				});
+			});
+		}
+		
+		function setScrollResize(self) {
+			var tableWidth = $obj.table.outerWidth(),
+				thCount = self.uit.getColumnCount(),
+				isLastCheck = false;
+			
+			for(var i = thCount - 1; i >= 0; i--) {
+				var colInfo = self.getColumn(i),
+					thWidth = $(colInfo.element).outerWidth();
+				
+				// 마지막 TD는 스크롤 사이즈를 차감
+				if($(colInfo.element).css("display") == "none") {}
+				else {
+					if(!isLastCheck) {
+						thWidth = thWidth - _.scrollWidth();
+						isLastCheck = true;
+					}
+				}
+				
+				$(colInfo.list[0]).outerWidth(thWidth);
+			}
+			
+			$obj.tbody.outerWidth(tableWidth);
+		}
+		
+		function setScrollEvent(self) {
+			if(!$(self.root).hasClass("table-scroll")) { // 스크롤일 경우, 별도 처리
+				self.scroll();
+			}
+			
+			$obj.tbody.unbind("scroll").scroll(function(e) {
+			    if(($obj.tbody.scrollTop() + self.options.scrollHeight) == $obj.tbody.get(0).scrollHeight){
+			    	self.emit("scroll", e);
+			    	return false;
+			    }
+			});
+		}
+		
+		function setUpdateInit(self, isInit) {
+			if(self.uit.getRowCount() < 1) return;
+			
+			if(isInit) {
+				if(self.options.expand) {
+					$obj.tbody.prepend(getExpandHtml(self));
+				}
+				
+				self.scroll();
+			}
+			
+			if(self.options.scroll) { // 스크롤 이벤트 처리
+				setScrollEvent(self);
+			}
+			
+			self.setVo();
+		}
+		
+		function setEventRows(self, rows) {
+			var rows = (!rows) ? self.uit.getRow() : rows;
+			
+			for(var i = 0; i < rows.length; i++) {
+				(function(row) {
+					if(row.childrens.length > 0) {
+						setEventRow(self, row);
+						setEventRows(self, row.childrens);
+					} else {
+						setEventRow(self, row);
+					}
+				})(rows[i])
+			}
+		}
+		
+		function setEventRow(self, row) {
+			self.addEvent(row.element, "click", function(e) {
+				// 1. 공통 이벤트 발생
+				self.emit("select", [ row, e ]); // deprecated
+				self.emit("click", [ row, e ]);
+
+				// 2. 확장영역 자동 이벤트 처리
+				if(self.options.expand) {
+					if(self.options.expandEvent === false) return;
+					
+					if(rowIndex === row.index) {
+						self.hideExpand(e);
+					} else {
+						if(rowIndex != null) {
+							self.hideExpand(e);
+						}
+						
+						self.showExpand(row.index, undefined, e);
+					}
+				} 
+			});
+			
+			self.addEvent(row.element, "dblclick", function(e) {
+				self.emit("dblclick", [ row, e ]);
+				return false;
+			});
+			
+			self.addEvent(row.element, "contextmenu", function(e) {
+				self.emit("rowmenu", [ row, e ]);
+				return false;
+			});
+			
+			if(self.options.fields && self.options.editCell) {
+				if(self.options.editEvent === false) return;
+				
+				$(row.element).find("td").each(function(i) {
+					var cell = this;
+					
+					(function(colIndex) { 
+						self.addEvent(cell, "dblclick", function(e) {
+							if(e.target.tagName == "TD") {
+								setEventEditCell(self, e.currentTarget, row, colIndex);
+							}
+							
+							self.emit("editstart", [ row, e ]);
+						});
+					})(i);
+				});
+			}
+
+			if(self.options.fields && self.options.editRow) {
+				if(self.options.editEvent === false) return;
+				
+				self.addEvent(row.element, "dblclick", function(e) {
+					if(e.target.tagName == "TD" || e.target.tagName == "TR") {
+						self.showEditRow(row.index, e);
+					}
+				});
+			}
+		}
+		
+		function setEventEditCell(self, elem, row, colIndex, event, callback) {
+			var column = self.getColumn(colIndex),
+				data = (column.name) ? column.data[row.index] : $(elem).html(),
+				colkeys = (!callback) ? self.options.editCell : self.options.editRow;
+			
+			var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
+			$(elem).html($input);
+			
+			if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
+				$input.attr("disabled", true);
+			}
+			
+			// 클릭 엘리먼트에 포커스 맞추기
+			if(event && event.target == elem) $input.focus();
+
+			// 엔터 키 이벤트 발생시 업데이트
+			self.addEvent($input, "keypress", function(e) {
+				if(e.which == 13) {
+					update(e);
+				}
+			});
+			
+			// 포커스가 바뀌었을 경우 업데이트
+			self.addEvent($obj.tbody.find("tr"), "click", function(e) {
+				if(e.target.tagName == "TD" || e.target.tagName == "TR") {
+					update(e);
+				}
+			});
+			
+			function update(e) {
+				if(typeof(callback) == "function") { // editRow일 경우
+					callback();
+				} else {
+					var data = {};
+					data[column.name] = $input.val();
+
+					var res = self.emit("editend", [ data ]);
+					
+					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+					if(res !== false) {
+						self.update(row.index, data);
+						$input.remove();
+					}
+				}
+			}
+		}
+=======
+});
+>>>>>>> 0d525800889872d6e2cb4e0e7cc46926f1a49f41
+
+/*
+ * 
+ * ui.layout("#container", { 
+ * 		top : { size : 100, splitter: false },
+ * 		left : { size : 100 },
+ * 		right : { size : 100, splitter : false },
+ * 		bottom : { size : 100 }
+ * }) 
+ * 
+ */
+
+
+jui.define("ui.layout", [ "util" ], function(_) {
+	
+	var UI = function() {
+		var ui_layout = null, 
+			ui_options = {}, 
+			directions = [ 'top','left','right','bottom','center' ];
+		
+		var resizerIcons = { 
+			top: 'n-resize', 
+			bottom: 'n-resize', 
+			right: 'e-resize', 
+			left: 'e-resize' 
+		};
+		
+		function setEvent($resizer, move, down, up) {
+			$resizer.mousedown(function(e) {
+				$resizer.data('mousedown', true);
+				
+				var $shadow = $resizer.clone();
+				
+				$resizer.data('shadow', $shadow);
+				$resizer.after($shadow);
+				
+				down.call(this, e);
+				$shadow.css('opacity', 0.3);
+				
+				$(document).on('mousemove', move);
+				$(document).on('mouseup', function mouseUp(e) {
+					$(document).off('mousemove', move);
+					$(document).off('mouseup', mouseUp);
+						
+					up.call(this, e);
+          			$resizer.data('mousedown', false);					
+          			
+					$shadow.remove();
+					$("body :not(.resize)").css({ 'user-select' : '' })						
+				});
+				
+				$("body :not(.resize)").css({ 'user-select' : 'none' })
+			});
+		}
+		
+		function setPosition(height, first, arr, second) {
+			arr = arr || [];
+			
+			if(ui_layout[height]) {
+				ui_layout[height].height(first);
+			}
+			
+			if(typeof arr == 'string') arr = [arr];
+			if(arr.length == 0) return;
+			
+			for(var i = 0, len = arr.length; i < len; i++) {
+				var $obj = ui_layout[arr[i]];
+				
+				if($obj) {
+					$obj.css({ top : second })
+					if($obj.resizer) $obj.resizer.css({ top : second })					
+				}
+			}
+		}
+		
+		function setResizer(direction) {
+			var $first, $second, $layout, $resizer, options;
+
+			$layout = ui_layout[direction];
+			$resizer = $layout.resizer;
+
+			$resizer.css({
+				cursor : resizerIcons[direction]
+			})			
+			
+			if($resizer.data('event')) return; 
+			
+			if(direction == 'top') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var top = e.clientY - $resizer.data('current');
+					var min = ui_options.top.min;
+					var max = ui_options.top.max;
+					if(min <= top && top < max) {
+						$resizer.css({top : top + 'px'});
+					}
+					
+				}, function(e) {
+					var top = $resizer.position().top;										 
+					$resizer.data('current', e.clientY - top);
+				}, function(e) {
+
+					var top = $resizer.position().top;					
+					var height = $resizer.height();					
+	
+					var first = top;
+					var second = (top + $resizer.height()) + 'px';
+						
+					var pre_height = ui_layout.top.height();
+					ui_layout.top.height(first);
+					
+					var dh = pre_height - first;
+					var new_height = ui_layout.center.height() + dh;
+					
+					ui_layout.center.css({top : second}).height(new_height);			
+					ui_layout.left.css({top : second}).height(new_height);			
+					ui_layout.left.resizer.css({top : second}).height(new_height);			
+					ui_layout.right.css({top : second}).height(new_height);			
+					ui_layout.right.resizer.css({top : second}).height(new_height);			
+				});
+		
+			} else if(direction == 'bottom') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var top = e.clientY - $resizer.data('current');
+					var min = ui_options.bottom.min;
+					var max = ui_options.bottom.max;
+					
+					var dh =  $layout.position().top - (top + ui_options.barSize);
+					var real_height = dh + $layout.height();
+					
+					if(min <= real_height && real_height <= max ) {
+						$resizer.css({top : top + 'px'});	
+					}
+				}, function(e) {
+					var top = $resizer.position().top;										 
+					$resizer.data('current', e.clientY - top);
+				}, function(e) {
+					var top = $resizer.position().top + $resizer.height();
+					
+					var max = ui_layout.root.height();
+					var dh = parseFloat(ui_layout.bottom.position().top) - top;
+					
+					ui_layout.bottom.css({ top : top + "px"});
+					ui_layout.bottom.height(ui_layout.bottom.height() + dh);
+					
+					var new_height = ui_layout.center.height() - dh;
+					
+					ui_layout.center.height(new_height);			
+					ui_layout.left.height(new_height);			
+					ui_layout.left.resizer.height(new_height);			
+					ui_layout.right.height(new_height);			
+					ui_layout.right.resizer.height(new_height);		
+				});				
+			} else if(direction == 'left') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var left = e.clientX - $resizer.data('current');
+					var min = ui_options.left.min;
+					var max = ui_options.left.max;
+					if(min <= left && left < max) {
+						$resizer.css({left : left + 'px'});
+					}
+				}, function(e) {
+					var left = $resizer.position().left;										 
+					$resizer.data('left', left).data('current', e.clientX - left);
+				}, function(e) {
+          			if(!$resizer.data('mousedown')) return; 
+          					
+					var left = $resizer.position().left;
+					var pre_left = $resizer.data('left');
+					var dw = pre_left - left;
+					
+					ui_layout.left.css({ width : left + "px"});
+					ui_layout.center.css({ left : (left + ui_options.barSize ) + "px" });
+          			ui_layout.center.width(ui_layout.center.width() + dw);
+				});	
+			} else if(direction == 'right') {
+        		setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					  
+					var left = e.clientX - $resizer.data('current');
+					var min = ui_options.right.min;
+					var max = ui_options.right.max;
+					  
+					var sizeLeft = ui_layout.left.width() + ui_layout.left.resizer.width();
+					var sizeCenter = ui_layout.center.width();
+					var current = $layout.width() - (left - (sizeLeft + sizeCenter));
+					  
+					if(min <= current && current < max) {
+						$resizer.css({left : left + 'px'});  
+					}
+		        }, function(e) {
+		        	var left = $resizer.position().left;                     
+		        	$resizer.data('left', left).data('current', e.clientX - left);
+		        }, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var left = $resizer.position().left;
+					var pre_left = $resizer.data('left');
+					var dw = pre_left - left;
+					
+					ui_layout.right.css({ 
+						left : (left + $resizer.width()) + 'px',
+						width : (ui_layout.right.width() + dw) + "px"
+					});
+					ui_layout.center.width(ui_layout.center.width() - dw);		          
+		        });			  
+			}
+			
+			$resizer.data('event', true);
+		}
+	
+	
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					barColor : '#d6d6d6',
+					barSize : 3,
+					width	: null,
+					height	: null,
+					top		: { el : null, size : null, min : 50, max : 200, resize : true },
+					left	: { el : null, size : null, min : 50, max : 200, resize : true },
+					right	: { el : null, size : null, min : 50, max : 200, resize : true },
+					bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+					center	: { el : null }
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			var $root, $top, $left, $right, $bottom, $center;
+			
+			$root = $(this.root).css("position", "relative");
+			
+			if(opts.width != null) {
+				$root.outerWidth(opts.width);
+			}
+
+			if(opts.height != null) {
+				$root.outerHeight(opts.height);
+			}
+			
+			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");				
+			if($top.length == 0) $top = null; 
+			
+			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
+			if($left.length == 0) $left = null;
+
+			
+			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right"); 
+			if($right.length == 0) $right = null;
+			
+			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom"); 
+			if($bottom.length == 0) $bottom = null;
+			
+			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center"); 
+			if($center.length == 0) $center = null;
+			
+			ui_layout = { 
+				root 	: $root, 
+				top 	: $top, 
+				left 	: $left,
+				right 	: $right, 
+				bottom 	: $bottom,
+				center	: $center
+			};
+			
+			ui_options = opts;
+			this.update();
+			
+			$(window).on('resize', function(e) {
+				self.resize();
+			})
+ 
+			return this; 			
+		}
+		
+		this.update = function() {
+			for(var i = 0, len = directions.length; i < len; i++) {
+				var direct = ui_layout[directions[i]];
+				
+				if(direct) {
+					ui_layout.root.append(direct);
+					
+					if(directions[i] != 'center') {
+						if(ui_options[directions[i]].resize) {
+							if(!direct.resizer) {
+								direct.resizer = $("<div class='resize " + directions[i] + "' />");
+							}
+
+							ui_layout.root.append(direct.resizer);		
+							setResizer(directions[i]);
+						}
+					}
+				}
+			}
+			
+			this.resize();
+		}
+		
+		this.resize = function() {
+			var $obj = null, $option = null, sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
+			
+			$obj = ui_layout.top;
+			$option = this.options.top;
+
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : '0px',
+					'left' : '0px',
+					'width' : '100%',
+					'height' : $option.size || $option.min  
+				});
+				
+				sizeTop = $obj.height();
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' : 'absolute',
+						'top': sizeTop,
+						'left' : '0px',
+						'width' : '100%',
+						"background": this.options.barColor,						
+						"height" : this.options.barSize
+					})					
+					
+					sizeTop += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}
+				}
+			}
+
+			$obj = ui_layout.bottom;
+			$option = this.options.bottom;
+			
+			var max = ui_layout.root.height();			
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'left' : '0px',
+					'width' : '100%',
+					'height' : $option.size || $option.min  
+				});
+				
+				var bottom_top = (sizeTop -  $obj.height()) + sizeTop;
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: bottom_top,
+						'left' 		: '0px',
+						'width' 	: '100%',
+						"background": this.options.barColor,
+						"height" 	: this.options.barSize
+					});					
+					
+					bottom_top += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}
+				}		
+					
+				$obj.css('top', bottom_top + "px");					
+			}			
+			
+			$obj = ui_layout.left;
+			$option = this.options.left;
+			
+			var content_height = max ;
+			
+			if(ui_layout.top) {
+				content_height -= ui_layout.top.height();
+				if(ui_layout.top.resizer) {
+					content_height -= ui_layout.top.resizer.height();	
+				}
+			}
+			
+			if(ui_layout.bottom) {
+				content_height -= ui_layout.bottom.height();
+				if(ui_layout.bottom.resizer) {
+					content_height -= ui_layout.bottom.resizer.height();	
+				}
+			}							
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : sizeTop,
+					'left' : '0px',
+					'height' : content_height,
+					'width' : $option.size || $option.min,
+					'max-width' : '100%',
+					'overflow' : 'auto'
+				});
+				
+				sizeLeft = $obj.width();
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: sizeTop,
+						'height'	: $obj.height(),
+						'left' 		: sizeLeft,
+						"background": this.options.barColor,
+						"width" 	: this.options.barSize
+					});			
+					
+					sizeLeft += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}					
+				}					
+			}
+			
+			$obj = ui_layout.right;
+			$option = this.options.right;
+			
+			var max_width = ui_layout.root.width();
+		    var content_width = max_width;
+		    
+		    if(ui_layout.left) {
+		    	content_width -= ui_layout.left.width();
+		    	if(ui_layout.left.resizer) {
+		    		content_width -= ui_layout.left.resizer.width();
+		    	}
+		    }			
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : sizeTop,
+					//'right' : '0px',
+					'height' : content_height,
+					'width' : $option.size || $option.min  ,
+					'max-width' : '100%'
+				});
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: sizeTop,
+						'height'	: $obj.height(),
+						"background": this.options.barColor,
+						"width" 	: this.options.barSize
+					})	
+					
+					sizeRight += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}					
+				}		
+				
+		    	content_width -= ui_layout.right.width();
+		    	if(ui_layout.right.resizer) {
+		    		content_width -= ui_layout.right.resizer.width();
+		    	}
+		        
+		        $obj.resizer.css({ left : (sizeLeft + content_width) + "px" });
+		        $obj.css({left : (sizeLeft + content_width + $obj.resizer.width()) + "px"})
+											
+			}									
+			
+			$obj = ui_layout.center;
+			$option = this.options.center;
+			
+			if($obj) {
+				$obj.css({
+					'position' 	: 'absolute',
+					'top' 		: sizeTop,
+          			'height'  : content_height,
+					'left' 		: sizeLeft,
+					'width'   : content_width,
+					'overflow' : 'auto'
+				});
+			}			
+		}
+	}
+	
+	return UI;
+	
+})
+
+jui.define("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
+	
+	/**
+	 * UI Class
+	 * 
+	 */
+	var UI = function() {
+		var ddUi = null, target = null;
+		
+		
+		/**
+		 * Private Methods
+		 * 
+		 */
+		function createDropdown(self, words) {
+			if(words.length == 0) {
+				if(ddUi) ddUi.hide();
+				return;
+			} else {
+				if(ddUi) $(ddUi.root).remove();
+			}
+			
+			var pos = $(self.root).offset(),
+				$ddObj = $(self.tpl.words({ words: words }));
+
+			$("body").append($ddObj);
+			
+			ddUi = dropdown($ddObj, {
+				keydown: true,
+				width: $(self.root).outerWidth(),
+				left: pos.left,
+				top: pos.top + $(self.root).outerHeight(),
+				event: {
+					change: function(data, e) {
+						$(target).val(data.text);
+						self.emit("change", [ data.text, e ]);
+					}
+				}
+			});
+			
+			ddUi.show();
+		}
+		
+		function getFilteredWords(self, word) {
+			var words = self.options.words,
+				result = [];
+			
+			if(word != "") {
+				for(var i = 0; i < words.length; i++) {
+					var origin = words[i],
+						a = words[i].toLowerCase(),
+						b = word.toLowerCase();
+					
+					if(a.indexOf(b) != -1) {
+						result.push(origin);
+					}
+				}
+			}
+			
+			return result;
+		}
+		
+		function setEventKeyup(self) {
+			self.addEvent(target, "keyup", function(e) {
+				if(e.which == 38 || e.which == 40 || e.which == 13) return;
+				
+				createDropdown(self, getFilteredWords(self, $(this).val()));
+				return false;
+			});
+		}
+		
+		
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					target: null,
+					words: []
+				},
+				valid: {
+					update: [ "array" ]
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			
+			// 타겟 엘리먼트 설정
+			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
+			
+			// 키-업 이벤트 설정
+			setEventKeyup(this);
+			
+			return this;
+		}		
+		
+		this.update = function(words) {
+			this.options.words = words;
+		}
+	}
+	
+	return UI;
+});
+jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+	
+	/**
+	 * UI Class
+	 * 
+	 */
+	var UI = function() {
+		var ui_menu = null,
+			$anchor = null;
+			
+		var menuIndex = -1, // menu index
+			activeIndex = 0;
+		
+			
+		/**
+		 * Private Methods
+		 * 
+		 */
+		
+		function hideAll(self) {
+			var $list = $(self.root).children("li");
+			$list.removeClass("active");
+		}
+		
+		function showMenu(self, elem) {
+			var pos = $(elem).offset();
+			
+			$(elem).parent().addClass("menu-keep");
+			ui_menu.show(pos.left, pos.top + $(self.root).height());
+		}
+		
+		function hideMenu(self) {
+			var $list = $(self.root).children("li"),
+				$menuTab = $list.eq(menuIndex);
+			
+			$menuTab.removeClass("menu-keep");
+		}
+		
+		function changeTab(self, index) {
+			hideAll(self);
+			
+			var $list = $(self.root).children("li"),
+				$tab = $list.eq(index).addClass("active");
+			
+			$anchor.appendTo($tab);
+			showTarget(self.options.target, $tab[0]);
+		}
+		
+		function showTarget(target, elem, isInit) {
+			var hash = $(elem).find("[href*=\#]").attr("href");
+			
+			$(target).children("*").each(function(i) {
+				var self = this;
+				
+				if(("#" + self.id) == hash) {
+					$(self).show();
+				} else {
+					$(self).hide();
+				}
+			});
+		}
+		
+		function setEventNodes(self) {
+			$(self.root).children("li").each(function(i) {
+				// 메뉴 설정
+				if($(this).hasClass("menu")) {
+					menuIndex = i;
+				}
+			
+				// 이벤트 설정
+				self.addEvent(this, "click", "a", function(e) {
+					var text = $(e.currentTarget).text();
+					
+					if(i != menuIndex) {
+						if(self.options.target != "") 
+							showTarget(self.options.target, this);
+						
+						self.emit("change", [ { index: i, text: text }, e ]);
+						changeTab(self, i);
+						
+						activeIndex = i;
+					} else {
+						self.emit("menu", [ { index: i, text: text }, e ]);
+						if(ui_menu.type != "show") showMenu(self, this);
+					}
+					
+					return false;
+				});
+			});
+			
+			setActiveNode(self);
+			setEventDragNodes(self);
+		}
+		
+		function setEventDragNodes(self) {
+			if(!self.options.drag) return;
+			
+			var $tabs = $(self.root).children("li"),
+				$origin = null,
+				$clone = null;
+			
+			var index = null,
+				targetIndex = null;
+			
+			$tabs.each(function(i) {
+				self.addEvent(this, "mousedown", function(e) {
+					$origin = $(this);
+					$clone = $origin.clone().css("opacity", "0.5");
+					
+					index = i;
+					self.emit("dragstart", [ index, e ]);
+					
+					return false;
+				});
+
+				self.addEvent(this, "mousemove", function(e) {
+					if(index == null) return;
+					targetIndex = i;
+					
+					if(index > targetIndex) { // move 로직과 동일
+						if(targetIndex == 0) {
+							$clone.insertBefore($tabs.eq(0));
+						} else {
+							$clone.insertAfter($tabs.eq(targetIndex - 1));
+						}
+					} else {
+						if(targetIndex == $tabs.size() - 1) {
+							$clone.insertAfter($tabs.eq(targetIndex));
+						} else {
+							$clone.insertBefore($tabs.eq(targetIndex + 1));
+						}
+					}
+					
+					$origin.hide();
+				});
+			});
+			
+			self.addEvent(self.root, "mouseup", function(e) {
+				if($origin != null) $origin.show();
+				if($clone != null) $clone.remove();
+				
+				if(index != null && targetIndex != null) {
+					self.move(index, targetIndex);
+					self.emit("dragend", [ targetIndex, e ]);
+				}
+
+				index = null;
+				targetIndex =  null;
+			});
+		}
+		
+		function setActiveNode(self) {
+			var $list = $(self.root).children("li"),
+				$markupNode = $list.filter(".active"),
+				$indexNode = $list.eq(activeIndex),
+				$node = ($indexNode.size() == 1) ? $indexNode : $markupNode;
+			
+			// 노드가 없을 경우, 맨 첫번째 노드를 활성화
+			if($node.size() == 0) {
+				$node = $list.eq(0);
+			}
+			
+			$anchor.appendTo($node);
+			changeTab(self, $list.index($node));
+		}
+		
+		
+		/**
+		 * Public Methods & Options
+		 * 
+		 */
+		this.setting = function() {
+			return {
+				options: {
+					target: "", 
+					index: 0,
+					drag: false,
+					nodes: []
+				},
+				valid: {
+					update: [ "array" ],
+					insert: [ "integer", "object" ],
+					append: [ "object" ],
+					prepend: [ "object" ],
+					remove: [ "integer" ],
+					show: [ "integer" ]
+				}
+			}
+		}
+		
+		this.init = function() {
+			var self = this, opts = this.options;
+			
+			// 활성화 인덱스 설정
+			activeIndex = opts.index;
+			
+			// 컴포넌트 요소 세팅
+			$anchor = $("<div class='anchor'></div>");
+			
+			// 탭 목록 갱신 및 이벤트 설정
+			if(opts.nodes.length > 0) {
+				this.update(opts.nodes);
+			} else {
+				setEventNodes(this);
+			}
+			
+			// 드롭다운 메뉴 
+			if(this.tpl.menu) {
+				var $menu = $(this.tpl.menu());
+				$menu.insertAfter($(self.root));
+				
+				ui_menu = dropdown($menu, {
+					event: {
+						change: function(data, e) {
+							hideMenu(self);
+							self.emit("changeMenu", [ data, e ]);
+						},
+						hide: function() {
+							hideMenu(self);
+						}
+					}
+				});
+			}
+			
+			return this;
+		}
+		
+		this.update = function(nodes) {
+			if(!this.tpl.node) return;
+			
+			$(this.root).empty();
+			
+			for(var i = 0; i < nodes.length; i++) {
+				$(this.root).append(this.tpl.node(nodes[i]));
+			}
+
+			setEventNodes(this);
+		}
+		
+		this.insert = function(index, node) {
+			if(!this.tpl.node) return;
+			
+			var html = this.tpl.node(node),
+				$list = $(this.root).children("li");
+			
+			if(index == $list.size()) {
+				$(html).insertAfter($list.eq(index - 1));
+			} else {
+				$(html).insertBefore($list.eq(index));
+			}
+
+			setEventNodes(this);
+		}
+		
+		this.append = function(node) {
+			if(!this.tpl.node) return;
+
+			var html = this.tpl.node(node);
+			
+			if(menuIndex != -1) {
+				$(html).insertBefore($(this.root).find(".menu"));
+				menuIndex++;
+			} else {
+				$(this.root).append(html);
+			}
+			
+			setEventNodes(this);
+		}
+		
+		this.prepend = function(node) {
+			if(!this.tpl.node) return;
+
+			$(this.root).prepend(this.tpl.node(node));
+			setEventNodes(this);
+		}
+		
+		this.remove = function(index) {
+			$(this.root).children("li").eq(index).remove();
+			setEventNodes(this);
+		}
+		
+		this.move = function(index, targetIndex) {
+			if(index == targetIndex) return;
+			
+			var $tabs = $(this.root).children("li"),
+				$target = $tabs.eq(index);
+			
+			if(index > targetIndex) {
+				if(targetIndex == 0) {
+					$target.insertBefore($tabs.eq(0));
+				} else {
+					$target.insertAfter($tabs.eq(targetIndex - 1));
+				}
+			} else {
+				if(targetIndex == $tabs.size() - 1) {
+					$target.insertAfter($tabs.eq(targetIndex));
+				} else {
+					$target.insertBefore($tabs.eq(targetIndex + 1));
+				}
+			}
+			
+			activeIndex = targetIndex;
+			setEventNodes(this);
+		}
+		
+		this.show = function(index) {
+			changeTab(this, index);
+			
+			this.emit("change", [{ 
+				index: index, 
+				text: $(this.root).children("li").eq(index).children("a").text() 
+			}]);
 		}
 		
 		this.activeIndex = function() {
@@ -7763,6 +12128,32 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 		
 		this.activeIndex = function() {
 			return body.activeIndex();
+		}
+	}
+	
+	return UI;
+});
+jui.define("chart.bar", [ "svg", "util" ], function(svg, _) {
+	var UI = function() {
+		this.init = function() {
+			return this;
+		}
+		
+		this.render = function() {
+			svg.build();
+		}
+	}
+	
+	return UI;
+});
+jui.define("chart.line", [ "svg", "util" ], function(svg, _) {
+	var UI = function() {
+		this.init = function() {
+			return this;
+		}
+		
+		this.render = function() {
+			svg.build();
 		}
 	}
 	
