@@ -9,6 +9,7 @@ module.exports = function(grunt) {
       			//core
       			"js/base.js",
       			"js/core.js",
+      			"js/svg.js",
       			
       			// ui
       			"js/ui/button.js",
@@ -27,7 +28,11 @@ module.exports = function(grunt) {
       			"js/uix/table.js",
       			"js/uix/tree.js",
       			"js/uix/window.js",
-      			"js/uix/xtable.js"
+      			"js/uix/xtable.js",
+      			
+      			// chart
+      			"js/chart/bar.js",
+      			"js/chart/line.js"
       		],
       		dest : "jui.js"
   		}

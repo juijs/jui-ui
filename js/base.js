@@ -738,12 +738,12 @@
 		return args;
 	}
 	
-	
 	/**
 	 * Global Object
 	 * 
 	 */
 	exports.jui = {
+		
 		ready: function() {
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
@@ -759,7 +759,7 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ global["ui"], global["uix"], utility ];
+					args = [ global["ui"], global["uix"], utility, global['chart'] ];
 				}
 				
 				callback.apply(null, args);
