@@ -7381,7 +7381,7 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 				
 				// 헤더와 바디 테이블 중간의 간격 정의 (스크롤 관련)
 				$(self.root).append($table.addClass("head"));
-				$(self.root).prepend($("<div></div>").outerHeight($table.height()));
+				$(self.root).css("padding-top", $table.height());
 			}
 		}
 		

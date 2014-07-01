@@ -1,6 +1,6 @@
 {
   "name": "jui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "HTML5 Based JENNIFER UI Library (CSS, JavaScript)",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
