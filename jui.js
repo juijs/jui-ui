@@ -3749,10 +3749,10 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 						if(self.options.target != "") 
 							showTarget(self.options.target, this);
 						
-						self.emit("change", [ { index: i, text: text }, e ]);
-						changeTab(self, i);
-						
 						activeIndex = i;
+						self.emit("change", [ { index: i, text: text }, e ]);
+
+						changeTab(self, i);
 					} else {
 						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(self, this);
@@ -3978,12 +3978,14 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		this.show = function(index) {
-			changeTab(this, index);
+			activeIndex = index;
 			
 			this.emit("change", [{ 
 				index: index, 
 				text: $(this.root).children("li").eq(index).children("a").text() 
 			}]);
+
+			changeTab(this, index);
 		}
 		
 		this.activeIndex = function() {
