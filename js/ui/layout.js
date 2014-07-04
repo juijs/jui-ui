@@ -1,16 +1,3 @@
-
-/*
- * 
- * ui.layout("#container", { 
- * 		top : { size : 100, splitter: false },
- * 		left : { size : 100 },
- * 		right : { size : 100, splitter : false },
- * 		bottom : { size : 100 }
- * }) 
- * 
- */
-
-
 jui.define("ui.layout", [ "util" ], function(_) {
 	
 	var UI = function() {
