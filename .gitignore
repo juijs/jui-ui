@@ -3,3 +3,6 @@ node_modules/
 
 # WebStorm
 .idea/
+
+# Test
+test/

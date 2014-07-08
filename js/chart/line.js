@@ -3,11 +3,13 @@ jui.define("chart.line", [ "svg", "util" ], function(svg, _) {
 		this.init = function() {
 			return this;
 		}
-		
-		this.render = function() {
-			svg.build();
-		}
+
+        this.draw = function() {
+            console.log(svg);
+
+            return "draw";
+        }
 	}
 	
 	return UI;
-});
+}, "chart");

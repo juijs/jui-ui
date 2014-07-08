@@ -1,7 +1,6 @@
 (function(exports) {
-	var global = {};
-	//var core = null, ui = {}, uix = {};
-	
+	var global = {}, globalFunc = {};
+
 	/**
 	 * Private Classes
 	 * 
@@ -737,7 +736,7 @@
 		
 		return args;
 	}
-	
+
 	/**
 	 * Global Object
 	 * 
@@ -765,30 +764,41 @@
 				callback.apply(null, args);
 			});
 		},
-		define: function(name, depends, callback) {
+		define: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || 
-				!utility.typeCheck("function", callback)) {
+				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
 			
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 			
-			var args = getDepends(depends);
-			
-			if(name == "core") {
-				core = callback.apply(null, args);
-			} else {
-				if(name.indexOf(".") != -1) {
-					var keys = name.split(".");
-					
-					if(!global[keys[0]]) {
-						global[keys[0]] = {};
-					}
+			var args = getDepends(depends),
+                uiFunc = callback.apply(null, args);
 
-					global[keys[0]][keys[1]] = core.init({ type: keys[1], func: callback.apply(null, args) });
-				} else {
-					global[name] = callback.apply(null, args);
-				}
-			}
+            // 상속을 위한 함수 캐싱
+            globalFunc[name] = uiFunc;
+
+            if(name.indexOf(".") != -1) {
+                var keys = name.split(".");
+
+                if(!global[keys[0]]) {
+                    global[keys[0]] = {};
+                }
+
+                // 상위 클래스가 있을 경우...
+                if(typeof(globalFunc[parent]) == "function") {
+                    utility.inherit(globalFunc[parent], global["core"]);
+                    utility.inherit(uiFunc, globalFunc[parent]);
+                } else {
+                    utility.inherit(uiFunc, global["core"]);
+                }
+
+                global[keys[0]][keys[1]] = global["core"].init({
+                    type: keys[1],
+                    func: uiFunc
+                });
+            } else {
+                global[name] = uiFunc;
+            }
 		},
 		log: function() {
 			var jui_mng = window.open(
