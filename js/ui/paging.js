@@ -1,4 +1,4 @@
-jui.define("ui.paging", [], function() {
+jui.defineUI("ui.paging", [], function() {
 	
 	/**
 	 * UI Class
@@ -142,4 +142,4 @@ jui.define("ui.paging", [], function() {
 	}
 	
 	return UI;
-});
+}, "core");

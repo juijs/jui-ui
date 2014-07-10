@@ -1,4 +1,4 @@
-jui.define("ui.dropdown", [], function() {
+jui.defineUI("ui.dropdown", [], function() {
 	
 	/**
 	 * Common Logic
@@ -321,4 +321,4 @@ jui.define("ui.dropdown", [], function() {
 	}
 	
 	return UI;
-});
+}, "core");

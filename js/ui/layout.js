@@ -1,4 +1,4 @@
-jui.define("ui.layout", [ "util" ], function(_) {
+jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -481,4 +481,4 @@ jui.define("ui.layout", [ "util" ], function(_) {
 	
 	return UI;
 	
-})
+}, "core")

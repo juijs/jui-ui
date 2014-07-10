@@ -1,4 +1,4 @@
-jui.define("chart", [ "svg", "util" ], function(svg, _) {
+jui.define("chart.core", [ "svg", "util" ], function(svg, _) {
     var UIChart = function() {
         this.render = function() {
             alert(this.draw());
@@ -6,4 +6,4 @@ jui.define("chart", [ "svg", "util" ], function(svg, _) {
     }
 
     return UIChart;
-});
+}, "core");

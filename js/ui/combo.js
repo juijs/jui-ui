@@ -1,4 +1,4 @@
-jui.define("ui.combo", [ "util" ], function(_) {
+jui.defineUI("ui.combo", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic
@@ -318,4 +318,4 @@ jui.define("ui.combo", [ "util" ], function(_) {
 	}
 	
 	return UI;
-});
+}, "core");

@@ -1,4 +1,4 @@
-jui.define("ui.button", [], function() {
+jui.defineUI("ui.button", [], function() {
 	
 	var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -175,4 +175,4 @@ jui.define("ui.button", [], function() {
 	}
 	
 	return UI;
-});
+}, "core");

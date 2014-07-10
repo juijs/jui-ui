@@ -1,4 +1,4 @@
-jui.define("ui.notify", [], function() {
+jui.defineUI("ui.notify", [], function() {
 
     /**
      * UI Class
@@ -129,4 +129,4 @@ jui.define("ui.notify", [], function() {
     }
 
     return UI;
-});
+}, "core");

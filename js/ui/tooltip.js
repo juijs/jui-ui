@@ -1,4 +1,4 @@
-jui.define("ui.tooltip", [], function() {
+jui.defineUI("ui.tooltip", [], function() {
 	
 	/**
 	 * UI Class
@@ -128,4 +128,4 @@ jui.define("ui.tooltip", [], function() {
 	}
 	
 	return UI;
-});
+}, "core");

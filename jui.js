@@ -371,7 +371,7 @@
 	 * Public Utility Classes
 	 * 
 	 */
-	var utility = {
+	var utility = global["util"] = {
 			
 		//-- Properties
 		browser: {
@@ -713,21 +713,7 @@
 		var args = [];
 		
 		for(var i = 0; i < depends.length; i++) {
-			var name = depends[i];
-			
-			if(name.indexOf(".") != -1) {
-				var keys = name.split(".");
-				
-				args[i] = global[keys[0]][keys[1]];
-			} else {
-				if(name == "util") {
-					args[i] = utility;
-				} else if(name == "core") {
-					args[i] = core;
-				} else {
-					args[i] = global[name];
-				}
-			}
+			args.push(global[depends[i]]);
 			
 			if(utility.typeCheck([ "null" ], args[i])) {
 				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
@@ -736,6 +722,7 @@
 		
 		return args;
 	}
+
 
 	/**
 	 * Global Object
@@ -758,48 +745,82 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ global["ui"], global["uix"], utility, global['chart'] ];
+					args = [ global["ui"], global["uix"], utility ];
 				}
-				
+
 				callback.apply(null, args);
 			});
 		},
-		define: function(name, depends, callback, parent) {
-			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || 
-				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
-			
+		defineUI: function(name, depends, callback, parent) {
+			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
+				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
+
+            if(utility.typeCheck("function", global[name])) {
+                throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            if(!utility.typeCheck("function", global[parent])) {
+                throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
+            } else {
+                if(globalFunc[parent] !== true) {
+                    throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
+                }
+            }
+
+            if(name.indexOf(".") == -1) {
+                throw new Error("JUI_CRITICAL_ERR: Grouping rules must be followed");
+            }
 			
 			var args = getDepends(depends),
+                keys = name.split("."),
                 uiFunc = callback.apply(null, args);
 
-            // 상속을 위한 함수 캐싱
-            globalFunc[name] = uiFunc;
-
-            if(name.indexOf(".") != -1) {
-                var keys = name.split(".");
-
-                if(!global[keys[0]]) {
-                    global[keys[0]] = {};
-                }
-
-                // 상위 클래스가 있을 경우...
-                if(typeof(globalFunc[parent]) == "function") {
-                    utility.inherit(globalFunc[parent], global["core"]);
-                    utility.inherit(uiFunc, globalFunc[parent]);
-                } else {
-                    utility.inherit(uiFunc, global["core"]);
-                }
-
-                global[keys[0]][keys[1]] = global["core"].init({
-                    type: keys[1],
-                    func: uiFunc
-                });
-            } else {
-                global[name] = uiFunc;
+            // 상위 객체가 없을 경우...
+            if(utility.typeCheck("undefined", global[keys[0]])) {
+                global[keys[0]] = {};
             }
+
+            // 상속
+            utility.inherit(uiFunc, global[parent]);
+
+            // UI 그룹 설정
+            global[keys[0]][keys[1]] = global["core"].init({
+                type: keys[1],
+                func: uiFunc
+            });
+
+            // UI 고유 설정
+            global[name] = global[keys[0]][keys[1]];
 		},
+        define: function(name, depends, callback, parent) {
+            if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
+                !utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
+
+                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+            }
+
+            if(utility.typeCheck("function", global[name])) {
+                throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            var args = getDepends(depends),
+                uiFunc = callback.apply(null, args);
+
+            if(utility.typeCheck("function", global[parent])) {
+                if(globalFunc[parent] !== true) {
+                    throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
+                } else {
+                    utility.inherit(uiFunc, global[parent]);
+                }
+            }
+
+            // 함수 고유 설정
+            global[name] = uiFunc;
+            globalFunc[name] = true;
+        },
 		log: function() {
 			var jui_mng = window.open(
 	    		this.logUrl, 
@@ -1533,7 +1554,7 @@ jui.define("svg", [ "util" ], function(_) {
 		}
 	}
 });
-jui.define("ui.button", [], function() {
+jui.defineUI("ui.button", [], function() {
 	
 	var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -1710,8 +1731,8 @@ jui.define("ui.button", [], function() {
 	}
 	
 	return UI;
-});
-jui.define("ui.combo", [ "util" ], function(_) {
+}, "core");
+jui.defineUI("ui.combo", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic
@@ -2031,8 +2052,8 @@ jui.define("ui.combo", [ "util" ], function(_) {
 	}
 	
 	return UI;
-});
-jui.define("ui.datepicker", [ "util" ], function(_) {
+}, "core");
+jui.defineUI("ui.datepicker", [ "util" ], function(_) {
 
     /**
      * UI Class
@@ -2381,8 +2402,8 @@ jui.define("ui.datepicker", [ "util" ], function(_) {
     }
 
     return UI;
-});
-jui.define("ui.dropdown", [], function() {
+}, "core");
+jui.defineUI("ui.dropdown", [], function() {
 	
 	/**
 	 * Common Logic
@@ -2705,8 +2726,8 @@ jui.define("ui.dropdown", [], function() {
 	}
 	
 	return UI;
-});
-jui.define("ui.modal", [ "util" ], function(_) {
+}, "core");
+jui.defineUI("ui.modal", [ "util" ], function(_) {
 	
 	/**
 	 * Common Logic
@@ -2884,8 +2905,8 @@ jui.define("ui.modal", [ "util" ], function(_) {
 	}
 	
 	return UI;
-});
-jui.define("ui.notify", [], function() {
+}, "core");
+jui.defineUI("ui.notify", [], function() {
 
     /**
      * UI Class
@@ -3016,8 +3037,8 @@ jui.define("ui.notify", [], function() {
     }
 
     return UI;
-});
-jui.define("ui.paging", [], function() {
+}, "core");
+jui.defineUI("ui.paging", [], function() {
 	
 	/**
 	 * UI Class
@@ -3161,8 +3182,8 @@ jui.define("ui.paging", [], function() {
 	}
 	
 	return UI;
-});
-jui.define("ui.tooltip", [], function() {
+}, "core");
+jui.defineUI("ui.tooltip", [], function() {
 	
 	/**
 	 * UI Class
@@ -3292,8 +3313,8 @@ jui.define("ui.tooltip", [], function() {
 	}
 	
 	return UI;
-});
-jui.define("ui.layout", [ "util" ], function(_) {
+}, "core");
+jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -3776,9 +3797,9 @@ jui.define("ui.layout", [ "util" ], function(_) {
 	
 	return UI;
 	
-})
+}, "core")
 
-jui.define("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3884,8 +3905,8 @@ jui.define("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) 
 	}
 	
 	return UI;
-});
-jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+}, "core");
+jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * UI Class
@@ -4207,8 +4228,8 @@ jui.define("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	}
 	
 	return UI;
-});
-jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
+}, "core");
+jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	/**
 	 * Common Logic
@@ -6117,8 +6138,8 @@ jui.define("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	}
 	
 	return UI;
-});
-jui.define("uix.tree", [ "util" ], function(_) {
+}, "core");
+jui.defineUI("uix.tree", [ "util" ], function(_) {
 	
 	/**
 	 * UI Core Class
@@ -7011,8 +7032,8 @@ jui.define("uix.tree", [ "util" ], function(_) {
 	}
 	
 	return UI;
-});
-jui.define("uix.window", [ "util", "ui.modal" ], function(_, modal) {
+}, "core");
+jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	
 	/**
 	 * UI Class
@@ -7255,8 +7276,8 @@ jui.define("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	}
 	
 	return UI;
-});
-jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
+}, "core");
+jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
 	
 	/**
 	 * Common Logic
@@ -7980,8 +8001,8 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 	}
 	
 	return UI;
-});
-jui.define("chart.bar", [ "svg", "util" ], function(svg, _) {
+}, "core");
+jui.defineUI("chart.bar", [ "svg", "util" ], function(svg, _) {
 	var UI = function() {
 		this.init = function() {
 			return this;
@@ -7993,8 +8014,8 @@ jui.define("chart.bar", [ "svg", "util" ], function(svg, _) {
 	}
 	
 	return UI;
-});
-jui.define("chart.line", [ "svg", "util" ], function(svg, _) {
+}, "chart.core");
+jui.defineUI("chart.line", [ "svg", "util" ], function(svg, _) {
 	var UI = function() {
 		this.init = function() {
 			return this;
@@ -8008,4 +8029,4 @@ jui.define("chart.line", [ "svg", "util" ], function(svg, _) {
 	}
 	
 	return UI;
-}, "chart");
+}, "chart.core");

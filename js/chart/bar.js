@@ -1,4 +1,4 @@
-jui.define("chart.bar", [ "svg", "util" ], function(svg, _) {
+jui.defineUI("chart.bar", [ "svg", "util" ], function(svg, _) {
 	var UI = function() {
 		this.init = function() {
 			return this;
@@ -10,4 +10,4 @@ jui.define("chart.bar", [ "svg", "util" ], function(svg, _) {
 	}
 	
 	return UI;
-});
+}, "chart.core");

@@ -1,4 +1,4 @@
-jui.define("uix.tree", [ "util" ], function(_) {
+jui.defineUI("uix.tree", [ "util" ], function(_) {
 	
 	/**
 	 * UI Core Class
@@ -891,4 +891,4 @@ jui.define("uix.tree", [ "util" ], function(_) {
 	}
 	
 	return UI;
-});
+}, "core");

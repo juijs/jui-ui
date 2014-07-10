@@ -1,4 +1,4 @@
-jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
+jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
 	
 	/**
 	 * Common Logic
@@ -722,4 +722,4 @@ jui.define("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal,
 	}
 	
 	return UI;
-});
+}, "core");
