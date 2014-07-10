@@ -771,12 +771,16 @@
             }
 
             if(name.indexOf(".") == -1) {
-                throw new Error("JUI_CRITICAL_ERR: Grouping rules must be followed");
+                throw new Error("JUI_CRITICAL_ERR: UI grouping rule must be followed");
             }
 			
 			var args = getDepends(depends),
                 keys = name.split("."),
                 uiFunc = callback.apply(null, args);
+
+            if(keys.length != 2) {
+                throw new Error("JUI_CRITICAL_ERR: UI naming rule is incorrect");
+            }
 
             // 상위 객체가 없을 경우...
             if(utility.typeCheck("undefined", global[keys[0]])) {
