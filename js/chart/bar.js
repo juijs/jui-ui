@@ -1,12 +1,12 @@
-jui.defineUI("chart.bar", [ "svg", "util" ], function(svg, _) {
+jui.defineUI("chart.bar", [ "svg", "chart.grid.basic" ], function(svg, _) {
 	var UI = function() {
 		this.init = function() {
 			return this;
 		}
-		
-		this.render = function() {
-			svg.build();
-		}
+
+        this.draw = function() {
+            return "barchart";
+        }
 	}
 	
 	return UI;

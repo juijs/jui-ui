@@ -1,13 +1,15 @@
-jui.defineUI("chart.line", [ "svg", "util" ], function(svg, _) {
-	var UI = function() {
+jui.defineUI("chart.line", [ "svg", "chart.grid.basic" ], function(svg, grid) {
+    var UI = function() {
 		this.init = function() {
 			return this;
 		}
 
         this.draw = function() {
-            console.log(svg);
+            return "linechart";
+        }
 
-            return "draw";
+        this.render = function() {
+            alert(this.merge(new grid));
         }
 	}
 	
