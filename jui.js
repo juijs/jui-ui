@@ -8002,6 +8002,15 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 	
 	return UI;
 }, "core");
+jui.define("chart.core", [ "svg", "util" ], function(svg, _) {
+    var UIChart = function() {
+        this.render = function() {
+            alert(this.draw());
+        }
+    }
+
+    return UIChart;
+}, "core");
 jui.defineUI("chart.bar", [ "svg", "util" ], function(svg, _) {
 	var UI = function() {
 		this.init = function() {

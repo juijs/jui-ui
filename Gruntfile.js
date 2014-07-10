@@ -31,6 +31,7 @@ module.exports = function(grunt) {
       			"js/uix/xtable.js",
       			
       			// chart
+                "js/chart/core.js",
       			"js/chart/bar.js",
       			"js/chart/line.js"
       		],
