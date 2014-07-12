@@ -715,8 +715,8 @@
 		for(var i = 0; i < depends.length; i++) {
 			args.push(global[depends[i]]);
 			
-			if(utility.typeCheck([ "null" ], args[i])) {
-				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
+			if(!utility.typeCheck([ "function", "object" ], args[i])) {
+				throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
 			}
 		}
 		
