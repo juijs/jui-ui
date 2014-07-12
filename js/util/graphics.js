@@ -1,8 +1,7 @@
 jui.define("util.graphics", [], function() {
+    var Graphics = {};
 
-	
 	var GraphicsUtil = {
-		
 		gid : 0,
 		
 		isObject : function(obj) {
@@ -32,16 +31,13 @@ jui.define("util.graphics", [], function() {
 		}
 	}
 	
-	var Graphics = { };
-	
-	
 	function GraphicsRenderer(dom, type, attr) {
 		attr = attr || {};
 			
-		switch(type){
-		case 'svg': return new SVGRenderer(dom, attr); 
-		case 'canvas': return new CanvasRenderer(dom, attr); 
-		case 'webgl': return new WebGLRenderer(dom, attr); 
+		switch(type) {
+            case 'svg': return new SVGRenderer(dom, attr);
+            case 'canvas': return new CanvasRenderer(dom, attr);
+            case 'webgl': return new WebGLRenderer(dom, attr);
 		}
 	}
 	
@@ -55,6 +51,7 @@ jui.define("util.graphics", [], function() {
 		
 		this.group = function(obj) {
 			obj.items = obj.items || [];
+
 			for(var i = 0, len = obj.items.length; i < len; i++) {
 				var o = obj.items[i];
 				
@@ -69,8 +66,6 @@ jui.define("util.graphics", [], function() {
 		}
 		
 		this.add = function(obj) {
-			
-			
 			if (obj.id) {
 				_objects[obj.id] = obj;
 			}
@@ -78,7 +73,6 @@ jui.define("util.graphics", [], function() {
 			obj.renderer = this; 
 	
 			_children.push(obj);
-	
 		}
 		
 		this.line = function(x1, y1, x2, y2, attr) {
@@ -187,8 +181,7 @@ jui.define("util.graphics", [], function() {
 		this.size = function() {
 			return GraphicsUtil.getSize(this.context) ;
 		}
-		
-	
+
 		this.createDefs = function() {
 			
 			// defs 생성 
@@ -207,7 +200,6 @@ jui.define("util.graphics", [], function() {
 			}
 	
 			return def;
-	
 		}
 	
 		/**
@@ -256,7 +248,7 @@ jui.define("util.graphics", [], function() {
 		}	
 		
 		this.renderObject = function(obj) {
-			
+
 			if (obj._isGroup) {
 				// batch drawing 
 				
@@ -267,16 +259,13 @@ jui.define("util.graphics", [], function() {
 				}
 				
 				this.context.appendChild(group);
-				
 			} else {
-							
 				this.context.appendChild(this.create(obj));			
 			}
 		}
 	}
 	
 	SVGRenderer.prototype.create = function(obj) {
-		
 		var element = document.createElementNS("http://www.w3.org/2000/svg", obj.type.toLowerCase());
 		
 		if (obj) {
@@ -348,8 +337,6 @@ jui.define("util.graphics", [], function() {
 		return el; 
 	}
 	
-	
-	
 	function CanvasRenderer(dom, context, attr) {  // canvas 에서는 context 는 실제 canvas 의 getContext('2d') 로 얻어온다.
 	
 		if (typeof dom == 'string') {
@@ -385,6 +372,7 @@ jui.define("util.graphics", [], function() {
 	
 	
 		this._gradients = {};
+
 		/**
 		 *
 		 * canvas.createLinearGradient(0, 0, 170, 0, [ [], [], [] ])
@@ -420,9 +408,7 @@ jui.define("util.graphics", [], function() {
 			var method = "renderObject" + obj.type;
 			this.renderObjectBase(obj);	
 			this[method].call(this, obj);
-		}	
-	
-			
+		}
 	}
 	
 	CanvasRenderer.prototype.renderObjectBase = function(obj) {
@@ -450,7 +436,6 @@ jui.define("util.graphics", [], function() {
 	}
 	
 	CanvasRenderer.prototype.renderObjectEllipse = function(obj) {
-		
 		var context = this.context;
 		
 		context.fillStyle = obj.fill;	
@@ -521,7 +506,6 @@ jui.define("util.graphics", [], function() {
 	} 
 	
 	Graphics.Rect = function(x ,y, width, height, attr) {
-		
 		Graphics.RenderObject.call(this);
 		
 		this.type = 'Rect';
@@ -546,7 +530,6 @@ jui.define("util.graphics", [], function() {
 	}
 	
 	Graphics.Ellipse = function(cx, cy, rx, ry, attr) {
-		
 		Graphics.RenderObject.call(this);
 		
 		this.type = 'Ellipse';

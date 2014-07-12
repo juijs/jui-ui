@@ -1,5 +1,6 @@
-jui.define("chart.core", [ "util.graphics"], function(Graphics) {
+jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 	var GraphicsUtil = Graphics.util;
+
     var UIChart = function() {
 	
 		this.set = function(key, value) {
@@ -51,24 +52,23 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 		this.setting = function() {
 			return {
 				options: {
-					'type' 		: 'svg',
-					'width' 	: "100%",
-					"height" 	: "100%",
-					"padding" 	: 10,
+					"type" 		    : "svg",
+					"width" 	    : "100%",
+					"height" 	    : "100%",
+					"padding" 	    : 10,
 					"barPadding" 	: 10,
-					"seriesPadding" 	: 1,
-					
-					"maxTicks" 	: 5,
-					"title" 	: "",
-					"titleY" 	: "",
-					"titleX" 	: "",
-					"theme"		: {},
-					"titleHeight" : 50,
-					"titleYWidth" : 50,
-					"titleXHeight" : 50,
-					"labels" : "",
-					"series" : {},
-					"data" : []
+					"seriesPadding" : 1,
+					"maxTicks" 	    : 5,
+					"title" 	    : "",
+					"titleY" 	    : "",
+					"titleX" 	    : "",
+					"theme"		    : {},
+					"titleHeight"   : 50,
+					"titleYWidth"   : 50,
+					"titleXHeight"  : 50,
+					"labels"        : "",
+					"series"        : {},
+                    "data"          : []
 				}
 			}
 		}		
@@ -77,23 +77,20 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 			this.renderer = Graphics.createRenderer(this.root, this.get('type'), {
 				width : this.get('width'),
 				height : this.get('height')
-			});			
+			});
+
+            return this;
 		}
 		
 		this.render = function() {
-			
 			// 비우기 
 			this.renderer.clear();
-			
+
 			this.caculate();
-			
-			this.renderChart();
-			
-			this.delegateEvents();
+			this.renderChart();     // 추상 메소드
 			
 			// 최종적으로 그리기 
-			this.renderer.render();				
-			
+			this.renderer.render();
 		}
 		
 		this.caculate = function() {
@@ -163,20 +160,18 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 				}  
 			}
 			
-			
 			// chart 영역 계산
 			chart.x2 = chart.x + chart.width;
-			chart.y2 = chart.y + chart.height;
+            chart.y2 = chart.y + chart.height;
 			this.area.chart = chart;
 		}
 		
-		
 		this.niceAxis = function niceAxis (min, max) {
-	      var factorList = [ 0.0, 1.2, 2.5, 5.0, 10.0]; 
-	      var scalarList = [ 0.2, 0.2, 0.5, 1.0, 2.0]; 
-	      var min_, max_;
+            var factorList = [ 0.0, 1.2, 2.5, 5.0, 10.0 ];
+            var scalarList = [ 0.2, 0.2, 0.5, 1.0, 2.0 ];
+            var min_, max_;
 	      
-	      if (min == 0) {
+            if (min == 0) {
 	            min_ = 0;
 	        }
 	        else if (min > 0) {
@@ -185,9 +180,8 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 	        else {
 	            min_ = min-(max-min)/100;
 	        }     
-	        
-	        
-	      if (max == 0) {
+
+            if (max == 0) {
 	            if (min == 0) {
 	                max_ = 1;
 	            }
@@ -202,41 +196,31 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 	            max_ = max+(max-min)/100;
 	        }       
 	        
-	      // 3. power
+            // 3. power
 	        var power = Math.log(max_ - min_) / Math.LN10;
 	    
 	        // 4. factor
 	        var factor = Math.pow(10, power - Math.floor(power));
 	    
-	      var tickWidth = "";
+            var tickWidth = "";
 	    
 	        // 5. nice ticks
 	        for (var i = 0; factor > factorList[i] ; i++) {
 	            tickWidth = scalarList[i] * Math.pow(10, Math.floor(power));
 	        }       
 	        
-	      // 6. min-axisValues
+            // 6. min-axisValues
 	        var minAxisValue = tickWidth * Math.floor(min_/tickWidth);
 	    
 	        // 7. min-axisValues
 	        var maxAxisValue = tickWidth * Math.floor((max_/tickWidth)+1);        
 	        
 	        return {
-	          min : minAxisValue,
-	          max: maxAxisValue,
-	          tickWidth : tickWidth
+                min: minAxisValue,
+                max: maxAxisValue,
+                tickWidth : tickWidth
 	        };
-	        
 	    }
-		
-		this.renderChart = function() {
-	
-		}
-		
-		this.delegateEvents = function() {
-			
-		}
-
     }
 
     return UIChart;

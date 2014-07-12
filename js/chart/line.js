@@ -1,17 +1,77 @@
-jui.defineUI("chart.line", [ "svg", "chart.grid.basic" ], function(svg, grid) {
+jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
+    var GraphicsUtil = Graphics.util;
+
     var UI = function() {
-		this.init = function() {
-			return this;
-		}
+        var grid = null;
 
-        this.draw = function() {
-            return "linechart";
+        function getPropertyCount(obj) {
+            var count = 0;
+
+            for(var key in obj) {
+                count += 1;
+            }
+
+            return count;
         }
 
-        this.render = function() {
-            alert(this.merge(new grid));
+        this.drawChart = function() {
+            var data = this.get('data');
+            var series = this.get('series');
+            var barPadding = this.get('barPadding');
+            var seriesPadding = this.get('seriesPadding');
+
+            console.log(series);
+
+            var info = this.niceAxis(grid.getMin(), grid.getMax());
+            var radius = 1.7,
+                cw = grid.getUnit() / 2,
+                max = Math.abs(info.min) + Math.abs(info.max),
+                rate = this.area.chart.height / max;
+
+            for(var i = 1; i <= data.length; i++) {
+                var cx = this.area.chart.x + (grid.getUnit() * i) - cw;
+
+                for(var key in series) {
+                    var value = series[key].data[i - 1];
+                    var cy = this.area.chart.y + ((max - value + info.min) * rate);
+
+                    if(!series[key].path) {
+                        series[key].path = [];
+                    }
+
+                    // 라인을 그리기 위한 위치 값 저장
+                    series[key].path.push({ cx: cx, cy: cy });
+
+                    this.renderer.circle(cx, cy, radius, {
+                        fill : series[key].color
+                    });
+                }
+            }
+
+            for(var key in series) {
+                var path = series[key].path;
+
+                for(var i = 0; i < path.length - 1; i++) {
+                    var x1 = path[i].cx,
+                        y1 = path[i].cy,
+                        x2 = path[i + 1].cx,
+                        y2 = path[i + 1].cy;
+
+                    this.renderer.line(x1, y1, x2, y2, {
+                        "stroke-width": 1,
+                        "stroke": series[key].color
+                    });
+                }
+            }
         }
-	}
-	
-	return UI;
+
+        this.renderChart = function() {
+            grid = new BasicGrid(this);
+            grid.draw();
+
+            this.drawChart();
+        }
+    }
+
+    return UI;
 }, "chart.core");
