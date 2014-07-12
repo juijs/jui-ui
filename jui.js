@@ -7160,16 +7160,19 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 					$(body.root).wrap("<div class='body' style='max-height: " + self.options.scrollHeight + "px'></div>");
 				else
 					$(body.root).wrap("<div class='body'></div>");
-				
+
+                // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
+                $(body.root).find("thead > tr").not(":last-child").remove();
+
 				// X-Table 헤더 영역 설정
 				for(var i = 0; i < cols.length; i++) {
 					var $elem = $(cols[i].element);
-					
+
 					$elem.html("").outerHeight(0).attr("style",
-							$elem.attr("style") + 
+							$elem.attr("style") +
 							"border-top-width: 0px !important;" +
-							"border-bottom-width: 0px !important;" + 
-							"padding-top: 0px !important;" + 
+							"border-bottom-width: 0px !important;" +
+							"padding-top: 0px !important;" +
 							"padding-bottom: 0px !important"
 					);
 				}
