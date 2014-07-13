@@ -5,7 +5,6 @@ module.exports = function(grunt) {
   	concat : {
   		dist : {
   			src : [
-      		
       			//core
       			"js/base.js",
       			"js/core.js",
@@ -27,17 +26,7 @@ module.exports = function(grunt) {
       			"js/uix/table.js",
       			"js/uix/tree.js",
       			"js/uix/window.js",
-      			"js/uix/xtable.js",
-      			
-      			// util
-      			"js/util/graphics.js",
-      			      			
-      			// chart
-                "js/chart/core.js",
-                "js/chart/grid/basic.js",
-      			"js/chart/bar.js",
-                "js/chart/line.js"
-
+      			"js/uix/xtable.js"
       		],
       		dest : "jui.js"
   		}

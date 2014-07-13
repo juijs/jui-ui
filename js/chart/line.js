@@ -1,8 +1,12 @@
-jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
+jui.defineUI("chart.line", [
+    "util.graphics",
+    "chart.grid.basic"
+], function(Graphics, BasicGrid) {
+
     var GraphicsUtil = Graphics.util;
 
     var UI = function() {
-        var grid = null;
+        var grid = null, radius = 1.7;
 
         function getPropertyCount(obj) {
             var count = 0;
@@ -14,17 +18,20 @@ jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Gra
             return count;
         }
 
+        function setCircleEvent(self) {
+            $(self.selector).find("circle").each(function(i) {
+                console.log(this);
+            });
+        }
+
         this.drawChart = function() {
             var data = this.get('data');
             var series = this.get('series');
             var barPadding = this.get('barPadding');
             var seriesPadding = this.get('seriesPadding');
 
-            console.log(series);
-
             var info = this.niceAxis(grid.getMin(), grid.getMax());
-            var radius = 1.7,
-                cw = grid.getUnit() / 2,
+            var cw = grid.getUnit() / 2,
                 max = Math.abs(info.min) + Math.abs(info.max),
                 rate = this.area.chart.height / max;
 
@@ -42,8 +49,9 @@ jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Gra
                     // 라인을 그리기 위한 위치 값 저장
                     series[key].path.push({ cx: cx, cy: cy });
 
-                    this.renderer.circle(cx, cy, radius, {
-                        fill : series[key].color
+                    var circle = this.renderer.circle(cx, cy, radius, {
+                        fill: series[key].color,
+                        title: key + ": " + value
                     });
                 }
             }
@@ -70,6 +78,27 @@ jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Gra
             grid.draw();
 
             this.drawChart();
+        }
+
+        this.setTooltip = function() {
+            var self = this;
+            var func = this.tpl.tooltip;
+
+            this.addEvent($(this.root).find("circle"), "mouseover", function(e) {
+                $(self.root).find(".tooltip").remove();
+
+                var $tooltip = $(func({ title: $(this).attr("title") }));
+                $(self.root).append($tooltip);
+
+                var offset = $(this).offset(),
+                    w = $tooltip.outerWidth(),
+                    h = $tooltip.outerHeight();
+
+                $tooltip.css({
+                    left: offset.left - (w / 2) + radius,
+                    top: offset.top - h + radius
+                });
+            });
         }
     }
 
