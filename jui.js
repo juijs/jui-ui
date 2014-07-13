@@ -793,7 +793,7 @@
             // UI 그룹 설정
             global[keys[0]][keys[1]] = global["core"].init({
                 type: keys[1],
-                func: uiFunc
+                "class": uiFunc
             });
 
             // UI 고유 설정
@@ -1236,31 +1236,31 @@ jui.define("core", [ "util" ], function(_) {
         }
 
         return function(selector, options) {
+            var $root = $(selector);
             var list = [],
-                $root = $(selector);
+                setting = _.typeCheck("function", UI["class"].setting) ? UI["class"].setting() : {};
 
             $root.each(function(index) {
-                var obj = new UI.func(),
-                    setting = (obj.setting) ? obj.setting() : {};
-                var defOptions = (typeof(setting.options) == "object") ? setting.options : {};
-
-                // Options Check
-                checkedOptions(defOptions, options);
+                var mainObj = new UI["class"](),
+                    defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
                 // Default Options Setting
-                var opts = $.extend(true, defOptions, options);
-                opts.tpl = (opts.tpl) ? opts.tpl : {};
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Options Check
+                checkedOptions(defOpts, options);
 
                 // Pulbic Properties
-                obj.init.prototype = obj;
-                obj.init.prototype.selector = $root.selector;
-                obj.init.prototype.root = this;
-                obj.init.prototype.options = opts;
-                obj.init.prototype.tpl = {};
-                obj.init.prototype.event = new Array(); // Custom Event
-                obj.init.prototype.listen = new UIListener(); // DOM Event
-                obj.init.prototype.timestamp = Date.now();
-                obj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype = mainObj;
+                mainObj.init.prototype.selector = $root.selector;
+                mainObj.init.prototype.root = this;
+                mainObj.init.prototype.options = opts;
+                mainObj.init.prototype.tpl = {};
+                mainObj.init.prototype.event = new Array(); // Custom Event
+                mainObj.init.prototype.listen = new UIListener(); // DOM Event
+                mainObj.init.prototype.timestamp = Date.now();
+                mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
@@ -1276,22 +1276,22 @@ jui.define("core", [ "util" ], function(_) {
                 });
 
                 // Template Setting (Script)
-                if(opts.tpl) {
+                if(_.typeCheck("object", opts.tpl)) {
                     for(var name in opts.tpl) {
                         var tplHtml = opts.tpl[name];
 
-                        if(typeof(tplHtml) == "string" && tplHtml != "") {
-                            obj.init.prototype.tpl[name] = _.template(tplHtml);
+                        if(_.typeCheck("string", tplHtml) && tplHtml != "") {
+                            mainObj.init.prototype.tpl[name] = _.template(tplHtml);
                         }
                     }
                 }
 
-                var uiObj = new obj.init();
-                var validFunc = (typeof(setting.valid) == "object") ? setting.valid : {},
-                    animateFunc = (typeof(setting.animate) == "object") ? setting.animate : {};
+                var uiObj = new mainObj.init(),
+                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
+                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
 
                 // Event Setting
-                if(typeof(uiObj.options.event) == "object") {
+                if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
                     }
@@ -1299,13 +1299,15 @@ jui.define("core", [ "util" ], function(_) {
 
                 // Type-Valid Check
                 for(var key in validFunc) {
-                    uiObj.addValid(key, validFunc[key]);
+                    if(_.typeCheck("array", validFunc[key])) {
+                        uiObj.addValid(key, validFunc[key]);
+                    }
                 }
 
                 // Call-Animate Functions
-                if(opts.animate) {
+                if(opts.animate === true) {
                     for(var key in animateFunc) {
-                        if(typeof(animateFunc[key]) == "object") {
+                        if(_.typeCheck("object", animateFunc[key])) {
                             uiObj.callDelay(key, animateFunc[key]);
                         }
                     }
@@ -1454,28 +1456,15 @@ jui.defineUI("ui.button", [], function() {
 	
 	var UI = function() {
 		var ui_list = {};
-		
-		
+
+
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					type: "radio",
-					index: 0,
-					value: ""
-				},
-				valid: {
-					setIndex: [ [ "integer", "array" ] ],
-					setValue: [ [ "integer", "string", "array", "boolean" ] ]
-				}
-			}
-		}
-		
+
 		this.init = function() {
-			var self = this, opts = this.options;
+            var self = this, opts = this.options;
 			
 			if(opts.type == "radio") {
 				ui_list[opts.type] = new UIRadio(self, this.root, self.options);
@@ -1486,8 +1475,6 @@ jui.defineUI("ui.button", [], function() {
 				ui_list[opts.type] = new UICheck();
 				ui_list[opts.type].init();
 			}
-			
-			return this;
 		}
 		
 		this.setIndex = function(indexList) {
@@ -1512,6 +1499,20 @@ jui.defineUI("ui.button", [], function() {
 			ui_list[this.options.type]._setting("init");
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                type: "radio",
+                index: 0,
+                value: ""
+            },
+            valid: {
+                setIndex: [ [ "integer", "array" ] ],
+                setValue: [ [ "integer", "string", "array", "boolean" ] ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -1680,25 +1681,9 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					index: 0,
-					value: "",
-					width: 0,
-					height: 100,
-					keydown: false,
-					position: "bottom"
-				},
-				valid: {
-					setIndex: [ "integer" ],
-					setValue: [ [ "integer", "string", "boolean" ] ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -1764,8 +1749,6 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 			
 			//  Key up/down event
 			setEventKeydown(this);
-			
-			return this;
 		}
 		
 		this.setIndex = function(index) {
@@ -1833,6 +1816,23 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 			this.emit("reload", ui_data);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                index: 0,
+                value: "",
+                width: 0,
+                height: 100,
+                keydown: false,
+                position: "bottom"
+            },
+            valid: {
+                setIndex: [ "integer" ],
+                setValue: [ [ "integer", "string", "boolean" ] ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -2012,47 +2012,9 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
 
 
         /**
-         * Public Methods & Options
+         * Public Methods
          *
          */
-        this.setting = function() {
-            return {
-            	options: {
-	                type: "daily",
-	                titleFormat: "yyyy.MM",
-	                format: "yyyy-MM-dd",
-	                animate: false
-            	},
-            	valid: {
-            		page: [ "integer", "integer" ],
-            		select: [ "integer", "integer", "integer" ],
-            		addTime: [ "integer" ],
-            		getFormat: [ "string" ]
-            	},
-            	animate: {
-            		page: {
-            			after: function() {
-            				var self = this;
-            				
-            				$body.find("tr").each(function(i) {
-            					var ms = (i + 1) * 200;
-            					
-        						$(this).addClass("fadeIn")
-        						.css({
-        							"animation-duration":  ms + "ms"
-        						});
-        						
-        						(function(elem) {
-        							self.addEvent(this, 'AnimationEnd', function() {
-        								$(elem).removeClass("fadeIn");
-        							});
-        						})(this);
-            				});
-            			}
-            		}
-            	}
-            };
-        }
 
         this.init = function() {
             var self = this,
@@ -2072,8 +2034,6 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
             // 화면 초기화
             this.page(year, month);
             this.select();
-
-            return this;
         }
         
         this.page = function(y, m) {
@@ -2182,6 +2142,45 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
+    }
+
+    UI.setting = function() {
+        return {
+            options: {
+                type: "daily",
+                titleFormat: "yyyy.MM",
+                format: "yyyy-MM-dd",
+                animate: false
+            },
+            valid: {
+                page: [ "integer", "integer" ],
+                select: [ "integer", "integer", "integer" ],
+                addTime: [ "integer" ],
+                getFormat: [ "string" ]
+            },
+            animate: {
+                page: {
+                    after: function() {
+                        var self = this;
+
+                        $body.find("tr").each(function(i) {
+                            var ms = (i + 1) * 200;
+
+                            $(this).addClass("fadeIn")
+                                .css({
+                                    "animation-duration":  ms + "ms"
+                                });
+
+                            (function(elem) {
+                                self.addEvent(this, 'AnimationEnd', function() {
+                                    $(elem).removeClass("fadeIn");
+                                });
+                            })(this);
+                        });
+                    }
+                }
+            }
+        };
     }
 
     return UI;
@@ -2347,28 +2346,9 @@ jui.defineUI("ui.dropdown", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					close: true,
-					keydown: false,
-					left: 0,
-					top: 0,
-					width: 0,
-					height: 0,
-					nodes: []
-				},
-				valid: {
-					update: [ "array" ],
-					show: [ "number", "number" ],
-					move: [ "number", "number" ],
-					wheel: [ "integer", "function" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -2418,8 +2398,6 @@ jui.defineUI("ui.dropdown", [], function() {
 			}
 
 			this.type = "hide"; // 기본 타입 설정
-			
-			return this;
 		}
 		
 		this.update = function(nodes) {
@@ -2507,6 +2485,26 @@ jui.defineUI("ui.dropdown", [], function() {
 			this.emit("reload");
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                close: true,
+                keydown: false,
+                left: 0,
+                top: 0,
+                width: 0,
+                height: 0,
+                nodes: []
+            },
+            valid: {
+                update: [ "array" ],
+                show: [ "number", "number" ],
+                move: [ "number", "number" ],
+                wheel: [ "integer", "function" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -2625,26 +2623,13 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					color: "black",
-					opacity: 0.4,
-					target: "body",
-					index: 0,
-					autoHide: true // 자신을 클릭했을 경우, hide
-				}
-			}
-		}
 		
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
 			this.type = "hide"; // 기본 타입 설정
-			
-			return this;
 		}
 		
 		this.hide = function() {
@@ -2686,6 +2671,18 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 			this.type = "show";
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                color: "black",
+                opacity: 0.4,
+                target: "body",
+                index: 0,
+                autoHide: true // 자신을 클릭했을 경우, hide
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -2699,26 +2696,9 @@ jui.defineUI("ui.notify", [], function() {
     	var $container = null, DEF_PADDING = 12;
     	
         /**
-         * Public Methods & Options
+         * Public Methods
          *
          */
-        this.setting = function() {
-            return {
-            	options: {
-	                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-	                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-	                distance: 5, // 알림끼리의 간격
-	                timeout: 3000, // 0이면 사라지지 않음
-	                showDuration: 500,
-	                hideDuration: 500,
-	                showEasing: "swing",
-	                hideEasing: "linear"
-            	},
-            	valid: {
-            		add: [ "object", "integer" ]
-            	}
-            };
-        }
 
         this.init = function() {
             var self = this, 
@@ -2819,6 +2799,24 @@ jui.defineUI("ui.notify", [], function() {
         }
     }
 
+    UI.setting = function() {
+        return {
+            options: {
+                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
+                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
+                distance: 5, // 알림끼리의 간격
+                timeout: 3000, // 0이면 사라지지 않음
+                showDuration: 500,
+                hideDuration: 500,
+                showEasing: "swing",
+                hideEasing: "linear"
+            },
+            valid: {
+                add: [ "object", "integer" ]
+            }
+        };
+    }
+
     return UI;
 }, "core");
 jui.defineUI("ui.paging", [], function() {
@@ -2900,22 +2898,9 @@ jui.defineUI("ui.paging", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					count: 0,		// 데이터 전체 개수
-					pageCount: 10,	// 한페이지당 데이터 개수
-					screenCount: 5	// 페이지 개수
-				},
-				valid: {
-					reload: [ "integer", "null" ],
-					page: [ "integer", "null" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -2963,6 +2948,20 @@ jui.defineUI("ui.paging", [], function() {
 			this.page(lastPage);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                count: 0,		// 데이터 전체 개수
+                pageCount: 10,	// 한페이지당 데이터 개수
+                screenCount: 5	// 페이지 개수
+            },
+            valid: {
+                reload: [ "integer", "null" ],
+                page: [ "integer", "null" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -3028,22 +3027,9 @@ jui.defineUI("ui.tooltip", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					color: "black",
-					position: "top",
-					width: 150,
-					align: "left",
-					delay: 0,
-					type: "mouseover",
-					title: ""
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -3094,6 +3080,20 @@ jui.defineUI("ui.tooltip", [], function() {
 			});
 		}		
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                color: "black",
+                position: "top",
+                width: 150,
+                align: "left",
+                delay: 0,
+                type: "mouseover",
+                title: ""
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -3302,24 +3302,9 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 	
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					barColor : '#d6d6d6',
-					barSize : 3,
-					width	: null,
-					height	: null,
-					top		: { el : null, size : null, min : 50, max : 200, resize : true },
-					left	: { el : null, size : null, min : 50, max : 200, resize : true },
-					right	: { el : null, size : null, min : 50, max : 200, resize : true },
-					bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
-					center	: { el : null }
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -3577,6 +3562,22 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 			}			
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                barColor : '#d6d6d6',
+                barSize : 3,
+                width	: null,
+                height	: null,
+                top		: { el : null, size : null, min : 50, max : 200, resize : true },
+                left	: { el : null, size : null, min : 50, max : 200, resize : true },
+                right	: { el : null, size : null, min : 50, max : 200, resize : true },
+                bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+                center	: { el : null }
+            }
+        }
+    }
 	
 	return UI;
 	
@@ -3655,37 +3656,36 @@ jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					target: null,
-					words: []
-				},
-				valid: {
-					update: [ "array" ]
-				}
-			}
-		}
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
 			
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
-			
-			return this;
 		}		
 		
 		this.update = function(words) {
 			this.options.words = words;
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                target: null,
+                words: []
+            },
+            valid: {
+                update: [ "array" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -3857,27 +3857,9 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					target: "", 
-					index: 0,
-					drag: false,
-					nodes: []
-				},
-				valid: {
-					update: [ "array" ],
-					insert: [ "integer", "object" ],
-					append: [ "object" ],
-					prepend: [ "object" ],
-					remove: [ "integer" ],
-					show: [ "integer" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -4009,6 +3991,25 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			return activeIndex;
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                target: "",
+                index: 0,
+                drag: false,
+                nodes: []
+            },
+            valid: {
+                update: [ "array" ],
+                insert: [ "integer", "object" ],
+                append: [ "object" ],
+                prepend: [ "object" ],
+                remove: [ "integer" ],
+                show: [ "integer" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -5207,128 +5208,9 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 *
 		 */
-		this.setting = function() {
-			var MAX = 2500, DELAY = 70;
-			
-			function animateUpdate(self, rows) {
-				var ms = MAX - 1;
-				
-				for(var i = 0; i < rows.length; i++) {
-					ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
-					
-					$(rows[i].element).addClass("fadeInLeft")
-					.css({
-						"animation-duration":  ms + "ms"
-					});
-					
-					(function(index) {
-						self.addEvent(rows[index].element, 'AnimationEnd', function() {
-							$(rows[index].element).removeClass("fadeInLeft");
-						});
-					})(i);
-				}
-			}
-			
-			return {
-				options: {
-					fields: null,
-					csv: null,
-					csvNames: null,
-					rows: [],
-					colshow: false,
-					scroll: false,
-					scrollHeight: 200,
-					width: 0,
-					expand: false,
-					expandEvent: true,
-					editCell: false,
-					editRow: false,
-					editEvent: true,
-					resize: false,
-					sort: false,
-					sortIndex: null,
-					sortOrder: "asc",
-					animate: false
-				},
-				valid: {
-					update: [ [ "integer", "string", "array" ], "object" ],
-					updateTree: [ "array" ],
-					append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
-					insert: [ [ "integer", "string" ], [ "object", "array" ] ],
-					select: [ [ "integer", "string" ] ],
-					check: [ [ "integer", "string" ] ],
-					uncheck: [ [ "integer", "string" ] ],
-					remove: [ [ "integer", "string" ] ],
-					move: [ [ "integer", "string" ], [ "integer", "string" ] ],
-					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
-					scroll: [ "integer" ],
-					open: [ [ "integer", "string" ] ],
-					fold: [ [ "integer", "string" ] ],
-					get: [ [ "integer", "string" ] ],
-					getAll: [ [ "integer", "string" ] ],
-					getColumn: [ [ "integer", "string" ] ],
-					showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-					hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-					initColumns: [ "array" ],
-					showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
-					hideExpand: [ [ "object", "undefined" ] ],
-					showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-					setCsv: [ "string", "string" ],
-					setCsvFile: [ [ "string", "object" ], "object" ],
-					getCsv: [ [ "boolean", "undefined" ] ],
-					getCsvBase64: [ [ "boolean", "undefined" ] ]
-				},
-				animate: {
-					update: {
-						after: function() {
-							if(arguments.length == 1) {
-								if(!_.browser.webkit && !_.browser.mozilla) return;
-								animateUpdate(this, this.listAll());
-							}
-						}
-					},
-					updateTree: {
-						after: function() {
-							if(!_.browser.webkit && !_.browser.mozilla) return;
-							animateUpdate(this, this.listAll());
-						}
-					},
-					remove: {
-						before: function(index) {
-							var row = this.get(index);
-							
-							$(row.element).addClass("fadeOutDown")
-							.css({
-								"animation-duration":  "350ms",
-								"animation-timing-function": "ease-out"
-							});
-						},
-						delay: 200
-					},
-					reset: {
-						before: function() {
-							var rows = this.listAll(),
-								m = 2000,
-								d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
-							
-							for(var i = 0; i < rows.length; i++) {
-								m -= d;
-								
-								$(rows[i].element).addClass("fadeOutRight")
-								.css({
-									"animation-duration":  ((m > 0) ? m : 50) + "ms",
-									"animation-fill-mode": "both"
-								});
-							}
-						},
-						delay: 1000
-					}
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -5378,8 +5260,6 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			}
 			
 			setEventColumn(this);
-			
-			return this;
 		}
 		
 		this.update = function() {
@@ -5919,6 +5799,126 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			return rowIndex;
 		}
 	}
+
+    UI.setting = function() {
+        var MAX = 2500, DELAY = 70;
+
+        function animateUpdate(self, rows) {
+            var ms = MAX - 1;
+
+            for(var i = 0; i < rows.length; i++) {
+                ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
+
+                $(rows[i].element).addClass("fadeInLeft")
+                    .css({
+                        "animation-duration":  ms + "ms"
+                    });
+
+                (function(index) {
+                    self.addEvent(rows[index].element, 'AnimationEnd', function() {
+                        $(rows[index].element).removeClass("fadeInLeft");
+                    });
+                })(i);
+            }
+        }
+
+        return {
+            options: {
+                fields: null,
+                csv: null,
+                csvNames: null,
+                rows: [],
+                colshow: false,
+                scroll: false,
+                scrollHeight: 200,
+                width: 0,
+                expand: false,
+                expandEvent: true,
+                editCell: false,
+                editRow: false,
+                editEvent: true,
+                resize: false,
+                sort: false,
+                sortIndex: null,
+                sortOrder: "asc",
+                animate: false
+            },
+            valid: {
+                update: [ [ "integer", "string", "array" ], "object" ],
+                updateTree: [ "array" ],
+                append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
+                insert: [ [ "integer", "string" ], [ "object", "array" ] ],
+                select: [ [ "integer", "string" ] ],
+                check: [ [ "integer", "string" ] ],
+                uncheck: [ [ "integer", "string" ] ],
+                remove: [ [ "integer", "string" ] ],
+                move: [ [ "integer", "string" ], [ "integer", "string" ] ],
+                sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
+                scroll: [ "integer" ],
+                open: [ [ "integer", "string" ] ],
+                fold: [ [ "integer", "string" ] ],
+                get: [ [ "integer", "string" ] ],
+                getAll: [ [ "integer", "string" ] ],
+                getColumn: [ [ "integer", "string" ] ],
+                showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
+                hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
+                initColumns: [ "array" ],
+                showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
+                hideExpand: [ [ "object", "undefined" ] ],
+                showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
+                setCsv: [ "string", "string" ],
+                setCsvFile: [ [ "string", "object" ], "object" ],
+                getCsv: [ [ "boolean", "undefined" ] ],
+                getCsvBase64: [ [ "boolean", "undefined" ] ]
+            },
+            animate: {
+                update: {
+                    after: function() {
+                        if(arguments.length == 1) {
+                            if(!_.browser.webkit && !_.browser.mozilla) return;
+                            animateUpdate(this, this.listAll());
+                        }
+                    }
+                },
+                updateTree: {
+                    after: function() {
+                        if(!_.browser.webkit && !_.browser.mozilla) return;
+                        animateUpdate(this, this.listAll());
+                    }
+                },
+                remove: {
+                    before: function(index) {
+                        var row = this.get(index);
+
+                        $(row.element).addClass("fadeOutDown")
+                            .css({
+                                "animation-duration":  "350ms",
+                                "animation-timing-function": "ease-out"
+                            });
+                    },
+                    delay: 200
+                },
+                reset: {
+                    before: function() {
+                        var rows = this.listAll(),
+                            m = 2000,
+                            d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
+
+                        for(var i = 0; i < rows.length; i++) {
+                            m -= d;
+
+                            $(rows[i].element).addClass("fadeOutRight")
+                                .css({
+                                    "animation-duration":  ((m > 0) ? m : 50) + "ms",
+                                    "animation-fill-mode": "both"
+                                });
+                        }
+                    },
+                    delay: 1000
+                }
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -6619,35 +6619,9 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 *
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					root: null,
-					rootHide: false,
-					rootFold: false,
-					drag: false,
-					dragChild: true
-				},
-				valid: {
-					update: [ "string", "object" ],
-					append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
-					insert: [ "string", [ "object", "array" ] ],
-					select: [ "string" ],
-					remove: [ "string" ],
-					move: [ "string", "string" ],
-					open: [ [ "string", "null" ], [ "object", "undefined" ] ],
-					fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
-					openAll: [ "string" ],
-					foldAll: [ "string" ],
-					listParents: [ "string" ],
-					get: [ "string" ],
-					getAll: [ "string" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -6675,8 +6649,6 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 			if(opts.rootFold) {
 				this.fold();
 			}
-			
-			return this;
 		}
 		
 		this.update = function(index, data) {
@@ -6813,6 +6785,33 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 			return this.uit.getNodeAll(index);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                root: null,
+                rootHide: false,
+                rootFold: false,
+                drag: false,
+                dragChild: true
+            },
+            valid: {
+                update: [ "string", "object" ],
+                append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
+                insert: [ "string", [ "object", "array" ] ],
+                select: [ "string" ],
+                remove: [ "string" ],
+                move: [ "string", "string" ],
+                open: [ [ "string", "null" ], [ "object", "undefined" ] ],
+                fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
+                openAll: [ "string" ],
+                foldAll: [ "string" ],
+                listParents: [ "string" ],
+                get: [ "string" ],
+                getAll: [ "string" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
@@ -6842,66 +6841,9 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 *
 		 */
-		this.setting = function() {
-			function animateVisible(self, style) {
-				$(self.root).addClass(style)
-				.css({
-					"animation-duration": "500ms",
-					"animation-fill-mode": "both"
-				});
-				
-				self.addEvent(self.root, 'AnimationEnd', function() {
-					$(self.root).removeClass(style);
-				});
-			}
-			
-			return {
-				options: {
-					width: 400,
-					height: 300,
-					left: "auto",
-					top: "auto",
-					right: "auto",
-					bottom: "auto",
-					modal: false,
-					move: true,
-					resize: true,
-					modalIndex: 0,
-					animate: false
-				},
-				valid: {
-					show: [ "number", "number" ],
-					move: [ "number", "number" ],
-					update: [ "string" ],
-					setTitle: [ "string" ],
-					setSize: [ "integer", "integer" ]
-				},
-				animate: {
-					show: {
-						after: function() {
-							animateVisible(this, "fadeInDown");
-						}
-					},
-					hide: {
-						before: function() {
-							animateVisible(this, "fadeOutUp");
-						},
-						after: function() {
-							$(this.root).removeClass("fadeOutUp");
-						},
-						delay: 500
-					},
-					move: {
-						after: function() {
-							animateVisible(this, "shake");
-						}
-					}
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -7011,8 +6953,6 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 					ui_modal = modal(self.selector, $.extend({ autoHide: false }, modalOpts));
 				}
 			}, 10);
-			
-			return this;
 		}
 		
 		this.hide = function() {
@@ -7057,11 +6997,70 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 			setBodyResize();
 		}
 	}
+
+    UI.setting = function() {
+        function animateVisible(self, style) {
+            $(self.root).addClass(style)
+                .css({
+                    "animation-duration": "500ms",
+                    "animation-fill-mode": "both"
+                });
+
+            self.addEvent(self.root, 'AnimationEnd', function() {
+                $(self.root).removeClass(style);
+            });
+        }
+
+        return {
+            options: {
+                width: 400,
+                height: 300,
+                left: "auto",
+                top: "auto",
+                right: "auto",
+                bottom: "auto",
+                modal: false,
+                move: true,
+                resize: true,
+                modalIndex: 0,
+                animate: false
+            },
+            valid: {
+                show: [ "number", "number" ],
+                move: [ "number", "number" ],
+                update: [ "string" ],
+                setTitle: [ "string" ],
+                setSize: [ "integer", "integer" ]
+            },
+            animate: {
+                show: {
+                    after: function() {
+                        animateVisible(this, "fadeInDown");
+                    }
+                },
+                hide: {
+                    before: function() {
+                        animateVisible(this, "fadeOutUp");
+                    },
+                    after: function() {
+                        $(this.root).removeClass("fadeOutUp");
+                    },
+                    delay: 500
+                },
+                move: {
+                    after: function() {
+                        animateVisible(this, "shake");
+                    }
+                }
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
 jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
-	
+	var p_type = null;
+
 	/**
 	 * Common Logic
 	 * 
@@ -7085,8 +7084,8 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;
-		var page = 1, p_type = null;
 		var ui_modal = null, is_loading = false;
+        var page = 1;
 		
 		
 		/**
@@ -7302,112 +7301,9 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		
 
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			var MAX = 2500, DELAY = 70;
-			
-			function animateUpdate(self, rows, style) {
-				var ms = MAX - 1;
-				
-				for(var i = 0; i < rows.length; i++) {
-					ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
-					
-					$(rows[i].element).addClass(style)
-					.css({
-						"animation-duration":  ms + "ms"
-					});
-					
-					(function(index) {
-						self.addEvent(rows[index].element, 'AnimationEnd', function() {
-							$(rows[index].element).removeClass(style);
-						});
-					})(i);
-				}
-			}
-			
-			return {
-				options: {
-					fields: null,
-					csv: null,
-					csvNames: null,
-					csvCount: 10000,
-					rows: [],
-					colshow: false,
-					expand: false,
-					expandEvent: true,
-					resize: false, 
-					scrollHeight: 200,
-					scrollWidth: 0,
-					width: 0,
-					buffer: "scroll",
-					bufferCount: 100,
-					sort: false,
-					sortLoading: false,
-					sortCache: false,
-					sortIndex: null,
-					sortOrder: "asc",
-					animate: false
-				},
-				valid: {
-					select: [ [ "integer", "string" ] ],
-					update: [ "array" ],
-					page: [ "integer" ],
-					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
-					filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
-					height: [ "integer" ],
-					getColumn: [ [ "integer", "string" ] ],
-					getData: [ [ "integer", "string" ] ],
-					showColumn: [ [ "integer", "string" ] ],
-					hideColumn: [ [ "integer", "string" ] ],
-					initColumns: [ "array" ],
-					columnMenu: [ "integer" ],
-					showExpand: [ [ "integer", "string" ], "object" ],
-					hideExpand: [ [ "integer", "string" ] ],
-					showLoading: [ "integer" ],
-					setCsv: [ "string" ],
-					setCsvFile: [ "object" ],
-					rowFunc: [ "string", [ "integer", "string" ], "function" ]
-				},
-				animate: {
-					update: {
-						after: function() {
-							if(!_.browser.webkit && !_.browser.mozilla) return;
-							animateUpdate(this, this.list(), "fadeInLeft");
-						}
-					},
-					page: {
-						after: function() {
-							animateUpdate(this, this.list(), (p_type == "next") ? "fadeInLeft" : "fadeInRight");
-						}
-					},
-					reset: {
-						before: function() {
-							var rows = this.list(),
-								m = 2000,
-								d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
-							
-							for(var i = 0; i < rows.length; i++) {
-								m -= d;
-								
-								$(rows[i].element).addClass("fadeOutRight")
-								.css({
-									"animation-duration":  ((m > 0) ? m : 50) + "ms",
-									"animation-fill-mode": "both"
-								});
-							}
-						},
-						delay: 1000
-					},
-					filter: {
-						after: function() {
-							animateUpdate(this, this.list(), "flipInX");
-						}
-					}
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -7460,8 +7356,6 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				head.resizeColumns();
 				head.resize();
 			}
-			
-			return this;
 		}
 		
 		this.select = function(index) {
@@ -7785,14 +7679,117 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			return body.activeIndex();
 		}
 	}
-	
+
+    UI.setting = function() {
+        var MAX = 2500, DELAY = 70;
+
+        function animateUpdate(self, rows, style) {
+            var ms = MAX - 1;
+
+            for(var i = 0; i < rows.length; i++) {
+                ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
+
+                $(rows[i].element).addClass(style)
+                    .css({
+                        "animation-duration":  ms + "ms"
+                    });
+
+                (function(index) {
+                    self.addEvent(rows[index].element, 'AnimationEnd', function() {
+                        $(rows[index].element).removeClass(style);
+                    });
+                })(i);
+            }
+        }
+
+        return {
+            options: {
+                fields: null,
+                csv: null,
+                csvNames: null,
+                csvCount: 10000,
+                rows: [],
+                colshow: false,
+                expand: false,
+                expandEvent: true,
+                resize: false,
+                scrollHeight: 200,
+                scrollWidth: 0,
+                width: 0,
+                buffer: "scroll",
+                bufferCount: 100,
+                sort: false,
+                sortLoading: false,
+                sortCache: false,
+                sortIndex: null,
+                sortOrder: "asc",
+                animate: false
+            },
+            valid: {
+                select: [ [ "integer", "string" ] ],
+                update: [ "array" ],
+                page: [ "integer" ],
+                sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
+                filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
+                height: [ "integer" ],
+                getColumn: [ [ "integer", "string" ] ],
+                getData: [ [ "integer", "string" ] ],
+                showColumn: [ [ "integer", "string" ] ],
+                hideColumn: [ [ "integer", "string" ] ],
+                initColumns: [ "array" ],
+                columnMenu: [ "integer" ],
+                showExpand: [ [ "integer", "string" ], "object" ],
+                hideExpand: [ [ "integer", "string" ] ],
+                showLoading: [ "integer" ],
+                setCsv: [ "string" ],
+                setCsvFile: [ "object" ],
+                rowFunc: [ "string", [ "integer", "string" ], "function" ]
+            },
+            animate: {
+                update: {
+                    after: function() {
+                        if(!_.browser.webkit && !_.browser.mozilla) return;
+                        animateUpdate(this, this.list(), "fadeInLeft");
+                    }
+                },
+                page: {
+                    after: function() {
+                        animateUpdate(this, this.list(), (p_type == "next") ? "fadeInLeft" : "fadeInRight");
+                    }
+                },
+                reset: {
+                    before: function() {
+                        var rows = this.list(),
+                            m = 2000,
+                            d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
+
+                        for(var i = 0; i < rows.length; i++) {
+                            m -= d;
+
+                            $(rows[i].element).addClass("fadeOutRight")
+                                .css({
+                                    "animation-duration":  ((m > 0) ? m : 50) + "ms",
+                                    "animation-fill-mode": "both"
+                                });
+                        }
+                    },
+                    delay: 1000
+                },
+                filter: {
+                    after: function() {
+                        animateUpdate(this, this.list(), "flipInX");
+                    }
+                }
+            }
+        }
+    }
+
 	return UI;
 }, "core");
 jui.define("util.graphics", [], function() {
+    var Graphics = {};
 
-	
 	var GraphicsUtil = {
-		
 		gid : 0,
 		
 		isObject : function(obj) {
@@ -7822,16 +7819,13 @@ jui.define("util.graphics", [], function() {
 		}
 	}
 	
-	var Graphics = { };
-	
-	
 	function GraphicsRenderer(dom, type, attr) {
 		attr = attr || {};
 			
-		switch(type){
-		case 'svg': return new SVGRenderer(dom, attr); 
-		case 'canvas': return new CanvasRenderer(dom, attr); 
-		case 'webgl': return new WebGLRenderer(dom, attr); 
+		switch(type) {
+            case 'svg': return new SVGRenderer(dom, attr);
+            case 'canvas': return new CanvasRenderer(dom, attr);
+            case 'webgl': return new WebGLRenderer(dom, attr);
 		}
 	}
 	
@@ -7845,6 +7839,7 @@ jui.define("util.graphics", [], function() {
 		
 		this.group = function(obj) {
 			obj.items = obj.items || [];
+
 			for(var i = 0, len = obj.items.length; i < len; i++) {
 				var o = obj.items[i];
 				
@@ -7859,8 +7854,6 @@ jui.define("util.graphics", [], function() {
 		}
 		
 		this.add = function(obj) {
-			
-			
 			if (obj.id) {
 				_objects[obj.id] = obj;
 			}
@@ -7868,7 +7861,6 @@ jui.define("util.graphics", [], function() {
 			obj.renderer = this; 
 	
 			_children.push(obj);
-	
 		}
 		
 		this.line = function(x1, y1, x2, y2, attr) {
@@ -7977,8 +7969,7 @@ jui.define("util.graphics", [], function() {
 		this.size = function() {
 			return GraphicsUtil.getSize(this.context) ;
 		}
-		
-	
+
 		this.createDefs = function() {
 			
 			// defs 생성 
@@ -7997,7 +7988,6 @@ jui.define("util.graphics", [], function() {
 			}
 	
 			return def;
-	
 		}
 	
 		/**
@@ -8046,7 +8036,7 @@ jui.define("util.graphics", [], function() {
 		}	
 		
 		this.renderObject = function(obj) {
-			
+
 			if (obj._isGroup) {
 				// batch drawing 
 				
@@ -8057,16 +8047,13 @@ jui.define("util.graphics", [], function() {
 				}
 				
 				this.context.appendChild(group);
-				
 			} else {
-							
 				this.context.appendChild(this.create(obj));			
 			}
 		}
 	}
 	
 	SVGRenderer.prototype.create = function(obj) {
-		
 		var element = document.createElementNS("http://www.w3.org/2000/svg", obj.type.toLowerCase());
 		
 		if (obj) {
@@ -8138,8 +8125,6 @@ jui.define("util.graphics", [], function() {
 		return el; 
 	}
 	
-	
-	
 	function CanvasRenderer(dom, context, attr) {  // canvas 에서는 context 는 실제 canvas 의 getContext('2d') 로 얻어온다.
 	
 		if (typeof dom == 'string') {
@@ -8175,6 +8160,7 @@ jui.define("util.graphics", [], function() {
 	
 	
 		this._gradients = {};
+
 		/**
 		 *
 		 * canvas.createLinearGradient(0, 0, 170, 0, [ [], [], [] ])
@@ -8210,9 +8196,7 @@ jui.define("util.graphics", [], function() {
 			var method = "renderObject" + obj.type;
 			this.renderObjectBase(obj);	
 			this[method].call(this, obj);
-		}	
-	
-			
+		}
 	}
 	
 	CanvasRenderer.prototype.renderObjectBase = function(obj) {
@@ -8240,7 +8224,6 @@ jui.define("util.graphics", [], function() {
 	}
 	
 	CanvasRenderer.prototype.renderObjectEllipse = function(obj) {
-		
 		var context = this.context;
 		
 		context.fillStyle = obj.fill;	
@@ -8311,7 +8294,6 @@ jui.define("util.graphics", [], function() {
 	} 
 	
 	Graphics.Rect = function(x ,y, width, height, attr) {
-		
 		Graphics.RenderObject.call(this);
 		
 		this.type = 'Rect';
@@ -8336,7 +8318,6 @@ jui.define("util.graphics", [], function() {
 	}
 	
 	Graphics.Ellipse = function(cx, cy, rx, ry, attr) {
-		
 		Graphics.RenderObject.call(this);
 		
 		this.type = 'Ellipse';
@@ -8376,8 +8357,9 @@ jui.define("util.graphics", [], function() {
 		util : GraphicsUtil
 	}
 });
-jui.define("chart.core", [ "util.graphics"], function(Graphics) {
+jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 	var GraphicsUtil = Graphics.util;
+
     var UIChart = function() {
 	
 		this.set = function(key, value) {
@@ -8426,52 +8408,22 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 			}
 		}
 		
-		this.setting = function() {
-			return {
-				options: {
-					'type' 		: 'svg',
-					'width' 	: "100%",
-					"height" 	: "100%",
-					"padding" 	: 10,
-					"barPadding" 	: 10,
-					"seriesPadding" 	: 1,
-					
-					"maxTicks" 	: 5,
-					"title" 	: "",
-					"titleY" 	: "",
-					"titleX" 	: "",
-					"theme"		: {},
-					"titleHeight" : 50,
-					"titleYWidth" : 50,
-					"titleXHeight" : 50,
-					"labels" : "",
-					"series" : {},
-					"data" : []
-				}
-			}
-		}		
-		
 		this.init = function() {
 			this.renderer = Graphics.createRenderer(this.root, this.get('type'), {
 				width : this.get('width'),
 				height : this.get('height')
-			});			
+			});
 		}
 		
 		this.render = function() {
-			
 			// 비우기 
 			this.renderer.clear();
-			
+
 			this.caculate();
-			
-			this.renderChart();
-			
-			this.delegateEvents();
+			this.renderChart();     // 추상 메소드
 			
 			// 최종적으로 그리기 
-			this.renderer.render();				
-			
+			this.renderer.render();
 		}
 		
 		this.caculate = function() {
@@ -8541,20 +8493,18 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 				}  
 			}
 			
-			
 			// chart 영역 계산
 			chart.x2 = chart.x + chart.width;
-			chart.y2 = chart.y + chart.height;
+            chart.y2 = chart.y + chart.height;
 			this.area.chart = chart;
 		}
 		
-		
 		this.niceAxis = function niceAxis (min, max) {
-	      var factorList = [ 0.0, 1.2, 2.5, 5.0, 10.0]; 
-	      var scalarList = [ 0.2, 0.2, 0.5, 1.0, 2.0]; 
-	      var min_, max_;
+            var factorList = [ 0.0, 1.2, 2.5, 5.0, 10.0 ];
+            var scalarList = [ 0.2, 0.2, 0.5, 1.0, 2.0 ];
+            var min_, max_;
 	      
-	      if (min == 0) {
+            if (min == 0) {
 	            min_ = 0;
 	        }
 	        else if (min > 0) {
@@ -8563,9 +8513,8 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 	        else {
 	            min_ = min-(max-min)/100;
 	        }     
-	        
-	        
-	      if (max == 0) {
+
+            if (max == 0) {
 	            if (min == 0) {
 	                max_ = 1;
 	            }
@@ -8580,234 +8529,136 @@ jui.define("chart.core", [ "util.graphics"], function(Graphics) {
 	            max_ = max+(max-min)/100;
 	        }       
 	        
-	      // 3. power
+            // 3. power
 	        var power = Math.log(max_ - min_) / Math.LN10;
 	    
 	        // 4. factor
 	        var factor = Math.pow(10, power - Math.floor(power));
 	    
-	      var tickWidth = "";
+            var tickWidth = "";
 	    
 	        // 5. nice ticks
 	        for (var i = 0; factor > factorList[i] ; i++) {
 	            tickWidth = scalarList[i] * Math.pow(10, Math.floor(power));
 	        }       
 	        
-	      // 6. min-axisValues
+            // 6. min-axisValues
 	        var minAxisValue = tickWidth * Math.floor(min_/tickWidth);
 	    
 	        // 7. min-axisValues
 	        var maxAxisValue = tickWidth * Math.floor((max_/tickWidth)+1);        
 	        
 	        return {
-	          min : minAxisValue,
-	          max: maxAxisValue,
-	          tickWidth : tickWidth
+                min: minAxisValue,
+                max: maxAxisValue,
+                tickWidth : tickWidth
 	        };
-	        
 	    }
-		
-		this.renderChart = function() {
-	
-		}
-		
-		this.delegateEvents = function() {
-			
-		}
-
     }
 
     return UIChart;
 }, "core");
-jui.defineUI("chart.bar", ["util.graphics"], function(Graphics) {
+jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
 	var GraphicsUtil = Graphics.util;
-	var UI = function() {
-		
-		this.caculateData = function() {
-			
-			var xAxis = [];
-			var series = this.get('series');
-			var labels = this.get('labels');
-			var data = this.get('data');
-			var min = 0;
-			var max = 0; 
-			var maxTicks = this.get('maxTicks');
-			
-			for(var i = 0, len = data.length; i < len; i++) {
-				var row = data[i];
-				
-				xAxis.push(row[labels]);
-				
-				for(var k in series) {
-					series[k].data = series[k].data || [];
-			
-					
-					var value = null;
-					
-					if (row[k]) {
-						value = row[k];	
-					} else {
-						if (GraphicsUtil.isFunction(series[k].get)) { // custom legend 설정
-							value = series[k].get(row); 
-						}
-					}
-					
-					series[k].data.push(value);
-					
-					if (value < min) { min = value; }				
-					if (value > max) { max = value; }
-				}
-			} 
-	
-			
-			this.xAxis = xAxis;
-			this.min = min;
-			this.max = max; 
-			
-			this.len = this.xAxis.length;
-			this.unit = this.area.chart.width / this.len;		
-			
-			this.seriesCount = 0;
-			for(var i in series) {
-				this.seriesCount++;
-			}
-	
-			var obj = this.niceAxis(min, max);
-			
-			this.range = obj.max - obj.min;
-			this.tickSpacing = obj.tickWidth;
-			this.niceMin = obj.min;
-	    	this.niceMax = obj.max;
-	
-	 	}
-		
-		this.drawX = function() {
-			// x 축 그리기 
-			var pos = this.unit / 2
-			
-			var xStart = this.area.chart.x + pos;
-			var yStart = this.area.chart.y2 + 15;
-			
-			var xLineStart = this.area.chart.x + this.unit; 
-			
-			for(var i = 0; i < this.len; i++) {
-				this.renderer.text(xStart, yStart, this.xAxis[i], {
-					"font-size" : "10pt",
-					"text-anchor" : "middle",
-					"fill" : "black"
-				});
-				
-				xStart += this.unit;
-				
-				this.renderer.line(xLineStart, this.area.chart.y, xLineStart, this.area.chart.y2, {
-					"stroke-width" : 0.5,
-					"stroke" : "rgba(0, 0, 0, 0.2)"
-				});
-				
-				xLineStart += this.unit;
-			}
-			
-		}
-		
-		this.drawY = function() {
-			var style = { "stroke-width" : 1, stroke : '#000'};
-			
-			// 기본 좌표 
-			this.renderer.line(this.area.chart.x, this.area.chart.y, this.area.chart.x, this.area.chart.y2, style);
-			
-			
-			// 구간별 라인 
-			var rate = this.tickSpacing / this.range;
-			var split2 = this.area.chart.height * rate
-			
-			var start = this.area.chart.y;
-			for(var i = this.niceMax ; i >= this.niceMin; i -= this.tickSpacing) {
-				
-				if (i == 0) {
-					this.zeroBase = start;
-					this.renderer.line(this.area.chart.x, start, this.area.chart.x2, start, style);
-				}
-				
-				this.renderer.line(this.area.chart.x, start, this.area.chart.x2, start, {
-					"stroke-width" : 0.5,
-					"stroke" : "rgba(0, 0, 0, 0.2)"
-				});
-				
-				this.renderer.text(this.area.chart.x - 5, start+5, i+"", {
-					"font-size" : "10pt",
-					"text-anchor" : "end",
-					"fill" : "gray"
-				});			
-				
-				start += split2;
-				
-			}
-			
-			
-			 
-		}
-		
-		this.drawChart = function() {
-			var barPadding = this.get('barPadding');
-			var seriesPadding = this.get('seriesPadding');
-			
-			var width = this.unit - barPadding * 2;
-			
-			var seriesWidth = (width - (this.seriesCount -1) * seriesPadding) / this.seriesCount;
-			var nextWidth = seriesWidth + seriesPadding;
-			
-			var data = this.get('data');
-			var series = this.get('series');
-			var theme = this.get('theme');
-			var startX = this.area.chart.x;
-			var startY = this.area.chart.y;
-			var height = this.area.chart.height;
-			var heightHigh = this.zeroBase;
-			var heightLow = this.area.chart.height - this.zeroBase;
-			
-			var index = 0;
-			var colors = theme.series || ["black", 'red', 'blue'];
-	
-			for(var key in series) {
-				
-				var chart = series[key];
-				var x = startX + barPadding +  index * (nextWidth);
-				
-				for(var i = 0, len = chart.data.length; i < len; i++) {
-					
-					var value = chart.data[i];
-					var h = height * (Math.abs(value) / this.range);
-					if (value >= 0) {
-						this.renderer.rect(x, heightHigh - h, seriesWidth, h, {
-							fill : chart.color || colors[index]
-						})	
-					} else {
-						this.renderer.rect(x, this.zeroBase, seriesWidth, h, {
-							fill : chart.color || colors[index]
-						})
-					}
-				
-					x += this.unit;
-					
-				}
-				
-				index++;
-				
-			}
-				
-		}
-		
-		this.renderChart = function() {
-			this.caculateData();
-			this.drawX();
-			this.drawY();
-			this.drawChart();
-		}
-		
-		this.delegateEvents = function() {
-			
-		}
-	}
+
+    var UI = function() {
+        var grid = null;
+
+        function getPropertyCount(obj) {
+            var count = 0;
+
+            for(var key in obj) {
+                count += 1;
+            }
+
+            return count;
+        }
+
+        this.drawChart = function() {
+            var data = this.get('data');
+            var series = this.get('series');
+            var theme = this.get('theme');
+            var barPadding = this.get('barPadding');
+            var seriesPadding = this.get('seriesPadding');
+
+            var width = grid.getUnit() - barPadding * 2;
+            var seriesCount = getPropertyCount(series);
+            var seriesWidth = (width - (seriesCount -1) * seriesPadding) / seriesCount;
+            var nextWidth = seriesWidth + seriesPadding;
+
+            var obj = this.niceAxis(grid.getMin(), grid.getMax());
+            var range = obj.max - obj.min;
+            var tickWidth = obj.tickWidth;
+
+            var startX = this.area.chart.x;
+            var startY = this.area.chart.y;
+            var height = this.area.chart.height;
+            var rate = tickWidth / range;
+            var tickCount = obj.max / tickWidth;
+            var zeroBase = this.area.chart.y + ((this.area.chart.height * rate) * tickCount);
+            var heightHigh = zeroBase;
+            var heightLow = this.area.chart.height - zeroBase;
+
+            var index = 0;
+            var colors = theme.series || ["black", 'red', 'blue'];
+
+            for(var key in series) {
+
+                var chart = series[key];
+                var x = startX + barPadding +  index * (nextWidth);
+
+                for(var i = 0, len = chart.data.length; i < len; i++) {
+
+                    var value = chart.data[i];
+                    var h = height * (Math.abs(value) / range);
+                    if (value >= 0) {
+                        this.renderer.rect(x, heightHigh - h, seriesWidth, h, {
+                            fill : chart.color || colors[index]
+                        })
+                    } else {
+                        this.renderer.rect(x, zeroBase, seriesWidth, h, {
+                            fill : chart.color || colors[index]
+                        })
+                    }
+
+                    x += grid.getUnit();
+                }
+
+                index++;
+            }
+        }
+
+        this.renderChart = function() {
+            grid = new BasicGrid(this);
+            grid.draw();
+
+            this.drawChart();
+        }
+    }
+
+    UI.setting = function() {
+        return {
+            options: {
+                "type": "svg",
+                "width": "100%",
+                "height": "100%",
+                "padding": 10,
+                "barPadding": 10,
+                "seriesPadding": 1,
+                "maxTicks": 5,
+                "title": "",
+                "titleY": "",
+                "titleX": "",
+                "theme": {},
+                "titleHeight": 50,
+                "titleYWidth": 50,
+                "titleXHeight": 50,
+                "labels": "",
+                "series": {},
+                "data": []
+            }
+        }
+    }
 	
 	return UI;
 }, "chart.core");

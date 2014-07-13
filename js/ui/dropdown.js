@@ -159,28 +159,9 @@ jui.defineUI("ui.dropdown", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					close: true,
-					keydown: false,
-					left: 0,
-					top: 0,
-					width: 0,
-					height: 0,
-					nodes: []
-				},
-				valid: {
-					update: [ "array" ],
-					show: [ "number", "number" ],
-					move: [ "number", "number" ],
-					wheel: [ "integer", "function" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -230,8 +211,6 @@ jui.defineUI("ui.dropdown", [], function() {
 			}
 
 			this.type = "hide"; // 기본 타입 설정
-			
-			return this;
 		}
 		
 		this.update = function(nodes) {
@@ -319,6 +298,26 @@ jui.defineUI("ui.dropdown", [], function() {
 			this.emit("reload");
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                close: true,
+                keydown: false,
+                left: 0,
+                top: 0,
+                width: 0,
+                height: 0,
+                nodes: []
+            },
+            valid: {
+                update: [ "array" ],
+                show: [ "number", "number" ],
+                move: [ "number", "number" ],
+                wheel: [ "integer", "function" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

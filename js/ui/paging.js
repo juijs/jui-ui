@@ -77,22 +77,9 @@ jui.defineUI("ui.paging", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					count: 0,		// 데이터 전체 개수
-					pageCount: 10,	// 한페이지당 데이터 개수
-					screenCount: 5	// 페이지 개수
-				},
-				valid: {
-					reload: [ "integer", "null" ],
-					page: [ "integer", "null" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -140,6 +127,20 @@ jui.defineUI("ui.paging", [], function() {
 			this.page(lastPage);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                count: 0,		// 데이터 전체 개수
+                pageCount: 10,	// 한페이지당 데이터 개수
+                screenCount: 5	// 페이지 개수
+            },
+            valid: {
+                reload: [ "integer", "null" ],
+                page: [ "integer", "null" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

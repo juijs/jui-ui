@@ -49,37 +49,11 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 			}
 		}
 		
-		this.setting = function() {
-			return {
-				options: {
-					"type" 		    : "svg",
-					"width" 	    : "100%",
-					"height" 	    : "100%",
-					"padding" 	    : 10,
-					"barPadding" 	: 10,
-					"seriesPadding" : 1,
-					"maxTicks" 	    : 5,
-					"title" 	    : "",
-					"titleY" 	    : "",
-					"titleX" 	    : "",
-					"theme"		    : {},
-					"titleHeight"   : 50,
-					"titleYWidth"   : 50,
-					"titleXHeight"  : 50,
-					"labels"        : "",
-					"series"        : {},
-                    "data"          : []
-				}
-			}
-		}		
-		
 		this.init = function() {
 			this.renderer = Graphics.createRenderer(this.root, this.get('type'), {
 				width : this.get('width'),
 				height : this.get('height')
 			});
-
-            return this;
 		}
 		
 		this.render = function() {

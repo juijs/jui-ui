@@ -113,26 +113,13 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					color: "black",
-					opacity: 0.4,
-					target: "body",
-					index: 0,
-					autoHide: true // 자신을 클릭했을 경우, hide
-				}
-			}
-		}
 		
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
 			this.type = "hide"; // 기본 타입 설정
-			
-			return this;
 		}
 		
 		this.hide = function() {
@@ -174,6 +161,18 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 			this.type = "show";
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                color: "black",
+                opacity: 0.4,
+                target: "body",
+                index: 0,
+                autoHide: true // 자신을 클릭했을 경우, hide
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

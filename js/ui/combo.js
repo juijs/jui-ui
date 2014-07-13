@@ -163,25 +163,9 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					index: 0,
-					value: "",
-					width: 0,
-					height: 100,
-					keydown: false,
-					position: "bottom"
-				},
-				valid: {
-					setIndex: [ "integer" ],
-					setValue: [ [ "integer", "string", "boolean" ] ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -247,8 +231,6 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 			
 			//  Key up/down event
 			setEventKeydown(this);
-			
-			return this;
 		}
 		
 		this.setIndex = function(index) {
@@ -316,6 +298,23 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 			this.emit("reload", ui_data);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                index: 0,
+                value: "",
+                width: 0,
+                height: 100,
+                keydown: false,
+                position: "bottom"
+            },
+            valid: {
+                setIndex: [ "integer" ],
+                setValue: [ [ "integer", "string", "boolean" ] ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

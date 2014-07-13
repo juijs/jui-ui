@@ -793,7 +793,7 @@
             // UI 그룹 설정
             global[keys[0]][keys[1]] = global["core"].init({
                 type: keys[1],
-                func: uiFunc
+                "class": uiFunc
             });
 
             // UI 고유 설정

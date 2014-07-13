@@ -75,6 +75,30 @@ jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Grap
             this.drawChart();
         }
     }
+
+    UI.setting = function() {
+        return {
+            options: {
+                "type": "svg",
+                "width": "100%",
+                "height": "100%",
+                "padding": 10,
+                "barPadding": 10,
+                "seriesPadding": 1,
+                "maxTicks": 5,
+                "title": "",
+                "titleY": "",
+                "titleX": "",
+                "theme": {},
+                "titleHeight": 50,
+                "titleYWidth": 50,
+                "titleXHeight": 50,
+                "labels": "",
+                "series": {},
+                "data": []
+            }
+        }
+    }
 	
 	return UI;
 }, "chart.core");

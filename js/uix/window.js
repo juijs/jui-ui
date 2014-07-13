@@ -24,66 +24,9 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 *
 		 */
-		this.setting = function() {
-			function animateVisible(self, style) {
-				$(self.root).addClass(style)
-				.css({
-					"animation-duration": "500ms",
-					"animation-fill-mode": "both"
-				});
-				
-				self.addEvent(self.root, 'AnimationEnd', function() {
-					$(self.root).removeClass(style);
-				});
-			}
-			
-			return {
-				options: {
-					width: 400,
-					height: 300,
-					left: "auto",
-					top: "auto",
-					right: "auto",
-					bottom: "auto",
-					modal: false,
-					move: true,
-					resize: true,
-					modalIndex: 0,
-					animate: false
-				},
-				valid: {
-					show: [ "number", "number" ],
-					move: [ "number", "number" ],
-					update: [ "string" ],
-					setTitle: [ "string" ],
-					setSize: [ "integer", "integer" ]
-				},
-				animate: {
-					show: {
-						after: function() {
-							animateVisible(this, "fadeInDown");
-						}
-					},
-					hide: {
-						before: function() {
-							animateVisible(this, "fadeOutUp");
-						},
-						after: function() {
-							$(this.root).removeClass("fadeOutUp");
-						},
-						delay: 500
-					},
-					move: {
-						after: function() {
-							animateVisible(this, "shake");
-						}
-					}
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -193,8 +136,6 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 					ui_modal = modal(self.selector, $.extend({ autoHide: false }, modalOpts));
 				}
 			}, 10);
-			
-			return this;
 		}
 		
 		this.hide = function() {
@@ -239,6 +180,64 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 			setBodyResize();
 		}
 	}
+
+    UI.setting = function() {
+        function animateVisible(self, style) {
+            $(self.root).addClass(style)
+                .css({
+                    "animation-duration": "500ms",
+                    "animation-fill-mode": "both"
+                });
+
+            self.addEvent(self.root, 'AnimationEnd', function() {
+                $(self.root).removeClass(style);
+            });
+        }
+
+        return {
+            options: {
+                width: 400,
+                height: 300,
+                left: "auto",
+                top: "auto",
+                right: "auto",
+                bottom: "auto",
+                modal: false,
+                move: true,
+                resize: true,
+                modalIndex: 0,
+                animate: false
+            },
+            valid: {
+                show: [ "number", "number" ],
+                move: [ "number", "number" ],
+                update: [ "string" ],
+                setTitle: [ "string" ],
+                setSize: [ "integer", "integer" ]
+            },
+            animate: {
+                show: {
+                    after: function() {
+                        animateVisible(this, "fadeInDown");
+                    }
+                },
+                hide: {
+                    before: function() {
+                        animateVisible(this, "fadeOutUp");
+                    },
+                    after: function() {
+                        $(this.root).removeClass("fadeOutUp");
+                    },
+                    delay: 500
+                },
+                move: {
+                    after: function() {
+                        animateVisible(this, "shake");
+                    }
+                }
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

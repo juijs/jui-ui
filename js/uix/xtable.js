@@ -1,5 +1,6 @@
 jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
-	
+	var p_type = null;
+
 	/**
 	 * Common Logic
 	 * 
@@ -23,8 +24,8 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;
-		var page = 1, p_type = null;
 		var ui_modal = null, is_loading = false;
+        var page = 1;
 		
 		
 		/**
@@ -240,112 +241,9 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		
 
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			var MAX = 2500, DELAY = 70;
-			
-			function animateUpdate(self, rows, style) {
-				var ms = MAX - 1;
-				
-				for(var i = 0; i < rows.length; i++) {
-					ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
-					
-					$(rows[i].element).addClass(style)
-					.css({
-						"animation-duration":  ms + "ms"
-					});
-					
-					(function(index) {
-						self.addEvent(rows[index].element, 'AnimationEnd', function() {
-							$(rows[index].element).removeClass(style);
-						});
-					})(i);
-				}
-			}
-			
-			return {
-				options: {
-					fields: null,
-					csv: null,
-					csvNames: null,
-					csvCount: 10000,
-					rows: [],
-					colshow: false,
-					expand: false,
-					expandEvent: true,
-					resize: false, 
-					scrollHeight: 200,
-					scrollWidth: 0,
-					width: 0,
-					buffer: "scroll",
-					bufferCount: 100,
-					sort: false,
-					sortLoading: false,
-					sortCache: false,
-					sortIndex: null,
-					sortOrder: "asc",
-					animate: false
-				},
-				valid: {
-					select: [ [ "integer", "string" ] ],
-					update: [ "array" ],
-					page: [ "integer" ],
-					sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
-					filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
-					height: [ "integer" ],
-					getColumn: [ [ "integer", "string" ] ],
-					getData: [ [ "integer", "string" ] ],
-					showColumn: [ [ "integer", "string" ] ],
-					hideColumn: [ [ "integer", "string" ] ],
-					initColumns: [ "array" ],
-					columnMenu: [ "integer" ],
-					showExpand: [ [ "integer", "string" ], "object" ],
-					hideExpand: [ [ "integer", "string" ] ],
-					showLoading: [ "integer" ],
-					setCsv: [ "string" ],
-					setCsvFile: [ "object" ],
-					rowFunc: [ "string", [ "integer", "string" ], "function" ]
-				},
-				animate: {
-					update: {
-						after: function() {
-							if(!_.browser.webkit && !_.browser.mozilla) return;
-							animateUpdate(this, this.list(), "fadeInLeft");
-						}
-					},
-					page: {
-						after: function() {
-							animateUpdate(this, this.list(), (p_type == "next") ? "fadeInLeft" : "fadeInRight");
-						}
-					},
-					reset: {
-						before: function() {
-							var rows = this.list(),
-								m = 2000,
-								d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
-							
-							for(var i = 0; i < rows.length; i++) {
-								m -= d;
-								
-								$(rows[i].element).addClass("fadeOutRight")
-								.css({
-									"animation-duration":  ((m > 0) ? m : 50) + "ms",
-									"animation-fill-mode": "both"
-								});
-							}
-						},
-						delay: 1000
-					},
-					filter: {
-						after: function() {
-							animateUpdate(this, this.list(), "flipInX");
-						}
-					}
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -398,8 +296,6 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				head.resizeColumns();
 				head.resize();
 			}
-			
-			return this;
 		}
 		
 		this.select = function(index) {
@@ -723,6 +619,110 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			return body.activeIndex();
 		}
 	}
-	
+
+    UI.setting = function() {
+        var MAX = 2500, DELAY = 70;
+
+        function animateUpdate(self, rows, style) {
+            var ms = MAX - 1;
+
+            for(var i = 0; i < rows.length; i++) {
+                ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
+
+                $(rows[i].element).addClass(style)
+                    .css({
+                        "animation-duration":  ms + "ms"
+                    });
+
+                (function(index) {
+                    self.addEvent(rows[index].element, 'AnimationEnd', function() {
+                        $(rows[index].element).removeClass(style);
+                    });
+                })(i);
+            }
+        }
+
+        return {
+            options: {
+                fields: null,
+                csv: null,
+                csvNames: null,
+                csvCount: 10000,
+                rows: [],
+                colshow: false,
+                expand: false,
+                expandEvent: true,
+                resize: false,
+                scrollHeight: 200,
+                scrollWidth: 0,
+                width: 0,
+                buffer: "scroll",
+                bufferCount: 100,
+                sort: false,
+                sortLoading: false,
+                sortCache: false,
+                sortIndex: null,
+                sortOrder: "asc",
+                animate: false
+            },
+            valid: {
+                select: [ [ "integer", "string" ] ],
+                update: [ "array" ],
+                page: [ "integer" ],
+                sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
+                filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
+                height: [ "integer" ],
+                getColumn: [ [ "integer", "string" ] ],
+                getData: [ [ "integer", "string" ] ],
+                showColumn: [ [ "integer", "string" ] ],
+                hideColumn: [ [ "integer", "string" ] ],
+                initColumns: [ "array" ],
+                columnMenu: [ "integer" ],
+                showExpand: [ [ "integer", "string" ], "object" ],
+                hideExpand: [ [ "integer", "string" ] ],
+                showLoading: [ "integer" ],
+                setCsv: [ "string" ],
+                setCsvFile: [ "object" ],
+                rowFunc: [ "string", [ "integer", "string" ], "function" ]
+            },
+            animate: {
+                update: {
+                    after: function() {
+                        if(!_.browser.webkit && !_.browser.mozilla) return;
+                        animateUpdate(this, this.list(), "fadeInLeft");
+                    }
+                },
+                page: {
+                    after: function() {
+                        animateUpdate(this, this.list(), (p_type == "next") ? "fadeInLeft" : "fadeInRight");
+                    }
+                },
+                reset: {
+                    before: function() {
+                        var rows = this.list(),
+                            m = 2000,
+                            d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
+
+                        for(var i = 0; i < rows.length; i++) {
+                            m -= d;
+
+                            $(rows[i].element).addClass("fadeOutRight")
+                                .css({
+                                    "animation-duration":  ((m > 0) ? m : 50) + "ms",
+                                    "animation-fill-mode": "both"
+                                });
+                        }
+                    },
+                    delay: 1000
+                },
+                filter: {
+                    after: function() {
+                        animateUpdate(this, this.list(), "flipInX");
+                    }
+                }
+            }
+        }
+    }
+
 	return UI;
 }, "core");

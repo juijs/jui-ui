@@ -203,24 +203,9 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 	
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					barColor : '#d6d6d6',
-					barSize : 3,
-					width	: null,
-					height	: null,
-					top		: { el : null, size : null, min : 50, max : 200, resize : true },
-					left	: { el : null, size : null, min : 50, max : 200, resize : true },
-					right	: { el : null, size : null, min : 50, max : 200, resize : true },
-					bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
-					center	: { el : null }
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -478,6 +463,22 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 			}			
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                barColor : '#d6d6d6',
+                barSize : 3,
+                width	: null,
+                height	: null,
+                top		: { el : null, size : null, min : 50, max : 200, resize : true },
+                left	: { el : null, size : null, min : 50, max : 200, resize : true },
+                right	: { el : null, size : null, min : 50, max : 200, resize : true },
+                bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+                center	: { el : null }
+            }
+        }
+    }
 	
 	return UI;
 	

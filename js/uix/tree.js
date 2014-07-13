@@ -695,35 +695,9 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 *
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					root: null,
-					rootHide: false,
-					rootFold: false,
-					drag: false,
-					dragChild: true
-				},
-				valid: {
-					update: [ "string", "object" ],
-					append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
-					insert: [ "string", [ "object", "array" ] ],
-					select: [ "string" ],
-					remove: [ "string" ],
-					move: [ "string", "string" ],
-					open: [ [ "string", "null" ], [ "object", "undefined" ] ],
-					fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
-					openAll: [ "string" ],
-					foldAll: [ "string" ],
-					listParents: [ "string" ],
-					get: [ "string" ],
-					getAll: [ "string" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -751,8 +725,6 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 			if(opts.rootFold) {
 				this.fold();
 			}
-			
-			return this;
 		}
 		
 		this.update = function(index, data) {
@@ -889,6 +861,33 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 			return this.uit.getNodeAll(index);
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                root: null,
+                rootHide: false,
+                rootFold: false,
+                drag: false,
+                dragChild: true
+            },
+            valid: {
+                update: [ "string", "object" ],
+                append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
+                insert: [ "string", [ "object", "array" ] ],
+                select: [ "string" ],
+                remove: [ "string" ],
+                move: [ "string", "string" ],
+                open: [ [ "string", "null" ], [ "object", "undefined" ] ],
+                fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
+                openAll: [ "string" ],
+                foldAll: [ "string" ],
+                listParents: [ "string" ],
+                get: [ "string" ],
+                getAll: [ "string" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

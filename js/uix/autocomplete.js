@@ -71,37 +71,36 @@ jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					target: null,
-					words: []
-				},
-				valid: {
-					update: [ "array" ]
-				}
-			}
-		}
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
 			
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
-			
-			return this;
 		}		
 		
 		this.update = function(words) {
 			this.options.words = words;
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                target: null,
+                words: []
+            },
+            valid: {
+                update: [ "array" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

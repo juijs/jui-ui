@@ -393,31 +393,31 @@ jui.define("core", [ "util" ], function(_) {
         }
 
         return function(selector, options) {
+            var $root = $(selector);
             var list = [],
-                $root = $(selector);
+                setting = _.typeCheck("function", UI["class"].setting) ? UI["class"].setting() : {};
 
             $root.each(function(index) {
-                var obj = new UI.func(),
-                    setting = (obj.setting) ? obj.setting() : {};
-                var defOptions = (typeof(setting.options) == "object") ? setting.options : {};
-
-                // Options Check
-                checkedOptions(defOptions, options);
+                var mainObj = new UI["class"](),
+                    defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
                 // Default Options Setting
-                var opts = $.extend(true, defOptions, options);
-                opts.tpl = (opts.tpl) ? opts.tpl : {};
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Options Check
+                checkedOptions(defOpts, options);
 
                 // Pulbic Properties
-                obj.init.prototype = obj;
-                obj.init.prototype.selector = $root.selector;
-                obj.init.prototype.root = this;
-                obj.init.prototype.options = opts;
-                obj.init.prototype.tpl = {};
-                obj.init.prototype.event = new Array(); // Custom Event
-                obj.init.prototype.listen = new UIListener(); // DOM Event
-                obj.init.prototype.timestamp = Date.now();
-                obj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype = mainObj;
+                mainObj.init.prototype.selector = $root.selector;
+                mainObj.init.prototype.root = this;
+                mainObj.init.prototype.options = opts;
+                mainObj.init.prototype.tpl = {};
+                mainObj.init.prototype.event = new Array(); // Custom Event
+                mainObj.init.prototype.listen = new UIListener(); // DOM Event
+                mainObj.init.prototype.timestamp = Date.now();
+                mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
@@ -433,22 +433,22 @@ jui.define("core", [ "util" ], function(_) {
                 });
 
                 // Template Setting (Script)
-                if(opts.tpl) {
+                if(_.typeCheck("object", opts.tpl)) {
                     for(var name in opts.tpl) {
                         var tplHtml = opts.tpl[name];
 
-                        if(typeof(tplHtml) == "string" && tplHtml != "") {
-                            obj.init.prototype.tpl[name] = _.template(tplHtml);
+                        if(_.typeCheck("string", tplHtml) && tplHtml != "") {
+                            mainObj.init.prototype.tpl[name] = _.template(tplHtml);
                         }
                     }
                 }
 
-                var uiObj = new obj.init();
-                var validFunc = (typeof(setting.valid) == "object") ? setting.valid : {},
-                    animateFunc = (typeof(setting.animate) == "object") ? setting.animate : {};
+                var uiObj = new mainObj.init(),
+                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
+                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
 
                 // Event Setting
-                if(typeof(uiObj.options.event) == "object") {
+                if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
                     }
@@ -456,13 +456,15 @@ jui.define("core", [ "util" ], function(_) {
 
                 // Type-Valid Check
                 for(var key in validFunc) {
-                    uiObj.addValid(key, validFunc[key]);
+                    if(_.typeCheck("array", validFunc[key])) {
+                        uiObj.addValid(key, validFunc[key]);
+                    }
                 }
 
                 // Call-Animate Functions
-                if(opts.animate) {
+                if(opts.animate === true) {
                     for(var key in animateFunc) {
-                        if(typeof(animateFunc[key]) == "object") {
+                        if(_.typeCheck("object", animateFunc[key])) {
                             uiObj.callDelay(key, animateFunc[key]);
                         }
                     }

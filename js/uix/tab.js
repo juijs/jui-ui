@@ -166,27 +166,9 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					target: "", 
-					index: 0,
-					drag: false,
-					nodes: []
-				},
-				valid: {
-					update: [ "array" ],
-					insert: [ "integer", "object" ],
-					append: [ "object" ],
-					prepend: [ "object" ],
-					remove: [ "integer" ],
-					show: [ "integer" ]
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -318,6 +300,25 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			return activeIndex;
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                target: "",
+                index: 0,
+                drag: false,
+                nodes: []
+            },
+            valid: {
+                update: [ "array" ],
+                insert: [ "integer", "object" ],
+                append: [ "object" ],
+                prepend: [ "object" ],
+                remove: [ "integer" ],
+                show: [ "integer" ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

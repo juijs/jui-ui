@@ -115,28 +115,15 @@ jui.defineUI("ui.button", [], function() {
 	
 	var UI = function() {
 		var ui_list = {};
-		
-		
+
+
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					type: "radio",
-					index: 0,
-					value: ""
-				},
-				valid: {
-					setIndex: [ [ "integer", "array" ] ],
-					setValue: [ [ "integer", "string", "array", "boolean" ] ]
-				}
-			}
-		}
-		
+
 		this.init = function() {
-			var self = this, opts = this.options;
+            var self = this, opts = this.options;
 			
 			if(opts.type == "radio") {
 				ui_list[opts.type] = new UIRadio(self, this.root, self.options);
@@ -147,8 +134,6 @@ jui.defineUI("ui.button", [], function() {
 				ui_list[opts.type] = new UICheck();
 				ui_list[opts.type].init();
 			}
-			
-			return this;
 		}
 		
 		this.setIndex = function(indexList) {
@@ -173,6 +158,20 @@ jui.defineUI("ui.button", [], function() {
 			ui_list[this.options.type]._setting("init");
 		}
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                type: "radio",
+                index: 0,
+                value: ""
+            },
+            valid: {
+                setIndex: [ [ "integer", "array" ] ],
+                setValue: [ [ "integer", "string", "array", "boolean" ] ]
+            }
+        }
+    }
 	
 	return UI;
 }, "core");

@@ -174,47 +174,9 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
 
 
         /**
-         * Public Methods & Options
+         * Public Methods
          *
          */
-        this.setting = function() {
-            return {
-            	options: {
-	                type: "daily",
-	                titleFormat: "yyyy.MM",
-	                format: "yyyy-MM-dd",
-	                animate: false
-            	},
-            	valid: {
-            		page: [ "integer", "integer" ],
-            		select: [ "integer", "integer", "integer" ],
-            		addTime: [ "integer" ],
-            		getFormat: [ "string" ]
-            	},
-            	animate: {
-            		page: {
-            			after: function() {
-            				var self = this;
-            				
-            				$body.find("tr").each(function(i) {
-            					var ms = (i + 1) * 200;
-            					
-        						$(this).addClass("fadeIn")
-        						.css({
-        							"animation-duration":  ms + "ms"
-        						});
-        						
-        						(function(elem) {
-        							self.addEvent(this, 'AnimationEnd', function() {
-        								$(elem).removeClass("fadeIn");
-        							});
-        						})(this);
-            				});
-            			}
-            		}
-            	}
-            };
-        }
 
         this.init = function() {
             var self = this,
@@ -234,8 +196,6 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
             // 화면 초기화
             this.page(year, month);
             this.select();
-
-            return this;
         }
         
         this.page = function(y, m) {
@@ -344,6 +304,45 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
+    }
+
+    UI.setting = function() {
+        return {
+            options: {
+                type: "daily",
+                titleFormat: "yyyy.MM",
+                format: "yyyy-MM-dd",
+                animate: false
+            },
+            valid: {
+                page: [ "integer", "integer" ],
+                select: [ "integer", "integer", "integer" ],
+                addTime: [ "integer" ],
+                getFormat: [ "string" ]
+            },
+            animate: {
+                page: {
+                    after: function() {
+                        var self = this;
+
+                        $body.find("tr").each(function(i) {
+                            var ms = (i + 1) * 200;
+
+                            $(this).addClass("fadeIn")
+                                .css({
+                                    "animation-duration":  ms + "ms"
+                                });
+
+                            (function(elem) {
+                                self.addEvent(this, 'AnimationEnd', function() {
+                                    $(elem).removeClass("fadeIn");
+                                });
+                            })(this);
+                        });
+                    }
+                }
+            }
+        };
     }
 
     return UI;

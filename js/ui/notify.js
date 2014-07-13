@@ -8,26 +8,9 @@ jui.defineUI("ui.notify", [], function() {
     	var $container = null, DEF_PADDING = 12;
     	
         /**
-         * Public Methods & Options
+         * Public Methods
          *
          */
-        this.setting = function() {
-            return {
-            	options: {
-	                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-	                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-	                distance: 5, // 알림끼리의 간격
-	                timeout: 3000, // 0이면 사라지지 않음
-	                showDuration: 500,
-	                hideDuration: 500,
-	                showEasing: "swing",
-	                hideEasing: "linear"
-            	},
-            	valid: {
-            		add: [ "object", "integer" ]
-            	}
-            };
-        }
 
         this.init = function() {
             var self = this, 
@@ -126,6 +109,24 @@ jui.defineUI("ui.notify", [], function() {
         this.reset = function() {
         	$container.empty();
         }
+    }
+
+    UI.setting = function() {
+        return {
+            options: {
+                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
+                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
+                distance: 5, // 알림끼리의 간격
+                timeout: 3000, // 0이면 사라지지 않음
+                showDuration: 500,
+                hideDuration: 500,
+                showEasing: "swing",
+                hideEasing: "linear"
+            },
+            valid: {
+                add: [ "object", "integer" ]
+            }
+        };
     }
 
     return UI;

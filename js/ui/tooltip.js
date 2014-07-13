@@ -60,22 +60,9 @@ jui.defineUI("ui.tooltip", [], function() {
 		
 		
 		/**
-		 * Public Methods & Options
+		 * Public Methods
 		 * 
 		 */
-		this.setting = function() {
-			return {
-				options: {
-					color: "black",
-					position: "top",
-					width: 150,
-					align: "left",
-					delay: 0,
-					type: "mouseover",
-					title: ""
-				}
-			}
-		}
 		
 		this.init = function() {
 			var self = this, opts = this.options;
@@ -126,6 +113,20 @@ jui.defineUI("ui.tooltip", [], function() {
 			});
 		}		
 	}
+
+    UI.setting = function() {
+        return {
+            options: {
+                color: "black",
+                position: "top",
+                width: 150,
+                align: "left",
+                delay: 0,
+                type: "mouseover",
+                title: ""
+            }
+        }
+    }
 	
 	return UI;
 }, "core");
