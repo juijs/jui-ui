@@ -2687,13 +2687,14 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 	return UI;
 }, "core");
 jui.defineUI("ui.notify", [], function() {
+    var DEF_PADDING = 12;
 
     /**
      * UI Class
      *
      */
     var UI = function() {
-    	var $container = null, DEF_PADDING = 12;
+    	var $container = null;
     	
         /**
          * Public Methods
@@ -2701,7 +2702,7 @@ jui.defineUI("ui.notify", [], function() {
          */
 
         this.init = function() {
-            var self = this, 
+            var self = this,
             	opts = this.options;
             
             var padding = (typeof(opts.padding) == "object") ? DEF_PADDING : opts.padding,
