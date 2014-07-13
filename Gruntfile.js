@@ -34,7 +34,9 @@ module.exports = function(grunt) {
       			      			
       			// chart
                 "js/chart/core.js",
-      			"js/chart/bar.js"
+                "js/chart/grid/basic.js",
+      			"js/chart/bar.js",
+                "js/chart/line.js"
 
       		],
       		dest : "jui.js"

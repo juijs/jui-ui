@@ -8558,6 +8558,140 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 
     return UIChart;
 }, "core");
+jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
+    var GraphicsUtil = Graphics.util;
+
+    var Grid = function(chart) {
+
+        var xAxis = [],
+            min = 0,
+            max = 0,
+            niceMin = 0,
+            niceMax = 0,
+            unit = 0,
+            range = 0,
+            tickWidth = 0;
+
+        function caculateData() {
+            var series = chart.get('series');
+            var labels = chart.get('labels');
+            var data = chart.get('data');
+            var maxTicks = chart.get('maxTicks');
+
+            for(var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                xAxis.push(row[labels]);
+
+                for(var k in series) {
+                    series[k].data = series[k].data || [];
+                    var value = null;
+
+                    if (row[k]) {
+                        value = row[k];
+                    } else {
+                        if (GraphicsUtil.isFunction(series[k].get)) { // custom legend 설정
+                            value = series[k].get(row);
+                        }
+                    }
+
+                    series[k].data.push(value);
+
+                    if (value < min) { min = value; }
+                    if (value > max) { max = value; }
+                }
+            }
+
+            unit = chart.area.chart.width / xAxis.length;
+
+            var obj = chart.niceAxis(min, max);
+
+            range = obj.max - obj.min;
+            tickWidth = obj.tickWidth;
+            niceMin = obj.min;
+            niceMax = obj.max;
+        }
+
+        function drawX() {
+            // x 축 그리기
+            var pos = unit / 2
+
+            var xStart = chart.area.chart.x + pos;
+            var yStart = chart.area.chart.y2 + 15;
+
+            var xLineStart = chart.area.chart.x + unit;
+
+            for(var i = 0; i < xAxis.length; i++) {
+                chart.renderer.text(xStart, yStart, xAxis[i], {
+                    "font-size" : "10pt",
+                    "text-anchor" : "middle",
+                    "fill" : "black"
+                });
+
+                xStart += unit;
+
+                chart.renderer.line(xLineStart, chart.area.chart.y, xLineStart, chart.area.chart.y2, {
+                    "stroke-width" : 0.5,
+                    "stroke" : "rgba(0, 0, 0, 0.2)"
+                });
+
+                xLineStart += unit;
+            }
+
+        }
+
+        function drawY() {
+            var style = { "stroke-width" : 1, stroke : '#000' };
+
+            // 기본 좌표
+            chart.renderer.line(chart.area.chart.x, chart.area.chart.y, chart.area.chart.x, chart.area.chart.y2, style);
+
+            // 구간별 라인
+            var rate = tickWidth / range;
+            var split2 = chart.area.chart.height * rate
+            var start = chart.area.chart.y;
+
+            for(var i = niceMax ; i >= niceMin; i -= tickWidth) {
+                if (i == 0) {
+                    chart.renderer.line(chart.area.chart.x, start, chart.area.chart.x2, start, style);
+                }
+
+                chart.renderer.line(chart.area.chart.x, start, chart.area.chart.x2, start, {
+                    "stroke-width" : 0.5,
+                    "stroke" : "rgba(0, 0, 0, 0.2)"
+                });
+
+                chart.renderer.text(chart.area.chart.x - 5, start+5, i+"", {
+                    "font-size" : "10pt",
+                    "text-anchor" : "end",
+                    "fill" : "gray"
+                });
+
+                start += split2;
+            }
+        }
+
+        this.getMin = function() {
+            return min;
+        }
+
+        this.getMax = function() {
+            return max;
+        }
+
+        this.getUnit = function() {
+            return unit;
+        }
+
+        this.draw = function() {
+            caculateData();
+            drawX();
+            drawY();
+        }
+    }
+
+    return Grid;
+});
 jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
 	var GraphicsUtil = Graphics.util;
 
@@ -8661,4 +8795,105 @@ jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Grap
     }
 	
 	return UI;
+}, "chart.core");
+jui.defineUI("chart.line", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
+    var GraphicsUtil = Graphics.util;
+
+    var UI = function() {
+        var grid = null;
+
+        function getPropertyCount(obj) {
+            var count = 0;
+
+            for(var key in obj) {
+                count += 1;
+            }
+
+            return count;
+        }
+
+        this.drawChart = function() {
+            var data = this.get('data');
+            var series = this.get('series');
+            var barPadding = this.get('barPadding');
+            var seriesPadding = this.get('seriesPadding');
+
+            console.log(series);
+
+            var info = this.niceAxis(grid.getMin(), grid.getMax());
+            var radius = 1.7,
+                cw = grid.getUnit() / 2,
+                max = Math.abs(info.min) + Math.abs(info.max),
+                rate = this.area.chart.height / max;
+
+            for(var i = 1; i <= data.length; i++) {
+                var cx = this.area.chart.x + (grid.getUnit() * i) - cw;
+
+                for(var key in series) {
+                    var value = series[key].data[i - 1];
+                    var cy = this.area.chart.y + ((max - value + info.min) * rate);
+
+                    if(!series[key].path) {
+                        series[key].path = [];
+                    }
+
+                    // 라인을 그리기 위한 위치 값 저장
+                    series[key].path.push({ cx: cx, cy: cy });
+
+                    this.renderer.circle(cx, cy, radius, {
+                        fill : series[key].color
+                    });
+                }
+            }
+
+            for(var key in series) {
+                var path = series[key].path;
+
+                for(var i = 0; i < path.length - 1; i++) {
+                    var x1 = path[i].cx,
+                        y1 = path[i].cy,
+                        x2 = path[i + 1].cx,
+                        y2 = path[i + 1].cy;
+
+                    this.renderer.line(x1, y1, x2, y2, {
+                        "stroke-width": 1,
+                        "stroke": series[key].color
+                    });
+                }
+            }
+        }
+
+        this.renderChart = function() {
+            grid = new BasicGrid(this);
+            grid.draw();
+
+            this.drawChart();
+        }
+    }
+
+    UI.setting = function() {
+        return {
+            options: {
+                "type": "svg",
+                "width": "100%",
+                "height": "100%",
+                "padding": 10,
+                "barPadding": 10,
+                "seriesPadding": 1,
+                "maxTicks": 5,
+                "title": "",
+                "titleY": "",
+                "titleX": "",
+                "theme": {},
+                "titleHeight": 50,
+                "titleYWidth": 50,
+                "titleXHeight": 50,
+                "labels": "",
+                "series": {},
+                "data": []
+            }
+        }
+    }
+
+    return UI;
 }, "chart.core");
