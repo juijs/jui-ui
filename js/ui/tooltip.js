@@ -78,6 +78,10 @@ jui.defineUI("ui.tooltip", [], function() {
 			this.addEvent(this.root, opts.type, function(e) {
 				delay = setTimeout(function() {
 					self.show();
+
+                    if($tooltip != null) {
+                        self.emit("show", [ $tooltip.get(0), e ]);
+                    }
 				}, opts.delay);
 				
 				return false;
@@ -87,7 +91,10 @@ jui.defineUI("ui.tooltip", [], function() {
 			this.addEvent(this.root, "mouseout", function(e) {
 				clearTimeout(delay);
 				self.hide();
-				
+
+                if($tooltip == null) {
+                    self.emit("hide", [ e ]);
+                }
 				return false;
 			});
 			
