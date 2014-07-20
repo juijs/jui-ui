@@ -978,7 +978,6 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			
 			self.addEvent(row.element, "dblclick", function(e) {
 				self.emit("dblclick", [ row, e ]);
-				return false;
 			});
 			
 			self.addEvent(row.element, "contextmenu", function(e) {
@@ -1063,18 +1062,33 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 
 		function setEventColumn(self) {
+            var opts = self.options,
+                len = self.uit.getColumnCount();
+
 			// 컬럼 컨텍스트 이벤트
-			$obj.thead.find("tr > th").each(function(i) {
-				(function(index, thElement) {
-					self.addEvent(thElement, "contextmenu", function(e) {
-						self.emit("colmenu", [ self.getColumn(index), e ]);
+            for(var i = 0; i < len; i++) {
+                var col = self.getColumn(i);
+
+				(function(index, column) {
+                    if(!opts.fields || !opts.sort || opts.sortEvent !== true) {
+                        self.addEvent(column.element, "click", function (e) {
+                            self.emit("colclick", [ column, e ]);
+                        });
+                    }
+
+                    self.addEvent(column.element, "dblclick", function(e) {
+                        self.emit("coldblclick", [ column, e ]);
+                    });
+
+					self.addEvent(column.element, "contextmenu", function(e) {
+						self.emit("colmenu", [ column, e ]);
 						return false;
 					});
-				})(i, this);
-			});
+				})(i, col);
+			}
 		}
 		
-		function setSort(self) {
+		function setEventSort(self) {
 			var sortIndexes = self.options.sort,
 				len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
 			
@@ -1086,7 +1100,9 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 					(function(index, name) {
 						self.addEvent(column.element, "click", function(e) {
 							if($(e.target).hasClass("resize")) return;
+
 							self.sort(index, undefined, e);
+                            self.emit("colclick", [ column, e ]);
 							
 							return false;
 						});
@@ -1223,9 +1239,9 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
 			if(opts.resize) {
 				setColumnResize(this);
 			}
-			
-			if(opts.fields && opts.sort) {
-				setSort(this);
+
+			if(opts.fields && opts.sort && opts.sortEvent === true) {
+                setEventSort(this);
 			}
 			
 			if(opts.rows.length > 0) {
@@ -1826,6 +1842,7 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown" ], function(_, dropdown) {
                 sort: false,
                 sortIndex: null,
                 sortOrder: "asc",
+                sortEvent: true,
                 animate: false
             },
             valid: {

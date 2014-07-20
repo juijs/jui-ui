@@ -159,7 +159,15 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				self.resize();
 				self.emit("colhide", [ column, e ]);
 			});
-			
+
+            head.on("colclick", function(column, e) {
+                self.emit("colclick", [ column, e ]);
+            });
+
+            head.on("coldblclick", function(column, e) {
+                self.emit("coldblclick", [ column, e ]);
+            });
+
 			head.on("colmenu", function(column, e) {
 				self.emit("colmenu", [ column, e ]);
 			});
@@ -663,6 +671,7 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 sortCache: false,
                 sortIndex: null,
                 sortOrder: "asc",
+                sortEvent: true,
                 animate: false
             },
             valid: {
