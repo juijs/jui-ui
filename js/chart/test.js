@@ -39,8 +39,8 @@ jui.defineUI("chart.test", [
                     h = $tooltip.outerHeight();
 
                 $tooltip.css({
-                    left: offset.left - (w / 2) + point.getRadius(),
-                    top: offset.top - h + point.getRadius()
+                    left: offset.left - (w / 2) + brush["point"].getRadius(),
+                    top: offset.top - h + brush["point"].getRadius()
                 });
             });
         }
