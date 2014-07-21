@@ -1,8 +1,6 @@
-jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Graphics, BasicGrid) {
-	var GraphicsUtil = Graphics.util;
+jui.define("chart.brush.bar", [], function() {
 
-    var UI = function() {
-        var grid = null;
+    var BarBrush = function(chart, grid) {
 
         function getPropertyCount(obj) {
             var count = 0;
@@ -14,50 +12,49 @@ jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Grap
             return count;
         }
 
-        this.drawChart = function() {
-            var data = this.get('data');
-            var series = this.get('series');
-            var theme = this.get('theme');
-            var barPadding = this.get('barPadding');
-            var seriesPadding = this.get('seriesPadding');
+        this.draw = function() {
+            var data = chart.get('data');
+            var series = chart.get('series');
+            var theme = chart.get('theme');
+            var barPadding = chart.get('barPadding');
+            var seriesPadding = chart.get('seriesPadding');
 
             var width = grid.getUnit() - barPadding * 2;
             var seriesCount = getPropertyCount(series);
             var seriesWidth = (width - (seriesCount -1) * seriesPadding) / seriesCount;
             var nextWidth = seriesWidth + seriesPadding;
 
-            var obj = this.niceAxis(grid.getMin(), grid.getMax());
+            var obj = chart.niceAxis(grid.getMin(), grid.getMax());
             var range = obj.max - obj.min;
             var tickWidth = obj.tickWidth;
 
-            var startX = this.area.chart.x;
-            var startY = this.area.chart.y;
-            var height = this.area.chart.height;
+            var startX = chart.area.chart.x;
+            var startY = chart.area.chart.y;
+            var height = chart.area.chart.height;
             var rate = tickWidth / range;
             var tickCount = obj.max / tickWidth;
-            var zeroBase = this.area.chart.y + ((this.area.chart.height * rate) * tickCount);
+            var zeroBase = chart.area.chart.y + ((chart.area.chart.height * rate) * tickCount);
             var heightHigh = zeroBase;
-            var heightLow = this.area.chart.height - zeroBase;
+            var heightLow = chart.area.chart.height - zeroBase;
 
             var index = 0;
             var colors = theme.series || ["black", 'red', 'blue'];
 
             for(var key in series) {
-
-                var chart = series[key];
+                var chartInfo = series[key];
                 var x = startX + barPadding +  index * (nextWidth);
 
-                for(var i = 0, len = chart.data.length; i < len; i++) {
+                for(var i = 0, len = chartInfo.data.length; i < len; i++) {
 
-                    var value = chart.data[i];
+                    var value = chartInfo.data[i];
                     var h = height * (Math.abs(value) / range);
                     if (value >= 0) {
-                        this.renderer.rect(x, heightHigh - h, seriesWidth, h, {
-                            fill : chart.color || colors[index]
+                        chart.renderer.rect(x, heightHigh - h, seriesWidth, h, {
+                            fill : chartInfo.color || colors[index]
                         })
                     } else {
-                        this.renderer.rect(x, zeroBase, seriesWidth, h, {
-                            fill : chart.color || colors[index]
+                        chart.renderer.rect(x, zeroBase, seriesWidth, h, {
+                            fill : chartInfo.color || colors[index]
                         })
                     }
 
@@ -67,38 +64,7 @@ jui.defineUI("chart.bar", [ "util.graphics", "chart.grid.basic" ], function(Grap
                 index++;
             }
         }
-
-        this.renderChart = function() {
-            grid = new BasicGrid(this);
-            grid.draw();
-
-            this.drawChart();
-        }
-    }
-
-    UI.setting = function() {
-        return {
-            options: {
-                "type": "svg",
-                "width": "100%",
-                "height": "100%",
-                "padding": 10,
-                "barPadding": 10,
-                "seriesPadding": 1,
-                "maxTicks": 5,
-                "title": "",
-                "titleY": "",
-                "titleX": "",
-                "theme": {},
-                "titleHeight": 50,
-                "titleYWidth": 50,
-                "titleXHeight": 50,
-                "labels": "",
-                "series": {},
-                "data": []
-            }
-        }
     }
 	
-	return UI;
-}, "chart.core");
+	return BarBrush;
+});

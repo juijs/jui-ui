@@ -1,22 +1,27 @@
-jui.defineUI("chart.linepoint", [
+jui.defineUI("chart.test", [
     "chart.grid.basic",
     "chart.brush.line",
-    "chart.brush.point"
-], function(BasicGrid, LineBrush, PointBrush) {
+    "chart.brush.point",
+    "chart.brush.bar"
+], function(BasicGrid, LineBrush, PointBrush, BarBrush) {
 
     var UI = function() {
-        var grid = null,
-            line = null,
-            point = null;
+        var grid = null;
+        var brush = {};
 
         this.renderChart = function() {
+            var brushes = this.options.brush;
+
             grid = new BasicGrid(this);
-            point = new PointBrush(this, grid);
-            line = new LineBrush(this, grid);
+            brush["point"] = new PointBrush(this, grid);
+            brush["line"] = new LineBrush(this, grid);
+            brush["bar"] = new BarBrush(this, grid);
 
             grid.draw();
-            point.draw();
-            line.draw();
+
+            for(var i = 0; i < brushes.length; i++) {
+                brush[brushes[i]].draw();
+            }
         }
 
         this.setTooltip = function() {
@@ -60,6 +65,7 @@ jui.defineUI("chart.linepoint", [
                 "titleXHeight": 50,
                 "labels": "",
                 "series": {},
+                "brush": [ "bar" ],
                 "data": []
             }
         }
