@@ -3,6 +3,14 @@ jui.define("chart.brush.point", [], function() {
     var PointBrush = function(chart, grid) {
         var radius = 1.7;
 
+        function isCheckedBrush(brushes) {
+            if($.inArray("point", brushes) != -1 || !brushes) {
+                return true;
+            }
+
+            return false;
+        }
+
         this.draw = function() {
             var data = chart.get('data');
             var series = chart.get('series');
@@ -18,13 +26,15 @@ jui.define("chart.brush.point", [], function() {
                 var cx = chart.area.chart.x + (grid.getUnit() * i) - cw;
 
                 for(var key in series) {
-                    var value = series[key].data[i - 1];
-                    var cy = chart.area.chart.y + ((max - value + info.min) * rate);
+                    if(isCheckedBrush(series[key].brush)) {
+                        var value = series[key].data[i - 1];
+                        var cy = chart.area.chart.y + ((max - value + info.min) * rate);
 
-                    chart.renderer.circle(cx, cy, radius, {
-                        fill: series[key].color,
-                        title: key + ": " + value
-                    });
+                        chart.renderer.circle(cx, cy, radius, {
+                            fill: series[key].color,
+                            title: key + ": " + value
+                        });
+                    }
                 }
             }
         }

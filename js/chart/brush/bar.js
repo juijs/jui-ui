@@ -6,10 +6,21 @@ jui.define("chart.brush.bar", [], function() {
             var count = 0;
 
             for(var key in obj) {
-                count += 1;
+                var brushes = obj[key].brush;
+
+                if($.inArray("bar", brushes) != -1 || !brushes)
+                    count += 1;
             }
 
             return count;
+        }
+
+        function isCheckedBrush(brushes) {
+            if($.inArray("bar", brushes) != -1 || !brushes) {
+                return true;
+            }
+
+            return false;
         }
 
         this.draw = function() {
@@ -42,26 +53,29 @@ jui.define("chart.brush.bar", [], function() {
 
             for(var key in series) {
                 var chartInfo = series[key];
-                var x = startX + barPadding +  index * (nextWidth);
 
-                for(var i = 0, len = chartInfo.data.length; i < len; i++) {
+                if(isCheckedBrush(chartInfo.brush)) {
+                    var x = startX + barPadding + index * (nextWidth);
 
-                    var value = chartInfo.data[i];
-                    var h = height * (Math.abs(value) / range);
-                    if (value >= 0) {
-                        chart.renderer.rect(x, heightHigh - h, seriesWidth, h, {
-                            fill : chartInfo.color || colors[index]
-                        })
-                    } else {
-                        chart.renderer.rect(x, zeroBase, seriesWidth, h, {
-                            fill : chartInfo.color || colors[index]
-                        })
+                    for (var i = 0, len = chartInfo.data.length; i < len; i++) {
+
+                        var value = chartInfo.data[i];
+                        var h = height * (Math.abs(value) / range);
+                        if (value >= 0) {
+                            chart.renderer.rect(x, heightHigh - h, seriesWidth, h, {
+                                fill: chartInfo.color || colors[index]
+                            })
+                        } else {
+                            chart.renderer.rect(x, zeroBase, seriesWidth, h, {
+                                fill: chartInfo.color || colors[index]
+                            })
+                        }
+
+                        x += grid.getUnit();
                     }
 
-                    x += grid.getUnit();
+                    index++;
                 }
-
-                index++;
             }
         }
     }
