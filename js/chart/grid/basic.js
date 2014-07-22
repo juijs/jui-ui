@@ -83,7 +83,7 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             return unit;
         }
 
-        this.calculate = function() {
+        this._calculate = function() {
             var series = chart.get('series');
             var labels = chart.get('labels');
             var data = chart.get('data');
@@ -123,7 +123,7 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             niceMax = obj.max;
         }
 
-        this.draw = function() {
+        this._draw = function() {
             drawX();
             drawY();
         }

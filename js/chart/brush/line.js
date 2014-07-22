@@ -10,11 +10,11 @@ jui.define("chart.brush.line", [], function() {
             return false;
         }
 
-        this.calculate = function() {
+        this._calculate = function() {
 
         }
 
-        this.draw = function() {
+        this._draw = function() {
             var data = chart.get('data');
             var series = chart.get('series');
             var barPadding = chart.get('barPadding');
