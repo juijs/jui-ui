@@ -11,6 +11,10 @@ jui.define("chart.brush.point", [], function() {
             return false;
         }
 
+        this.calculate = function() {
+
+        }
+
         this.draw = function() {
             var data = chart.get('data');
             var series = chart.get('series');
@@ -37,6 +41,8 @@ jui.define("chart.brush.point", [], function() {
                     }
                 }
             }
+
+            console.log(this);
         }
 
         this.getRadius = function() {
@@ -45,4 +51,4 @@ jui.define("chart.brush.point", [], function() {
     }
 
     return PointBrush;
-});
+}, "chart.brush");

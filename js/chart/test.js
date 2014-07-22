@@ -17,10 +17,10 @@ jui.defineUI("chart.test", [
             brush["line"] = new LineBrush(this, grid);
             brush["bar"] = new BarBrush(this, grid);
 
-            grid.draw();
+            grid.init();
 
             for(var i = 0; i < brushes.length; i++) {
-                brush[brushes[i]].draw();
+                brush[brushes[i]].init();
             }
         }
 

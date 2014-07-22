@@ -23,6 +23,10 @@ jui.define("chart.brush.bar", [], function() {
             return false;
         }
 
+        this.calculate = function() {
+
+        }
+
         this.draw = function() {
             var data = chart.get('data');
             var series = chart.get('series');
@@ -81,4 +85,4 @@ jui.define("chart.brush.bar", [], function() {
     }
 	
 	return BarBrush;
-});
+}, "chart.brush");

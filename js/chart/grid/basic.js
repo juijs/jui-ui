@@ -1,7 +1,7 @@
 jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
     var GraphicsUtil = Graphics.util;
 
-    var Grid = function(chart) {
+    var BasicGrid = function(chart) {
 
         var xAxis = [],
             min = 0,
@@ -11,46 +11,6 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             unit = 0,
             range = 0,
             tickWidth = 0;
-
-        function caculateData() {
-            var series = chart.get('series');
-            var labels = chart.get('labels');
-            var data = chart.get('data');
-            var maxTicks = chart.get('maxTicks');
-
-            for(var i = 0, len = data.length; i < len; i++) {
-                var row = data[i];
-
-                xAxis.push(row[labels]);
-
-                for(var k in series) {
-                    series[k].data = series[k].data || [];
-                    var value = null;
-
-                    if (row[k]) {
-                        value = row[k];
-                    } else {
-                        if (GraphicsUtil.isFunction(series[k].get)) { // custom legend 설정
-                            value = series[k].get(row);
-                        }
-                    }
-
-                    series[k].data.push(value);
-
-                    if (value < min) { min = value; }
-                    if (value > max) { max = value; }
-                }
-            }
-
-            unit = chart.area.chart.width / xAxis.length;
-
-            var obj = chart.niceAxis(min, max);
-
-            range = obj.max - obj.min;
-            tickWidth = obj.tickWidth;
-            niceMin = obj.min;
-            niceMax = obj.max;
-        }
 
         function drawX() {
             // x 축 그리기
@@ -123,12 +83,51 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             return unit;
         }
 
+        this.calculate = function() {
+            var series = chart.get('series');
+            var labels = chart.get('labels');
+            var data = chart.get('data');
+            var maxTicks = chart.get('maxTicks');
+
+            for(var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                xAxis.push(row[labels]);
+
+                for(var k in series) {
+                    series[k].data = series[k].data || [];
+                    var value = null;
+
+                    if (row[k]) {
+                        value = row[k];
+                    } else {
+                        if (GraphicsUtil.isFunction(series[k].get)) { // custom legend 설정
+                            value = series[k].get(row);
+                        }
+                    }
+
+                    series[k].data.push(value);
+
+                    if (value < min) { min = value; }
+                    if (value > max) { max = value; }
+                }
+            }
+
+            unit = chart.area.chart.width / xAxis.length;
+
+            var obj = chart.niceAxis(min, max);
+
+            range = obj.max - obj.min;
+            tickWidth = obj.tickWidth;
+            niceMin = obj.min;
+            niceMax = obj.max;
+        }
+
         this.draw = function() {
-            caculateData();
             drawX();
             drawY();
         }
     }
 
-    return Grid;
-});
+    return BasicGrid;
+}, "chart.grid");
