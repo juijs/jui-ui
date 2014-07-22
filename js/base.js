@@ -395,10 +395,9 @@
 			return (isJUI) ? 10 : (w1 - w2);
 		},
 		inherit: function(ctor, superCtor) {
-			ctor.super_ = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
-			ctor.prototype.parent = ctor.prototype;  
+            ctor.prototype.parent = ctor.prototype;
 		},
 		extend: function(origin, add) {
 			// Don't do anything if add isn't an object
@@ -752,6 +751,15 @@
 				callback.apply(null, args);
 			});
 		},
+
+        /**
+         * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
+         *
+         * @param name 'UIGroup.UIName' 형태로 설정해야 하며, ready에서 패키지 형태로 UIGroup 객체를 받을 수 있다.
+         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
 				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
@@ -800,6 +808,15 @@
             // UI 고유 설정
             global[name] = global[keys[0]][keys[1]];
 		},
+
+        /**
+         * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
+         *
+         * @param name 'defineUI'와 달리 이름을 설정하는데 제약이 없다.
+         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
                 !utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
