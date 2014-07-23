@@ -115,11 +115,11 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             return unit;
         }
 
-        this.draw = function(chart) {
+        this.paint = function(chart) {
             drawX(chart);
             drawY(chart);
         }
     }
 
     return Grid;
-});
+}, "chart.grid");
