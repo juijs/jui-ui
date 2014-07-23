@@ -398,6 +398,7 @@
 			ctor.super_ = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
+			ctor.prototype.parent = ctor.prototype;  
 		},
 		extend: function(origin, add) {
 			// Don't do anything if add isn't an object

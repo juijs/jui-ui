@@ -1,48 +1,38 @@
 jui.define("chart.brush.point", [], function() {
 
-    var PointBrush = function(chart, grid) {
+    var PointBrush = function(brush) {
         var radius = 1.7;
 
-        function isCheckedBrush(brushes) {
-            if($.inArray("point", brushes) != -1 || !brushes) {
-                return true;
-            }
-
-            return false;
-        }
-
-        this._calculate = function() {
-
-        }
-
-        this._draw = function() {
-            var data = chart.get('data');
+        this.draw = function(chart) {
             var series = chart.get('series');
             var barPadding = chart.get('barPadding');
             var seriesPadding = chart.get('seriesPadding');
+            var labels = chart.get('labels');
+			var colors = ["black", 'red', 'blue'];
+            var height = chart.area.chart.height;
+            var width = chart.area.chart.width;
+            var rate = width / labels.length; 
+            var pos = rate / 2; 
+            var grid = brush.grid;
+            
+            for(var i = 0, len = brush.series.length; i < len; i++) {
+            	var s = series[brush.series[i]];
+            	
+            	for(var j = 0; j < s.data.length; j++) {
+            		var value = s.data[j];
+            		
+            		var y = chart.convert(height, grid.max, grid.min, value);
+            		var x = (rate * j) + pos;
+            		
+           			chart.circle(x, y, radius * (value/15), {
+                      fill: colors[i],
+                    });                            		
 
-            var info = chart.niceAxis(grid.getMin(), grid.getMax());
-            var cw = grid.getUnit() / 2,
-                max = Math.abs(info.min) + Math.abs(info.max),
-                rate = chart.area.chart.height / max;
+            	}
+            	
 
-            for(var i = 1; i <= data.length; i++) {
-                var cx = chart.area.chart.x + (grid.getUnit() * i) - cw;
-
-                for(var key in series) {
-                    if(isCheckedBrush(series[key].brush)) {
-                        var value = series[key].data[i - 1];
-                        var cy = chart.area.chart.y + ((max - value + info.min) * rate);
-
-                        chart.renderer.circle(cx, cy, radius, {
-                            fill: series[key].color,
-                            title: key + ": " + value
-                        });
-                    }
-                }
-            }
-
-            console.log(this);
+            }            
+            
         }
 
         this.getRadius = function() {
@@ -51,4 +41,4 @@ jui.define("chart.brush.point", [], function() {
     }
 
     return PointBrush;
-}, "chart.brush");
+});

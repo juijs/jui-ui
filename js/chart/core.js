@@ -50,6 +50,7 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 		}
 		
 		this.init = function() {
+			//console.log(this.options);
 			this.renderer = Graphics.createRenderer(this.root, this.get('type'), {
 				width : this.get('width'),
 				height : this.get('height')
@@ -138,6 +139,51 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 			chart.x2 = chart.x + chart.width;
             chart.y2 = chart.y + chart.height;
 			this.area.chart = chart;
+		}
+		
+		/**
+		 * chart draw util 
+		 * 
+		 * chart 기본 x 를 기준으로 그리게 한다. 
+		 */
+		this.line = function(x1, y1, x2, y2, attr) {
+			return this.renderer.line(this.area.chart.x + x1, this.area.chart.y + y1, this.area.chart.x + x2, this.area.chart.y + y2, attr);
+		}
+		
+		this.circle = function(cx, cy, radius, attr) {
+			return this.renderer.circle(this.area.chart.x + cx, this.area.chart.y + cy, radius, attr);
+		}
+		
+		this.rect = function(x ,y, width, height, attr) {
+			return this.renderer.rect(this.area.chart.x + x ,this.area.chart.y + y, width, height, attr);
+		}
+		
+		this.ellipse = function(cx, cy, rx, ry, attr) {
+			return this.renderer.ellipse(this.area.chart.x + cx, this.area.chart.y + cy, rx, ry, attr);
+		}
+		
+		this.text = function(x, y, text, attr) {
+			return this.renderer.text(this.area.chart.x + x, this.area.chart.y + y, text, attr);
+		}		
+		
+		/**
+		 * y 좌표 구하기 
+		 * 
+		 * var y = this.convert(height, max, min , 50);
+		 * var x = this.convert(width, max, min, 100, false);
+		 * 
+		 */
+		this.convert = function(dist, max, min, value, isY) {
+			isY = isY || true; 
+			
+			var axis = (dist/(max - min)) * (value - min);
+			
+			if (isY) {
+				return dist - axis;	
+			}
+			 
+			return axis;
+			
 		}
 		
 		this.niceAxis = function niceAxis (min, max) {

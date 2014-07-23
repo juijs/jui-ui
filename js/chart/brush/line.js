@@ -1,65 +1,48 @@
 jui.define("chart.brush.line", [], function() {
 
-    var LineBrush = function(chart, grid) {
+    var LineBrush = function(brush) {
 
-        function isCheckedBrush(brushes) {
-            if($.inArray("line", brushes) != -1 || !brushes) {
-                return true;
-            }
-
-            return false;
-        }
-
-        this._calculate = function() {
-
-        }
-
-        this._draw = function() {
-            var data = chart.get('data');
+        this.draw = function(chart) { 
             var series = chart.get('series');
             var barPadding = chart.get('barPadding');
             var seriesPadding = chart.get('seriesPadding');
+            var labels = chart.get('labels');
+			var colors = ["black", 'red', 'blue'];
+            var height = chart.area.chart.height;
+            var width = chart.area.chart.width;
+            var rate = width / labels.length; 
+            var pos = rate / 2; 
+            var grid = brush.grid;
+            
+            //console.log(brush);
+            
+            for(var i = 0, len = brush.series.length; i < len; i++) {
+            	var s = series[brush.series[i]];
+            	s.paths = s.paths || [];
+            	
+            	for(var j = 0, jlen = s.data.length; j < jlen; j++) {
+            		var y = chart.convert(height, grid.max, grid.min, s.data[j]);
+            		var x = (rate * j) + pos;
+            		
+            		s.paths.push({x : x, y : y})
+            	}
+            	
+            	for (var k = 0; k < s.paths.length - 1; k++) {
+                    var x1 = s.paths[k].x,
+                        y1 = s.paths[k].y,
+                        x2 = s.paths[k + 1].x,
+                        y2 = s.paths[k + 1].y;
 
-            var info = chart.niceAxis(grid.getMin(), grid.getMax());
-            var cw = grid.getUnit() / 2,
-                max = Math.abs(info.min) + Math.abs(info.max),
-                rate = chart.area.chart.height / max;
-
-            for(var i = 1; i <= data.length; i++) {
-                var cx = chart.area.chart.x + (grid.getUnit() * i) - cw;
-
-                for(var key in series) {
-                    var value = series[key].data[i - 1];
-                    var cy = chart.area.chart.y + ((max - value + info.min) * rate);
-
-                    if(!series[key].path) {
-                        series[key].path = [];
-                    }
-
-                    // 라인을 그리기 위한 위치 값 저장
-                    series[key].path.push({ cx: cx, cy: cy });
+                    chart.line(x1, y1, x2, y2, {
+                        "stroke-width": 1,
+                        "stroke": colors[i]
+                    });
                 }
+                
             }
 
-            for(var key in series) {
-                if(isCheckedBrush(series[key].brush)) {
-                    var path = series[key].path;
-
-                    for (var i = 0; i < path.length - 1; i++) {
-                        var x1 = path[i].cx,
-                            y1 = path[i].cy,
-                            x2 = path[i + 1].cx,
-                            y2 = path[i + 1].cy;
-
-                        chart.renderer.line(x1, y1, x2, y2, {
-                            "stroke-width": 1,
-                            "stroke": series[key].color
-                        });
-                    }
-                }
-            }
         }
     }
 
     return LineBrush;
-}, "chart.brush");
+});

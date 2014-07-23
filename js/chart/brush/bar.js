@@ -1,88 +1,73 @@
 jui.define("chart.brush.bar", [], function() {
 
-    var BarBrush = function(chart, grid) {
+    var BarBrush = function(opt) {
 
-        function getPropertyCount(obj) {
-            var count = 0;
+		this.drawBar = function(chart, data, startX) {
+			
+			//console.log(startX);
+			
+			var barPadding = chart.get('barPadding');
+			var seriesPadding = chart.get('seriesPadding');
+			var tickWidth = chart.area.chart.width / chart.get('labels').length;
+			var colors = ["black", 'red', 'blue'];
+			var max = opt.grid.max;
+			var min = opt.grid.min;
+			var range = max - min; 
+			var height = chart.area.chart.height; 
+			var rate = height / range; 
+			
+			var unit = (tickWidth - barPadding*2 - seriesPadding * (data.length - 1))/data.length;
+			var x = startX + barPadding;
 
-            for(var key in obj) {
-                var brushes = obj[key].brush;
+			for(var i = 0; i < data.length; i++ ) {
+			
+				var value = data[i];
+				var unitHeight = rate * Math.abs(value);
 
-                if($.inArray("bar", brushes) != -1 || !brushes)
-                    count += 1;
-            }
+				if (value > 0) {
+					chart.rect(x, ((max - value) * rate), unit, unitHeight, {
+						fill : colors[i]
+					})	
+					
+				} else if (value < 0) {
+					var zeroBase = max * rate;					
+					chart.rect(x, zeroBase, unit, unitHeight, {
+						fill : colors[i]
+					})
+					
+				}
+				//break;
+				x += unit + seriesPadding;	
+			}
+			
+		}
 
-            return count;
-        }
-
-        function isCheckedBrush(brushes) {
-            if($.inArray("bar", brushes) != -1 || !brushes) {
-                return true;
-            }
-
-            return false;
-        }
-
-        this._calculate = function() {
-
-        }
-
-        this._draw = function() {
-            var data = chart.get('data');
+        this.draw = function(chart) {
             var series = chart.get('series');
-            var theme = chart.get('theme');
-            var barPadding = chart.get('barPadding');
-            var seriesPadding = chart.get('seriesPadding');
 
-            var width = grid.getUnit() - barPadding * 2;
-            var seriesCount = getPropertyCount(series);
-            var seriesWidth = (width - (seriesCount -1) * seriesPadding) / seriesCount;
-            var nextWidth = seriesWidth + seriesPadding;
+            var labels = chart.get('labels');
+            var tickWidth = (chart.area.chart.width / labels.length);
+            
+            var startX = 0;
 
-            var obj = chart.niceAxis(grid.getMin(), grid.getMax());
-            var range = obj.max - obj.min;
-            var tickWidth = obj.tickWidth;
+			for(var i = 0, len = labels.length; i < len; i++) {
+	
+				var data = [];
+		
+				for(var j = 0; j < opt.series.length; j ++ ) {
+					
+					var s = series[opt.series[j]];
+					data.push(s.data[i]);
+				}
+				
+				this.drawBar(chart, data, startX);
+				
+				startX += tickWidth;
+				
+			}
 
-            var startX = chart.area.chart.x;
-            var startY = chart.area.chart.y;
-            var height = chart.area.chart.height;
-            var rate = tickWidth / range;
-            var tickCount = obj.max / tickWidth;
-            var zeroBase = chart.area.chart.y + ((chart.area.chart.height * rate) * tickCount);
-            var heightHigh = zeroBase;
-            var heightLow = chart.area.chart.height - zeroBase;
-
-            var index = 0;
-            var colors = theme.series || ["black", 'red', 'blue'];
-
-            for(var key in series) {
-                var chartInfo = series[key];
-
-                if(isCheckedBrush(chartInfo.brush)) {
-                    var x = startX + barPadding + index * (nextWidth);
-
-                    for (var i = 0, len = chartInfo.data.length; i < len; i++) {
-
-                        var value = chartInfo.data[i];
-                        var h = height * (Math.abs(value) / range);
-                        if (value >= 0) {
-                            chart.renderer.rect(x, heightHigh - h, seriesWidth, h, {
-                                fill: chartInfo.color || colors[index]
-                            })
-                        } else {
-                            chart.renderer.rect(x, zeroBase, seriesWidth, h, {
-                                fill: chartInfo.color || colors[index]
-                            })
-                        }
-
-                        x += grid.getUnit();
-                    }
-
-                    index++;
-                }
-            }
         }
     }
 	
 	return BarBrush;
-}, "chart.brush");
+});
