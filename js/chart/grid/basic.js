@@ -115,7 +115,7 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
             return unit;
         }
 
-        this.paint = function(chart) {
+        this.draw = function(chart) {
             drawX(chart);
             drawY(chart);
         }

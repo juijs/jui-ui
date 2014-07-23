@@ -2,7 +2,7 @@ jui.define("chart.brush.line", [], function() {
 
     var LineBrush = function(brush) {
 
-        this.paint = function(chart) {
+        this.draw = function(chart) {
             var series = chart.get('series');
             var barPadding = chart.get('barPadding');
             var seriesPadding = chart.get('seriesPadding');

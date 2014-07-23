@@ -3,7 +3,7 @@ jui.define("chart.brush.point", [], function() {
     var PointBrush = function(brush) {
         var radius = 1.7;
 
-        this.paint = function(chart) {
+        this.draw = function(chart) {
             var series = chart.get('series');
             var barPadding = chart.get('barPadding');
             var seriesPadding = chart.get('seriesPadding');
