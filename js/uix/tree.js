@@ -1,466 +1,472 @@
-jui.defineUI("uix.tree", [ "util" ], function(_) {
-	
-	/**
-	 * UI Core Class
-	 * 
-	 */
-	var UINode = function(data, tplFunc) {
-		var self = this;
-		
-		/**
-		 * Public Properties
-		 * 
-		 */
-		this.data = data;			// 해당 노드의 데이터
-		this.element = null;		// 해당 노드의 엘리먼트
-		this.index = null;			// 계층적 구조를 수용할 수 있는 키값
-		this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
-		
-		this.parent = null;			// 부모 노드
-		this.childrens = [];		// 자식 노드들
-		this.depth = 0;				// 해당 노드의 뎁스
-		
-		this.type = "open";
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
-		function setIndex(nodenum) {
-			self.nodenum = (!isNaN(nodenum)) ? nodenum : self.nodenum;
-			
-			if(self.parent) {
-				if(self.parent.index == null) self.index = "" + self.nodenum;
-				else self.index = self.parent.index + "." + self.nodenum;
-			}
-			
-			// 뎁스 체크
-			if(self.parent && typeof(self.index) == "string") {
-				self.depth = self.index.split(".").length;
-			}
-			
-			// 자식 인덱스 체크
-			if(self.childrens.length > 0) {
-				setIndexChild(self);
-			}
-		}
-		
-		function setIndexChild(node) {
-			var clist = node.childrens;
-			
-			for(var i = 0; i < clist.length; i++) {
-				clist[i].reload(i);
-				
-				if(clist[i].childrens.length > 0) { 
-					setIndexChild(clist[i]);
-				}
-			}
-		}
-		
-		function getElement() {
-			if(!tplFunc) return self.element;
-			
-			try {
-				var element = $(tplFunc(
-					$.extend({ node: { index: self.index, data: self.data, depth: self.depth } }, self.data))
-				).get(0);
-			} catch(e) {
-				console.log(e);
-			}
-			
-			return element;
-		}
-		
-		function removeChildAll(node) {
-			$(node.element).remove();
-			
-			for(var i = 0; i < node.childrens.length; i++) {
-				var cNode = node.childrens[i];
-				
-				if(cNode.childrens.length > 0) {
-					removeChildAll(cNode);
-				} else {
-					$(cNode.element).remove();
-				}
-			}
-		}
+jui.define("uix.tree.node", [], function() {
+    var Node = function(data, tplFunc) {
+        var self = this;
 
-		function reloadChildAll(node) {
-			for(var i = 0; i < node.childrens.length; i++) {
-				var cNode = node.childrens[i];
-				cNode.reload(i);
-				
-				if(cNode.childrens.length > 0) {
-					reloadChildAll(cNode);
-				}
-			}
-		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		this.reload = function(nodenum, isUpdate) {
-			setIndex(nodenum); // 노드 인덱스 설정
-			
-			if(this.element != null) {
-				var newElem = getElement();
-				
-				if(!isUpdate) {
-					$(this.parent.element).children("ul").append(newElem);
-				} else {
-					$(newElem).insertAfter(this.element);
-				}
-				
-				$(this.element).remove();
-				
-				this.element = newElem;
-			} else {
-				this.element = getElement();
-			}
-		}
-		
-		
-		this.reloadChildrens = function() {
-			reloadChildAll(this);
-		}
-		
-		this.destroy = function() {
-			if(this.parent != null) { // 부모가 있을 경우, 연결관계 끊기
-				this.parent.removeChild(this.index);
-			} else {
-				removeChildAll(this);
-				$(this.element).remove();
-			}
-		}
-		
-		this.isLeaf = function() {
-			return (this.childrens.length == 0) ? true : false;
-		}
-		
-		this.fold = function() {
-			$(this.element).children("ul").hide();
-			this.type = "fold";
-		}
-		
-		this.open = function() {
-			$(this.element).children("ul").show();
-			this.type = "open";
-		}
-		
-		this.appendChild = function(node) {
-			$(this.element).children("ul").append(node.element);
-			this.childrens.push(node);
-		}
+        /**
+         * Public Properties
+         *
+         */
+        this.data = data;			// 해당 노드의 데이터
+        this.element = null;		// 해당 노드의 엘리먼트
+        this.index = null;			// 계층적 구조를 수용할 수 있는 키값
+        this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
 
-		this.insertChild = function(nodenum, node) {
-			if(nodenum == 0) {
-				if(this.childrens.length == 0) {
-					$(this.element).children("ul").append(node.element);
-				} else {
-					$(node.element).insertBefore(this.childrens[0].element);
-				}
-			} else {
-				$(node.element).insertAfter(this.childrens[nodenum - 1].element);
-			}
-			
-			var preNodes = this.childrens.splice(0, nodenum);
-			preNodes.push(node);
-			
-			this.childrens = preNodes.concat(this.childrens);
-			reloadChildAll(this);
-		}
-		
-		this.removeChild = function(index) {
-			for(var i = 0; i < this.childrens.length; i++) {
-				var node = this.childrens[i];
-				
-				if(node.index == index) {
-					this.childrens.splice(i, 1); // 배열에서 제거
-					removeChildAll(node);
-				}
-			}
-			
-			reloadChildAll(this);
-		}
+        this.parent = null;			// 부모 노드
+        this.childrens = [];		// 자식 노드들
+        this.depth = 0;				// 해당 노드의 뎁스
 
-		this.lastChild = function() {
-			if(this.childrens.length > 0)
-				return this.childrens[this.childrens.length - 1];
-				
-			return null;
-		}
-		
-		this.lastChildLeaf = function(lastRow) {
-			var row = (!lastRow) ? this.lastChild() : lastRow;
-			
-			if(row.isLeaf()) return row;
-			else {
-				return this.lastChildLeaf(row.lastChild());
-			}
-		}
-	}
-	
-	var UITree = function(handler) {
-		var self = this, root = null;
-		
-		var $obj = handler.$obj,
-			$tpl = handler.$tpl;
-		
-		var iParser = _.index();
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
-		function createNode(data, no, pNode) {
-			var node = new UINode(data, $tpl.node);
-			
-			node.parent = (pNode) ? pNode : null;
-			node.reload(no);
-			
-			return node;
-		}
-		
-		function setNodeChildAll(dataList, node) {
-			var c_nodes = node.childrens;
-			
-			if(c_nodes.length > 0) {
-				for(var i = 0; i < c_nodes.length; i++) {
-					dataList.push(c_nodes[i]);
-					
-					if(c_nodes[i].childrens.length > 0) {
-						setNodeChildAll(dataList, c_nodes[i]);
-					}
-				}
-			}
-		}
-		
-		function getNodeChildLeaf(keys, node) {
-			if(!node) return null;
-			var tmpKey = keys.shift();
-			
-			if(tmpKey == undefined) {
-				return node;
-			} else {
-				return getNodeChildLeaf(keys, node.childrens[tmpKey]);
-			}
-		}
-		
-		function insertNodeDataChild(index, data) {
-			var keys = iParser.getIndexList(index);
-			
-			var pNode = self.getNodeParent(index),
-				nodenum = keys[keys.length - 1];
-				node = createNode(data, nodenum, pNode);
-			
-			// 데이터 갱신
-			pNode.insertChild(nodenum, node);
-			
-			return node;
-		}
-		
-		function appendNodeData(data) {
-			if(root == null) {
-				root = createNode(data);; 
-				$obj.tree.append(root.element);
-			} else {
-				var node = createNode(data, root.childrens.length, root);
-				root.appendChild(node);
-			}
-			
-			return node;
-		}
-		
-		function appendNodeDataChild(index, data) {
-			var pNode = self.getNode(index), 
-				cNode = createNode(data, pNode.childrens.length, pNode);
-				
-			pNode.appendChild(cNode);
-			
-			return cNode;
-		}
-		
-		function isRelative(node, targetNode) {
-			var nodeList = [];
-			
-			while(true) {
-				var tNode = targetNode.parent;
-				
-				if(tNode) {
-					nodeList.push(tNode);
-					targetNode = tNode;
-				} else {
-					break;
-				}
-			}
-			
-			for(var i = 0; i < nodeList.length; i++) {
-				if(node == nodeList[i]) {
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		this.appendNode = function() {
-			var index = arguments[0], data = arguments[1];
-			
-			if(!data) {
-				return appendNodeData(index);
-			} else {
-				return appendNodeDataChild(index, data);
-			}
-		}
-		
-		this.insertNode = function(index, data) {
-			if(root.childrens.length == 0 && parseInt(index) == 0) {
-				return this.appendNode(data);
-			} else {
-				return insertNodeDataChild(index, data);
-			}
-		}
+        this.type = "open";
 
-		this.updateNode = function(index, data) {
-			var node = this.getNode(index);
-			
-			for(var key in data) {
-				node.data[key] = data[key];
-			}
-			
-			node.reload(node.nodenum, true);
-			node.reloadChildrens();
-			
-			return node;
-		}
-		
-		this.removeNode = function(index) {
-			this.getNode(index).destroy();
-		}
 
-		this.removeNodes = function() {
-			var nodes = root.childrens;
-			
-			if(nodes.length > 0) {
-				var node = nodes.pop();
-				
-				node.parent = null;
-				node.destroy();
-				
-				this.removeNodes();
-			}
-		}
-		
-		this.openNode = function(index) {
-			if(index == null) this.getRoot().open();
-			else this.getNode(index).open();
-		}
+        /**
+         * Private Methods
+         *
+         */
+        function setIndex(nodenum) {
+            self.nodenum = (!isNaN(nodenum)) ? nodenum : self.nodenum;
 
-		this.foldNode = function(index) {
-			if(index == null) this.getRoot().fold();
-			else this.getNode(index).fold();
-		}
-		
-		this.openNodeAll = function(index) {
-			var nodeList = this.getNodeAll(index);
-			
-			for(var i = 0; i < nodeList.length; i++) {
-				nodeList[i].open();
-			}
-			
-			if(index == null) this.getRoot().open();
-		}
+            if(self.parent) {
+                if(self.parent.index == null) self.index = "" + self.nodenum;
+                else self.index = self.parent.index + "." + self.nodenum;
+            }
 
-		this.foldNodeAll = function(index) {
-			var nodeList = this.getNodeAll(index);
-			
-			for(var i = 0; i < nodeList.length; i++) {
-				nodeList[i].fold();
-			}
+            // 뎁스 체크
+            if(self.parent && typeof(self.index) == "string") {
+                self.depth = self.index.split(".").length;
+            }
 
-			if(index == null) this.getRoot().fold();
-		}
-		
-		this.moveNode = function(index, targetIndex) {
-			if(index == targetIndex) return;
-			
-			var node = this.getNode(index), 
-				tpNode = this.getNodeParent(targetIndex);
-			var indexList = iParser.getIndexList(targetIndex);
-				tNo = indexList[indexList.length - 1];
-				
-			if(!isRelative(node, tpNode)) {
-				// 기존의 데이터 
-				node.parent.childrens.splice(node.nodenum, 1);
-				node.parent.reloadChildrens();
-				node.parent = tpNode;
-				
-				// 이동 대상 데이터 처리
-				var preNodes = tpNode.childrens.splice(0, tNo);
-				preNodes.push(node);
-				
-				tpNode.childrens = preNodes.concat(tpNode.childrens);
-				tpNode.reloadChildrens();
-			}
-		}
-		
-		this.getNode = function(index) {
-			if(index == null) return root.childrens;
-			else {
-				var nodes = root.childrens;
-				
-				if(iParser.isIndexDepth(index)) {
-					var keys = iParser.getIndexList(index);
-					return getNodeChildLeaf(keys, nodes[keys.shift()]);
-				} else {
-					return (nodes[index]) ? nodes[index] : null;
-				}
-			}
-		}
-		
-		this.getNodeAll = function(index) {
-			var dataList = [],
-				tmpNodes = (index == null) ? root.childrens : [ this.getNode(index) ];
-			
-			for(var i = 0; i < tmpNodes.length; i++) {
-				if(tmpNodes[i]) {
-					dataList.push(tmpNodes[i]);
-					
-					if(tmpNodes[i].childrens.length > 0) {
-						setNodeChildAll(dataList, tmpNodes[i]);
-					}
-				}
-			}
-			
-			return dataList;
-		}
-		
-		this.getNodeParent = function(index) { // 해당 인덱스의 부모 노드를 가져옴 (단, 해당 인덱스의 노드가 없을 경우)
-			var keys = iParser.getIndexList(index);
-			
-			if(keys.length == 1) {
-				return root;
-			} else if(keys.length == 2) {
-				return this.getNode(keys[0]);
-			} else if(keys.length > 2) {
-				keys.pop();
-				return this.getNode(keys.join("."));
-			}
-		}
-		
-		this.getRoot = function() {
-			return root;
-		}
-	}
-	
-	
+            // 자식 인덱스 체크
+            if(self.childrens.length > 0) {
+                setIndexChild(self);
+            }
+        }
+
+        function setIndexChild(node) {
+            var clist = node.childrens;
+
+            for(var i = 0; i < clist.length; i++) {
+                clist[i].reload(i);
+
+                if(clist[i].childrens.length > 0) {
+                    setIndexChild(clist[i]);
+                }
+            }
+        }
+
+        function getElement() {
+            if(!tplFunc) return self.element;
+
+            try {
+                var element = $(tplFunc(
+                        $.extend({ node: { index: self.index, data: self.data, depth: self.depth } }, self.data))
+                ).get(0);
+            } catch(e) {
+                console.log(e);
+            }
+
+            return element;
+        }
+
+        function removeChildAll(node) {
+            $(node.element).remove();
+
+            for(var i = 0; i < node.childrens.length; i++) {
+                var cNode = node.childrens[i];
+
+                if(cNode.childrens.length > 0) {
+                    removeChildAll(cNode);
+                } else {
+                    $(cNode.element).remove();
+                }
+            }
+        }
+
+        function reloadChildAll(node) {
+            for(var i = 0; i < node.childrens.length; i++) {
+                var cNode = node.childrens[i];
+                cNode.reload(i);
+
+                if(cNode.childrens.length > 0) {
+                    reloadChildAll(cNode);
+                }
+            }
+        }
+
+
+        /**
+         * Public Methods
+         *
+         */
+        this.reload = function(nodenum, isUpdate) {
+            setIndex(nodenum); // 노드 인덱스 설정
+
+            if(this.element != null) {
+                var newElem = getElement();
+
+                if(!isUpdate) {
+                    $(this.parent.element).children("ul").append(newElem);
+                } else {
+                    $(newElem).insertAfter(this.element);
+                }
+
+                $(this.element).remove();
+
+                this.element = newElem;
+            } else {
+                this.element = getElement();
+            }
+        }
+
+
+        this.reloadChildrens = function() {
+            reloadChildAll(this);
+        }
+
+        this.destroy = function() {
+            if(this.parent != null) { // 부모가 있을 경우, 연결관계 끊기
+                this.parent.removeChild(this.index);
+            } else {
+                removeChildAll(this);
+                $(this.element).remove();
+            }
+        }
+
+        this.isLeaf = function() {
+            return (this.childrens.length == 0) ? true : false;
+        }
+
+        this.fold = function() {
+            $(this.element).children("ul").hide();
+            this.type = "fold";
+        }
+
+        this.open = function() {
+            $(this.element).children("ul").show();
+            this.type = "open";
+        }
+
+        this.appendChild = function(node) {
+            $(this.element).children("ul").append(node.element);
+            this.childrens.push(node);
+        }
+
+        this.insertChild = function(nodenum, node) {
+            if(nodenum == 0) {
+                if(this.childrens.length == 0) {
+                    $(this.element).children("ul").append(node.element);
+                } else {
+                    $(node.element).insertBefore(this.childrens[0].element);
+                }
+            } else {
+                $(node.element).insertAfter(this.childrens[nodenum - 1].element);
+            }
+
+            var preNodes = this.childrens.splice(0, nodenum);
+            preNodes.push(node);
+
+            this.childrens = preNodes.concat(this.childrens);
+            reloadChildAll(this);
+        }
+
+        this.removeChild = function(index) {
+            for(var i = 0; i < this.childrens.length; i++) {
+                var node = this.childrens[i];
+
+                if(node.index == index) {
+                    this.childrens.splice(i, 1); // 배열에서 제거
+                    removeChildAll(node);
+                }
+            }
+
+            reloadChildAll(this);
+        }
+
+        this.lastChild = function() {
+            if(this.childrens.length > 0)
+                return this.childrens[this.childrens.length - 1];
+
+            return null;
+        }
+
+        this.lastChildLeaf = function(lastRow) {
+            var row = (!lastRow) ? this.lastChild() : lastRow;
+
+            if(row.isLeaf()) return row;
+            else {
+                return this.lastChildLeaf(row.lastChild());
+            }
+        }
+    }
+
+    return Node;
+});
+
+
+jui.define("uix.tree.base", [ "util", "uix.tree.node" ], function(_, Node) {
+    var Base = function(handler) {
+        var self = this, root = null;
+
+        var $obj = handler.$obj,
+            $tpl = handler.$tpl;
+
+        var iParser = _.index();
+
+        /**
+         * Private Methods
+         *
+         */
+        function createNode(data, no, pNode) {
+            var node = new Node(data, $tpl.node);
+
+            node.parent = (pNode) ? pNode : null;
+            node.reload(no);
+
+            return node;
+        }
+
+        function setNodeChildAll(dataList, node) {
+            var c_nodes = node.childrens;
+
+            if(c_nodes.length > 0) {
+                for(var i = 0; i < c_nodes.length; i++) {
+                    dataList.push(c_nodes[i]);
+
+                    if(c_nodes[i].childrens.length > 0) {
+                        setNodeChildAll(dataList, c_nodes[i]);
+                    }
+                }
+            }
+        }
+
+        function getNodeChildLeaf(keys, node) {
+            if(!node) return null;
+            var tmpKey = keys.shift();
+
+            if(tmpKey == undefined) {
+                return node;
+            } else {
+                return getNodeChildLeaf(keys, node.childrens[tmpKey]);
+            }
+        }
+
+        function insertNodeDataChild(index, data) {
+            var keys = iParser.getIndexList(index);
+
+            var pNode = self.getNodeParent(index),
+                nodenum = keys[keys.length - 1];
+            node = createNode(data, nodenum, pNode);
+
+            // 데이터 갱신
+            pNode.insertChild(nodenum, node);
+
+            return node;
+        }
+
+        function appendNodeData(data) {
+            if(root == null) {
+                root = createNode(data);;
+                $obj.tree.append(root.element);
+            } else {
+                var node = createNode(data, root.childrens.length, root);
+                root.appendChild(node);
+            }
+
+            return node;
+        }
+
+        function appendNodeDataChild(index, data) {
+            var pNode = self.getNode(index),
+                cNode = createNode(data, pNode.childrens.length, pNode);
+
+            pNode.appendChild(cNode);
+
+            return cNode;
+        }
+
+        function isRelative(node, targetNode) {
+            var nodeList = [];
+
+            while(true) {
+                var tNode = targetNode.parent;
+
+                if(tNode) {
+                    nodeList.push(tNode);
+                    targetNode = tNode;
+                } else {
+                    break;
+                }
+            }
+
+            for(var i = 0; i < nodeList.length; i++) {
+                if(node == nodeList[i]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        /**
+         * Public Methods
+         *
+         */
+        this.appendNode = function() {
+            var index = arguments[0], data = arguments[1];
+
+            if(!data) {
+                return appendNodeData(index);
+            } else {
+                return appendNodeDataChild(index, data);
+            }
+        }
+
+        this.insertNode = function(index, data) {
+            if(root.childrens.length == 0 && parseInt(index) == 0) {
+                return this.appendNode(data);
+            } else {
+                return insertNodeDataChild(index, data);
+            }
+        }
+
+        this.updateNode = function(index, data) {
+            var node = this.getNode(index);
+
+            for(var key in data) {
+                node.data[key] = data[key];
+            }
+
+            node.reload(node.nodenum, true);
+            node.reloadChildrens();
+
+            return node;
+        }
+
+        this.removeNode = function(index) {
+            this.getNode(index).destroy();
+        }
+
+        this.removeNodes = function() {
+            var nodes = root.childrens;
+
+            if(nodes.length > 0) {
+                var node = nodes.pop();
+
+                node.parent = null;
+                node.destroy();
+
+                this.removeNodes();
+            }
+        }
+
+        this.openNode = function(index) {
+            if(index == null) this.getRoot().open();
+            else this.getNode(index).open();
+        }
+
+        this.foldNode = function(index) {
+            if(index == null) this.getRoot().fold();
+            else this.getNode(index).fold();
+        }
+
+        this.openNodeAll = function(index) {
+            var nodeList = this.getNodeAll(index);
+
+            for(var i = 0; i < nodeList.length; i++) {
+                nodeList[i].open();
+            }
+
+            if(index == null) this.getRoot().open();
+        }
+
+        this.foldNodeAll = function(index) {
+            var nodeList = this.getNodeAll(index);
+
+            for(var i = 0; i < nodeList.length; i++) {
+                nodeList[i].fold();
+            }
+
+            if(index == null) this.getRoot().fold();
+        }
+
+        this.moveNode = function(index, targetIndex) {
+            if(index == targetIndex) return;
+
+            var node = this.getNode(index),
+                tpNode = this.getNodeParent(targetIndex);
+            var indexList = iParser.getIndexList(targetIndex);
+            tNo = indexList[indexList.length - 1];
+
+            if(!isRelative(node, tpNode)) {
+                // 기존의 데이터
+                node.parent.childrens.splice(node.nodenum, 1);
+                node.parent.reloadChildrens();
+                node.parent = tpNode;
+
+                // 이동 대상 데이터 처리
+                var preNodes = tpNode.childrens.splice(0, tNo);
+                preNodes.push(node);
+
+                tpNode.childrens = preNodes.concat(tpNode.childrens);
+                tpNode.reloadChildrens();
+            }
+        }
+
+        this.getNode = function(index) {
+            if(index == null) return root.childrens;
+            else {
+                var nodes = root.childrens;
+
+                if(iParser.isIndexDepth(index)) {
+                    var keys = iParser.getIndexList(index);
+                    return getNodeChildLeaf(keys, nodes[keys.shift()]);
+                } else {
+                    return (nodes[index]) ? nodes[index] : null;
+                }
+            }
+        }
+
+        this.getNodeAll = function(index) {
+            var dataList = [],
+                tmpNodes = (index == null) ? root.childrens : [ this.getNode(index) ];
+
+            for(var i = 0; i < tmpNodes.length; i++) {
+                if(tmpNodes[i]) {
+                    dataList.push(tmpNodes[i]);
+
+                    if(tmpNodes[i].childrens.length > 0) {
+                        setNodeChildAll(dataList, tmpNodes[i]);
+                    }
+                }
+            }
+
+            return dataList;
+        }
+
+        this.getNodeParent = function(index) { // 해당 인덱스의 부모 노드를 가져옴 (단, 해당 인덱스의 노드가 없을 경우)
+            var keys = iParser.getIndexList(index);
+
+            if(keys.length == 1) {
+                return root;
+            } else if(keys.length == 2) {
+                return this.getNode(keys[0]);
+            } else if(keys.length > 2) {
+                keys.pop();
+                return this.getNode(keys.join("."));
+            }
+        }
+
+        this.getRoot = function() {
+            return root;
+        }
+    }
+
+    return Base;
+});
+
+
+jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
+
 	/**
 	 * UI Main Class
 	 * 
@@ -703,7 +709,7 @@ jui.defineUI("uix.tree", [ "util" ], function(_) {
 			var self = this, opts = this.options;
 			
 			// UITable 객체 생성
-			this.uit = new UITree({ $obj: { tree: $(this.root) }, $tpl: this.tpl }); // 신규 테이블 클래스 사용
+			this.uit = new Base({ $obj: { tree: $(this.root) }, $tpl: this.tpl }); // 신규 테이블 클래스 사용
 			
 			// 루트 데이터 처리
 			if(opts.root) {
