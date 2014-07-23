@@ -838,6 +838,21 @@
         },
 
         /**
+         * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
+         *
+         * @returns {Array}
+         */
+        includeAll: function() {
+            var result = [];
+
+            for(var key in global) {
+                result.push(global[key]);
+            }
+
+            return result;
+        },
+
+        /**
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
          * @returns {Window}
