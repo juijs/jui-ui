@@ -843,6 +843,16 @@
             global[name] = uiFunc;
             globalFunc[name] = true;
         },
+
+        /**
+         * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
+         *
+         * @param name 가져온 클래스 또는 객체의 이름
+         * @returns {*}
+         */
+        getDefine: function(name) {
+            return global[name];
+        },
 		log: function() {
 			var jui_mng = window.open(
 	    		this.logUrl, 
