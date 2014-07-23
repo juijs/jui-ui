@@ -850,9 +850,15 @@
          * @param name 가져온 클래스 또는 객체의 이름
          * @returns {*}
          */
-        getDefine: function(name) {
+        include: function(name) {
             return global[name];
         },
+
+        /**
+         * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
+         *
+         * @returns {Window}
+         */
 		log: function() {
 			var jui_mng = window.open(
 	    		this.logUrl, 
@@ -866,6 +872,7 @@
 	    	
 	    	return jui_mng;
 		},
+
 		logUrl: "jui.mng.html"
 	};
 })(window);
