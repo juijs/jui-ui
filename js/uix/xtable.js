@@ -229,14 +229,6 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			self.emit("filter", [ s_rows ]);
 		}
 		
-		function resetFilteredData(self) {
-			if(o_rows != null) {
-				self.update(o_rows);
-				
-				o_rows = null;
-			}
-		}
-		
 		function setColumnWidthAuto(self) {
 			var columns = head.listColumn();
 			
@@ -416,12 +408,12 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		    }
 		}
 		
-		this.filter = function(index, keyword, callback) { // filter (=포함), keyword가 null일 경우에는 롤백
+		this.filter = function(index, keyword, callback) { // filter (=포함)
 			if(!this.options.fields) return;
 
-			var column = head.getColumn(index);
-			resetFilteredData(this);
-			
+            this.rollback();
+            var column = head.getColumn(index);
+
 			if(column.name && keyword) {
 				setFilteredData(this, column.name, function(target) {
 					if(typeof(callback) == "function") {
@@ -438,6 +430,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				this.emit("filter", [ rows ]);
 			}
 		}
+
+        this.rollback = function() {
+            if(o_rows != null) {
+                this.update(o_rows);
+
+                o_rows = null;
+            }
+        }
 		
 		this.clear = function() {
 			page = 1;
