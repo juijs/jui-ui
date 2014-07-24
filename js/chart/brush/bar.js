@@ -1,8 +1,8 @@
 jui.define("chart.brush.bar", [], function() {
 
-    var BarBrush = function(opt) {
+    var BarBrush = function(brush) {
 
-		this.drawBar = function(chart, data, startX) {
+		function drawBar(chart, data, startX) {
 			
 			//console.log(startX);
 			
@@ -10,8 +10,8 @@ jui.define("chart.brush.bar", [], function() {
 			var seriesPadding = chart.get('seriesPadding');
 			var tickWidth = chart.area.chart.width / chart.get('labels').length;
 			var colors = ["black", 'red', 'blue'];
-			var max = opt.grid.max;
-			var min = opt.grid.min;
+			var max = brush.grid.max;
+			var min = brush.grid.min;
 			var range = max - min; 
 			var height = chart.area.chart.height; 
 			var rate = height / range; 
@@ -54,13 +54,13 @@ jui.define("chart.brush.bar", [], function() {
 	
 				var data = [];
 		
-				for(var j = 0; j < opt.series.length; j ++ ) {
+				for(var j = 0; j < brush.series.length; j ++ ) {
 					
-					var s = series[opt.series[j]];
+					var s = series[brush.series[j]];
 					data.push(s.data[i]);
 				}
-				
-				this.drawBar(chart, data, startX);
+
+                drawBar(chart, data, startX);
 				
 				startX += tickWidth;
 				
@@ -70,4 +70,4 @@ jui.define("chart.brush.bar", [], function() {
     }
 	
 	return BarBrush;
-});
+}, "chart.brush");

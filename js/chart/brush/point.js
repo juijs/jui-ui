@@ -41,4 +41,4 @@ jui.define("chart.brush.point", [], function() {
     }
 
     return PointBrush;
-});
+}, "chart.brush");

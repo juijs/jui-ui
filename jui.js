@@ -826,6 +826,37 @@
             global[name] = uiFunc;
             globalFunc[name] = true;
         },
+
+        /**
+         * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
+         *
+         * @param name 가져온 클래스 또는 객체의 이름
+         * @returns {*}
+         */
+        include: function(name) {
+            return global[name];
+        },
+
+        /**
+         * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
+         *
+         * @returns {Array}
+         */
+        includeAll: function() {
+            var result = [];
+
+            for(var key in global) {
+                result.push(global[key]);
+            }
+
+            return result;
+        },
+
+        /**
+         * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
+         *
+         * @returns {Window}
+         */
 		log: function() {
 			var jui_mng = window.open(
 	    		this.logUrl, 
@@ -839,6 +870,7 @@
 	    	
 	    	return jui_mng;
 		},
+
 		logUrl: "jui.mng.html"
 	};
 })(window);

@@ -111,4 +111,4 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
     }
 
     return Grid;
-});
+}, "chart.grid");

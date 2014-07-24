@@ -124,10 +124,10 @@ jui.defineUI("chart.chart", [
 	      		
 	      		if (g.type) {
 	      			var Grid = g_list[g.type];
-	      			new Grid(g).draw(this);
+	      			new Grid(g).render(this);
 	      		} else {
-	      			if (typeof g.draw == 'function') {
-	      				g.draw(this);
+	      			if (typeof g.render == 'function') {
+	      				g.render(this);
 	      			}	
 	      		}
 				
@@ -139,16 +139,14 @@ jui.defineUI("chart.chart", [
 	      		
 	      		if (b.type) {
 	      			var Brush = b_list[b.type];
-	      			new Brush(b).draw(this);
+	      			new Brush(b).render(this);
 	      		} else {
-	      			if (typeof b.draw == 'function') {
-	      				b.draw(this);
+	      			if (typeof b.render == 'function') {
+	      				b.render(this);
 	      			}	
 	      		}
 	      	}	
 		}
-       
- 
     }
 
     UI.setting = function() {
