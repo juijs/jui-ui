@@ -401,14 +401,14 @@ jui.define("core", [ "util" ], function(_) {
                 var mainObj = new UI["class"](),
                     defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
-                // Default Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
-
                 // Options Check
                 checkedOptions(defOpts, options);
 
-                // Pulbic Properties
+                // Options Setting
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Public Properties
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;

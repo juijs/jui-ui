@@ -1294,14 +1294,14 @@ jui.define("core", [ "util" ], function(_) {
                 var mainObj = new UI["class"](),
                     defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
-                // Default Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
-
                 // Options Check
                 checkedOptions(defOpts, options);
 
-                // Pulbic Properties
+                // Options Setting
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Public Properties
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
@@ -7183,9 +7183,9 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		function createTableList(self) { // 2
 			var exceptOpts = [ 
-                   "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", 
-                   "event", "rows", "scrollWidth", "width"
-               ];
+               "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
+               "event", "rows", "scrollWidth", "width"
+            ];
 			
 			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
@@ -7395,8 +7395,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
-			
+			var opts = this.options;
+
+            // 루트가 테이블일 경우, 별도 처리
+            if(this.root.tagName == "TABLE") {
+                var $root = $(this.root).wrap("<div class='xtable'></div>");
+                this.root = $root.parent().get(0);
+            }
+
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
