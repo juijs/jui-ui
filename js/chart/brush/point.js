@@ -24,7 +24,7 @@ jui.define("chart.brush.point", [], function() {
             		var y = chart.convert(height, grid.max, grid.min, value);
             		var x = (rate * j) + pos;
             		
-           			chart.circle(x, y, radius * (value/15), {
+           			chart.circle(x, y, radius * (value/5), {
                       fill: colors[i],
                     });                            		
 

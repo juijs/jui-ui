@@ -6,17 +6,18 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
         function drawX(chart) {
             // x 축 그리기
             var labels = chart.get('labels');
+            var height = chart.area.chart.height; 
             var unit = chart.area.chart.width / labels.length;
             var pos = unit / 2;
 
-            var xStart = chart.area.chart.x + pos;
-            var yStart = chart.area.chart.y2 + 15;
+            var xStart = pos;
+            var yStart = height + 15;
 
-            var xLineStart = chart.area.chart.x + unit;
+            var xLineStart = unit;
 
             for(var i = 0; i < labels.length; i++) {
 
-                chart.renderer.text(xStart, yStart, labels[i], {
+                chart.text(xStart, yStart, labels[i], {
                     "font-size" : "10pt",
                     "text-anchor" : "middle",
                     "fill" : "black"
@@ -24,7 +25,7 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
 
                 xStart += unit;
 
-                chart.renderer.line(xLineStart, chart.area.chart.y, xLineStart, chart.area.chart.y2, {
+                chart.line(xLineStart, 0, xLineStart, height, {
                     "stroke-width" : 0.5,
                     "stroke" : "rgba(0, 0, 0, 0.2)"
                 });
@@ -85,7 +86,7 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
 					
 					chart.line(0, start, width, start, {
 	                    "stroke-width" : 0.5,
-	                    "stroke" : "rgba(0, 0, 0, 0.2)"
+	                    "stroke" : opt.color || "rgba(0, 0, 0, 0.2)"
 	                });
 	
 	                chart.text(tx, start+5, (Math.round(startValue))+"", {
@@ -101,18 +102,6 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
                 startValue += rate;
 			
 			} 
-        }
-
-        this.getMin = function() {
-            return min;
-        }
-
-        this.getMax = function() {
-            return max;
-        }
-
-        this.getUnit = function() {
-            return unit;
         }
 
         this.draw = function(chart) {
