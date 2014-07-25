@@ -179,6 +179,12 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 		this.resize = function() {
 			setBodyResize();
 		}
+
+        this.resizeModal = function() {
+            if(!ui_modal) return;
+
+            ui_modal.resize();
+        }
 	}
 
     UI.setting = function() {
