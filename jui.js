@@ -1034,7 +1034,7 @@ jui.define("core", [ "util" ], function(_) {
 			
 			for(var p = 0; p < pfx.length; p++) {
 				var type = e.type;
-				
+
 				if(!pfx[p]) type = type.toLowerCase();
 				$(e.target).on(pfx[p] + type, e.callback);
 			}
@@ -1079,26 +1079,33 @@ jui.define("core", [ "util" ], function(_) {
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
-			if(typeof(args[2]) == "function") {
+			if(_.typeCheck("function", args[2])) {
 				e = $.extend(e, { callback: args[2] });
-			} else if(typeof(args[2]) == "string") {
+			} else if(_.typeCheck("string", args[2])) {
 				e = $.extend(e, { children: args[2], callback: args[3] });
 			}
-			
+
+            // 이벤트 유형을 배열로 변경
+            var eventTypes = _.typeCheck("array", e.type) ? e.type : [ e.type ];
+
 			// 이벤트 유형에 따른 이벤트 설정
-			if(e.type.toLowerCase().indexOf("animation") != -1) 
-				settingEventAnimation(e);
-			else {
-				if(e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
-					$(e.target).unbind(e.type);
-				}
-				
-				if(_.isTouch) {
-					settingEventTouch(e);
-				} else {
-					settingEvent(e);
-				}
-			}
+            for(var i = 0; i < eventTypes.length; i++) {
+                e.type = eventTypes[i]
+
+                if (e.type.toLowerCase().indexOf("animation") != -1)
+                    settingEventAnimation(e);
+                else {
+                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+                        $(e.target).unbind(e.type);
+                    }
+
+                    if (_.isTouch) {
+                        settingEventTouch(e);
+                    } else {
+                        settingEvent(e);
+                    }
+                }
+            }
 		}
 		
 		this.trigger = function(selector, type) {
@@ -3817,17 +3824,30 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				}
 			
 				// 이벤트 설정
-				self.addEvent(this, "click", "a", function(e) {
-					var text = $(e.currentTarget).text();
-					
-					if(i != menuIndex) {
-						if(self.options.target != "") 
-							showTarget(self.options.target, this);
-						
-						activeIndex = i;
-						self.emit("change", [ { index: i, text: text }, e ]);
+				self.addEvent(this, [ "click", "contextmenu" ], function(e) {
+					var text = $.trim($(this).text()),
+                        value = $(this).val();
 
-						changeTab(self, i);
+					if(i != menuIndex) {
+                        if(i != activeIndex) {
+                            var args = [ { index: i, text: text, value: value }, e ];
+
+                            if(e.type == "click") {
+                                if(self.options.target != "") {
+                                    showTarget(self.options.target, this);
+                                }
+
+                                // 엑티브 인덱스 변경
+                                activeIndex = i;
+
+                                self.emit("change", args);
+                                self.emit("click", args);
+
+                                changeTab(self, i);
+                            } else if(e.type == "contextmenu") {
+                                self.emit("rclick", args);
+                            }
+                        }
 					} else {
 						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(self, this);
@@ -4035,11 +4055,15 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		this.show = function(index) {
+            if(index == menuIndex || index == activeIndex) return;
+
 			activeIndex = index;
-			
+            var $target = $(this.root).children("li").eq(index);
+
 			this.emit("change", [{ 
 				index: index, 
-				text: $(this.root).children("li").eq(index).children("a").text() 
+				text: $.trim($target.text()),
+                value: $target.val()
 			}]);
 
 			changeTab(this, index);
