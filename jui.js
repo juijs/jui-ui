@@ -2582,8 +2582,7 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") {
-					ui_list[j].hide();
-					ui_list[j].show();
+					ui_list[j].resize();
 				}
 			}
 		}
@@ -2715,18 +2714,31 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 				$clone = $(this.root).clone();
 				$clone.insertAfter($(this.root));
 			}
-			
+
+            // 위치 재조정
+            this.resize();
+
 			$(this.options.target).css("position", info.tPos);
-			$(this.root).css({
-				"position": info.pos,
-				"left": info.x,
-				"top": info.y,
-				"z-index": (z_index + this.options.index)
-			}).show();
+			$(this.root).show();
 			
 			createModal(this, info.h);
 			this.type = "show";
 		}
+
+        this.resize = function() {
+            var info = getModalInfo(this);
+
+            $(this.root).css({
+                "position": info.pos,
+                "left": info.x,
+                "top": info.y,
+                "z-index": (z_index + this.options.index)
+            });
+
+            if($modal != null) {
+                $modal.height(info.h);
+            }
+        }
 	}
 
     UI.setting = function() {
