@@ -47,24 +47,63 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.moveTo = function(x, y) {
             orders.push("M" + x + "," + y);
-
             return this;
         }
 
         this.lineTo = function(x, y) {
             orders.push("L" + x + "," + y);
-
             return this;
         }
 
-        this.end = function() {
-            orders.push("Z");
+        this.hLineTo = function(x) {
+            orders.push("H" + x);
+            return this;
+        }
 
+        this.vLineTo = function(y) {
+            orders.push("V" + y);
+            return this;
+        }
+
+        this.curveTo = function(x1, y1, x2, y2, x, y) {
+            orders.push("C" + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y);
+            return this;
+        }
+
+        this.sCurveTo = function(x2, y2, x, y) {
+            orders.push("S" + x2 + "," + y2 + " " + x + "," + y);
+            return this;
+        }
+
+        this.qCurveTo = function(x1, y1, x, y) {
+            orders.push("Q" + x1 + "," + y1 + " " + x + "," + y);
+            return this;
+        }
+
+        this.tCurveTo = function(x1, y1, x, y) {
+            orders.push("T" + x1 + "," + y1 + " " + x + "," + y);
+            return this;
+        }
+
+        this.arc = function(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y) {
+            large_arc_flag = (large_arc_flag) ? 1 : 0;
+            sweep_flag = (sweep_flag) ? 1 : 0;
+
+            orders.push("A" + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y);
+            return this;
+        }
+
+        this.close = function() {
             this.attr({
-               d: orders.join(" ")
+                d: orders.join(" ")
             });
 
             orders = [];
+        }
+
+        this.closePath = function() {
+            orders.push("Z");
+            this.close();
         }
     }
 
@@ -84,8 +123,9 @@ jui.define("util.svg",
     function(_, Element, Path, Poly) {
 
     var SVG = function(root, width, height) {
+        var self = this;
         var target = null,
-            group = null;
+            parent = null;
 
         function init() {
             target = new Element();
@@ -101,13 +141,24 @@ jui.define("util.svg",
         function create(elem, type, attr) {
             elem.create(type, attr);
 
-            if(group == null) {
+            if(parent == null) {
                 target.childrens.push(elem);
             } else {
-                group.childrens.push(elem);
+                parent.childrens.push(elem);
             }
 
             return elem;
+        }
+
+        function createParent(elem, type, attr, callback) {
+            elem.create(type, attr);
+            target.childrens.push(elem);
+
+            parent = elem;
+            if(_.typeCheck("function", callback)) {
+                callback.call(self, parent);
+            }
+            parent = null;
         }
 
         /**
@@ -155,16 +206,11 @@ jui.define("util.svg",
          */
 
         this.group = function(attr, callback) {
-            var elem = new Element();
+            return createParent(new Element(), "g", attr, callback);
+        }
 
-            elem.create("g", attr);
-            target.childrens.push(elem);
-
-            group = elem;
-            if(_.typeCheck("function", callback)) {
-                callback();
-            }
-            group = null;
+        this.marker = function(attr, callback) {
+            return createParent(new Element(), "marker", attr, callback);
         }
 
         this.rect = function(attr) {
