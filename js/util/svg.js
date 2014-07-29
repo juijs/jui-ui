@@ -1,11 +1,40 @@
 jui.define("util.svg.element", [], function() { // rectangle, circle, text, line, ...
-    var Element = function(type) {
-        this.attr = function(attr) {
+    var Element = function() {
+        var attributes = {},
+            styles = {};
 
+        this.create = function(type, attr) {
+            this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
+            this.childrens = [];
+            this.attr(attr);
+        }
+
+        this.attr = function(attr) {
+            for(var k in attr) {
+                attributes[k] = attr[k];
+            }
+
+            for(var k in attributes) {
+                this.element.setAttributeNS(null, k, attributes[k]);
+            }
+
+            return this;
         }
 
         this.css = function(css) {
+            var list = [];
 
+            for (var k in css) {
+                styles[k] = css[k];
+            }
+
+            for (var k in styles) {
+                list.push(k + ":" + styles[k]);
+            }
+
+            this.attr({ style: list.join(";") });
+
+            return this;
         }
     }
 
@@ -13,15 +42,37 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
 });
 
 jui.define("util.svg.element.path", [], function() { // path
-    var PathElement = function(type) {
+    var PathElement = function() {
+        var orders = [];
 
+        this.moveTo = function(x, y) {
+            orders.push("M" + x + "," + y);
+
+            return this;
+        }
+
+        this.lineTo = function(x, y) {
+            orders.push("L" + x + "," + y);
+
+            return this;
+        }
+
+        this.end = function() {
+            orders.push("Z");
+
+            this.attr({
+               d: orders.join(" ")
+            });
+
+            orders = [];
+        }
     }
 
     return PathElement;
 }, "util.svg.element");
 
 jui.define("util.svg.element.poly", [], function() { // polygon, polyline
-    var PolyElement = function(type) {
+    var PolyElement = function() {
 
     }
 
@@ -32,64 +83,67 @@ jui.define("util.svg",
     [ "util", "util.svg.element", "util.svg.element.path", "util.svg.element.poly" ],
     function(_, Element, Path, Poly) {
 
-    var SVG = function(selector, attr) {
-        var root = null,
-            childrens = [];
+    var SVG = function(root, width, height) {
+        var target = null,
+            group = null;
 
         function init() {
-            root = createElement("svg", {
-                width: attr.width || 300,
-                height: attr.height || 300,
-                x: attr.x || 0,
-                y: attr.y || 0
+            target = new Element();
+
+            target.create("svg", {
+                width: (_.typeCheck("integer", width)) ? width : 300,
+                height: (_.typeCheck("integer", height)) ? width : 300
             });
 
-            $(selector)[0].appendChild(root);
+            root.appendChild(target.element);
         }
 
-        function createElement(type, attr) {
-            var elem = document.createElementNS("http://www.w3.org/2000/svg", type);
+        function create(elem, type, attr) {
+            elem.create(type, attr);
 
-            if (_.typeCheck("object", attr)) {
-                setAttributes(elem, attr);
+            if(group == null) {
+                target.childrens.push(elem);
+            } else {
+                group.childrens.push(elem);
             }
 
             return elem;
         }
-
-        function setAttributes(elem, attr) {
-            for(var k in attr) {
-                elem.setAttributeNS(null, k, attr[k]);
-            }
-        }
-
-        this.clear = function() {
-            var newRoot = root.cloneNode(false);
-
-            root.parentNode.removeChild(root);
-            $(selector)[0].appendChild(newRoot);
-        }
-
 
         /**
          * 일반 메소드
          *
          */
 
-        this.render = function() {
-            this.clear();
-
-            for(var i = 0, len = childrens.length; i < len; i++) {
-                root.appendChild(childrens[i]);
-            }
-        }
-
         this.size = function() {
-            var rect = root.getBoundingClientRect();
+            var rect = target.element.getBoundingClientRect();
 
             return {
                 width: rect.width,
                 height: rect.height
+            }
+        }
+
+        this.clear = function() {
+            var newElement = target.element.cloneNode(false);
+
+            target.element.parentNode.removeChild(target.element);
+            target.element = newElement;
+
+            root.appendChild(target.element);
+        }
+
+        this.render = function() {
+            this.clear();
+
+            for(var i = 0; i < target.childrens.length; i++) {
+                var targetChild = target.childrens[i];
+
+                for(var j = 0; j < targetChild.childrens.length; j++) {
+                    targetChild.element.appendChild(targetChild.childrens[j].element);
+                }
+
+                target.element.appendChild(target.childrens[i].element);
             }
         }
 
@@ -100,27 +154,41 @@ jui.define("util.svg",
          * @param attr
          */
 
-        this.rect = function(attr) {
-            var elem = createElement("rect", attr);
+        this.group = function(attr, callback) {
+            var elem = new Element();
 
-            setAttributes(elem, attr);
-            childrens.push(elem);
+            elem.create("g", attr);
+            target.childrens.push(elem);
+
+            group = elem;
+            if(_.typeCheck("function", callback)) {
+                callback();
+            }
+            group = null;
+        }
+
+        this.rect = function(attr) {
+            return create(new Element(), "rect", attr);
         }
 
         this.line = function(attr) {
-
+            return create(new Element(), "line", attr);
         }
 
         this.circle = function(attr) {
-
+            return create(new Element(), "circle", attr);
         }
 
         this.text = function(attr) {
-
+            return create(new Element(), "text", attr);
         }
 
         this.ellipse = function(attr) {
+            return create(new Element(), "ellipse", attr);
+        }
 
+        this.path = function(attr) {
+            return create(new Path(), "path", attr);
         }
 
         this.polyline = function(attr) {
@@ -128,10 +196,6 @@ jui.define("util.svg",
         }
 
         this.polygon = function(attr) {
-
-        }
-
-        this.path = function(attr) {
 
         }
 
