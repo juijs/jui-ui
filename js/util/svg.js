@@ -99,11 +99,15 @@ jui.define("util.svg.element.path", [], function() { // path
             });
 
             orders = [];
+
+            return this;
         }
 
         this.closePath = function() {
             orders.push("Z");
             this.close();
+
+            return this;
         }
     }
 
@@ -138,7 +142,7 @@ jui.define("util.svg",
             root.appendChild(target.element);
         }
 
-        function create(elem, type, attr) {
+        function create(elem, type, attr, callback) {
             elem.create(type, attr);
 
             if(parent == null) {
@@ -147,18 +151,25 @@ jui.define("util.svg",
                 parent.childrens.push(elem);
             }
 
+            if(_.typeCheck("function", callback)) {
+                parent = elem;
+                callback.call(self, parent);
+                parent = null;
+            }
+
             return elem;
         }
 
-        function createParent(elem, type, attr, callback) {
-            elem.create(type, attr);
-            target.childrens.push(elem);
+        function appendChild(target) {
+            for(var i = 0; i < target.childrens.length; i++) {
+                var child = target.childrens[i];
 
-            parent = elem;
-            if(_.typeCheck("function", callback)) {
-                callback.call(self, parent);
+                target.element.appendChild(child.element);
+
+                if(child.childrens.length > 0) {
+                    appendChild(child);
+                }
             }
-            parent = null;
         }
 
         /**
@@ -186,16 +197,7 @@ jui.define("util.svg",
 
         this.render = function() {
             this.clear();
-
-            for(var i = 0; i < target.childrens.length; i++) {
-                var targetChild = target.childrens[i];
-
-                for(var j = 0; j < targetChild.childrens.length; j++) {
-                    targetChild.element.appendChild(targetChild.childrens[j].element);
-                }
-
-                target.element.appendChild(target.childrens[i].element);
-            }
+            appendChild(target);
         }
 
 
@@ -206,11 +208,11 @@ jui.define("util.svg",
          */
 
         this.group = function(attr, callback) {
-            return createParent(new Element(), "g", attr, callback);
+            return create(new Element(), "g", attr, callback);
         }
 
         this.marker = function(attr, callback) {
-            return createParent(new Element(), "marker", attr, callback);
+            return create(new Element(), "marker", attr, callback);
         }
 
         this.rect = function(attr) {
