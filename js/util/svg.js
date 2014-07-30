@@ -2,8 +2,7 @@ jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, tex
     var Element = function() {
         var attributes = {},
             styles = {};
-            
-         var parent = this; 
+        var parent = this;
             
         function create(elem, type, attr, callback) {
             elem.create(type, attr);
@@ -51,7 +50,7 @@ jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, tex
             return this;
         }
         
-/**
+        /**
          * 엘리먼트 관련 메소드
          *
          * @param attr
@@ -261,7 +260,7 @@ jui.define("util.svg",
             appendChild(target);
         }
 
-/**
+        /**
          * 엘리먼트 관련 메소드
          *
          * @param attr
@@ -276,27 +275,27 @@ jui.define("util.svg",
         }
 
         this.rect = function(attr, callback) {
-            return create(new Element(), "rect", attr);
+            return create(new Element(), "rect", attr, callback);
         }
 
         this.line = function(attr, callback) {
-            return create(new Element(), "line", attr);
+            return create(new Element(), "line", attr, callback);
         }
 
         this.circle = function(attr, callback) {
-            return create(new Element(), "circle", attr);
+            return create(new Element(), "circle", attr, callback);
         }
 
         this.text = function(attr, callback) {
-            return create(new Element(), "text", attr);
+            return create(new Element(), "text", attr, callback);
         }
 
         this.ellipse = function(attr, callback) {
-            return create(new Element(), "ellipse", attr);
+            return create(new Element(), "ellipse", attr, callback);
         }
 
         this.path = function(attr, callback) {
-            return create(new Path(), "path", attr);
+            return create(new Path(), "path", attr, callback);
         }
 
         this.polyline = function(attr, callback) {
@@ -305,8 +304,7 @@ jui.define("util.svg",
 
         this.polygon = function(attr, callback) {
 
-        }        
-        
+        }
 
         init();
     }
