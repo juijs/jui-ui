@@ -158,12 +158,11 @@ jui.define("util.svg",
 
         function create(elem, type, attr, callback) {
             elem.create(type, getAttributes(attr));
-            elem.parent = target;
 
             if(depth == 0) {
-                target.childrens.push(elem);
+                target.append(elem);
             } else {
-                parent[depth].childrens.push(elem);
+                parent[depth].append(elem);
             }
 
             if(_.typeCheck("function", callback)) {
