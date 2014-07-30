@@ -1,7 +1,21 @@
-jui.define("util.svg.element", [], function() { // rectangle, circle, text, line, ...
+jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, text, line, ...
     var Element = function() {
         var attributes = {},
             styles = {};
+            
+         var parent = this; 
+            
+        function create(elem, type, attr, callback) {
+            elem.create(type, attr);
+
+            parent.childrens.push(elem);
+
+            if(_.typeCheck("function", callback)) {
+                callback.call(self, elem);
+            }
+
+            return elem;
+        }            
 
         this.create = function(type, attr) {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
@@ -36,6 +50,53 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
 
             return this;
         }
+        
+/**
+         * 엘리먼트 관련 메소드
+         *
+         * @param attr
+         */
+
+        this.group = function(attr, callback) {
+            return create(new Element(), "g", attr, callback);
+        }
+
+        this.marker = function(attr, callback) {
+            return create(new Element(), "marker", attr, callback);
+        }
+
+        this.rect = function(attr, callback) {
+            return create(new Element(), "rect", attr);
+        }
+
+        this.line = function(attr, callback) {
+            return create(new Element(), "line", attr);
+        }
+
+        this.circle = function(attr, callback) {
+            return create(new Element(), "circle", attr);
+        }
+
+        this.text = function(attr, callback) {
+            return create(new Element(), "text", attr);
+        }
+
+        this.ellipse = function(attr, callback) {
+            return create(new Element(), "ellipse", attr);
+        }
+
+        this.path = function(attr, callback) {
+            return create(new Path(), "path", attr);
+        }
+
+        this.polyline = function(attr, callback) {
+
+        }
+
+        this.polygon = function(attr, callback) {
+
+        }        
+        
     }
 
     return Element;
@@ -153,7 +214,7 @@ jui.define("util.svg",
 
             if(_.typeCheck("function", callback)) {
                 parent = elem;
-                callback.call(self, parent);
+                callback.call(self, parent, self);
                 parent = null;
             }
 
@@ -200,8 +261,7 @@ jui.define("util.svg",
             appendChild(target);
         }
 
-
-        /**
+/**
          * 엘리먼트 관련 메소드
          *
          * @param attr
@@ -215,37 +275,38 @@ jui.define("util.svg",
             return create(new Element(), "marker", attr, callback);
         }
 
-        this.rect = function(attr) {
+        this.rect = function(attr, callback) {
             return create(new Element(), "rect", attr);
         }
 
-        this.line = function(attr) {
+        this.line = function(attr, callback) {
             return create(new Element(), "line", attr);
         }
 
-        this.circle = function(attr) {
+        this.circle = function(attr, callback) {
             return create(new Element(), "circle", attr);
         }
 
-        this.text = function(attr) {
+        this.text = function(attr, callback) {
             return create(new Element(), "text", attr);
         }
 
-        this.ellipse = function(attr) {
+        this.ellipse = function(attr, callback) {
             return create(new Element(), "ellipse", attr);
         }
 
-        this.path = function(attr) {
+        this.path = function(attr, callback) {
             return create(new Path(), "path", attr);
         }
 
-        this.polyline = function(attr) {
+        this.polyline = function(attr, callback) {
 
         }
 
-        this.polygon = function(attr) {
+        this.polygon = function(attr, callback) {
 
-        }
+        }        
+        
 
         init();
     }
