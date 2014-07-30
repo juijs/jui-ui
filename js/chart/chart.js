@@ -1,4 +1,4 @@
-jui.defineUI("chart.chart", [ "chart.grid.basic" ], function(BasicGrid) {
+jui.defineUI("chart.chart", [  ], function() {
 
     var UI = function() {
        
@@ -76,15 +76,38 @@ jui.defineUI("chart.chart", [ "chart.grid.basic" ], function(BasicGrid) {
 				axis.series = [axis.series];
 			}
 			var series = this.get('series');
+			var data = this.get('data');
+			
 			if (axis.series && axis.series.length) {
 				var max = 0;
 				var min = 0;
 				
 				for(var i = 0; i < axis.series.length; i++) {
-					var _max = series[axis.series[i]].max;
-					var _min = series[axis.series[i]].min;
-					if (max < _max) max = _max;		
-					if (min > _min) min = _min;		
+					var s = axis.series[i];
+					
+					var arr = s.split("+")
+					
+					if (arr.length == 1) {
+						var _max = series[arr[0]].max;
+						var _min = series[arr[0]].min;
+						if (max < _max) max = _max;		
+						if (min > _min) min = _min;	
+					} else {
+						for(var index = 0; index < data.length; index++) {
+							var row = data[index];
+							
+							var value = 0;
+							
+							for(var k in arr) {
+								value += row[arr[k]];
+							}
+							
+							if (max < value) max = value;		
+							if (min > value) min = value;	
+							
+						}
+					}
+							
 				}			
 				
 				
@@ -108,27 +131,22 @@ jui.defineUI("chart.chart", [ "chart.grid.basic" ], function(BasicGrid) {
 		
 		this.renderChart = function() {
 			var grid = this.get('grid');
+			
 			// draw grid
-			
-			if (grid.x) {		// bottom
-				this.setDomain(grid.x);				
-				this.x = new BasicGrid('bottom', grid.x).render(this);
-			}  
-			
-			if (grid.y) {		// left
-				this.setDomain(grid.y);								
-				this.y = new BasicGrid('left', grid.y).render(this);
+						
+			for(var k in grid) {
+				
+				var orient = 'left';
+				
+				if (k == 'x')  orient = 'bottom'; 
+				else if (k == 'x1')  orient = 'top'; 
+				else if (k == 'y1')  orient = 'right'; 
+				
+				this.setDomain(grid[k]);
+				var Grid = jui.include("chart.grid." + (grid[k].type || "block"))				
+				this[k] = new Grid(orient, grid[k]).render(this);
 			}
-			
-			if (grid.x1) {		// top
-				this.setDomain(grid.x1);								
-				this.x1 = new BasicGrid('top', grid.x1).render(this);
-			}
-			
-			if (grid.y1) {		// right 
-				this.setDomain(grid.y1);								
-				this.y1 = new BasicGrid('right', grid.y1).render(this);
-			}
+
 			
 			
 			// draw brush 

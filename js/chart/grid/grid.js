@@ -18,7 +18,7 @@ jui.define("chart.grid", ["util"], function(_) {
     			else if (domain[i] < min) min = domain[i];
     		}
     		
-    		var g = chart.group();
+    		var g = chart.svg.group();
 
 			if (orient == 'left') {
 				
@@ -26,7 +26,17 @@ jui.define("chart.grid", ["util"], function(_) {
 				var bar = 6; 
 				var barX = width - bar; 
 				
-				g.line(width, 0, width, scale(Math.min(max, min)), { stroke : "black", "stroke-width" : 0.5});
+				var line = chart.svg.line({
+					x1 : width,
+					y1 : 0,
+					x2 : width,
+					y2 : scale(Math.min(max, min)),
+					stroke : 'black',
+					'stroke-width' : 0.5
+				});
+				
+				g.append(line);
+				//g.line(width, 0, width, scale(Math.min(max, min)), { stroke : "black", "stroke-width" : 0.5});
 				
 				for(var i = 0; i < ticks.length; i++) {
 	    			values[i] = scale(ticks[i]); 
@@ -37,13 +47,27 @@ jui.define("chart.grid", ["util"], function(_) {
 	    				values[i] = format(values[i]);
 	    			}
 	    			
-	    			var axis = g.group();
-	    			axis.attr({ 
+	    			var axis = chart.svg.group({ 
 	    				"transform" : "translate(0, " + values[i] + ")"
 	    			});
 	    			
-	    			axis.line(barX, 0, width+chart.area.chart.width, 0, { 'stroke-width' : 0.2, 'stroke' : 'black'});
-	    			axis.text(barX-bar, bar, ticks[i]+"", {'text-anchor' : 'end'});
+	    			var l = chart.svg.line({
+	    				x1 : barX, 
+	    				y1 : 0, 
+	    				x2 : width+chart.area.chart.width, 
+	    				y2 : 0, 
+	    				'stroke-width' : 0.2,
+	    				'stroke' : 'black'});
+	    			var t = chart.svg.text({
+	    				x : barX-bar, 
+	    				y : bar, 
+	    				text : ticks[i]+"",
+	    				'text-anchor' : 'end'});
+	    			
+	    			axis.append(l);
+	    			axis.append(t);
+	    			
+	    			g.append(axis);
 	    			
 	    			//console.log(g);
 	    		}									
