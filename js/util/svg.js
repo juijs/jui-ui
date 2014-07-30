@@ -20,6 +20,10 @@ jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, tex
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
             this.attr(attr);
+            
+            if (attr.text) {
+            	this.element.appendChild(document.createTextNode(attr.text));
+            }
         }
 
         this.attr = function(attr) {

@@ -169,8 +169,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, barY, 0, height, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 	    			axis.text(band/2, 20, domain[i], {'text-anchor' : 'middle'});
-	    			
-	    			g.add(axis);
 	    		}
 	    		
 	    		
@@ -181,8 +179,6 @@ jui.define("chart.grid", ["util"], function(_) {
 				
 				axis.line(0, barY, 0, height, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 				axis.text(band/2, 20, "", {'text-anchor' : 'middle'});
-				
-				g.add(axis);
 				
     		} else if (orient == 'bottom') {
 				var height = 30;
@@ -201,8 +197,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, 0, 0, bar, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 	    			axis.text(band/2, 20, domain[i], {'text-anchor' : 'middle'});
-	    			
-	    			g.add(axis);
 	    		}
 	    		
 	    		
@@ -213,8 +207,6 @@ jui.define("chart.grid", ["util"], function(_) {
 				
 				axis.line(0, 0, 0, bar, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 				axis.text(band/2, 20, "", {'text-anchor' : 'middle'});
-				
-				g.add(axis);
     		} else if (orient == 'left') {
 				var width = 30;
 				var bar = 6; 
@@ -232,8 +224,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(barX, 0, width, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 	    			axis.text(bar*4, band/2, domain[i], {'text-anchor' : 'end'});
-	    			
-	    			g.add(axis);
 	    		}
 	    		
 	    		
@@ -244,8 +234,6 @@ jui.define("chart.grid", ["util"], function(_) {
 				
 				axis.line(barX, 0, width, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 				axis.text(20, band/2, "", {'text-anchor' : 'end'});
-				
-				g.add(axis);
     		} else if (orient == 'right') {
 				var width = 30;
 				var bar = 6; 
@@ -263,8 +251,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, 0, bar, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 	    			axis.text(bar, band/2, domain[i], {'text-anchor' : 'start'});
-	    			
-	    			g.add(axis);
 	    		}
 	    		
 	    		
@@ -275,8 +261,6 @@ jui.define("chart.grid", ["util"], function(_) {
 				
 				axis.line(0, 0, bar, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
 				axis.text(20, band/2, "", {'text-anchor' : 'start'});
-				
-				g.add(axis);
     		}
     		
     		
@@ -323,8 +307,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, barY, 0, height, { 'stroke-width' : .5, 'stroke' : 'black'});
 	    			axis.text(0, bar*3, format ? format(ticks[i]) : ticks[i], {'text-anchor' : 'middle'});
-	    			
-	    			g.add(axis);
 	    		}
     		} else if (orient == 'bottom') {
     			var height = 30;
@@ -343,8 +325,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, 0, 0, bar, { 'stroke-width' : .5, 'stroke' : 'black'});
 	    			axis.text(0, bar*3, format ? format(ticks[i]) : ticks[i], {'text-anchor' : 'middle'});
-	    			
-	    			g.add(axis);
 	    		}    			
     			
     			
@@ -365,8 +345,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(barX, 0, width, 0, { 'stroke-width' : .5, 'stroke' : 'black'});
 	    			axis.text(bar, bar, format ? format(ticks[i]) : ticks[i], {'text-anchor' : 'end'});
-	    			
-	    			g.add(axis);
 	    		}    
     			
     		} else if (orient == 'right') {
@@ -386,8 +364,6 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			axis.line(0, 0, bar, 0, { 'stroke-width' : .5, 'stroke' : 'black'});
 	    			axis.text(bar*2, bar, format ? format(ticks[i]) : ticks[i], {'text-anchor' : 'start'});
-	    			
-	    			g.add(axis);
 	    		}    
     		}
     		
