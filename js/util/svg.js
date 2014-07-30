@@ -42,7 +42,7 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
             return this;
         }
 
-        this.add = function(elem) {
+        this.append = function(elem) {
             this.childrens.push(elem);
             elem.parent = this;
         }

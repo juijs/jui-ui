@@ -37,7 +37,7 @@ jui.define("chart.brush.bar", [], function() {
                             fill: this.getColor(j)
                         });
 
-                        g.add(r);
+                        g.append(r);
 					} else {
                         var r = chart.svg.rect({
                             x: startX,
@@ -47,7 +47,7 @@ jui.define("chart.brush.bar", [], function() {
                             fill: this.getColor(j)
                         });
 
-                        g.add(r);
+                        g.append(r);
                     }
 					
 					startX += barWidth + innerPadding;
