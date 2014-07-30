@@ -274,35 +274,35 @@ jui.define("util.svg",
             return create(new Element(), "marker", attr, callback);
         }
 
-        this.rect = function(attr, callback) {
-            return create(new Element(), "rect", attr, callback);
+        this.rect = function(attr) {
+            return create(new Element(), "rect", attr);
         }
 
-        this.line = function(attr, callback) {
-            return create(new Element(), "line", attr, callback);
+        this.line = function(attr) {
+            return create(new Element(), "line", attr);
         }
 
-        this.circle = function(attr, callback) {
-            return create(new Element(), "circle", attr, callback);
+        this.circle = function(attr) {
+            return create(new Element(), "circle", attr);
         }
 
-        this.text = function(attr, callback) {
-            return create(new Element(), "text", attr, callback);
+        this.text = function(attr) {
+            return create(new Element(), "text", attr);
         }
 
-        this.ellipse = function(attr, callback) {
-            return create(new Element(), "ellipse", attr, callback);
+        this.ellipse = function(attr) {
+            return create(new Element(), "ellipse", attr);
         }
 
-        this.path = function(attr, callback) {
-            return create(new Path(), "path", attr, callback);
+        this.path = function(attr) {
+            return create(new Path(), "path", attr);
         }
 
-        this.polyline = function(attr, callback) {
+        this.polyline = function(attr) {
 
         }
 
-        this.polygon = function(attr, callback) {
+        this.polygon = function(attr) {
 
         }
 
