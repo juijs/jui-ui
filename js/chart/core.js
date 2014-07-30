@@ -166,6 +166,10 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 			return this.renderer.text(this.area.chart.x + x, this.area.chart.y + y, text, attr);
 		}		
 		
+		this.group = function() {
+			return this.renderer.group();
+		}
+		
 		/**
 		 * y 좌표 구하기 
 		 * 
@@ -185,62 +189,7 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 			return axis;
 			
 		}
-		
-		this.niceAxis = function niceAxis (min, max) {
-            var factorList = [ 0.0, 1.2, 2.5, 5.0, 10.0 ];
-            var scalarList = [ 0.2, 0.2, 0.5, 1.0, 2.0 ];
-            var min_, max_;
-	      
-            if (min == 0) {
-	            min_ = 0;
-	        }
-	        else if (min > 0) {
-	            min_ = Math.max( 0, min-(max-min)/100);
-	        }
-	        else {
-	            min_ = min-(max-min)/100;
-	        }     
 
-            if (max == 0) {
-	            if (min == 0) {
-	                max_ = 1;
-	            }
-	            else {
-	                max_ = 0;
-	            }
-	        }
-	        else if (max < 0) {
-	            max_ = Math.min(0, max+(max-min)/100);
-	        }
-	        else {
-	            max_ = max+(max-min)/100;
-	        }       
-	        
-            // 3. power
-	        var power = Math.log(max_ - min_) / Math.LN10;
-	    
-	        // 4. factor
-	        var factor = Math.pow(10, power - Math.floor(power));
-	    
-            var tickWidth = "";
-	    
-	        // 5. nice ticks
-	        for (var i = 0; factor > factorList[i] ; i++) {
-	            tickWidth = scalarList[i] * Math.pow(10, Math.floor(power));
-	        }       
-	        
-            // 6. min-axisValues
-	        var minAxisValue = tickWidth * Math.floor(min_/tickWidth);
-	    
-	        // 7. min-axisValues
-	        var maxAxisValue = tickWidth * Math.floor((max_/tickWidth)+1);        
-	        
-	        return {
-                min: minAxisValue,
-                max: maxAxisValue,
-                tickWidth : tickWidth
-	        };
-	    }
     }
 
     return UIChart;

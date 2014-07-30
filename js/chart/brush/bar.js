@@ -42,7 +42,7 @@ jui.define("chart.brush.bar", [], function() {
 			
 		}
 
-        this.draw = function(chart) {
+        this._draw = function(chart) {
             var series = chart.get('series');
 
             var labels = chart.get('labels');
@@ -63,9 +63,7 @@ jui.define("chart.brush.bar", [], function() {
                 drawBar(chart, data, startX);
 				
 				startX += tickWidth;
-				
 			}
-
         }
     }
 	

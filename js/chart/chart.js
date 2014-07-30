@@ -1,19 +1,4 @@
-jui.defineUI("chart.chart", [
-    "chart.grid.basic",
-    "chart.brush.line",
-    "chart.brush.point",
-    "chart.brush.bar"
-], function(BasicGrid, LineBrush, PointBrush, BarBrush ) {
-
-	var g_list = {
-		basic : BasicGrid
-	}
-	
-	var b_list = {
-		line : LineBrush,
-		point : PointBrush,
-		bar : BarBrush
-	}
+jui.defineUI("chart.chart", [ ], function() {
 
     var UI = function() {
        
@@ -68,6 +53,7 @@ jui.defineUI("chart.chart", [
 	      	for(var i = 0, len = grid.length; i < len; i++) { 
 	      		var g = grid[i];
 	      		
+	      		g.cls = 'grid';
 	      		g.type = g.type || 'basic';
 	      		g.tick = g.tick || 5;       	
 	      		g.format = g.format || "";
@@ -86,6 +72,7 @@ jui.defineUI("chart.chart", [
 	      	
 	      	for(var i = 0, len = brush.length; i < len; i++) {
 	      		var b = brush[i];
+	      		b.cls = 'brush';
 	      		var g = b.grid = grid[b.grid || 0];
 	      		b.chart = this; 
 			
@@ -118,34 +105,28 @@ jui.defineUI("chart.chart", [
 		}       
 		
 		this.renderChart = function() {
+			
+		  var arr = _grid.concat(_brush);
+		  
 			// draw grid
-	      	for(var i = 0, len = _grid.length; i < len; i++) {
-	      		var g = _grid[i];
+	      	for(var i = 0, len = arr.length; i < len; i++) {
+	      		var obj = arr[i];
 	      		
-	      		if (g.type) {
-	      			var Grid = g_list[g.type];
-	      			new Grid(g).render(this);
+	      		if (obj.type) {
+	      			
+	      			var Obj = jui.include("chart." + obj.cls + "." + obj.type);
+	      			
+	      			if (Obj) {
+	      				new Obj(obj).render(this);	
+	      			}
 	      		} else {
-	      			if (typeof g.render == 'function') {
-	      				g.render(this);
+	      			if (typeof obj.render == 'function') {
+	      				obj.render(this);
 	      			}	
 	      		}
 				
 	      	} 
 	      	
-	      	// draw brush 
-	      	for(var i = 0, len = _brush.length; i < len; i++) {
-	      		var b = _brush[i];
-	      		
-	      		if (b.type) {
-	      			var Brush = b_list[b.type];
-	      			new Brush(b).render(this);
-	      		} else {
-	      			if (typeof b.render == 'function') {
-	      				b.render(this);
-	      			}	
-	      		}
-	      	}	
 		}
     }
 
