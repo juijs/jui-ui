@@ -1,7 +1,7 @@
 jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
     var GraphicsUtil = Graphics.util;
 
-    var Grid = function(opt) {
+    var Grid = function(orient, opt) {
     	
     	var self = this; 
     	
@@ -119,17 +119,50 @@ jui.define("chart.grid.basic", [  "util.graphics" ], function(Graphics) {
 			
         }
         
-        this.y = function(value) {
-        	return this._yScale.invert(value);
-        }
-        
-        this.x = function(value) {
-        	return this._xScale.invert(value);
-        }
-
         this._draw = function(chart) {
-            drawX.call(this, chart);
-            drawY.call(this, chart);
+        	
+        	opt.type = opt.type || "block";
+        	
+        	var height = chart.area.chart.height;
+        	var width = chart.area.chart.width; 
+            
+            if (opt.type == "block") {
+            	var max = (orient == 'left' || orient == 'right') ? height : width;
+            	
+            	var obj = this.drawBlock(chart, orient, opt.domain, [0, max]);
+            } else if (opt.type == "range") {
+            	
+            	if (orient == 'left' || orient == 'right') {
+            		var obj = this.drawRange(chart, orient, opt.domain, [height, 0], opt.step);	
+            	} else {
+            		var obj = this.drawRange(chart, orient, opt.domain, [0, width], opt.step);
+            	}
+            } else if (opt.type == "date") {
+            	var max = (orient == 'left' || orient == 'right') ? chart.area.chart.height : chart.area.chart.width;
+            	
+            	var obj = this.drawBlock(chart, orient, opt.domain, [0, chart.area.chart.height]);
+            }
+
+
+			if (orient == 'left') {
+				var x = chart.area.chart.x - 30;
+				var y = chart.area.chart.y;
+			} else if (orient == 'right') {
+				var x = chart.area.chart.x2;
+				var y = chart.area.chart.y;
+			} else if (orient == 'top') {
+				var x = chart.area.chart.x;
+				var y = chart.area.chart.y - 30;
+			} else if (orient == 'bottom') {
+				var x = chart.area.chart.x;
+				var y = chart.area.chart.y2;
+			}            
+            
+			obj.g.attr({
+				transform : "translate(" + x + ", " + y + ")"
+			})	            
+
+			return obj;
         }
     }
 

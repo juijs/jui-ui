@@ -5,7 +5,7 @@ jui.define("chart.draw", [ "util" ], function(_) {
                 throw new Error("JUI_CRITICAL_ERR: '_draw' method must be implemented");
             }
 
-            this._draw(chart);
+            return this._draw(chart);
         }
         
         // chart util function 
@@ -23,7 +23,9 @@ jui.define("chart.draw", [ "util" ], function(_) {
         	}	
         }
         
-        this.nice = function niceAxis (min, max, ticks) {
+        this.nice = function niceAxis (min, max, ticks, isNice) {
+        	
+        	isNice = isNice || false;
         	
           if (min > max) {
           	var _max = min;
@@ -74,10 +76,10 @@ jui.define("chart.draw", [ "util" ], function(_) {
           }
           
           function caculate() {
-          	_range = niceNum(_max - _min, false);
-          	_tickSpacing = niceNum(_range / _ticks, true);
-          	_niceMin = Math.floor(_min / _tickSpacing) * _tickSpacing;
-          	_niceMax = Math.floor(_max / _tickSpacing) * _tickSpacing;
+          	_range = (isNice) ? niceNum(_max - _min, false) : _max - _min;
+          	_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks ;
+          	_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
+          	_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
           }
           
           caculate();
@@ -161,7 +163,6 @@ jui.define("chart.draw", [ "util" ], function(_) {
 	      	    if (index > -1) {
 	      	    	return _range[index];
 	      	    } else {
-	      	    
 	      	    	if (_range[t]) {
 	      	    		_domain[t] = t; 
 	      	    		return _range[t];	
@@ -381,7 +382,7 @@ jui.define("chart.draw", [ "util" ], function(_) {
 							
 							var scale = _isRound ? self.interpolateRound(minR, maxR) : self.interpolateNumber(minR, maxR);
 							
-							return scale(pos);
+							return Math.round(scale(pos));
 							
 						}
 					}
@@ -423,16 +424,25 @@ jui.define("chart.draw", [ "util" ], function(_) {
 					return f(y);
 				}
 				
-				func.ticks = function(count) {
-				  var obj = self.nice(_domain[0], _domain[1], count || 10);
+				func.ticks = function(count, isNice, intNumber) {
+				  intNumber = intNumber || 10000;
+				  var obj = self.nice(_domain[0], _domain[1], count || 10, isNice || false);
+				  
+				  //console.log(obj);
 					
 				  var arr = []; 
 				  
-				  var start = obj.min;
-				  var end = obj.max;
+				  var start = obj.min * intNumber;
+				  var end = obj.max * intNumber;
 				  while(start <= end) {
-				    arr.push(start);
-				    start += obj.spacing;
+				    arr.push(start/intNumber);
+				    start += obj.spacing * intNumber;
+				  }
+				  
+				  //console.log(arr[arr.length-1], end)
+				  
+				  if (arr[arr.length-1]*intNumber != end && start > end) {
+				  	arr.push(end/intNumber);
 				  }
 				  
 				  return arr;

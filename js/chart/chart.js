@@ -1,4 +1,4 @@
-jui.defineUI("chart.chart", [ ], function() {
+jui.defineUI("chart.chart", [ "chart.grid.basic" ], function(BasicGrid) {
 
     var UI = function() {
        
@@ -45,24 +45,6 @@ jui.defineUI("chart.chart", [ ], function() {
 	      		}
 	      	}
 	      	
-	      	// grid별 brush series 구성 
-	      	if (typeof grid == 'object' && !grid.length) {
-	      		grid = [grid];
-	      	}
-	      	
-	      	for(var i = 0, len = grid.length; i < len; i++) { 
-	      		var g = grid[i];
-	      		
-	      		g.cls = 'grid';
-	      		g.type = g.type || 'basic';
-	      		g.tick = g.tick || 5;       	
-	      		g.format = g.format || "";
-	      		g.style = g.style || {};	
-	      		
-	      		if (typeof g.min == 'undefined') g.emptyMin = true;   
-	      		if (typeof g.max == 'undefined') g.emptyMax = true;   
-	      	}
-	      	
 	      	// grid 최소, 최대 구성
 	      	if (typeof brush == 'string') {
 	      		brush = [{ type : brush }];
@@ -81,21 +63,6 @@ jui.defineUI("chart.chart", [ ], function() {
 				} else if (typeof b.series == 'string') {
 					b.series = [b.series];
 				}
-				
-	      		for(var j = 0; j < b.series.length; j++ ) {
-	      			var s = series[b.series[j]]
-		      		if (g.emptyMin) {
-		      			g.min = g.min || 0;
-		      		
-		      			if (s.min < g.min) g.min = s.min;
-		      		}
-		      		
-		      		if (g.emptyMax) {
-		      			g.max = g.max || 0;
-		      		
-		      			if (s.max > g.max) g.max = s.max;
-		      		}
-	      		}
 	      	}
 	      	
 	      	//console.log(data, series, grid, brush);
@@ -104,29 +71,75 @@ jui.defineUI("chart.chart", [ ], function() {
 	      			
 		}       
 		
-		this.renderChart = function() {
-			
-		  var arr = _grid.concat(_brush);
-		  
-			// draw grid
-	      	for(var i = 0, len = arr.length; i < len; i++) {
-	      		var obj = arr[i];
-	      		
-	      		if (obj.type) {
-	      			
-	      			var Obj = jui.include("chart." + obj.cls + "." + obj.type);
-	      			
-	      			if (Obj) {
-	      				new Obj(obj).render(this);	
-	      			}
-	      		} else {
-	      			if (typeof obj.render == 'function') {
-	      				obj.render(this);
-	      			}	
-	      		}
+		this.setDomain = function(axis) {
+			if (typeof axis.series == 'string') {
+				axis.series = [axis.series];
+			}
+			var series = this.get('series');
+			if (axis.series && axis.series.length) {
+				var max = 0;
+				var min = 0;
 				
-	      	} 
-	      	
+				for(var i = 0; i < axis.series.length; i++) {
+					var _max = series[axis.series[i]].max;
+					var _min = series[axis.series[i]].min;
+					if (max < _max) max = _max;		
+					if (min > _min) min = _min;		
+				}			
+				
+				
+				var unit = Math.ceil((max - min) / axis.step);
+				
+				var start = 0;
+				while(start < max) {
+					start += unit; 
+				}
+				
+				var end = 0;
+				while(end > min) {
+					end -= unit; 
+				}
+				
+				axis.domain = [end, start];
+				axis.step = Math.abs(start/unit) + Math.abs(end/unit);	
+			}
+
+		}
+		
+		this.renderChart = function() {
+			var grid = this.get('grid');
+			// draw grid
+			
+			if (grid.x) {		// bottom
+				this.setDomain(grid.x);				
+				this.x = new BasicGrid('bottom', grid.x).render(this);
+			}  
+			
+			if (grid.y) {		// left
+				this.setDomain(grid.y);								
+				this.y = new BasicGrid('left', grid.y).render(this);
+			}
+			
+			if (grid.x1) {		// top
+				this.setDomain(grid.x1);								
+				this.x1 = new BasicGrid('top', grid.x1).render(this);
+			}
+			
+			if (grid.y1) {		// right 
+				this.setDomain(grid.y1);								
+				this.y1 = new BasicGrid('right', grid.y1).render(this);
+			}
+			
+			
+			// draw brush 
+			for(var i = 0; i < _brush.length; i++) {
+				var Obj = jui.include("chart.brush." + _brush[i].type);
+				
+				_brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
+				_brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
+				
+				new Obj(_brush[i]).render(this);
+			}
 		}
     }
 

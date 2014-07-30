@@ -1,69 +1,50 @@
 jui.define("chart.brush.bar", [], function() {
 
     var BarBrush = function(brush) {
-
-		function drawBar(chart, data, startX) {
-			
-			//console.log(startX);
-			
-			var barPadding = chart.get('barPadding');
-			var seriesPadding = chart.get('seriesPadding');
-			var tickWidth = chart.area.chart.width / chart.get('labels').length;
-			var colors = ["black", 'red', 'blue'];
-			var max = brush.grid.max;
-			var min = brush.grid.min;
-			var range = max - min; 
-			var height = chart.area.chart.height; 
-			var rate = height / range; 
-			
-			var unit = (tickWidth - barPadding*2 - seriesPadding * (data.length - 1))/data.length;
-			var x = startX + barPadding;
-
-			for(var i = 0; i < data.length; i++ ) {
-			
-				var value = data[i];
-				var unitHeight = rate * Math.abs(value);
-
-				if (value > 0) {
-					chart.rect(x, ((max - value) * rate), unit, unitHeight, {
-						fill : colors[i]
-					})	
-					
-				} else if (value < 0) {
-					var zeroBase = max * rate;					
-					chart.rect(x, zeroBase, unit, unitHeight, {
-						fill : colors[i]
-					})
-					
-				}
-				//break;
-				x += unit + seriesPadding;	
-			}
-			
-		}
+    	
+    	console.log(brush);
 
         this._draw = function(chart) {
+        	
+        	var x = chart.area.chart.x;
+        	var y = chart.area.chart.y;
+        	
+        	var g = chart.group();
+        	g.attr({
+        		"transform" : "translate(" + x + "," + y + ")"
+        	})
+        	
+        	var zeroY = brush.y.scale(0);
+        	
             var series = chart.get('series');
 
-            var labels = chart.get('labels');
-            var tickWidth = (chart.area.chart.width / labels.length);
-            
-            var startX = 0;
-
-			for(var i = 0, len = labels.length; i < len; i++) {
-	
-				var data = [];
-		
-				for(var j = 0; j < brush.series.length; j ++ ) {
+			var count = series[brush.series[0]].data.length;
+			
+			var outerPadding = 15; 
+			var innerPadding = 10;
+			
+			var width = chart.x.scale.rangeBand();
+			
+			var barWidth = (width - outerPadding*2 - (brush.series.length-1) * innerPadding) / brush.series.length;
+			
+			for(var i = 0; i < count; i++) {
+				var startX = brush.x.scale(i) + outerPadding;
+				
+				for(var j = 0; j < brush.series.length; j++) {
+					var startY = brush.y.scale(series[brush.series[j]].data[i]);
 					
-					var s = series[brush.series[j]];
-					data.push(s.data[i]);
+					if (startY <= zeroY) {
+						g.rect(startX, startY, barWidth, Math.abs(zeroY - startY), { fill: this.getColor(j) });	
+					} else {
+						g.rect(startX, zeroY, barWidth, Math.abs(zeroY - startY), { fill: this.getColor(j) });
+					}
+					
+					
+					startX += barWidth + innerPadding;
 				}
 
-                drawBar(chart, data, startX);
-				
-				startX += tickWidth;
 			}
+			 
         }
     }
 	

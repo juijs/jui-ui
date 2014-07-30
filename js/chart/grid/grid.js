@@ -1,11 +1,13 @@
 jui.define("chart.grid", ["util"], function(_) {
     var Grid = function() {
     	
-    	this.drawRange = function(chart, orient, domain, range, step, format) {
+    	this.drawRange = function(chart, orient, domain, range, step, format, nice) {
     		step = step || 10;
+    		
+    		//console.log(domain, range);
 
     		var scale = this.scale.linear().domain(domain).range(range);
-    		var ticks = scale.ticks(step);
+    		var ticks = scale.ticks(step, nice || false);
     		var values = []
     		
     		var max = domain[0];
@@ -15,7 +17,7 @@ jui.define("chart.grid", ["util"], function(_) {
     			if (domain[i] > max) max = domain[i];
     			else if (domain[i] < min) min = domain[i];
     		}
-
+    		
     		var g = chart.group();
 
 			if (orient == 'left') {
@@ -24,10 +26,12 @@ jui.define("chart.grid", ["util"], function(_) {
 				var bar = 6; 
 				var barX = width - bar; 
 				
-				g.line(width, 0, width, max, { stroke : "black", "stroke-width" : 0.5});
+				g.line(width, 0, width, scale(Math.min(max, min)), { stroke : "black", "stroke-width" : 0.5});
 				
 				for(var i = 0; i < ticks.length; i++) {
 	    			values[i] = scale(ticks[i]); 
+	    			
+	    			//console.log(values[i], ticks[i]);
 	    			
 	    			if (format) {
 	    				values[i] = format(values[i]);
@@ -35,11 +39,11 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			var axis = g.group();
 	    			axis.attr({ 
-	    				"transform" : "translate(0, " + ticks[i] + ")"
+	    				"transform" : "translate(0, " + values[i] + ")"
 	    			});
 	    			
-	    			axis.line(barX, 0, width, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
-	    			axis.text(barX-bar, bar, values[i]+"", {'text-anchor' : 'end'});
+	    			axis.line(barX, 0, width+chart.area.chart.width, 0, { 'stroke-width' : 0.2, 'stroke' : 'black'});
+	    			axis.text(barX-bar, bar, ticks[i]+"", {'text-anchor' : 'end'});
 	    			
 	    			//console.log(g);
 	    		}									
@@ -49,7 +53,7 @@ jui.define("chart.grid", ["util"], function(_) {
 				var bar = 6; 
 				var barY = bar; 				
 				
-				g.line(0, 0, max, 0, { stroke : "black", "stroke-width" : 0.5});	
+				g.line(0, 0, scale(Math.max(max, min)), 0, { stroke : "black", "stroke-width" : 0.5});	
 				
 				for(var i = 0; i < ticks.length; i++) {
 	    			values[i] = scale(ticks[i]); 
@@ -60,11 +64,11 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			var axis = g.group();
 	    			axis.attr({ 
-	    				"transform" : "translate("+ ticks[i] + ", 0)"
+	    				"transform" : "translate("+ values[i] + ", 0)"
 	    			});
 	    			
 	    			axis.line(0, 0, 0, bar, { 'stroke-width' : 0.5, 'stroke' : 'black'});
-	    			axis.text(0, bar*4, values[i]+"", {'text-anchor' : 'middle'});
+	    			axis.text(0, bar*4, ticks[i]+"", {'text-anchor' : 'middle'});
 	    			
 	    			//console.log(g);
 	    		}
@@ -75,7 +79,7 @@ jui.define("chart.grid", ["util"], function(_) {
 				var bar = 6; 
 				var barY = height - bar; 
 				
-				g.line(0, height, max, height, { stroke : "black", "stroke-width" : 0.5});	
+				g.line(0, height, scale(Math.max(max, min)), height, { stroke : "black", "stroke-width" : 0.5});	
 				
 				for(var i = 0; i < ticks.length; i++) {
 	    			values[i] = scale(ticks[i]); 
@@ -86,11 +90,11 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			var axis = g.group();
 	    			axis.attr({ 
-	    				"transform" : "translate("+ ticks[i] + ", " + barY + ")"
+	    				"transform" : "translate("+ values[i] + ", " + barY + ")"
 	    			});
 	    			
 	    			axis.line(0, 0, 0, 6, { 'stroke-width' : 0.5, 'stroke' : 'black'});
-	    			axis.text(0, -4, values[i]+"", {'text-anchor' : 'middle'});
+	    			axis.text(0, -4, ticks[i]+"", {'text-anchor' : 'middle'});
 	    			
 	    			//console.log(g);
 	    		}				
@@ -101,7 +105,7 @@ jui.define("chart.grid", ["util"], function(_) {
 				var bar = 6; 
 				var barX = width - bar; 
 				
-				g.line(0, 0, 0, max, { stroke : "black", "stroke-width" : 0.5});
+				g.line(0, 0, 0, scale(Math.min(max, min)), { stroke : "black", "stroke-width" : 0.5});
 				
 				for(var i = 0; i < ticks.length; i++) {
 	    			values[i] = scale(ticks[i]); 
@@ -112,11 +116,11 @@ jui.define("chart.grid", ["util"], function(_) {
 	    			
 	    			var axis = g.group();
 	    			axis.attr({ 
-	    				"transform" : "translate(0, " + ticks[i] + ")"
+	    				"transform" : "translate(0, " + values[i] + ")"
 	    			});
 	    			
 	    			axis.line(0, 0, bar, 0, { 'stroke-width' : 0.5, 'stroke' : 'black'});
-	    			axis.text(bar +2, bar, values[i]+"", {'text-anchor' : 'start'});
+	    			axis.text(bar +2, bar, ticks[i]+"", {'text-anchor' : 'start'});
 	    			
 	    			//console.log(g);
 	    		}					
@@ -138,6 +142,8 @@ jui.define("chart.grid", ["util"], function(_) {
     		var g = chart.group();
     		
     		var scale = this.scale.ordinal().domain(domain);
+    		
+    		//console.log(scale);
 
    			var max = range[0];
     		var min = range[0];
@@ -289,6 +295,7 @@ jui.define("chart.grid", ["util"], function(_) {
     		
     		var ticks = scale.ticks(step[0], step[1]); // step = [this.time.days, 1];
     		var values = [];
+
     		
     		if (orient == 'top') {
     			var height = 30;
