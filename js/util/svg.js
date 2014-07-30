@@ -1,24 +1,12 @@
-jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, text, line, ...
+jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, text, line, ...
     var Element = function() {
         var attributes = {},
             styles = {};
-        var parent = this;
-            
-        function create(elem, type, attr, callback) {
-            elem.create(type, attr);
-
-            parent.childrens.push(elem);
-
-            if(_.typeCheck("function", callback)) {
-                callback.call(self, elem);
-            }
-
-            return elem;
-        }            
 
         this.create = function(type, attr) {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
+            this.parent = null;
             this.attr(attr);
             
             if (attr.text) {
@@ -53,53 +41,11 @@ jui.define("util.svg.element", ["util"], function(_) { // rectangle, circle, tex
 
             return this;
         }
-        
-        /**
-         * 엘리먼트 관련 메소드
-         *
-         * @param attr
-         */
 
-        this.group = function(attr, callback) {
-            return create(new Element(), "g", attr, callback);
+        this.add = function(elem) {
+            this.childrens.push(elem);
+            elem.parent = this;
         }
-
-        this.marker = function(attr, callback) {
-            return create(new Element(), "marker", attr, callback);
-        }
-
-        this.rect = function(attr, callback) {
-            return create(new Element(), "rect", attr);
-        }
-
-        this.line = function(attr, callback) {
-            return create(new Element(), "line", attr);
-        }
-
-        this.circle = function(attr, callback) {
-            return create(new Element(), "circle", attr);
-        }
-
-        this.text = function(attr, callback) {
-            return create(new Element(), "text", attr);
-        }
-
-        this.ellipse = function(attr, callback) {
-            return create(new Element(), "ellipse", attr);
-        }
-
-        this.path = function(attr, callback) {
-            return create(new Path(), "path", attr);
-        }
-
-        this.polyline = function(attr, callback) {
-
-        }
-
-        this.polygon = function(attr, callback) {
-
-        }        
-        
     }
 
     return Element;
@@ -191,9 +137,13 @@ jui.define("util.svg",
     function(_, Element, Path, Poly) {
 
     var SVG = function(root, width, height) {
-        var self = this;
-        var target = null,
-            parent = null;
+        var self = this,
+            target = null;
+
+        var parent = {},
+            depth = 0;
+
+        var def_attr = {}; // 엘리먼트 공통 속성
 
         function init() {
             target = new Element();
@@ -207,18 +157,21 @@ jui.define("util.svg",
         }
 
         function create(elem, type, attr, callback) {
-            elem.create(type, attr);
+            elem.create(type, getAttributes(attr));
+            elem.parent = target;
 
-            if(parent == null) {
+            if(depth == 0) {
                 target.childrens.push(elem);
             } else {
-                parent.childrens.push(elem);
+                parent[depth].childrens.push(elem);
             }
 
             if(_.typeCheck("function", callback)) {
-                parent = elem;
-                callback.call(self, parent, self);
-                parent = null;
+                depth++;
+                parent[depth] = elem;
+
+                callback.call(self, elem);
+                depth--;
             }
 
             return elem;
@@ -228,7 +181,9 @@ jui.define("util.svg",
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
 
-                target.element.appendChild(child.element);
+                if(child.parent == target) {
+                    target.element.appendChild(child.element);
+                }
 
                 if(child.childrens.length > 0) {
                     appendChild(child);
@@ -236,10 +191,30 @@ jui.define("util.svg",
             }
         }
 
+        function getAttributes(attr) {
+            var tmp_attr = {};
+
+            for(var k in def_attr) {
+                if(_.typeCheck("function", def_attr[k])) {
+                    if(attr[k]) {
+                        attr[k] = def_attr[k](attr[k]);
+                    }
+                } else {
+                    tmp_attr[k] = def_attr[k];
+                }
+            }
+
+            return $.extend(tmp_attr, attr);
+        }
+
         /**
          * 일반 메소드
          *
          */
+
+        this.setting = function(attr) {
+            def_attr = attr;
+        }
 
         this.size = function() {
             var rect = target.element.getBoundingClientRect();

@@ -1,4 +1,4 @@
-jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
+jui.define("chart.core", [ "util.graphics", "util.svg" ], function(Graphics, SVGUtil) {
 	var GraphicsUtil = Graphics.util;
 
     var UIChart = function() {
@@ -50,22 +50,43 @@ jui.define("chart.core", [ "util.graphics" ], function(Graphics) {
 		}
 		
 		this.init = function() {
+            var self = this;
+
 			//console.log(this.options);
 			this.renderer = Graphics.createRenderer(this.root, this.get('type'), {
 				width : this.get('width'),
 				height : this.get('height')
 			});
+
+            this.svg = new SVGUtil(this.root, this.get("width"), this.get("height"));
+            /*/
+            this.svg.setting({
+                x: getX,
+                cx: getX,
+                x1: getX,
+                x2: getX,
+                y: getY,
+                cy: getY,
+                y1: getY,
+                y2: getY
+            });
+
+            function getX(value) { return value + self.area.chart.x; }
+            function getY(value) { return value + self.area.chart.y; }
+            /**/
 		}
 		
 		this.render = function() {
 			// 비우기 
 			this.renderer.clear();
+            this.svg.clear();
 
 			this.caculate();
 			this.renderChart();     // 추상 메소드
 			
 			// 최종적으로 그리기 
 			this.renderer.render();
+            this.svg.render();
 		}
 		
 		this.caculate = function() {

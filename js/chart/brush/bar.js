@@ -1,23 +1,18 @@
 jui.define("chart.brush.bar", [], function() {
 
     var BarBrush = function(brush) {
-    	
-    	console.log(brush);
 
         this._draw = function(chart) {
         	
         	var x = chart.area.chart.x;
         	var y = chart.area.chart.y;
         	
-        	var g = chart.group();
-        	g.attr({
-        		"transform" : "translate(" + x + "," + y + ")"
-        	})
+        	var g = chart.svg.group({
+                "transform" : "translate(" + x + "," + y + ")"
+            });
         	
         	var zeroY = brush.y.scale(0);
-        	
             var series = chart.get('series');
-
 			var count = series[brush.series[0]].data.length;
 			
 			var outerPadding = 15; 
@@ -34,17 +29,30 @@ jui.define("chart.brush.bar", [], function() {
 					var startY = brush.y.scale(series[brush.series[j]].data[i]);
 					
 					if (startY <= zeroY) {
-						g.rect(startX, startY, barWidth, Math.abs(zeroY - startY), { fill: this.getColor(j) });	
+                        var r = chart.svg.rect({
+                            x: startX,
+                            y: startY,
+                            width: barWidth,
+                            height: Math.abs(zeroY - startY),
+                            fill: this.getColor(j)
+                        });
+
+                        g.add(r);
 					} else {
-						g.rect(startX, zeroY, barWidth, Math.abs(zeroY - startY), { fill: this.getColor(j) });
-					}
-					
+                        var r = chart.svg.rect({
+                            x: startX,
+                            y: zeroY,
+                            width: barWidth,
+                            height: Math.abs(zeroY - startY),
+                            fill: this.getColor(j)
+                        });
+
+                        g.add(r);
+                    }
 					
 					startX += barWidth + innerPadding;
 				}
-
 			}
-			 
         }
     }
 	
