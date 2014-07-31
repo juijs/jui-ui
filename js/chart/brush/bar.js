@@ -2,8 +2,10 @@ jui.define("chart.brush.bar", [], function() {
 
     var BarBrush = function(brush) {
 
-        this._draw = function(chart) {
-        	
+        this.drawBefore = function(chart) {
+        }
+
+        this.draw = function(chart) {
         	var x = chart.area.chart.x;
         	var y = chart.area.chart.y;
         	
@@ -12,7 +14,7 @@ jui.define("chart.brush.bar", [], function() {
             });
         	
         	var zeroY = brush.y.scale(0);
-            var series = chart.get('series');
+            var series = chart.options.series;
 			var count = series[brush.series[0]].data.length;
 			
 			var outerPadding = 15; 

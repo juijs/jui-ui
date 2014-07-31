@@ -1,18 +1,13 @@
 jui.defineUI("chart.chart", [], function() {
 
     var UI = function() {
-       
-        var _grid = [];  
-        var _brush = [];
+        var _grid = [],
+            _brush = [];
        
 		this.init = function() {
-			
-		
 			this.parent.init.call(this);
 
-			//console.log(this.options);
-			
-	      	// 데이타 설정 
+	      	// 데이타 설정
 	      	var data = this.get('data');
 	      	var series = this.get('series');
 	      	var grid = this.get('grid');
@@ -64,12 +59,39 @@ jui.defineUI("chart.chart", [], function() {
 					b.series = [b.series];
 				}
 	      	}
-	      	
-	      	//console.log(data, series, grid, brush);
+
 	      	_grid = grid;
 	      	_brush = brush;
-	      			
-		}       
+		}
+
+        this.drawBefore = function() {
+
+        }
+
+        this.draw = function() {
+            var grid = this.get('grid');
+
+            for(var k in grid) {
+                var orient = 'left';
+
+                if (k == 'x')  orient = 'bottom';
+                else if (k == 'x1')  orient = 'top';
+                else if (k == 'y1')  orient = 'right';
+
+                this.setDomain(grid[k]);
+                var Grid = jui.include("chart.grid." + (grid[k].type || "block"))
+                this[k] = new Grid(orient, grid[k]).render(this);
+            }
+
+            for(var i = 0; i < _brush.length; i++) {
+                var Obj = jui.include("chart.brush." + _brush[i].type);
+
+                _brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
+                _brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
+
+                new Obj(_brush[i]).render(this);
+            }
+        }
 		
 		this.setDomain = function(axis) {
 			if (typeof axis.series == 'string') {
@@ -125,38 +147,6 @@ jui.defineUI("chart.chart", [], function() {
 				
 				axis.domain = [end, start];
 				axis.step = Math.abs(start/unit) + Math.abs(end/unit);	
-			}
-
-		}
-		
-		this.renderChart = function() {
-			var grid = this.get('grid');
-			
-			// draw grid
-						
-			for(var k in grid) {
-				
-				var orient = 'left';
-				
-				if (k == 'x')  orient = 'bottom'; 
-				else if (k == 'x1')  orient = 'top'; 
-				else if (k == 'y1')  orient = 'right'; 
-				
-				this.setDomain(grid[k]);
-				var Grid = jui.include("chart.grid." + (grid[k].type || "block"))				
-				this[k] = new Grid(orient, grid[k]).render(this);
-			}
-
-			
-			
-			// draw brush 
-			for(var i = 0; i < _brush.length; i++) {
-				var Obj = jui.include("chart.brush." + _brush[i].type);
-				
-				_brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
-				_brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
-				
-				new Obj(_brush[i]).render(this);
 			}
 		}
     }

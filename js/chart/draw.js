@@ -1,14 +1,18 @@
 jui.define("chart.draw", [ "util" ], function(_) {
     var Draw = function() {
         this.render = function(chart) {
-            if(!_.typeCheck("function", this._draw)) {
-                throw new Error("JUI_CRITICAL_ERR: '_draw' method must be implemented");
+            if(!_.typeCheck("function", this.draw)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
-            return this._draw(chart);
+            if(_.typeCheck("function", this.drawBefore)) {
+                this.drawBefore(chart);
+            }
+
+            return this.draw(chart);
         }
-        
-        // chart util function 
+
+        // chart util function
         this.interpolateNumber = function(a, b) {
         	return function(t) {
         		return a  + (b - a) * t ;
@@ -451,9 +455,6 @@ jui.define("chart.draw", [ "util" ], function(_) {
 				return func;
 	        }        
       	}
-      	
-
-        
     }
 
     return Draw;

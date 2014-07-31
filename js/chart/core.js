@@ -1,6 +1,79 @@
-jui.define("chart.core", [ "util.svg" ], function(SVGUtil) {
+jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 
     var UIChart = function() {
+
+        function calculate(self) {
+            self.area = {};
+
+            var padding = self.get('padding');
+            var titleYWidth = self.get('titleYWidth');
+            var titleXHeight = self.get('titleXHeight');
+            var max = self.svg.size();
+
+            var chart = {
+                width : max.width - padding * 2 - titleYWidth,
+                height : max.height - padding * 2 - titleXHeight,
+                x : padding +  titleYWidth,
+                y : padding
+            };
+
+            // 메인 title 영역 계산
+            if (self.get('title')) {
+                chart.y += self.get('titleHeight');
+                chart.height -= self.get('titleHeight');
+
+                self.area.title = {
+                    x : chart.x,
+                    y : chart.y,
+                    width : chart.width,
+                    height : self.get('titleHeight')
+                }
+            }
+
+            // legend 영역 계산
+            if (self.get('legend')) {
+                chart.y += self.get('legendHeight');
+                chart.height -= self.get('legendHeight');
+
+                self.area.legend = {
+                    x : chart.x,
+                    y : chart.y,
+                    width : chart.width,
+                    height : self.get('legendHeight')
+                }
+            }
+
+            // Y axis Title 영역 계산
+            if (self.get('titleY')) {
+                chart.x += self.get('titleYWidth');
+                chart.width -= self.get('titleYWidth');
+
+                self.area.titleY = {
+                    x : chart.x,
+                    y : chart.y,
+                    width : self.get('titleYWidth'),
+                    height : chart.height
+                }
+            }
+
+            // X axis Title 영역 계산
+            if (self.get('titleX')) {
+                chart.height -= self.get('titleXHeight');
+
+                self.area.titleX = {
+                    x : chart.x,
+                    y : chart.y + chart.height,
+                    width : chart.width,
+                    height : self.get('titleXHeight')
+                }
+            }
+
+            // chart 영역 계산
+            chart.x2 = chart.x + chart.width;
+            chart.y2 = chart.y + chart.height;
+
+            self.area.chart = chart;
+        }
 
 		this.get = function(key) {
 			return this.options[key];
@@ -27,86 +100,19 @@ jui.define("chart.core", [ "util.svg" ], function(SVGUtil) {
 		}
 		
 		this.render = function() {
-			// 비우기 
-            this.svg.clear();
+            if(!_.typeCheck("function", this.draw)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+            }
 
-			this.caculate();
-			this.renderChart();     // 추상 메소드
-			
-			// 최종적으로 그리기 
+            this.svg.clear();
+            calculate(this);
+
+            if(_.typeCheck("function", this.drawBefore)) {
+                this.drawBefore(chart);
+            }
+
+			this.draw();
             this.svg.render();
-		}
-		
-		this.caculate = function() {
-			this.area = {};
-			
-			var padding = this.get('padding');
-			var titleYWidth = this.get('titleYWidth');
-			var titleXHeight = this.get('titleXHeight');
-			var max = this.svg.size();
-			
-			var chart = { 
-				width : max.width - padding * 2 - titleYWidth, 
-				height : max.height - padding * 2 - titleXHeight, 
-				x : padding +  titleYWidth, 
-				y : padding 
-			};
-	
-			// 메인 title 영역 계산 		
-			if (this.get('title')) {
-				chart.y += this.get('titleHeight');
-				chart.height -= this.get('titleHeight');
-				
-				this.area.title = {
-					x : chart.x,
-					y : chart.y,
-					width : chart.width,
-					height : this.get('titleHeight')
-				}  
-			}
-	
-			// legend 영역 계산 		
-			if (this.get('legend')) {
-				chart.y += this.get('legendHeight');
-				chart.height -= this.get('legendHeight');
-				
-				this.area.legend = {
-					x : chart.x,
-					y : chart.y,
-					width : chart.width,
-					height : this.get('legendHeight')
-				}  
-			}
-	
-			// Y axis Title 영역 계산		
-			if (this.get('titleY')) {
-				chart.x += this.get('titleYWidth');
-				chart.width -= this.get('titleYWidth');			
-				
-				this.area.titleY = {
-					x : chart.x,
-					y : chart.y,
-					width : this.get('titleYWidth'),
-					height : chart.height
-				}  			
-			}
-			
-			// X axis Title 영역 계산		
-			if (this.get('titleX')) {
-				chart.height -= this.get('titleXHeight');
-				
-				this.area.titleX = {
-					x : chart.x,
-					y : chart.y + chart.height,
-					width : chart.width,
-					height : this.get('titleXHeight')
-				}  
-			}
-			
-			// chart 영역 계산
-			chart.x2 = chart.x + chart.width;
-            chart.y2 = chart.y + chart.height;
-			this.area.chart = chart;
 		}
 		
 		/**
@@ -126,7 +132,6 @@ jui.define("chart.core", [ "util.svg" ], function(SVGUtil) {
 			}
 			 
 			return axis;
-			
 		}
     }
 

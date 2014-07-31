@@ -1,12 +1,15 @@
 jui.define("chart.grid.block", [], function() {
 
     var Grid = function(orient, opt) {
+        this.drawBefore = function(chart) {
 
-        this._draw = function(chart) {
-        	var height = chart.area.chart.height;
-        	var width = chart.area.chart.width;
-        	var max = (orient == 'left' || orient == 'right') ? height : width;
-        	var obj = this.drawBlock(chart, orient, opt.domain, [0, max]);
+        }
+
+        this.draw = function(chart) {
+        	var width = chart.area.chart.width,
+                height = chart.area.chart.height,
+                max = (orient == 'left' || orient == 'right') ? height : width,
+                obj = this.drawBlock(chart, orient, opt.domain, [0, max]);
 
 			if (orient == 'left') {
 				var x = chart.area.chart.x - 30;

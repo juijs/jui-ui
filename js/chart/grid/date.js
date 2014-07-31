@@ -1,8 +1,11 @@
 jui.define("chart.grid.date", [], function() {
 
     var Grid = function(orient, opt) {
+        this.drawBefore = function(chart) {
 
-        this._draw = function(chart) {
+        }
+
+        this.draw = function(chart) {
         	var obj = this.drawBlock(chart, orient, opt.domain, [0, chart.area.chart.height]);
 
 			if (orient == 'left') {

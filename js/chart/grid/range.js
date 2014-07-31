@@ -1,10 +1,13 @@
 jui.define("chart.grid.range", [], function() {
 
     var Grid = function(orient, opt) {
+        this.drawBefore = function(chart) {
 
-        this._draw = function(chart) {
-        	var height = chart.area.chart.height;
-        	var width = chart.area.chart.width; 
+        }
+
+        this.draw = function(chart) {
+        	var width = chart.area.chart.width,
+                height = chart.area.chart.height;
             
         	if (orient == 'left' || orient == 'right') {
         		var obj = this.drawRange(chart, orient, opt.domain, [height, 0], opt.step);	
