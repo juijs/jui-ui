@@ -1,11 +1,8 @@
-jui.define("chart.grid.range", [  ], function() {
+jui.define("chart.grid.range", [], function() {
 
     var Grid = function(orient, opt) {
-    	
-    	var self = this; 
-    	        
+
         this._draw = function(chart) {
-        	
         	var height = chart.area.chart.height;
         	var width = chart.area.chart.width; 
             
@@ -14,7 +11,6 @@ jui.define("chart.grid.range", [  ], function() {
         	} else {
         		var obj = this.drawRange(chart, orient, opt.domain, [0, width], opt.step);
         	}
-        
 
 			if (orient == 'left') {
 				var x = chart.area.chart.x - 30;

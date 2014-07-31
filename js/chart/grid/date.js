@@ -1,20 +1,9 @@
-jui.define("chart.grid.date", [  ], function() {
-
+jui.define("chart.grid.date", [], function() {
 
     var Grid = function(orient, opt) {
-    	
-    	var self = this; 
-    	
-        this._draw = function(chart) {
-        	
-        	var height = chart.area.chart.height;
-        	var width = chart.area.chart.width; 
-            
-        	var max = (orient == 'left' || orient == 'right') ? chart.area.chart.height : chart.area.chart.width;
-        	
-        	var obj = this.drawBlock(chart, orient, opt.domain, [0, chart.area.chart.height]);
-    
 
+        this._draw = function(chart) {
+        	var obj = this.drawBlock(chart, orient, opt.domain, [0, chart.area.chart.height]);
 
 			if (orient == 'left') {
 				var x = chart.area.chart.x - 30;

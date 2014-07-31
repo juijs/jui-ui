@@ -1,4 +1,4 @@
-jui.defineUI("chart.chart", [  ], function() {
+jui.defineUI("chart.chart", [], function() {
 
     var UI = function() {
        
