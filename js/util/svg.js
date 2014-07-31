@@ -45,6 +45,8 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
         this.append = function(elem) {
             this.childrens.push(elem);
             elem.parent = this;
+
+            return this;
         }
     }
 
