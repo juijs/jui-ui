@@ -621,6 +621,9 @@
 			
 			return tmpFields;
 		},
+        svgToBase64: function(xml) {
+            return "data:image/svg+xml;base64," + Base64.encode(xml);
+        },
         dateFormat: function(date, format, utc) {
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
