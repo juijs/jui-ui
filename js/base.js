@@ -1,17 +1,17 @@
 (function(exports) {
-	var global = {}, globalFunc = {};
+    var global = {}, globalFunc = {};
 
-	/**
-	 * Private Classes
-	 * 
-	 */
-	var QuickSort = function(array, isClone) { // isClone이면, 해당 배열을 참조하지 않고 복사해서 처리
+    /**
+     * Private Classes
+     *
+     */
+    var QuickSort = function(array, isClone) { // isClone이면, 해당 배열을 참조하지 않고 복사해서 처리
         var compareFunc = null,
-        	array = (isClone) ? array.slice(0) : array;
-  
+            array = (isClone) ? array.slice(0) : array;
+
         function swap(indexA, indexB) {
             var temp = array[indexA];
-            
+
             array[indexA] = array[indexB];
             array[indexB] = temp;
         }
@@ -21,19 +21,19 @@
             swap(pivot, right);
 
             for(var v = left; v < right; v++) {
-            	if(compareFunc(array[v], pivotValue) || !compareFunc(pivotValue, array[v]) && v%2 == 1) {
-                	swap(v, storeIndex);
+                if(compareFunc(array[v], pivotValue) || !compareFunc(pivotValue, array[v]) && v%2 == 1) {
+                    swap(v, storeIndex);
                     storeIndex++;
                 }
             }
-    
+
             swap(right, storeIndex);
 
             return storeIndex;
         }
-  
+
         this.setCompare = function(func) {
-        	compareFunc = func;
+            compareFunc = func;
         }
 
         this.run = function(left, right) {
@@ -54,573 +54,573 @@
                 this.run(left, newPivot - 1);
                 this.run(newPivot + 1, right);
             }
-            
+
             return array;
         }
-	}
-	
-	var IndexParser = function() {
-		this.isIndexDepth = function(index) {
-			if(typeof(index) == "string" && index.indexOf(".") != -1) {
-				return true;
-			}
-			
-			return false;
-		}
-		
-		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
-			var resIndex = [], strIndex = "" + index;
-			
-			if(strIndex.length == 1) {
-				resIndex[0] = parseInt(index);
-			} else {
-				var keys = strIndex.split(".");
-				
-				for(var i = 0; i < keys.length; i++) {
-					resIndex[i] = parseInt(keys[i]);
-				}
-			}
-			
-			return resIndex;
-		}
-		
-		this.changeIndex = function(index, targetIndex, rootIndex) {
-			var rootIndexLen = this.getIndexList(rootIndex).length,
-				indexList = this.getIndexList(index),
-				tIndexList = this.getIndexList(targetIndex);
-			
-			for(var i = 0; i < rootIndexLen; i++) {
-				indexList.shift();
-			}
+    }
 
-			return tIndexList.concat(indexList).join(".");
-		}
-		
-		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
-			var indexList = this.getIndexList(index),
-				no = indexList.pop() + 1;
-				
-			indexList.push(no);
-			return indexList.join(".");
-		}
-		
-		this.getParentIndex = function(index) {
-			if(!this.isIndexDepth(index)) return null;
-			var keys = this.getIndexList(index);
-			
-			if(keys.length == 2) {
-				return "" + keys[0];
-			} else if(keys.length > 2) {
-				keys.pop();
-				return keys.join(".");
-			}
-		}
-	}
-	
-	/**
-	 * Private Static Classes
-	 * 
-	 */
-	var Base64 = {
-			 
-	    // private property
-	    _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-	 
-	    // public method for encoding
-	    encode : function (input) {
-	        var output = "";
-	        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-	        var i = 0;
-	 
-	        input = Base64._utf8_encode(input);
-	 
-	        while (i < input.length) {
-	 
-	            chr1 = input.charCodeAt(i++);
-	            chr2 = input.charCodeAt(i++);
-	            chr3 = input.charCodeAt(i++);
-	 
-	            enc1 = chr1 >> 2;
-	            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-	            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-	            enc4 = chr3 & 63;
-	 
-	            if (isNaN(chr2)) {
-	                enc3 = enc4 = 64;
-	            } else if (isNaN(chr3)) {
-	                enc4 = 64;
-	            }
-	 
-	            output = output +
-	            Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
-	            Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
-	 
-	        }
-	 
-	        return output;
-	    },
-	 
-	    // public method for decoding
-	    decode : function (input) {
-	        var output = "";
-	        var chr1, chr2, chr3;
-	        var enc1, enc2, enc3, enc4;
-	        var i = 0;
-	 
-	        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-	 
-	        while (i < input.length) {
-	 
-	            enc1 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc2 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc3 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc4 = Base64._keyStr.indexOf(input.charAt(i++));
-	 
-	            chr1 = (enc1 << 2) | (enc2 >> 4);
-	            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-	            chr3 = ((enc3 & 3) << 6) | enc4;
-	 
-	            output = output + String.fromCharCode(chr1);
-	 
-	            if (enc3 != 64) {
-	                output = output + String.fromCharCode(chr2);
-	            }
-	            if (enc4 != 64) {
-	                output = output + String.fromCharCode(chr3);
-	            }
-	 
-	        }
-	 
-	        output = Base64._utf8_decode(output);
-	 
-	        return output;
-	 
-	    },
-	 
-	    // private method for UTF-8 encoding
-	    _utf8_encode : function (string) {
-	        string = string.replace(/\r\n/g,"\n");
-	        
-	        // BOM 코드 적용 (UTF-8 관련)
-	        var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
-	 
-	        for (var n = 0; n < string.length; n++) {
-	 
-	            var c = string.charCodeAt(n);
-	 
-	            if (c < 128) {
-	                utftext += String.fromCharCode(c);
-	            }
-	            else if((c > 127) && (c < 2048)) {
-	                utftext += String.fromCharCode((c >> 6) | 192);
-	                utftext += String.fromCharCode((c & 63) | 128);
-	            }
-	            else {
-	                utftext += String.fromCharCode((c >> 12) | 224);
-	                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-	                utftext += String.fromCharCode((c & 63) | 128);
-	            }
-	 
-	        }
-	 
-	        return utftext;
-	    },
-	 
-	    // private method for UTF-8 decoding
-	    _utf8_decode : function (utftext) {
-	        var string = "";
-	        var i = 0;
-	        var c = c1 = c2 = 0;
-	 
-	        while ( i < utftext.length ) {
-	 
-	            c = utftext.charCodeAt(i);
-	 
-	            if (c < 128) {
-	                string += String.fromCharCode(c);
-	                i++;
-	            }
-	            else if((c > 191) && (c < 224)) {
-	                c2 = utftext.charCodeAt(i+1);
-	                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-	                i += 2;
-	            }
-	            else {
-	                c2 = utftext.charCodeAt(i+1);
-	                c3 = utftext.charCodeAt(i+2);
-	                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-	                i += 3;
-	            }
-	 
-	        }
-	 
-	        return string;
-	    }
-	}
-	
-	/**
-	 * Private Functions
-	 * 
-	 */
-	var template = function(text, data, settings) {
-		var _ = {},
-			breaker = {};
-	
-		var ArrayProto = Array.prototype,
-			slice = ArrayProto.slice,
-			nativeForEach = ArrayProto.forEach;
-		
-		var escapes = {
-			'\\' : '\\',
-			"'" : "'",
-			'r' : '\r',
-			'n' : '\n',
-			't' : '\t',
-			'u2028' : '\u2028',
-			'u2029' : '\u2029'
-		};
-	
-		for (var p in escapes)
-		escapes[escapes[p]] = p;
-		
-		var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g,
-			unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g,
-			noMatch = /.^/;
-		
-		var unescape = function(code) {
-			return code.replace(unescaper, function(match, escape) {
-				return escapes[escape];
-			});
-		};
-	
-		var each = _.each = _.forEach = function(obj, iterator, context) {
-			if (obj == null)
-				return;
-			if (nativeForEach && obj.forEach === nativeForEach) {
-				obj.forEach(iterator, context);
-			} else if (obj.length === +obj.length) {
-				for (var i = 0, l = obj.length; i < l; i++) {
-					if ( i in obj && iterator.call(context, obj[i], i, obj) === breaker)
-						return;
-				}
-			} else {
-				for (var key in obj) {
-					if (_.has(obj, key)) {
-						if (iterator.call(context, obj[key], key, obj) === breaker)
-							return;
-					}
-				}
-			}
-		};
-	
-		_.has = function(obj, key) {
-			return hasOwnProperty.call(obj, key);
-		};
-	
-		_.defaults = function(obj) {
-			each(slice.call(arguments, 1), function(source) {
-				for (var prop in source) {
-					if (obj[prop] == null)
-						obj[prop] = source[prop];
-				}
-			});
-			return obj;
-		};
-	
-		_.templateSettings = {
-			evaluate : /<\!([\s\S]+?)\!>/g,
-			interpolate : /<\!=([\s\S]+?)\!>/g,
-			escape : /<\!-([\s\S]+?)\!>/g
-		};
-	
-		_.template = function(text, data, settings) {
-			settings = _.defaults(settings || {}, _.templateSettings);
-	
-			var source = "__p+='" + text.replace(escaper, function(match) {
-				return '\\' + escapes[match];
-			}).replace(settings.escape || noMatch, function(match, code) {
-				return "'+\n_.escape(" + unescape(code) + ")+\n'";
-			}).replace(settings.interpolate || noMatch, function(match, code) {
-				return "'+\n(" + unescape(code) + ")+\n'";
-			}).replace(settings.evaluate || noMatch, function(match, code) {
-				return "';\n" + unescape(code) + "\n;__p+='";
-			}) + "';\n";
-	
-			if (!settings.variable)
-				source = 'with(obj||{}){\n' + source + '}\n';
-	
-			source = "var __p='';" + "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + source + "return __p;\n";
-	
-			var render = new Function(settings.variable || 'obj', '_', source);
-			if (data)
-				return render(data, _);
-			var template = function(data) {
-				return render.call(this, data, _);
-			};
-	
-			template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
-	
-			return template;
-		};
-		
-		return _.template(text, data, settings);
-	}
-	
-	
-	/**
-	 * Public Utility Classes
-	 * 
-	 */
-	var utility = global["util"] = {
-			
-		//-- Properties
-		browser: {
-			webkit: (window.webkitURL) ? true : false,
-			mozilla: (window.mozInnerScreenX) ? true : false,
-			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
-		},
-		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-				
-		//-- Functions
-		scrollWidth: function() {
-			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
-			
-			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
-			$('body').append(div); 
-			var w1 = $('div', div).innerWidth(); 
-			div.css('overflow-y', 'auto'); 
-			var w2 = $('div', div).innerWidth(); 
-			$(div).remove(); 
-		    
-			return (isJUI) ? 10 : (w1 - w2);
-		},
-		inherit: function(ctor, superCtor) {
-			ctor.prototype = new superCtor;
-			ctor.prototype.constructor = ctor;
+    var IndexParser = function() {
+        this.isIndexDepth = function(index) {
+            if(typeof(index) == "string" && index.indexOf(".") != -1) {
+                return true;
+            }
+
+            return false;
+        }
+
+        this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
+            var resIndex = [], strIndex = "" + index;
+
+            if(strIndex.length == 1) {
+                resIndex[0] = parseInt(index);
+            } else {
+                var keys = strIndex.split(".");
+
+                for(var i = 0; i < keys.length; i++) {
+                    resIndex[i] = parseInt(keys[i]);
+                }
+            }
+
+            return resIndex;
+        }
+
+        this.changeIndex = function(index, targetIndex, rootIndex) {
+            var rootIndexLen = this.getIndexList(rootIndex).length,
+                indexList = this.getIndexList(index),
+                tIndexList = this.getIndexList(targetIndex);
+
+            for(var i = 0; i < rootIndexLen; i++) {
+                indexList.shift();
+            }
+
+            return tIndexList.concat(indexList).join(".");
+        }
+
+        this.getNextIndex = function(index) { // 현재 인덱스에서 +1
+            var indexList = this.getIndexList(index),
+                no = indexList.pop() + 1;
+
+            indexList.push(no);
+            return indexList.join(".");
+        }
+
+        this.getParentIndex = function(index) {
+            if(!this.isIndexDepth(index)) return null;
+            var keys = this.getIndexList(index);
+
+            if(keys.length == 2) {
+                return "" + keys[0];
+            } else if(keys.length > 2) {
+                keys.pop();
+                return keys.join(".");
+            }
+        }
+    }
+
+    /**
+     * Private Static Classes
+     *
+     */
+    var Base64 = {
+
+        // private property
+        _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+        // public method for encoding
+        encode : function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+
+            input = Base64._utf8_encode(input);
+
+            while (i < input.length) {
+
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+
+                output = output +
+                    Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
+                    Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
+
+            }
+
+            return output;
+        },
+
+        // public method for decoding
+        decode : function (input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+            while (i < input.length) {
+
+                enc1 = Base64._keyStr.indexOf(input.charAt(i++));
+                enc2 = Base64._keyStr.indexOf(input.charAt(i++));
+                enc3 = Base64._keyStr.indexOf(input.charAt(i++));
+                enc4 = Base64._keyStr.indexOf(input.charAt(i++));
+
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+
+                output = output + String.fromCharCode(chr1);
+
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+
+            }
+
+            output = Base64._utf8_decode(output);
+
+            return output;
+
+        },
+
+        // private method for UTF-8 encoding
+        _utf8_encode : function (string) {
+            string = string.replace(/\r\n/g,"\n");
+
+            // BOM 코드 적용 (UTF-8 관련)
+            var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
+
+            for (var n = 0; n < string.length; n++) {
+
+                var c = string.charCodeAt(n);
+
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                }
+                else if((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+
+            return utftext;
+        },
+
+        // private method for UTF-8 decoding
+        _utf8_decode : function (utftext) {
+            var string = "";
+            var i = 0;
+            var c = c1 = c2 = 0;
+
+            while ( i < utftext.length ) {
+
+                c = utftext.charCodeAt(i);
+
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                }
+                else if((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i+1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                }
+                else {
+                    c2 = utftext.charCodeAt(i+1);
+                    c3 = utftext.charCodeAt(i+2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+
+            }
+
+            return string;
+        }
+    }
+
+    /**
+     * Private Functions
+     *
+     */
+    var template = function(text, data, settings) {
+        var _ = {},
+            breaker = {};
+
+        var ArrayProto = Array.prototype,
+            slice = ArrayProto.slice,
+            nativeForEach = ArrayProto.forEach;
+
+        var escapes = {
+            '\\' : '\\',
+            "'" : "'",
+            'r' : '\r',
+            'n' : '\n',
+            't' : '\t',
+            'u2028' : '\u2028',
+            'u2029' : '\u2029'
+        };
+
+        for (var p in escapes)
+            escapes[escapes[p]] = p;
+
+        var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g,
+            unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g,
+            noMatch = /.^/;
+
+        var unescape = function(code) {
+            return code.replace(unescaper, function(match, escape) {
+                return escapes[escape];
+            });
+        };
+
+        var each = _.each = _.forEach = function(obj, iterator, context) {
+            if (obj == null)
+                return;
+            if (nativeForEach && obj.forEach === nativeForEach) {
+                obj.forEach(iterator, context);
+            } else if (obj.length === +obj.length) {
+                for (var i = 0, l = obj.length; i < l; i++) {
+                    if ( i in obj && iterator.call(context, obj[i], i, obj) === breaker)
+                        return;
+                }
+            } else {
+                for (var key in obj) {
+                    if (_.has(obj, key)) {
+                        if (iterator.call(context, obj[key], key, obj) === breaker)
+                            return;
+                    }
+                }
+            }
+        };
+
+        _.has = function(obj, key) {
+            return hasOwnProperty.call(obj, key);
+        };
+
+        _.defaults = function(obj) {
+            each(slice.call(arguments, 1), function(source) {
+                for (var prop in source) {
+                    if (obj[prop] == null)
+                        obj[prop] = source[prop];
+                }
+            });
+            return obj;
+        };
+
+        _.templateSettings = {
+            evaluate : /<\!([\s\S]+?)\!>/g,
+            interpolate : /<\!=([\s\S]+?)\!>/g,
+            escape : /<\!-([\s\S]+?)\!>/g
+        };
+
+        _.template = function(text, data, settings) {
+            settings = _.defaults(settings || {}, _.templateSettings);
+
+            var source = "__p+='" + text.replace(escaper, function(match) {
+                return '\\' + escapes[match];
+            }).replace(settings.escape || noMatch, function(match, code) {
+                return "'+\n_.escape(" + unescape(code) + ")+\n'";
+            }).replace(settings.interpolate || noMatch, function(match, code) {
+                return "'+\n(" + unescape(code) + ")+\n'";
+            }).replace(settings.evaluate || noMatch, function(match, code) {
+                return "';\n" + unescape(code) + "\n;__p+='";
+            }) + "';\n";
+
+            if (!settings.variable)
+                source = 'with(obj||{}){\n' + source + '}\n';
+
+            source = "var __p='';" + "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + source + "return __p;\n";
+
+            var render = new Function(settings.variable || 'obj', '_', source);
+            if (data)
+                return render(data, _);
+            var template = function(data) {
+                return render.call(this, data, _);
+            };
+
+            template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+
+            return template;
+        };
+
+        return _.template(text, data, settings);
+    }
+
+
+    /**
+     * Public Utility Classes
+     *
+     */
+    var utility = global["util"] = {
+
+        //-- Properties
+        browser: {
+            webkit: (window.webkitURL) ? true : false,
+            mozilla: (window.mozInnerScreenX) ? true : false,
+            msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
+        },
+        isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+
+        //-- Functions
+        scrollWidth: function() {
+            var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
+
+            var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>');
+            $('body').append(div);
+            var w1 = $('div', div).innerWidth();
+            div.css('overflow-y', 'auto');
+            var w2 = $('div', div).innerWidth();
+            $(div).remove();
+
+            return (isJUI) ? 10 : (w1 - w2);
+        },
+        inherit: function(ctor, superCtor) {
+            ctor.prototype = new superCtor;
+            ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
-		},
-		extend: function(origin, add) {
-			// Don't do anything if add isn't an object
-			if (!add || typeof add !== 'object') return origin;
-			
-			var keys = Object.keys(add);
-			var i = keys.length;
-			while (i--) {
-				origin[keys[i]] = add[keys[i]];
-			}
-			
-			return origin;
-		},
-		pxToInt: function(px) {
-			if(typeof(px) == "string" && px.indexOf("px") != -1) {
-				return parseInt(px.split("px").join(""));
-			}
-			
-			return px;
-		},
-		clone: function(obj) {
-			var clone = ($.isArray(obj)) ? [] : {};
-			
-	        for(var i in obj) {
-	            if(typeof(obj[i]) == "object")
-	                clone[i] = this.clone(obj[i]);
-	            else
-	                clone[i] = obj[i];
-	        }
-	        
-	        return clone;
-		},
-		sort: function(array) {
-			return new QuickSort(array);
-		},
-		runtime: function(name, callback) {
-			var nStart = new Date().getTime();
-			callback();
-			var nEnd = new Date().getTime(); 
-			
-			console.log(name + " : " + (nEnd - nStart) + "ms");
-		},
-		template: function(html, obj) {
-			if(!obj) return template(html);
-			else return template(html, obj);
-		},
-		resize: function(callback, ms) {
-			var after_resize = (function(){
-				var timer = 0;
-				
-				return function() {
-				    clearTimeout(timer);
-				    timer = setTimeout(callback, ms);
-				}
-			})();
-			
-			$(window).resize(function() {
-				after_resize();
-			});
-		},
-		index: function() {
-			return new IndexParser();
-		},
-		chunk: function(arr, len) {
-		  var chunks = [],
-		      i = 0,
-		      n = arr.length;
-		
-		  while (i < n) {
-		    chunks.push(arr.slice(i, i += len));
-		  }
-		
-		  return chunks;
-		},
-		typeCheck: function(t, v) {
-			function check(type, value) {
-				return {
-					"string": (typeof(value) == "string") ? true : false,
-					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
-					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
-					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object") ? true : false,
-					"function": (typeof(value) == "function") ? true : false,
-					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
-					"boolean"	: (typeof(value) == "boolean") ? true : false, 
-					"undefined": (typeof(value) == "undefined") ? true: false,
-					"null": (value === null) ? true : false
-				}[type];
-			}
-			
-			if(typeof(t) == "object" && t.length) {
-				var typeList = t;
-				
-				for(var i = 0; i < typeList.length; i++) {
-					if(check(typeList[i], v)) return true;
-				}
-				
-				return false;
-			} else {
-				return check(t, v);
-			}
-		},
-		typeCheckObj: function(uiObj, list) {
-			if(typeof(uiObj) != "object") return;
-			var self = this;
-			
-			for(var key in uiObj) {
-				var func = uiObj[key];
-				
-				if(typeof(func) == "function") {
-					(function(funcName, funcObj) {
-						uiObj[funcName] = function() {
-							var args = arguments,
-								params = list[funcName];
-							
-							for(var i = 0; i < args.length; i++) {
-								if(!self.typeCheck(params[i], args[i])) {
-									throw new Error("JUI_CRITICAL_ERR: the " + i + "th parameter is not a " + params[i] + " (" + name + ")");
-								}
-							}
-							
-							return funcObj.apply(this, args);
-						}
-					})(key, func);
-				}
-			}
-		},
-		dataToCsv: function(keys, dataList, dataSize) {
-			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
-			
-			for(var i = -1; i < len; i++) {
-				var tmpArr = [];
-				
-				for(var j = 0; j < keys.length; j++) {
-					if(keys[j]) {
-						if(i == -1) {
-							tmpArr.push(keys[j]);
-						} else {
-							tmpArr.push(dataList[i][keys[j]]);
-						}
-					}
-				}
-				
-				csv += tmpArr.join(",") + "\n";
-			}
-			
-			return csv;
-		},
-		dataToCsv2: function(options) {
-			var csv = "";
-			var opts = $.extend({
-				fields: null, // required
-				rows: null, // required
-				names: null,
-				count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
-			}, options);
-			
-			for(var i = -1; i < opts.count; i++) {
-				var tmpArr = [];
-				
-				for(var j = 0; j < opts.fields.length; j++) {
-					if(opts.fields[j]) {
-						if(i == -1) {
-							if(opts.names && opts.names[j]) {
-								tmpArr.push(opts.names[j]);
-							} else {
-								tmpArr.push(opts.fields[j]);
-							}
-						} else {
-							tmpArr.push(opts.rows[i][opts.fields[j]]);
-						}
-					}
-				}
-				
-				csv += tmpArr.join(",") + "\n";
-			}
-			
-			return csv;
-		},
-		fileToCsv: function(file, callback) {
-			var reader = new FileReader();
-			
-	        reader.onload = function(readerEvt) {
-	            if(typeof(callback) == "function") {
-	            	callback(readerEvt.target.result);
-	            }
-	        };
-	
-	        reader.readAsText(file);
-		},
-		csvToBase64: function(csv) {
-			return "data:application/octet-stream;base64," + Base64.encode(csv);
-		},
-		csvToData: function(keys, csv) {
-			var dataList = [],
-				tmpRowArr = csv.split("\n");
-				
-			for(var i = 1; i < tmpRowArr.length; i++) {
-				if(tmpRowArr[i] != "") {
-					var tmpArr = tmpRowArr[i].split(","),
-						data = {};
-					
-					for(var j = 0; j < keys.length; j++) {
-						data[keys[j]] = tmpArr[j];
-					}
-					
-					dataList.push(data);
-				}
-			}
-			
-			return dataList;
-		},
-		getCsvFields: function(fields, csvFields) {
-			var tmpFields = (csvFields) ? csvFields : fields;
-			
-			for(var i = 0; i < tmpFields.length; i++) {
-				if(!isNaN(tmpFields[i])) {
-					tmpFields[i] = fields[tmpFields[i]];
-				}
-			}
-			
-			return tmpFields;
-		},
+        },
+        extend: function(origin, add) {
+            // Don't do anything if add isn't an object
+            if (!add || typeof add !== 'object') return origin;
+
+            var keys = Object.keys(add);
+            var i = keys.length;
+            while (i--) {
+                origin[keys[i]] = add[keys[i]];
+            }
+
+            return origin;
+        },
+        pxToInt: function(px) {
+            if(typeof(px) == "string" && px.indexOf("px") != -1) {
+                return parseInt(px.split("px").join(""));
+            }
+
+            return px;
+        },
+        clone: function(obj) {
+            var clone = ($.isArray(obj)) ? [] : {};
+
+            for(var i in obj) {
+                if(typeof(obj[i]) == "object")
+                    clone[i] = this.clone(obj[i]);
+                else
+                    clone[i] = obj[i];
+            }
+
+            return clone;
+        },
+        sort: function(array) {
+            return new QuickSort(array);
+        },
+        runtime: function(name, callback) {
+            var nStart = new Date().getTime();
+            callback();
+            var nEnd = new Date().getTime();
+
+            console.log(name + " : " + (nEnd - nStart) + "ms");
+        },
+        template: function(html, obj) {
+            if(!obj) return template(html);
+            else return template(html, obj);
+        },
+        resize: function(callback, ms) {
+            var after_resize = (function(){
+                var timer = 0;
+
+                return function() {
+                    clearTimeout(timer);
+                    timer = setTimeout(callback, ms);
+                }
+            })();
+
+            $(window).resize(function() {
+                after_resize();
+            });
+        },
+        index: function() {
+            return new IndexParser();
+        },
+        chunk: function(arr, len) {
+            var chunks = [],
+                i = 0,
+                n = arr.length;
+
+            while (i < n) {
+                chunks.push(arr.slice(i, i += len));
+            }
+
+            return chunks;
+        },
+        typeCheck: function(t, v) {
+            function check(type, value) {
+                return {
+                    "string": (typeof(value) == "string") ? true : false,
+                    "integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
+                    "float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
+                    "number": (typeof(value) == "number") ? true : false,
+                    "object": (typeof(value) == "object") ? true : false,
+                    "function": (typeof(value) == "function") ? true : false,
+                    "array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
+                    "boolean"	: (typeof(value) == "boolean") ? true : false,
+                    "undefined": (typeof(value) == "undefined") ? true: false,
+                    "null": (value === null) ? true : false
+                }[type];
+            }
+
+            if(typeof(t) == "object" && t.length) {
+                var typeList = t;
+
+                for(var i = 0; i < typeList.length; i++) {
+                    if(check(typeList[i], v)) return true;
+                }
+
+                return false;
+            } else {
+                return check(t, v);
+            }
+        },
+        typeCheckObj: function(uiObj, list) {
+            if(typeof(uiObj) != "object") return;
+            var self = this;
+
+            for(var key in uiObj) {
+                var func = uiObj[key];
+
+                if(typeof(func) == "function") {
+                    (function(funcName, funcObj) {
+                        uiObj[funcName] = function() {
+                            var args = arguments,
+                                params = list[funcName];
+
+                            for(var i = 0; i < args.length; i++) {
+                                if(!self.typeCheck(params[i], args[i])) {
+                                    throw new Error("JUI_CRITICAL_ERR: the " + i + "th parameter is not a " + params[i] + " (" + name + ")");
+                                }
+                            }
+
+                            return funcObj.apply(this, args);
+                        }
+                    })(key, func);
+                }
+            }
+        },
+        dataToCsv: function(keys, dataList, dataSize) {
+            var csv = "", len = (!dataSize) ? dataList.length : dataSize;
+
+            for(var i = -1; i < len; i++) {
+                var tmpArr = [];
+
+                for(var j = 0; j < keys.length; j++) {
+                    if(keys[j]) {
+                        if(i == -1) {
+                            tmpArr.push(keys[j]);
+                        } else {
+                            tmpArr.push(dataList[i][keys[j]]);
+                        }
+                    }
+                }
+
+                csv += tmpArr.join(",") + "\n";
+            }
+
+            return csv;
+        },
+        dataToCsv2: function(options) {
+            var csv = "";
+            var opts = $.extend({
+                fields: null, // required
+                rows: null, // required
+                names: null,
+                count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
+            }, options);
+
+            for(var i = -1; i < opts.count; i++) {
+                var tmpArr = [];
+
+                for(var j = 0; j < opts.fields.length; j++) {
+                    if(opts.fields[j]) {
+                        if(i == -1) {
+                            if(opts.names && opts.names[j]) {
+                                tmpArr.push(opts.names[j]);
+                            } else {
+                                tmpArr.push(opts.fields[j]);
+                            }
+                        } else {
+                            tmpArr.push(opts.rows[i][opts.fields[j]]);
+                        }
+                    }
+                }
+
+                csv += tmpArr.join(",") + "\n";
+            }
+
+            return csv;
+        },
+        fileToCsv: function(file, callback) {
+            var reader = new FileReader();
+
+            reader.onload = function(readerEvt) {
+                if(typeof(callback) == "function") {
+                    callback(readerEvt.target.result);
+                }
+            };
+
+            reader.readAsText(file);
+        },
+        csvToBase64: function(csv) {
+            return "data:application/octet-stream;base64," + Base64.encode(csv);
+        },
+        csvToData: function(keys, csv) {
+            var dataList = [],
+                tmpRowArr = csv.split("\n");
+
+            for(var i = 1; i < tmpRowArr.length; i++) {
+                if(tmpRowArr[i] != "") {
+                    var tmpArr = tmpRowArr[i].split(","),
+                        data = {};
+
+                    for(var j = 0; j < keys.length; j++) {
+                        data[keys[j]] = tmpArr[j];
+                    }
+
+                    dataList.push(data);
+                }
+            }
+
+            return dataList;
+        },
+        getCsvFields: function(fields, csvFields) {
+            var tmpFields = (csvFields) ? csvFields : fields;
+
+            for(var i = 0; i < tmpFields.length; i++) {
+                if(!isNaN(tmpFields[i])) {
+                    tmpFields[i] = fields[tmpFields[i]];
+                }
+            }
+
+            return tmpFields;
+        },
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
@@ -710,50 +710,50 @@
         },
         btoa: Base64.encode,
         atob: Base64.decode
-	}
-	
-	var getDepends = function(depends) {
-		var args = [];
-		
-		for(var i = 0; i < depends.length; i++) {
-			args.push(global[depends[i]]);
-			
-			if(!utility.typeCheck([ "function", "object" ], args[i])) {
-				throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
-			}
-		}
-		
-		return args;
-	}
+    }
+
+    var getDepends = function(depends) {
+        var args = [];
+
+        for(var i = 0; i < depends.length; i++) {
+            args.push(global[depends[i]]);
+
+            if(!utility.typeCheck([ "function", "object" ], args[i])) {
+                throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
+            }
+        }
+
+        return args;
+    }
 
 
-	/**
-	 * Global Object
-	 * 
-	 */
-	exports.jui = {
-		
-		ready: function() {
-			var args = [],
-				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
-				depends = (arguments.length == 2) ? arguments[0] : null;
-				
-			if(!utility.typeCheck([ "array", "null" ], depends) || 
-					!utility.typeCheck("function", callback)) {
-			
-				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
-			}
+    /**
+     * Global Object
+     *
+     */
+    exports.jui = {
 
-			$(function() { 
-				if(depends) {
-					args = getDepends(depends);
-				} else {
-					args = [ global["ui"], global["uix"], utility ];
-				}
+        ready: function() {
+            var args = [],
+                callback = (arguments.length == 2) ? arguments[1] : arguments[0],
+                depends = (arguments.length == 2) ? arguments[0] : null;
 
-				callback.apply(null, args);
-			});
-		},
+            if(!utility.typeCheck([ "array", "null" ], depends) ||
+                !utility.typeCheck("function", callback)) {
+
+                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+            }
+
+            $(function() {
+                if(depends) {
+                    args = getDepends(depends);
+                } else {
+                    args = [ global["ui"], global["uix"], utility ];
+                }
+
+                callback.apply(null, args);
+            });
+        },
 
         /**
          * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
@@ -763,12 +763,12 @@
          * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
          * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
-		defineUI: function(name, depends, callback, parent) {
-			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+        defineUI: function(name, depends, callback, parent) {
+            if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
+                !utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
 
-				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
-			}
+                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+            }
 
             if(utility.typeCheck("function", global[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
@@ -785,8 +785,8 @@
             if(name.indexOf(".") == -1) {
                 throw new Error("JUI_CRITICAL_ERR: UI grouping rule must be followed");
             }
-			
-			var args = getDepends(depends),
+
+            var args = getDepends(depends),
                 keys = name.split("."),
                 uiFunc = callback.apply(null, args);
 
@@ -810,7 +810,7 @@
 
             // UI 고유 설정
             global[name] = global[keys[0]][keys[1]];
-		},
+        },
 
         /**
          * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
@@ -877,20 +877,20 @@
          *
          * @returns {Window}
          */
-		log: function() {
-			var jui_mng = window.open(
-	    		this.logUrl, 
-	    		"JUIM",
-	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
-	    	);
-	    	
-	    	jui.debugAll(function(log, str) {
-	    		jui_mng.log(log, str);
-	    	});
-	    	
-	    	return jui_mng;
-		},
+        log: function() {
+            var jui_mng = window.open(
+                this.logUrl,
+                "JUIM",
+                "width=800, height=600, toolbar=no, menubar=no, resizable=yes"
+            );
 
-		logUrl: "jui.mng.html"
-	};
+            jui.debugAll(function(log, str) {
+                jui_mng.log(log, str);
+            });
+
+            return jui_mng;
+        },
+
+        logUrl: "jui.mng.html"
+    };
 })(window);
