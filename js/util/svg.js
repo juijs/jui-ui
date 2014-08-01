@@ -9,7 +9,7 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
             this.parent = null;
             this.attr(attr);
             
-            if (attr.text) {
+            if(attr.text) { // 이 코드가 뭘까?
             	this.element.appendChild(document.createTextNode(attr.text));
             }
         }
@@ -20,7 +20,11 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
             }
 
             for(var k in attributes) {
-                this.element.setAttributeNS(null, k, attributes[k]);
+                if(k.indexOf("xlink:") != -1) {
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attributes[k]);
+                } else {
+                    this.element.setAttributeNS(null, k, attributes[k]);
+                }
             }
 
             return this;
@@ -42,6 +46,12 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
             return this;
         }
 
+        this.html = function(html) {
+            this.element.innerHTML = html;
+
+            return this;
+        }
+
         this.append = function(elem) {
             this.childrens.push(elem);
             elem.parent = this;
@@ -55,45 +65,56 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
 
 jui.define("util.svg.element.path", [], function() { // path
     var PathElement = function() {
-        var orders = [];
+        var orders = [],
+            isUpper = true;
+
+        this.uppercase = function() {
+            isUpper = true;
+            return this;
+        }
+
+        this.lowercase = function() {
+            isUpper = false;
+            return this;
+        }
 
         this.moveTo = function(x, y) {
-            orders.push("M" + x + "," + y);
+            orders.push( ((isUpper) ? "M" : "m") + x + "," + y );
             return this;
         }
 
         this.lineTo = function(x, y) {
-            orders.push("L" + x + "," + y);
+            orders.push( ((isUpper) ? "L" : "l") + x + "," + y );
             return this;
         }
 
         this.hLineTo = function(x) {
-            orders.push("H" + x);
+            orders.push( ((isUpper) ? "H" : "h") + x );
             return this;
         }
 
         this.vLineTo = function(y) {
-            orders.push("V" + y);
+            orders.push( ((isUpper) ? "V" : "v") + y );
             return this;
         }
 
         this.curveTo = function(x1, y1, x2, y2, x, y) {
-            orders.push("C" + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y);
+            orders.push( ((isUpper) ? "C" : "c") + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y );
             return this;
         }
 
         this.sCurveTo = function(x2, y2, x, y) {
-            orders.push("S" + x2 + "," + y2 + " " + x + "," + y);
+            orders.push( ((isUpper) ? "S" : "s") + x2 + "," + y2 + " " + x + "," + y );
             return this;
         }
 
         this.qCurveTo = function(x1, y1, x, y) {
-            orders.push("Q" + x1 + "," + y1 + " " + x + "," + y);
+            orders.push( ((isUpper) ? "Q" : "q") + x1 + "," + y1 + " " + x + "," + y );
             return this;
         }
 
         this.tCurveTo = function(x1, y1, x, y) {
-            orders.push("T" + x1 + "," + y1 + " " + x + "," + y);
+            orders.push( ((isUpper) ? "T" : "t") + x1 + "," + y1 + " " + x + "," + y );
             return this;
         }
 
@@ -101,7 +122,7 @@ jui.define("util.svg.element.path", [], function() { // path
             large_arc_flag = (large_arc_flag) ? 1 : 0;
             sweep_flag = (sweep_flag) ? 1 : 0;
 
-            orders.push("A" + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y);
+            orders.push( ((isUpper) ? "A" : "a") + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y );
             return this;
         }
 
@@ -111,12 +132,11 @@ jui.define("util.svg.element.path", [], function() { // path
             });
 
             orders = [];
-
             return this;
         }
 
         this.closePath = function() {
-            orders.push("Z");
+            orders.push((isUpper) ? "Z" : "z");
             this.close();
 
             return this;
@@ -128,7 +148,21 @@ jui.define("util.svg.element.path", [], function() { // path
 
 jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     var PolyElement = function() {
+        var orders = [];
 
+        this.point = function(x, y) {
+            orders.push(x + "," + y)
+            return this;
+        }
+
+        this.close = function() {
+            this.attr({
+                points: orders.join(" ")
+            });
+
+            orders = [];
+            return this;
+        }
     }
 
     return PolyElement;
@@ -136,7 +170,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 
 jui.define("util.svg",
     [ "util", "util.svg.element", "util.svg.element.path", "util.svg.element.poly" ],
-    function(_, Element, Path, Poly) {
+    function(_, Element, PathElement, PolyElement) {
 
     var SVG = function(root, width, height) {
         var self = this,
@@ -246,12 +280,32 @@ jui.define("util.svg",
          * @param attr
          */
 
-        this.group = function(attr, callback) {
+        this.custom = function(name, attr, callback) {
+            return create(new Element(), name, attr, callback);
+        }
+
+        this.defs = function(callback) {
+            return create(new Element(), "defs", null, callback);
+        }
+
+        this.symbol = function(attr, callback) {
+            return create(new Element(), "symbol", attr, callback);
+        }
+
+        this.g = this.group = function(attr, callback) {
             return create(new Element(), "g", attr, callback);
         }
 
         this.marker = function(attr, callback) {
             return create(new Element(), "marker", attr, callback);
+        }
+
+        this.a = function(attr, callback) {
+            return create(new Element(), "a", attr, callback);
+        }
+
+        this.use = function(attr) {
+            return create(new Element(), "use", attr);
         }
 
         this.rect = function(attr) {
@@ -266,8 +320,36 @@ jui.define("util.svg",
             return create(new Element(), "circle", attr);
         }
 
-        this.text = function(attr) {
-            return create(new Element(), "text", attr);
+        this.text = function(attr, textOrCallback) {
+            if(_.typeCheck("string", textOrCallback)) {
+                return create(new Element(), "text", attr).html(textOrCallback);
+            }
+
+            return create(new Element(), "text", attr, textOrCallback);
+        }
+
+        this.textPath = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "textPath", attr).html(text);
+            }
+
+            return create(new Element(), "textPath", attr);
+        }
+
+        this.tref = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "tref", attr).html(text);
+            }
+
+            return create(new Element(), "tref", attr);
+        }
+
+        this.tspan = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "tspan", attr).html(text);
+            }
+
+            return create(new Element(), "tspan", attr);
         }
 
         this.ellipse = function(attr) {
@@ -275,15 +357,15 @@ jui.define("util.svg",
         }
 
         this.path = function(attr) {
-            return create(new Path(), "path", attr);
+            return create(new PathElement(), "path", attr);
         }
 
         this.polyline = function(attr) {
-
+            return create(new PolyElement(), "polyline", attr);
         }
 
         this.polygon = function(attr) {
-
+            return create(new PolyElement(), "polygon", attr);
         }
 
         init();
