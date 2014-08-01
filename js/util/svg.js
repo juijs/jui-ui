@@ -239,7 +239,7 @@ jui.define("util.svg",
                 }
             }
 
-            return $.extend(tmp_attr, attr);
+            return _.extend(tmp_attr, attr);
         }
 
         /**
@@ -272,6 +272,20 @@ jui.define("util.svg",
         this.render = function() {
             this.clear();
             appendChild(target);
+        }
+
+        this.download = function(name) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".png" : "svg.png";
+            a.href = _.svgToBase64(root.innerHTML);
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
         }
 
         /**
