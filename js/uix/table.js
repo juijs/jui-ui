@@ -1803,7 +1803,21 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			
 			return _.csvToBase64(this.getCsv(isTree));
 		}
-		
+
+        this.downloadCsv = function(name, isTree) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64(isTree);
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
+
 		this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
 			return rowIndex;
 		}
@@ -1879,7 +1893,8 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 setCsv: [ "string", "string" ],
                 setCsvFile: [ [ "string", "object" ], "object" ],
                 getCsv: [ [ "boolean", "undefined" ] ],
-                getCsvBase64: [ [ "boolean", "undefined" ] ]
+                getCsvBase64: [ [ "boolean", "undefined" ] ],
+                dowloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
             },
             animate: {
                 update: {

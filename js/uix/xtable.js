@@ -592,6 +592,20 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			
 			return _.csvToBase64(this.getCsv());
 		}
+
+        this.downloadCsv = function(name) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64();
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
 		
 		this.rowFunc = function(type, index, callback) {
 			if(!this.options.fields) return;
@@ -698,6 +712,7 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showLoading: [ "integer" ],
                 setCsv: [ "string" ],
                 setCsvFile: [ "object" ],
+                dowloadCsv: [ [ "string", "undefined" ] ],
                 rowFunc: [ "string", [ "integer", "string" ], "function" ]
             },
             animate: {
