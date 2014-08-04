@@ -1,4 +1,4 @@
-jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, text, line, ...
+jui.define("util.svg.element", [], function() { // rectangle, circle, text, line, ...
     var Element = function() {
         var attributes = {},
             styles = {};
@@ -62,6 +62,69 @@ jui.define("util.svg.element", [ "util" ], function(_) { // rectangle, circle, t
 
     return Element;
 });
+
+jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+    var TransElement = function() {
+        var orders = {};
+
+        function applyOrders(self) {
+            var orderArr = [];
+
+            for(var key in orders) {
+                if(orders[key]) orderArr.push(orders[key]);
+            }
+
+            self.attr({ transform: orderArr.join(" ") });
+        }
+
+        function getStringArgs(args) {
+            var result = [];
+
+            for(var i = 0; i < args.length; i++) {
+                result.push(args[i]);
+            }
+
+            return result.join(",");
+        }
+
+        this.translate = function() {
+            orders["translate"] = "translate(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.rotate = function() {
+            orders["rotate"] = "rotate(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.scale = function() {
+            orders["scale"] = "scale(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.skew = function() {
+            orders["skew"] = "skew(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.matrix = function() {
+            orders["matrix"] = "matrix(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+    }
+
+    return TransElement;
+}, "util.svg.element");
 
 jui.define("util.svg.element.path", [], function() { // path
     var PathElement = function() {
@@ -127,9 +190,7 @@ jui.define("util.svg.element.path", [], function() { // path
         }
 
         this.close = function() {
-            this.attr({
-                d: orders.join(" ")
-            });
+            this.attr({ d: orders.join(" ") });
 
             orders = [];
             return this;
@@ -144,7 +205,7 @@ jui.define("util.svg.element.path", [], function() { // path
     }
 
     return PathElement;
-}, "util.svg.element");
+}, "util.svg.element.transform");
 
 jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     var PolyElement = function() {
@@ -156,9 +217,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         }
 
         this.close = function() {
-            this.attr({
-                points: orders.join(" ")
-            });
+            this.attr({ points: orders.join(" ") });
 
             orders = [];
             return this;
@@ -166,11 +225,11 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     }
 
     return PolyElement;
-}, "util.svg.element");
+}, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.svg.element", "util.svg.element.path", "util.svg.element.poly" ],
-    function(_, Element, PathElement, PolyElement) {
+    [ "util", "util.svg.element", "util.svg.element.transform", "util.svg.element.path", "util.svg.element.poly" ],
+    function(_, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(root, attr) {
         var self = this,
@@ -314,7 +373,7 @@ jui.define("util.svg",
         }
 
         this.g = this.group = function(attr, callback) {
-            return create(new Element(), "g", attr, callback);
+            return create(new TransElement(), "g", attr, callback);
         }
 
         this.marker = function(attr, callback) {
@@ -322,7 +381,7 @@ jui.define("util.svg",
         }
 
         this.a = function(attr, callback) {
-            return create(new Element(), "a", attr, callback);
+            return create(new TransElement(), "a", attr, callback);
         }
 
         this.switch = function(attr, callback) {
@@ -334,23 +393,23 @@ jui.define("util.svg",
         }
 
         this.rect = function(attr, callback) {
-            return create(new Element(), "rect", attr, callback);
+            return create(new TransElement(), "rect", attr, callback);
         }
 
         this.line = function(attr, callback) {
-            return create(new Element(), "line", attr, callback);
+            return create(new TransElement(), "line", attr, callback);
         }
 
         this.circle = function(attr, callback) {
-            return create(new Element(), "circle", attr, callback);
+            return create(new TransElement(), "circle", attr, callback);
         }
 
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
-                return create(new Element(), "text", attr).html(textOrCallback);
+                return create(new TransElement(), "text", attr).html(textOrCallback);
             }
 
-            return create(new Element(), "text", attr, textOrCallback);
+            return create(new TransElement(), "text", attr, textOrCallback);
         }
 
         this.textPath = function(attr, text) {
@@ -378,11 +437,11 @@ jui.define("util.svg",
         }
 
         this.ellipse = function(attr, callback) {
-            return create(new Element(), "ellipse", attr, callback);
+            return create(new TransElement(), "ellipse", attr, callback);
         }
 
         this.image = function(attr, callback) {
-            return create(new Element(), "image", attr, callback);
+            return create(new TransElement(), "image", attr, callback);
         }
 
         this.path = function(attr, callback) {
