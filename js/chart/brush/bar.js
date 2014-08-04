@@ -6,8 +6,8 @@ jui.define("chart.brush.bar", [], function() {
         }
 
         this.draw = function(chart) {
-        	var x = chart.area.chart.x;
-        	var y = chart.area.chart.y;
+        	var x = chart.area.x;
+        	var y = chart.area.y;
         	
         	var g = chart.svg.group({
                 "transform" : "translate(" + x + "," + y + ")"

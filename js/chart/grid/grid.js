@@ -50,7 +50,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.line({
                             x1: barX,
                             y1: 0,
-                            x2: width + chart.area.chart.width,
+                            x2: width + chart.area.width,
                             y2: 0,
                             stroke : "black",
                             "stroke-width" : 0.2

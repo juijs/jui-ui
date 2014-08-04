@@ -9,7 +9,7 @@ jui.define("chart.brush.point", [], function() {
             var seriesPadding = chart.get('seriesPadding');
             var labels = chart.get('labels');
 			var colors = ["black", 'red', 'blue'];
-            var height = chart.area.chart.height;
+            var height = chart.area.height;
             var width = chart.area.chart.width;
             var rate = width / labels.length; 
             var pos = rate / 2; 

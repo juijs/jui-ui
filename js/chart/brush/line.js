@@ -8,8 +8,8 @@ jui.define("chart.brush.line", [], function() {
             var seriesPadding = chart.get('seriesPadding');
             var labels = chart.get('labels');
 			var colors = ["black", 'red', 'blue'];
-            var height = chart.area.chart.height;
-            var width = chart.area.chart.width;
+            var height = chart.area.height;
+            var width = chart.area.width;
             var rate = width / labels.length; 
             var pos = rate / 2; 
             var grid = brush.grid;
