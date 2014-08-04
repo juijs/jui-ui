@@ -17,6 +17,8 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
                 y : padding
             };
 
+			//TODO: 나중에  영역 계산 할 때 다시 필요 
+			/*
             // 메인 title 영역 계산
             if (self.get('title')) {
                 chart.y += self.get('titleHeight');
@@ -68,11 +70,12 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
                 }
             }
 
+			*/
             // chart 영역 계산
             chart.x2 = chart.x + chart.width;
             chart.y2 = chart.y + chart.height;
 
-            self.area.chart = chart;
+            self.area = chart;
         }
 
 		this.get = function(key) {
