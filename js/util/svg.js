@@ -172,7 +172,7 @@ jui.define("util.svg",
     [ "util", "util.svg.element", "util.svg.element.path", "util.svg.element.poly" ],
     function(_, Element, PathElement, PolyElement) {
 
-    var SVG = function(root, width, height) {
+    var SVG = function(root, attr) {
         var self = this,
             target = null;
 
@@ -185,8 +185,8 @@ jui.define("util.svg",
             target = new Element();
 
             target.create("svg", {
-                width: (_.typeCheck("integer", width)) ? width : 300,
-                height: (_.typeCheck("integer", height)) ? width : 300
+                width: (_.typeCheck("integer", attr.width)) ? attr.width : 300,
+                height: (_.typeCheck("integer", attr.height)) ? attr.width : 300
             });
 
             root.appendChild(target.element);
@@ -212,6 +212,14 @@ jui.define("util.svg",
             return elem;
         }
 
+        function createChild(elem, type, attr, callback) {
+            if(elem.parent == target) {
+                throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
+            }
+
+            return create(elem, type, attr, callback);
+        }
+
         function appendChild(target) {
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
@@ -229,9 +237,9 @@ jui.define("util.svg",
         function getAttributes(attr) {
             var tmp_attr = {};
 
-            for(var k in def_attr) {
-                if(_.typeCheck("function", def_attr[k])) {
-                    if(attr[k]) {
+            for (var k in def_attr) {
+                if (_.typeCheck("function", def_attr[k])) {
+                    if (attr[k]) {
                         attr[k] = def_attr[k](attr[k]);
                     }
                 } else {
@@ -291,7 +299,6 @@ jui.define("util.svg",
         /**
          * 엘리먼트 관련 메소드
          *
-         * @param attr
          */
 
         this.custom = function(name, attr, callback) {
@@ -318,20 +325,24 @@ jui.define("util.svg",
             return create(new Element(), "a", attr, callback);
         }
 
+        this.switch = function(attr, callback) {
+            return create(new Element(), "switch", attr, callback);
+        }
+
         this.use = function(attr) {
             return create(new Element(), "use", attr);
         }
 
-        this.rect = function(attr) {
-            return create(new Element(), "rect", attr);
+        this.rect = function(attr, callback) {
+            return create(new Element(), "rect", attr, callback);
         }
 
-        this.line = function(attr) {
-            return create(new Element(), "line", attr);
+        this.line = function(attr, callback) {
+            return create(new Element(), "line", attr, callback);
         }
 
-        this.circle = function(attr) {
-            return create(new Element(), "circle", attr);
+        this.circle = function(attr, callback) {
+            return create(new Element(), "circle", attr, callback);
         }
 
         this.text = function(attr, textOrCallback) {
@@ -366,20 +377,155 @@ jui.define("util.svg",
             return create(new Element(), "tspan", attr);
         }
 
-        this.ellipse = function(attr) {
-            return create(new Element(), "ellipse", attr);
+        this.ellipse = function(attr, callback) {
+            return create(new Element(), "ellipse", attr, callback);
         }
 
-        this.path = function(attr) {
-            return create(new PathElement(), "path", attr);
+        this.image = function(attr, callback) {
+            return create(new Element(), "image", attr, callback);
         }
 
-        this.polyline = function(attr) {
-            return create(new PolyElement(), "polyline", attr);
+        this.path = function(attr, callback) {
+            return create(new PathElement(), "path", attr, callback);
         }
 
-        this.polygon = function(attr) {
-            return create(new PolyElement(), "polygon", attr);
+        this.polyline = function(attr, callback) {
+            return create(new PolyElement(), "polyline", attr, callback);
+        }
+
+        this.polygon = function(attr, callback) {
+            return create(new PolyElement(), "polygon", attr, callback);
+        }
+
+        this.pattern = function(attr, callback) {
+            return create(new Element(), "pattern", attr, callback);
+        }
+
+        this.mask = function(attr, callback) {
+            return create(new Element(), "mask", attr, callback);
+        }
+
+        this.clipPath = function(attr, callback) {
+            return create(new Element(), "clipPath", attr, callback);
+        }
+
+        this.linearGradient = function(attr, callback) {
+            return create(new Element(), "linearGradient", attr, callback);
+        }
+
+        this.radialGradient = function(attr, callback) {
+            return create(new Element(), "radialGradient", attr, callback);
+        }
+
+        this.filter = function(attr, callback) {
+            return create(new Element(), "filter", attr, callback);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (그라데이션)
+         *
+         */
+
+        this.stop = function(attr) {
+            return createChild(new Element(), "stop", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (애니메이션)
+         *
+         */
+
+        this.set = function(attr) {
+            return createChild(new Element(), "set", attr);
+        }
+
+        this.animate = function(attr) {
+            return createChild(new Element(), "animate", attr);
+        }
+
+        this.animateColor = function(attr) {
+            return createChild(new Element(), "animateColor", attr);
+        }
+
+        this.animateTransform = function(attr) {
+            return createChild(new Element(), "animateTransform", attr);
+        }
+
+        this.animateMotion = function(attr) {
+            return createChild(new Element(), "animateMotion", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (필터)
+         *
+         */
+
+        this.feBlend = function(attr) {
+            return createChild(new Element(), "feBlend", attr);
+        }
+
+        this.feColorMatrix = function(attr) {
+            return createChild(new Element(), "feColorMatrix", attr);
+        }
+
+        this.feComponentTransfer = function(attr) {
+            return createChild(new Element(), "feComponentTransfer", attr);
+        }
+
+        this.feComposite = function(attr) {
+            return createChild(new Element(), "feComposite", attr);
+        }
+
+        this.feConvolveMatrix = function(attr) {
+            return createChild(new Element(), "feConvolveMatrix", attr);
+        }
+
+        this.feDiffuseLighting = function(attr) {
+            return createChild(new Element(), "feDiffuseLighting", attr);
+        }
+
+        this.feDisplacementMap = function(attr) {
+            return createChild(new Element(), "feDisplacementMap", attr);
+        }
+
+        this.feFlood = function(attr) {
+            return createChild(new Element(), "feFlood", attr);
+        }
+
+        this.feGaussianBlur = function(attr) {
+            return createChild(new Element(), "feGaussianBlur", attr);
+        }
+
+        this.feImage = function(attr) {
+            return createChild(new Element(), "feImage", attr);
+        }
+
+        this.feMerge = function(attr, callback) {
+            return createChild(new Element(), "feMerge", attr, callback);
+        }
+
+        this.feMergeNode = function(attr) {
+            return createChild(new Element(), "feMergeNode", attr);
+        }
+
+        this.feMorphology = function(attr) {
+            return createChild(new Element(), "feMorphology", attr);
+        }
+
+        this.feOffset = function(attr) {
+            return createChild(new Element(), "feOffset", attr);
+        }
+
+        this.feSpecularLighting = function(attr) {
+            return createChild(new Element(), "feSpecularLighting", attr);
+        }
+
+        this.feTile = function(attr) {
+            return createChild(new Element(), "feTile", attr);
+        }
+
+        this.feTurbulence = function(attr) {
+            return createChild(new Element(), "feTurbulence", attr);
         }
 
         init();

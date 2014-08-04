@@ -80,7 +80,10 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 		}
 
 		this.init = function() {
-            this.svg = new SVGUtil(this.root, this.get("width"), this.get("height"));
+            this.svg = new SVGUtil(this.root, {
+                width: this.get("width"),
+                height: this.get("height")
+            });
 
             /*/
             this.svg.setting({
