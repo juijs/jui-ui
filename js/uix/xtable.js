@@ -712,7 +712,7 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showLoading: [ "integer" ],
                 setCsv: [ "string" ],
                 setCsvFile: [ "object" ],
-                dowloadCsv: [ [ "string", "undefined" ] ],
+                downloadCsv: [ [ "string", "undefined" ] ],
                 rowFunc: [ "string", [ "integer", "string" ], "function" ]
             },
             animate: {

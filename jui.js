@@ -6006,7 +6006,7 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 setCsvFile: [ [ "string", "object" ], "object" ],
                 getCsv: [ [ "boolean", "undefined" ] ],
                 getCsvBase64: [ [ "boolean", "undefined" ] ],
-                dowloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
+                downloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
             },
             animate: {
                 update: {
@@ -7921,7 +7921,7 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showLoading: [ "integer" ],
                 setCsv: [ "string" ],
                 setCsvFile: [ "object" ],
-                dowloadCsv: [ [ "string", "undefined" ] ],
+                downloadCsv: [ [ "string", "undefined" ] ],
                 rowFunc: [ "string", [ "integer", "string" ], "function" ]
             },
             animate: {
