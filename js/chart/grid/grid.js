@@ -43,7 +43,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0, " + values[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: barX,
                             y1: 0,
                             x2: width + chart.area.width,
@@ -52,7 +52,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.2
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: barX-bar,
                             y: bar,
                             'text-anchor' : 'end'
@@ -84,7 +84,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(" + values[i] + ", 0)"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: 0,
@@ -93,7 +93,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: 0,
                             y: bar * 4,
                             'text-anchor' : 'middle'
@@ -125,7 +125,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate("+ values[i] + ", " + barY + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: 0,
@@ -134,7 +134,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: 0,
                             y: -4,
                             'text-anchor' : 'middle'
@@ -167,7 +167,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0, " + values[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: bar,
@@ -176,7 +176,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: bar + 2,
                             y: bar,
                             'text-anchor' : 'start'
@@ -230,7 +230,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate("+ points[i] + ", 0)"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: barY,
                             x2: 0,
@@ -239,7 +239,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: band / 2,
                             y: 20,
                             'text-anchor' : 'middle'
@@ -267,7 +267,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate("+ points[i] + ", 0)"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: 0,
@@ -276,7 +276,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: band / 2,
                             y: 20,
                             'text-anchor' : 'middle'
@@ -304,7 +304,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0, "+ points[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: barX,
                             y1: 0,
                             x2: width,
@@ -313,7 +313,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: bar * 4,
                             y: band / 2,
                             'text-anchor' : 'end'
@@ -341,7 +341,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0, "+ points[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: bar,
@@ -350,7 +350,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: bar,
                             y: band / 2,
                             'text-anchor' : 'start'
@@ -405,7 +405,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate("+ values[i] + ", 0)"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: barY,
                             x2: 0,
@@ -414,7 +414,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: 0,
                             y: bar * 3,
                             'text-anchor' : 'middle'
@@ -441,7 +441,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate("+ values[i] + ", 0)"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: 0,
@@ -450,7 +450,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: 0,
                             y: bar * 3,
                             'text-anchor' : 'middle'
@@ -478,7 +478,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0,"+ values[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: barX,
                             y1: 0,
                             x2: width,
@@ -487,7 +487,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: bar,
                             y: bar,
                             'text-anchor' : 'end'
@@ -515,7 +515,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     g.append(chart.svg.group({
                         "transform" : "translate(0,"+ values[i] + ")"
                     }, function() {
-                        this.line({
+                        chart.svg.line({
                             x1: 0,
                             y1: 0,
                             x2: bar,
@@ -524,7 +524,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             "stroke-width" : 0.5
                         });
 
-                        this.text({
+                        chart.svg.text({
                             x: bar * 2,
                             y: bar,
                             'text-anchor' : 'start'

@@ -43,6 +43,22 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
 
             return this;
         }
+
+        this.remove = function() {
+            this.parent.element.removeChild(this.element);
+
+            return this;
+        }
+
+        this.on = function(type, handler) {
+            this.element.addEventListener(type, function(e) {
+                if(typeof(handler) == "function") {
+                    handler.call(this, e);
+                }
+            }, false);
+
+            return this;
+        }
     }
 
     return Element;
@@ -212,7 +228,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         var orders = [];
 
         function applyOrders(self) {
-            self.attr({ d: orders.join(" ") });
+            self.attr({ points: orders.join(" ") });
         }
 
         this.point = function(x, y) {
@@ -231,10 +247,8 @@ jui.define("util.svg",
     function(_, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(root, attr) {
-        var self = this,
-            target = null;
-
-        var parent = {},
+        var target = null,
+            parent = {},
             depth = 0;
 
         function init() {
@@ -261,7 +275,7 @@ jui.define("util.svg",
                 depth++;
                 parent[depth] = elem;
 
-                callback.call(self, elem);
+                callback.call(elem);
                 depth--;
             }
 
@@ -276,7 +290,7 @@ jui.define("util.svg",
             return create(elem, type, attr, callback);
         }
 
-        function appendChild(target) {
+        function appendAll(target) {
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
 
@@ -285,7 +299,7 @@ jui.define("util.svg",
                 }
 
                 if(child.childrens.length > 0) {
-                    appendChild(child);
+                    appendAll(child);
                 }
             }
         }
@@ -315,7 +329,7 @@ jui.define("util.svg",
 
         this.render = function() {
             this.clear();
-            appendChild(target);
+            appendAll(target);
         }
 
         this.download = function(name) {
@@ -471,10 +485,6 @@ jui.define("util.svg",
          *
          */
 
-        this.set = function(attr) {
-            return createChild(new Element(), "set", attr);
-        }
-
         this.animate = function(attr) {
             return createChild(new Element(), "animate", attr);
         }
@@ -483,12 +493,20 @@ jui.define("util.svg",
             return createChild(new Element(), "animateColor", attr);
         }
 
+        this.animateMotion = function(attr) {
+            return createChild(new Element(), "animateMotion", attr);
+        }
+
         this.animateTransform = function(attr) {
             return createChild(new Element(), "animateTransform", attr);
         }
 
-        this.animateMotion = function(attr) {
-            return createChild(new Element(), "animateMotion", attr);
+        this.mpath = function(attr) {
+            return createChild(new Element(), "mpath", attr);
+        }
+
+        this.set = function(attr) {
+            return createChild(new Element(), "set", attr);
         }
 
         /**
