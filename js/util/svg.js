@@ -1,4 +1,4 @@
-jui.define("util.svg.element", [], function() { // rectangle, circle, text, line, ...
+jui.define("util.svg.element", [], function() {
     var Element = function() {
         this.create = function(type, attr) {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
