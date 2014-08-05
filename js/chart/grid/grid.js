@@ -40,10 +40,6 @@ jui.define("chart.grid", [ "util" ], function(_) {
 	    				values[i] = format(values[i]);
 	    			}
 	    			
-	    			var axis = chart.svg.group({ 
-	    				"transform" : "translate(0, " + values[i] + ")"
-	    			});
-
                     g.append(chart.svg.group({
                         "transform" : "translate(0, " + values[i] + ")"
                     }, function() {
@@ -59,9 +55,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: barX-bar,
                             y: bar,
-                            text: ticks[i] + "",
                             'text-anchor' : 'end'
-                        })
+                        },ticks[i] + "")
                     }));
 	    		}									
 				
@@ -101,9 +96,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: 0,
                             y: bar * 4,
-                            text: ticks[i] + "",
                             'text-anchor' : 'middle'
-                        })
+                        },ticks[i] + "")
                     }));
 	    		}
 				
@@ -143,9 +137,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: 0,
                             y: -4,
-                            text: ticks[i] + "",
                             'text-anchor' : 'middle'
-                        })
+                        },ticks[i] + "")
                     }));
 	    		}				
 				
@@ -186,9 +179,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: bar + 2,
                             y: bar,
-                            text: ticks[i] + "",
                             'text-anchor' : 'start'
-                        })
+                        },ticks[i] + "")
                     }));
 	    		}					
 			}
@@ -250,9 +242,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: band / 2,
                             y: 20,
-                            text: domain[i],
                             'text-anchor' : 'middle'
-                        })
+                        },domain[i])
                     }));
 	    		}
 				
@@ -288,9 +279,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: band / 2,
                             y: 20,
-                            text: domain[i],
                             'text-anchor' : 'middle'
-                        })
+                        }, domain[i])
                     }));
 	    		}
 
@@ -326,9 +316,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: bar * 4,
                             y: band / 2,
-                            text: domain[i],
                             'text-anchor' : 'end'
-                        })
+                        }, domain[i])
                     }));
 	    		}
 
@@ -364,9 +353,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: bar,
                             y: band / 2,
-                            text: domain[i],
                             'text-anchor' : 'start'
-                        })
+                        }, domain[i])
                     }));
 	    		}
     		}
@@ -429,9 +417,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: 0,
                             y: bar * 3,
-                            text: format ? format(ticks[i]) : ticks[i],
                             'text-anchor' : 'middle'
-                        })
+                        }, format ? format(ticks[i]) : ticks[i])
                     }));
 	    		}
     		} else if (orient == 'bottom') {
@@ -466,9 +453,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: 0,
                             y: bar * 3,
-                            text: format ? format(ticks[i]) : ticks[i],
                             'text-anchor' : 'middle'
-                        })
+                        }, format ? format(ticks[i]) : ticks[i])
                     }));
 	    		}    			
 
@@ -504,9 +490,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: bar,
                             y: bar,
-                            text: format ? format(ticks[i]) : ticks[i],
                             'text-anchor' : 'end'
-                        })
+                        }, format ? format(ticks[i]) : ticks[i])
                     }));
 	    		}    
     			
@@ -542,9 +527,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         this.text({
                             x: bar * 2,
                             y: bar,
-                            text: format ? format(ticks[i]) : ticks[i],
                             'text-anchor' : 'start'
-                        })
+                        }, format ? format(ticks[i]) : ticks[i])
                     }));
 	    		}    
     		}

@@ -41,23 +41,26 @@ jui.defineUI("chart.chart", [], function() {
 	      	}
 	      	
 	      	// grid 최소, 최대 구성
-	      	if (typeof brush == 'string') {
-	      		brush = [{ type : brush }];
-	      	} else if (typeof brush == 'object' && !brush.length) {
-	      		brush = [brush];
-	      	}
+	      	if (brush != null) {
+		      	if (typeof brush == 'string') {
+		      		brush = [{ type : brush }];
+		      	} else if (typeof brush == 'object' && !brush.length) {
+		      		brush = [brush];
+		      	}
 	      	
-	      	for(var i = 0, len = brush.length; i < len; i++) {
-	      		var b = brush[i];
-	      		b.cls = 'brush';
-	      		var g = b.grid = grid[b.grid || 0];
-	      		b.chart = this; 
-			
-				if (!b.series) {
-					b.series = series_list;
-				} else if (typeof b.series == 'string') {
-					b.series = [b.series];
-				}
+		      	for(var i = 0, len = brush.length; i < len; i++) {
+		      		var b = brush[i];
+		      		b.cls = 'brush';
+		      		var g = b.grid = grid[b.grid || 0];
+		      		b.chart = this; 
+				
+					if (!b.series) {
+						b.series = series_list;
+					} else if (typeof b.series == 'string') {
+						b.series = [b.series];
+					}
+		      	}
+	      		
 	      	}
 
 	      	_grid = grid;
@@ -83,22 +86,43 @@ jui.defineUI("chart.chart", [], function() {
                 this[k] = new Grid(orient, grid[k]).render(this);
             }
 
-            for(var i = 0; i < _brush.length; i++) {
-                var Obj = jui.include("chart.brush." + _brush[i].type);
-
-                _brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
-                _brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
-
-                new Obj(_brush[i]).render(this);
-            }
+			if (_brush != null) {
+	            for(var i = 0; i < _brush.length; i++) {
+	                var Obj = jui.include("chart.brush." + _brush[i].type);
+	
+	                _brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
+	                _brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
+	
+	                new Obj(_brush[i]).render(this);
+	            }
+				
+			}
         }
 		
 		this.setDomain = function(axis) {
+
+			var series = this.get('series');
+			var data = this.get('data');
+			
+			if (axis.type == 'radal') {
+				 
+				if (axis.series && !axis.domain) {
+					var domain = [];
+					for(var i = 0; i < data.length; i++) {
+						domain.push(data[i][axis.series]);
+					}
+					
+					axis.domain = domain;
+					axis.step = axis.step || 10; 
+				}
+				 
+				return;
+			}
+			
 			if (typeof axis.series == 'string') {
 				axis.series = [axis.series];
 			}
-			var series = this.get('series');
-			var data = this.get('data');
+
 			
 			if (axis.series && axis.series.length) {
 				var max = 0;
@@ -174,8 +198,8 @@ jui.defineUI("chart.chart", [], function() {
                 "theme": {},
                 "labels": [],
                 "series": {},
-                "grid" : [],
-                "brush": [],
+                "grid" : null,
+                "brush": null,
                 "data": []
             }
         }
