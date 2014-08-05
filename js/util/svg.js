@@ -5,10 +5,6 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
             this.childrens = [];
             this.parent = null;
             this.attr(attr);
-            
-            if(attr.text) { // 이 코드가 뭘까?
-            	this.element.appendChild(document.createTextNode(attr.text));
-            }
         }
 
         this.attr = function(attr) {
