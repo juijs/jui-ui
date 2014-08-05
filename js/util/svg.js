@@ -1,8 +1,5 @@
 jui.define("util.svg.element", [], function() { // rectangle, circle, text, line, ...
     var Element = function() {
-        var attributes = {},
-            styles = {};
-
         this.create = function(type, attr) {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
@@ -15,17 +12,11 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
         }
 
         this.attr = function(attr) {
-            console.log(this.element);
-
             for(var k in attr) {
-                attributes[k] = attr[k];
-            }
-
-            for(var k in attributes) {
                 if(k.indexOf("xlink:") != -1) {
-                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attributes[k]);
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, attributes[k]);
+                    this.element.setAttributeNS(null, k, attr[k]);
                 }
             }
 
@@ -36,11 +27,7 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
             var list = [];
 
             for (var k in css) {
-                styles[k] = css[k];
-            }
-
-            for (var k in styles) {
-                list.push(k + ":" + styles[k]);
+                list.push(k + ":" + css[k]);
             }
 
             this.attr({ style: list.join(";") });
