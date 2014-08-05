@@ -15,6 +15,8 @@ jui.define("util.svg.element", [], function() { // rectangle, circle, text, line
         }
 
         this.attr = function(attr) {
+            console.log(this.element);
+
             for(var k in attr) {
                 attributes[k] = attr[k];
             }
@@ -131,6 +133,10 @@ jui.define("util.svg.element.path", [], function() { // path
         var orders = [],
             isUpper = true;
 
+        function applyOrders(self) {
+            self.attr({ d: orders.join(" ") });
+        }
+
         this.uppercase = function() {
             isUpper = true;
             return this;
@@ -143,41 +149,57 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.moveTo = function(x, y) {
             orders.push( ((isUpper) ? "M" : "m") + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.lineTo = function(x, y) {
             orders.push( ((isUpper) ? "L" : "l") + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.hLineTo = function(x) {
             orders.push( ((isUpper) ? "H" : "h") + x );
+            applyOrders(this);
+
             return this;
         }
 
         this.vLineTo = function(y) {
             orders.push( ((isUpper) ? "V" : "v") + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.curveTo = function(x1, y1, x2, y2, x, y) {
             orders.push( ((isUpper) ? "C" : "c") + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.sCurveTo = function(x2, y2, x, y) {
             orders.push( ((isUpper) ? "S" : "s") + x2 + "," + y2 + " " + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.qCurveTo = function(x1, y1, x, y) {
             orders.push( ((isUpper) ? "Q" : "q") + x1 + "," + y1 + " " + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
         this.tCurveTo = function(x1, y1, x, y) {
             orders.push( ((isUpper) ? "T" : "t") + x1 + "," + y1 + " " + x + "," + y );
+            applyOrders(this);
+
             return this;
         }
 
@@ -186,19 +208,14 @@ jui.define("util.svg.element.path", [], function() { // path
             sweep_flag = (sweep_flag) ? 1 : 0;
 
             orders.push( ((isUpper) ? "A" : "a") + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y );
-            return this;
-        }
+            applyOrders(this);
 
-        this.close = function() {
-            this.attr({ d: orders.join(" ") });
-
-            orders = [];
             return this;
         }
 
         this.closePath = function() {
             orders.push((isUpper) ? "Z" : "z");
-            this.close();
+            applyOrders(this);
 
             return this;
         }
@@ -211,15 +228,14 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     var PolyElement = function() {
         var orders = [];
 
-        this.point = function(x, y) {
-            orders.push(x + "," + y)
-            return this;
+        function applyOrders(self) {
+            self.attr({ d: orders.join(" ") });
         }
 
-        this.close = function() {
-            this.attr({ points: orders.join(" ") });
+        this.point = function(x, y) {
+            orders.push(x + "," + y);
+            applyOrders(this);
 
-            orders = [];
             return this;
         }
     }
@@ -238,8 +254,6 @@ jui.define("util.svg",
         var parent = {},
             depth = 0;
 
-        var def_attr = {}; // 엘리먼트 공통 속성
-
         function init() {
             target = new Element();
 
@@ -252,7 +266,7 @@ jui.define("util.svg",
         }
 
         function create(elem, type, attr, callback) {
-            elem.create(type, getAttributes(attr));
+            elem.create(type, attr);
 
             if(depth == 0) {
                 target.append(elem);
@@ -291,22 +305,6 @@ jui.define("util.svg",
                     appendChild(child);
                 }
             }
-        }
-
-        function getAttributes(attr) {
-            var tmp_attr = {};
-
-            for (var k in def_attr) {
-                if (_.typeCheck("function", def_attr[k])) {
-                    if (attr[k]) {
-                        attr[k] = def_attr[k](attr[k]);
-                    }
-                } else {
-                    tmp_attr[k] = def_attr[k];
-                }
-            }
-
-            return _.extend(tmp_attr, attr);
         }
 
         /**
