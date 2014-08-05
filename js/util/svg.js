@@ -312,10 +312,6 @@ jui.define("util.svg",
          *
          */
 
-        this.setting = function(attr) {
-            def_attr = attr;
-        }
-
         this.size = function() {
             var rect = target.element.getBoundingClientRect();
 
