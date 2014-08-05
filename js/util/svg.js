@@ -1,18 +1,66 @@
 jui.define("util.svg.element", [], function() {
     var Element = function() {
+
+        /**
+         * 엘리먼트 생성 및 조회 메소드
+         *
+         */
+
         this.create = function(type, attr) {
+            // 퍼블릭 프로퍼티
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
             this.parent = null;
+            this.attributes = {};
+            this.styles = {};
+
+            // 기본 속성 설정
             this.attr(attr);
         }
 
+        this.each = function(callback) {
+            if(typeof(callback) != "function") {
+                for(var i = 0; i < this.childrens.length; i++) {
+                    callback.call(this.childrens[i], i);
+                }
+            }
+
+            return this.childrens;
+        }
+
+        this.get = function(index) {
+            if(this.childrens[index]) {
+                return this.childrens[index];
+            }
+
+            return null;
+        }
+
+        this.index = function(obj) {
+            for(var i = 0; i < this.childrens.length; i++) {
+                if(obj == this.childrens[i]) {
+                    return i;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * 엘리먼트 조작 메소드
+         *
+         */
+
         this.attr = function(attr) {
             for(var k in attr) {
+                this.attributes[k] = attr[k];
+            }
+
+            for(var k in this.attributes) {
                 if(k.indexOf("xlink:") != -1) {
-                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, this.attributes[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, attr[k]);
+                    this.element.setAttributeNS(null, k, this.attributes[k]);
                 }
             }
 
@@ -22,8 +70,12 @@ jui.define("util.svg.element", [], function() {
         this.css = function(css) {
             var list = [];
 
-            for (var k in css) {
-                list.push(k + ":" + css[k]);
+            for(var k in css) {
+                this.styles[k] = css[k];
+            }
+
+            for(var k in this.styles) {
+                list.push(k + ":" + this.styles[k]);
             }
 
             this.attr({ style: list.join(";") });
@@ -246,48 +298,44 @@ jui.define("util.svg",
     [ "util", "util.svg.element", "util.svg.element.transform", "util.svg.element.path", "util.svg.element.poly" ],
     function(_, Element, TransElement, PathElement, PolyElement) {
 
-    var SVG = function(root, attr) {
-        var target = null,
+    var SVG = function(rootElem, rootAttr) {
+        var root = null,
             parent = {},
             depth = 0;
 
         function init() {
-            target = new Element();
+            root = new Element();
+            root.create("svg", rootAttr);
 
-            target.create("svg", {
-                width: (_.typeCheck("integer", attr.width)) ? attr.width : 300,
-                height: (_.typeCheck("integer", attr.height)) ? attr.width : 300
-            });
-
-            root.appendChild(target.element);
+            rootElem.appendChild(root.element);
         }
 
-        function create(elem, type, attr, callback) {
-            elem.create(type, attr);
+        function create(obj, type, attr, callback) {
+            obj.create(type, attr);
 
             if(depth == 0) {
-                target.append(elem);
+                root.append(obj);
             } else {
-                parent[depth].append(elem);
+                parent[depth].append(obj);
             }
 
             if(_.typeCheck("function", callback)) {
                 depth++;
-                parent[depth] = elem;
+                parent[depth] = obj;
 
-                callback.call(elem);
+                callback.call(obj);
                 depth--;
             }
 
-            return elem;
+            return obj;
         }
 
-        function createChild(elem, type, attr, callback) {
-            if(elem.parent == target) {
+        function createChild(obj, type, attr, callback) {
+            if(obj.parent == root) {
                 throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
             }
 
-            return create(elem, type, attr, callback);
+            return create(obj, type, attr, callback);
         }
 
         function appendAll(target) {
@@ -310,26 +358,35 @@ jui.define("util.svg",
          */
 
         this.size = function() {
-            var rect = target.element.getBoundingClientRect();
+            if(arguments.length == 2) {
+                var w = arguments[0],
+                    h = arguments[1];
 
-            return {
-                width: rect.width,
-                height: rect.height
+                if(_.typeCheck("integer", w) && _.typeCheck("integer", h)) {
+                    root.attr({ width: w, height: h });
+                }
+            } else {
+                var rect = root.element.getBoundingClientRect();
+
+                return {
+                    width: rect.width,
+                    height: rect.height
+                }
             }
         }
 
         this.clear = function() {
-            var newElement = target.element.cloneNode(false);
+            var newElement = root.element.cloneNode(false);
 
-            target.element.parentNode.removeChild(target.element);
-            target.element = newElement;
+            root.element.parentNode.removeChild(root.element);
+            root.element = newElement;
 
-            root.appendChild(target.element);
+            rootElem.appendChild(root.element);
         }
 
         this.render = function() {
             this.clear();
-            appendAll(target);
+            appendAll(root);
         }
 
         this.download = function(name) {
@@ -339,7 +396,7 @@ jui.define("util.svg",
 
             var a = document.createElement('a');
             a.download = (name) ? name + ".png" : "svg.png";
-            a.href = _.svgToBase64(root.innerHTML);
+            a.href = _.svgToBase64(rootElem.innerHTML);
 
             document.body.appendChild(a);
             a.click();
@@ -347,7 +404,24 @@ jui.define("util.svg",
         }
 
         /**
-         * 엘리먼트 관련 메소드
+         * 루트 엘리먼트 조작 메소드
+         *
+         */
+
+        this.each = function(callback) {
+            return root.each(callback);
+        }
+
+        this.get = function(index) {
+            return root.get(index);
+        }
+
+        this.index = function(obj) {
+            return root.index(obj);
+        }
+
+        /**
+         * 엘리먼트 생성 메소드
          *
          */
 
