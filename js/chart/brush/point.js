@@ -1,42 +1,37 @@
 jui.define("chart.brush.point", [], function() {
 
-    var PointBrush = function(brush) {
-        var radius = 1.7;
+    var PointBrush = function(grid) {
+        var g, zeroY, series, count, width;
+        var r = 10;
 
-        this._draw = function(chart) {
-            var series = chart.get('series');
-            var barPadding = chart.get('barPadding');
-            var seriesPadding = chart.get('seriesPadding');
-            var labels = chart.get('labels');
-			var colors = ["black", 'red', 'blue'];
-            var height = chart.area.height;
-            var width = chart.area.chart.width;
-            var rate = width / labels.length; 
-            var pos = rate / 2; 
-            var grid = brush.grid;
-            
-            for(var i = 0, len = brush.series.length; i < len; i++) {
-            	var s = series[brush.series[i]];
-            	
-            	for(var j = 0; j < s.data.length; j++) {
-            		var value = s.data[j];
-            		
-            		var y = chart.convert(height, grid.max, grid.min, value);
-            		var x = (rate * j) + pos;
-            		
-           			chart.circle(x, y, radius * (value/5), {
-                      fill: colors[i],
-                    });                            		
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.area.x, chart.area.y);
 
-            	}
-            	
+            zeroY = grid.y.scale(0);
+            series = chart.options.series;
+            count = series[grid.series[0]].data.length;
+            width = chart.x.scale.rangeBand();
 
-            }            
-            
+
+            console.log(grid.series);
+            console.log(series);
         }
 
-        this.getRadius = function() {
-            return radius;
+        this.draw = function(chart) {
+            for(var i = 0; i < count; i++) {
+                var startX = grid.x.scale(i) + (width / 2);
+
+                for(var j = 0; j < grid.series.length; j++) {
+                    var startY = grid.y.scale(series[grid.series[j]].data[i]);
+
+                    g.append(chart.svg.circle({
+                        cx: startX,
+                        cy: startY,
+                        r: r,
+                        fill: this.getColor(j)
+                    }));
+                }
+            }
         }
     }
 
