@@ -86,12 +86,14 @@ jui.defineUI("chart.chart", [], function() {
                 this[k] = new Grid(orient, grid[k]).render(this);
             }
 
-			if (_brush != null) {
+        if (_brush != null) {
 	            for(var i = 0; i < _brush.length; i++) {
 	                var Obj = jui.include("chart.brush." + _brush[i].type);
 	
-	                _brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
-	                _brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
+	                if (this.x || this.x1) _brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
+	                if (this.y || this.y1) _brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
+	                if (this.c) _brush[i].c = this.c;
+	                
 	
 	                new Obj(_brush[i]).render(this);
 	            }

@@ -30,6 +30,7 @@ jui.define("chart.grid.range", [], function() {
 			}            
             
 			obj.g.attr({
+			  'class' : 'grid range',
 				transform : "translate(" + x + ", " + y + ")"
 			})	            
 

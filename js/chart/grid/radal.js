@@ -4,36 +4,73 @@ jui.define("chart.grid.radal", [], function() {
     	
     	var self = this; 
     	
-    	console.log(opt);
-    	
         this.drawBefore = function(chart) {
 
         }
         
-        this.drawRadal = function(chart, centerX, centerY, x, y, count, unit) {
-        	
-          console.log(x, y, count, unit);
+        this.x = function() {
+          
+        }
+        
+        this.drawCircle = function(chart, root, centerX, centerY, x, y, count) {
+          var r = Math.abs(y);
+          var cx = centerX;
+          var cy = centerY;
+          
+          root.append(chart.svg.circle({
+            cx : cx,
+            cy : cy,
+            r : r,
+            "fill-opacity" : 0,            
+            stroke : 'black',
+            "stroke-width" : 1
+          }))
+          
+        }
+        
+        this.drawRadal = function(chart, root, centerX, centerY, x, y, count, unit) {
         	
           var g = chart.svg.group();
-        	
+          
+ 		  var points = [];
+		  
+		  points.push([centerX + x, centerY + y]);
+          
 		  var startX = x;
 		  var startY = y;
           
           for(var i = 0; i < count; i++) {
             var obj = this.rotate(startX, startY, unit);
             
-            g.append(chart.svg.line({
-              x1 : centerX + startX,
-              y1 : centerY + startY,
-              x2 : centerX + obj.x,
-              y2 : centerY + obj.y,
-              "stroke-width" : 1,
-              'stroke' : 'black'
-            }))  
-            
             startX = obj.x;
-            startY = obj.y;            
+            startY = obj.y;
+            
+            points.push([centerX + obj.x, centerY + obj.y]);            
           }     
+          
+          var path = chart.svg.path({
+
+          	"fill-opacity" : 0,
+          	stroke : "black"
+          });
+          
+          for(var i = 0; i < points.length; i++) {
+          	var point = points[i];
+          	
+          	if (i == 0) {
+          		path.MoveTo(point[0], point[1])
+          	} else {
+          		path.LineTo(point[0], point[1]);
+          	}
+          }
+          
+          path.LineTo(points[0][0], points[0][1]);
+          //path.ClosePath();
+          
+          g.append(path)
+          
+          root.append(g);
+          
         }
 
         this.draw = function(chart) {
@@ -58,7 +95,13 @@ jui.define("chart.grid.radal", [], function() {
           
           var h = Math.abs(startY) / step;
           
-          var g = chart.svg.group();
+          var g = chart.svg.group({
+            'class' : 'grid radal'
+          });
+          
+          var root = chart.svg.group();
+          
+          g.append(root);
           
           // domain line 
           for(var i = 0; i < count; i++) {
@@ -66,7 +109,7 @@ jui.define("chart.grid.radal", [], function() {
           	  var x2 = centerX + startX;
           	  var y2 = centerY + startY;
           	
-	          g.append(chart.svg.line({
+	          root.append(chart.svg.line({
 	            x1 : centerX,
 	            y1 : centerY,
 	            x2 : x2,
@@ -93,7 +136,7 @@ jui.define("chart.grid.radal", [], function() {
 	          	tx -= 10;
 	          }
 	          
-	          g.append(chart.svg.text({
+	          root.append(chart.svg.text({
 	            x : tx,
 	            y : ty,
 	            'text-anchor' : talign
@@ -109,11 +152,24 @@ jui.define("chart.grid.radal", [], function() {
 
 		  // area split line 
 		  startY = -w/1.5;
+		  
 		  for(var i = 0; i < step; i++) {
-		  	this.drawRadal(chart, centerX, centerY, 0, startY, count, unit);
+
+        if (i == 0 && opt.extra) {
+          startY += h;
+          continue;
+        }		    
+		    if (opt.shape == 'circle') {
+		      this.drawCircle(chart, root, centerX, centerY, 0, startY, count);
+		    } else {
+		      this.drawRadal(chart, root, centerX, centerY, 0, startY, count, unit);  
+		    }
+		  	
 		  	
 		  	startY += h;
 		  }
+		  
+		  
         }
     }
 

@@ -23,6 +23,7 @@ jui.define("chart.grid.date", [], function() {
 			}            
             
 			obj.g.attr({
+			  'class' : 'grid date',
 				transform : "translate(" + x + ", " + y + ")"
 			})	            
 

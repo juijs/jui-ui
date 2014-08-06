@@ -26,6 +26,7 @@ jui.define("chart.grid.block", [], function() {
 			}            
             
 			obj.g.attr({
+			  'class' : 'grid block',
 				transform : "translate(" + x + ", " + y + ")"
 			})	            
 

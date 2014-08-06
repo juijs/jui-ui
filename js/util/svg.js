@@ -194,6 +194,7 @@ jui.define("util.svg.element.path", [], function() { // path
             return this;
         }
         this.MoveTo = function(x, y) {
+        	console.log(x, y);
             return this.moveTo(x, y, "M");
         }
 
