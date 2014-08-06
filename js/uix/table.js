@@ -1101,22 +1101,20 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 				len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
 			
 			for(var i = 0; i < len; i++) {
-				var columnKey = (sortIndexes === true) ? i : sortIndexes[i],
-					column = self.getColumn(columnKey);
+				var colKey = (sortIndexes === true) ? i : sortIndexes[i],
+					col = self.getColumn(colKey);
 				
-				if(column.element != null) {
-					(function(index, name) {
+				if(col.element != null) {
+					(function(index, column) {
 						self.addEvent(column.element, "click", function(e) {
 							if($(e.target).hasClass("resize")) return;
 
 							self.sort(index, undefined, e);
                             self.emit("colclick", [ column, e ]);
-							
-							return false;
 						});
-					})(columnKey, column.name);
+					})(colKey, col);
 					
-					$(column.element).css("cursor", "pointer");
+					$(col.element).css("cursor", "pointer");
 				}
 			}
 		}
