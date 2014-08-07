@@ -11,10 +11,6 @@ jui.define("chart.brush.point", [], function() {
             series = chart.options.series;
             count = series[grid.series[0]].data.length;
             width = chart.x.scale.rangeBand();
-
-
-            console.log(grid.series);
-            console.log(series);
         }
 
         this.draw = function(chart) {

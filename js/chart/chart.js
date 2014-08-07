@@ -72,7 +72,6 @@ jui.defineUI("chart.chart", [], function() {
 		}
 
 		this.drawBefore = function() {
-
 		}
 
 		this.draw = function() {

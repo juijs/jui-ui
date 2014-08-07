@@ -1,540 +1,438 @@
 jui.define("chart.grid", [ "util" ], function(_) {
     var Grid = function() {
-    	
-    	this.drawRange = function(chart, orient, domain, range, step, format, nice) {
-    		step = step || 10;
+        var self = this;
 
-            var g = chart.svg.group();
-    		var scale = this.scale.linear().domain(domain).range(range);
+        this.scale = {
+            ordinal : function() {
+                var that = this;
 
-    		var ticks = scale.ticks(step, nice || false);
-    		var values = []
-    		
-    		var max = domain[0];
-    		var min = domain[0];
-    		
-    		for(var i = 0; i < domain.length; i++) {
-    			if (domain[i] > max) max = domain[i];
-    			else if (domain[i] < min) min = domain[i];
-    		}
+                var _domain = [];
+                var _range = [];
+                var _rangeBand = 0;
 
-			if (orient == 'left') {
-				
-				var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                function func(t) {
 
-                g.append(chart.svg.line({
-                    x1: width,
-                    y1: 0,
-                    x2: width,
-                    y2: scale(Math.min(max, min)),
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-				
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]); 
+                    var index = -1;
+                    for (var i = 0; i < _domain.length; i++) {
+                        if (_domain[i] == t) {
+                            index = i;
+                            break;
+                        }
+                    }
 
-	    			if (format) {
-	    				values[i] = format(values[i]);
-	    			}
-	    			
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0, " + values[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: barX,
-                            y1: 0,
-                            x2: width + chart.area.width,
-                            y2: 0,
-                            stroke : "black",
-                            "stroke-width" : 0.2
-                        });
+                    if (index > -1) {
+                        return _range[index];
+                    } else {
+                        if (_range[t]) {
+                            _domain[t] = t;
+                            return _range[t];
+                        }
 
-                        chart.svg.text({
-                            x: barX-bar,
-                            y: bar,
-                            'text-anchor' : 'end'
-                        },ticks[i] + "")
-                    }));
-	    		}									
-				
-			} else if (orient == 'bottom') {
-				var height = 30;
-				var bar = 6; 
-				var barY = bar;
+                        return null;
+                    }
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: scale(Math.max(max, min)),
-                    y2: 0,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-				
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]); 
-	    			
-	    			if (format) {
-	    				values[i] = format(values[i]);
-	    			}
+                }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(" + values[i] + ", 0)"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: bar,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
 
-                        chart.svg.text({
-                            x: 0,
-                            y: bar * 4,
-                            'text-anchor' : 'middle'
-                        },ticks[i] + "")
-                    }));
-	    		}
-				
-			} else if (orient == 'top' ) {
-				var height = 30;
-				var bar = 6; 
-				var barY = height - bar;
+                func.domain = function(values) {
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: height,
-                    x2: scale(Math.max(max, min)),
-                    y2: height,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-				
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]); 
-	    			
-	    			if (format) {
-	    				values[i] = format(values[i]);
-	    			}
+                    if ( typeof values == 'undefined') {
+                        return _domain;
+                    }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate("+ values[i] + ", " + barY + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 6,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    _domain = values;
 
-                        chart.svg.text({
-                            x: 0,
-                            y: -4,
-                            'text-anchor' : 'middle'
-                        },ticks[i] + "")
-                    }));
-	    		}				
-				
-			} else if (orient == 'right') {
-				
-				var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                    return this;
+                }
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: scale(Math.min(max, min)),
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-				
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]); 
-	    			
-	    			if (format) {
-	    				values[i] = format(values[i]);
-	    			}
+                func.range = function(values) {
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0, " + values[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: bar,
-                            y2: 6,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    if ( typeof values == 'undefined') {
+                        return _range;
+                    }
 
-                        chart.svg.text({
-                            x: bar + 2,
-                            y: bar,
-                            'text-anchor' : 'start'
-                        },ticks[i] + "")
-                    }));
-	    		}					
-			}
+                    _range = values;
 
-    		return {g : g, scale : scale, ticks : ticks, values : values};
-    	}
-    	
-    	/*
-    	 * this.drawBlock(['apple', 'orange', 'banana', 'gruit'], [0, width]));
-    	 * 
-    	 */
-    	this.drawBlock = function(chart, orient, domain, range) {
+                    return this;
+                }
 
-    		var g = chart.svg.group();
-    		var scale = this.scale.ordinal().domain(domain);
+                func.rangePoints = function(interval, padding) {
 
-   			var max = range[0];
-    		var min = range[0];
-    		
-    		for(var i = 0; i < range.length; i++) {
-    			if (range[i] > max) max = range[i];
-    			else if (range[i] < min) min = range[i];
-    		}
+                    padding = padding || 0;
 
-    		var points = scale.rangePoints(range).range();
-    		var band = scale.rangeBand();
-    		var values = [];
-    		
-    		if (orient == 'top') {
-    			
-				var height = 30;
-				var bar = 6; 
-				var barY = height - bar;
+                    var step = _domain.length;
+                    var unit = (interval[1] - interval[0] - padding) / step;
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: height,
-                    x2: max,
-                    y2: height,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < points.length; i++) {
-	    			values[i] = { point : points[i], band : band };
+                    var range = [];
+                    for (var i = 0; i < _domain.length; i++) {
+                        if (i == 0) {
+                            range[i] = interval[0] + padding / 2;
+                        } else {
+                            range[i] = range[i - 1] + unit;
+                        }
+                    }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate("+ points[i] + ", 0)"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: barY,
-                            x2: 0,
-                            y2: height,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    _range = range;
+                    _rangeBand = unit;
 
-                        chart.svg.text({
-                            x: band / 2,
-                            y: 20,
-                            'text-anchor' : 'middle'
-                        },domain[i])
-                    }));
-	    		}
-				
-    		} else if (orient == 'bottom') {
-				var height = 30;
-				var bar = 6; 
-				var barY = height - bar; 
+                    return func;
+                }
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: max,
-                    y2: 0,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < points.length; i++) {
-	    			values[i] = { point : points[i], band : band };
+                func.rangeBands = function(interval, padding, outerPadding) {
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate("+ points[i] + ", 0)"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: bar,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    padding = padding || 0;
+                    outerPadding = outerPadding || 0;
 
-                        chart.svg.text({
-                            x: band / 2,
-                            y: 20,
-                            'text-anchor' : 'middle'
-                        }, domain[i])
-                    }));
-	    		}
+                    var count = _domain.length;
+                    var step = 2 * count + -1;
+                    var band = (interval[1] - interval[0]) / step;
 
-    		} else if (orient == 'left') {
-				var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                    var range = [];
+                    for (var i = 0; i < _domain.length; i++) {
+                        if (i == 0) {
+                            range[i] = interval[0];
+                        } else {
+                            range[i] = band + arr[i - 1];
+                        }
+                    }
 
-                g.append(chart.svg.line({
-                    x1: width,
-                    y1: 0,
-                    x2: width,
-                    y2: max,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < points.length; i++) {
-	    			values[i] = { point : points[i], band : band };
+                    _rangeBand = band;
+                    _range = range;
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0, "+ points[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: barX,
-                            y1: 0,
-                            x2: width,
-                            y2: 0,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    return func;
+                }
 
-                        chart.svg.text({
-                            x: bar * 4,
-                            y: band / 2,
-                            'text-anchor' : 'end'
-                        }, domain[i])
-                    }));
-	    		}
+                func.rangeBand = function() {
+                    return _rangeBand;
+                }
 
-    		} else if (orient == 'right') {
-				var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                return func;
+            },
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: max,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < points.length; i++) {
-	    			values[i] = { point : points[i], band : band };
+            time : function() {
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0, "+ points[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: bar,
-                            y2: 0,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                var that = this;
 
-                        chart.svg.text({
-                            x: bar,
-                            y: band / 2,
-                            'text-anchor' : 'start'
-                        }, domain[i])
-                    }));
-	    		}
-    		}
+                var _domain = [];
+                var _range = [];
 
-    		return {g : g, scale : scale, values : values};
-    	}
-    	
-    	this.drawDate = function(chart, orient, domain, range, step, format) {
-    		var g = chart.svg.group();
-    		var scale = this.scale.time().domain(domain).rangeRound(range);
-    		
-   			var max = range[0];
-    		var min = range[0];
-    		
-    		for(var i = 0; i < range.length; i++) {
-    			if (range[i] > max) max = range[i];
-    			else if (range[i] < min) min = range[i];
-    		}    		
-    		
-    		if (typeof format  == 'string') {
-    			var str = format; 
-    			format = function(value) {
-    				return _.dateFormat(value, str);
-    			}
-    		}
-    		
-    		var ticks = scale.ticks(step[0], step[1]); // step = [this.time.days, 1];
-    		var values = [];
+                var func = self.scale.linear();
 
-    		
-    		if (orient == 'top') {
-    			var height = 30;
-				var bar = 6; 
-				var barY = height - bar;
+                var df = func.domain;
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: height,
-                    x2: max,
-                    y2: height,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]);
+                func.domain = function(domain) {
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate("+ values[i] + ", 0)"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: barY,
-                            x2: 0,
-                            y2: height,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    if (!arguments.length)
+                        return df.call(func);
 
-                        chart.svg.text({
-                            x: 0,
-                            y: bar * 3,
-                            'text-anchor' : 'middle'
-                        }, format ? format(ticks[i]) : ticks[i])
-                    }));
-	    		}
-    		} else if (orient == 'bottom') {
-    			var height = 30;
-				var bar = 6; 
-				var barY = height - bar;
+                    for (var i = 0; i < domain.length; i++) {
+                        _domain[i] = +domain[i];
+                    }
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: max,
-                    y2: 0,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]);
+                    return df.call(func, _domain);
+                }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate("+ values[i] + ", 0)"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: bar,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                func.ticks = function(type, step) {
+                    var start = _domain[0];
+                    var end = _domain[1];
 
-                        chart.svg.text({
-                            x: 0,
-                            y: bar * 3,
-                            'text-anchor' : 'middle'
-                        }, format ? format(ticks[i]) : ticks[i])
-                    }));
-	    		}    			
+                    var times = [];
+                    while (start < end) {
+                        times.push(new Date(+start));
 
-    		} else if (orient == 'left') {
-    			var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                        start = self.time.add(start, type, step);
 
-                g.append(chart.svg.line({
-                    x1: width,
-                    y1: 0,
-                    x2: width,
-                    y2: max,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]);
+                        //;console.log(start)
+                    }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0,"+ values[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: barX,
-                            y1: 0,
-                            x2: width,
-                            y2: 0,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                    times.push(new Date(+start));
 
-                        chart.svg.text({
-                            x: bar,
-                            y: bar,
-                            'text-anchor' : 'end'
-                        }, format ? format(ticks[i]) : ticks[i])
-                    }));
-	    		}    
-    			
-    		} else if (orient == 'right') {
-    			var width = 30;
-				var bar = 6; 
-				var barX = width - bar;
+                    return times;
 
-                g.append(chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: max,
-                    stroke : "black",
-                    "stroke-width" : 0.5
-                }));
-    			
-				for(var i = 0; i < ticks.length; i++) {
-	    			values[i] = scale(ticks[i]);
+                }
 
-                    g.append(chart.svg.group({
-                        "transform" : "translate(0,"+ values[i] + ")"
-                    }, function() {
-                        chart.svg.line({
-                            x1: 0,
-                            y1: 0,
-                            x2: bar,
-                            y2: 0,
-                            stroke : "black",
-                            "stroke-width" : 0.5
-                        });
+                func.tickFormat = function(count, format) {
 
-                        chart.svg.text({
-                            x: bar * 2,
-                            y: bar,
-                            'text-anchor' : 'start'
-                        }, format ? format(ticks[i]) : ticks[i])
-                    }));
-	    		}    
-    		}
+                }
 
-    		return {g : g, scale : scale, ticks : ticks, values : values};    		
-    	}
+                func.invert = function(y) {
+                    var f = self.scale.linear().domain(func.range()).range(func.domain());
+
+                    return new Date(f(y));
+                }
+
+                return func;
+            },
+            /**
+             *
+             *
+             */
+            linear : function() {
+
+                var that = this;
+
+                var _domain = [0, 1];
+                var _range = [0, 1];
+                var _isRound = false;
+
+                function func(x) {
+                    var index = -1;
+                    var target;
+                    for (var i = 0, len = _domain.length; i < len; i++) {
+
+                        if (i == len - 1) {
+                            if (_domain[i - 1] < _domain[i]) {
+                                if (x > _domain[i]) {
+                                    index = i;
+                                    break;
+                                }
+                            } else if (_domain[i - 1] >= _domain[i]) {
+                                if (x <= _domain[i]) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (_domain[i] < _domain[i + 1]) {
+                                if (x >= _domain[i] && x < _domain[i + 1]) {
+                                    index = i;
+                                    break;
+                                }
+                            } else if (_domain[i] >= _domain[i + 1]) {
+                                if (x <= _domain[i] && _domain[i + 1] < x) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+
+                    if (!_range) {
+                        if (index == 0) {
+                            return 0;
+                        } else if (index == -1) {
+                            return 1;
+                        } else {
+                            var min = _domain[index - 1];
+                            var max = _domain[index];
+
+                            var pos = (x - min) / (max - min);
+
+                            return pos;
+                        }
+                    } else {
+
+                        if (_domain.length - 1 == index) {
+                            return _range[index];
+                        } else if (index == -1) {
+                            return _range[_range.length - 1];
+                        } else {
+
+                            var min = _domain[index];
+                            var max = _domain[index + 1];
+
+                            var minR = _range[index]
+                            var maxR = _range[index + 1];
+
+                            var pos = (x - min) / (max - min);
+
+                            var scale = _isRound ? self.interpolateRound(minR, maxR) : self.interpolateNumber(minR, maxR);
+
+                            return Math.round(scale(pos));
+
+                        }
+                    }
+
+                }
+
+
+                func.domain = function(values) {
+
+                    if (!arguments.length) {
+                        return _domain;
+                    }
+
+                    _domain = values;
+
+                    return this;
+                }
+
+                func.range = function(values) {
+
+                    if (!arguments.length) {
+                        return _range;
+                    }
+
+                    _range = values;
+
+                    return this;
+                }
+
+                func.rangeRound = function(values) {
+                    _isRound = true;
+                    return func.range(values);
+                }
+
+                func.invert = function(y) {
+
+                    var f = self.scale.linear().domain(_range).range(_domain);
+                    return f(y);
+                }
+
+                func.ticks = function(count, isNice, intNumber) {
+                    intNumber = intNumber || 10000;
+                    var obj = self.nice(_domain[0], _domain[1], count || 10, isNice || false);
+
+                    var arr = [];
+
+                    var start = obj.min * intNumber;
+                    var end = obj.max * intNumber;
+                    while (start <= end) {
+                        arr.push(start / intNumber);
+                        start += obj.spacing * intNumber;
+                    }
+
+                    if (arr[arr.length - 1] * intNumber != end && start > end) {
+                        arr.push(end / intNumber);
+                    }
+
+                    return arr;
+                }
+
+                return func;
+            }
+        }
+
+        this.time = {
+
+            // unit
+            years : 0x01,
+            months : 0x02,
+            days : 0x03,
+            hours : 0x04,
+            minutes : 0x05,
+            seconds : 0x06,
+            weeks : 0x07,
+
+            // add
+            add : function(date) {
+
+                if (arguments.length <= 2) {
+                    return date;
+                }
+
+                if (arguments.length > 2) {
+                    var d = new Date(+date);
+
+                    for (var i = 1; i < arguments.length; i += 2) {
+
+                        var split = arguments[i];
+                        var time = arguments[i + 1];
+
+                        if (this.years == split) {
+                            d.setFullYear(d.getFullYear() + time);
+                        } else if (this.months == split) {
+                            d.setMonth(d.getMonth() + time);
+                        } else if (this.days == split) {
+                            d.setDate(d.getDate() + time);
+                        } else if (this.hours == split) {
+                            d.setHours(d.getHours() + time);
+                        } else if (this.minutes == split) {
+                            d.setMinutes(d.getMinutes() + time);
+                        } else if (this.seconds == split) {
+                            d.setSeconds(d.getSeconds() + time);
+                        } else if (this.weeks == split) {
+                            d.setDate(d.getDate() + time * 7);
+                        }
+                    }
+
+                    return d;
+                }
+            }
+        }
+
+        this.nice = function niceAxis(min, max, ticks, isNice) {
+            isNice = isNice || false;
+
+            if (min > max) {
+                var _max = min;
+                var _min = max;
+            } else {
+                var _min = min;
+                var _max = max;
+
+            }
+
+            var _ticks = ticks;
+            var _tickSpacing = 0;
+            var _range = [];
+            var _niceMin;
+            var _niceMax;
+
+            function niceNum(range, round) {
+                var exponent = Math.floor(Math.log(range) / Math.LN10);
+                var fraction = range / Math.pow(10, exponent);
+                var nickFraction;
+
+                //console.log(range, exponent, fraction, _ticks);
+
+                if (round) {
+                    if (fraction < 1.5)
+                        niceFraction = 1;
+                    else if (fraction < 3)
+                        niceFraction = 2;
+                    else if (fraction < 7)
+                        niceFraction = 5;
+                    else
+                        niceFraction = 10;
+                } else {
+                    if (fraction <= 1)
+                        niceFraction = 1;
+                    else if (fraction <= 2)
+                        niceFraction = 2;
+                    else if (fraction <= 5)
+                        niceFraction = 5;
+                    else
+                        niceFraction = 10;
+
+                    //console.log(niceFraction)
+                }
+
+                return niceFraction * Math.pow(10, exponent);
+
+            }
+
+            function caculate() {
+                _range = (isNice) ? niceNum(_max - _min, false) : _max - _min;
+                _tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
+                _niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
+                _niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+            }
+
+            caculate();
+
+            return {
+                min : _niceMin,
+                max : _niceMax,
+                range : _range,
+                spacing : _tickSpacing
+            }
+        }
+
+        this.interpolateNumber = function(a, b) {
+            return function(t) {
+                return a + (b - a) * t;
+            }
+        }
+
+        this.interpolateRound = function(a, b) {
+            var f = this.interpolateNumber(a, b);
+
+            return function(t) {
+                return Math.round(f(t));
+            }
+        }
     }
 
     return Grid;

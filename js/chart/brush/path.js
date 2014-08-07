@@ -1,25 +1,18 @@
 jui.define("chart.brush.path", [], function() {
 
-	var Brush = function(brush) {
-
-		var self = this;
-
+	var Brush = function(grid) {
 		this.drawBefore = function(chart) {
-
 		}
 		
 		this.draw = function(chart) {
-
 			var series = chart.get('series');
-			
-			var s = series[brush.series[0]];
-			
+			var s = series[grid.series[0]];
 			var g = chart.svg.group();
 			
 			var path = chart.svg.path({
-				fill : this.getColor(brush.index),
+				fill : this.getColor(grid.index),
 				"fill-opacity" : 0.5,
-				stroke : this.getColor(brush.index+1),
+				stroke : this.getColor(grid.index + 1),
 				"stroke-width" : 1
 			});
 			
@@ -28,7 +21,7 @@ jui.define("chart.brush.path", [], function() {
 			var x1 = 0;
 			var y1 = 0;
 			for(var i = 0; i < s.data.length; i++) {
-				var obj = brush.c.xy(i, s.data[i]/s.max);
+				var obj = grid.c.xy(i, s.data[i]/s.max);
 				
 				g.append(chart.svg.circle({
 					cx : obj.x,
@@ -45,8 +38,7 @@ jui.define("chart.brush.path", [], function() {
 			}
 			
 			path.ClosePath();
-			
-			
+
 			return this; 
 		}
 	}
