@@ -910,13 +910,17 @@ jui.define("core", [ "util" ], function(_) {
 		this.get = function(key) {
 			var result = [];
 
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return instances[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < instances.length; i++) {
 					if(key == instances[i].type) {
 						result.push(instances[i]);
-					}
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(instances[i].type.indexOf("." + key) != -1) {
+                            result.push(instances[i]);
+                        }
+                    }
 				}
 			}
 			
@@ -5736,25 +5740,37 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			}
 		}
 		
-		this.columnMenu = function(x) {
-			if(!this.options.fields || !ddUi) return;
-			
-			var columns = this.listColumn();
-			var offset = $obj.thead.offset(),
-				maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-			
-			x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-			x = (x < 0) ? 0 : x;
-			
-			// 현재 체크박스 상태 설정
-			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
-				if(columns[i].type == "show") this.checked = true;
-				else this.checked = false;
-			});
-			
-			ddUi.move(x, offset.top + $obj.thead.outerHeight());
-			ddUi.show();
-		}
+        this.showColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            var columns = this.listColumn();
+            var offset = $obj.thead.offset(),
+                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
+
+            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
+            x = (x < 0) ? 0 : x;
+
+            // 현재 체크박스 상태 설정
+            $(ddUi.root).find("input[type=checkbox]").each(function(i) {
+                if(columns[i].type == "show") this.checked = true;
+                else this.checked = false;
+            });
+
+            ddUi.move(x, offset.top + $obj.thead.outerHeight());
+            ddUi.show();
+        }
+
+        this.hideColumnMenu = function() {
+            if(!this.options.fields || !ddUi) return;
+            ddUi.hide();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            if(ddUi.type == "show") this.hideColumnMenu();
+            else this.showColumnMenu(x);
+        }
 		
 		this.showExpand = function(index, obj, e) {
 			if(!this.options.expand) return;
@@ -6010,6 +6026,8 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 initColumns: [ "array" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
                 hideExpand: [ [ "object", "undefined" ] ],
                 showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
@@ -7738,9 +7756,17 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			head.emit("colresize");
 		}
 		
-		this.columnMenu = function(x) {
-			head.columnMenu(x);
+		this.showColumnMenu = function(x) {
+			head.showColumnMenu(x);
 		}
+
+        this.hideColumnMenu = function() {
+            head.hideColumnMenu();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            head.toggleColumnMenu(x);
+        }
 
 		this.showExpand = function(index, obj) {
 			body.showExpand(index, obj);
@@ -7926,7 +7952,8 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showColumn: [ [ "integer", "string" ] ],
                 hideColumn: [ [ "integer", "string" ] ],
                 initColumns: [ "array" ],
-                columnMenu: [ "integer" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], "object" ],
                 hideExpand: [ [ "integer", "string" ] ],
                 showLoading: [ "integer" ],

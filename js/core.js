@@ -14,13 +14,17 @@ jui.define("core", [ "util" ], function(_) {
 		this.get = function(key) {
 			var result = [];
 
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return instances[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < instances.length; i++) {
 					if(key == instances[i].type) {
 						result.push(instances[i]);
-					}
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(instances[i].type.indexOf("." + key) != -1) {
+                            result.push(instances[i]);
+                        }
+                    }
 				}
 			}
 			

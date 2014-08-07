@@ -1611,25 +1611,37 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			}
 		}
 		
-		this.columnMenu = function(x) {
-			if(!this.options.fields || !ddUi) return;
-			
-			var columns = this.listColumn();
-			var offset = $obj.thead.offset(),
-				maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-			
-			x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-			x = (x < 0) ? 0 : x;
-			
-			// 현재 체크박스 상태 설정
-			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
-				if(columns[i].type == "show") this.checked = true;
-				else this.checked = false;
-			});
-			
-			ddUi.move(x, offset.top + $obj.thead.outerHeight());
-			ddUi.show();
-		}
+        this.showColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            var columns = this.listColumn();
+            var offset = $obj.thead.offset(),
+                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
+
+            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
+            x = (x < 0) ? 0 : x;
+
+            // 현재 체크박스 상태 설정
+            $(ddUi.root).find("input[type=checkbox]").each(function(i) {
+                if(columns[i].type == "show") this.checked = true;
+                else this.checked = false;
+            });
+
+            ddUi.move(x, offset.top + $obj.thead.outerHeight());
+            ddUi.show();
+        }
+
+        this.hideColumnMenu = function() {
+            if(!this.options.fields || !ddUi) return;
+            ddUi.hide();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            if(ddUi.type == "show") this.hideColumnMenu();
+            else this.showColumnMenu(x);
+        }
 		
 		this.showExpand = function(index, obj, e) {
 			if(!this.options.expand) return;
@@ -1885,6 +1897,8 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 initColumns: [ "array" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
                 hideExpand: [ [ "object", "undefined" ] ],
                 showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],

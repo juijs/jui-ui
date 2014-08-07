@@ -518,9 +518,17 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			head.emit("colresize");
 		}
 		
-		this.columnMenu = function(x) {
-			head.columnMenu(x);
+		this.showColumnMenu = function(x) {
+			head.showColumnMenu(x);
 		}
+
+        this.hideColumnMenu = function() {
+            head.hideColumnMenu();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            head.toggleColumnMenu(x);
+        }
 
 		this.showExpand = function(index, obj) {
 			body.showExpand(index, obj);
@@ -706,7 +714,8 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showColumn: [ [ "integer", "string" ] ],
                 hideColumn: [ [ "integer", "string" ] ],
                 initColumns: [ "array" ],
-                columnMenu: [ "integer" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], "object" ],
                 hideExpand: [ [ "integer", "string" ] ],
                 showLoading: [ "integer" ],
