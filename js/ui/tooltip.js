@@ -13,11 +13,11 @@ jui.defineUI("ui.tooltip", [], function() {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self) {
-			$tooltip = 
+		function createTooltip(self, message) {
+			$tooltip =
 				$("<div id='TOOLTIP_" + self.timestamp + "' class='tooltip tooltip-" + self.options.position + " tooltip-" + self.options.color + "'>" + 
 					"<div class='anchor'></div>" +
-					"<div class='title'>" + ((self.options.title) ? self.options.title : title) + "</div>" +
+					"<div class='title'>" + message + "</div>" +
 				"</div>");
 			
 			// 스타일 옵션
@@ -112,12 +112,16 @@ jui.defineUI("ui.tooltip", [], function() {
 		
 		this.show = function() {
 			if($tooltip) this.hide();
-			createTooltip(this);
-			
-			$tooltip.css({ 
-				"left": pos.x,
-				"top": pos.y
-			});
+
+            var message = ((this.options.title) ? this.options.title : title);
+            if(message != "") {
+                createTooltip(this, message);
+
+                $tooltip.css({
+                    "left": pos.x,
+                    "top": pos.y
+                });
+            }
 		}		
 	}
 
