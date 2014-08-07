@@ -1,0 +1,94 @@
+jui.define("chart.brush.donut", [], function() {
+
+	var Brush = function(brush) {
+
+		var self = this;
+
+		this.drawBefore = function(chart) {
+
+		}
+		
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+			var g = chart.svg.group({
+				'class' : 'donut'
+			})
+			
+			g.translate(centerX, centerY);
+			
+			var path = chart.svg.path(attr)
+			
+			// 바깥 지름 부터 그림 
+			var startX = 0;
+			var startY = -outerRadius;
+			
+			var obj = this.rotate(startX, startY, this.radian(startAngle));
+			
+			startX = obj.x;
+			startY = obj.y; 
+			
+			
+			
+			// 시작 하는 위치로 옮김 
+			path.MoveTo(startX, startY);
+			
+			// outer arc 에 대한 지점 설정 
+			obj = this.rotate(startX, startY, this.radian(endAngle));
+						
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+			
+			
+			// inner arc 로 이어지는 직선 그림 
+			var innerX = obj.x * (innerRadius/outerRadius);
+			var innerY = - (Math.abs(obj.y) * (innerRadius/outerRadius));
+			 
+			path.LineTo(innerX, innerY);
+			
+			// inner arc 도착점 그림 
+			obj = this.rotate(innerX, innerY, this.radian(-endAngle));
+			
+			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, obj.x, obj.y);
+			
+			// 패스 종료 
+			path.ClosePath();
+			
+			
+			g.append(path);
+			
+			return g; 
+		}
+		
+		this.radian = function(degree) {
+			return degree * Math.PI / 180;
+		}
+
+		this.draw = function(chart) {
+			var width = chart.area.width, height = chart.area.height;
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.w = min / 2;
+			this.centerX = width/2;
+			this.centerY = height/2;
+			this.startY = -this.w / 1.5;
+			this.startX = 0;
+			this.r = Math.abs(this.startY);
+			
+			this.startAngle = 30;
+			this.endAngle = 300;
+			
+			this.drawDonut(chart, this.centerX, this.centerY, this.r/2, this.r, this.startAngle, this.endAngle, {
+				fill : "red",
+				stroke : 'black',
+				"stroke-width" : '3'
+			})
+
+		}
+	}
+
+	return Brush;
+}, "chart.brush");
