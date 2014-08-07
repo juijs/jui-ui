@@ -1,7 +1,6 @@
 jui.define("chart.brush.bar", [], function() {
 
     var BarBrush = function(grid) {
-      
         var g, zeroY, series, count, width, barWidth;
         var outerPadding = 15, innerPadding = 10;
 

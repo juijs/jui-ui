@@ -1,11 +1,7 @@
 jui.define("chart.brush.donut", [], function() {
 
-	var Brush = function(brush) {
-
-		var self = this;
-
+	var Brush = function(grid) {
 		this.drawBefore = function(chart) {
-
 		}
 		
 		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
@@ -75,7 +71,7 @@ jui.define("chart.brush.donut", [], function() {
 		this.draw = function(chart) {
 			
 			var series = chart.get('series');
-			var key = brush.series[0];
+			var key = grid.series[0];
 			var s = series[key];
 			
 			
@@ -117,7 +113,6 @@ jui.define("chart.brush.donut", [], function() {
 				
 				startAngle += endAngle + this.empty;
 			}
-			
 		}
 	}
 
