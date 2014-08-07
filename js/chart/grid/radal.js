@@ -4,12 +4,35 @@ jui.define("chart.grid.radal", [], function() {
 
 		var self = this;
 
+		this.position = [];
+		
 		this.drawBefore = function(chart) {
 
 		}
 
-		this.x = function() {
+		this.xy = function(index, rate) {
+			
+			var obj = this.position[0];
+			
+			var height = Math.abs(obj.y1) - Math.abs(obj.y2);
+			var pos = height * rate;
+			var unit = 2 * Math.PI / opt.domain.length;
+			
+			var centerX = obj.x1;
+			var centerY = obj.y1;
+			var y = -pos;
+			var x = 0;
 
+			for(var i = 0; i < index; i++) {
+				
+				var obj = this.rotate(x, y, unit);
+				
+				x = obj.x;
+				y = obj.y;
+			}
+
+
+			return { x : centerX + x, y : centerY + y }
 		}
 
 		this.drawCircle = function(chart, root, centerX, centerY, x, y, count) {
@@ -105,6 +128,7 @@ jui.define("chart.grid.radal", [], function() {
 			g.append(root);
 
 			// domain line
+			this.position = [];
 			for (var i = 0; i < count; i++) {
 
 				var x2 = centerX + startX;
@@ -118,6 +142,8 @@ jui.define("chart.grid.radal", [], function() {
 					"stroke-width" : 1,
 					'stroke' : 'black'
 				}))
+				
+				this.position[i] = { x1 : centerX, y1 : centerY, x2 : x2, y2 : y2 };
 
 				var ty = y2;
 				var tx = x2;
@@ -171,6 +197,7 @@ jui.define("chart.grid.radal", [], function() {
 				startY += h;
 			}
 
+			return this; 
 		}
 	}
 

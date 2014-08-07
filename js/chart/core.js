@@ -120,25 +120,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			this.draw();
             this.svg.render();
 		}
-		
-		/**
-		 * y 좌표 구하기 
-		 * 
-		 * var y = this.convert(height, max, min , 50);
-		 * var x = this.convert(width, max, min, 100, false);
-		 * 
-		 */
-		this.convert = function(dist, max, min, value, isY) {
-			isY = isY || true; 
-			
-			var axis = (dist/(max - min)) * (value - min);
-			
-			if (isY) {
-				return dist - axis;	
-			}
-			 
-			return axis;
-		}
+
     }
 
     return UIChart;

@@ -9,7 +9,9 @@ jui.define("chart.draw", [ "util" ], function(_) {
                 this.drawBefore(chart);
             }
 
-            return this.draw(chart);
+            this.draw(chart);
+            
+            return this;
         }
 
         this.rotate = function(x, y, radian) {

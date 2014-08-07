@@ -111,6 +111,8 @@ jui.defineUI("chart.chart", [], function() {
 					if (this.c)
 						_brush[i].c = this.c;
 
+					_brush[i].index = i;
+
 					new Obj(_brush[i]).render(this);
 				}
 
@@ -132,6 +134,7 @@ jui.defineUI("chart.chart", [], function() {
 
 					axis.domain = domain;
 					axis.step = axis.step || 10;
+					axis.max = axis.max || 100; 
 				}
 
 				return;
