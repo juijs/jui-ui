@@ -440,8 +440,6 @@ jui.define("chart.draw", [ "util" ], function(_) {
 				  intNumber = intNumber || 10000;
 				  var obj = self.nice(_domain[0], _domain[1], count || 10, isNice || false);
 				  
-				  //console.log(obj);
-					
 				  var arr = []; 
 				  
 				  var start = obj.min * intNumber;
@@ -450,8 +448,6 @@ jui.define("chart.draw", [ "util" ], function(_) {
 				    arr.push(start/intNumber);
 				    start += obj.spacing * intNumber;
 				  }
-				  
-				  //console.log(arr[arr.length-1], end)
 				  
 				  if (arr[arr.length-1]*intNumber != end && start > end) {
 				  	arr.push(end/intNumber);
