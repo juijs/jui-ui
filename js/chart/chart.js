@@ -124,7 +124,7 @@ jui.defineUI("chart.chart", [], function() {
 			var series = this.get('series');
 			var data = this.get('data');
 
-			if (axis.type == 'radal') {
+			if (axis.type == 'radar') {
 
 				if (axis.series && !axis.domain) {
 					var domain = [];
