@@ -804,7 +804,7 @@
 
             // UI 그룹 설정
             global[keys[0]][keys[1]] = global["core"].init({
-                type: keys[1],
+                type: name,
                 "class": uiFunc
             });
 

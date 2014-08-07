@@ -106,13 +106,17 @@ jui.define("core", [ "util" ], function(_) {
 		}
 		
 		this.getClass = function(key) {
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return classes[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < classes.length; i++) {
 					if(key == classes[i].type) {
-						return classes[i];
-					}
+                        return classes[i];
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(classes[i].type.indexOf("." + key) != -1) {
+                            return classes[i];
+                        }
+                    }
 				}
 			}
 			
@@ -122,11 +126,16 @@ jui.define("core", [ "util" ], function(_) {
 		this.getClassAll = function() {
 			return classes;
 		}
-		
-		this.create = function(type, selector, options) {
-			var clsFunc = UIManager.getClass(type)["class"];
-			return clsFunc(selector, options);
-		}
+
+        this.create = function(type, selector, options) {
+            var cls = UIManager.getClass(type);
+
+            if(_.typeCheck("null", cls)) {
+                throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
+            }
+
+            return cls["class"](selector, options);
+        }
 	}
 	
 	var UIListener = function(obj) {
