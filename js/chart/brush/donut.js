@@ -20,13 +20,12 @@ jui.define("chart.brush.donut", [], function() {
 			// 바깥 지름 부터 그림 
 			var startX = 0;
 			var startY = -outerRadius;
+			var rate = (innerRadius/outerRadius);
 			
 			var obj = this.rotate(startX, startY, this.radian(startAngle));
 			
 			startX = obj.x;
 			startY = obj.y; 
-			
-			
 			
 			// 시작 하는 위치로 옮김 
 			path.MoveTo(startX, startY);
@@ -37,12 +36,23 @@ jui.define("chart.brush.donut", [], function() {
 			// arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 			
-			
-			// inner arc 로 이어지는 직선 그림 
-			var innerX = obj.x * (innerRadius/outerRadius);
-			var innerY = - (Math.abs(obj.y) * (innerRadius/outerRadius));
+			// inner arc 로 이어지는 직선 그림			
+			if (obj.x >= 0 && obj.y >= 0) {
+				var innerX = Math.abs(obj.x) * rate;
+				var innerY = Math.abs(obj.y) * rate;				
+			} else if (obj.x < 0 && obj.y > 0) {
+				var innerX = -Math.abs(obj.x) * rate;
+				var innerY = Math.abs(obj.y) * rate;				  
+			} else if (obj.x > 0 && obj.y < 0) {
+				var innerX = Math.abs(obj.x) * rate;
+				var innerY = -Math.abs(obj.y) * rate;				  
+			} else if (obj.x < 0 && obj.y < 0) {
+				var innerX = -Math.abs(obj.x) * rate;
+				var innerY = -Math.abs(obj.y) * rate;				  
+			}
 			 
 			path.LineTo(innerX, innerY);
+			
 			
 			// inner arc 도착점 그림 
 			obj = this.rotate(innerX, innerY, this.radian(-endAngle));
@@ -63,6 +73,12 @@ jui.define("chart.brush.donut", [], function() {
 		}
 
 		this.draw = function(chart) {
+			
+			var series = chart.get('series');
+			var key = brush.series[0];
+			var s = series[key];
+			
+			
 			var width = chart.area.width, height = chart.area.height;
 			var min = width;
 
@@ -76,17 +92,32 @@ jui.define("chart.brush.donut", [], function() {
 			this.centerY = height/2;
 			this.startY = -this.w / 1.5;
 			this.startX = 0;
-			this.r = Math.abs(this.startY);
+			this.outerRadius = Math.abs(this.startY);
+			this.innerRadius = this.outerRadius/2;
+			this.empty = 2; 
 			
-			this.startAngle = 30;
-			this.endAngle = 300;
 			
-			this.drawDonut(chart, this.centerX, this.centerY, this.r/2, this.r, this.startAngle, this.endAngle, {
-				fill : "red",
-				stroke : 'black',
-				"stroke-width" : '3'
-			})
+			var all = 360 - s.data.length*this.empty;
+			var startAngle = 0;
 
+			var max = 0;
+			for(var i = 0; i < s.data.length; i++) {
+				max += s.data[i];
+			}
+			
+			for(var i = 0; i < s.data.length; i++) {							
+				var data = s.data[i];
+				var endAngle = all * (data / max); 	
+				
+				this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
+					fill : this.getColor(i),
+					stroke : 'black',
+					"stroke-width" : '1'
+				})				
+				
+				startAngle += endAngle + this.empty;
+			}
+			
 		}
 	}
 
