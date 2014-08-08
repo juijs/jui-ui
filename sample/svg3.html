@@ -1,0 +1,116 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../jui.css" />
+<link rel="stylesheet" href="../lib/animate.min.css" />
+<script src="../lib/jquery-1.8.3.min.js"></script>
+<script src="../lib/jquery.binder.js"></script>
+<script src="../js/base.js"></script>
+<script src="../js/util/svg.js"></script>
+
+<script>
+var r1 = null;
+
+jui.ready([ "util.svg" ], function(SVGUtil) {
+    svg = new SVGUtil($("#svg").get(0), { width: 300, height: 300 });
+    svg2 = new SVGUtil($("#svg2").get(0), { width: 300, height: 300 });
+    svg3 = new SVGUtil($("#svg3").get(0), { width: 300, height: 300 });
+    svg4 = new SVGUtil($("#svg4").get(0), { width: 300, height: 300 });
+
+    //------------------------------
+
+    var g1 = svg.group({ id: "g1" }, function(elem) {
+        /*
+         rect x="10" y="10" height="130" width="500" style="fill: #000000"/>
+
+         <image x="20" y="20" width="300" height="80"
+         xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
+
+         <line x1="25" y1="80" x2="350" y2="80"
+         style="stroke: #ffffff; stroke-width: 3;"/>
+         */
+
+        var r1 = svg.rect({
+            id: "r1", x: 10, y:10, height: 130, width: 500, style: "fill: #000"
+        });
+
+        svg.image({
+            x: 20, y: 20, width: 300, height: 80, "xlink:href": "http://jenkov.com/images/layout/top-bar-logo.png"
+        });
+
+        svg.line({
+            x1: 25, y1: 80, x2: 350, y2:80, style: "stroke: #fff; stoke-width: 3;"
+        });
+
+        r1.on("click", function(e) {
+            alert(123);
+        });
+    });
+
+    svg.render();
+
+    //------------------------------
+    /*
+     <defs>
+     <pattern id="pattern1"
+     x="10" y="10" width="20" height="20"
+     patternUnits="userSpaceOnUse" >
+
+     <circle cx="10" cy="10" r="10" style="stroke: none; fill: #0000ff" />
+
+     </pattern>
+     </defs>
+
+     <rect x="10" y="10" width="100" height="100"
+     style="stroke: #000000; fill: url(#pattern1);" />
+
+     */
+
+    svg2.defs(function() {
+        this.pattern({
+            id: "pattern1",
+
+            x: 10, y: 10, width: 20, height:20,
+            patternUnits: "userSpaceOnUse"
+        }, function() {
+            this.circle({
+                cx: 10, cy: 10, r: 10,
+                style: "stroke: none; fill: #0000ff"
+            });
+        })
+    });
+
+    var r1 = svg2.rect({
+        x: 10, y: 10, width: 100, height: 100,
+        style: "stroke: #000; fill: url(#pattern1);"
+    });
+
+    r1.rotate(15, 40, 40);
+    svg2.render();
+});
+</script>
+</head>
+<body class="jui">
+    <h3>SVG 1</h3>
+    <div id="svg"></div>
+    <a id="svgImage">Download</a>
+    <br/>
+
+    <h3>SVG 2</h3>
+    <div id="svg2"></div>
+    <br/>
+
+    <h3>SVG 3</h3>
+    <div id="svg3"></div>
+    <br/>
+
+    <h3>SVG 4</h3>
+    <div id="svg4"></div>
+    <br/>
+</body>
+</html>
