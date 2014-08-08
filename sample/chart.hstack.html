@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta chartset="utf-8" />
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>	
+	<script src="../js/base.js"></script>
+	<script src="../js/core.js"></script>
+	<script src="../js/util/svg.js"></script>
+	<script src="../js/chart/core.js"></script>
+	<script src="../js/chart/draw.js"></script>
+	<script src="../js/chart/grid/grid.js"></script>
+	<script src="../js/chart/grid/block.js"></script>
+	<script src="../js/chart/grid/range.js"></script>
+	<script src="../js/chart/grid/date.js"></script>
+	<script src="../js/chart/brush/brush.js"></script>
+	<script src="../js/chart/brush/line.js"></script>
+	<script src="../js/chart/brush/point.js"></script>
+	<script src="../js/chart/brush/hstack.js"></script>
+	<script src="../js/chart/chart.js"></script>
+</head>
+<body>
+	
+	<div id="chart"></div>
+	
+	<script>
+	
+		jui.ready(["chart.chart"], function(Chart) {
+			new Chart("#chart", {
+				width: 600,
+				height : 600,
+				data : [
+					{ name : 2, value : 15, test : 20 },
+					{ name : 15, value : 6, test : 20 },
+					{ name : 8, value : 10, test : 20 },
+					{ name : 18, value : 5, test : 20 }
+				],
+				grid : {
+					
+					y : { 
+						//type : "block",  // default type is block 
+						domain : [ "week1", "week2", "week3", "week4" ]
+					},
+					x : { 
+						type : 'range', 
+						target : function(data) { 
+							return data.name + data.value + data.test;
+						}
+					}
+				},
+				series : {
+					name : { text : "이름" },
+					value : { text : "값" },
+					test : { text : "테스트값" }
+				},
+				brush : {  
+					type : 'hstack',
+					//grid : 0,
+					target : ['name', 'value', 'test']
+				}
+			}).render();
+		})
+	</script>
+	
+</body>
+</html>

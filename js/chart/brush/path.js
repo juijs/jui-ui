@@ -26,7 +26,7 @@ jui.define("chart.brush.path", [], function() {
 				g.append(chart.svg.circle({
 					cx : obj.x,
 					cy : obj.y,
-					r : 5,
+					r : 3,
 					fill : this.getColor(0)
 				}));
 				

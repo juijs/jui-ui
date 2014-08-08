@@ -7,7 +7,7 @@ jui.define("chart.grid.range", [], function() {
 	 *    step : Line Step Count
 	 *    min : Min Value
 	 *    max : Max Value
-	 *    series : 'field' or ['field1', 'field2'] or function(data) { return data.name + data.value +_data.test; }
+	 *    target : 'field' or ['field1', 'field2'] or function(data) { return data.name + data.value +_data.test; }
 	 * }
 	 *
 	 * @param {Object} orient
@@ -42,9 +42,9 @@ jui.define("chart.grid.range", [], function() {
 				var barX = width - bar;
 
 				g.append(chart.svg.line({
-					x1 : width,
+					x1 : width + 0.5,
 					y1 : 0,
-					x2 : width,
+					x2 : width + 0.5,
 					y2 : scale(Math.min(max, min)),
 					stroke : "black",
 					"stroke-width" : 0.5
@@ -84,9 +84,9 @@ jui.define("chart.grid.range", [], function() {
 
 				g.append(chart.svg.line({
 					x1 : 0,
-					y1 : 0,
+					y1 : 0.5,
 					x2 : scale(Math.max(max, min)),
-					y2 : 0,
+					y2 : 0.5,
 					stroke : "black",
 					"stroke-width" : 0.5
 				}));
@@ -102,9 +102,9 @@ jui.define("chart.grid.range", [], function() {
 						"transform" : "translate(" + values[i] + ", 0)"
 					}, function() {
 						chart.svg.line({
-							x1 : 0,
+							x1 : 0.5,
 							y1 : 0,
-							x2 : 0,
+							x2 : 0.5,
 							y2 : bar,
 							stroke : "black",
 							"stroke-width" : 0.5

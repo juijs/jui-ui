@@ -100,9 +100,9 @@ jui.define("chart.grid.block", [], function() {
                 var barX = width - bar;
 
                 g.append(chart.svg.line({
-                    x1: width,
+                    x1: width+0.5,
                     y1: 0,
-                    x2: width,
+                    x2: width+0.5,
                     y2: max,
                     stroke : "black",
                     "stroke-width" : 0.5
@@ -116,9 +116,9 @@ jui.define("chart.grid.block", [], function() {
                     }, function() {
                         chart.svg.line({
                             x1: barX,
-                            y1: 0,
-                            x2: width,
-                            y2: 0,
+                            y1: 0.5,
+                            x2: width + chart.area.width,
+                            y2: 0.5,
                             stroke : "black",
                             "stroke-width" : 0.5
                         });
