@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <script src="../lib/jquery-1.8.3.min.js"></script>
+    <script src="../lib/jquery.binder.js"></script>
+    <script src="../js/base.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/util/svg.js"></script>
+    <script src="../js/chart/core.js"></script>
+    <script src="../js/chart/draw.js"></script>
+    <script src="../js/chart/grid/grid.js"></script>
+    <script src="../js/chart/grid/block.js"></script>
+    <script src="../js/chart/grid/date.js"></script>
+    <script src="../js/chart/grid/range.js"></script>
+    <script src="../js/chart/brush/brush.js"></script>
+    <script src="../js/chart/brush/point.js"></script>
+    <script src="../js/chart/brush/bar.js"></script>
+    <script src="../js/chart/chart.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+
+    jui.ready(["chart.chart"], function(Chart) {
+        ccc = new Chart("#chart", {
+            width: 600,
+            height : 600,
+            data : [
+                { name : 2, value : 15 },
+                { name : -15, value : 6 },
+                { name : 8, value : 10 },
+                { name : 18, value : 5 },
+            ],
+            grid : {
+
+                x : {
+                    //type : "block",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ]
+                },
+                y : {
+                    type : 'range',
+                    target : [ "name", "value" ],
+                    step : 10
+                }
+            },
+            series : {
+                name : { text : "ì´ë¦„" },
+                value : { text : "ê°’" }
+            },
+            brush : {
+                type : 'bar',
+                //grid : 0,
+                series : [ 'name', 'value']
+            }
+        });
+
+        ccc.render();
+    })
+</script>
+
+
+</body>
+</html>

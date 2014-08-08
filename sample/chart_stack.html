@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <script src="../lib/jquery-1.8.3.min.js"></script>
+    <script src="../lib/jquery.binder.js"></script>
+    <script src="../js/base.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/util/svg.js"></script>
+    <script src="../js/chart/core.js"></script>
+    <script src="../js/chart/draw.js"></script>
+    <script src="../js/chart/grid/grid.js"></script>
+    <script src="../js/chart/grid/block.js"></script>
+    <script src="../js/chart/grid/date.js"></script>
+    <script src="../js/chart/grid/range.js"></script>
+    <script src="../js/chart/grid/radar.js"></script>
+    <script src="../js/chart/brush/brush.js"></script>
+    <script src="../js/chart/brush/point.js"></script>
+    <script src="../js/chart/brush/bar.js"></script>
+    <script src="../js/chart/brush/donut.js"></script>
+    <script src="../js/chart/brush/path.js"></script>
+    <script src="../js/chart/brush/stack.js"></script>
+    <script src="../js/chart/chart.js"></script>
+</head>
+<body>
+<div id="chart"></div>
+
+<script>
+
+    jui.ready(["chart.chart"], function(Chart) {
+        new Chart("#chart", {
+            width: 600,
+            height : 600,
+            data : [
+                { name : 2, value : 15, test : 20 },
+                { name : 15, value : 6, test : 20 },
+                { name : 8, value : 10, test : 20 },
+                { name : 18, value : 5, test : 20 }
+            ],
+            grid : {
+
+                x : {
+                    //type : "block",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ]
+                },
+                y : {
+                    type : 'range',
+                    target : function(data) {
+                        return data.name + data.value + data.test;
+                    }
+                }
+            },
+            series : {
+                name : { text : "ì´ë¦„" },
+                value : { text : "ê°’" },
+                test : { text : "í…ŒìŠ¤íŠ¸ê°’" }
+            },
+            brush : {
+                type : 'stack',
+                //grid : 0,
+                target : ['name', 'value', 'test']
+            }
+        }).render();
+    })
+
+</script>
+
+</body>
+</html>
