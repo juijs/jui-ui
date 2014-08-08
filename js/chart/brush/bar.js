@@ -9,18 +9,18 @@ jui.define("chart.brush.bar", [], function() {
 
             zeroY = brush.y.scale(0);
             series = chart.options.series;
-            count = series[brush.series[0]].data.length;
+            count = series[brush.target[0]].data.length;
 
             width = chart.x.scale.rangeBand();
-            barWidth = (width - outerPadding*2 - (brush.series.length-1) * innerPadding) / brush.series.length;
+            barWidth = (width - outerPadding*2 - (brush.target.length-1) * innerPadding) / brush.target.length;
         }
 
         this.draw = function(chart) {
 			for(var i = 0; i < count; i++) {
 				var startX = brush.x.scale(i) + outerPadding;
 				
-				for(var j = 0; j < brush.series.length; j++) {
-					var startY = brush.y.scale(series[brush.series[j]].data[i]);
+				for(var j = 0; j < brush.target.length; j++) {
+					var startY = brush.y.scale(series[brush.target[j]].data[i]);
 					
 					if (startY <= zeroY) {
                         var r = chart.svg.rect({

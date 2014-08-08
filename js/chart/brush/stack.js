@@ -9,7 +9,7 @@ jui.define("chart.brush.stack", [], function() {
 
             zeroY = brush.y.scale(0);
             series = chart.options.series;
-            count = series[brush.series[0]].data.length;
+            count = series[brush.target[0]].data.length;
 
             width = chart.x.scale.rangeBand();
             barWidth = width - outerPadding*2;
@@ -21,8 +21,8 @@ jui.define("chart.brush.stack", [], function() {
 				
 				var heightSum = 0;
 				var heightArr = [];
-				for(var j = 0; j < brush.series.length; j++) {
-					var height = series[brush.series[j]].data[i];
+				for(var j = 0; j < brush.target.length; j++) {
+					var height = series[brush.target[j]].data[i];
 					
 					heightSum += height;
 					heightArr.push(chart.area.height - brush.y.scale(height)); 

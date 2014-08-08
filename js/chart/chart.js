@@ -52,10 +52,10 @@ jui.defineUI("chart.chart", [], function() {
 				for (var i = 0, len = brush.length; i < len; i++) {
 					var b = brush[i];
 
-					if (!b.series) {
-						b.series = series_list;
-					} else if ( typeof b.series == 'string') {
-						b.series = [b.series];
+					if (!b.target) {
+						b.target = series_list;
+					} else if ( typeof b.target == 'string') {
+						b.target = [b.target];
 					}
 				}
 			}
@@ -118,10 +118,10 @@ jui.defineUI("chart.chart", [], function() {
 
 			if (axis.type == 'radar') {
 
-				if (axis.series && !axis.domain) {
+				if (axis.target && !axis.domain) {
 					var domain = [];
 					for (var i = 0; i < data.length; i++) {
-						domain.push(data[i][axis.series]);
+						domain.push(data[i][axis.target]);
 					}
 
 					axis.domain = domain;
@@ -132,16 +132,16 @@ jui.defineUI("chart.chart", [], function() {
 				return;
 			}
 
-			if ( typeof axis.series == 'string' || typeof axis.series == 'function') {
-				axis.series = [axis.series];
+			if ( typeof axis.target == 'string' || typeof axis.target == 'function') {
+				axis.target = [axis.target];
 			}
 
-			if (axis.series && axis.series.length) {
+			if (axis.target && axis.target.length) {
 				var max = 0;
 				var min = 0;
 
-				for (var i = 0; i < axis.series.length; i++) {
-					var s = axis.series[i];
+				for (var i = 0; i < axis.target.length; i++) {
+					var s = axis.target[i];
 
 					if (typeof s == 'function') {
 						for (var index = 0; index < data.length; index++) {

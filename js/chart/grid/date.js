@@ -1,6 +1,6 @@
 jui.define("chart.grid.date", [], function() {
 
-    var Grid = function(orient, opt) {
+    var Grid = function(orient, grid) {
         var self = this;
 
         function drawDate(chart, orient, domain, range, step, format) {
@@ -181,7 +181,7 @@ jui.define("chart.grid.date", [], function() {
         }
 
         this.draw = function(chart) {
-        	var obj = drawDate(chart, orient, opt.domain, [0, chart.area.height]);
+        	var obj = drawDate(chart, orient, grid.domain, [0, chart.area.height]);
 
 			if (orient == 'left') {
 				var x = chart.area.x - 30;

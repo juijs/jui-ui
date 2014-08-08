@@ -1,96 +1,100 @@
 jui.define("chart.grid.radar", [], function() {
 
-	var Grid = function(orient, opt) {
-        var position = [];
+	var Grid = function(orient, grid) {
+		var position = [];
 
-        function drawCircle(chart, root, centerX, centerY, x, y, count) {
-            var r = Math.abs(y);
-            var cx = centerX;
-            var cy = centerY;
+		function drawCircle(chart, root, centerX, centerY, x, y, count) {
+			var r = Math.abs(y);
+			var cx = centerX;
+			var cy = centerY;
 
-            root.append(chart.svg.circle({
-                cx : cx,
-                cy : cy,
-                r : r,
-                "fill-opacity" : 0,
-                stroke : 'black',
-                "stroke-width" : 1
-            }))
-        }
+			root.append(chart.svg.circle({
+				cx : cx,
+				cy : cy,
+				r : r,
+				"fill-opacity" : 0,
+				stroke : 'black',
+				"stroke-width" : 1
+			}))
+		}
 
-        function drawRadal(chart, root, centerX, centerY, x, y, count, unit) {
+		function drawRadal(chart, root, centerX, centerY, x, y, count, unit) {
 
-            var g = chart.svg.group();
+			var g = chart.svg.group();
 
-            var points = [];
+			var points = [];
 
-            points.push([centerX + x, centerY + y]);
+			points.push([centerX + x, centerY + y]);
 
-            var startX = x;
-            var startY = y;
+			var startX = x;
+			var startY = y;
 
-            for (var i = 0; i < count; i++) {
-                var obj = this.rotate(startX, startY, unit);
+			for (var i = 0; i < count; i++) {
+				var obj = this.rotate(startX, startY, unit);
 
-                startX = obj.x;
-                startY = obj.y;
+				startX = obj.x;
+				startY = obj.y;
 
-                points.push([centerX + obj.x, centerY + obj.y]);
-            }
+				points.push([centerX + obj.x, centerY + obj.y]);
+			}
 
-            var path = chart.svg.path({
+			var path = chart.svg.path({
 
-                "fill-opacity" : 0,
-                stroke : "black"
-            });
+				"fill-opacity" : 0,
+				stroke : "black"
+			});
 
-            for (var i = 0; i < points.length; i++) {
-                var point = points[i];
+			for (var i = 0; i < points.length; i++) {
+				var point = points[i];
 
-                if (i == 0) {
-                    path.MoveTo(point[0], point[1])
-                } else {
-                    path.LineTo(point[0], point[1]);
-                }
-            }
+				if (i == 0) {
+					path.MoveTo(point[0], point[1])
+				} else {
+					path.LineTo(point[0], point[1]);
+				}
+			}
 
-            path.LineTo(points[0][0], points[0][1]);
-            //path.ClosePath();
+			path.LineTo(points[0][0], points[0][1]);
+			//path.ClosePath();
 
-            g.append(path)
+			g.append(path)
 
-            root.append(g);
-        }
-		
+			root.append(g);
+		}
+
+
 		this.drawBefore = function(chart) {
 		}
 
 		this.xy = function(index, rate) {
-            var obj = position[0];
+			var obj = position[0];
 
-            var height = Math.abs(obj.y1) - Math.abs(obj.y2);
-            var pos = height * rate;
-            var unit = 2 * Math.PI / opt.domain.length;
+			var height = Math.abs(obj.y1) - Math.abs(obj.y2);
+			var pos = height * rate;
+			var unit = 2 * Math.PI / grid.domain.length;
 
-            var centerX = obj.x1;
-            var centerY = obj.y1;
-            var y = -pos;
-            var x = 0;
+			var centerX = obj.x1;
+			var centerY = obj.y1;
+			var y = -pos;
+			var x = 0;
 
-            for (var i = 0; i < index; i++) {
+			for (var i = 0; i < index; i++) {
 
-                var obj = this.rotate(x, y, unit);
+				var obj = this.rotate(x, y, unit);
 
-                x = obj.x;
-                y = obj.y;
-            }
+				x = obj.x;
+				y = obj.y;
+			}
 
-            return { x: centerX + x, y: centerY + y }
-        }
+			return {
+				x : centerX + x,
+				y : centerY + y
+			}
+		}
 
 		this.draw = function(chart) {
 			var width = chart.area.width, height = chart.area.height;
-			opt.line = typeof opt.line == 'undefined' ? true : opt.line;
+			grid.line = typeof grid.line == 'undefined' ? true : grid.line;
 
 			var min = width;
 
@@ -105,8 +109,8 @@ jui.define("chart.grid.radar", [], function() {
 
 			var startY = -w / 1.5;
 			var startX = 0;
-			var count = opt.domain.length;
-			var step = opt.step;
+			var count = grid.domain.length;
+			var step = grid.step;
 			var unit = 2 * Math.PI / count;
 
 			var h = Math.abs(startY) / step;
@@ -134,8 +138,13 @@ jui.define("chart.grid.radar", [], function() {
 					"stroke-width" : 1,
 					'stroke' : 'black'
 				}))
-				
-				position[i] = { x1 : centerX, y1 : centerY, x2 : x2, y2 : y2 };
+
+				position[i] = {
+					x1 : centerX,
+					y1 : centerY,
+					x2 : x2,
+					y2 : y2
+				};
 
 				var ty = y2;
 				var tx = x2;
@@ -159,7 +168,7 @@ jui.define("chart.grid.radar", [], function() {
 					x : tx,
 					y : ty,
 					'text-anchor' : talign
-				}, opt.domain[i]))
+				}, grid.domain[i]))
 
 				var obj = this.rotate(startX, startY, unit);
 
@@ -168,7 +177,7 @@ jui.define("chart.grid.radar", [], function() {
 
 			}
 
-			if (!opt.line)
+			if (!grid.line)
 				return;
 
 			// area split line
@@ -176,11 +185,11 @@ jui.define("chart.grid.radar", [], function() {
 
 			for (var i = 0; i < step; i++) {
 
-				if (i == 0 && opt.extra) {
+				if (i == 0 && grid.extra) {
 					startY += h;
 					continue;
 				}
-				if (opt.shape == 'circle') {
+				if (grid.shape == 'circle') {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
 					drawRadal(chart, root, centerX, centerY, 0, startY, count, unit);
@@ -189,7 +198,7 @@ jui.define("chart.grid.radar", [], function() {
 				startY += h;
 			}
 
-			return this; 
+			return this;
 		}
 	}
 

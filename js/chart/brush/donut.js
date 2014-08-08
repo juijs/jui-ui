@@ -71,7 +71,7 @@ jui.define("chart.brush.donut", [], function() {
 		this.draw = function(chart) {
 			
 			var series = chart.get('series');
-			var key = brush.series[0];
+			var key = brush.target[0];
 			var s = series[key];
 			
 			

@@ -6,7 +6,7 @@ jui.define("chart.brush.path", [], function() {
 		
 		this.draw = function(chart) {
 			var series = chart.get('series');
-			var s = series[brush.series[0]];
+			var s = series[brush.target[0]];
 			var g = chart.svg.group();
 			
 			var path = chart.svg.path({

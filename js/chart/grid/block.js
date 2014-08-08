@@ -1,6 +1,6 @@
 jui.define("chart.grid.block", [], function() {
 
-    var Grid = function(orient, opt) {
+    var Grid = function(orient, grid) {
         var self = this;
 
         function drawBlock(chart, orient, domain, range) {
@@ -64,9 +64,9 @@ jui.define("chart.grid.block", [], function() {
 
                 g.append(chart.svg.line({
                     x1: 0,
-                    y1: 0,
+                    y1: 0.5,
                     x2: max,
-                    y2: 0,
+                    y2: 0.5,
                     stroke : "black",
                     "stroke-width" : 0.5
                 }));
@@ -78,9 +78,9 @@ jui.define("chart.grid.block", [], function() {
                         "transform" : "translate("+ points[i] + ", 0)"
                     }, function() {
                         chart.svg.line({
-                            x1: 0,
+                            x1: 0.5,
                             y1: 0,
-                            x2: 0,
+                            x2: 0.5,
                             y2: bar,
                             stroke : "black",
                             "stroke-width" : 0.5
@@ -179,7 +179,7 @@ jui.define("chart.grid.block", [], function() {
         	var width = chart.area.width,
                 height = chart.area.height,
                 max = (orient == 'left' || orient == 'right') ? height : width,
-                obj = drawBlock(chart, orient, opt.domain, [0, max]);
+                obj = drawBlock(chart, orient, grid.domain, [0, max]);
 
 			if (orient == 'left') {
 				var x = chart.area.x - 30;
