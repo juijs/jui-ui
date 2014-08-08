@@ -173,6 +173,10 @@ jui.defineUI("chart.chart", [], function() {
 
 
 				}
+				
+				axis.max = max;
+				axis.min = min;
+				axis.step = axis.step || 10; 
 
 				var unit = Math.ceil((max - min) / axis.step);
 
@@ -187,7 +191,8 @@ jui.defineUI("chart.chart", [], function() {
 				}
 
 				axis.domain = [end, start];
-				axis.step = Math.abs(start / unit) + Math.abs(end / unit);
+				axis.step = Math.abs(start / unit) + Math.abs(end / unit);	
+				
 			}
 		}
 	}
