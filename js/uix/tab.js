@@ -1,4 +1,4 @@
-jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class

@@ -1,4 +1,4 @@
-jui.define("uix.table.column", [], function() {
+jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
 
@@ -31,7 +31,7 @@ jui.define("uix.table.column", [], function() {
 });
 
 
-jui.define("uix.table.row", [], function() {
+jui.define("uix.table.row", [ "jquery" ], function($) {
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -271,7 +271,7 @@ jui.define("uix.table.row", [], function() {
 });
 
 
-jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], function(_, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -783,7 +783,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
 });
 
 
-jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(_, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic

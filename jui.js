@@ -1,5 +1,5 @@
-(function(exports) {
-	var global = {}, globalFunc = {};
+(function(exports, $) {
+	var global = { jquery: $ }, globalFunc = {};
 
 	/**
 	 * Private Classes
@@ -893,8 +893,8 @@
 
 		logUrl: "jui.mng.html"
 	};
-})(window);
-jui.define("core", [ "util" ], function(_) {
+})(window, jQuery || $);
+jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1412,9 +1412,9 @@ jui.define("core", [ "util" ], function(_) {
 	
 	return UICore;
 });
-jui.defineUI("ui.button", [], function() {
-	
-	var UIRadio = function(ui, element, options) {
+jui.defineUI("ui.button", [ "jquery" ], function($) {
+
+    var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
 		
 		this.ui = ui;
@@ -1589,7 +1589,7 @@ jui.defineUI("ui.button", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.combo", [ "util" ], function(_) {
+jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -1909,7 +1909,7 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.datepicker", [ "util" ], function(_) {
+jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
 
     /**
      * UI Class
@@ -2258,7 +2258,7 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
 
     return UI;
 }, "core");
-jui.defineUI("ui.dropdown", [], function() {
+jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	/**
 	 * Common Logic
@@ -2581,7 +2581,7 @@ jui.defineUI("ui.dropdown", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.modal", [ "util" ], function(_) {
+jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -2771,7 +2771,7 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.notify", [], function() {
+jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
     /**
@@ -2905,7 +2905,7 @@ jui.defineUI("ui.notify", [], function() {
 
     return UI;
 }, "core");
-jui.defineUI("ui.paging", [], function() {
+jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class
@@ -3051,7 +3051,7 @@ jui.defineUI("ui.paging", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.tooltip", [], function() {
+jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class
@@ -3194,7 +3194,7 @@ jui.defineUI("ui.tooltip", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.layout", [ "util" ], function(_) {
+jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -3680,7 +3680,7 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 }, "core")
 
-jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3786,7 +3786,7 @@ jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -4127,7 +4127,7 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	return UI;
 }, "core");
-jui.define("uix.table.column", [], function() {
+jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
 
@@ -4160,7 +4160,7 @@ jui.define("uix.table.column", [], function() {
 });
 
 
-jui.define("uix.table.row", [], function() {
+jui.define("uix.table.row", [ "jquery" ], function($) {
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -4400,7 +4400,7 @@ jui.define("uix.table.row", [], function() {
 });
 
 
-jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], function(_, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -4912,7 +4912,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
 });
 
 
-jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(_, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -6089,7 +6089,7 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 	
 	return UI;
 }, "core");
-jui.define("uix.tree.node", [], function() {
+jui.define("uix.tree.node", [ "jquery" ], function($) {
     var Node = function(data, tplFunc) {
         var self = this;
 
@@ -6293,7 +6293,7 @@ jui.define("uix.tree.node", [], function() {
 });
 
 
-jui.define("uix.tree.base", [ "util", "uix.tree.node" ], function(_, Node) {
+jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -6988,7 +6988,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
+jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -7237,7 +7237,7 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**

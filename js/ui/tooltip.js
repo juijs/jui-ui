@@ -1,4 +1,4 @@
-jui.defineUI("ui.tooltip", [], function() {
+jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class

@@ -1,4 +1,4 @@
-jui.defineUI("ui.layout", [ "util" ], function(_) {
+jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 

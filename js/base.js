@@ -1,5 +1,5 @@
-(function(exports) {
-	var global = {}, globalFunc = {};
+(function(exports, $) {
+	var global = { jquery: $ }, globalFunc = {};
 
 	/**
 	 * Private Classes
@@ -893,4 +893,4 @@
 
 		logUrl: "jui.mng.html"
 	};
-})(window);
+})(window, jQuery || $);

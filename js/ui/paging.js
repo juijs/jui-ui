@@ -1,4 +1,4 @@
-jui.defineUI("ui.paging", [], function() {
+jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class
