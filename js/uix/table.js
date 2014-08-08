@@ -3,10 +3,10 @@ jui.define("uix.table.column", [], function() {
         var self = this;
 
         this.element = null;
-        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.order = "asc";
         this.name = null;
-        this.data = [];
+        this.data = []; // 자신의 컬럼 로우의 데이터 목록
+        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.index = index;
         this.type = "show";
         this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
@@ -310,6 +310,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
                     column.order = columns[i].order;
                     column.name = columns[i].name;
                     column.data = columns[i].data;
+                    column.list = columns[i].list;
                     column.type = columns[i].type;
                     column.width = columns[i].width;
                 } else {
