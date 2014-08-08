@@ -1,6 +1,6 @@
 jui.define("chart.brush.donut", [], function() {
 
-	var Brush = function(grid) {
+	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
 		}
 		
@@ -71,7 +71,7 @@ jui.define("chart.brush.donut", [], function() {
 		this.draw = function(chart) {
 			
 			var series = chart.get('series');
-			var key = grid.series[0];
+			var key = brush.series[0];
 			var s = series[key];
 			
 			

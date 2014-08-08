@@ -4,6 +4,8 @@ jui.define("chart.brush.point", [], function() {
         var g, zeroY, series, count, width;
         var r = 10;
 
+        console.log(grid);
+
         this.drawBefore = function(chart) {
             g = chart.svg.group().translate(chart.area.x, chart.area.y);
 

@@ -1,6 +1,6 @@
 jui.define("chart.brush.stack", [], function() {
 
-    var BarBrush = function(brush) {
+    var StackBrush = function(brush) {
         var g, zeroY, series, count, width, barWidth;
         var outerPadding = 15, innerPadding = 10;
 
@@ -48,5 +48,5 @@ jui.define("chart.brush.stack", [], function() {
         }
     }
 	
-	return BarBrush;
+	return StackBrush;
 }, "chart.brush");

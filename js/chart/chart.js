@@ -51,12 +51,6 @@ jui.defineUI("chart.chart", [], function() {
 
 				for (var i = 0, len = brush.length; i < len; i++) {
 					var b = brush[i];
-					b.cls = 'brush';
-					if (grid) {
-						var g = b.grid = grid[b.grid || 0];	
-					}
-					
-					b.chart = this;
 
 					if (!b.series) {
 						b.series = series_list;
@@ -64,7 +58,6 @@ jui.defineUI("chart.chart", [], function() {
 						b.series = [b.series];
 					}
 				}
-
 			}
 
 			_grid = grid;
