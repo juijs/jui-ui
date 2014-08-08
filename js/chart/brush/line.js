@@ -1,44 +1,54 @@
 jui.define("chart.brush.line", [], function() {
 
-    var LineBrush = function(brush) {
+    var LineBrush = function(grid) {
+        var g, zeroY, series, count, width;
 
-        this._draw = function(chart) {
-            var series = chart.get('series');
-            var barPadding = chart.get('barPadding');
-            var seriesPadding = chart.get('seriesPadding');
-            var labels = chart.get('labels');
-			var colors = ["black", 'red', 'blue'];
-            var height = chart.area.height;
-            var width = chart.area.width;
-            var rate = width / labels.length; 
-            var pos = rate / 2; 
-            var grid = brush.grid;
-            
-            for(var i = 0, len = brush.series.length; i < len; i++) {
-            	var s = series[brush.series[i]];
-            	s.paths = s.paths || [];
-            	
-            	for(var j = 0, jlen = s.data.length; j < jlen; j++) {
-            		var y = chart.convert(height, grid.max, grid.min, s.data[j]);
-            		var x = (rate * j) + pos;
-            		
-            		s.paths.push({x : x, y : y})
-            	}
-            	
-            	for (var k = 0; k < s.paths.length - 1; k++) {
-                    var x1 = s.paths[k].x,
-                        y1 = s.paths[k].y,
-                        x2 = s.paths[k + 1].x,
-                        y2 = s.paths[k + 1].y;
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.area.x, chart.area.y);
 
-                    chart.line(x1, y1, x2, y2, {
-                        "stroke-width": 1,
-                        "stroke": colors[i]
-                    });
+            zeroY = grid.y.scale(0);
+            series = chart.options.series;
+            count = series[grid.series[0]].data.length;
+            width = chart.x.scale.rangeBand();
+        }
+
+        this.draw = function(chart) {
+            var path = {};
+
+            for(var i = 0; i < count; i++) {
+                var startX = grid.x.scale(i) + (width / 2);
+
+                for(var j = 0; j < grid.series.length; j++) {
+                    var startY = grid.y.scale(series[grid.series[j]].data[i]);
+
+                    if(!path[j]) {
+                        path[j] = { x: [], y: [] };
+                    }
+
+                    path[j].x.push(startX);
+                    path[j].y.push(startY);
                 }
-                
             }
 
+            for(var k in path) {
+                var p = chart.svg.path({
+                    stroke: this.getColor(k),
+                    "stroke-width": 2,
+                    fill: "transparent"
+                });
+
+                var x = path[k].x,
+                    y = path[k].y,
+                    px = this.curvePoints(x),
+                    py = this.curvePoints(y);
+
+                for(var i = 0; i < x.length - 1; i++) {
+                    p.MoveTo(x[i], y[i]);
+                    p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
+                }
+
+                g.append(p);
+            }
         }
     }
 
