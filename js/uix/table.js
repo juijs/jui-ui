@@ -1,12 +1,12 @@
-jui.define("uix.table.column", [], function() {
+jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
 
         this.element = null;
-        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.order = "asc";
         this.name = null;
-        this.data = [];
+        this.data = []; // 자신의 컬럼 로우의 데이터 목록
+        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.index = index;
         this.type = "show";
         this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
@@ -31,7 +31,7 @@ jui.define("uix.table.column", [], function() {
 });
 
 
-jui.define("uix.table.row", [], function() {
+jui.define("uix.table.row", [ "jquery" ], function($) {
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -271,7 +271,7 @@ jui.define("uix.table.row", [], function() {
 });
 
 
-jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], function(_, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -310,6 +310,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
                     column.order = columns[i].order;
                     column.name = columns[i].name;
                     column.data = columns[i].data;
+                    column.list = columns[i].list;
                     column.type = columns[i].type;
                     column.width = columns[i].width;
                 } else {
@@ -782,7 +783,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
 });
 
 
-jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(_, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -1101,22 +1102,20 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 				len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
 			
 			for(var i = 0; i < len; i++) {
-				var columnKey = (sortIndexes === true) ? i : sortIndexes[i],
-					column = self.getColumn(columnKey);
+				var colKey = (sortIndexes === true) ? i : sortIndexes[i],
+					col = self.getColumn(colKey);
 				
-				if(column.element != null) {
-					(function(index, name) {
+				if(col.element != null) {
+					(function(index, column) {
 						self.addEvent(column.element, "click", function(e) {
 							if($(e.target).hasClass("resize")) return;
 
 							self.sort(index, undefined, e);
                             self.emit("colclick", [ column, e ]);
-							
-							return false;
 						});
-					})(columnKey, column.name);
+					})(colKey, col);
 					
-					$(column.element).css("cursor", "pointer");
+					$(col.element).css("cursor", "pointer");
 				}
 			}
 		}
@@ -1613,25 +1612,37 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			}
 		}
 		
-		this.columnMenu = function(x) {
-			if(!this.options.fields || !ddUi) return;
-			
-			var columns = this.listColumn();
-			var offset = $obj.thead.offset(),
-				maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-			
-			x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-			x = (x < 0) ? 0 : x;
-			
-			// 현재 체크박스 상태 설정
-			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
-				if(columns[i].type == "show") this.checked = true;
-				else this.checked = false;
-			});
-			
-			ddUi.move(x, offset.top + $obj.thead.outerHeight());
-			ddUi.show();
-		}
+        this.showColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            var columns = this.listColumn();
+            var offset = $obj.thead.offset(),
+                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
+
+            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
+            x = (x < 0) ? 0 : x;
+
+            // 현재 체크박스 상태 설정
+            $(ddUi.root).find("input[type=checkbox]").each(function(i) {
+                if(columns[i].type == "show") this.checked = true;
+                else this.checked = false;
+            });
+
+            ddUi.move(x, offset.top + $obj.thead.outerHeight());
+            ddUi.show();
+        }
+
+        this.hideColumnMenu = function() {
+            if(!this.options.fields || !ddUi) return;
+            ddUi.hide();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            if(ddUi.type == "show") this.hideColumnMenu();
+            else this.showColumnMenu(x);
+        }
 		
 		this.showExpand = function(index, obj, e) {
 			if(!this.options.expand) return;
@@ -1803,7 +1814,21 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			
 			return _.csvToBase64(this.getCsv(isTree));
 		}
-		
+
+        this.downloadCsv = function(name, isTree) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64(isTree);
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
+
 		this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
 			return rowIndex;
 		}
@@ -1873,13 +1898,16 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 initColumns: [ "array" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
                 hideExpand: [ [ "object", "undefined" ] ],
                 showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 setCsv: [ "string", "string" ],
                 setCsvFile: [ [ "string", "object" ], "object" ],
                 getCsv: [ [ "boolean", "undefined" ] ],
-                getCsvBase64: [ [ "boolean", "undefined" ] ]
+                getCsvBase64: [ [ "boolean", "undefined" ] ],
+                downloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
             },
             animate: {
                 update: {

@@ -1,4 +1,4 @@
-jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**
@@ -34,9 +34,9 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		function createTableList(self) { // 2
 			var exceptOpts = [ 
-                   "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", 
-                   "event", "rows", "scrollWidth", "width"
-               ];
+               "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
+               "event", "rows", "scrollWidth", "width"
+            ];
 			
 			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
@@ -229,14 +229,6 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			self.emit("filter", [ s_rows ]);
 		}
 		
-		function resetFilteredData(self) {
-			if(o_rows != null) {
-				self.update(o_rows);
-				
-				o_rows = null;
-			}
-		}
-		
 		function setColumnWidthAuto(self) {
 			var columns = head.listColumn();
 			
@@ -254,8 +246,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
-			
+			var opts = this.options;
+
+            // 루트가 테이블일 경우, 별도 처리
+            if(this.root.tagName == "TABLE") {
+                var $root = $(this.root).wrap("<div class='xtable'></div>");
+                this.root = $root.parent().get(0);
+            }
+
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
@@ -416,12 +414,12 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		    }
 		}
 		
-		this.filter = function(index, keyword, callback) { // filter (=포함), keyword가 null일 경우에는 롤백
+		this.filter = function(index, keyword, callback) { // filter (=포함)
 			if(!this.options.fields) return;
 
-			var column = head.getColumn(index);
-			resetFilteredData(this);
-			
+            this.rollback();
+            var column = head.getColumn(index);
+
 			if(column.name && keyword) {
 				setFilteredData(this, column.name, function(target) {
 					if(typeof(callback) == "function") {
@@ -438,6 +436,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				this.emit("filter", [ rows ]);
 			}
 		}
+
+        this.rollback = function() {
+            if(o_rows != null) {
+                this.update(o_rows);
+
+                o_rows = null;
+            }
+        }
 		
 		this.clear = function() {
 			page = 1;
@@ -512,9 +518,17 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			head.emit("colresize");
 		}
 		
-		this.columnMenu = function(x) {
-			head.columnMenu(x);
+		this.showColumnMenu = function(x) {
+			head.showColumnMenu(x);
 		}
+
+        this.hideColumnMenu = function() {
+            head.hideColumnMenu();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            head.toggleColumnMenu(x);
+        }
 
 		this.showExpand = function(index, obj) {
 			body.showExpand(index, obj);
@@ -586,6 +600,20 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			
 			return _.csvToBase64(this.getCsv());
 		}
+
+        this.downloadCsv = function(name) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64();
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
 		
 		this.rowFunc = function(type, index, callback) {
 			if(!this.options.fields) return;
@@ -686,12 +714,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showColumn: [ [ "integer", "string" ] ],
                 hideColumn: [ [ "integer", "string" ] ],
                 initColumns: [ "array" ],
-                columnMenu: [ "integer" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], "object" ],
                 hideExpand: [ [ "integer", "string" ] ],
                 showLoading: [ "integer" ],
                 setCsv: [ "string" ],
                 setCsvFile: [ "object" ],
+                downloadCsv: [ [ "string", "undefined" ] ],
                 rowFunc: [ "string", [ "integer", "string" ], "function" ]
             },
             animate: {

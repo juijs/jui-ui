@@ -1,4 +1,4 @@
-jui.defineUI("ui.dropdown", [], function() {
+jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	/**
 	 * Common Logic

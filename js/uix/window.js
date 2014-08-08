@@ -1,4 +1,4 @@
-jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
+jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -179,6 +179,12 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 		this.resize = function() {
 			setBodyResize();
 		}
+
+        this.resizeModal = function() {
+            if(!ui_modal) return;
+
+            ui_modal.resize();
+        }
 	}
 
     UI.setting = function() {

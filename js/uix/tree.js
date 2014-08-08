@@ -1,4 +1,4 @@
-jui.define("uix.tree.node", [], function() {
+jui.define("uix.tree.node", [ "jquery" ], function($) {
     var Node = function(data, tplFunc) {
         var self = this;
 
@@ -202,7 +202,7 @@ jui.define("uix.tree.node", [], function() {
 });
 
 
-jui.define("uix.tree.base", [ "util", "uix.tree.node" ], function(_, Node) {
+jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 

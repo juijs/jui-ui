@@ -1,4 +1,4 @@
-jui.define("core", [ "util" ], function(_) {
+jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -14,13 +14,17 @@ jui.define("core", [ "util" ], function(_) {
 		this.get = function(key) {
 			var result = [];
 
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return instances[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < instances.length; i++) {
 					if(key == instances[i].type) {
 						result.push(instances[i]);
-					}
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(instances[i].type.indexOf("." + key) != -1) {
+                            result.push(instances[i]);
+                        }
+                    }
 				}
 			}
 			
@@ -106,13 +110,17 @@ jui.define("core", [ "util" ], function(_) {
 		}
 		
 		this.getClass = function(key) {
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return classes[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < classes.length; i++) {
 					if(key == classes[i].type) {
-						return classes[i];
-					}
+                        return classes[i];
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(classes[i].type.indexOf("." + key) != -1) {
+                            return classes[i];
+                        }
+                    }
 				}
 			}
 			
@@ -122,11 +130,16 @@ jui.define("core", [ "util" ], function(_) {
 		this.getClassAll = function() {
 			return classes;
 		}
-		
-		this.create = function(type, selector, options) {
-			var clsFunc = UIManager.getClass(type)["class"];
-			return clsFunc(selector, options);
-		}
+
+        this.create = function(type, selector, options) {
+            var cls = UIManager.getClass(type);
+
+            if(_.typeCheck("null", cls)) {
+                throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
+            }
+
+            return cls["class"](selector, options);
+        }
 	}
 	
 	var UIListener = function(obj) {
@@ -141,7 +154,7 @@ jui.define("core", [ "util" ], function(_) {
 			
 			for(var p = 0; p < pfx.length; p++) {
 				var type = e.type;
-				
+
 				if(!pfx[p]) type = type.toLowerCase();
 				$(e.target).on(pfx[p] + type, e.callback);
 			}
@@ -186,26 +199,33 @@ jui.define("core", [ "util" ], function(_) {
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
-			if(typeof(args[2]) == "function") {
+			if(_.typeCheck("function", args[2])) {
 				e = $.extend(e, { callback: args[2] });
-			} else if(typeof(args[2]) == "string") {
+			} else if(_.typeCheck("string", args[2])) {
 				e = $.extend(e, { children: args[2], callback: args[3] });
 			}
-			
+
+            // 이벤트 유형을 배열로 변경
+            var eventTypes = _.typeCheck("array", e.type) ? e.type : [ e.type ];
+
 			// 이벤트 유형에 따른 이벤트 설정
-			if(e.type.toLowerCase().indexOf("animation") != -1) 
-				settingEventAnimation(e);
-			else {
-				if(e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
-					$(e.target).unbind(e.type);
-				}
-				
-				if(_.isTouch) {
-					settingEventTouch(e);
-				} else {
-					settingEvent(e);
-				}
-			}
+            for(var i = 0; i < eventTypes.length; i++) {
+                e.type = eventTypes[i]
+
+                if (e.type.toLowerCase().indexOf("animation") != -1)
+                    settingEventAnimation(e);
+                else {
+                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+                        $(e.target).unbind(e.type);
+                    }
+
+                    if (_.isTouch) {
+                        settingEventTouch(e);
+                    } else {
+                        settingEvent(e);
+                    }
+                }
+            }
 		}
 		
 		this.trigger = function(selector, type) {
@@ -401,14 +421,14 @@ jui.define("core", [ "util" ], function(_) {
                 var mainObj = new UI["class"](),
                     defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
-                // Default Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
-
                 // Options Check
                 checkedOptions(defOpts, options);
 
-                // Pulbic Properties
+                // Options Setting
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Public Properties
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;

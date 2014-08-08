@@ -1,5 +1,5 @@
-(function(exports) {
-	var global = {}, globalFunc = {};
+(function(exports, $) {
+	var global = { jquery: $ }, globalFunc = {};
 
 	/**
 	 * Private Classes
@@ -621,6 +621,9 @@
 			
 			return tmpFields;
 		},
+        svgToBase64: function(xml) {
+            return "data:image/svg+xml;base64," + Base64.encode(xml);
+        },
         dateFormat: function(date, format, utc) {
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -801,7 +804,7 @@
 
             // UI 그룹 설정
             global[keys[0]][keys[1]] = global["core"].init({
-                type: keys[1],
+                type: name,
                 "class": uiFunc
             });
 
@@ -890,8 +893,8 @@
 
 		logUrl: "jui.mng.html"
 	};
-})(window);
-jui.define("core", [ "util" ], function(_) {
+})(window, jQuery || $);
+jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -907,13 +910,17 @@ jui.define("core", [ "util" ], function(_) {
 		this.get = function(key) {
 			var result = [];
 
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return instances[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < instances.length; i++) {
 					if(key == instances[i].type) {
 						result.push(instances[i]);
-					}
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(instances[i].type.indexOf("." + key) != -1) {
+                            result.push(instances[i]);
+                        }
+                    }
 				}
 			}
 			
@@ -999,13 +1006,17 @@ jui.define("core", [ "util" ], function(_) {
 		}
 		
 		this.getClass = function(key) {
-			if(!isNaN(key)) {
+			if(_.typeCheck("integer", key)) {
 				return classes[key];
-			} else if(typeof(key) == "string") {
+			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < classes.length; i++) {
 					if(key == classes[i].type) {
-						return classes[i];
-					}
+                        return classes[i];
+					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
+                        if(classes[i].type.indexOf("." + key) != -1) {
+                            return classes[i];
+                        }
+                    }
 				}
 			}
 			
@@ -1015,11 +1026,16 @@ jui.define("core", [ "util" ], function(_) {
 		this.getClassAll = function() {
 			return classes;
 		}
-		
-		this.create = function(type, selector, options) {
-			var clsFunc = UIManager.getClass(type)["class"];
-			return clsFunc(selector, options);
-		}
+
+        this.create = function(type, selector, options) {
+            var cls = UIManager.getClass(type);
+
+            if(_.typeCheck("null", cls)) {
+                throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
+            }
+
+            return cls["class"](selector, options);
+        }
 	}
 	
 	var UIListener = function(obj) {
@@ -1034,7 +1050,7 @@ jui.define("core", [ "util" ], function(_) {
 			
 			for(var p = 0; p < pfx.length; p++) {
 				var type = e.type;
-				
+
 				if(!pfx[p]) type = type.toLowerCase();
 				$(e.target).on(pfx[p] + type, e.callback);
 			}
@@ -1079,26 +1095,33 @@ jui.define("core", [ "util" ], function(_) {
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
-			if(typeof(args[2]) == "function") {
+			if(_.typeCheck("function", args[2])) {
 				e = $.extend(e, { callback: args[2] });
-			} else if(typeof(args[2]) == "string") {
+			} else if(_.typeCheck("string", args[2])) {
 				e = $.extend(e, { children: args[2], callback: args[3] });
 			}
-			
+
+            // 이벤트 유형을 배열로 변경
+            var eventTypes = _.typeCheck("array", e.type) ? e.type : [ e.type ];
+
 			// 이벤트 유형에 따른 이벤트 설정
-			if(e.type.toLowerCase().indexOf("animation") != -1) 
-				settingEventAnimation(e);
-			else {
-				if(e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
-					$(e.target).unbind(e.type);
-				}
-				
-				if(_.isTouch) {
-					settingEventTouch(e);
-				} else {
-					settingEvent(e);
-				}
-			}
+            for(var i = 0; i < eventTypes.length; i++) {
+                e.type = eventTypes[i]
+
+                if (e.type.toLowerCase().indexOf("animation") != -1)
+                    settingEventAnimation(e);
+                else {
+                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+                        $(e.target).unbind(e.type);
+                    }
+
+                    if (_.isTouch) {
+                        settingEventTouch(e);
+                    } else {
+                        settingEvent(e);
+                    }
+                }
+            }
 		}
 		
 		this.trigger = function(selector, type) {
@@ -1294,14 +1317,14 @@ jui.define("core", [ "util" ], function(_) {
                 var mainObj = new UI["class"](),
                     defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
 
-                // Default Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
-
                 // Options Check
                 checkedOptions(defOpts, options);
 
-                // Pulbic Properties
+                // Options Setting
+                var opts = $.extend(true, defOpts, options);
+                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+
+                // Public Properties
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
@@ -1389,9 +1412,9 @@ jui.define("core", [ "util" ], function(_) {
 	
 	return UICore;
 });
-jui.defineUI("ui.button", [], function() {
-	
-	var UIRadio = function(ui, element, options) {
+jui.defineUI("ui.button", [ "jquery" ], function($) {
+
+    var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
 		
 		this.ui = ui;
@@ -1566,7 +1589,7 @@ jui.defineUI("ui.button", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.combo", [ "util" ], function(_) {
+jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -1886,7 +1909,7 @@ jui.defineUI("ui.combo", [ "util" ], function(_) {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.datepicker", [ "util" ], function(_) {
+jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
 
     /**
      * UI Class
@@ -2235,7 +2258,7 @@ jui.defineUI("ui.datepicker", [ "util" ], function(_) {
 
     return UI;
 }, "core");
-jui.defineUI("ui.dropdown", [], function() {
+jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	/**
 	 * Common Logic
@@ -2558,7 +2581,7 @@ jui.defineUI("ui.dropdown", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.modal", [ "util" ], function(_) {
+jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -2575,8 +2598,7 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") {
-					ui_list[j].hide();
-					ui_list[j].show();
+					ui_list[j].resize();
 				}
 			}
 		}
@@ -2708,18 +2730,31 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 				$clone = $(this.root).clone();
 				$clone.insertAfter($(this.root));
 			}
-			
+
+            // 위치 재조정
+            this.resize();
+
 			$(this.options.target).css("position", info.tPos);
-			$(this.root).css({
-				"position": info.pos,
-				"left": info.x,
-				"top": info.y,
-				"z-index": (z_index + this.options.index)
-			}).show();
+			$(this.root).show();
 			
 			createModal(this, info.h);
 			this.type = "show";
 		}
+
+        this.resize = function() {
+            var info = getModalInfo(this);
+
+            $(this.root).css({
+                "position": info.pos,
+                "left": info.x,
+                "top": info.y,
+                "z-index": (z_index + this.options.index)
+            });
+
+            if($modal != null) {
+                $modal.height(info.h);
+            }
+        }
 	}
 
     UI.setting = function() {
@@ -2736,7 +2771,7 @@ jui.defineUI("ui.modal", [ "util" ], function(_) {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.notify", [], function() {
+jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
     /**
@@ -2870,7 +2905,7 @@ jui.defineUI("ui.notify", [], function() {
 
     return UI;
 }, "core");
-jui.defineUI("ui.paging", [], function() {
+jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class
@@ -3016,7 +3051,7 @@ jui.defineUI("ui.paging", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.tooltip", [], function() {
+jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	/**
 	 * UI Class
@@ -3031,11 +3066,11 @@ jui.defineUI("ui.tooltip", [], function() {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self) {
-			$tooltip = 
+		function createTooltip(self, message) {
+			$tooltip =
 				$("<div id='TOOLTIP_" + self.timestamp + "' class='tooltip tooltip-" + self.options.position + " tooltip-" + self.options.color + "'>" + 
 					"<div class='anchor'></div>" +
-					"<div class='title'>" + ((self.options.title) ? self.options.title : title) + "</div>" +
+					"<div class='title'>" + message + "</div>" +
 				"</div>");
 			
 			// 스타일 옵션
@@ -3130,12 +3165,16 @@ jui.defineUI("ui.tooltip", [], function() {
 		
 		this.show = function() {
 			if($tooltip) this.hide();
-			createTooltip(this);
-			
-			$tooltip.css({ 
-				"left": pos.x,
-				"top": pos.y
-			});
+
+            var message = ((this.options.title) ? this.options.title : title);
+            if(message != "") {
+                createTooltip(this, message);
+
+                $tooltip.css({
+                    "left": pos.x,
+                    "top": pos.y
+                });
+            }
 		}		
 	}
 
@@ -3155,7 +3194,7 @@ jui.defineUI("ui.tooltip", [], function() {
 	
 	return UI;
 }, "core");
-jui.defineUI("ui.layout", [ "util" ], function(_) {
+jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -3641,7 +3680,7 @@ jui.defineUI("ui.layout", [ "util" ], function(_) {
 	
 }, "core")
 
-jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3747,7 +3786,7 @@ jui.defineUI("uix.autocomplete", [ "util", "ui.dropdown" ], function(_, dropdown
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3817,17 +3856,30 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				}
 			
 				// 이벤트 설정
-				self.addEvent(this, "click", "a", function(e) {
-					var text = $(e.currentTarget).text();
-					
-					if(i != menuIndex) {
-						if(self.options.target != "") 
-							showTarget(self.options.target, this);
-						
-						activeIndex = i;
-						self.emit("change", [ { index: i, text: text }, e ]);
+				self.addEvent(this, [ "click", "contextmenu" ], function(e) {
+					var text = $.trim($(this).text()),
+                        value = $(this).val();
 
-						changeTab(self, i);
+					if(i != menuIndex) {
+                        if(i != activeIndex) {
+                            var args = [ { index: i, text: text, value: value }, e ];
+
+                            if(e.type == "click") {
+                                if(self.options.target != "") {
+                                    showTarget(self.options.target, this);
+                                }
+
+                                // 엑티브 인덱스 변경
+                                activeIndex = i;
+
+                                self.emit("change", args);
+                                self.emit("click", args);
+
+                                changeTab(self, i);
+                            } else if(e.type == "contextmenu") {
+                                self.emit("rclick", args);
+                            }
+                        }
 					} else {
 						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(self, this);
@@ -4035,11 +4087,15 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		this.show = function(index) {
+            if(index == menuIndex || index == activeIndex) return;
+
 			activeIndex = index;
-			
+            var $target = $(this.root).children("li").eq(index);
+
 			this.emit("change", [{ 
 				index: index, 
-				text: $(this.root).children("li").eq(index).children("a").text() 
+				text: $.trim($target.text()),
+                value: $target.val()
 			}]);
 
 			changeTab(this, index);
@@ -4071,15 +4127,15 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 	
 	return UI;
 }, "core");
-jui.define("uix.table.column", [], function() {
+jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
 
         this.element = null;
-        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.order = "asc";
         this.name = null;
-        this.data = [];
+        this.data = []; // 자신의 컬럼 로우의 데이터 목록
+        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
         this.index = index;
         this.type = "show";
         this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
@@ -4104,7 +4160,7 @@ jui.define("uix.table.column", [], function() {
 });
 
 
-jui.define("uix.table.row", [], function() {
+jui.define("uix.table.row", [ "jquery" ], function($) {
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -4344,7 +4400,7 @@ jui.define("uix.table.row", [], function() {
 });
 
 
-jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], function(_, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -4383,6 +4439,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
                     column.order = columns[i].order;
                     column.name = columns[i].name;
                     column.data = columns[i].data;
+                    column.list = columns[i].list;
                     column.type = columns[i].type;
                     column.width = columns[i].width;
                 } else {
@@ -4855,7 +4912,7 @@ jui.define("uix.table.base", [ "util", "uix.table.column", "uix.table.row" ], fu
 });
 
 
-jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(_, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -5174,22 +5231,20 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 				len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
 			
 			for(var i = 0; i < len; i++) {
-				var columnKey = (sortIndexes === true) ? i : sortIndexes[i],
-					column = self.getColumn(columnKey);
+				var colKey = (sortIndexes === true) ? i : sortIndexes[i],
+					col = self.getColumn(colKey);
 				
-				if(column.element != null) {
-					(function(index, name) {
+				if(col.element != null) {
+					(function(index, column) {
 						self.addEvent(column.element, "click", function(e) {
 							if($(e.target).hasClass("resize")) return;
 
 							self.sort(index, undefined, e);
                             self.emit("colclick", [ column, e ]);
-							
-							return false;
 						});
-					})(columnKey, column.name);
+					})(colKey, col);
 					
-					$(column.element).css("cursor", "pointer");
+					$(col.element).css("cursor", "pointer");
 				}
 			}
 		}
@@ -5686,25 +5741,37 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			}
 		}
 		
-		this.columnMenu = function(x) {
-			if(!this.options.fields || !ddUi) return;
-			
-			var columns = this.listColumn();
-			var offset = $obj.thead.offset(),
-				maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-			
-			x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-			x = (x < 0) ? 0 : x;
-			
-			// 현재 체크박스 상태 설정
-			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
-				if(columns[i].type == "show") this.checked = true;
-				else this.checked = false;
-			});
-			
-			ddUi.move(x, offset.top + $obj.thead.outerHeight());
-			ddUi.show();
-		}
+        this.showColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            var columns = this.listColumn();
+            var offset = $obj.thead.offset(),
+                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
+
+            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
+            x = (x < 0) ? 0 : x;
+
+            // 현재 체크박스 상태 설정
+            $(ddUi.root).find("input[type=checkbox]").each(function(i) {
+                if(columns[i].type == "show") this.checked = true;
+                else this.checked = false;
+            });
+
+            ddUi.move(x, offset.top + $obj.thead.outerHeight());
+            ddUi.show();
+        }
+
+        this.hideColumnMenu = function() {
+            if(!this.options.fields || !ddUi) return;
+            ddUi.hide();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            if(!this.options.fields || !ddUi) return;
+
+            if(ddUi.type == "show") this.hideColumnMenu();
+            else this.showColumnMenu(x);
+        }
 		
 		this.showExpand = function(index, obj, e) {
 			if(!this.options.expand) return;
@@ -5876,7 +5943,21 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 			
 			return _.csvToBase64(this.getCsv(isTree));
 		}
-		
+
+        this.downloadCsv = function(name, isTree) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64(isTree);
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
+
 		this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
 			return rowIndex;
 		}
@@ -5946,13 +6027,16 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
                 showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 initColumns: [ "array" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
                 hideExpand: [ [ "object", "undefined" ] ],
                 showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
                 setCsv: [ "string", "string" ],
                 setCsvFile: [ [ "string", "object" ], "object" ],
                 getCsv: [ [ "boolean", "undefined" ] ],
-                getCsvBase64: [ [ "boolean", "undefined" ] ]
+                getCsvBase64: [ [ "boolean", "undefined" ] ],
+                downloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
             },
             animate: {
                 update: {
@@ -6005,7 +6089,7 @@ jui.defineUI("uix.table", [ "util", "ui.dropdown", "uix.table.base" ], function(
 	
 	return UI;
 }, "core");
-jui.define("uix.tree.node", [], function() {
+jui.define("uix.tree.node", [ "jquery" ], function($) {
     var Node = function(data, tplFunc) {
         var self = this;
 
@@ -6209,7 +6293,7 @@ jui.define("uix.tree.node", [], function() {
 });
 
 
-jui.define("uix.tree.base", [ "util", "uix.tree.node" ], function(_, Node) {
+jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -6904,7 +6988,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
+jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -7085,6 +7169,12 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 		this.resize = function() {
 			setBodyResize();
 		}
+
+        this.resizeModal = function() {
+            if(!ui_modal) return;
+
+            ui_modal.resize();
+        }
 	}
 
     UI.setting = function() {
@@ -7147,7 +7237,7 @@ jui.defineUI("uix.window", [ "util", "ui.modal" ], function(_, modal) {
 	
 	return UI;
 }, "core");
-jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**
@@ -7183,9 +7273,9 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		function createTableList(self) { // 2
 			var exceptOpts = [ 
-                   "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder", 
-                   "event", "rows", "scrollWidth", "width"
-               ];
+               "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
+               "event", "rows", "scrollWidth", "width"
+            ];
 			
 			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
@@ -7378,14 +7468,6 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			self.emit("filter", [ s_rows ]);
 		}
 		
-		function resetFilteredData(self) {
-			if(o_rows != null) {
-				self.update(o_rows);
-				
-				o_rows = null;
-			}
-		}
-		
 		function setColumnWidthAuto(self) {
 			var columns = head.listColumn();
 			
@@ -7403,8 +7485,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
-			
+			var opts = this.options;
+
+            // 루트가 테이블일 경우, 별도 처리
+            if(this.root.tagName == "TABLE") {
+                var $root = $(this.root).wrap("<div class='xtable'></div>");
+                this.root = $root.parent().get(0);
+            }
+
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
@@ -7565,12 +7653,12 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 		    }
 		}
 		
-		this.filter = function(index, keyword, callback) { // filter (=포함), keyword가 null일 경우에는 롤백
+		this.filter = function(index, keyword, callback) { // filter (=포함)
 			if(!this.options.fields) return;
 
-			var column = head.getColumn(index);
-			resetFilteredData(this);
-			
+            this.rollback();
+            var column = head.getColumn(index);
+
 			if(column.name && keyword) {
 				setFilteredData(this, column.name, function(target) {
 					if(typeof(callback) == "function") {
@@ -7587,6 +7675,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 				this.emit("filter", [ rows ]);
 			}
 		}
+
+        this.rollback = function() {
+            if(o_rows != null) {
+                this.update(o_rows);
+
+                o_rows = null;
+            }
+        }
 		
 		this.clear = function() {
 			page = 1;
@@ -7661,9 +7757,17 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			head.emit("colresize");
 		}
 		
-		this.columnMenu = function(x) {
-			head.columnMenu(x);
+		this.showColumnMenu = function(x) {
+			head.showColumnMenu(x);
 		}
+
+        this.hideColumnMenu = function() {
+            head.hideColumnMenu();
+        }
+
+        this.toggleColumnMenu = function(x) {
+            head.toggleColumnMenu(x);
+        }
 
 		this.showExpand = function(index, obj) {
 			body.showExpand(index, obj);
@@ -7735,6 +7839,20 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
 			
 			return _.csvToBase64(this.getCsv());
 		}
+
+        this.downloadCsv = function(name) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".csv" : "table.csv";
+            a.href = this.getCsvBase64();
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
 		
 		this.rowFunc = function(type, index, callback) {
 			if(!this.options.fields) return;
@@ -7835,12 +7953,14 @@ jui.defineUI("uix.xtable", [ "util", "ui.modal", "uix.table" ], function(_, moda
                 showColumn: [ [ "integer", "string" ] ],
                 hideColumn: [ [ "integer", "string" ] ],
                 initColumns: [ "array" ],
-                columnMenu: [ "integer" ],
+                showColumnMenu: [ [ "integer", "undefined" ] ],
+                toggleColumnMenu: [ [ "integer", "undefined" ] ],
                 showExpand: [ [ "integer", "string" ], "object" ],
                 hideExpand: [ [ "integer", "string" ] ],
                 showLoading: [ "integer" ],
                 setCsv: [ "string" ],
                 setCsvFile: [ "object" ],
+                downloadCsv: [ [ "string", "undefined" ] ],
                 rowFunc: [ "string", [ "integer", "string" ], "function" ]
             },
             animate: {

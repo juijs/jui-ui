@@ -1,4 +1,4 @@
-jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -68,17 +68,30 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 				}
 			
 				// 이벤트 설정
-				self.addEvent(this, "click", "a", function(e) {
-					var text = $(e.currentTarget).text();
-					
-					if(i != menuIndex) {
-						if(self.options.target != "") 
-							showTarget(self.options.target, this);
-						
-						activeIndex = i;
-						self.emit("change", [ { index: i, text: text }, e ]);
+				self.addEvent(this, [ "click", "contextmenu" ], function(e) {
+					var text = $.trim($(this).text()),
+                        value = $(this).val();
 
-						changeTab(self, i);
+					if(i != menuIndex) {
+                        if(i != activeIndex) {
+                            var args = [ { index: i, text: text, value: value }, e ];
+
+                            if(e.type == "click") {
+                                if(self.options.target != "") {
+                                    showTarget(self.options.target, this);
+                                }
+
+                                // 엑티브 인덱스 변경
+                                activeIndex = i;
+
+                                self.emit("change", args);
+                                self.emit("click", args);
+
+                                changeTab(self, i);
+                            } else if(e.type == "contextmenu") {
+                                self.emit("rclick", args);
+                            }
+                        }
 					} else {
 						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(self, this);
@@ -286,11 +299,15 @@ jui.defineUI("uix.tab", [ "util", "ui.dropdown" ], function(_, dropdown) {
 		}
 		
 		this.show = function(index) {
+            if(index == menuIndex || index == activeIndex) return;
+
 			activeIndex = index;
-			
+            var $target = $(this.root).children("li").eq(index);
+
 			this.emit("change", [{ 
 				index: index, 
-				text: $(this.root).children("li").eq(index).children("a").text() 
+				text: $.trim($target.text()),
+                value: $target.val()
 			}]);
 
 			changeTab(this, index);

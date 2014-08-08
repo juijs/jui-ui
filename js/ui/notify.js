@@ -1,4 +1,4 @@
-jui.defineUI("ui.notify", [], function() {
+jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
     /**
