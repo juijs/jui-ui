@@ -139,7 +139,7 @@ jui.defineUI("chart.chart", [], function() {
 				return;
 			}
 
-			if ( typeof axis.series == 'string') {
+			if ( typeof axis.series == 'string' || typeof axis.series == 'function') {
 				axis.series = [axis.series];
 			}
 
@@ -150,32 +150,27 @@ jui.defineUI("chart.chart", [], function() {
 				for (var i = 0; i < axis.series.length; i++) {
 					var s = axis.series[i];
 
-					var arr = s.split("+")
-
-					if (arr.length == 1) {
-						var _max = series[arr[0]].max;
-						var _min = series[arr[0]].min;
-						if (max < _max)
-							max = _max;
-						if (min > _min)
-							min = _min;
-					} else {
+					if (typeof s == 'function') {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
-							var value = 0;
-
-							for (var k in arr) {
-								value += row[arr[k]];
-							}
+							var value = s(row);
 
 							if (max < value)
 								max = value;
 							if (min > value)
 								min = value;
 
-						}
+						}						
+					} else {
+						var _max = series[s].max;
+						var _min = series[s].min;
+						if (max < _max)
+							max = _max;
+						if (min > _min)
+							min = _min;						
 					}
+
 
 				}
 
