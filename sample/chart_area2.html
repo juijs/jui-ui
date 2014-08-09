@@ -29,10 +29,10 @@
             width: 600,
             height : 600,
             data : [
-                { name : 2, value : 15, test : 7 },
-                { name : -15, value : 6, test : 2 },
-                { name : 8, value : 10, test : 5 },
-                { name : 18, value : 5, test : 12 }
+                { name : 2, value : 5, test : 3 },
+                { name : 9, value : 6, test : 5 },
+                { name : 8, value : 7, test : 6 },
+                { name : 7, value : 5, test : 4 }
             ],
             grid : {
                 x : {
@@ -41,7 +41,9 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value", "test" ],
+                    target : function(data) {
+                        return data.name + data.value + data.test;
+                    },
                     step : 10
                 }
             },
@@ -50,12 +52,12 @@
             series : {
                 name : { text : "ì´ë¦„" },
                 value : { text : "ê°’" },
-                test : { text : "ê°’" }
+                test : { text: "text" }
             },
             brush : {
                 type : 'area',
-                nest : true,
-                opacity: 0.3
+                nest : false,
+                opacity: 0.9
             }
         });
 

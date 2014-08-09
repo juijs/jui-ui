@@ -14,51 +14,62 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            var path = {};
+            var path = [], elems = [];
 
             for(var i = 0; i < count; i++) {
-                var startX = brush.x.scale(i) + (width / 2);
+                var startX = brush.x.scale(i) + 1,
+                    valueSum = 0;
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var startY = brush.y.scale(series[brush.target[j]].data[i]);
+                    var value = series[brush.target[j]].data[i];
+
+                    if(brush.nest === false && j > 0) {
+                        valueSum += series[brush.target[j - 1]].data[i];
+                    }
 
                     if(!path[j]) {
                         path[j] = { x: [], y: [] };
                     }
 
                     path[j].x.push(startX);
-                    path[j].y.push(startY);
+                    path[j].y.push(brush.y.scale(value + valueSum));
                 }
             }
 
-            for(var k in path) {
+            for(var i = 0; i < path.length; i++) {
                 var p = chart.svg.path({
-                    stroke: this.getColor(k),
+                    stroke: this.getColor(i),
                     "stroke-width": 2,
                     fill: "transparent"
                 });
 
                 var p2 = chart.svg.polygon({
-                    fill: this.getColor(k),
-                    opacity: 0.3
+                    fill: this.getColor(i),
+                    opacity: brush.opacity
                 });
 
-                var x = path[k].x,
-                    y = path[k].y;
+                var x = path[i].x,
+                    y = path[i].y;
 
                 p2.point(x[0], maxY);
 
-                for(var i = 0; i < x.length - 1; i++) {
-                    p.MoveTo(x[i], y[i]);
-                    p.LineTo(x[i + 1], y[i + 1]);
-                    p2.point(x[i], y[i]);
+                for(var j = 0; j < x.length - 1; j++) {
+                    p.MoveTo(x[j], y[j]);
+                    p.LineTo(x[j + 1], y[j + 1]);
+                    p2.point(x[j], y[j]);
                 }
 
                 p2.point(x[x.length - 1], y[y.length - 1]);
                 p2.point(x[x.length - 1], maxY);
 
-                g.append(p);
-                g.append(p2);
+                elems.push({ p: p, p2: p2 });
+            }
+
+            elems.reverse();
+
+            for(var i = 0; i < elems.length; i++) {
+                g.append(elems[i].p);
+                g.append(elems[i].p2);
             }
         }
     }
