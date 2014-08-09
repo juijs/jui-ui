@@ -96,6 +96,17 @@ jui.define("util.svg.element", [], function() {
             return this;
         }
 
+        this.prepend = function(elem) {
+            return this.insert(0, elem);
+        }
+
+        this.insert = function(index, elem) {
+            this.childrens.splice(index, 0, elem);
+            elem.parent = this;
+
+            return this;
+        }
+
         this.remove = function() {
             this.parent.element.removeChild(this.element);
 

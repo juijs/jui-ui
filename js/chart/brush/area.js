@@ -14,7 +14,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            var path = [], elems = [];
+            var path = [];
 
             for(var i = 0; i < count; i++) {
                 var startX = brush.x.scale(i) + 1,
@@ -62,14 +62,8 @@ jui.define("chart.brush.area", [], function() {
                 p2.point(x[x.length - 1], y[y.length - 1]);
                 p2.point(x[x.length - 1], maxY);
 
-                elems.push({ p: p, p2: p2 });
-            }
-
-            elems.reverse();
-
-            for(var i = 0; i < elems.length; i++) {
-                g.append(elems[i].p);
-                g.append(elems[i].p2);
+                g.prepend(p);
+                g.prepend(p2);
             }
         }
     }
