@@ -2,7 +2,7 @@ jui.define("chart.brush.point", [], function() {
 
     var PointBrush = function(brush) {
         var g, zeroY, series, count, width;
-        var r = 3, pos = brush.position || "middle"
+        var r = 5, pos = brush.position || "middle"
 
         function getPositionX() {
             if(pos == "left") return 0;

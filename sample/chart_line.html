@@ -23,8 +23,14 @@
 
 <div id="chart"></div>
 
-<script>
+<style>
+    #chart circle {
+        stroke: #fff;
+        stroke-width: 2
+    }
+</style>
 
+<script>
     jui.ready(["chart.chart"], function(Chart) {
         ccc = new Chart("#chart", {
             width: 600,
