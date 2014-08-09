@@ -52,10 +52,19 @@
                 value : { text : "ê°’" },
                 test : { text : "ê°’" }
             },
-            brush : {
+            brush : [{
                 type : 'area',
                 nest : true,
                 opacity: 0.3
+            }, {
+                type : 'point',
+                position: 'left'
+            }],
+
+            event: {
+                click: function(elem, data) {
+                    console.log(elem, data);
+                }
             }
         });
 
