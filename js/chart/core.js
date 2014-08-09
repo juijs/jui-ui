@@ -127,6 +127,13 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             this.options.data = data;
             this.render();
         }
+
+        this.size = function(width, height) {
+            if(!_.typeCheck("integer", width) || !_.typeCheck("integer", height)) return;
+
+            this.svg.size(width, height);
+            this.render();
+        }
     }
 
     return UIChart;
