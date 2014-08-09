@@ -33,11 +33,13 @@ jui.define("chart.brush.bar", [], function() {
 
             g.append(r);
           } else {
+            var w = Math.abs(zeroX - startX);
+            
             var r = chart.svg.rect({
               y : startY,
-              x : zeroX - Math.abs(zeroX - startX),
+              x : zeroX - w,
               height : barHeight,
-              width : Math.abs(zeroX - startX),
+              width : w,
               fill : this.getColor(j)
             });
 

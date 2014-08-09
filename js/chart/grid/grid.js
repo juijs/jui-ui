@@ -84,7 +84,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     outerPadding = outerPadding || 0;
 
                     var count = _domain.length;
-                    var step = 2 * count + -1;
+                    var step = count -1;
                     var band = (interval[1] - interval[0]) / step;
 
                     var range = [];
@@ -92,7 +92,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                         if (i == 0) {
                             range[i] = interval[0];
                         } else {
-                            range[i] = band + arr[i - 1];
+                            range[i] = band + range[i - 1];
                         }
                     }
 
