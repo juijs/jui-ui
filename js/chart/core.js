@@ -110,7 +110,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
-            this.svg.clear();
+            this.svg.reset();
             calculate(this);
 
             if(_.typeCheck("function", this.drawBefore)) {
@@ -121,6 +121,12 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             this.svg.render();
 		}
 
+        this.update = function(data) {
+            if(!_.typeCheck("array", data)) return;
+
+            this.options.data = data;
+            this.render();
+        }
     }
 
     return UIChart;

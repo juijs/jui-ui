@@ -414,6 +414,11 @@ jui.define("util.svg",
             rootElem.appendChild(root.element);
         }
 
+        this.reset = function() {
+            this.clear();
+            root.childrens = [];
+        }
+
         this.render = function() {
             this.clear();
             appendAll(root);
