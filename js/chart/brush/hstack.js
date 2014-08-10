@@ -7,8 +7,8 @@ jui.define("chart.brush.hstack", [], function() {
     this.drawBefore = function(chart) {
       g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-      series = chart.options.series;
-      count = series[brush.target[0]].data.length;
+      series = chart.series();
+      count = chart.series(brush.target[0]).data.length;
 
       height = chart.y.scale.rangeBand();
       barWidth = height - outerPadding * 2;
@@ -21,7 +21,7 @@ jui.define("chart.brush.hstack", [], function() {
         var widthSum = 0;
         var widthArr = [];
         for (var j = 0; j < brush.target.length; j++) {
-          var width = series[brush.target[j]].data[i];
+          var width = chart.series(brush.target[j]).data[i];
 
           widthSum += width;
           widthArr.push(brush.x.scale(width));
@@ -35,7 +35,7 @@ jui.define("chart.brush.hstack", [], function() {
             y : startY,
             width : widthArr[j],
             height : barWidth,
-            fill : this.getColor(j)
+            fill : this.color(j)
           });
 
           g.append(r);

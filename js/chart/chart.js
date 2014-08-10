@@ -1,16 +1,17 @@
-jui.defineUI("chart.chart", [], function() {
+jui.defineUI("chart.chart", ["util"], function(_) {
 
 	var UI = function() {
-		var _grid = [], _brush = [];
+		var _grid = [], _brush = [], _data, _series;
+		
 
 		this.init = function() {
 			this.parent.init.call(this);
 
 			// 데이타 설정
-			var data = this.get('data');
-			var series = this.get('series');
-			var grid = this.get('grid');
-			var brush = this.get('brush');
+			var data = _.clone(this.get('data'));
+			var series = _.clone(this.get('series'));
+			var grid = _.clone(this.get('grid'));
+			var brush = _.clone(this.get('brush'));
 			var series_list = [];
 
 			// series_list
@@ -62,13 +63,48 @@ jui.defineUI("chart.chart", [], function() {
 
 			_grid = grid;
 			_brush = brush;
+			_data = data;
+			_series = series;
+		}
+		
+		this.grid = function(key) {
+	    if (_grid[key]) {
+        return _grid[key];
+      }
+      	  
+		  return _grid; 
+		}
+		
+		this.brush = function(key) {
+		  if (_brush[key]) {
+        return _brush[key];
+      }
+		  
+		  return _brush;
+		}
+		
+		this.data = function(key) {
+		  if (_data[key]) {
+        return _data[key];
+      }
+		  
+		  return _data; 
+		}
+		
+		this.series = function(key) {
+		  
+		  if (_series[key]) {
+		    return _series[key];
+		  }
+		  
+		  return _series; 
 		}
 
 		this.drawBefore = function() {
 		}
 
 		this.draw = function() {
-			var grid = this.get('grid');
+			var grid = this.grid();
 			
 			if (grid != null) {
 				if (grid.type)  grid = { c : grid };
@@ -113,8 +149,8 @@ jui.defineUI("chart.chart", [], function() {
 
 		this.setDomain = function(axis) {
 
-			var series = this.get('series');
-			var data = this.get('data');
+			var series = this.series();
+			var data = this.data();
 
 			if (axis.type == 'radar') {
 

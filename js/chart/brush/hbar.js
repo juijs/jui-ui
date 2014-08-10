@@ -8,8 +8,8 @@ jui.define("chart.brush.bar", [], function() {
       g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
       zeroX = brush.x.scale(0);
-      series = chart.options.series;
-      count = series[brush.target[0]].data.length;
+      series = chart.series();
+      count = chart.series(brush.target[0]).data.length;
 
       height = brush.y.scale.rangeBand();
       barHeight = (height - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
@@ -20,7 +20,7 @@ jui.define("chart.brush.bar", [], function() {
         var startY = brush.y.scale(i) + outerPadding;
 
         for (var j = 0; j < brush.target.length; j++) {
-          var startX = brush.x.scale(series[brush.target[j]].data[i]);
+          var startX = brush.x.scale(chart.series(brush.target[j]).data[i]);
 
           if (startX >= zeroX) {
             var r = chart.svg.rect({
@@ -28,7 +28,7 @@ jui.define("chart.brush.bar", [], function() {
               y : startY,
               height : barHeight,
               width : Math.abs(zeroX - startX),
-              fill : this.getColor(j)
+              fill : this.color(j)
             });
 
             g.append(r);
@@ -40,7 +40,7 @@ jui.define("chart.brush.bar", [], function() {
               x : zeroX - w,
               height : barHeight,
               width : w,
-              fill : this.getColor(j)
+              fill : this.color(j)
             });
 
             g.append(r);

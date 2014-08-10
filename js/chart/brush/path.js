@@ -5,14 +5,13 @@ jui.define("chart.brush.path", [], function() {
 		}
 		
 		this.draw = function(chart) {
-			var series = chart.get('series');
-			var s = series[brush.target[0]];
+			var s = chart.series(brush.target[0]);
 			var g = chart.svg.group();
 			
 			var path = chart.svg.path({
-				fill : this.getColor(brush.index),
+				fill : this.color(brush.index),
 				"fill-opacity" : 0.5,
-				stroke : this.getColor(brush.index + 1),
+				stroke : this.color(brush.index + 1),
 				"stroke-width" : 1
 			});
 			
@@ -27,7 +26,7 @@ jui.define("chart.brush.path", [], function() {
 					cx : obj.x,
 					cy : obj.y,
 					r : 3,
-					fill : this.getColor(0)
+					fill : this.color(0)
 				}));
 				
 				if (i == 0) {

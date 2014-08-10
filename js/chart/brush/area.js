@@ -1,15 +1,14 @@
 jui.define("chart.brush.area", [], function() {
 
   var AreaBrush = function(brush) {
-    var g, zeroY, maxY, series, count, width;
+    var g, zeroY, maxY, count, width;
 
     this.drawBefore = function(chart) {
       g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
       zeroY = brush.y.scale(0);
       maxY = chart.area('height');
-      series = chart.options.series;
-      count = series[brush.target[0]].data.length;
+      count = chart.series(brush.target[0]).data.length;
       width = chart.x.scale.rangeBand();
     }
 
@@ -20,10 +19,10 @@ jui.define("chart.brush.area", [], function() {
         var startX = brush.x.scale(i) + 1, valueSum = 0;
 
         for (var j = 0; j < brush.target.length; j++) {
-          var value = series[brush.target[j]].data[i];
+          var value = chart.series(brush.target[j]).data[i];
 
           if (brush.nest === false && j > 0) {
-            valueSum += series[brush.target[j - 1]].data[i];
+            valueSum += chart.series(brush.target[j - 1]).data[i];
           }
 
           if (!path[j]) {
@@ -40,13 +39,13 @@ jui.define("chart.brush.area", [], function() {
 
       for (var i = 0; i < path.length; i++) {
         var p = chart.svg.path({
-          stroke : this.getColor(i),
+          stroke : this.color(i),
           "stroke-width" : 2,
           fill : "transparent"
         });
 
         var p2 = chart.svg.polygon({
-          fill : this.getColor(i),
+          fill : this.color(i),
           opacity : brush.opacity
         });
 

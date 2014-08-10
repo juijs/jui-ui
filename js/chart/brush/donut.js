@@ -70,9 +70,7 @@ jui.define("chart.brush.donut", [], function() {
 
 		this.draw = function(chart) {
 			
-			var series = chart.get('series');
-			var key = brush.target[0];
-			var s = series[key];
+			var s = chart.series(brush.target[0]);
 			
 			
 			var width = chart.area('width'), height = chart.area('height');
@@ -106,7 +104,7 @@ jui.define("chart.brush.donut", [], function() {
 				var endAngle = all * (data / max); 	
 				
 				this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
-					fill : this.getColor(i)
+					fill : this.color(i)
 				})				
 				
 				startAngle += endAngle + this.empty;

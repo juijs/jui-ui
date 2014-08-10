@@ -1,14 +1,13 @@
 jui.define("chart.brush.line", [], function() {
 
     var LineBrush = function(brush) {
-        var g, zeroY, series, count, width;
+        var g, zeroY, count, width;
 
         this.drawBefore = function(chart) {
             g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
             zeroY = brush.y.scale(0);
-            series = chart.options.series;
-            count = series[brush.target[0]].data.length;
+            count = chart.series(brush.target[0]).data.length;
             width = chart.x.scale.rangeBand();
         }
 
@@ -19,7 +18,7 @@ jui.define("chart.brush.line", [], function() {
                 var startX = brush.x.scale(i) + (width / 2);
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var startY = brush.y.scale(series[brush.target[j]].data[i]);
+                    var startY = brush.y.scale(chart.series(brush.target[j]).data[i]);
 
                     if(!path[j]) {
                         path[j] = { x: [], y: [] };
@@ -32,7 +31,7 @@ jui.define("chart.brush.line", [], function() {
 
             for(var k in path) {
                 var p = chart.svg.path({
-                    stroke: this.getColor(k),
+                    stroke: this.color(k),
                     "stroke-width": 2,
                     fill: "transparent"
                 });
