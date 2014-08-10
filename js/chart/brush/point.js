@@ -11,10 +11,8 @@ jui.define("chart.brush.point", [], function() {
             return width / 2;
         }
 
-        console.log(brush);
-
         this.drawBefore = function(chart) {
-            g = chart.svg.group().translate(chart.area.x, chart.area.y);
+            g = chart.svg.group().translate(chart.getArea('x'), chart.getArea('y'));
 
             zeroY = brush.y.scale(0);
             series = chart.options.series;

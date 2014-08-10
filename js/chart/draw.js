@@ -12,6 +12,7 @@ jui.define("chart.draw", [ "util" ], function(_) {
             return this.draw(chart);
         }
 
+        // 2d rotate 
         this.rotate = function(x, y, radian) {
             return {
                 x : x * Math.cos(radian) - y * Math.sin(radian),

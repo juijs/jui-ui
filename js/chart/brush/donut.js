@@ -75,7 +75,7 @@ jui.define("chart.brush.donut", [], function() {
 			var s = series[key];
 			
 			
-			var width = chart.area.width, height = chart.area.height;
+			var width = chart.getArea('width'), height = chart.getArea('height');
 			var min = width;
 
 			if (height < min) {

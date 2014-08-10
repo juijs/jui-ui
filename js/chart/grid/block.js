@@ -136,7 +136,7 @@ jui.define("chart.grid.block", [], function() {
             chart.svg.line({
               x1 : barX,
               y1 : 0.5,
-              x2 : width + chart.area.width,
+              x2 : width + chart.getArea('width'),
               y2 : 0.5,
               stroke : "black",
               "stroke-width" : 0.5
@@ -203,24 +203,25 @@ jui.define("chart.grid.block", [], function() {
     }
 
     this.draw = function(chart) {
-      var width = chart.area.width, height = chart.area.height, max = (orient == 'left' || orient == 'right') ? height : width;
+      var width = chart.getArea('width'), 
+          height = chart.getArea('height'), 
+          max = (orient == 'left' || orient == 'right') ? height : width;
       
       var obj = drawBlock(chart, orient, grid.domain, [0, max], grid.full);  
       
       
-
       if (orient == 'left') {
-        var x = chart.area.x - 30;
-        var y = chart.area.y;
+        var x = chart.getArea('x') - 30;
+        var y = chart.getArea('y');
       } else if (orient == 'right') {
-        var x = chart.area.x2;
-        var y = chart.area.y;
+        var x = chart.getArea('x2');
+        var y = chart.getArea('y');
       } else if (orient == 'top') {
-        var x = chart.area.x;
-        var y = chart.area.y - 30;
+        var x = chart.getArea('x');
+        var y = chart.getArea('y') - 30;
       } else if (orient == 'bottom') {
-        var x = chart.area.x;
-        var y = chart.area.y2;
+        var x = chart.getArea('x');
+        var y = chart.getArea('y2');
       }
 
       obj.g.translate(x, y);
