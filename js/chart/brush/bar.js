@@ -5,7 +5,7 @@ jui.define("chart.brush.bar", [], function() {
     var outerPadding = 15, innerPadding = 10;
 
     this.drawBefore = function(chart) {
-      g = chart.svg.group().translate(chart.getArea('x'), chart.getArea('y'));
+      g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
       zeroY = brush.y.scale(0);
       series = chart.options.series;

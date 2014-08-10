@@ -4,7 +4,7 @@ jui.define("chart.brush.line", [], function() {
         var g, zeroY, series, count, width;
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group().translate(chart.getArea('x'), chart.getArea('y'));
+            g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
             zeroY = brush.y.scale(0);
             series = chart.options.series;

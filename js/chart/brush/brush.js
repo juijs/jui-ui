@@ -24,7 +24,7 @@ jui.define("chart.brush", [], function() {
         ],
         colorIndex = 0;
 
-        this.getColor = function(index) {
+        this.getColor = this.color =  function(index) {
             return "rgb(" + colors[index] +")";
         }
 

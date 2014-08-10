@@ -93,7 +93,7 @@ jui.define("chart.grid.radar", [], function() {
 		}
 
 		this.draw = function(chart) {
-			var width = chart.getArea('width'), height = chart.getArea('height');
+			var width = chart.area('width'), height = chart.area('height');
 			grid.line = typeof grid.line == 'undefined' ? true : grid.line;
 
 			var min = width;

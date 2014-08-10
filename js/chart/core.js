@@ -3,7 +3,7 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
   var UIChart = function() {
 
     function calculate(self) {
-      self.area = {};
+      self._area = {};
 
       var padding = self.get('padding');
       var titleYWidth = self.get('titleYWidth');
@@ -75,7 +75,7 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
       chart.x2 = chart.x + chart.width;
       chart.y2 = chart.y + chart.height;
 
-      self.area = chart;
+      self._area = chart;
     }
 
 
@@ -83,12 +83,12 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
       return this.options[key];
     }
     
-    this.getArea = function(key) {
-      if (this.area[key]) {
-        return this.area[key];
+    this.area = function(key) {
+      if (this._area[key]) {
+        return this._area[key];
       }
       
-      return this.area; 
+      return this._area; 
     }
 
     this.init = function() {

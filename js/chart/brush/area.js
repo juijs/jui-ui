@@ -4,10 +4,10 @@ jui.define("chart.brush.area", [], function() {
     var g, zeroY, maxY, series, count, width;
 
     this.drawBefore = function(chart) {
-      g = chart.svg.group().translate(chart.getArea('x'), chart.getArea('y'));
+      g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
       zeroY = brush.y.scale(0);
-      maxY = chart.getArea('height');
+      maxY = chart.area('height');
       series = chart.options.series;
       count = series[brush.target[0]].data.length;
       width = chart.x.scale.rangeBand();

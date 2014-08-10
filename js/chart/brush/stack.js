@@ -5,7 +5,7 @@ jui.define("chart.brush.stack", [], function() {
     var outerPadding = 15, innerPadding = 10;
 
     this.drawBefore = function(chart) {
-      g = chart.svg.group().translate(chart.getArea('x'), chart.getArea('y'));
+      g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
       zeroY = brush.y.scale(0);
       series = chart.options.series;
@@ -16,7 +16,7 @@ jui.define("chart.brush.stack", [], function() {
     }
 
     this.draw = function(chart) {
-      var chart_height = chart.getArea('height');
+      var chart_height = chart.area('height');
       for (var i = 0; i < count; i++) {
         var startX = brush.x.scale(i) + outerPadding;
 

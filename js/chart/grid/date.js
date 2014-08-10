@@ -189,20 +189,20 @@ jui.define("chart.grid.date", [], function() {
     }
 
     this.draw = function(chart) {
-      var obj = drawDate(chart, orient, grid.domain, [0, chart.getArea('height')]);
+      var obj = drawDate(chart, orient, grid.domain, [0, chart.area('height')]);
 
       if (orient == 'left') {
-        var x = chart.getArea('x') - 30;
-        var y = chart.getArea('y');
+        var x = chart.area('x') - 30;
+        var y = chart.area('y');
       } else if (orient == 'right') {
-        var x = chart.getArea('x2');
-        var y = chart.getArea('y');
+        var x = chart.area('x2');
+        var y = chart.area('y');
       } else if (orient == 'top') {
-        var x = chart.getArea('x');
-        var y = chart.getArea('y') - 30;
+        var x = chart.area('x');
+        var y = chart.area('y') - 30;
       } else if (orient == 'bottom') {
-        var x = chart.getArea('x');
-        var y = chart.getArea('y2');
+        var x = chart.area('x');
+        var y = chart.area('y2');
       }
 
       obj.g.translate(x, y);
