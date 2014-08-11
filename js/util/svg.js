@@ -88,6 +88,12 @@ jui.define("util.svg.element", [], function() {
 
             return this;
         }
+        
+        this.text = function(text) {
+        	this.element.appendChild(document.createTextNode(text));
+        	
+        	return this; 
+        }
 
         this.append = function(elem) {
             this.childrens.push(elem);
@@ -506,7 +512,7 @@ jui.define("util.svg",
 
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
-                return create(new TransElement(), "text", attr).html(textOrCallback);
+                return create(new TransElement(), "text", attr).text(textOrCallback);
             }
 
             return create(new TransElement(), "text", attr, textOrCallback);
@@ -514,7 +520,7 @@ jui.define("util.svg",
 
         this.textPath = function(attr, text) {
             if(_.typeCheck("string", text)) {
-                return create(new Element(), "textPath", attr).html(text);
+                return create(new Element(), "textPath", attr).text(text);
             }
 
             return create(new Element(), "textPath", attr);
@@ -522,7 +528,7 @@ jui.define("util.svg",
 
         this.tref = function(attr, text) {
             if(_.typeCheck("string", text)) {
-                return create(new Element(), "tref", attr).html(text);
+                return create(new Element(), "tref", attr).text(text);
             }
 
             return create(new Element(), "tref", attr);
@@ -530,7 +536,7 @@ jui.define("util.svg",
 
         this.tspan = function(attr, text) {
             if(_.typeCheck("string", text)) {
-                return create(new Element(), "tspan", attr).html(text);
+                return create(new Element(), "tspan", attr).text(text);
             }
 
             return create(new Element(), "tspan", attr);
