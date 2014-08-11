@@ -3,7 +3,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
         var self = this;
 
         this.scale = {
-            ordinal : function() {
+            ordinal : function() {  // 순서 
                 var that = this;
 
                 var _domain = [];
@@ -56,6 +56,10 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     return this;
                 }
 
+				/**
+				 * 
+				 * 
+				 */
                 func.rangePoints = function(interval, padding) {
 
                     padding = padding || 0;
@@ -109,7 +113,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
                 return func;
             },
 
-            time : function() {
+            time : function() {	// 시간 
 
                 var that = this;
 
@@ -167,7 +171,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
              *
              *
              */
-            linear : function() {
+            linear : function() {			// 선형 
 
                 var that = this;
 

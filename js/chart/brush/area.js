@@ -46,7 +46,7 @@ jui.define("chart.brush.area", [], function() {
 
         var p2 = chart.svg.polygon({
           fill : this.color(i),
-          opacity : brush.opacity
+          opacity : brush.opacity || 0.5
         });
 
         var x = path[i].x, y = path[i].y;

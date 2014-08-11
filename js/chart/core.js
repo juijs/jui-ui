@@ -123,7 +123,7 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
       calculate(this);
 
       if (_.typeCheck("function", this.drawBefore)) {
-        this.drawBefore(chart);
+        this.drawBefore();
       }
 
       this.draw();

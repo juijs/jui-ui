@@ -1,4 +1,4 @@
-jui.define("chart.brush.bar", [], function() {
+jui.define("chart.brush.hbar", [], function() {
 
   var BarBrush = function(brush) {
     var g, zeroY, series, count, width, barWidth;

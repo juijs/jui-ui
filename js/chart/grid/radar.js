@@ -78,19 +78,16 @@ jui.define("chart.grid.radar", [], function() {
 			var y = -pos;
 			var x = 0;
 
-			for (var i = 0; i < index; i++) {
-
-				var obj = this.rotate(x, y, unit);
-
-				x = obj.x;
-				y = obj.y;
-			}
+			var obj = this.rotate(x, y, unit * index);
+			x = obj.x;
+			y = obj.y;
 
 			return {
 				x : centerX + x,
 				y : centerY + y
 			}
 		}
+
 
 		this.draw = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
@@ -104,8 +101,8 @@ jui.define("chart.grid.radar", [], function() {
 
 			// center
 			var w = min / 2;
-			var centerX = width / 2;
-			var centerY = height / 2;
+			var centerX = chart.area('x') + width / 2;
+			var centerY = chart.area('y') + height / 2;
 
 			var startY = -w / 1.5;
 			var startX = 0;
@@ -116,7 +113,7 @@ jui.define("chart.grid.radar", [], function() {
 			var h = Math.abs(startY) / step;
 
 			var g = chart.svg.group({
-				'class' : 'grid radal'
+				'class' : 'grid radar'
 			});
 
 			var root = chart.svg.group();

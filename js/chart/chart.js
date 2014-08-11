@@ -238,8 +238,8 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				"barPadding" : 10,
 				"seriesPadding" : 1,
 				"titleHeight" : 50,
-				"titleYWidth" : 50,
-				"titleXHeight" : 50,
+				"titleYWidth" : 0,
+				"titleXHeight" : 0,
 
 				// chart
 				"tick" : 5,

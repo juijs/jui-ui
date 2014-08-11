@@ -6,12 +6,14 @@ jui.define("chart.brush.path", [], function() {
 		
 		this.draw = function(chart) {
 			var s = chart.series(brush.target[0]);
-			var g = chart.svg.group();
+			var g = chart.svg.group({
+				'class' : 'brush path'
+			});
 			
 			var path = chart.svg.path({
-				fill : this.color(brush.index),
-				"fill-opacity" : 0.5,
-				stroke : this.color(brush.index + 1),
+				fill : this.color(brush.index+1),
+				"fill-opacity" : 0.7,
+				stroke : this.color(brush.index + 3),
 				"stroke-width" : 1
 			});
 			
