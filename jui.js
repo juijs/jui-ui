@@ -7299,24 +7299,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
 
-                $(self.root).css("position", "relative");
+				$(self.root).css({ "position": "relative" });
 
-                $(head.root).css({
-                    "position": "absolute",
-                    "top": "0",
-                    "border-bottom-width": "0",
-                    "table-layout": "fixed",
-                    "margin": "0",
-                    "border-spacing": "0",
-                    "border-collapse": "inherit"
-                });
+				$(head.root).css({
+					"position": "absolute",
+					"top": "0",
+					"border-bottom-width": "0",
+					"margin": "0"
+				});
 
-                $(body.root).css({
-                    "table-layout": "fixed",
-                    "margin": "0",
-                    "border-spacing": "0",
-                    "border-collapse": "inherit"
-                });
+				$(body.root).css({
+					"margin": "0"
+				});
 				
 				if(opts.width > 0) {
 					$(self.root).outerWidth(opts.width);
