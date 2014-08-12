@@ -23,13 +23,13 @@ jui.define("chart.brush.gauge", [], function() {
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius/this.rate) * this.empty;
 			
 			
-			this.startAngle = chart.get('startAngle') || -120;
-			this.endAngle = chart.get('endAngle') || 240;
+			this.startAngle = brush.startAngle || -120;
+			this.endAngle = brush.endAngle || 240;
 			
-			this.min = chart.get('min') || 0;
-			this.max = chart.get('max') || 100; 
+			this.min = brush.min || 0;
+			this.max = brush.max || 100; 
 			
-			this.value = chart.get('value') || 0;			
+			this.value = brush.value || 0;			
 			
 		}
 		
@@ -63,7 +63,7 @@ jui.define("chart.brush.gauge", [], function() {
 			
 			g.append(chart.svg.text({
 				x : obj.x+20,
-				y : obj.y+10,
+				y : obj.y+20,
 				"text-anchor" : "middle",
 				'font-family' : 'Verdana'
 			}, min+""))
@@ -75,7 +75,7 @@ jui.define("chart.brush.gauge", [], function() {
 
 			g.append(chart.svg.text({
 				x : obj.x-20,
-				y : obj.y+10,
+				y : obj.y+20,
 				"text-anchor" : "middle",
 				'font-family' : 'Verdana'
 			}, max+""))
@@ -210,7 +210,7 @@ jui.define("chart.brush.gauge", [], function() {
 			group.translate(chart.area('x'), chart.area('y'))
 			
 			
-			var rate = this.value / (this.max - this.min);
+			var rate = (this.value - this.min) / (this.max - this.min);
 			
 			var currentAngle = (this.endAngle) * rate;
 
