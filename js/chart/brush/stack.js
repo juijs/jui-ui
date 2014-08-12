@@ -45,6 +45,7 @@ jui.define("chart.brush.stack", [], function() {
         
         var startY = brush.y.scale(heightSum);
 
+
         for (var j = heightArr.length - 1; j >= 0; j--) {
           var r = chart.svg.rect({
             x : startX,

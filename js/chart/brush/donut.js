@@ -113,7 +113,7 @@ jui.define("chart.brush.donut", [], function() {
 				var cut = this.innerCut;
 				
 				if (i == 1) {
-					cut += 5; 
+					cut += 10; 
 				}
 				
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
