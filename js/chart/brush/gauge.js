@@ -2,7 +2,7 @@ jui.define("chart.brush.gauge", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.empty = chart.get('empty') || 80; 
+			this.empty = brush.empty || 80; 
 
 			
 			var width = chart.area('width'), height = chart.area('height');
@@ -13,7 +13,7 @@ jui.define("chart.brush.gauge", [], function() {
 			}
 
 			// center
-			this.rate = chart.get('rate') || 100; 
+			this.rate = brush.rate || 100; 
 			this.w = min / 2;
 			this.centerX = width/2;
 			this.centerY = height/2;
@@ -230,6 +230,7 @@ jui.define("chart.brush.gauge", [], function() {
 			
 			group.append(g);
 			
+			// startAngle, endAngle 에 따른 Text 위치를 선정해야함 
 			g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);				
 			
 			group.append(g);		

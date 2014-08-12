@@ -1,7 +1,7 @@
 jui.define("chart.brush.stack", [], function() {
 
   var StackBrush = function(brush) {
-    var g, zeroY, count, width, barWidth;
+    var g, zeroY, count, width, barWidth, gauge;
     var outerPadding = 15, innerPadding = 10;
 
     this.drawBefore = function(chart) {
@@ -12,11 +12,13 @@ jui.define("chart.brush.stack", [], function() {
 
       width = chart.x.scale.rangeBand();
       barWidth = width - outerPadding * 2;
+      gauge = brush.gauge || false; 
     }
 
     this.draw = function(chart) {
       var chart_height = chart.area('height');
       for (var i = 0; i < count; i++) {
+      	
         var startX = brush.x.scale(i) + outerPadding;
 
         var heightSum = 0;
@@ -27,7 +29,20 @@ jui.define("chart.brush.stack", [], function() {
           heightSum += height;
           heightArr.push(chart_height - brush.y.scale(height));
         }
-
+        
+        if (gauge) {
+	        var gaugeRect = chart.svg.rect({
+	        	x : startX,
+	        	y : 0,
+	        	width : barWidth,
+	        	height : chart_height,
+	        	fill : this.color(6),
+	        	"fill-opacity": 0.1
+	        })
+	        
+	        g.append(gaugeRect);        	
+        }
+        
         var startY = brush.y.scale(heightSum);
 
         for (var j = heightArr.length - 1; j >= 0; j--) {
