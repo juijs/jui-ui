@@ -47,11 +47,24 @@
                 }
             },
             series : {
-                name : { text : "ì´ë¦„" },
-                value : { text : "ê°’" }
+                name : {
+                    text : "ì´ë¦„",
+                    attr: {
+                        r: 10
+                    }
+                },
+                value : {
+                    text : "ê°’",
+                    attr: {
+                        r: 5
+                    }
+                }
             },
             brush : {
-                type : 'point'
+                type : 'point',
+                attr: {
+                    fill: "red"
+                }
             }
         });
 

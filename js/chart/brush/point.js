@@ -33,6 +33,8 @@ jui.define("chart.brush.point", [], function() {
                             fill: this.color(j)
                         });
 
+                        circle.attr(chart.attr(brush.type, brush.target[j]));
+
                     (function(c, d) {
                         circle.on("click", function() {
                             chart.emit("click", [ c, d ]);

@@ -100,6 +100,20 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 		  return _series; 
 		}
 
+        this.attr = function(type, key) {
+            var brushStyle = {};
+
+            for(var k in _brush) {
+                var b = _brush[k];
+
+                if(b.type == type) {
+                    brushStyle = b.attr;
+                }
+            }
+
+            return $.extend(brushStyle, _series[key].attr);
+        }
+
 		this.drawBefore = function() {
 		}
 
