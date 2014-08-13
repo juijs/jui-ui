@@ -1332,7 +1332,7 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
-                mainObj.init.prototype.timestamp = Date.now();
+                mainObj.init.prototype.timestamp = new Date().getTime();
                 mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
 
                 // Template Setting (Markup)
