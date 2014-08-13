@@ -34,11 +34,13 @@
 		jui.ready(["chart.chart"], function(Chart) {
 			
 			var start = new Date();
-			var end = _time.add(start, _time.hours, 5);
+			var end = _time.add(start, _time.seconds, 5);
+			
+			console.log(start, end);
 			
 			var data = [];
 			for(var i = 0; i < 30; i++) {
-				data.push({ name : getNumber(), name2 : getNumber(), value : _time.add(start, _time.minutes, i*10)} )
+				data.push({ name : getNumber(), name2 : getNumber(), value : _time.add(start, _time.seconds, i*10)} )
 			}
 
 			new Chart("#chart", {
@@ -50,8 +52,8 @@
 					x : { 
 						type : "date",  // default type is block 
 						domain : [ start, end ],
-						step : [_time.hours, 1],
-						format : "hh:mm"
+						step : [_time.seconds, 1],
+						format : "mm:SS"
 					},
 					y : { 
 						type : 'range', 

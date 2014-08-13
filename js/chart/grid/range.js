@@ -238,7 +238,7 @@ jui.define("chart.grid.range", [], function() {
 			}
 
 			obj.g.translate(x, y);
-
+      obj.key = grid.key;
 			return obj;
 		}
 	}
