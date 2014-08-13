@@ -2,8 +2,8 @@ jui.define("chart.brush.donut", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.empty = 50; 
-			this.innerCut = 5; 
+			this.empty = brush.empty || 50; 
+			this.innerCut = brush.innerCut || 5; 
 			
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -13,7 +13,7 @@ jui.define("chart.brush.donut", [], function() {
 			}
 
 			// center
-			this.rate = 100; 
+			this.rate = brush.rate || 100; 
 			this.w = min / 2;
 			this.centerX = width/2;
 			this.centerY = height/2;
@@ -23,7 +23,7 @@ jui.define("chart.brush.donut", [], function() {
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius/this.rate) * this.empty;
 		}
 		
-		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, innerCut, attr) {
 			var g = chart.svg.group({
 				'class' : 'donut'
 			})
@@ -48,7 +48,7 @@ jui.define("chart.brush.donut", [], function() {
 			
 			var cobj = this.rotate(startX, startY, this.radian(endAngle/2));
 			
-			g.translate(centerX + (cobj.x/outerRadius * this.innerCut), centerY + (cobj.y/outerRadius * this.innerCut));
+			g.translate(centerX + (cobj.x/outerRadius * innerCut), centerY + (cobj.y/outerRadius * innerCut));
 			
 			// arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
@@ -96,26 +96,7 @@ jui.define("chart.brush.donut", [], function() {
 				'class' : 'brush donut'
 			})
 			
-			group.append(chart.svg.line({
-				x1 : 0,
-				y1 : chart.area('height')/2+.5,
-				x2 : chart.area('width'),
-				y2 : chart.area('height')/2+.5,
-				stroke : 'black',
-				"stroke-width" : 0.5
-			}))
-			
-			group.append(chart.svg.line({
-				x1 : chart.area('width')/2+.5,
-				y1 : 0,
-				x2 : chart.area('width')/2+.5,
-				y2 : chart.area('height'),
-				stroke : 'black',
-				"stroke-width" : 0.5
-			}))
-			
 			group.translate(chart.area('x'), chart.area('y'))
-			
 			
 			var all = 360;
 			var startAngle = 0;
@@ -129,7 +110,13 @@ jui.define("chart.brush.donut", [], function() {
 				var data = s.data[i];
 				var endAngle = all * (data / max); 	
 				
-				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
+				var cut = this.innerCut;
+				
+				if (i == 1) {
+					cut += 10; 
+				}
+				
+				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
 					fill : this.color(i)
 				})		
 				

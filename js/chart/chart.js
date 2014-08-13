@@ -122,7 +122,7 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			
 			if (grid != null) {
 				if (grid.type)  grid = { c : grid };
-	
+				
 				for (var k in grid) {
 					var orient = 'custom';
 	

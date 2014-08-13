@@ -243,7 +243,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
 
                             var scale = _isRound ? self.interpolateRound(minR, maxR) : self.interpolateNumber(minR, maxR);
 
-                            return Math.round(scale(pos));
+                            return scale(pos);
 
                         }
                     }
