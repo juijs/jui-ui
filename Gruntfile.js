@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         options: {
             timeout: 10000
         },
-        all: [ 'test/*.html' ]
+        all: [ 'test/*.html', 'test/*/*.html' ]
     },
     concat : {
         dist : {
