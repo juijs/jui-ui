@@ -1121,27 +1121,28 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		}
 		
 		function setColumnResize(self) {
-			var resizeX = 0;
+			var resizeX = 0,
+                tablePos = $obj.table.offset();
 			var col = null,
 				colNext = null,
 				colWidth = 0,
 				colNextWidth = 0,
 				colResize = null;
-				
+
 			// 리사이즈 엘리먼트 삭제
 			$obj.thead.find(".resize").remove();
 			
 			for(var i = 0; i < self.uit.getColumnCount() - 1; i++) {
 				var $colElem = $(self.getColumn(i).element),
 					$resizeBar = $("<div class='resize'></div>");
-				var pos = $colElem.position();
-				
+				var pos = $colElem.offset(); // ie8 버그로 인해 position에서 offset으로 변경함
+
 				$resizeBar.css({
 					position: "absolute",
 			        width: "8px",
 			        height: $colElem.outerHeight(),
-			        left: ($colElem.outerWidth() + pos.left - 1) + "px",
-			        top: pos.top + "px",
+			        left: ($colElem.outerWidth() + (pos.left - tablePos.left) - 1) + "px",
+			        top: (pos.top - tablePos.top) + "px",
 			        cursor: "w-resize",
 			        "z-index": "1"
 				});
@@ -1177,7 +1178,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 					resizeX = 0;
 					
 					// 리사이징 바, 위치 이동
-					var left = $(col.element).position().left;
+					var left = $(col.element).offset().left - tablePos.left;
 					$(colResize).css("left", $(col.element).outerWidth() + left - 1);
 					
 					return false;
@@ -1221,7 +1222,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
