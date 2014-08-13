@@ -1332,7 +1332,7 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
-                mainObj.init.prototype.timestamp = Date.now();
+                mainObj.init.prototype.timestamp = new Date().getTime();
                 mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
 
                 // Template Setting (Markup)
@@ -5250,27 +5250,28 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		}
 		
 		function setColumnResize(self) {
-			var resizeX = 0;
+			var resizeX = 0,
+                tablePos = $obj.table.offset();
 			var col = null,
 				colNext = null,
 				colWidth = 0,
 				colNextWidth = 0,
 				colResize = null;
-				
+
 			// 리사이즈 엘리먼트 삭제
 			$obj.thead.find(".resize").remove();
 			
 			for(var i = 0; i < self.uit.getColumnCount() - 1; i++) {
 				var $colElem = $(self.getColumn(i).element),
 					$resizeBar = $("<div class='resize'></div>");
-				var pos = $colElem.position();
-				
+				var pos = $colElem.offset(); // ie8 버그로 인해 position에서 offset으로 변경함
+
 				$resizeBar.css({
 					position: "absolute",
 			        width: "8px",
 			        height: $colElem.outerHeight(),
-			        left: ($colElem.outerWidth() + pos.left - 1) + "px",
-			        top: pos.top + "px",
+			        left: ($colElem.outerWidth() + (pos.left - tablePos.left) - 1) + "px",
+			        top: (pos.top - tablePos.top) + "px",
 			        cursor: "w-resize",
 			        "z-index": "1"
 				});
@@ -5306,7 +5307,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 					resizeX = 0;
 					
 					// 리사이징 바, 위치 이동
-					var left = $(col.element).position().left;
+					var left = $(col.element).offset().left - tablePos.left;
 					$(colResize).css("left", $(col.element).outerWidth() + left - 1);
 					
 					return false;
@@ -5350,7 +5351,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
@@ -7298,17 +7299,17 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
-				
+
 				$(self.root).css({ "position": "relative" });
 
-				$(head.root).css({ 
+				$(head.root).css({
 					"position": "absolute",
 					"top": "0",
 					"border-bottom-width": "0",
 					"margin": "0"
 				});
-				
-				$(body.root).css({ 
+
+				$(body.root).css({
 					"margin": "0"
 				});
 				
@@ -7340,7 +7341,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 					$(body.root).wrap("<div class='body'></div>");
 
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
-                $(body.root).find("thead > tr").not(":last-child").remove();
+                $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
 
 				// X-Table 헤더 영역 설정
 				for(var i = 0; i < cols.length; i++) {

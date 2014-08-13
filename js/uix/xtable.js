@@ -59,17 +59,17 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
-				
+
 				$(self.root).css({ "position": "relative" });
 
-				$(head.root).css({ 
+				$(head.root).css({
 					"position": "absolute",
 					"top": "0",
 					"border-bottom-width": "0",
 					"margin": "0"
 				});
-				
-				$(body.root).css({ 
+
+				$(body.root).css({
 					"margin": "0"
 				});
 				
@@ -101,7 +101,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 					$(body.root).wrap("<div class='body'></div>");
 
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
-                $(body.root).find("thead > tr").not(":last-child").remove();
+                $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
 
 				// X-Table 헤더 영역 설정
 				for(var i = 0; i < cols.length; i++) {
