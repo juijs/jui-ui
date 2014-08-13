@@ -154,6 +154,39 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     return times;
 
                 }
+                
+                func.realTicks = function(type, step) {
+                	var start = _domain[0];
+                    var end = _domain[1];
+                    
+                    var times = [];
+                    var date = new Date(+start)
+                    var realStart = null; 
+                    if (type == _time.years) {
+                    	realStart = new Date(date.getFullYear(), 0, 1);
+                    } else if (type == _time.months) {
+                    	realStart = new Date(date.getFullYear(), date.getMonth(), 1);
+                    } else if (type == _time.days || type == _time.weeks) {
+                    	realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    } else if (type == _time.hours) {
+                    	realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0, 0);
+                    } else if (type == _time.minutes) {
+                    	realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), 0, 0);
+                    } else if (type == _time.seconds){
+                    	realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
+                    } else if (type == _time.milliseconds){
+                      realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+
+                    }
+                    
+                    realStart = _time.add(realStart, type, step);
+                    while(+realStart < +end) {
+                    	times.push(new Date(+realStart));
+                    	realStart = _time.add(realStart, type, step);	
+                    }
+                    
+                    return  times; 
+                }
 
                 func.tickFormat = function(count, format) {
 
@@ -317,7 +350,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
             hours : 0x04,
             minutes : 0x05,
             seconds : 0x06,
-            weeks : 0x07,
+            milliseconds : 0x07,
+            weeks : 0x08,
 
             // add
             add : function(date) {
@@ -346,6 +380,8 @@ jui.define("chart.grid", [ "util" ], function(_) {
                             d.setMinutes(d.getMinutes() + time);
                         } else if (this.seconds == split) {
                             d.setSeconds(d.getSeconds() + time);
+                        } else if (this.milliseconds == split) {
+                            d.setMilliseconds(d.getMilliseconds() + time);                            
                         } else if (this.weeks == split) {
                             d.setDate(d.getDate() + time * 7);
                         }

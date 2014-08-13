@@ -114,6 +114,7 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.remove = function() {
+
             this.parent.element.removeChild(this.element);
 
             return this;

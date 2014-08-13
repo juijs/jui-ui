@@ -225,6 +225,7 @@ jui.define("chart.grid.block", [], function() {
       }
 
       obj.g.translate(x, y);
+      obj.key = grid.key;
 
       return obj;
     }

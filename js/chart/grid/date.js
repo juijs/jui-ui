@@ -4,7 +4,7 @@ jui.define("chart.grid.date", ["util"], function(_) {
     var self = this;
 
     function drawDate(chart, orient, domain, range, step, format) {
-    	
+
       var g = chart.svg.group();
       var scale = self.scale.time().domain(domain).rangeRound(range);
       var max = range[0];
@@ -24,9 +24,13 @@ jui.define("chart.grid.date", ["util"], function(_) {
         }
       }
 
-      var ticks = scale.ticks(step[0], step[1]);
+      if (grid.realtime) {
+        var ticks = scale.realTicks(step[0], step[1]);
+      } else {
+        var ticks = scale.ticks(step[0], step[1]);
+      }
+
       // step = [this.time.days, 1];
-      
       var values = [];
 
       if (orient == 'top') {
@@ -82,25 +86,24 @@ jui.define("chart.grid.date", ["util"], function(_) {
         for (var i = 0; i < ticks.length; i++) {
           values[i] = scale(ticks[i]);
 
-
-		  var group = chart.svg.group({
+          var group = chart.svg.group({
             "transform" : "translate(" + values[i] + ", 0)"
           })
-          
-            group.append(chart.svg.line({
-              x1 : 0.5,
-              y1 : 0,
-              x2 : 0.5,
-              y2 : bar,
-              stroke : "black",
-              "stroke-width" : 0.5
-            }));
 
-            group.append(chart.svg.text({
-              x : 0,
-              y : bar * 4,
-              'text-anchor' : 'middle'
-            }, format ? format(ticks[i]) : ticks[i]+""));          
+          group.append(chart.svg.line({
+            x1 : 0.5,
+            y1 : 0,
+            x2 : 0.5,
+            y2 : bar,
+            stroke : "black",
+            "stroke-width" : 0.5
+          }));
+
+          group.append(chart.svg.text({
+            x : 0,
+            y : bar * 4,
+            'text-anchor' : 'middle'
+          }, format ? format(ticks[i]) : ticks[i] + ""));
 
           g.append(group);
         }
@@ -111,9 +114,9 @@ jui.define("chart.grid.date", ["util"], function(_) {
         var barX = width - bar;
 
         g.append(chart.svg.line({
-          x1 : width+0.5,
+          x1 : width + 0.5,
           y1 : 0,
-          x2 : width+0.5,
+          x2 : width + 0.5,
           y2 : max,
           stroke : "black",
           "stroke-width" : 0.5
@@ -193,13 +196,17 @@ jui.define("chart.grid.date", ["util"], function(_) {
     }
 
     this.draw = function(chart) {
-    	
+
+      var root = chart.svg.group({
+        'class' : 'grid date',
+      })
       var max = chart.area('height');
-      
+
       if (orient == 'top' || orient == 'bottom') {
-      	max = chart.area('width');
+        max = chart.area('width');
       }
-    	
+
+      var domain = grid.domain;
       var obj = drawDate(chart, orient, grid.domain, [0, max], grid.step, grid.format);
 
       if (orient == 'left') {
@@ -217,6 +224,27 @@ jui.define("chart.grid.date", ["util"], function(_) {
       }
 
       obj.g.translate(x, y);
+      obj.key = grid.key;
+
+      root.append(obj.g);
+
+      if (grid.realtime) {
+        setInterval(function() {
+
+          obj.g.remove();
+          for (var i = 0; i < domain.length; i++) {
+            domain[i] = _time.add(domain[i], _time.milliseconds, 10);
+          }
+
+          obj = drawDate(chart, orient, domain, [0, max], grid.step, grid.format);
+          
+          obj.g.translate(x, y);
+          obj.key = grid.key ; 
+          
+          root.append(obj.g);
+          
+        }, 100);
+      }
 
       return obj;
     }
