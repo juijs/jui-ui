@@ -1,5 +1,8 @@
 jui.define("chart.draw", [ "util" ], function(_) {
     var Draw = function() {
+    	
+    	this.borderWidth = 0.5;
+    	
         this.render = function(chart) {
             if (!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");

@@ -37,9 +37,9 @@ jui.define("chart.grid.block", [], function() {
 
         g.append(chart.svg.line({
           x1 : 0,
-          y1 : height,
+          y1 : height+0.5,
           x2 : max,
-          y2 : height,
+          y2 : height+0.5,
           stroke : "black",
           "stroke-width" : 0.5
         }));

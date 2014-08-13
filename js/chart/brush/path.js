@@ -19,8 +19,6 @@ jui.define("chart.brush.path", [], function() {
 			
 			g.append(path);
 			
-			var x1 = 0;
-			var y1 = 0;
 			for(var i = 0; i < s.data.length; i++) {
 				var obj = brush.c.xy(i, s.data[i]/s.max);
 				

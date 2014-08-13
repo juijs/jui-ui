@@ -1,12 +1,12 @@
-jui.define("chart.grid.date", [], function() {
+jui.define("chart.grid.date", ["util"], function(_) {
 
   var Grid = function(orient, grid) {
     var self = this;
 
     function drawDate(chart, orient, domain, range, step, format) {
+    	
       var g = chart.svg.group();
       var scale = self.scale.time().domain(domain).rangeRound(range);
-
       var max = range[0];
       var min = range[0];
 
@@ -26,6 +26,7 @@ jui.define("chart.grid.date", [], function() {
 
       var ticks = scale.ticks(step[0], step[1]);
       // step = [this.time.days, 1];
+      
       var values = [];
 
       if (orient == 'top') {
@@ -35,9 +36,9 @@ jui.define("chart.grid.date", [], function() {
 
         g.append(chart.svg.line({
           x1 : 0,
-          y1 : height,
+          y1 : height + 0.5,
           x2 : max,
-          y2 : height,
+          y2 : height + 0.5,
           stroke : "black",
           "stroke-width" : 0.5
         }));
@@ -49,9 +50,9 @@ jui.define("chart.grid.date", [], function() {
             "transform" : "translate(" + values[i] + ", 0)"
           }, function() {
             chart.svg.line({
-              x1 : 0,
+              x1 : 0.5,
               y1 : barY,
-              x2 : 0,
+              x2 : 0.5,
               y2 : height,
               stroke : "black",
               "stroke-width" : 0.5
@@ -71,9 +72,9 @@ jui.define("chart.grid.date", [], function() {
 
         g.append(chart.svg.line({
           x1 : 0,
-          y1 : 0,
+          y1 : 0.5,
           x2 : max,
-          y2 : 0,
+          y2 : 0.5,
           stroke : "black",
           "stroke-width" : 0.5
         }));
@@ -81,24 +82,27 @@ jui.define("chart.grid.date", [], function() {
         for (var i = 0; i < ticks.length; i++) {
           values[i] = scale(ticks[i]);
 
-          g.append(chart.svg.group({
+
+		  var group = chart.svg.group({
             "transform" : "translate(" + values[i] + ", 0)"
-          }, function() {
-            chart.svg.line({
-              x1 : 0,
+          })
+          
+            group.append(chart.svg.line({
+              x1 : 0.5,
               y1 : 0,
-              x2 : 0,
+              x2 : 0.5,
               y2 : bar,
               stroke : "black",
               "stroke-width" : 0.5
-            });
+            }));
 
-            chart.svg.text({
+            group.append(chart.svg.text({
               x : 0,
-              y : bar * 3,
+              y : bar * 4,
               'text-anchor' : 'middle'
-            }, format ? format(ticks[i]) : ticks[i])
-          }));
+            }, format ? format(ticks[i]) : ticks[i]+""));          
+
+          g.append(group);
         }
 
       } else if (orient == 'left') {
@@ -107,9 +111,9 @@ jui.define("chart.grid.date", [], function() {
         var barX = width - bar;
 
         g.append(chart.svg.line({
-          x1 : width,
+          x1 : width+0.5,
           y1 : 0,
-          x2 : width,
+          x2 : width+0.5,
           y2 : max,
           stroke : "black",
           "stroke-width" : 0.5
@@ -123,9 +127,9 @@ jui.define("chart.grid.date", [], function() {
           }, function() {
             chart.svg.line({
               x1 : barX,
-              y1 : 0,
+              y1 : 0.5,
               x2 : width,
-              y2 : 0,
+              y2 : 0.5,
               stroke : "black",
               "stroke-width" : 0.5
             });
@@ -144,9 +148,9 @@ jui.define("chart.grid.date", [], function() {
         var barX = width - bar;
 
         g.append(chart.svg.line({
-          x1 : 0,
+          x1 : 0.5,
           y1 : 0,
-          x2 : 0,
+          x2 : 0.5,
           y2 : max,
           stroke : "black",
           "stroke-width" : 0.5
@@ -160,9 +164,9 @@ jui.define("chart.grid.date", [], function() {
           }, function() {
             chart.svg.line({
               x1 : 0,
-              y1 : 0,
+              y1 : 0.5,
               x2 : bar,
-              y2 : 0,
+              y2 : 0.5,
               stroke : "black",
               "stroke-width" : 0.5
             });
@@ -189,7 +193,14 @@ jui.define("chart.grid.date", [], function() {
     }
 
     this.draw = function(chart) {
-      var obj = drawDate(chart, orient, grid.domain, [0, chart.area('height')]);
+    	
+      var max = chart.area('height');
+      
+      if (orient == 'top' || orient == 'bottom') {
+      	max = chart.area('width');
+      }
+    	
+      var obj = drawDate(chart, orient, grid.domain, [0, max], grid.step, grid.format);
 
       if (orient == 'left') {
         var x = chart.area('x') - 30;

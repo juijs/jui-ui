@@ -8,11 +8,15 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			this.parent.init.call(this);
 
 			// 데이타 설정
-			var data = _.clone(this.get('data'));
-			var series = _.clone(this.get('series'));
-			var grid = _.clone(this.get('grid'));
-			var brush = _.clone(this.get('brush'));
+			var data = this.get('data');
+			var series = this.get('series');
+			var grid = this.get('grid');			// 내부적으로 완전히 clone 이 안되네? 
+			var brush = this.get('brush');
 			var series_list = [];
+
+			for(var k in grid) {
+				_grid[k] = grid[k];
+			}
 
 			// series_list
 			for (var key in series) {
@@ -22,14 +26,16 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			// series 데이타 구성
 			for (var i = 0, len = data.length; i < len; i++) {
 				var row = data[i];
-
 				for (var key in series) {
 					var obj = series[key];
 					var value = row[key];
+					
+					
 
 					obj.data = obj.data || [];
 					obj.min = obj.min || 0;
 					obj.max = obj.max || 0;
+					
 					obj.data.push(value);
 
 					if (value < obj.min) {
@@ -61,7 +67,7 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				}
 			}
 
-			_grid = grid;
+			//_grid = grid;
 			_brush = brush;
 			_data = data;
 			_series = series;
@@ -110,6 +116,7 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				if (grid.type)  grid = { c : grid };
 				
 				for (var k in grid) {
+
 					var orient = 'custom';
 	
 					if (k == 'x')

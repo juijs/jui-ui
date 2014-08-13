@@ -39,9 +39,9 @@ jui.define("chart.grid", [ "util" ], function(_) {
                     if ( typeof values == 'undefined') {
                         return _domain;
                     }
-
+                    
                     _domain = values;
-
+                    
                     return this;
                 }
 
@@ -308,7 +308,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
             }
         }
 
-        this.time = {
+        window._time = this.time = {
 
             // unit
             years : 0x01,

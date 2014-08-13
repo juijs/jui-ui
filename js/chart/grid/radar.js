@@ -14,7 +14,7 @@ jui.define("chart.grid.radar", [], function() {
 				r : r,
 				"fill-opacity" : 0,
 				stroke : 'black',
-				"stroke-width" : 1
+				"stroke-width" : 0.5
 			}))
 		}
 
