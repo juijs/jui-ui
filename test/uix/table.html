@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QUnit Example</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/dropdown.js"></script>
+<script src="../../js/ui/modal.js"></script>
+<script src="../../js/uix/table.js"></script>
+
+<script>
+var table_data = [
+    { name: "Hong", age: "20", location: "Ilsan" },
+    { name: "Jung", age: "30", location: "Seoul" },
+    { name: "Park", age: "10", location: "Dangjin" }
+];
+
+var t1;
+
+jui.ready([ "uix.table", "util" ], function(table, _) {
+    QUnit.testStart(function() {
+        t1 = table("#t1", {
+            rows: _.clone(table_data),
+            tpl: {
+                row: $("#tpl_row").html()
+            }
+        });
+    });
+
+    QUnit.test( "테이블 업데이트 테스트", function(assert) {
+        assert.ok(t1.count() == 3, "로우 개수 확인");
+        assert.equal(t1.get(1).element, $("#t1").find("tbody > tr").get(1), "로우 엘리먼트 확인");
+    });
+
+    QUnit.testDone(function() {
+        $(t1.root).remove();
+    });
+});
+</script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<table id="t1">
+    <thead>
+    <tr>
+        <th data-tag="name">Name</th>
+        <th data-bind="age">Age</th>
+        <th>Location</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script id="tpl_row" type="text/template">
+    <tr>
+        <td><!= name !></td>
+        <td><!= age !></td>
+        <td><!= location !></td>
+    </tr>
+</script>
+
+</body>
+</html>
