@@ -101,17 +101,17 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 		}
 
         this.attr = function(type, key) {
-            var brushStyle = {};
+            var bAttr = {};
 
             for(var k in _brush) {
                 var b = _brush[k];
 
                 if(b.type == type) {
-                    brushStyle = b.attr;
+                    bAttr = b.attr;
                 }
             }
 
-            return $.extend(brushStyle, _series[key].attr);
+            return $.extend(_.clone(bAttr), _series[key].attr);
         }
 
 		this.drawBefore = function() {
