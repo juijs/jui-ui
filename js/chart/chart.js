@@ -106,6 +106,20 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 		  return _series; 
 		}
 
+        this.attr = function(type, key) {
+            var bAttr = {};
+
+            for(var k in _brush) {
+                var b = _brush[k];
+
+                if(b.type == type) {
+                    bAttr = b.attr;
+                }
+            }
+
+            return $.extend(_.clone(bAttr), _series[key].attr);
+        }
+
 		this.drawBefore = function() {
 		}
 
