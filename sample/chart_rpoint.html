@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <script src="../lib/jquery-1.8.3.min.js"></script>
+    <script src="../lib/jquery.binder.js"></script>
+    <script src="../js/base.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/util/svg.js"></script>
+    <script src="../js/chart/core.js"></script>
+    <script src="../js/chart/draw.js"></script>
+    <script src="../js/chart/grid/grid.js"></script>
+    <script src="../js/chart/grid/block.js"></script>
+    <script src="../js/chart/grid/date.js"></script>
+    <script src="../js/chart/grid/range.js"></script>
+    <script src="../js/chart/brush/brush.js"></script>
+    <script src="../js/chart/brush/rpoint.js"></script>
+    <script src="../js/chart/brush/area.js"></script>
+    <script src="../js/chart/chart.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+
+		function getDate() {
+			return Math.round((Math.random()*1000) % 300)
+		}
+		
+		function getNumber() {
+			return Math.round(Math.random() * 1000  % 100);
+		}
+	
+		jui.ready(["chart.chart"], function(Chart) {
+			
+			var start = new Date();
+			var end = _time.add(start, _time.hours, 5);
+			
+			var data = [];
+			for(var i = 0; i < 10000; i++) {
+				data.push({ name : getNumber(), value : _time.add(start, _time.minutes, getDate())} )
+			}
+
+			new Chart("#chart", {
+				width: 600,
+				height : 600,
+				data : data,
+				grid : {
+					
+					y : { 
+						type : "date",  // default type is block 
+						domain : [ start, end ],
+						step : [_time.hours, 1],
+						format : "hh:mm"
+					},
+					x : { 
+						type : 'range', 
+						target : ["name"], 
+						step : 10
+					}
+				},
+				series : {
+					name : {
+						text : "이름"
+					},
+					value : {
+						text : "날짜"
+					}
+				},
+				brush : {  
+					type : 'rpoint',
+					//grid : 0,
+					target : ["value"],
+					key: "name"
+				}
+			}).render();
+		})
+</script>
+
+
+</body>
+</html>
