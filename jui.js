@@ -4787,12 +4787,12 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
             function getValue(row) {
                 var value = row.data[name];
 
-                if(_.typeCheck("number", value)) {
-                    return value;
-                }
-
-                if(_.typeCheck("string", value)) {
+                if(typeof(value) == "string") {
                     return value.toLowerCase();
+                } else {
+                    if(!isNaN(value) && value != null) {
+                        return value;
+                    }
                 }
 
                 return "";
@@ -7660,12 +7660,12 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			function getValue(data) {
 		    	var value = data[column.name];
 
-                if(_.typeCheck("number", value)) {
-                    return value;
-                }
-
-                if(_.typeCheck("string", value)) {
+                if(typeof(value) == "string") {
                     return value.toLowerCase();
+                } else {
+                    if(!isNaN(value) && value != null) {
+                        return value;
+                    }
                 }
     			
     			return "";
