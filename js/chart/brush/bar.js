@@ -30,6 +30,7 @@ jui.define("chart.brush.bar", [], function() {
 							fill : this.color(j)
 						});
 
+                        r.attr(chart.attr(brush.type, brush.target[j]));
 						g.append(r);
 					} else {
 						var r = chart.svg.rect({
@@ -40,6 +41,7 @@ jui.define("chart.brush.bar", [], function() {
 							fill : this.color(j)
 						});
 
+                        r.attr(chart.attr(brush.type, brush.target[j]));
 						g.append(r);
 					}
 

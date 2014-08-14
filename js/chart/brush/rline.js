@@ -69,6 +69,7 @@ jui.define("chart.brush.rline", [], function() {
 					}
 				}
 
+                p.attr(chart.attr(brush.type, brush.target[j]));
 				g.append(p);
 			}
 		}

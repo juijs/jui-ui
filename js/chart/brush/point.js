@@ -13,7 +13,6 @@ jui.define("chart.brush.point", [], function() {
 			return width / 2;
 		}
 
-
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
@@ -27,22 +26,16 @@ jui.define("chart.brush.point", [], function() {
 				var startX = brush.x.scale(i) + getPositionX();
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var data = chart.series(brush.target[j]).data[i], startY = brush.y.scale(data);
-					var circle = chart.svg.circle({
-						cx : startX,
-						cy : startY,
-						r : r,
-						fill : this.color(j)
-					});
+					var value = chart.series(brush.target[j]).data[i],
+                        startY = brush.y.scale(value),
+                        circle = chart.svg.circle({
+                            cx : startX,
+                            cy : startY,
+                            r : r,
+                            fill : this.color(j)
+                        });
 
-					circle.attr(chart.attr(brush.type, brush.target[j]));
-
-					(function(c, d) {
-						circle.on("click", function() {
-							chart.emit("click", [c, d]);
-						});
-					})(circle, data);
-
+                    circle.attr(chart.attr(brush.type, brush.target[j]));
 					g.append(circle);
 				}
 			}

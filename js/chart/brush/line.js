@@ -41,7 +41,7 @@ jui.define("chart.brush.line", [], function() {
 
 				var x = path[k].x, y = path[k].y, px = [], py = [];
 
-				if (brush.smooth) {
+				if (brush.curve) {
 					px = this.curvePoints(x);
 					py = this.curvePoints(y);
 				}
@@ -56,6 +56,7 @@ jui.define("chart.brush.line", [], function() {
 					}
 				}
 
+                p.attr(chart.attr(brush.type, brush.target[j]));
 				g.append(p);
 			}
 		}

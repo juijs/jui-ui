@@ -40,6 +40,9 @@ jui.define("chart.brush.stack", [], function() {
 						"fill-opacity" : 0.1
 					})
 
+                    // 속성 옵션 적용
+                    gaugeRect.attr(chart.attr(brush.type, brush.target[j]));
+
 					g.append(gaugeRect);
 				}
 
@@ -51,14 +54,14 @@ jui.define("chart.brush.stack", [], function() {
 						y : startY,
 						width : barWidth,
 						height : heightArr[j],
-						fill : this.getColor(j)
+						fill : this.color(j)
 					});
 
+                    r.attr(chart.attr(brush.type, brush.target[j]));
 					g.append(r);
 
 					startY += heightArr[j]
 				}
-
 			}
 		}
 	}

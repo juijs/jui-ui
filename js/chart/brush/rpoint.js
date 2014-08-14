@@ -40,12 +40,7 @@ jui.define("chart.brush.rpoint", [], function() {
 						fill : this.color(j)
 					});
 
-					(function(c, d) {
-						circle.on("click", function() {
-							chart.emit("click", [c, d]);
-						});
-					})(circle, data);
-
+                    circle.attr(chart.attr(brush.type, brush.target[j]));
 					g.append(circle);
 				}
 			}
