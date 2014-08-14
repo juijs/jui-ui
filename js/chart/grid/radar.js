@@ -1,4 +1,4 @@
-jui.define("chart.grid.radar", [], function() {
+jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 	var Grid = function(orient, grid) {
 		var position = [];
@@ -30,7 +30,7 @@ jui.define("chart.grid.radar", [], function() {
 			var startY = y;
 
 			for (var i = 0; i < count; i++) {
-				var obj = this.rotate(startX, startY, unit);
+				var obj = util.rotate(startX, startY, unit);
 
 				startX = obj.x;
 				startY = obj.y;
@@ -167,7 +167,7 @@ jui.define("chart.grid.radar", [], function() {
 					'text-anchor' : talign
 				}, grid.domain[i]))
 
-				var obj = this.rotate(startX, startY, unit);
+				var obj = util.rotate(startX, startY, unit);
 
 				startX = obj.x;
 				startY = obj.y;

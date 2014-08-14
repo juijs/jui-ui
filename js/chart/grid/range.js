@@ -1,4 +1,4 @@
-jui.define("chart.grid.range", [], function() {
+jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 	/**
 	 *
@@ -20,7 +20,7 @@ jui.define("chart.grid.range", [], function() {
 			step = step || 10;
 
 			var g = chart.svg.group();
-			var scale = self.scale.linear().domain(domain).range(range);
+			var scale = util.scale.linear().domain(domain).range(range);
 
 			var ticks = scale.ticks(step, nice || false);
 			var values = []

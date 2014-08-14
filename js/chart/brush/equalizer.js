@@ -1,7 +1,7 @@
 jui.define("chart.brush.equalizer", [], function() {
 
   var BarBrush = function(brush) {
-    var g, zeroY, count, width, barWidth;
+    var g, zeroY, count, width, barWidth, unit, gap;
     var outerPadding = 15, innerPadding = 10;
 
     this.drawBefore = function(chart) {
@@ -12,6 +12,9 @@ jui.define("chart.brush.equalizer", [], function() {
 
       width = chart.x.scale.rangeBand();
       barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+      
+      unit = brush.unit || 10;
+      gap = brush.gap || 4;
     }
     
     this.draw = function(chart) {
@@ -25,7 +28,6 @@ jui.define("chart.brush.equalizer", [], function() {
           	
           	var height = Math.abs(zeroY - startY)
           	var padding = 1;  
-          	var unit = 10;
 
           	var eY = zeroY;
           	var eMin = startY;
@@ -41,7 +43,7 @@ jui.define("chart.brush.equalizer", [], function() {
 	              height : unitHeight,
 	              rx : 3, 
 	              ry : 3,
-	              fill : this.color(Math.floor(eIndex/4))
+	              fill : this.color(Math.floor(eIndex/gap))
 	            });
 	            
 	            eY -= unitHeight + padding;
@@ -52,7 +54,6 @@ jui.define("chart.brush.equalizer", [], function() {
           } else {
           	
           	var padding = 1;  
-          	var unit = 10;
           	
           	var eY = zeroY;
           	var eMax = startY;
@@ -67,7 +68,7 @@ jui.define("chart.brush.equalizer", [], function() {
 	              rx : 3, 
 	              ry : 3,
 	              
-	              fill : this.color(Math.floor(eIndex/4))
+	              fill : this.color(Math.floor(eIndex/gap))
 	            });          	
 	            
 	            eY += unitHeight + padding;

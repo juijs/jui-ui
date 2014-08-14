@@ -1,4 +1,4 @@
-jui.define("chart.grid.date", ["util"], function(_) {
+jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 
   var Grid = function(orient, grid) {
     var self = this;
@@ -6,7 +6,7 @@ jui.define("chart.grid.date", ["util"], function(_) {
     function drawDate(chart, orient, domain, range, step, format) {
 
       var g = chart.svg.group();
-      var scale = self.scale.time().domain(domain).rangeRound(range);
+      var scale = util.scale.time().domain(domain).rangeRound(range);
       var max = range[0];
       var min = range[0];
 
@@ -228,6 +228,7 @@ jui.define("chart.grid.date", ["util"], function(_) {
 
       root.append(obj.g);
 
+	  /*
       if (grid.realtime) {
         setInterval(function() {
 
@@ -244,8 +245,7 @@ jui.define("chart.grid.date", ["util"], function(_) {
           root.append(obj.g);
           
         }, 100);
-      }
-
+      } */
       return obj;
     }
   }

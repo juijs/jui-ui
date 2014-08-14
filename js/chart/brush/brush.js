@@ -24,14 +24,6 @@ jui.define("chart.brush", [], function() {
         ],
         colorIndex = 0;
         
-        this.axis = function(chart, brush, i) {
-        	if (brush.key) {
-        		return chart.series(brush.key).data[i];
-        	}
-        	
-        	return i; 
-        }
-
         this.getColor = this.color =  function(index) {
             return "rgb(" + colors[index] +")";
         }
