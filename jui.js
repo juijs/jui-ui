@@ -3066,12 +3066,14 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self, message) {
-			$tooltip =
-				$("<div id='TOOLTIP_" + self.timestamp + "' class='tooltip tooltip-" + self.options.position + " tooltip-" + self.options.color + "'>" + 
-					"<div class='anchor'></div>" +
-					"<div class='title'>" + message + "</div>" +
-				"</div>");
+		function createTooltip(self, title) {
+            // 메시지 템플릿 적용
+			$tooltip = $(self.tpl.message({
+                timestamp: self.timestamp,
+                position: self.options.position,
+                color: self.options.color,
+                title: title
+            }));
 			
 			// 스타일 옵션
 			if(self.options.width) 
@@ -3110,6 +3112,37 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 				y: (y < 1) ? 1 : y
 			}
 		}
+
+        function hideTooltip(self, e) {
+            clearTimeout(delay);
+
+            if($tooltip != null) {
+                $tooltip.remove();
+                $tooltip = null;
+
+                pos = {};
+            }
+
+            if(delay != null) {
+                self.emit("hide", [ e ]);
+                delay = null;
+            }
+        }
+
+        function showTooltip(self, e) {
+            if($tooltip) hideTooltip(self, e);
+
+            var message = ((self.options.title) ? self.options.title : title);
+
+            if(message != "") {
+                createTooltip(self, message);
+
+                $tooltip.css({
+                    "left": pos.x,
+                    "top": pos.y
+                });
+            }
+        }
 		
 		
 		/**
@@ -3125,57 +3158,36 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 			$(this.root).removeAttr("title");
 			
 			// 기존의 설정된 이벤트 제거
-			$(this.root).unbind(opts.type).unbind("mouseout");
+			$(this.root).unbind(opts.showType).unbind(opts.hideType);
 			
 			// 보이기 이벤트
-			this.addEvent(this.root, opts.type, function(e) {
-				delay = setTimeout(function() {
-					self.show();
+			this.addEvent(this.root, opts.showType, function(e) {
+                if(delay == null) {
+                    delay = setTimeout(function () {
+                        showTooltip(self, e);
 
-                    if($tooltip != null) {
-                        self.emit("show", [ $tooltip.get(0), e ]);
+                        if ($tooltip != null) {
+                            self.emit("show", [ $tooltip.get(0), e ]);
+                        }
+                    }, opts.delay);
+                } else {
+                    if(opts.showType == opts.hideType) {
+                        hideTooltip(self, e);
                     }
-				}, opts.delay);
-				
+                }
+
 				return false;
 			});
 			
 			// 숨기기 이벤트
-			this.addEvent(this.root, "mouseout", function(e) {
-				clearTimeout(delay);
-				self.hide();
+            if(opts.showType != opts.hideType) {
+                this.addEvent(this.root, opts.hideType, function (e) {
+                    hideTooltip(self, e);
 
-                if($tooltip == null) {
-                    self.emit("hide", [ e ]);
-                }
-				return false;
-			});
-			
-			return this;
-		}
-		
-		this.hide = function() {
-			if($tooltip != null) { 
-				$tooltip.remove();
-				$tooltip = null;
-				
-				pos = {};
-			}
-		}
-		
-		this.show = function() {
-			if($tooltip) this.hide();
-
-            var message = ((this.options.title) ? this.options.title : title);
-            if(message != "") {
-                createTooltip(this, message);
-
-                $tooltip.css({
-                    "left": pos.x,
-                    "top": pos.y
+                    return false;
                 });
             }
-		}		
+		}
 	}
 
     UI.setting = function() {
@@ -3186,8 +3198,14 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                 width: 150,
                 align: "left",
                 delay: 0,
-                type: "mouseover",
-                title: ""
+                showType: "mouseover",
+                hideType: "mouseout",
+                title: "",
+                tpl: {
+                    message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                            "</div>"
+                }
             }
         }
     }
