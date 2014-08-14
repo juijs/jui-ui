@@ -2,7 +2,6 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 
 	var UI = function() {
 		var _grid = [], _brush = [], _data, _series;
-		
 
 		this.init = function() {
 			this.parent.init.call(this);
@@ -10,11 +9,12 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			// 데이타 설정
 			var data = this.get('data');
 			var series = this.get('series');
-			var grid = this.get('grid');			// 내부적으로 완전히 clone 이 안되네? 
+			var grid = this.get('grid');
+			// 내부적으로 완전히 clone 이 안되네?
 			var brush = this.get('brush');
 			var series_list = [];
 
-			for(var k in grid) {
+			for (var k in grid) {
 				_grid[k] = grid[k];
 			}
 
@@ -29,13 +29,11 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				for (var key in series) {
 					var obj = series[key];
 					var value = row[key];
-					
-					
 
 					obj.data = obj.data || [];
 					obj.min = obj.min || 0;
 					obj.max = obj.max || 0;
-					
+
 					obj.data.push(value);
 
 					if (value < obj.min) {
@@ -72,67 +70,70 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			_data = data;
 			_series = series;
 		}
-		
+
 		this.grid = function(key) {
-	    if (_grid[key]) {
-        return _grid[key];
-      }
-      	  
-		  return _grid; 
+			if (_grid[key]) {
+				return _grid[key];
+			}
+
+			return _grid;
 		}
-		
+
 		this.brush = function(key) {
-		  if (_brush[key]) {
-        return _brush[key];
-      }
-		  
-		  return _brush;
+			if (_brush[key]) {
+				return _brush[key];
+			}
+
+			return _brush;
 		}
-		
+
 		this.data = function(key) {
-		  if (_data[key]) {
-        return _data[key];
-      }
-		  
-		  return _data; 
+			if (_data[key]) {
+				return _data[key];
+			}
+
+			return _data;
 		}
-		
+
 		this.series = function(key) {
-		  
-		  if (_series[key]) {
-		    return _series[key];
-		  }
-		  
-		  return _series; 
+
+			if (_series[key]) {
+				return _series[key];
+			}
+
+			return _series;
 		}
 
-        this.attr = function(type, key) {
-            var bAttr = {};
+		this.attr = function(type, key) {
+			var bAttr = {};
 
-            for(var k in _brush) {
-                var b = _brush[k];
+			for (var k in _brush) {
+				var b = _brush[k];
 
-                if(b.type == type) {
-                    bAttr = b.attr;
-                }
-            }
+				if (b.type == type) {
+					bAttr = b.attr;
+				}
+			}
 
-            return $.extend(_.clone(bAttr), _series[key].attr);
-        }
+			return $.extend(_.clone(bAttr), _series[key].attr);
+		}
 
 		this.drawBefore = function() {
 		}
 
 		this.draw = function() {
 			var grid = this.grid();
-			
+
 			if (grid != null) {
-				if (grid.type)  grid = { c : grid };
-				
+				if (grid.type)
+					grid = {
+						c : grid
+					};
+
 				for (var k in grid) {
 
 					var orient = 'custom';
-	
+
 					if (k == 'x')
 						orient = 'bottom';
 					else if (k == 'x1')
@@ -141,13 +142,12 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 						orient = 'left';
 					else if (k == 'y1')
 						orient = 'right';
-	
+
 					this.setDomain(grid[k]);
 					var Grid = jui.include("chart.grid." + (grid[k].type || "block"))
 					this[k] = new Grid(orient, grid[k]).render(this);
 				}
 			}
-
 
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
@@ -183,7 +183,7 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 
 					axis.domain = domain;
 					axis.step = axis.step || 10;
-					axis.max = axis.max || 100; 
+					axis.max = axis.max || 100;
 				}
 
 				return;
@@ -200,7 +200,7 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				for (var i = 0; i < axis.target.length; i++) {
 					var s = axis.target[i];
 
-					if (typeof s == 'function') {
+					if ( typeof s == 'function') {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
@@ -211,22 +211,21 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 							if (min > value)
 								min = value;
 
-						}						
+						}
 					} else {
 						var _max = series[s].max;
 						var _min = series[s].min;
 						if (max < _max)
 							max = _max;
 						if (min > _min)
-							min = _min;						
+							min = _min;
 					}
 
-
 				}
-				
+
 				axis.max = max;
 				axis.min = min;
-				axis.step = axis.step || 10; 
+				axis.step = axis.step || 10;
 
 				var unit = Math.ceil((max - min) / axis.step);
 
@@ -241,8 +240,8 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				}
 
 				axis.domain = [end, start];
-				axis.step = Math.abs(start / unit) + Math.abs(end / unit);	
-				
+				axis.step = Math.abs(start / unit) + Math.abs(end / unit);
+
 			}
 		}
 	}
@@ -278,4 +277,4 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 	}
 
 	return UI;
-}, "chart.core"); 
+}, "chart.core");

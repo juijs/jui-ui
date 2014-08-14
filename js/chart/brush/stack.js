@@ -1,68 +1,67 @@
 jui.define("chart.brush.stack", [], function() {
 
-  var StackBrush = function(brush) {
-    var g, zeroY, count, width, barWidth, gauge;
-    var outerPadding = 15, innerPadding = 10;
+	var StackBrush = function(brush) {
+		var g, zeroY, count, width, barWidth, gauge;
+		var outerPadding = 15, innerPadding = 10;
 
-    this.drawBefore = function(chart) {
-      g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-      zeroY = brush.y.scale(0);
-      count = chart.series(brush.target[0]).data.length;
+			zeroY = brush.y.scale(0);
+			count = chart.series(brush.target[0]).data.length;
 
-      width = chart.x.scale.rangeBand();
-      barWidth = width - outerPadding * 2;
-      gauge = brush.gauge || false; 
-    }
+			width = chart.x.scale.rangeBand();
+			barWidth = width - outerPadding * 2;
+			gauge = brush.gauge || false;
+		}
 
-    this.draw = function(chart) {
-      var chart_height = chart.area('height');
-      for (var i = 0; i < count; i++) {
-      	
-        var startX = brush.x.scale(i) + outerPadding;
+		this.draw = function(chart) {
+			var chart_height = chart.area('height');
+			for (var i = 0; i < count; i++) {
 
-        var heightSum = 0;
-        var heightArr = [];
-        for (var j = 0; j < brush.target.length; j++) {
-          var height = chart.series(brush.target[j]).data[i];
+				var startX = brush.x.scale(i) + outerPadding;
 
-          heightSum += height;
-          heightArr.push(chart_height - brush.y.scale(height));
-        }
-        
-        if (gauge) {
-	        var gaugeRect = chart.svg.rect({
-	        	x : startX,
-	        	y : 0,
-	        	width : barWidth,
-	        	height : chart_height,
-	        	fill : this.color(6),
-	        	"fill-opacity": 0.1
-	        })
-	        
-	        g.append(gaugeRect);        	
-        }
-        
-        var startY = brush.y.scale(heightSum);
+				var heightSum = 0;
+				var heightArr = [];
+				for (var j = 0; j < brush.target.length; j++) {
+					var height = chart.series(brush.target[j]).data[i];
 
+					heightSum += height;
+					heightArr.push(chart_height - brush.y.scale(height));
+				}
 
-        for (var j = heightArr.length - 1; j >= 0; j--) {
-          var r = chart.svg.rect({
-            x : startX,
-            y : startY,
-            width : barWidth,
-            height : heightArr[j],
-            fill : this.getColor(j)
-          });
+				if (gauge) {
+					var gaugeRect = chart.svg.rect({
+						x : startX,
+						y : 0,
+						width : barWidth,
+						height : chart_height,
+						fill : this.color(6),
+						"fill-opacity" : 0.1
+					})
 
-          g.append(r);
+					g.append(gaugeRect);
+				}
 
-          startY += heightArr[j]
-        }
+				var startY = brush.y.scale(heightSum);
 
-      }
-    }
-  }
+				for (var j = heightArr.length - 1; j >= 0; j--) {
+					var r = chart.svg.rect({
+						x : startX,
+						y : startY,
+						width : barWidth,
+						height : heightArr[j],
+						fill : this.getColor(j)
+					});
 
-  return StackBrush;
-}, "chart.brush"); 
+					g.append(r);
+
+					startY += heightArr[j]
+				}
+
+			}
+		}
+	}
+
+	return StackBrush;
+}, "chart.brush");

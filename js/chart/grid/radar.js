@@ -88,7 +88,6 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			}
 		}
 
-
 		this.draw = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
 			grid.line = typeof grid.line == 'undefined' ? true : grid.line;
