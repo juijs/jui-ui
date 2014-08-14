@@ -401,14 +401,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		    // 해당 컬럼에 해당하는 값 가져오기
 			function getValue(data) {
 		    	var value = data[column.name];
-		    	
-    			if(!isNaN(value) && value != null) {
-    				return parseInt(value);
-    			} 
-    			
-    			if(typeof(value) == "string") {
-    				return value.toLowerCase();
-    			}
+
+                if(_.typeCheck("number", value)) {
+                    return value;
+                }
+
+                if(_.typeCheck("string", value)) {
+                    return value.toLowerCase();
+                }
     			
     			return "";
 		    }

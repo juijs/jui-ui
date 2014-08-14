@@ -4762,7 +4762,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
         }
 
         this.sortRows = function(name, isDesc) {
-            var self = this, qs = _.sort(rows);
+            var qs = _.sort(rows);
 
             if(isDesc) {
                 qs.setCompare(function(a, b) {
@@ -4787,11 +4787,11 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
             function getValue(row) {
                 var value = row.data[name];
 
-                if(!isNaN(value) && value != null) {
-                    return parseInt(value);
+                if(_.typeCheck("number", value)) {
+                    return value;
                 }
 
-                if(typeof(value) == "string") {
+                if(_.typeCheck("string", value)) {
                     return value.toLowerCase();
                 }
 
@@ -7659,14 +7659,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		    // 해당 컬럼에 해당하는 값 가져오기
 			function getValue(data) {
 		    	var value = data[column.name];
-		    	
-    			if(!isNaN(value) && value != null) {
-    				return parseInt(value);
-    			} 
-    			
-    			if(typeof(value) == "string") {
-    				return value.toLowerCase();
-    			}
+
+                if(_.typeCheck("number", value)) {
+                    return value;
+                }
+
+                if(_.typeCheck("string", value)) {
+                    return value.toLowerCase();
+                }
     			
     			return "";
 		    }
