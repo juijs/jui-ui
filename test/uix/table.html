@@ -39,12 +39,12 @@ jui.ready([ "uix.table", "util" ], function(table, _) {
 <body>
 
 <script>
-    QUnit.test( "테이블 업데이트 테스트", function(assert) {
+    QUnit.test("테이블 업데이트 테스트", function(assert) {
         assert.ok(t1.count() == 3, "로우 개수 확인");
         assert.equal(t1.get(1).element, $("#t1").find("tbody > tr").get(1), "로우 엘리먼트 확인");
     });
 
-    QUnit.test( "테이블 정렬 테스트", function(assert) {
+    QUnit.test("테이블 정렬 테스트", function(assert) {
         $("#t1").find("th:last-child").trigger("click");
         assert.ok(t1.get(0).data.etc == "BB", "내림차순 정렬 확인");
 

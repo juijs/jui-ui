@@ -15,7 +15,7 @@
 <script>
 var t1, t1_msg;
 
-jui.ready([ "ui.tooltip", "util" ], function(tooltip, _) {
+jui.ready([ "ui.tooltip" ], function(tooltip) {
     t1_msg = $("#t1").attr("title");
     t1 = tooltip("#t1", {
         tpl: {
@@ -30,7 +30,7 @@ jui.ready([ "ui.tooltip", "util" ], function(tooltip, _) {
 </head>
 <body>
 <script>
-    QUnit.test( "툴팁 기본 테스트", function(assert) {
+    QUnit.test("툴팁 기본 테스트", function(assert) {
         assert.ok($("#TOOLTIP_" + t1.timestamp).size() == 1, "툴팁 생성 확인");
         assert.ok($("#TOOLTIP_" + t1.timestamp).html() == t1_msg, "툴팁 메시지 확인");
 
@@ -38,7 +38,7 @@ jui.ready([ "ui.tooltip", "util" ], function(tooltip, _) {
         assert.ok($("#TOOLTIP_" + t1.timestamp).size() == 0, "툴팁 제거 확인");
     });
 
-    QUnit.testDone(function() {
+    QUnit.done(function() {
         $(t1.root).remove();
     });
 </script>
