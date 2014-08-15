@@ -14,7 +14,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 				index = this.options.index,
 				value = this.options.value;
 
-			$(self.element).children("*").each(function(i) {
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "event") {
 					if(e.currentTarget == this) on(i, this);
 					else off(this);
@@ -46,7 +46,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 			var self = this;
 
 			// Event
-			this.ui.addEvent($(self.element).children("*"), "click", function(e) {
+			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
 
@@ -73,7 +73,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 				index = this.options.index,
 				value = this.options.value;
 
-			$(self.element).children("*").each(function(i) {
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "init") {
 					if(order == "value") {
 						if(inArray(value, $(this).attr("value"))) on(i, this);
