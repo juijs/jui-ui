@@ -69,6 +69,8 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 			_brush = brush;
 			_data = data;
 			_series = series;
+			
+			this.emit("load", []);
 		}
 
 		this.grid = function(key) {
@@ -166,6 +168,8 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 				}
 
 			}
+			
+			this.emit("draw", []);
 		}
 
 		this.setDomain = function(axis) {
