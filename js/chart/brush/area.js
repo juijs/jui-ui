@@ -38,32 +38,24 @@ jui.define("chart.brush.area", [], function() {
 			}
 
 			for (var i = 0; i < path.length; i++) {
-				var p = chart.svg.path({
-					stroke : this.color(i),
-					"stroke-width" : 2,
-					fill : "transparent"
-				});
-
-				var p2 = chart.svg.polygon({
+				var p = chart.svg.polygon({
 					fill : this.color(i),
-					opacity : brush.opacity || 0.5
+					opacity : 0.9
 				});
 
 				var x = path[i].x, y = path[i].y;
 
-				p2.point(x[0], maxY);
+				p.point(x[0], maxY);
 
 				for (var j = 0; j < x.length - 1; j++) {
-					p.MoveTo(x[j], y[j]);
-					p.LineTo(x[j + 1], y[j + 1]);
-					p2.point(x[j], y[j]);
+					p.point(x[j], y[j]);
 				}
 
-				p2.point(x[x.length - 1], y[y.length - 1]);
-				p2.point(x[x.length - 1], maxY);
+				p.point(x[x.length - 1], y[y.length - 1]);
+				p.point(x[x.length - 1], maxY);
 
+                p.attr(chart.attr(brush.type, brush.target[j]));
 				g.prepend(p);
-				g.prepend(p2);
 			}
 		}
 	}
