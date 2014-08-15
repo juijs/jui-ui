@@ -26,9 +26,12 @@ jui.define("chart.brush.donut", [], function() {
 		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, innerCut, attr) {
 			var g = chart.svg.group({
 				'class' : 'donut'
-			})
+			});
 
-			var path = chart.svg.path(attr)
+			var path = chart.svg.path(attr);
+
+            // 속성 옵션 적용
+            path.attr(chart.attr(brush.type, brush.target[j]));
 
 			// 바깥 지름 부터 그림
 			var startX = 0;
@@ -116,7 +119,7 @@ jui.define("chart.brush.donut", [], function() {
 
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
 					fill : this.color(i)
-				})
+				});
 
 				group.append(g);
 

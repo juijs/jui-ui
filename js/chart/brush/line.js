@@ -2,6 +2,16 @@ jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
 		var g, zeroY, count, width;
+        var pos = brush.position || "middle";
+
+        function getPositionX() {
+            if (pos == "left")
+                return 0;
+            else if (pos == "right")
+                return width;
+
+            return width / 2;
+        }
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
@@ -15,10 +25,15 @@ jui.define("chart.brush.line", [], function() {
 			var path = {};
 
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(i) + (width / 2);
+				var startX = brush.x.scale(i) + getPositionX(),
+                    valueSum = 0;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y.scale(chart.series(brush.target[j]).data[i]);
+                    var value = chart.series(brush.target[j]).data[i];
+
+                    if (brush.nest === false && j > 0) {
+                        valueSum += chart.series(brush.target[j - 1]).data[i];
+                    }
 
 					if (!path[j]) {
 						path[j] = {
@@ -28,7 +43,7 @@ jui.define("chart.brush.line", [], function() {
 					}
 
 					path[j].x.push(startX);
-					path[j].y.push(startY);
+					path[j].y.push(brush.y.scale(value + valueSum));
 				}
 			}
 
@@ -41,7 +56,7 @@ jui.define("chart.brush.line", [], function() {
 
 				var x = path[k].x, y = path[k].y, px = [], py = [];
 
-				if (brush.smooth) {
+				if (brush.curve) {
 					px = this.curvePoints(x);
 					py = this.curvePoints(y);
 				}
@@ -56,6 +71,7 @@ jui.define("chart.brush.line", [], function() {
 					}
 				}
 
+                p.attr(chart.attr(brush.type, brush.target[j]));
 				g.append(p);
 			}
 		}

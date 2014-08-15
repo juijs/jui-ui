@@ -38,6 +38,7 @@ jui.define("chart.brush.hstack", [], function() {
 						fill : this.color(j)
 					});
 
+                    r.attr(chart.attr(brush.type, brush.target[j]));
 					g.append(r);
 
 					startX += widthArr[j]

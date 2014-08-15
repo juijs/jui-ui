@@ -1,4 +1,4 @@
-jui.defineUI("chart.chart", ["util"], function(_) {
+jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 	var UI = function() {
 		var _grid = [], _brush = [], _data, _series;
@@ -107,17 +107,18 @@ jui.defineUI("chart.chart", ["util"], function(_) {
 		}
 
 		this.attr = function(type, key) {
-			var bAttr = {};
+			var bAttr = {},
+                cAttr = (_series[key]) ? _series[key].attr : {};
 
 			for (var k in _brush) {
 				var b = _brush[k];
 
 				if (b.type == type) {
-					bAttr = b.attr;
+					bAttr = _.clone(b.attr);
 				}
 			}
 
-			return $.extend(_.clone(bAttr), _series[key].attr);
+			return $.extend(bAttr, cAttr);
 		}
 
 		this.drawBefore = function() {
