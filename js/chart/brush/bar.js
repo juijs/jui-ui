@@ -2,13 +2,13 @@ jui.define("chart.brush.bar", [], function() {
 
 	var BarBrush = function(brush) {
 		var g, zeroY, count, width, barWidth;
-		var outerPadding = 15, innerPadding = 10;
+		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
 			zeroY = brush.y.scale(0);
-			count = chart.series(brush.target[0]).data.length;
+			count = chart.data().length;
 
 			width = chart.x.scale.rangeBand();
 			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;

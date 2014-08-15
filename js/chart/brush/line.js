@@ -17,7 +17,7 @@ jui.define("chart.brush.line", [], function() {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
 			zeroY = brush.y.scale(0);
-			count = chart.series(brush.target[0]).data.length;
+			count = chart.data().length;
 			width = chart.x.scale.rangeBand();
 		}
 

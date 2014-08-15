@@ -2,13 +2,13 @@ jui.define("chart.brush.hstack", [], function() {
 
 	var HStackBrush = function(brush) {
 		var g, zeroY, series, count, height, barWidth;
-		var outerPadding = 15, innerPadding = 10;
+		var outerPadding = brush.outerPadding || 15;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
 			series = chart.series();
-			count = chart.series(brush.target[0]).data.length;
+			count = chart.data().length;
 
 			height = chart.y.scale.rangeBand();
 			barWidth = height - outerPadding * 2;
