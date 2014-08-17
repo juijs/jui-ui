@@ -438,6 +438,7 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
                 mainObj.init.prototype.timestamp = new Date().getTime();
                 mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype.type = UI.type;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {

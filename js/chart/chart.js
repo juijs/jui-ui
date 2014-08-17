@@ -5,71 +5,6 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 		this.init = function() {
 			this.parent.init.call(this);
-
-			// 데이타 설정
-			var data = this.get('data');
-			var series = this.get('series');
-			var grid = this.get('grid');
-			// 내부적으로 완전히 clone 이 안되네?
-			var brush = this.get('brush');
-			var series_list = [];
-
-			for (var k in grid) {
-				_grid[k] = grid[k];
-			}
-
-			// series_list
-			for (var key in series) {
-				series_list.push(key);
-			}
-
-			// series 데이타 구성
-			for (var i = 0, len = data.length; i < len; i++) {
-				var row = data[i];
-				for (var key in series) {
-					var obj = series[key];
-					var value = row[key];
-
-					obj.data = obj.data || [];
-					obj.min = obj.min || 0;
-					obj.max = obj.max || 0;
-
-					obj.data.push(value);
-
-					if (value < obj.min) {
-						obj.min = value;
-					} else if (value > obj.max) {
-						obj.max = value;
-					}
-				}
-			}
-
-			// grid 최소, 최대 구성
-			if (brush != null) {
-				if ( typeof brush == 'string') {
-					brush = [{
-						type : brush
-					}];
-				} else if ( typeof brush == 'object' && !brush.length) {
-					brush = [brush];
-				}
-
-				for (var i = 0, len = brush.length; i < len; i++) {
-					var b = brush[i];
-
-					if (!b.target) {
-						b.target = series_list;
-					} else if ( typeof b.target == 'string') {
-						b.target = [b.target];
-					}
-				}
-			}
-
-			//_grid = grid;
-			_brush = brush;
-			_data = data;
-			_series = series;
-			
 			this.emit("load", []);
 		}
 
@@ -98,7 +33,6 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 		}
 
 		this.series = function(key) {
-
 			if (_series[key]) {
 				return _series[key];
 			}
@@ -122,6 +56,69 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 		}
 
 		this.drawBefore = function() {
+            // 데이타 설정
+            var data = this.get('data');
+            var series = this.get('series');
+            var grid = this.get('grid');
+            // 내부적으로 완전히 clone 이 안되네?
+            var brush = this.get('brush');
+            var series_list = [];
+
+            for (var k in grid) {
+                _grid[k] = grid[k];
+            }
+
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+            }
+
+            // series 데이타 구성
+            for (var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                for (var key in series) {
+                    var obj = series[key];
+                    var value = row[key];
+
+                    obj.data = obj.data || [];
+                    obj.min = obj.min || 0;
+                    obj.max = obj.max || 0;
+                    obj.data[i] = value;
+
+                    if (value < obj.min) {
+                        obj.min = value;
+                    } else if (value > obj.max) {
+                        obj.max = value;
+                    }
+                }
+            }
+
+            // grid 최소, 최대 구성
+            if (brush != null) {
+                if ( typeof brush == 'string') {
+                    brush = [{
+                        type : brush
+                    }];
+                } else if ( typeof brush == 'object' && !brush.length) {
+                    brush = [brush];
+                }
+
+                for (var i = 0, len = brush.length; i < len; i++) {
+                    var b = brush[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [b.target];
+                    }
+                }
+            }
+
+            //_grid = grid;
+            _brush = brush;
+            _data = data;
+            _series = series;
 		}
 
 		this.draw = function() {
@@ -254,7 +251,6 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 	UI.setting = function() {
 		return {
 			options : {
-				"type" : "svg",
 				"width" : "100%",
 				"height" : "100%",
 
@@ -276,7 +272,8 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 				"series" : {},
 				"grid" : null,
 				"brush" : null,
-				"data" : []
+				"data" : [],
+                "bind" : null
 			}
 		}
 	}

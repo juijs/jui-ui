@@ -1,7 +1,6 @@
-jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
+jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
-
 		function calculate(self) {
 			self._area = {};
 
@@ -78,7 +77,6 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
 			self._area = chart;
 		}
 
-
 		this.get = function(key) {
 			return this.options[key];
 		}
@@ -91,11 +89,30 @@ jui.define("chart.core", ["util", "util.svg"], function(_, SVGUtil) {
 			return this._area;
 		}
 
+        this.bind = function(ui) {
+            var self = this,
+                bind = _.typeCheck("object", ui) ? ui : this.get("bind");
+
+            if(bind.type == "uix.table") {
+                bind.callAfter("update", function() {
+                    var data = [];
+
+                    for(var i = 0; i < bind.count(); i++) {
+                        data.push(bind.get(i).data);
+                    }
+
+                    self.update(data);
+                });
+            }
+        }
+
 		this.init = function() {
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
 			});
+
+            this.bind();
 
 			/*/
 			 this.svg.setting({
