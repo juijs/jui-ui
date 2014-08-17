@@ -24,7 +24,7 @@ var table_data = [
 
 var t1;
 
-jui.ready([ "uix.table", "util" ], function(xtable, _) {
+jui.ready([ "uix.xtable", "util" ], function(xtable, _) {
     t1 = xtable("#t1", {
         fields: [ "name", "age", "location", "etc" ],
         sort: true,
@@ -51,6 +51,16 @@ jui.ready([ "uix.table", "util" ], function(xtable, _) {
 
         $("#t1").find("th:last-child").trigger("click");
         assert.ok(t1.get(0).data.etc == "123", "오름차순 정렬 확인");
+    });
+
+    QUnit.test("테이블 필터 테스트", function(assert) {
+        t1.filter("name", "ng");
+        assert.ok(t1.list().length == 2, "기본 필터 확인");
+
+        t1.filter("age", 30, function(target, keyword) {
+            if(target >= keyword) return true;
+        });
+        assert.ok(t1.list().length == 1, "커스텀 필터 확인");
     });
 
     QUnit.done(function() {

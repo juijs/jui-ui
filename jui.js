@@ -479,7 +479,7 @@
 					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
 					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
 					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object") ? true : false,
+					"object": (typeof(value) == "object" && value !== null) ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
@@ -3717,7 +3717,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 	 * 
 	 */
 	var UI = function() {
-		var ddUi = null, target = null;
+		var ddUi = null, target = null, list = [];
 		
 		
 		/**
@@ -3775,8 +3775,10 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 		function setEventKeyup(self) {
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
-				
-				createDropdown(self, getFilteredWords(self, $(this).val()));
+
+                list = getFilteredWords(self, $(this).val());
+				createDropdown(self, list);
+
 				return false;
 			});
 		}
@@ -3800,6 +3802,10 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 		this.update = function(words) {
 			this.options.words = words;
 		}
+
+        this.list = function() {
+            return list;
+        }
 	}
 
     UI.setting = function() {

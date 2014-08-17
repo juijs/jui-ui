@@ -479,7 +479,7 @@
 					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
 					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
 					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object") ? true : false,
+					"object": (typeof(value) == "object" && value !== null) ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
