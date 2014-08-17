@@ -3426,6 +3426,29 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			
 			$resizer.data('event', true);
 		}
+
+        function initLayout(self) {
+            for(var i = 0, len = directions.length; i < len; i++) {
+                var direct = ui_layout[directions[i]];
+
+                if(direct) {
+                    ui_layout.root.append(direct);
+
+                    if(directions[i] != 'center') {
+                        if(ui_options[directions[i]].resize) {
+                            if(!direct.resizer) {
+                                direct.resizer = $("<div class='resize " + directions[i] + "' />");
+                            }
+
+                            ui_layout.root.append(direct.resizer);
+                            setResizer(directions[i]);
+                        }
+                    }
+                }
+            }
+
+            self.resize();
+        }
 	
 	
 		/**
@@ -3473,7 +3496,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			};
 			
 			ui_options = opts;
-			this.update();
+			initLayout(this);
 			
 			$(window).on('resize', function(e) {
 				self.resize();
@@ -3482,31 +3505,9 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			return this; 			
 		}
 		
-		this.update = function() {
-			for(var i = 0, len = directions.length; i < len; i++) {
-				var direct = ui_layout[directions[i]];
-				
-				if(direct) {
-					ui_layout.root.append(direct);
-					
-					if(directions[i] != 'center') {
-						if(ui_options[directions[i]].resize) {
-							if(!direct.resizer) {
-								direct.resizer = $("<div class='resize " + directions[i] + "' />");
-							}
-
-							ui_layout.root.append(direct.resizer);		
-							setResizer(directions[i]);
-						}
-					}
-				}
-			}
-			
-			this.resize();
-		}
-		
 		this.resize = function() {
-			var $obj = null, $option = null, sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
+			var $obj = null, $option = null;
+            var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
 			
 			$obj = ui_layout.top;
 			$option = this.options.top;
