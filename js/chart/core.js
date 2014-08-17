@@ -89,11 +89,16 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			return this._area;
 		}
 
-        this.bind = function(ui) {
-            var self = this,
-                bind = _.typeCheck("object", ui) ? ui : this.get("bind");
+        this.bind = function(bind) {
+            var self = this;
 
-            bind.callAfter("update", function() {
+            bind.callAfter("update", update);
+            bind.callAfter("sort", update);
+            bind.callAfter("append", update);
+            bind.callAfter("insert", update);
+            bind.callAfter("remove", update);
+
+            function update() {
                 var data = [];
 
                 for(var i = 0; i < bind.count(); i++) {
@@ -101,7 +106,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
                 }
 
                 self.update(data);
-            });
+            }
         }
 
 		this.init = function() {
@@ -110,7 +115,9 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 				height : this.get("height")
 			});
 
-            this.bind();
+            if(this.get("bind") != null) {
+                this.bind(this.get("bind"));
+            }
 
 			/*/
 			 this.svg.setting({
