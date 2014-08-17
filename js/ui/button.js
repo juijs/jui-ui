@@ -1,4 +1,4 @@
-jui.defineUI("ui.button", [ "jquery" ], function($) {
+jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -13,8 +13,8 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 				className = "active",
 				index = this.options.index,
 				value = this.options.value;
-			
-			$(self.element).find(".btn").each(function(i) {
+
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "event") {
 					if(e.currentTarget == this) on(i, this);
 					else off(this);
@@ -28,31 +28,31 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 					}
 				}
 			});
-			
+
 			function on(i, elem) {
 				var value = $(elem).attr("value"),
 					text = $(elem).text();
-				
+
 				self.data = { index: i, value: value, text: text };
 				$(elem).addClass(className);
 			}
-			
+
 			function off(elem) {
 				$(elem).removeClass(className);
 			}
 		}
-		
+
 		this.init = function() {
 			var self = this;
-			
+
 			// Event
-			this.ui.addEvent(self.element, "click", ".btn", function(e) {
+			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
-				
+
 				e.preventDefault();
 			});
-			
+
 			// Init
 			if(this.options.value != "") {
 				this._setting("init", this.options.value, "value");
@@ -65,15 +65,15 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 	var UICheck = function() {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
-		
+
 		// Private
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
 				index = this.options.index,
 				value = this.options.value;
-				
-			$(self.element).find(".btn").each(function(i) {
+
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "init") {
 					if(order == "value") {
 						if(inArray(value, $(this).attr("value"))) on(i, this);
@@ -151,7 +151,19 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 		}
 		
 		this.getValue = function() {
-			return ui_list[this.options.type].data.value;
+            var data = this.getData();
+
+            if(_.typeCheck("array", data)) { // 타입이 체크일 경우
+                var values = [];
+
+                for(var i = 0; i < data.length; i++) {
+                    values[i] = (data[i] != null) ? data[i].value : data[i];
+                }
+
+                return values;
+            }
+
+			return data.value;
 		}
 
 		this.reload = function() {

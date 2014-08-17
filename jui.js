@@ -1412,7 +1412,7 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	return UICore;
 });
-jui.defineUI("ui.button", [ "jquery" ], function($) {
+jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -1427,8 +1427,8 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 				className = "active",
 				index = this.options.index,
 				value = this.options.value;
-			
-			$(self.element).find(".btn").each(function(i) {
+
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "event") {
 					if(e.currentTarget == this) on(i, this);
 					else off(this);
@@ -1442,31 +1442,31 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 					}
 				}
 			});
-			
+
 			function on(i, elem) {
 				var value = $(elem).attr("value"),
 					text = $(elem).text();
-				
+
 				self.data = { index: i, value: value, text: text };
 				$(elem).addClass(className);
 			}
-			
+
 			function off(elem) {
 				$(elem).removeClass(className);
 			}
 		}
-		
+
 		this.init = function() {
 			var self = this;
-			
+
 			// Event
-			this.ui.addEvent(self.element, "click", ".btn", function(e) {
+			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
 				self.ui.emit("change", [ self.data, e ]);
-				
+
 				e.preventDefault();
 			});
-			
+
 			// Init
 			if(this.options.value != "") {
 				this._setting("init", this.options.value, "value");
@@ -1479,15 +1479,15 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 	var UICheck = function() {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
-		
+
 		// Private
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
 				index = this.options.index,
 				value = this.options.value;
-				
-			$(self.element).find(".btn").each(function(i) {
+
+			$(self.element).children(".btn").each(function(i) {
 				if(type == "init") {
 					if(order == "value") {
 						if(inArray(value, $(this).attr("value"))) on(i, this);
@@ -1565,7 +1565,19 @@ jui.defineUI("ui.button", [ "jquery" ], function($) {
 		}
 		
 		this.getValue = function() {
-			return ui_list[this.options.type].data.value;
+            var data = this.getData();
+
+            if(_.typeCheck("array", data)) { // 타입이 체크일 경우
+                var values = [];
+
+                for(var i = 0; i < data.length; i++) {
+                    values[i] = (data[i] != null) ? data[i].value : data[i];
+                }
+
+                return values;
+            }
+
+			return data.value;
 		}
 
 		this.reload = function() {
@@ -1659,7 +1671,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 			}
 		}
 		
-		function getElement(target) {
+		function getElement(target) { // 드롭다운 메뉴 타겟
 			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
 		}
 		
@@ -3066,12 +3078,14 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self, message) {
-			$tooltip =
-				$("<div id='TOOLTIP_" + self.timestamp + "' class='tooltip tooltip-" + self.options.position + " tooltip-" + self.options.color + "'>" + 
-					"<div class='anchor'></div>" +
-					"<div class='title'>" + message + "</div>" +
-				"</div>");
+		function createTooltip(self, title) {
+            // 메시지 템플릿 적용
+			$tooltip = $(self.tpl.message({
+                timestamp: self.timestamp,
+                position: self.options.position,
+                color: self.options.color,
+                title: title
+            }));
 			
 			// 스타일 옵션
 			if(self.options.width) 
@@ -3110,6 +3124,37 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 				y: (y < 1) ? 1 : y
 			}
 		}
+
+        function hideTooltip(self, e) {
+            clearTimeout(delay);
+
+            if($tooltip != null) {
+                $tooltip.remove();
+                $tooltip = null;
+
+                pos = {};
+            }
+
+            if(delay != null) {
+                self.emit("hide", [ e ]);
+                delay = null;
+            }
+        }
+
+        function showTooltip(self, e) {
+            if($tooltip) hideTooltip(self, e);
+
+            var message = ((self.options.title) ? self.options.title : title);
+
+            if(message != "") {
+                createTooltip(self, message);
+
+                $tooltip.css({
+                    "left": pos.x,
+                    "top": pos.y
+                });
+            }
+        }
 		
 		
 		/**
@@ -3125,57 +3170,36 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 			$(this.root).removeAttr("title");
 			
 			// 기존의 설정된 이벤트 제거
-			$(this.root).unbind(opts.type).unbind("mouseout");
+			$(this.root).unbind(opts.showType).unbind(opts.hideType);
 			
 			// 보이기 이벤트
-			this.addEvent(this.root, opts.type, function(e) {
-				delay = setTimeout(function() {
-					self.show();
+			this.addEvent(this.root, opts.showType, function(e) {
+                if(delay == null) {
+                    delay = setTimeout(function () {
+                        showTooltip(self, e);
 
-                    if($tooltip != null) {
-                        self.emit("show", [ $tooltip.get(0), e ]);
+                        if ($tooltip != null) {
+                            self.emit("show", [ $tooltip.get(0), e ]);
+                        }
+                    }, opts.delay);
+                } else {
+                    if(opts.showType == opts.hideType) {
+                        hideTooltip(self, e);
                     }
-				}, opts.delay);
-				
+                }
+
 				return false;
 			});
 			
 			// 숨기기 이벤트
-			this.addEvent(this.root, "mouseout", function(e) {
-				clearTimeout(delay);
-				self.hide();
+            if(opts.showType != opts.hideType) {
+                this.addEvent(this.root, opts.hideType, function (e) {
+                    hideTooltip(self, e);
 
-                if($tooltip == null) {
-                    self.emit("hide", [ e ]);
-                }
-				return false;
-			});
-			
-			return this;
-		}
-		
-		this.hide = function() {
-			if($tooltip != null) { 
-				$tooltip.remove();
-				$tooltip = null;
-				
-				pos = {};
-			}
-		}
-		
-		this.show = function() {
-			if($tooltip) this.hide();
-
-            var message = ((this.options.title) ? this.options.title : title);
-            if(message != "") {
-                createTooltip(this, message);
-
-                $tooltip.css({
-                    "left": pos.x,
-                    "top": pos.y
+                    return false;
                 });
             }
-		}		
+		}
 	}
 
     UI.setting = function() {
@@ -3186,8 +3210,14 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                 width: 150,
                 align: "left",
                 delay: 0,
-                type: "mouseover",
-                title: ""
+                showType: "mouseover",
+                hideType: "mouseout",
+                title: "",
+                tpl: {
+                    message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                            "</div>"
+                }
             }
         }
     }
@@ -4744,7 +4774,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
         }
 
         this.sortRows = function(name, isDesc) {
-            var self = this, qs = _.sort(rows);
+            var qs = _.sort(rows);
 
             if(isDesc) {
                 qs.setCompare(function(a, b) {
@@ -4769,12 +4799,12 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
             function getValue(row) {
                 var value = row.data[name];
 
-                if(!isNaN(value) && value != null) {
-                    return parseInt(value);
-                }
-
                 if(typeof(value) == "string") {
                     return value.toLowerCase();
+                } else {
+                    if(!isNaN(value) && value != null) {
+                        return value;
+                    }
                 }
 
                 return "";
@@ -5352,7 +5382,10 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		
 		this.init = function() {
 			var opts = this.options;
-			
+
+            // @Deprecated, 'rows'는 의미상 맞지 않아 차후 삭제
+            opts.data = (opts.rows != null) ? opts.rows : opts.data;
+
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
 				table: $(this.root),
@@ -5381,8 +5414,8 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
                 setEventSort(this);
 			}
 			
-			if(opts.rows.length > 0) {
-				this.update(opts.rows);
+			if(opts.data.length > 0) {
+				this.update(opts.data);
 			} else {
 				this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
 			}
@@ -5991,7 +6024,8 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
                 fields: null,
                 csv: null,
                 csvNames: null,
-                rows: [],
+                data: [],
+                rows: null, // @Deprecated
                 colshow: false,
                 scroll: false,
                 scrollHeight: 200,
@@ -7488,6 +7522,9 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		this.init = function() {
 			var opts = this.options;
 
+            // @Deprecated, 'rows'는 의미상 맞지 않아 차후 삭제
+            opts.data = (opts.rows != null) ? opts.rows : opts.data;
+
             // 루트가 테이블일 경우, 별도 처리
             if(this.root.tagName == "TABLE") {
                 var $root = $(this.root).wrap("<div class='xtable'></div>");
@@ -7518,8 +7555,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			}
 			
 			// 데이터가 있을 경우
-			if(opts.rows) {
-				this.update(opts.rows);
+			if(opts.data) {
+				this.update(opts.data);
 			}
 			
 			// 로딩 템플릿 체크 (opts.sortLoading으로 체크하지 않음)
@@ -7641,14 +7678,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		    // 해당 컬럼에 해당하는 값 가져오기
 			function getValue(data) {
 		    	var value = data[column.name];
-		    	
-    			if(!isNaN(value) && value != null) {
-    				return parseInt(value);
-    			} 
-    			
-    			if(typeof(value) == "string") {
-    				return value.toLowerCase();
-    			}
+
+                if(typeof(value) == "string") {
+                    return value.toLowerCase();
+                } else {
+                    if(!isNaN(value) && value != null) {
+                        return value;
+                    }
+                }
     			
     			return "";
 		    }
@@ -7924,7 +7961,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
                 csv: null,
                 csvNames: null,
                 csvCount: 10000,
-                rows: [],
+                data: [],
+                rows: null, // @Deprecated
                 colshow: false,
                 expand: false,
                 expandEvent: true,

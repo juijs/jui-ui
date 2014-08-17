@@ -615,7 +615,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
         }
 
         this.sortRows = function(name, isDesc) {
-            var self = this, qs = _.sort(rows);
+            var qs = _.sort(rows);
 
             if(isDesc) {
                 qs.setCompare(function(a, b) {
@@ -640,12 +640,12 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
             function getValue(row) {
                 var value = row.data[name];
 
-                if(!isNaN(value) && value != null) {
-                    return parseInt(value);
-                }
-
                 if(typeof(value) == "string") {
                     return value.toLowerCase();
+                } else {
+                    if(!isNaN(value) && value != null) {
+                        return value;
+                    }
                 }
 
                 return "";
@@ -1223,7 +1223,10 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		
 		this.init = function() {
 			var opts = this.options;
-			
+
+            // @Deprecated, 'rows'는 의미상 맞지 않아 차후 삭제
+            opts.data = (opts.rows != null) ? opts.rows : opts.data;
+
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
 				table: $(this.root),
@@ -1252,8 +1255,8 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
                 setEventSort(this);
 			}
 			
-			if(opts.rows.length > 0) {
-				this.update(opts.rows);
+			if(opts.data.length > 0) {
+				this.update(opts.data);
 			} else {
 				this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
 			}
@@ -1862,7 +1865,8 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
                 fields: null,
                 csv: null,
                 csvNames: null,
-                rows: [],
+                data: [],
+                rows: null, // @Deprecated
                 colshow: false,
                 scroll: false,
                 scrollHeight: 200,

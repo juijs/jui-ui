@@ -68,7 +68,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 			}
 		}
 		
-		function getElement(target) {
+		function getElement(target) { // 드롭다운 메뉴 타겟
 			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
 		}
 		
