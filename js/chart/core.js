@@ -93,17 +93,15 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             var self = this,
                 bind = _.typeCheck("object", ui) ? ui : this.get("bind");
 
-            if(bind.type == "uix.table") {
-                bind.callAfter("update", function() {
-                    var data = [];
+            bind.callAfter("update", function() {
+                var data = [];
 
-                    for(var i = 0; i < bind.count(); i++) {
-                        data.push(bind.get(i).data);
-                    }
+                for(var i = 0; i < bind.count(); i++) {
+                    data.push(bind.get(i).data);
+                }
 
-                    self.update(data);
-                });
-            }
+                self.update(data);
+            });
         }
 
 		this.init = function() {
