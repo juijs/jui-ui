@@ -4496,15 +4496,10 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
         }
 
         function initColumnRows(type, row) {
-            if(type == "reload") {
+            if(type == "reload" || type == "append") {
                 for(var i = 0; i < columns.length; i++) {
                     columns[i].list[row.index] = row.list[i];
                     columns[i].data[row.index] = row.data[columns[i].name];
-                }
-            } else if(type == "append") {
-                for(var i = 0; i < columns.length; i++) {
-                    columns[i].list.push(row.list[i]);
-                    columns[i].data.push(row.data[columns[i].name]);
                 }
             } else if(type == "remove") {
                 for(var i = 0; i < columns.length; i++) {
