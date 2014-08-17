@@ -248,6 +248,9 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		this.init = function() {
 			var opts = this.options;
 
+            // @Deprecated, 'rows'는 의미상 맞지 않아 차후 삭제
+            opts.data = (opts.rows != null) ? opts.rows : opts.data;
+
             // 루트가 테이블일 경우, 별도 처리
             if(this.root.tagName == "TABLE") {
                 var $root = $(this.root).wrap("<div class='xtable'></div>");
@@ -278,8 +281,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			}
 			
 			// 데이터가 있을 경우
-			if(opts.rows) {
-				this.update(opts.rows);
+			if(opts.data) {
+				this.update(opts.data);
 			}
 			
 			// 로딩 템플릿 체크 (opts.sortLoading으로 체크하지 않음)
@@ -684,7 +687,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
                 csv: null,
                 csvNames: null,
                 csvCount: 10000,
-                rows: [],
+                data: [],
+                rows: null, // @Deprecated
                 colshow: false,
                 expand: false,
                 expandEvent: true,

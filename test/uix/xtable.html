@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>[JENNIFER UI Test] - Table</title>
+<title>[JENNIFER UI Test] - XTable</title>
 <link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
 
 <script src="../../lib/qunit-1.14.0.js"></script>
@@ -13,6 +13,7 @@
 <script src="../../js/ui/dropdown.js"></script>
 <script src="../../js/ui/modal.js"></script>
 <script src="../../js/uix/table.js"></script>
+<script src="../../js/uix/xtable.js"></script>
 
 <script>
 var table_data = [
@@ -23,8 +24,8 @@ var table_data = [
 
 var t1;
 
-jui.ready([ "uix.table", "util" ], function(table, _) {
-    t1 = table("#t1", {
+jui.ready([ "uix.table", "util" ], function(xtable, _) {
+    t1 = xtable("#t1", {
         fields: [ "name", "age", "location", "etc" ],
         sort: true,
         data: _.clone(table_data),
