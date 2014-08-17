@@ -29,12 +29,12 @@ jui.ready([ "uix.tab" ], function(tab) {
 
 <script>
     QUnit.test("탭 기본 테스트", function(assert) {
-        assert.ok($("#t1").find("li:last-child").hasClass("active"), "활성화 탭 확인");
+        assert.ok($(t1.root).find("li:last-child").hasClass("active"), "활성화 탭 확인");
         assert.ok($("#t1_contents").find("div:last-child").text() == "script", "활성화 탭 내용 확인");
     });
 
     QUnit.test("탭 클릭 테스트", function(assert) {
-        $("#t1").find("li:eq(1)").trigger("click");
+        $(t1.root).find("li:eq(1)").trigger("click");
 
         assert.ok($("#t1").find("li:eq(1)").hasClass("active"), "활성화 탭 확인");
         assert.ok($("#t1_contents").find("div:eq(1)").text() == "css", "활성화 탭 내용 확인");

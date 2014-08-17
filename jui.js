@@ -7074,7 +7074,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
 			
 			// 기본 스타일 & Modal 스타일 & Body로 강제 이동
 			$body.children(this.selector).remove();
-			$win_root.css(opts).appendTo($body);
+			$win_root.css($.extend({ position: "absolute" }, opts)).appendTo($body);
 			
 			// 윈도우 이동
 			if(opts.move) {

@@ -45,10 +45,10 @@ jui.ready([ "uix.table", "util" ], function(table, _) {
     });
 
     QUnit.test("테이블 정렬 테스트", function(assert) {
-        $("#t1").find("th:last-child").trigger("click");
+        $(t1.root).find("th:last-child").trigger("click");
         assert.ok(t1.get(0).data.etc == "BB", "내림차순 정렬 확인");
 
-        $("#t1").find("th:last-child").trigger("click");
+        $(t1.root).find("th:last-child").trigger("click");
         assert.ok(t1.get(0).data.etc == "123", "오름차순 정렬 확인");
     });
 
