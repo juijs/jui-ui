@@ -63,22 +63,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
             }
-
-			/*/
-			 this.svg.setting({
-			 x: getX,
-			 cx: getX,
-			 x1: getX,
-			 x2: getX,
-			 y: getY,
-			 cy: getY,
-			 y1: getY,
-			 y2: getY
-			 });
-
-			 function getX(value) { return value + self.area.chart.x; }
-			 function getY(value) { return value + self.area.chart.y; }
-			 /**/
+            
 		}
 
 		this.render = function() {

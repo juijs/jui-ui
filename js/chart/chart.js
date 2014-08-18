@@ -187,8 +187,11 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 			
 			if (widget != null) {
 				for(var k in widget) {
-					var Obj = jui.include("chart.widget." + (widget[k].type || "title"));
-					new Obj(k, widget[k]).render(this);
+					if (widget[k].type || widget[k].title) {
+						var Obj = jui.include("chart.widget." + (widget[k].type || "title"));
+						new Obj(k, widget[k]).render(this);						
+					}
+
 				}
 			}
 			

@@ -201,7 +201,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 		this.drawBefore = function(chart) {
 			grid.type = grid.type || "block";
 			grid = this.setBlockDomain(chart, grid);
-			console.log(grid);
 		}
 
 		this.draw = function(chart) {
