@@ -2,7 +2,7 @@ jui.define("chart.brush.stack", [], function() {
 
 	var StackBrush = function(brush) {
 		var g, zeroY, count, width, barWidth, gauge;
-		var outerPadding = 15, innerPadding = 10;
+		var outerPadding = brush.outerPadding || 15;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));

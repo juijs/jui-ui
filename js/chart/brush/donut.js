@@ -4,6 +4,7 @@ jui.define("chart.brush.donut", [], function() {
 		this.drawBefore = function(chart) {
 			this.empty = brush.empty || 50;
 			this.innerCut = brush.innerCut || 5;
+			
 
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -19,7 +20,7 @@ jui.define("chart.brush.donut", [], function() {
 			this.centerY = height / 2;
 			this.startY = -this.w / 1.5;
 			this.startX = 0;
-			this.outerRadius = Math.abs(this.startY);
+			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius / this.rate) * this.empty;
 		}
 
@@ -31,7 +32,7 @@ jui.define("chart.brush.donut", [], function() {
 			var path = chart.svg.path(attr);
 
             // 속성 옵션 적용
-            path.attr(chart.attr(brush.type, brush.target[j]));
+            path.attr(chart.attr(brush.type, brush.target[0]));
 
 			// 바깥 지름 부터 그림
 			var startX = 0;

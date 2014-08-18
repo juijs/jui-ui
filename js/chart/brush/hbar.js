@@ -2,14 +2,14 @@ jui.define("chart.brush.hbar", [], function() {
 
 	var BarBrush = function(brush) {
 		var g, zeroY, series, count, width, barWidth;
-		var outerPadding = 15, innerPadding = 10;
+		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
 			zeroX = brush.x.scale(0);
 			series = chart.series();
-			count = chart.series(brush.target[0]).data.length;
+			count = chart.data().length;
 
 			height = brush.y.scale.rangeBand();
 			barHeight = (height - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;

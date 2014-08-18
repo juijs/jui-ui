@@ -71,6 +71,10 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
             // series_list
             for (var key in series) {
                 series_list.push(key);
+                var obj = series[key];
+                
+                obj.min = 0;
+                obj.max = 0;
             }
 
             // series 데이타 구성
@@ -142,7 +146,7 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 						orient = 'left';
 					else if (k == 'y1')
 						orient = 'right';
-
+						
 					this.setDomain(grid[k]);
 					var Grid = jui.include("chart.grid." + (grid[k].type || "block"))
 					this[k] = new Grid(orient, grid[k]).render(this);
@@ -230,7 +234,7 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 				axis.step = axis.step || 10;
 
 				var unit = Math.ceil((max - min) / axis.step);
-
+				
 				var start = 0;
 				while (start < max) {
 					start += unit;
@@ -241,8 +245,13 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 					end -= unit;
 				}
 
-				axis.domain = [end, start];
-				axis.step = Math.abs(start / unit) + Math.abs(end / unit);
+				if (unit == 0) {
+					axis.domain = [0, 0];
+				} else {
+					axis.domain = [end, start];
+					axis.step = Math.abs(start / unit) + Math.abs(end / unit);					
+				}
+
 
 			}
 		}

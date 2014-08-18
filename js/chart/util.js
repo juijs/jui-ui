@@ -180,7 +180,10 @@ jui.define("chart.util", ["util"], function(_) {
 						return _domain;
 					}
 
-					_domain = values;
+					for(var i = 0; i < values.length; i++) {
+						_domain[i] = values[i];	
+					}
+					
 
 					return this;
 				}
@@ -191,7 +194,9 @@ jui.define("chart.util", ["util"], function(_) {
 						return _range;
 					}
 
-					_range = values;
+					for(var i = 0; i < values.length; i++) {
+						_range[i] = values[i];	
+					}
 
 					return this;
 				}
@@ -426,7 +431,9 @@ jui.define("chart.util", ["util"], function(_) {
 						return _domain;
 					}
 
-					_domain = values;
+					for(var i = 0; i < values.length; i++) {
+						_domain[i] = values[i];	
+					}
 
 					return this;
 				}
@@ -437,7 +444,9 @@ jui.define("chart.util", ["util"], function(_) {
 						return _range;
 					}
 
-					_range = values;
+					for(var i = 0; i < values.length; i++) {
+						_range[i] = values[i];	
+					}
 
 					return this;
 				}
