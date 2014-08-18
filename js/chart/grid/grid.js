@@ -1,6 +1,5 @@
-jui.define("chart.grid", ["util"], function(_) {
+jui.define("chart.grid", [], function() {
 	var Grid = function() {
-		
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == 'radar' || grid.type == 'block') {
 
@@ -95,6 +94,7 @@ jui.define("chart.grid", ["util"], function(_) {
 
 			return this.draw(chart);
 		}
+
 	}
 
 	return Grid;

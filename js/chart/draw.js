@@ -1,8 +1,5 @@
-jui.define("chart.draw", ["util"], function(_) {
+jui.define("chart.draw", [ "util" ], function(_) {
 	var Draw = function() {
-
-		this.borderWidth = 0.5;
-
 		this.render = function(chart) {
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
@@ -14,6 +11,7 @@ jui.define("chart.draw", ["util"], function(_) {
 
 			return this.draw(chart);
 		}
+
 		// 2d rotate
 		this.rotate = function(x, y, radian) {
 			return {
