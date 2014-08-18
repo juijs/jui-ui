@@ -405,11 +405,33 @@ jui.define("util.svg",
             } else {
                 var rect = root.element.getBoundingClientRect();
 
+                if (rect.width == 0 && rect.height == 0) {
+                    rect = this.caculateSize();
+                }
+
                 return {
                     width: rect.width,
                     height: rect.height
                 }
             }
+        }
+        
+        this.caculateSize = function() {
+            var height_list = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'];
+            var width_list = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'];
+            
+            var computedStyle = window.getComputedStyle(root.element);
+            var size = { width : 0, height : 0 };
+            
+            for(var i = 0; i < height_list.length;i++) {
+                size.height += parseFloat(computedStyle[height_list[i]]);
+            }
+            
+            for(var i = 0; i < width_list.length;i++) {
+                size.width += parseFloat(computedStyle[width_list[i]]);
+            }
+            
+            return size; 
         }
 
         this.clear = function() {
