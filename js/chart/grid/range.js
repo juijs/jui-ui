@@ -212,6 +212,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 
 		this.drawBefore = function(chart) {
+			grid = this.setRangeDomain(chart, grid);
 		}
 
 		this.draw = function(chart) {

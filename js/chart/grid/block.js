@@ -199,9 +199,13 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 
 		this.drawBefore = function(chart) {
+			grid.type = grid.type || "block";
+			grid = this.setBlockDomain(chart, grid);
+			console.log(grid);
 		}
 
 		this.draw = function(chart) {
+
 			var width = chart.area('width'), height = chart.area('height'), max = (orient == 'left' || orient == 'right') ? height : width;
 
 			var obj = drawBlock(chart, orient, grid.domain, [0, max], grid.full);

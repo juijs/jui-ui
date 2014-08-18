@@ -160,7 +160,6 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 					else if (k == 'y1')
 						orient = 'right';
 						
-					this.setDomain(grid[k]);
 					var Grid = jui.include("chart.grid." + (grid[k].type || "block"))
 					this[k] = new Grid(orient, grid[k]).render(this);
 				}
@@ -194,88 +193,6 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 			}
 			
 			this.emit("draw", []);
-		}
-
-		this.setDomain = function(axis) {
-
-			var series = this.series();
-			var data = this.data();
-
-			if (axis.type == 'radar') {
-
-				if (axis.target && !axis.domain) {
-					var domain = [];
-					for (var i = 0; i < data.length; i++) {
-						domain.push(data[i][axis.target]);
-					}
-
-					axis.domain = domain;
-					axis.step = axis.step || 10;
-					axis.max = axis.max || 100;
-				}
-
-				return;
-			}
-
-			if ( typeof axis.target == 'string' || typeof axis.target == 'function') {
-				axis.target = [axis.target];
-			}
-
-			if (axis.target && axis.target.length) {
-				var max = 0;
-				var min = 0;
-
-				for (var i = 0; i < axis.target.length; i++) {
-					var s = axis.target[i];
-
-					if ( typeof s == 'function') {
-						for (var index = 0; index < data.length; index++) {
-							var row = data[index];
-
-							var value = s(row);
-
-							if (max < value)
-								max = value;
-							if (min > value)
-								min = value;
-
-						}
-					} else {
-						var _max = series[s].max;
-						var _min = series[s].min;
-						if (max < _max)
-							max = _max;
-						if (min > _min)
-							min = _min;
-					}
-
-				}
-
-				axis.max = max;
-				axis.min = min;
-				axis.step = axis.step || 10;
-
-				var unit = Math.ceil((max - min) / axis.step);
-				
-				var start = 0;
-				while (start < max) {
-					start += unit;
-				}
-
-				var end = 0;
-				while (end > min) {
-					end -= unit;
-				}
-
-				if (unit == 0) {
-					axis.domain = [0, 0];
-				} else {
-					axis.domain = [end, start];
-					axis.step = Math.abs(start / unit) + Math.abs(end / unit);					
-				}
-
-
-			}
 		}
 	}
 

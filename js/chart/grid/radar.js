@@ -64,6 +64,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 
 		this.drawBefore = function(chart) {
+			grid = this.setBlockDomain(chart, grid);
 		}
 
 		this.xy = function(index, rate) {

@@ -193,6 +193,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 
 
 		this.drawBefore = function(chart) {
+			grid = this.setRangeDomain(chart, grid);
 		}
 
 		this.draw = function(chart) {
