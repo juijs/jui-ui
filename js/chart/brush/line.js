@@ -1,80 +1,64 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
-		var g, zeroY, count, width;
-        var pos = brush.position || "middle";
-
-        function getPositionX() {
-            if (pos == "left")
-                return 0;
-            else if (pos == "right")
-                return width;
-
-            return width / 2;
-        }
-
-		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
-
-			zeroY = brush.y.scale(0);
-			count = chart.data().length;
-			width = chart.x.scale.rangeBand();
-		}
 
 		this.draw = function(chart) {
-			var path = {};
+            var g = chart.svg.group().translate(chart.area('x'), chart.area('y')),
+                path = this.getPath(brush, chart);
 
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(i) + getPositionX(),
+            this.drawLine(brush, chart, path, g);
+		}
+
+        this.getPath = function(brush, chart) {
+            var path = [],
+                posX = (brush.full) ? 0 : chart.x.scale.rangeBand() / 2;
+
+            for (var i = 0; i < chart.data().length; i++) {
+                var startX = brush.x.scale(i) + posX,
                     valueSum = 0;
 
-				for (var j = 0; j < brush.target.length; j++) {
+                for (var j = 0; j < brush.target.length; j++) {
                     var value = chart.series(brush.target[j]).data[i];
 
                     if (brush.nest === false && j > 0) {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
                     }
 
-					if (!path[j]) {
-						path[j] = {
-							x : [],
-							y : []
-						};
-					}
+                    if (!path[j]) {
+                        path[j] = {
+                            x : [],
+                            y : []
+                        };
+                    }
 
-					path[j].x.push(startX);
-					path[j].y.push(brush.y.scale(value + valueSum));
-				}
-			}
+                    path[j].x.push(startX);
+                    path[j].y.push(brush.y.scale(value + valueSum));
+                }
+            }
 
-			for (var k in path) {
-				var p = chart.svg.path({
-					stroke : this.color(k),
-					"stroke-width" : 2,
-					fill : "transparent"
-				});
+            return path;
+        }
 
-				var x = path[k].x, y = path[k].y, px = [], py = [];
+        this.drawLine = function(brush, chart, path, g) {
+            for (var k = 0; k < path.length; k++) {
+                var p = chart.svg.path({
+                    stroke : this.color(k),
+                    "stroke-width" : 2,
+                    fill : "transparent"
+                });
 
-				if (brush.curve) {
-					px = this.curvePoints(x);
-					py = this.curvePoints(y);
-				}
+                var x = path[k].x,
+                    y = path[k].y;
 
-				for (var i = 0; i < x.length - 1; i++) {
-					p.MoveTo(x[i], y[i]);
+                for (var i = 0; i < x.length - 1; i++) {
+                    p.MoveTo(x[i], y[i]);
+                    p.LineTo(x[i + 1], y[i + 1]);
+                }
 
-					if (brush.smooth) {
-						p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
-					} else {
-						p.LineTo(x[i + 1], y[i + 1]);
-					}
-				}
-
-                p.attr(chart.attr(brush.type, brush.target[j]));
-				g.append(p);
-			}
-		}
+                p.attr(chart.attr(brush.type, brush.target[k]));
+                g.append(p);
+            }
+        }
 	}
 
 	return LineBrush;

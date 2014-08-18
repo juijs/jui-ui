@@ -1,44 +1,41 @@
 jui.define("chart.brush.point", [], function() {
 
 	var PointBrush = function(brush) {
-		var g, zeroY, count, width;
-		var r = 5, pos = brush.position || "middle"
 
-		function getPositionX() {
-			if (pos == "left")
-				return 0;
-			else if (pos == "right")
-				return width;
+        this.draw = function(chart) {
+            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+            var points = [],
+                posX = (brush.full) ? 0 : chart.x.scale.rangeBand() / 2;
 
-			return width / 2;
-		}
+            for (var i = 0; i < chart.data().length; i++) {
+                points[i] = brush.x.scale(i) + posX;
+            }
 
-		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+            this.drawPoint(brush, chart, points, g);
+        }
 
-			zeroY = brush.y.scale(0);
-			count = chart.data(0).length;
-			width = brush.x.scale.rangeBand();
-		}
+		this.drawPoint = function(brush, chart, points, g) {
+            for (var i = 0; i < points.length; i++) {
+                var valueSum = 0;
 
-		this.draw = function(chart) {
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(i) + getPositionX();
+                for (var j = 0; j < brush.target.length; j++) {
+                    var value = chart.series(brush.target[j]).data[i];
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.series(brush.target[j]).data[i],
-                        startY = brush.y.scale(value),
-                        circle = chart.svg.circle({
-                            cx : startX,
-                            cy : startY,
-                            r : r,
-                            fill : this.color(j)
-                        });
+                    if (brush.nest === false && j > 0) {
+                        valueSum += chart.series(brush.target[j - 1]).data[i];
+                    }
+
+                    var circle = chart.svg.circle({
+                        cx: points[i],
+                        cy: brush.y.scale(value + valueSum),
+                        r: 1,
+                        fill: this.color(j)
+                    });
 
                     circle.attr(chart.attr(brush.type, brush.target[j]));
-					g.append(circle);
-				}
-			}
+                    g.append(circle);
+                }
+            }
 		}
 	}
 
