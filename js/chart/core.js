@@ -4,72 +4,17 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 		function calculate(self) {
 			self._area = {};
 
-			var padding = self.get('padding');
-			var titleYWidth = self.get('titleYWidth');
-			var titleXHeight = self.get('titleXHeight');
+			var widget = self.get('widget');
+			
 			var max = self.svg.size();
 
 			var chart = {
-				width : max.width - padding * 2 - titleYWidth,
-				height : max.height - padding * 2 - titleXHeight,
-				x : padding + titleYWidth,
-				y : padding
+				width : max.width - (widget.left.size + widget.right.size),
+				height : max.height - (widget.top.size + widget.bottom.size),
+				x : widget.left.size,
+				y : widget.top.size
 			};
 
-			//TODO: 나중에  영역 계산 할 때 다시 필요
-			/*
-			// 메인 title 영역 계산
-			if (self.get('title')) {
-			chart.y += self.get('titleHeight');
-			chart.height -= self.get('titleHeight');
-
-			self.area.title = {
-			x : chart.x,
-			y : chart.y,
-			width : chart.width,
-			height : self.get('titleHeight')
-			}
-			}
-
-			// legend 영역 계산
-			if (self.get('legend')) {
-			chart.y += self.get('legendHeight');
-			chart.height -= self.get('legendHeight');
-
-			self.area.legend = {
-			x : chart.x,
-			y : chart.y,
-			width : chart.width,
-			height : self.get('legendHeight')
-			}
-			}
-
-			// Y axis Title 영역 계산
-			if (self.get('titleY')) {
-			chart.x += self.get('titleYWidth');
-			chart.width -= self.get('titleYWidth');
-
-			self.area.titleY = {
-			x : chart.x,
-			y : chart.y,
-			width : self.get('titleYWidth'),
-			height : chart.height
-			}
-			}
-
-			// X axis Title 영역 계산
-			if (self.get('titleX')) {
-			chart.height -= self.get('titleXHeight');
-
-			self.area.titleX = {
-			x : chart.x,
-			y : chart.y + chart.height,
-			width : chart.width,
-			height : self.get('titleXHeight')
-			}
-			}
-
-			*/
 			// chart 영역 계산
 			chart.x2 = chart.x + chart.width;
 			chart.y2 = chart.y + chart.height;

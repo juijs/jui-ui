@@ -1,7 +1,7 @@
 jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 	var UI = function() {
-		var _grid = [], _brush = [], _data, _series;
+		var _grid = [], _widget = [], _brush = [], _data, _series;
 
 		this.init = function() {
 			this.parent.init.call(this);
@@ -14,6 +14,14 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 			}
 
 			return _grid;
+		}
+		
+		this.widget = function(key) {
+			if (_widget[key]) {
+				return _widget[key];
+			}
+
+			return _widget;
 		}
 
 		this.brush = function(key) {
@@ -60,12 +68,17 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
             var data = this.get('data');
             var series = this.get('series');
             var grid = this.get('grid');
+            var widget = this.get('widget');
             // 내부적으로 완전히 clone 이 안되네?
             var brush = this.get('brush');
             var series_list = [];
 
             for (var k in grid) {
                 _grid[k] = grid[k];
+            }
+            
+            for (var k in widget) {
+                _widget[k] = widget[k];
             }
 
             // series_list
@@ -171,6 +184,15 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 			}
 			
+			var widget = this.widget();
+			
+			if (widget != null) {
+				for(var k in widget) {
+					var Obj = jui.include("chart.widget." + (widget[k].type || "title"));
+					new Obj(k, widget[k]).render(this);
+				}
+			}
+			
 			this.emit("draw", []);
 		}
 
@@ -264,18 +286,14 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 				"height" : "100%",
 
 				// style
-				"padding" : 30,
-				"barPadding" : 10,
-				"seriesPadding" : 1,
-				"titleHeight" : 50,
-				"titleYWidth" : 0,
-				"titleXHeight" : 0,
-
+				"widget" : {
+					left : { size : 50 },
+					right : { size : 50 },
+					bottom : { size : 50 },
+					top : { size : 50 }
+				},
+				
 				// chart
-				"tick" : 5,
-				"title" : "",
-				"titleY" : "",
-				"titleX" : "",
 				"theme" : {},
 				"labels" : [],
 				"series" : {},
