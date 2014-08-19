@@ -27,7 +27,7 @@ jui.define("chart.brush.rpoint", [], function() {
                 raw = chart.series(brush.x.key).data;
 
             for (var i = 0; i < chart.data().length; i++) {
-                points[i] = brush.x.scale(raw[i]);
+                points[i] = brush.x(raw[i]);
             }
 
             this.drawPoint(brush, chart, points, g);

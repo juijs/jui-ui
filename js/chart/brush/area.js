@@ -6,17 +6,17 @@ jui.define("chart.brush.area", [], function() {
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-			zeroY = brush.y.scale(0);
+			zeroY = brush.y(0);
 			maxY = chart.area('height');
 			count = chart.data().length;
-			width = chart.x.scale.rangeBand();
+			width = chart.x.rangeBand();
 		}
 
 		this.draw = function(chart) {
 			var path = [];
 
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(i) + 1, valueSum = 0;
+				var startX = brush.x(i) + 1, valueSum = 0;
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = chart.series(brush.target[j]).data[i];
@@ -33,7 +33,7 @@ jui.define("chart.brush.area", [], function() {
 					}
 
 					path[j].x.push(startX);
-					path[j].y.push(brush.y.scale(value + valueSum));
+					path[j].y.push(brush.y(value + valueSum));
 				}
 			}
 

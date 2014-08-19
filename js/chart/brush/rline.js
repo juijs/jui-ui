@@ -27,10 +27,10 @@ jui.define("chart.brush.rline", [], function() {
             }).translate(chart.area('x'), chart.area('y'));
 
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(raw[i]);
+				var startX = brush.x(raw[i]);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y.scale(chart.series(brush.target[j]).data[i]);
+					var startY = brush.y(chart.series(brush.target[j]).data[i]);
 
 					if (!path[j]) {
 						path[j] = {

@@ -10,13 +10,13 @@ jui.define("chart.brush.hstack", [], function() {
 			series = chart.series();
 			count = chart.data().length;
 
-			height = chart.y.scale.rangeBand();
+			height = chart.y.rangeBand();
 			barWidth = height - outerPadding * 2;
 		}
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startY = brush.y.scale(i) + outerPadding;
+				var startY = brush.y(i) + outerPadding;
 
 				var widthSum = 0;
 				var widthArr = [];
@@ -24,7 +24,7 @@ jui.define("chart.brush.hstack", [], function() {
 					var width = chart.series(brush.target[j]).data[i];
 
 					widthSum += width;
-					widthArr.push(brush.x.scale(width));
+					widthArr.push(brush.x(width));
 				}
 
 				var startX = 0;

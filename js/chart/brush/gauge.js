@@ -2,7 +2,7 @@ jui.define("chart.brush.gauge", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.empty = brush.empty || 80;
+			this.empty = (typeof brush.empty == undefined) ?  80 : parseInt(brush.empty);
 
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;

@@ -5,10 +5,10 @@ jui.define("chart.brush.point", [], function() {
         this.draw = function(chart) {
             var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
             var points = [],
-                posX = (brush.full) ? 0 : chart.x.scale.rangeBand() / 2;
+                posX = (brush.full) ? 0 : chart.x.rangeBand() / 2;
 
             for (var i = 0; i < chart.data().length; i++) {
-                points[i] = brush.x.scale(i) + posX;
+                points[i] = brush.x(i) + posX;
             }
 
             this.drawPoint(brush, chart, points, g);
@@ -27,7 +27,7 @@ jui.define("chart.brush.point", [], function() {
 
                     var circle = chart.svg.circle({
                         cx: points[i],
-                        cy: brush.y.scale(value + valueSum),
+                        cy: brush.y(value + valueSum),
                         r: 1,
                         fill: this.color(j)
                     });

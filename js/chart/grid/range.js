@@ -37,7 +37,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 			if (orient == 'left') {
 
-				var width = 30;
+				var width = chart.widget('left').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -66,7 +66,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
 							stroke : "black",
-							"stroke-width" : 0.2
+							"stroke-width" : 0.5
 						});
 
 						chart.svg.text({
@@ -78,7 +78,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'bottom') {
-				var height = 30;
+				var height = chart.widget('bottom').size;
 				var bar = 6;
 				var barY = bar;
 
@@ -119,7 +119,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'top') {
-				var height = 30;
+				var height = chart.widget('top').size;
 				var bar = 6;
 				var barY = height - bar;
 
@@ -161,7 +161,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 			} else if (orient == 'right') {
 
-				var width = 30;
+				var width = chart.widget('right').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -202,12 +202,13 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				}
 			}
 
-			return {
+			scale.result = {
 				g : g,
-				scale : scale,
 				ticks : ticks,
-				values : values
-			};
+				values : values 
+			}
+
+			return scale;
 		}
 
 
@@ -219,28 +220,31 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 			var width = chart.area('width'), height = chart.area('height');
 
 			if (orient == 'left' || orient == 'right') {
-				var obj = drawRange(chart, orient, grid.domain, [height, 0], grid.step, grid.format, grid.nice);
+				var scale = drawRange(chart, orient, grid.domain, [height, 0], grid.step, grid.format, grid.nice);
 			} else {
-				var obj = drawRange(chart, orient, grid.domain, [0, width], grid.step, grid.format, grid.nice);
+				var scale = drawRange(chart, orient, grid.domain, [0, width], grid.step, grid.format, grid.nice);
 			}
 
 			if (orient == 'left') {
-				var x = chart.area('x') - 30;
+				var x = chart.area('x') - chart.widget('left').size;
 				var y = chart.area('y');
 			} else if (orient == 'right') {
 				var x = chart.area('x2');
 				var y = chart.area('y');
 			} else if (orient == 'top') {
 				var x = chart.area('x');
-				var y = chart.area('y') - 30;
+				var y = chart.area('y') - chart.widget('top').size;
 			} else if (orient == 'bottom') {
 				var x = chart.area('x');
 				var y = chart.area('y2');
 			}
 
-			obj.g.translate(x, y);
-			obj.key = grid.key;
-			return obj;
+			
+
+			scale.result.g.translate(x, y);
+			scale.key = grid.key;
+			
+			return scale;
 		}
 	}
 

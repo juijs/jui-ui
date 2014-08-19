@@ -7,19 +7,19 @@ jui.define("chart.brush.bar", [], function() {
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-			zeroY = brush.y.scale(0);
+			zeroY = brush.y(0);
 			count = chart.data().length;
 
-			width = chart.x.scale.rangeBand();
+			width = chart.x.rangeBand();
 			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 		}
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x.scale(i) + outerPadding;
+				var startX = brush.x(i) + outerPadding;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y.scale(chart.series(brush.target[j]).data[i]);
+					var startY = brush.y(chart.series(brush.target[j]).data[i]);
 
 					if (startY <= zeroY) {
 						var r = chart.svg.rect({

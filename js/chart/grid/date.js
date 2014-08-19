@@ -34,7 +34,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 			var values = [];
 
 			if (orient == 'top') {
-				var height = 30;
+				var height = chart.widget('top').size;
 				var bar = 6;
 				var barY = height - bar;
 
@@ -70,7 +70,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					}));
 				}
 			} else if (orient == 'bottom') {
-				var height = 30;
+				var height = chart.widget('bottom').size;
 				var bar = 6;
 				var barY = height - bar;
 
@@ -109,7 +109,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 
 			} else if (orient == 'left') {
-				var width = 30;
+				var width = chart.widget('left').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -146,7 +146,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 
 			} else if (orient == 'right') {
-				var width = 30;
+				var width = chart.widget('right').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -183,12 +183,13 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 			}
 
-			return {
+			scale.result = {
 				g : g,
-				scale : scale,
 				ticks : ticks,
 				values : values
 			};
+			
+			return scale; 
 		}
 
 
@@ -208,46 +209,28 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 			}
 
 			var domain = grid.domain;
-			var obj = drawDate(chart, orient, grid.domain, [0, max], grid.step, grid.format);
+			var scale = drawDate(chart, orient, grid.domain, [0, max], grid.step, grid.format);
 
 			if (orient == 'left') {
-				var x = chart.area('x') - 30;
+				var x = chart.area('x') - chart.widget('left').size;
 				var y = chart.area('y');
 			} else if (orient == 'right') {
 				var x = chart.area('x2');
 				var y = chart.area('y');
 			} else if (orient == 'top') {
 				var x = chart.area('x');
-				var y = chart.area('y') - 30;
+				var y = chart.area('y') - chart.widget('top').size;
 			} else if (orient == 'bottom') {
 				var x = chart.area('x');
 				var y = chart.area('y2');
 			}
 
-			obj.g.translate(x, y);
-			obj.key = grid.key;
+			scale.result.g.translate(x, y);
+			scale.key = grid.key;
 
-			root.append(obj.g);
+			root.append(scale.result.g);
 
-			/*
-			 if (grid.realtime) {
-			 setInterval(function() {
-
-			 obj.g.remove();
-			 for (var i = 0; i < domain.length; i++) {
-			 domain[i] = _time.add(domain[i], _time.milliseconds, 10);
-			 }
-
-			 obj = drawDate(chart, orient, domain, [0, max], grid.step, grid.format);
-
-			 obj.g.translate(x, y);
-			 obj.key = grid.key ;
-
-			 root.append(obj.g);
-
-			 }, 100);
-			 } */
-			return obj;
+			return scale;
 		}
 	}
 

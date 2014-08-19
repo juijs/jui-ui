@@ -405,6 +405,7 @@ jui.define("util.svg",
             } else {
                 var rect = root.element.getBoundingClientRect();
 
+                // if firefox 
                 if (rect.width == 0 && rect.height == 0) {
                     rect = this.caculateSize();
                 }
@@ -416,6 +417,11 @@ jui.define("util.svg",
             }
         }
         
+        /**
+         * getBoundingClientRect() 로 크기를 구할 수 없을 때 사용 
+         * 
+         * ex) 파폭 버그로   width, height 모두 0이 되므로 아래 함수를 사용해야함 
+         */
         this.caculateSize = function() {
             var height_list = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'];
             var width_list = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'];

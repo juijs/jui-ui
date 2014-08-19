@@ -2,6 +2,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 	var Grid = function(orient, grid) {
 		var self = this;
+		var size;
 
 		function drawBlock(chart, orient, domain, range, full) {
 
@@ -30,7 +31,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 			if (orient == 'top') {
 
-				var height = 30;
+				var height = chart.widget('top').size;
 				var bar = 6;
 				var barY = height - bar;
 
@@ -70,7 +71,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'bottom') {
-				var height = 30;
+				var height = chart.widget('bottom').size;
 				var bar = 6;
 				var barY = height - bar;
 
@@ -110,7 +111,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'left') {
-				var width = 30;
+				var width = chart.widget('left').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -150,7 +151,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'right') {
-				var width = 30;
+				var width = chart.widget('right').size;
 				var bar = 6;
 				var barX = width - bar;
 
@@ -190,11 +191,12 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 			}
 
-			return {
-				g : g,
-				scale : scale,
-				values : values
-			};
+			scale.result = {
+				g : g, 
+				values : values 
+			}
+			
+			return scale; 
 		}
 
 
@@ -207,26 +209,25 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 			var width = chart.area('width'), height = chart.area('height'), max = (orient == 'left' || orient == 'right') ? height : width;
 
-			var obj = drawBlock(chart, orient, grid.domain, [0, max], grid.full);
-
+			var scale = drawBlock(chart, orient, grid.domain, [0, max], grid.full);
 			if (orient == 'left') {
-				var x = chart.area('x') - 30;
+				var x = chart.area('x') - chart.widget('left').size;
 				var y = chart.area('y');
 			} else if (orient == 'right') {
 				var x = chart.area('x2');
 				var y = chart.area('y');
 			} else if (orient == 'top') {
 				var x = chart.area('x');
-				var y = chart.area('y') - 30;
+				var y = chart.area('y') - chart.widget('top').size;
 			} else if (orient == 'bottom') {
 				var x = chart.area('x');
 				var y = chart.area('y2');
 			}
 
-			obj.g.translate(x, y);
-			obj.key = grid.key;
+			scale.result.g.translate(x, y);
+			scale.key = grid.key;
 
-			return obj;
+			return scale;
 		}
 	}
 

@@ -11,10 +11,10 @@ jui.define("chart.brush.line", [], function() {
 
         this.getPath = function(brush, chart) {
             var path = [],
-                posX = (brush.full) ? 0 : chart.x.scale.rangeBand() / 2;
+                posX = (brush.full) ? 0 : chart.x.rangeBand() / 2;
 
             for (var i = 0; i < chart.data().length; i++) {
-                var startX = brush.x.scale(i) + posX,
+                var startX = brush.x(i) + posX,
                     valueSum = 0;
 
                 for (var j = 0; j < brush.target.length; j++) {
@@ -32,7 +32,7 @@ jui.define("chart.brush.line", [], function() {
                     }
 
                     path[j].x.push(startX);
-                    path[j].y.push(brush.y.scale(value + valueSum));
+                    path[j].y.push(brush.y(value + valueSum));
                 }
             }
 

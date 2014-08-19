@@ -18,7 +18,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			}))
 		}
 
-		function drawRadal(chart, root, centerX, centerY, x, y, count, unit) {
+		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
 
 			var g = chart.svg.group();
 
@@ -91,7 +91,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 		this.draw = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
-			grid.line = typeof grid.line == 'undefined' ? true : grid.line;
+			grid.line = (typeof grid.line == 'undefined') ? true : grid.line;
 
 			var min = width;
 
@@ -189,7 +189,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				if (grid.shape == 'circle') {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
-					drawRadal(chart, root, centerX, centerY, 0, startY, count, unit);
+					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
 
 				startY += h;
