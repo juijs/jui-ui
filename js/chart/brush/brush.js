@@ -67,6 +67,21 @@ jui.define("chart.brush", [], function() {
 				p2 : p2
 			};
 		}
+
+        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
+            var range = maxRadius - minRadius,
+                tg = range * getPer();
+
+            function getPer() {
+                var range = maxValue - minValue,
+                    tg = value - minValue,
+                    per = tg / range;
+
+                return per;
+            }
+
+            return tg + minRadius;
+        }
 	}
 
 	return Brush;

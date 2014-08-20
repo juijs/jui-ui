@@ -19,7 +19,9 @@ jui.define("chart.brush.point", [], function() {
                 var valueSum = 0;
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var value = chart.series(brush.target[j]).data[i];
+                    var obj = chart.series(brush.target[j]),
+                        value = obj.data[i],
+                        radius = (brush.radius) ? this.getScaleValue(value, obj.min, obj.max, brush.radius.min, brush.radius.max) : 3;
 
                     if (brush.nest === false && j > 0) {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
@@ -28,7 +30,7 @@ jui.define("chart.brush.point", [], function() {
                     var circle = chart.svg.circle({
                         cx: points[i],
                         cy: brush.y(value + valueSum),
-                        r: 1,
+                        r: radius,
                         fill: this.color(j)
                     });
 
