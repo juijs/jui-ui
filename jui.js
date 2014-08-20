@@ -2647,16 +2647,18 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 		}
 		
 		function getModalInfo(self) {
-			var x = "auto", y = "auto", h = 0;
+			var x = "auto", y = "auto",
+                w = 0, h = 0;
 			
 			var target = self.options.target, 
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
 				tPos = (target == "body") ? null : "relative";
 			
-			x = ($(hTarget).width() / 2) - ($(self.root).width() / 2);
+			x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft();
 			y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
-			
+
+            w = $(target).outerWidth() + $(target).scrollLeft();
 			h = $(target).outerHeight();
 			h = (h > 0) ? h : $(hTarget).outerHeight();
 			
@@ -2669,16 +2671,16 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 			}
 			
 			return {
-				x: x, y: y, pos: pos, tPos: tPos, h: h
+				x: x, y: y, pos: pos, tPos: tPos, w: w, h: h
 			}
 		}
 		
-		function createModal(self, h) {
+		function createModal(self, w, h) {
 			if($modal != null) return;
 			
 			$modal = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
 				position: "absolute",
-				width: "100%",
+				width: w,
 				height: h,
 				left: 0,
 				top: 0,
@@ -2749,7 +2751,7 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 			$(this.options.target).css("position", info.tPos);
 			$(this.root).show();
 			
-			createModal(this, info.h);
+			createModal(this, info.w, info.h);
 			this.type = "show";
 		}
 
@@ -7362,7 +7364,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 					
 					$(self.root).css({
 						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto"
+						"overflow-x": "auto",
+                        "overflow-y": "hidden"
 					});
 					
 					$(head.root).outerWidth(rootWidth);
@@ -7573,23 +7576,27 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
                     // 리사이징 바, 위치 이동
                     colResizeBarLeft();
 
-                    self.emit("colresize", [ column.head, e ]);
+                    head.emit("colresize", [ column.head, e ]);
 
                     return false;
                 }
             });
 
+            // 리사이징 바 위치 설정
+            head.on("colshow", colResizeBarLeft);
+            head.on("colhide", colResizeBarLeft);
+
             function colResizeWidth(disWidth) {
                 var colMinWidth = 30;
 
                 // 최소 크기 체크
-                if(width.column + disWidth < colMinWidth)
+                if (width.column + disWidth < colMinWidth)
                     return;
 
                 $(column.head.element).outerWidth(width.column + disWidth);
                 $(column.body.element).outerWidth(width.column + disWidth);
 
-                if(disWidth > 0) {
+                if (disWidth > 0) {
                     $(body.root).parent().outerWidth(width.body + disWidth);
                     $(head.root).outerWidth(width.body + disWidth);
                 }

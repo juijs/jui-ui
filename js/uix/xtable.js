@@ -82,7 +82,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 					
 					$(self.root).css({
 						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto"
+						"overflow-x": "auto",
+                        "overflow-y": "hidden"
 					});
 					
 					$(head.root).outerWidth(rootWidth);
@@ -293,23 +294,27 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
                     // 리사이징 바, 위치 이동
                     colResizeBarLeft();
 
-                    self.emit("colresize", [ column.head, e ]);
+                    head.emit("colresize", [ column.head, e ]);
 
                     return false;
                 }
             });
 
+            // 리사이징 바 위치 설정
+            head.on("colshow", colResizeBarLeft);
+            head.on("colhide", colResizeBarLeft);
+
             function colResizeWidth(disWidth) {
                 var colMinWidth = 30;
 
                 // 최소 크기 체크
-                if(width.column + disWidth < colMinWidth)
+                if (width.column + disWidth < colMinWidth)
                     return;
 
                 $(column.head.element).outerWidth(width.column + disWidth);
                 $(column.body.element).outerWidth(width.column + disWidth);
 
-                if(disWidth > 0) {
+                if (disWidth > 0) {
                     $(body.root).parent().outerWidth(width.body + disWidth);
                     $(head.root).outerWidth(width.body + disWidth);
                 }
