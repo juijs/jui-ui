@@ -2647,18 +2647,18 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 		}
 		
 		function getModalInfo(self) {
-			var x = "auto", y = "auto",
-                w = 0, h = 0;
+			var x = "auto", y = "auto", w = 0, h = 0;
 			
 			var target = self.options.target, 
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
-				tPos = (target == "body") ? null : "relative";
+				tPos = (target == "body") ? null : "relative",
+                sLeft = $(target).scrollLeft();
 			
 			x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft();
 			y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
 
-            w = $(target).outerWidth() + $(target).scrollLeft();
+            w = (sLeft > 0) ? $(target).outerWidth() + sLeft : "100%";
 			h = $(target).outerHeight();
 			h = (h > 0) ? h : $(hTarget).outerHeight();
 			
