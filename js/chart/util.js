@@ -276,6 +276,18 @@ jui.define("chart.util", ["util"], function(_) {
 
 					return df.call(func, _domain);
 				}
+				
+				func.min = function() {
+					return Math.min(_domain[0], _domain[_domain.length - 1]);
+				}
+				
+				func.max = function() {
+					return Math.max(_domain[0], _domain[_domain.length - 1]);
+				}
+				
+				func.rate = function(value, max) {
+					return func(func.max() * (value/max));
+				}				
 
 				func.ticks = function(type, step) {
 					var start = _domain[0];
@@ -424,6 +436,17 @@ jui.define("chart.util", ["util"], function(_) {
 
 				}
 
+				func.min = function() {
+					return Math.min(_domain[0], _domain[_domain.length - 1]);
+				}
+				
+				func.max = function() {
+					return Math.max(_domain[0], _domain[_domain.length - 1]);
+				}
+				
+				func.rate = function(value, max) {
+					return func(func.max() * (value/max));
+				}
 
 				func.domain = function(values) {
 

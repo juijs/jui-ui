@@ -1,6 +1,8 @@
 jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 	var UI = function() {
+		
+		var self = this; 
 		var _grid = [], _widget = [], _brush = [], _data, _series;
 
 		this.init = function() {
@@ -22,6 +24,21 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 			}
 
 			return _widget;
+		}
+		
+		this.widget.size = function(key) {
+			var obj = self.widget(key);
+			
+			if (!_.typeCheck("array", obj)) {
+				obj = [obj];
+			}
+			
+			var size = 0;
+			for(var i = 0; i < obj.length; i++) {
+				size += obj[i].size;
+			}
+			
+			return size;
 		}
 
 		this.brush = function(key) {
@@ -59,6 +76,9 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 					bAttr = _.clone(b.attr);
 				}
 			}
+			
+			//TODO: attr 에 function 으로 custom 값을 정의 할 수 있어야한다. 
+			//TODO: 그렇다면 매개 변수는 무엇을 넣어야하는가? 
 
 			return $.extend(bAttr, cAttr);
 		}
@@ -187,10 +207,21 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 			
 			if (widget != null) {
 				for(var k in widget) {
-					if (widget[k].type || widget[k].title) {
-						var Obj = jui.include("chart.widget." + (widget[k].type || "title"));
-						new Obj(k, widget[k]).render(this);						
+					
+					if (!_.typeCheck("array", widget[k])) {
+						widget[k] = [widget[k]];
 					}
+					
+					for(var i = 0; i < widget[k].length; i++) {
+						var w  = widget[k][i];
+
+						if (w.type || w.text) {
+							var Obj = jui.include("chart.widget." + (w.type || "text"));
+							new Obj(k, w).render(this);						
+						}
+						
+					}
+					
 
 				}
 			}

@@ -6,7 +6,9 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 		function drawBlock(chart, orient, domain, range, full) {
 
-			var g = chart.svg.group();
+			var g = chart.svg.group({
+				'class' : 'grid block'
+			});
 			var scale = util.scale.ordinal().domain(domain);
 
 			var max = range[0];

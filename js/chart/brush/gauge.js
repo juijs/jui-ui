@@ -2,7 +2,7 @@ jui.define("chart.brush.gauge", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.empty = (typeof brush.empty == undefined) ?  80 : parseInt(brush.empty);
+			this.empty = (typeof brush.empty == 'undefined') ?  80 : parseInt(brush.empty);
 
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -12,7 +12,7 @@ jui.define("chart.brush.gauge", [], function() {
 			}
 
 			// center
-			this.rate = brush.rate || 100;
+			this.rate = typeof brush.rate == 'undefined' ? 100 : parseInt(brush.rate);
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
@@ -21,13 +21,13 @@ jui.define("chart.brush.gauge", [], function() {
 			this.outerRadius = Math.abs(this.startY);
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius / this.rate) * this.empty;
 
-			this.startAngle = brush.startAngle || -120;
-			this.endAngle = brush.endAngle || 240;
+			this.startAngle = typeof brush.startAngle == 'undefined' ? 0 : parseFloat(brush.startAngle);
+			this.endAngle = typeof brush.endAngle == 'undefined' ? 360 : parseFloat(brush.endAngle);
 
-			this.min = brush.min || 0;
-			this.max = brush.max || 100;
+			this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
+			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
 
-			this.value = brush.value || 0;
+			this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
 
 		}
 
@@ -41,10 +41,10 @@ jui.define("chart.brush.gauge", [], function() {
 			// current Value
 			g.append(chart.svg.text({
 				x : 0,
-				y : 70,
+				y : (brush.arrow) ? 70 : 20,
 				"text-anchor" : "middle",
 				'font-family' : 'Verdana',
-				'font-size' : '2.5em',
+				'font-size' : '3em',
 				'font-weight' : 1000
 
 			}, value + ""))
@@ -53,30 +53,38 @@ jui.define("chart.brush.gauge", [], function() {
 			var startX = 0;
 			var startY = -(this.outerRadius);
 
-			// min
-			var obj = this.rotate(startX, startY, this.radian(startAngle));
 
-			startX = obj.x;
-			startY = obj.y;
-
-			g.append(chart.svg.text({
-				x : obj.x + 20,
-				y : obj.y + 20,
-				"text-anchor" : "middle",
-				'font-family' : 'Verdana'
-			}, min + ""))
+            if (brush.minText) {
+                // min
+                var obj = this.rotate(startX, startY, this.radian(startAngle));
+    
+                startX = obj.x;
+                startY = obj.y;
+    
+                g.append(chart.svg.text({
+                    x : obj.x + 20,
+                    y : obj.y + 20,
+                    "text-anchor" : "middle",
+                    'font-family' : 'Verdana'
+                }, min + ""))
+                
+            }
 
 			// max
 			// outer arc 에 대한 지점 설정
+			
+			if (brush.maxText) {
+                var obj = this.rotate(startX, startY, this.radian(endAngle));
+    
+                g.append(chart.svg.text({
+                    x : obj.x - 20,
+                    y : obj.y + 20,
+                    "text-anchor" : "middle",
+                    'font-family' : 'Verdana'
+                }, max + ""))
+			    
+			}
 
-			obj = this.rotate(startX, startY, this.radian(endAngle));
-
-			g.append(chart.svg.text({
-				x : obj.x - 20,
-				y : obj.y + 20,
-				"text-anchor" : "middle",
-				'font-family' : 'Verdana'
-			}, max + ""))
 
 			return g;
 		}
@@ -101,7 +109,6 @@ jui.define("chart.brush.gauge", [], function() {
 			path.MoveTo(startX, startY);
 			path.LineTo(2, 0);
 			path.LineTo(-2, 0);
-			path.ClosePath();
 			path.ClosePath();
 
 			// start angle
@@ -154,7 +161,7 @@ jui.define("chart.brush.gauge", [], function() {
 			obj = this.rotate(startX, startY, this.radian(endAngle));
 
 			// arc 그림
-			path.Arc(this.outerRadius, this.outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+			path.Arc(this.outerRadius, this.outerRadius, 0, (endAngle >= 180) ? 1 : 0, 1, obj.x, obj.y);
 
 			var innerX, innerY;
 			// inner arc 로 이어지는 직선 그림
@@ -177,7 +184,7 @@ jui.define("chart.brush.gauge", [], function() {
 			// inner arc 도착점 그림
 			obj = this.rotate(innerX, innerY, this.radian(-endAngle));
 
-			path.Arc(this.innerRadius, this.innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, obj.x, obj.y);
+			path.Arc(this.innerRadius, this.innerRadius, 0, (endAngle >= 180) ? 1 : 0, 0, obj.x, obj.y);
 
 			// 패스 종료
 			path.ClosePath();
@@ -203,9 +210,13 @@ jui.define("chart.brush.gauge", [], function() {
 			var rate = (this.value - this.min) / (this.max - this.min);
 
 			var currentAngle = (this.endAngle) * rate;
-
+			
+			if (this.endAngle >= 360) {
+			    this.endAngle = 359.99999;
+			}
+			
 			var g = this.drawDonut(chart, this.startAngle, this.endAngle, {
-				fill : this.color(6)
+				fill : this.color(2)
 			})
 
 			group.append(g);
@@ -216,14 +227,20 @@ jui.define("chart.brush.gauge", [], function() {
 
 			group.append(g);
 
-			g = this.drawArrow(chart, this.startAngle, currentAngle)
+            if (brush.arrow) {
+                g = this.drawArrow(chart, this.startAngle, currentAngle)
+    
+                group.append(g);
+                
+            }
 
-			group.append(g);
+            if (brush.text) {
+                // startAngle, endAngle 에 따른 Text 위치를 선정해야함
+                g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
 
-			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
-			g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
+                group.append(g);                
+            }
 
-			group.append(g);
 		}
 	}
 

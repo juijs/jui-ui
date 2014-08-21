@@ -40,8 +40,9 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 			var path = chart.svg.path({
 
-				"fill-opacity" : 0,
-				stroke : "black"
+				"fill" : "none",
+				stroke : "black",
+				"stroke-width" : 0.5
 			});
 
 			for (var i = 0; i < points.length; i++) {
@@ -67,8 +68,10 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			grid = this.setBlockDomain(chart, grid);
 		}
 
-		this.xy = function(index, rate) {
+		this.xy = function(index, value) {
 			var obj = position[0];
+
+            var rate = value / grid.max;
 
 			var height = Math.abs(obj.y1) - Math.abs(obj.y2);
 			var pos = height * rate;
@@ -129,10 +132,10 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 				root.append(chart.svg.line({
 					x1 : centerX,
-					y1 : centerY,
+					y1 : centerY+0.5,
 					x2 : x2,
-					y2 : y2,
-					"stroke-width" : 1,
+					y2 : y2+0.5,
+					"stroke-width" : 0.5,
 					'stroke' : 'black'
 				}))
 

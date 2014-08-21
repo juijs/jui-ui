@@ -25,15 +25,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 			var ticks = scale.ticks(step, nice || false);
 			var values = []
 
-			var max = domain[0];
-			var min = domain[0];
-
-			for (var i = 0; i < domain.length; i++) {
-				if (domain[i] > max)
-					max = domain[i];
-				else if (domain[i] < min)
-					min = domain[i];
-			}
+			var max = scale.max();
+			var min = scale.min();
 
 			if (orient == 'left') {
 
@@ -53,10 +46,6 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					if (format) {
-						values[i] = format(values[i]);
-					}
-
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
 					}, function() {
@@ -73,7 +62,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x : barX - bar,
 							y : bar,
 							'text-anchor' : 'end'
-						}, ticks[i] + "")
+						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 
@@ -94,10 +83,6 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					if (format) {
-						values[i] = format(values[i]);
-					}
-
 					g.append(chart.svg.group({
 						"transform" : "translate(" + values[i] + ", 0)"
 					}, function() {
@@ -114,7 +99,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x : 0,
 							y : bar * 4,
 							'text-anchor' : 'middle'
-						}, ticks[i] + "")
+						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 
@@ -135,10 +120,6 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					if (format) {
-						values[i] = format(values[i]);
-					}
-
 					g.append(chart.svg.group({
 						"transform" : "translate(" + values[i] + ", " + barY + ")"
 					}, function() {
@@ -155,7 +136,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x : 0,
 							y : -4,
 							'text-anchor' : 'middle'
-						}, ticks[i] + "")
+						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 
@@ -177,10 +158,6 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					if (format) {
-						values[i] = format(values[i]);
-					}
-
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
 					}, function() {
@@ -197,7 +174,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x : bar + 2,
 							y : bar,
 							'text-anchor' : 'start'
-						}, ticks[i] + "")
+						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 			}
