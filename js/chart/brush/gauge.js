@@ -41,13 +41,27 @@ jui.define("chart.brush.gauge", [], function() {
 			// current Value
 			g.append(chart.svg.text({
 				x : 0,
-				y : (brush.arrow) ? 70 : 20,
+				y : (brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
 				'font-family' : 'Verdana',
 				'font-size' : '3em',
 				'font-weight' : 1000
 
 			}, value + ""))
+			
+			if (brush.unitText) {
+				// current Value
+				g.append(chart.svg.text({
+					x : 0,
+					y : 40,
+					"text-anchor" : "middle",
+					'font-family' : 'Verdana',
+					'font-size' : '1.5em',
+					'font-weight' : 500
+	
+				}, brush.unitText))
+	
+			}			
 
 			// 바깥 지름 부터 그림
 			var startX = 0;
@@ -84,6 +98,8 @@ jui.define("chart.brush.gauge", [], function() {
                 }, max + ""))
 			    
 			}
+			
+
 
 
 			return g;
@@ -215,14 +231,14 @@ jui.define("chart.brush.gauge", [], function() {
 			    this.endAngle = 359.99999;
 			}
 			
-			var g = this.drawDonut(chart, this.startAngle, this.endAngle, {
-				fill : this.color(2)
+			var g = this.drawDonut(chart, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+				fill : this.color(6)
 			})
 
 			group.append(g);
 
 			g = this.drawDonut(chart, this.startAngle, currentAngle, {
-				fill : this.color(3)
+				fill : this.color(0) 
 			})
 
 			group.append(g);

@@ -9,12 +9,12 @@ jui.define("chart.brush.equalizer", [], function() {
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
-
+ 
 			width = chart.x.rangeBand();
 			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
-			unit = brush.unit || 10;
-			gap = brush.gap || 4;
+			unit = brush.unit || 5;
+			gap = brush.gap || 1;
 		}
 
 		this.draw = function(chart) {
@@ -27,7 +27,7 @@ jui.define("chart.brush.equalizer", [], function() {
 					if (startY <= zeroY) {
 
 						var height = Math.abs(zeroY - startY)
-						var padding = 1;
+						var padding = 1.5;
 
 						var eY = zeroY;
 						var eMin = startY;
@@ -41,8 +41,6 @@ jui.define("chart.brush.equalizer", [], function() {
 								y : eY - unitHeight,
 								width : barWidth,
 								height : unitHeight,
-								rx : 3,
-								ry : 3,
 								fill : this.color(Math.floor(eIndex / gap))
 							});
 
@@ -54,7 +52,7 @@ jui.define("chart.brush.equalizer", [], function() {
 						}
 					} else {
 
-						var padding = 1;
+						var padding = 1.5;
 
 						var eY = zeroY;
 						var eMax = startY;
@@ -66,9 +64,6 @@ jui.define("chart.brush.equalizer", [], function() {
 								y : eY,
 								width : barWidth,
 								height : unitHeight,
-								rx : 3,
-								ry : 3,
-
 								fill : this.color(Math.floor(eIndex / gap))
 							});
 
