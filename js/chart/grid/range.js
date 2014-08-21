@@ -46,6 +46,12 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
+					var color = "black";
+					if (ticks[i] == 0 && i < ticks.length-1) {
+						color = "#ff7800";
+					} 
+					
+					
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
 					}, function() {
@@ -54,16 +60,20 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							y1 : 0.5,
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
-							stroke : "black",
+							stroke : color,
 							"stroke-width" : 0.5
 						});
 
 						chart.svg.text({
 							x : barX - bar,
 							y : bar,
-							'text-anchor' : 'end'
+							'text-anchor' : 'end',
+							fill : color
 						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
+						
+					
+
 				}
 
 			} else if (orient == 'bottom') {
