@@ -5,8 +5,8 @@ jui.define("chart.brush.scatter", [], function() {
 
         function createScatter(chart, x, y, symbol, index) {
             var symbol = (!symbol) ? brush.symbol : symbol,
-                w = (brush.width) ? brush.width : 5,
-                h = (brush.height) ? brush.height : 5;
+                w = (brush.r) ? brush.r : 5,
+                h = w;
 
             var elem = null;
 
