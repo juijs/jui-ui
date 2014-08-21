@@ -12,7 +12,6 @@ jui.define("chart.brush.fullstack", [], function() {
 
 			width = chart.x.rangeBand();
 			barWidth = width - outerPadding * 2;
-			gauge = brush.gauge || false;
 		}
 
 		this.draw = function(chart) {
@@ -21,36 +20,22 @@ jui.define("chart.brush.fullstack", [], function() {
 
 				var startX = brush.x(i) + outerPadding;
 
-				var heightSum = 0;
-				var heightArr = [];
+				var sum = 0;
+				var list = [];
 				for (var j = 0; j < brush.target.length; j++) {
 					var height = chart.series(brush.target[j]).data[i];
 
-					heightSum += height;
-					heightArr.push(height);
-				}
-
-				if (gauge) {
-					var gaugeRect = chart.svg.rect({
-						x : startX,
-						y : 0,
-						width : barWidth,
-						height : chart_height,
-						fill : this.color(6),
-						"fill-opacity" : 0.1
-					})
-
-                    // 속성 옵션 적용
-                    gaugeRect.attr(chart.attr(brush.type, brush.target[j]));
-
-					g.append(gaugeRect);
+					sum += height;
+					list.push(height);
 				}
 
 				var startY = 0;
-
-				for (var j = heightArr.length - 1; j >= 0; j--) {
+				var max  = brush.y.max();
+				var current = max; 
+				
+				for (var j = list.length - 1; j >= 0; j--) {
 					
-					var height = chart_height - brush.y.rate(heightArr[j] , heightSum); 
+					var height = chart_height - brush.y.rate(list[j] , sum); 
 					
 					var r = chart.svg.rect({
 						x : startX,
@@ -59,11 +44,22 @@ jui.define("chart.brush.fullstack", [], function() {
 						height : height,
 						fill : this.color(j)
 					});
-
+					
                     r.attr(chart.attr(brush.type, brush.target[j]));
 					g.append(r);
 
-					startY += height;
+					if (brush.text) {
+						var percent = Math.round((list[j]/sum)*max);
+						var text = chart.svg.text({
+							x : startX + barWidth/2,
+							y : startY + height/2 + 8,
+							'text-anchor' : 'middle'
+						}, ((current - percent < 0 ) ? current : percent) + "%");					
+						g.append(text);					
+						current -= percent;
+					}
+					
+					startY += height;										
 				}
 			}
 		}
