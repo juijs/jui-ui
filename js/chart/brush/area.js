@@ -1,41 +1,40 @@
 jui.define("chart.brush.area", [], function() {
 
 	var AreaBrush = function(brush) {
-		var g, zeroY, maxY, count, width;
+		var path = [];
+        var zeroY, maxY, count, width;
 
 		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
-
 			zeroY = brush.y(0);
 			maxY = chart.area('height');
 			count = chart.data().length;
 			width = chart.x.rangeBand();
+
+            for (var i = 0; i < count; i++) {
+                var startX = brush.x(i) + 1, valueSum = 0;
+
+                for (var j = 0; j < brush.target.length; j++) {
+                    var value = chart.series(brush.target[j]).data[i];
+
+                    if (brush.nest === false && j > 0) {
+                        valueSum += chart.series(brush.target[j - 1]).data[i];
+                    }
+
+                    if (!path[j]) {
+                        path[j] = {
+                            x : [],
+                            y : []
+                        };
+                    }
+
+                    path[j].x.push(startX);
+                    path[j].y.push(brush.y(value + valueSum));
+                }
+            }
 		}
 
 		this.draw = function(chart) {
-			var path = [];
-
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) + 1, valueSum = 0;
-
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.series(brush.target[j]).data[i];
-
-					if (brush.nest === false && j > 0) {
-						valueSum += chart.series(brush.target[j - 1]).data[i];
-					}
-
-					if (!path[j]) {
-						path[j] = {
-							x : [],
-							y : []
-						};
-					}
-
-					path[j].x.push(startX);
-					path[j].y.push(brush.y(value + valueSum));
-				}
-			}
+            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
 			for (var i = 0; i < path.length; i++) {
 				var p = chart.svg.polygon({
