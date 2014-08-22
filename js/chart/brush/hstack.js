@@ -16,7 +16,7 @@ jui.define("chart.brush.hstack", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startY = brush.y(i) + outerPadding;
+				var startY = brush.y(i) - barWidth/2;
 
 				var widthSum = 0;
 				var widthArr = [];

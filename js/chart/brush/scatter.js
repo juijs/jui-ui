@@ -58,11 +58,10 @@ jui.define("chart.brush.scatter", [], function() {
 
         this.draw = function(chart) {
             var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
-            var points = [],
-                posX = (brush.full) ? 0 : chart.x.rangeBand() / 2;
+            var points = [];
 
             for (var i = 0; i < chart.data().length; i++) {
-                points[i] = brush.x(i) + posX;
+                points[i] = brush.x(i);
             }
 
             this.drawScatter(brush, chart, points, g);

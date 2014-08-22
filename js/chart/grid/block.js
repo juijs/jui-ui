@@ -26,8 +26,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			} else {
 				var points = scale.rangePoints(range).range();
 			}
-			
-			console.log(points);
 
 			var band = scale.rangeBand();
 			var values = [];
@@ -35,17 +33,17 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 			if (orient == 'top') {
 
-				var height = chart.widget('top').size;
+				var height = chart.widget.size('top');
 				var bar = 6;
 				var barY = height - bar;
 
 				g.append(chart.svg.line({
 					x1 : 0,
-					y1 : height + 0.5,
+					y1 : height,
 					x2 : max,
-					y2 : height + 0.5,
+					y2 : height,
 					stroke : "black",
-					"stroke-width" : 0.5
+					"stroke-width" : 1
 				}));
 
 				for (var i = 0; i < points.length; i++) {
@@ -63,7 +61,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : 0,
 							y2 : height,
 							stroke : "black",
-							"stroke-width" : 0.5
+							"stroke-width" : 1
 						});
 
 						chart.svg.text({
@@ -71,6 +69,21 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y : 20,
 							'text-anchor' : 'middle'
 						}, domain[i])
+					}));
+				}
+				
+				if (full) {
+					g.append(chart.svg.group({
+						"transform" : "translate(" + max + ", 0)"
+					}, function() {
+						chart.svg.line({
+							x1 : 0,
+							y1 : barY,
+							x2 : 0,
+							y2 : height,
+							stroke : "black",
+							"stroke-width" : 1
+						});
 					}));
 				}
 
@@ -85,7 +98,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					x2 : max,
 					y2 : 0.5,
 					stroke : "black",
-					"stroke-width" : 0.5
+					"stroke-width" : 1
 				}));
 
 				for (var i = 0; i < points.length; i++) {
@@ -98,9 +111,9 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						"transform" : "translate(" + points[i] + ", 0)"
 					}, function() {
 						chart.svg.line({
-							x1 : -band/2,
+							x1 : -half_band,
 							y1 : 0,
-							x2 : -band/2,
+							x2 : -half_band,
 							y2 : bar,
 							stroke : "black",
 							"stroke-width" : 1
@@ -115,14 +128,14 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'left') {
-				var width = chart.widget('left').size;
+				var width = chart.widget.size('left');
 				var bar = 6;
 				var barX = width - bar;
 
 				g.append(chart.svg.line({
-					x1 : Math.round(width),
+					x1 : width,
 					y1 : 0,
-					x2 : Math.round(width),
+					x2 : width,
 					y2 : max,
 					stroke : "black",
 					"stroke-width" : 1
@@ -139,16 +152,16 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					}, function() {
 						chart.svg.line({
 							x1 : barX,
-							y1 : 0.5,
+							y1 : -half_band,
 							x2 : width,
-							y2 : 0.5,
+							y2 : -half_band,
 							stroke : "black",
-							"stroke-width" : 0.5
+							"stroke-width" : 1
 						});
 
 						chart.svg.text({
-							x : bar * 4,
-							y : half_band,
+							x : width-10,
+							y : 5, 
 							'text-anchor' : 'end'
 						}, domain[i])
 					}));
@@ -165,7 +178,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					x2 : 0,
 					y2 : max,
 					stroke : "black",
-					"stroke-width" : 0.5
+					"stroke-width" : 1
 				}));
 
 				for (var i = 0; i < points.length; i++) {
@@ -183,12 +196,12 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : bar,
 							y2 : 0,
 							stroke : "black",
-							"stroke-width" : 0.5
+							"stroke-width" : 1
 						});
 
 						chart.svg.text({
-							x : bar,
-							y : half_band,
+							x : bar + 5,
+							y : half_band-5,
 							'text-anchor' : 'start'
 						}, domain[i])
 					}));

@@ -1,7 +1,7 @@
 jui.define("chart.brush.equalizer", [], function() {
 
 	var BarBrush = function(brush) {
-		var g, zeroY, count, width, barWidth, unit, gap;
+		var g, zeroY, count, width, barWidth, unit, gap, half_width;
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
@@ -11,6 +11,7 @@ jui.define("chart.brush.equalizer", [], function() {
 			count = chart.data().length;
  
 			width = chart.x.rangeBand();
+			half_width = (width - outerPadding * 2) / 2; 
 			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
 			unit = brush.unit || 5;
@@ -19,7 +20,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) + outerPadding;
+				var startX = brush.x(i) - half_width;
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var startY = brush.y(chart.series(brush.target[j]).data[i]);

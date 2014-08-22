@@ -38,10 +38,8 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawBefore = function(chart) {
-            var posX = (brush.full) ? 0 : chart.x.rangeBand() / 2;
-
             for (var i = 0; i < chart.data().length; i++) {
-                var startX = brush.x(i) + posX,
+                var startX = brush.x(i),
                     valueSum = 0;
 
                 for (var j = 0; j < brush.target.length; j++) {

@@ -1,7 +1,7 @@
 jui.define("chart.brush.hbar", [], function() {
 
 	var BarBrush = function(brush) {
-		var g, zeroY, series, count, width, barWidth;
+		var g, zeroY, series, count, height, half_height, barHeight;
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
@@ -12,12 +12,13 @@ jui.define("chart.brush.hbar", [], function() {
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
-			barHeight = (height - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+			half_height = height - outerPadding*2;
+			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
 		}
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startY = brush.y(i) + outerPadding;
+				var startY = brush.y(i) - half_height/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var startX = brush.x(chart.series(brush.target[j]).data[i]);
