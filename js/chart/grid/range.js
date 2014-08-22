@@ -30,27 +30,33 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 			if (orient == 'left') {
 
-				var width = chart.widget('left').size;
+				var width = chart.widget.size('left');
 				var bar = 6;
 				var barX = width - bar;
 
-				g.append(chart.svg.line({
-					x1 : width + 0.5,
-					y1 : 0,
-					x2 : width + 0.5,
-					y2 : scale(Math.min(max, min)),
-					stroke : "black",
-					"stroke-width" : 0.5
-				}));
+				if (grid.line) {
+					g.append(chart.svg.line({
+						x1 : width,
+						y1 : 0,
+						x2 : width,
+						y2 : scale(Math.min(max, min)),
+						stroke : "black",
+						"stroke-width" : 1
+					}));
+					
+				}
 
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
 					var color = "black";
-					if (ticks[i] == 0 && i < ticks.length-1) {
+					var strokeWidth = 0.5; 
+					var fontWeight = "normal";
+					if (ticks[i] == 0 && ticks[i] != scale.min()) {
 						color = "#ff7800";
+						strokeWidth = 2;
+						fontWeight = 'bold';
 					} 
-					
 					
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
@@ -61,7 +67,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
 							stroke : color,
-							"stroke-width" : 0.5
+							"stroke-width" : strokeWidth
 						});
 
 						chart.svg.text({
@@ -77,96 +83,133 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'bottom') {
-				var height = chart.widget('bottom').size;
+				var height = chart.widget.size('bottom');
 				var bar = 6;
 				var barY = bar;
 
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : 0.5,
-					x2 : scale(Math.max(max, min)),
-					y2 : 0.5,
-					stroke : "black",
-					"stroke-width" : 0.5
-				}));
+				if (grid.line) {
+					g.append(chart.svg.line({
+						x1 : 0,
+						y1 : 0.5,
+						x2 : scale(scale.max()),
+						y2 : 0.5,
+						stroke : "black",
+						"stroke-width" : 0.5
+					}));
+				}
 
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
+
+					var color = "black";
+					var strokeWidth = 0.5; 
+					var fontWeight = "normal";
+					if (ticks[i] == 0 && ticks[i] != scale.min()) {
+						color = "#ff7800";
+						strokeWidth = 2;
+						fontWeight = 'bold';
+					} 
 
 					g.append(chart.svg.group({
 						"transform" : "translate(" + values[i] + ", 0)"
 					}, function() {
 						chart.svg.line({
 							x1 : 0.5,
-							y1 : 0,
+							y1 : -chart.area('height'),
 							x2 : 0.5,
-							y2 : bar,
-							stroke : "black",
-							"stroke-width" : 0.5
+							y2 : 0 ,
+							stroke : color,
+							"stroke-width" : strokeWidth,
 						});
 
 						chart.svg.text({
 							x : 0,
 							y : bar * 4,
-							'text-anchor' : 'middle'
+							'text-anchor' : 'middle',
+							fill : color,
+							'font-weight' : fontWeight 
 						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 
 			} else if (orient == 'top') {
-				var height = chart.widget('top').size;
+				var height = chart.widget.size('top');
 				var bar = 6;
 				var barY = height - bar;
 
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : height,
-					x2 : scale(Math.max(max, min)),
-					y2 : height,
-					stroke : "black",
-					"stroke-width" : 0.5
-				}));
+				if (grid.line) {
+					g.append(chart.svg.line({
+						x1 : 0,
+						y1 : height,
+						x2 : scale(scale.max()),
+						y2 : height,
+						stroke : "black",
+						"stroke-width" : 0.5
+					}));
+				}
 
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
+
+					var color = "black";
+					var strokeWidth = 0.5; 
+					var fontWeight = "normal";
+					if (ticks[i] == 0 && ticks[i] != scale.min()) {
+						color = "#ff7800";
+						strokeWidth = 2;
+						fontWeight = 'bold';
+					} 
 
 					g.append(chart.svg.group({
 						"transform" : "translate(" + values[i] + ", " + barY + ")"
 					}, function() {
 						chart.svg.line({
 							x1 : 0,
-							y1 : 0,
+							y1 : 6,
 							x2 : 0,
-							y2 : 6,
-							stroke : "black",
-							"stroke-width" : 0.5
+							y2 : 6 + chart.area('height'),
+							stroke : color,
+							"stroke-width" : strokeWidth
 						});
 
 						chart.svg.text({
 							x : 0,
 							y : -4,
-							'text-anchor' : 'middle'
+							'text-anchor' : 'middle',
+							fill : color,
+							'font-weight' : fontWeight 
 						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}
 
 			} else if (orient == 'right') {
 
-				var width = chart.widget('right').size;
+				var width = chart.widget.size('right');
 				var bar = 6;
 				var barX = width - bar;
 
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : 0,
-					x2 : 0,
-					y2 : scale(Math.min(max, min)),
-					stroke : "black",
-					"stroke-width" : 0.5
-				}));
+				if (grid.line) {
+					g.append(chart.svg.line({
+						x1 : 0,
+						y1 : 0,
+						x2 : 0,
+						y2 : scale(scale.min()),
+						stroke : "black",
+						"stroke-width" : 0.5
+					}));
+				}
 
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
+
+					var color = "rgba(0, 0, 0, 0.5)";
+					var strokeWidth = 0.5; 
+					var fontWeight = "normal";
+					if (ticks[i] == 0 && ticks[i] != scale.min()) {
+						color = "#ff7800";
+						strokeWidth = 2;
+						fontWeight = 'bold';
+					} 
 
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
@@ -176,14 +219,16 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							y1 : 0,
 							x2 : bar,
 							y2 : 6,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : color,
+							"stroke-width" : strokeWidth
 						});
 
 						chart.svg.text({
 							x : bar + 2,
 							y : bar,
-							'text-anchor' : 'start'
+							'text-anchor' : 'start',
+							fill : color,
+							'font-weight' : fontWeight 
 						}, (format) ? format(ticks[i]) : ticks[i] + "")
 					}));
 				}

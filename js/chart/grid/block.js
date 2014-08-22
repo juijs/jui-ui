@@ -26,6 +26,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			} else {
 				var points = scale.rangePoints(range).range();
 			}
+			
+			console.log(points);
 
 			var band = scale.rangeBand();
 			var values = [];
@@ -73,7 +75,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				}
 
 			} else if (orient == 'bottom') {
-				var height = chart.widget('bottom').size;
+				var height = chart.widget.size('bottom');
 				var bar = 6;
 				var barY = height - bar;
 
@@ -96,16 +98,16 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						"transform" : "translate(" + points[i] + ", 0)"
 					}, function() {
 						chart.svg.line({
-							x1 : 0.5,
+							x1 : -band/2,
 							y1 : 0,
-							x2 : 0.5,
+							x2 : -band/2,
 							y2 : bar,
 							stroke : "black",
-							"stroke-width" : 0.5
+							"stroke-width" : 1
 						});
 
 						chart.svg.text({
-							x : half_band,
+							x : 0,
 							y : 20,
 							'text-anchor' : 'middle'
 						}, domain[i])
@@ -118,12 +120,12 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var barX = width - bar;
 
 				g.append(chart.svg.line({
-					x1 : width + 0.5,
+					x1 : Math.round(width),
 					y1 : 0,
-					x2 : width + 0.5,
+					x2 : Math.round(width),
 					y2 : max,
 					stroke : "black",
-					"stroke-width" : 0.5
+					"stroke-width" : 1
 				}));
 
 				for (var i = 0; i < points.length; i++) {
@@ -131,14 +133,14 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						point : points[i],
 						band : band
 					};
-
+					
 					g.append(chart.svg.group({
 						"transform" : "translate(0, " + points[i] + ")"
 					}, function() {
 						chart.svg.line({
 							x1 : barX,
 							y1 : 0.5,
-							x2 : width + chart.area('width'),
+							x2 : width,
 							y2 : 0.5,
 							stroke : "black",
 							"stroke-width" : 0.5

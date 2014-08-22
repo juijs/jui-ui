@@ -18,7 +18,7 @@ jui.define("chart.brush.fullstack", [], function() {
 			var chart_height = chart.area('height');
 			for (var i = 0; i < count; i++) {
 
-				var startX = brush.x(i) + outerPadding;
+				var startX = brush.x(i) - barWidth/2;
 
 				var sum = 0;
 				var list = [];

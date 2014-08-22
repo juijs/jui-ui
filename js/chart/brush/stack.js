@@ -13,13 +13,14 @@ jui.define("chart.brush.stack", [], function() {
 			width = chart.x.rangeBand();
 			barWidth = width - outerPadding * 2;
 			gauge = brush.gauge || false;
+			
 		}
 
 		this.draw = function(chart) {
 			var chart_height = chart.area('height');
 			for (var i = 0; i < count; i++) {
 
-				var startX = brush.x(i) + outerPadding;
+				var startX = brush.x(i) - barWidth/2;
 
 				var heightSum = 0;
 				var heightArr = [];

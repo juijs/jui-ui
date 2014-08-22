@@ -156,6 +156,24 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
             _brush = brush;
             _data = data;
             _series = series;
+            
+            
+            this.drawDefs();
+            
+		}
+		
+		this.drawDefs = function() {
+			
+            // draw defs 
+            var defs = this.svg.defs();
+            
+
+			// default clip path             
+            var clip = this.svg.clipPath({ id : 'clip' });
+            clip.append(this.svg.rect({  x : 0, y : 0, width : this.area('width'), height : this.area('height') }));
+                        
+            defs.append(clip);
+			
 		}
 
 		this.draw = function() {

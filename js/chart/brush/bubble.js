@@ -12,7 +12,10 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.draw = function(chart) {
-            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+            var g = chart.svg.group({
+            	'clip-path' : 'url(#clip)'
+            	
+            }).translate(chart.area('x'), chart.area('y'));
 
             for (var i = 0; i < points.length; i++) {
                 for (var j = 0; j < brush.target.length; j++) {
@@ -21,11 +24,11 @@ jui.define("chart.brush.bubble", [], function() {
 
                     var r_min = (brush.min) ? brush.min : 5,
                         r_max = (brush.max) ? brush.max : 30,
-                        radius = this.getScaleValue(value, target.min, target.max, r_min, r_max);
+                        radius = Math.round(this.getScaleValue(value, target.min, target.max, r_min, r_max));
 
                     var bubble = chart.svg.circle({
-                        cx: points[i],
-                        cy: brush.y(value),
+                        cx: Math.round(points[i]),
+                        cy: Math.round(brush.y(value)),
                         r: radius,
                         "fill": this.color(j),
                         "fill-opacity": 0.5,
