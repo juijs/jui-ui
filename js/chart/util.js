@@ -163,7 +163,7 @@ jui.define("chart.util", ["util"], function(_) {
 					if (index > -1) {
 						return _range[index];
 					} else {
-						if (_range[t]) {
+						if (typeof _range[t] != 'undefined') {
 							_domain[t] = t;
 							return _range[t];
 						}

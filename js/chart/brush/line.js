@@ -38,9 +38,11 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawBefore = function(chart) {
-            for (var i = 0; i < chart.data().length; i++) {
+            for (var i = 0, len = chart.data().length; i < len; i++) {
                 var startX = brush.x(i),
                     valueSum = 0;
+                    
+                    console.log(startX, i);
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var value = chart.series(brush.target[j]).data[i];
