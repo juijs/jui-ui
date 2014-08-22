@@ -3,30 +3,34 @@ jui.define("chart.brush.scatter", [], function() {
 	var ScatterBrush = function(brush) {
         var self = this;
 
-        function createScatter(chart, x, y, symbol, index) {
-            var symbol = (!symbol) ? brush.symbol : symbol,
+        function createScatter(brush, chart, x, y, index) {
+            var elem = null;
+            var target = chart.series(brush.target[index]),
+                symbol = (!target.symbol) ? brush.symbol : target.symbol,
                 w = (brush.size) ? brush.size : 5,
                 h = w;
 
-            var elem = null;
-
-            if(symbol == "triangle") {
+            if(symbol == "triangle" || symbol == "cross") {
                 elem = chart.svg.group({ width: w, height: h }, function() {
-                    var poly = chart.svg.polygon({
-                        fill : self.color(index)
-                    });
+                    if(symbol == "triangle") {
+                        var poly = chart.svg.polygon({
+                            fill: self.color(index)
+                        });
 
-                    poly.point(0, h)
-                        .point(w, h)
-                        .point(w / 2, 0)
-                        .attr(chart.attr(brush.type, brush.target[index]));
+                        poly.point(0, h)
+                            .point(w, h)
+                            .point(w / 2, 0)
+                            .attr(chart.attr(brush.type, brush.target[index]));
+                    } else {
+                        var attr = chart.attr(brush.type, brush.target[index]);
+                        var line1 = chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h }),
+                            line2 = chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
+
+                        line1.attr(attr);
+                        line2.attr(attr);
+                    }
 
                 }).translate(x - (w / 2), y - (h / 2));
-
-                // 역삼각형
-                if(brush.invert) {
-                    elem.rotate(180, w / 2, h / 2);
-                }
             } else {
                 if(symbol == "rectangle") {
                     elem = chart.svg.rect({
@@ -76,7 +80,7 @@ jui.define("chart.brush.scatter", [], function() {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
                     }
 
-                    g.append(createScatter(chart, points[i], brush.y(value + valueSum), obj.symbol, j));
+                    g.append(createScatter(brush, chart, points[i], brush.y(value + valueSum), j));
                 }
             }
 		}
