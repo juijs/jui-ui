@@ -3,10 +3,10 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 	var Grid = function(orient, grid) {
 		var self = this;
 
-		function drawDate(chart, orient, domain, range, step, format) {
+		this.drawDate = function (chart, orient, g, domain, range, step, format) {
 
-			var g = chart.svg.group();
 			var scale = util.scale.time().domain(domain).rangeRound(range);
+			
 			var max = range[0];
 			var min = range[0];
 
@@ -34,7 +34,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 			var values = [];
 
 			if (orient == 'top') {
-				var height = chart.widget('top').size;
+				var height = chart.widget.size('top');
 				var bar = 6;
 				var barY = height - bar;
 
@@ -190,13 +190,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 			}
 
-			scale.result = {
-				g : g,
-				ticks : ticks,
-				values : values
-			};
 			
-			return scale; 
+			return this.wrapper(chart, scale, grid.key);
 		}
 
 
@@ -216,7 +211,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 			}
 
 			var domain = grid.domain;
-			var scale = drawDate(chart, orient, grid.domain, [0, max], grid.step, grid.format);
+			var scale = this.drawDate(chart, orient, root, grid.domain, [0, max], grid.step, grid.format);
 
 			if (orient == 'left') {
 				var x = chart.area('x') - chart.widget('left').size;
@@ -232,10 +227,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				var y = chart.area('y2');
 			}
 
-			scale.result.g.translate(x, y);
+			root.translate(x, y);
 			scale.key = grid.key;
-
-			root.append(scale.result.g);
 
 			return scale;
 		}

@@ -16,12 +16,11 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 	var Grid = function(orient, grid) {
 		var self = this;
 
-		function drawRange(chart, orient, domain, range, step, format, nice) {
+		this.drawRange = function (chart, orient, g, domain, range, step, format, nice) {
 			step = step || 10;
 
-			var g = chart.svg.group();
 			var scale = util.scale.linear().domain(domain).range(range);
-
+			
 			var ticks = scale.ticks(step, nice || false);
 			var values = []
 
@@ -248,13 +247,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				}
 			}
 
-			scale.result = {
-				g : g,
-				ticks : ticks,
-				values : values 
-			}
-
-			return scale;
+			return this.wrapper(chart, scale, grid.key);
 		}
 
 
@@ -263,12 +256,17 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 		}
 
 		this.draw = function(chart) {
+			
+			var root = chart.svg.group({
+				'class' : 'grid range',
+			})
+						
 			var width = chart.area('width'), height = chart.area('height');
 
 			if (orient == 'left' || orient == 'right') {
-				var scale = drawRange(chart, orient, grid.domain, [height, 0], grid.step, grid.format, grid.nice);
+				var scale = this.drawRange(chart, orient, root, grid.domain, [height, 0], grid.step, grid.format, grid.nice);
 			} else {
-				var scale = drawRange(chart, orient, grid.domain, [0, width], grid.step, grid.format, grid.nice);
+				var scale = this.drawRange(chart, orient, root, grid.domain, [0, width], grid.step, grid.format, grid.nice);
 			}
 
 			if (orient == 'left') {
@@ -287,7 +285,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 
 			
 
-			scale.result.g.translate(x, y);
+			root.translate(x, y);
 			scale.key = grid.key;
 			
 			return scale;

@@ -20,7 +20,7 @@ jui.define("chart.brush.path", [], function() {
 			g.append(path);
 
 			for (var i = 0; i < s.data.length; i++) {
-				var obj = brush.c.xy(i, s.data[i]);
+				var obj = brush.c(i, s.data[i]);
 
 				if (i == 0) {
 					path.MoveTo(obj.x, obj.y);

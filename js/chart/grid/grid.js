@@ -82,6 +82,37 @@ jui.define("chart.grid", [ "util" ], function(_) {
 			
 			return grid; 
 		}
+		
+		this.wrapper = function(chart, scale, key) {
+			var old_scale = scale; 
+			
+			
+			function new_scale(i) {
+				if (key) {
+					i = chart.series(key).data[i];
+				}
+				 
+				return old_scale(i);
+			}	
+			
+			new_scale.max = function() {
+				return old_scale.max.apply(old_scale, arguments);
+			}
+			
+			new_scale.min = function() {
+				return old_scale.min.apply(old_scale, arguments);
+			}
+			
+			new_scale.rangeBand = function() {
+				return old_scale.rangeBand.apply(old_scale, arguments);
+			}
+			
+			new_scale.rate = function() {
+				return old_scale.rate.apply(old_scale, arguments);
+			}
+			
+			return new_scale;
+		}
 	}
 
 	return Grid;

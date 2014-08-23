@@ -12,8 +12,6 @@ jui.define("chart.brush.stack", [], function() {
 
 			width = chart.x.rangeBand();
 			barWidth = width - outerPadding * 2;
-			gauge = brush.gauge || false;
-			
 		}
 
 		this.draw = function(chart) {
@@ -29,22 +27,6 @@ jui.define("chart.brush.stack", [], function() {
 
 					heightSum += height;
 					heightArr.push(chart_height - brush.y(height));
-				}
-
-				if (gauge) {
-					var gaugeRect = chart.svg.rect({
-						x : startX,
-						y : 0,
-						width : barWidth,
-						height : chart_height,
-						fill : this.color(6),
-						"fill-opacity" : 0.1
-					})
-
-                    // 속성 옵션 적용
-                    gaugeRect.attr(chart.attr(brush.type, brush.target[j]));
-
-					g.append(gaugeRect);
 				}
 
 				var startY = brush.y(heightSum);

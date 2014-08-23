@@ -2,6 +2,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 	var Grid = function(orient, grid) {
 		var position = [];
+		var self = this; 
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y);
@@ -68,28 +69,33 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			grid = this.setBlockDomain(chart, grid);
 		}
 
-		this.xy = function(index, value) {
-			var obj = position[0];
+		function scale(obj) {
+			var max = grid.max;		
+			var domain = grid.domain;	
+			var that = self;
 
-            var rate = value / grid.max;
-
-			var height = Math.abs(obj.y1) - Math.abs(obj.y2);
-			var pos = height * rate;
-			var unit = 2 * Math.PI / grid.domain.length;
-
-			var centerX = obj.x1;
-			var centerY = obj.y1;
-			var y = -pos;
-			var x = 0;
-
-			var obj = this.rotate(x, y, unit * index);
-			x = obj.x;
-			y = obj.y;
-
-			return {
-				x : centerX + x,
-				y : centerY + y
+			return function(index, value) {
+	            var rate = value / max;
+	
+				var height = Math.abs(obj.y1) - Math.abs(obj.y2);
+				var pos = height * rate;
+				var unit = 2 * Math.PI / domain.length;
+	
+				var cx = obj.x1;
+				var cy = obj.y1;
+				var y = -pos;
+				var x = 0;
+	
+				var o = that.rotate(x, y, unit * index);
+				x = o.x;
+				y = o.y;
+	
+				return {
+					x : cx + x,
+					y : cy + y
+				}				
 			}
+
 		}
 
 		this.draw = function(chart) {
@@ -198,7 +204,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				startY += h;
 			}
 
-			return this;
+			return scale(position[0]);
 		}
 	}
 
