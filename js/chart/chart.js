@@ -5,6 +5,20 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 		var self = this; 
 		var _grid = [], _widget = [], _brush = [], _data, _series;
 
+		this.style=  {
+			text : {
+				"font-family" : "arial,Tahoma,verdana",
+				"font-size" : "11px",
+				"fill" : "#666666"
+			}
+		}
+		
+		this.text = function(attr, textOrCallback) {
+			var el = this.svg.text(_.extend(this.style.text, attr), textOrCallback);
+			
+			return el; 
+		}
+
 		this.init = function() {
 			this.parent.init.call(this);
 			this.emit("load", []);

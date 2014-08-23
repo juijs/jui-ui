@@ -58,25 +58,28 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 						fontWeight = 'bold';
 					} 
 					
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : barX,
 							y1 : 0.5,
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
 							stroke : color,
 							"stroke-width" : strokeWidth
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : barX - bar,
 							y : bar,
 							'text-anchor' : 'end',
 							fill : color
-						}, (format) ? format(ticks[i]) : ticks[i] + "")
-					}));
+						}, (format) ? format(ticks[i]) : ticks[i] + ""));
+					
+					
+					g.append(axis);
 						
 					
 
@@ -110,26 +113,28 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 						fontWeight = 'bold';
 					} 
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(" + values[i] + ", 0)"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : 0.5,
 							y1 : -chart.area('height'),
 							x2 : 0.5,
 							y2 : 0 ,
 							stroke : color,
 							"stroke-width" : strokeWidth,
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : 0,
 							y : bar * 4,
 							'text-anchor' : 'middle',
 							fill : color,
 							'font-weight' : fontWeight 
-						}, (format) ? format(ticks[i]) : ticks[i] + "")
-					}));
+						}, (format) ? format(ticks[i]) : ticks[i] + ""))					
+
+					g.append(axis);
 				}
 
 			} else if (orient == 'top') {
@@ -154,32 +159,39 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 					var color = "black";
 					var strokeWidth = 0.5; 
 					var fontWeight = "normal";
-					if (ticks[i] == 0 && ticks[i] != scale.min()) {
+					
+					var isZero = ticks[i] == 0 && ticks[i] != scale.min();
+					
+					if (isZero) {
 						color = "#ff7800";
 						strokeWidth = 2;
 						fontWeight = 'bold';
 					} 
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(" + values[i] + ", " + barY + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(						chart.svg.line({
 							x1 : 0,
 							y1 : 6,
 							x2 : 0,
 							y2 : 6 + chart.area('height'),
 							stroke : color,
 							"stroke-width" : strokeWidth
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : 0,
 							y : -4,
 							'text-anchor' : 'middle',
 							fill : color,
 							'font-weight' : fontWeight 
-						}, (format) ? format(ticks[i]) : ticks[i] + "")
-					}));
+						}, (format) ? format(ticks[i]) : ticks[i] + ""));							
+
+ 					axis.append(text);					
+
+					g.append(axis);
 				}
 
 			} else if (orient == 'right') {
@@ -211,26 +223,28 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 						fontWeight = 'bold';
 					} 
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0, " + values[i] + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : 0,
 							y1 : 0,
 							x2 : bar,
 							y2 : 6,
 							stroke : color,
 							"stroke-width" : strokeWidth
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : bar + 2,
 							y : bar,
 							'text-anchor' : 'start',
 							fill : color,
 							'font-weight' : fontWeight 
-						}, (format) ? format(ticks[i]) : ticks[i] + "")
-					}));
+						}, (format) ? format(ticks[i]) : ticks[i] + ""));					
+
+					g.append(axis);
 				}
 			}
 

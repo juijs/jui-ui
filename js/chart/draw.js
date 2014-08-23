@@ -1,5 +1,6 @@
 jui.define("chart.draw", [ "util" ], function(_) {
 	var Draw = function() {
+		
 		this.render = function(chart) {
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
@@ -19,6 +20,7 @@ jui.define("chart.draw", [ "util" ], function(_) {
 				y : x * Math.sin(radian) + y * Math.cos(radian)
 			}
 		}
+		
 	}
 
 	return Draw;

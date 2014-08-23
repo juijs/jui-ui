@@ -52,24 +52,31 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						band : band
 					};
 
-					g.append(chart.svg.group({
-						"transform" : "translate(" + points[i] + ", 0)"
-					}, function() {
-						chart.svg.line({
-							x1 : 0,
-							y1 : barY,
-							x2 : 0,
-							y2 : height,
-							stroke : "black",
-							"stroke-width" : 1
-						});
 
-						chart.svg.text({
-							x : half_band,
-							y : 20,
-							'text-anchor' : 'middle'
-						}, domain[i])
-					}));
+					var axis = chart.svg.group({
+							"transform" : "translate(" + points[i] + ", 0)"
+						})
+						
+						axis.append(
+							chart.svg.line({
+								x1 : 0,
+								y1 : barY,
+								x2 : 0,
+								y2 : height,
+								stroke : "black",
+								"stroke-width" : 1
+							})
+						);
+	
+						axis.append(chart.text({
+								x : half_band,
+								y : 20,
+								'text-anchor' : 'middle'
+							}, domain[i])
+						)						
+
+
+					g.append(axis);
 				}
 				
 				if (full) {
@@ -106,25 +113,28 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						point : points[i],
 						band : band
 					};
-
-					g.append(chart.svg.group({
+					
+					var axis = chart.svg.group({
 						"transform" : "translate(" + points[i] + ", 0)"
-					}, function() {
-						chart.svg.line({
+					})
+					
+						axis.append(chart.svg.line({
 							x1 : -half_band,
 							y1 : 0,
 							x2 : -half_band,
 							y2 : bar,
 							stroke : "black",
 							"stroke-width" : 1
-						});
+						}));
 
-						chart.svg.text({
+						axis.append(chart.text({
 							x : 0,
 							y : 20,
 							'text-anchor' : 'middle'
-						}, domain[i])
-					}));
+						}, domain[i]))
+
+
+					g.append(axis);
 				}
 
 			} else if (orient == 'left') {
@@ -139,7 +149,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					y2 : max,
 					stroke : "black",
 					"stroke-width" : 1
-				}));
+				})); 
 
 				for (var i = 0; i < points.length; i++) {
 					values[i] = {
@@ -147,24 +157,26 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						band : band
 					};
 					
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0, " + points[i] + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : barX,
 							y1 : -half_band,
 							x2 : width,
 							y2 : -half_band,
 							stroke : "black",
 							"stroke-width" : 1
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : width-10,
-							y : 5, 
+							y : 0, 
 							'text-anchor' : 'end'
-						}, domain[i])
-					}));
+						}, domain[i]));
+					
+					g.append(axis);
 				}
 
 			} else if (orient == 'right') {
@@ -187,24 +199,26 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						band : band
 					};
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0, " + points[i] + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : 0,
 							y1 : 0,
 							x2 : bar,
 							y2 : 0,
 							stroke : "black",
 							"stroke-width" : 1
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : bar + 5,
-							y : half_band-5,
+							y : half_band,
 							'text-anchor' : 'start'
-						}, domain[i])
-					}));
+						}, domain[i]))
+					
+					g.append(axis);
 				}
 			}
 

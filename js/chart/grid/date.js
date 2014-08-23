@@ -50,24 +50,26 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(" + values[i] + ", 0)"
-					}, function() {
-						chart.svg.line({
-							x1 : 0.5,
+					})
+					
+					axis.append(chart.svg.line({
+							x1 : 0,
 							y1 : barY,
-							x2 : 0.5,
+							x2 : 0,
 							y2 : height,
 							stroke : "black",
-							"stroke-width" : 0.5
-						});
+							"stroke-width" : 1
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : 0,
 							y : bar * 3,
 							'text-anchor' : 'middle'
-						}, format ? format(ticks[i]) : ticks[i])
-					}));
+						}, format ? format(ticks[i]) : ticks[i]))
+
+					g.append(axis);
 				}
 			} else if (orient == 'bottom') {
 				var height = chart.widget('bottom').size;
@@ -99,7 +101,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						"stroke-width" : 0.5
 					}));
 
-					group.append(chart.svg.text({
+					group.append(chart.text({
 						x : 0,
 						y : bar * 4,
 						'text-anchor' : 'middle'
@@ -125,24 +127,27 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0," + values[i] + ")"
-					}, function() {
-						chart.svg.line({
-							x1 : barX,
-							y1 : 0.5,
-							x2 : width,
-							y2 : 0.5,
-							stroke : "black",
-							"stroke-width" : 0.5
-						});
+					})
+					
+					axis.append(chart.svg.line({
+						x1 : barX,
+						y1 : 0.5,
+						x2 : width,
+						y2 : 0.5,
+						stroke : "black",
+						"stroke-width" : 0.5
+					}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : bar,
 							y : bar,
 							'text-anchor' : 'end'
 						}, format ? format(ticks[i]) : ticks[i])
-					}));
+					);					
+
+					g.append(axis);
 				}
 
 			} else if (orient == 'right') {
@@ -162,24 +167,26 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
 
-					g.append(chart.svg.group({
+					var axis = chart.svg.group({
 						"transform" : "translate(0," + values[i] + ")"
-					}, function() {
-						chart.svg.line({
+					})
+					
+					axis.append(chart.svg.line({
 							x1 : 0,
 							y1 : 0.5,
 							x2 : bar,
 							y2 : 0.5,
 							stroke : "black",
 							"stroke-width" : 0.5
-						});
+						}));
 
-						chart.svg.text({
+					axis.append(chart.text({
 							x : bar * 2,
 							y : bar,
 							'text-anchor' : 'start'
-						}, format ? format(ticks[i]) : ticks[i])
-					}));
+						}, format ? format(ticks[i]) : ticks[i]))					
+
+					g.append(axis);
 				}
 			}
 

@@ -164,7 +164,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 					tx -= 10;
 				}
 
-				root.append(chart.svg.text({
+				root.append(chart.text({
 					x : tx,
 					y : ty,
 					'text-anchor' : talign
