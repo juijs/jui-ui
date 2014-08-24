@@ -34,7 +34,6 @@ jui.define("chart.brush.bubble", [], function() {
                         "stroke-width": 1
                     });
 
-                    bubble.attr(chart.attr(brush.type, brush.target[j]));
                     g.append(bubble);
                 }
             }

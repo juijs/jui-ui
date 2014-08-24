@@ -19,15 +19,10 @@ jui.define("chart.brush.scatter", [], function() {
 
                         poly.point(0, h)
                             .point(w, h)
-                            .point(w / 2, 0)
-                            .attr(chart.attr(brush.type, brush.target[index]));
+                            .point(w / 2, 0);
                     } else {
-                        var attr = chart.attr(brush.type, brush.target[index]);
-                        var line1 = chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h }),
-                            line2 = chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
-
-                        line1.attr(attr);
-                        line2.attr(attr);
+                        chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
+                        chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
 
                 }).translate(x - (w / 2), y - (h / 2));
@@ -49,8 +44,6 @@ jui.define("chart.brush.scatter", [], function() {
                         fill: self.color(index)
                     });
                 }
-
-                elem.attr(chart.attr(brush.type, brush.target[index]));
             }
 
             return elem;

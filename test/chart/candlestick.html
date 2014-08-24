@@ -23,7 +23,7 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chart.chart", "chart.util" ], function(chart, util) {
+    jui.ready([ "chart.chart", "util" ], function(chart, _) {
 
         var dataSource = [
             { date: new Date(1994,2,1), l: 24.00, h: 25.00, o: 25.00, c: 24.875 },
@@ -57,27 +57,27 @@
             data : dataSource,
             grid : {
                 x : {
-                    type : "date",  // default type is block
-                    domain : [ dataSource[0].date, dataSource[dataSource.length - 1].date ],
-                    step : [ util.time.days, 1 ],
-                    format : "MM-dd",
-                    key : 'date'
+                    type : "block",  // default type is block
+                    target : 'date',
+                    format: function(d) {
+                        return _.dateFormat(d, "MM-dd");
+                    }
                 },
                 y : {
                     type : 'range',
-                    target : [ "l", "h", "o", "c" ],
-                    step : 10
+                    domain: [ 20, 30 ],
+                    step: 5
                 }
             },
             series : {
                 l: {
-                    type: "open"
+                    type: "low"
                 },
                 h: {
                     type: "high"
                 },
                 o: {
-                    type: "low"
+                    type: "open"
                 },
                 c: {
                     type: "close"

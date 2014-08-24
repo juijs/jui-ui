@@ -53,7 +53,6 @@ jui.define("chart.brush.area", [], function() {
 				p.point(x[x.length - 1], y[y.length - 1]);
 				p.point(x[x.length - 1], maxY);
 
-                p.attr(chart.attr(brush.type, brush.target[j]));
 				g.prepend(p);
 			}
 		}

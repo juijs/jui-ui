@@ -31,9 +31,6 @@ jui.define("chart.brush.donut", [], function() {
 
 			var path = chart.svg.path(attr);
 
-            // 속성 옵션 적용
-            path.attr(chart.attr(brush.type, brush.target[0]));
-
 			// 바깥 지름 부터 그림
 			var startX = 0;
 			var startY = -outerRadius;

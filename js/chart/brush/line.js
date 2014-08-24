@@ -72,7 +72,6 @@ jui.define("chart.brush.line", [], function() {
             for (var k = 0; k < path.length; k++) {
                 var p = createPath(brush, chart, path, k);
 
-                p.attr(chart.attr(brush.type, brush.target[k]));
                 g.append(p);
             }
         }

@@ -48,7 +48,6 @@ jui.define("chart.brush.equalizer", [], function() {
 							eY -= unitHeight + padding;
 							eIndex++;
 
-                            r.attr(chart.attr(brush.type, brush.target[j]));
 							g.append(r);
 						}
 					} else {
@@ -71,7 +70,6 @@ jui.define("chart.brush.equalizer", [], function() {
 							eY += unitHeight + padding;
 							eIndex++;
 
-                            r.attr(chart.attr(brush.type, brush.target[j]));
 							g.append(r);
 						}
 

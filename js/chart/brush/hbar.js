@@ -32,7 +32,6 @@ jui.define("chart.brush.hbar", [], function() {
 							fill : this.color(j)
 						});
 
-                        r.attr(chart.attr(brush.type, brush.target[j]));
 						g.append(r);
 					} else {
 						var w = Math.abs(zeroX - startX);
@@ -45,7 +44,6 @@ jui.define("chart.brush.hbar", [], function() {
 							fill : this.color(j)
 						});
 
-                        r.attr(chart.attr(brush.type, brush.target[j]));
 						g.append(r);
 					}
 
