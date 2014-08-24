@@ -4,11 +4,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 		var self = this;
 		var size;
 
-		function drawBlock(chart, orient, domain, range, full) {
+		function drawBlock(chart, orient, g, domain, range, full) {
 
-			var g = chart.svg.group({
-				'class' : 'grid block'
-			});
 			var scale = util.scale.ordinal().domain(domain);
 
 			var max = range[0];
@@ -30,6 +27,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			var band = scale.rangeBand();
 			var values = [];
 			var half_band = (full) ? 0 : band / 2;
+			var format = grid.format; 
 
 			if (orient == 'top') {
 
@@ -72,7 +70,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 								x : half_band,
 								y : 20,
 								'text-anchor' : 'middle'
-							}, domain[i])
+							}, (format) ? format(domain[i]) : domain[i])
 						)						
 
 
@@ -131,7 +129,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x : 0,
 							y : 20,
 							'text-anchor' : 'middle'
-						}, domain[i]))
+						}, (format) ? format(domain[i]) : domain[i])
+					)
 
 
 					g.append(axis);
@@ -174,13 +173,13 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x : width-10,
 							y : 0, 
 							'text-anchor' : 'end'
-						}, domain[i]));
+						}, (format) ? format(domain[i]) : domain[i]));
 					
 					g.append(axis);
 				}
 
 			} else if (orient == 'right') {
-				var width = chart.widget('right').size;
+				var width = chart.widget.size('right');
 				var bar = 6;
 				var barX = width - bar;
 
@@ -216,16 +215,12 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x : bar + 5,
 							y : half_band,
 							'text-anchor' : 'start'
-						}, domain[i]))
+						}, (format) ? format(domain[i]) : domain[i]))
 					
 					g.append(axis);
 				}
 			}
 
-			scale.result = {
-				g : g, 
-				values : values 
-			}
 			
 			return scale; 
 		}
@@ -239,8 +234,11 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 		this.draw = function(chart) {
 
 			var width = chart.area('width'), height = chart.area('height'), max = (orient == 'left' || orient == 'right') ? height : width;
-
-			var scale = drawBlock(chart, orient, grid.domain, [0, max], grid.full);
+			var root = chart.svg.group({
+				'class' : 'grid block'
+			})
+			
+			var scale = drawBlock(chart, orient, root, grid.domain, [0, max], grid.full);
 			if (orient == 'left') {
 				var x = chart.area('x') - chart.widget('left').size;
 				var y = chart.area('y');
@@ -255,7 +253,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var y = chart.area('y2');
 			}
 
-			scale.result.g.translate(x, y);
+			root.translate(x, y);
 			scale.key = grid.key;
 
 			return scale;
