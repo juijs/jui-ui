@@ -9,18 +9,16 @@ jui.define("chart.brush.candlestick", [], function() {
             zeroY = brush.y(0);
             count = chart.data().length;
 
-            //width = brush.x(1) + brush.x(0);
+            width = brush.x(1) - brush.x(0);
             barWidth = width * 0.7;
-
-            console.log(width);
         }
 
         this.draw = function(chart) {
-            /*/
+            
             for (var i = 0; i < count; i++) {
                 console.log(brush.x(i));
             }
-            /**/
+            
         }
 	}
 

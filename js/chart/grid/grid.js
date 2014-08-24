@@ -89,7 +89,7 @@ jui.define("chart.grid", [ "util" ], function(_) {
 			
 			function new_scale(i) {
 				if (key) {
-					i = chart.series(key).data[i];
+					i = chart.data(i)[key];
 				}
 				 
 				return old_scale(i);
