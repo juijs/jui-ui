@@ -1,8 +1,11 @@
 jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
+		
+		var _area, _theme; 
+		
 		function calculate(self) {
-			self._area = {};
+			_area = {};
 
 			var widget = self.get('widget');
 			
@@ -19,7 +22,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			chart.x2 = chart.x + chart.width;
 			chart.y2 = chart.y + chart.height;
 
-			self._area = chart;
+			_area = chart;
 		}
 
 		this.get = function(key) {
@@ -27,11 +30,11 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 		}
 
 		this.area = function(key) {
-			if (this._area[key]) {
-				return this._area[key];
+			if (_area[key]) {
+				return _area[key];
 			}
 
-			return this._area;
+			return _area;
 		}
 
         this.bind = function(bind) {
@@ -61,12 +64,32 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			});
 
             // 차트 테마 설정
-            this.theme = jui.include("chart.theme." + (this.get("theme")));
+            _theme = jui.include("chart.theme." + this.get("theme"));
+
 
             // UI 바인딩 설정
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
             }
+		}
+		
+		this.theme = function(key, value, value2) {
+			
+			if (arguments.length == 0) {
+				return _theme;
+			} else if (arguments.length == 1) {
+				return _theme[key];
+			} else if (arguments.length == 2) {
+				_theme[key] = value;
+				
+				return _theme[key];
+			} else if (arguments.length == 3) {
+				return (key) ? _theme[value] : _theme[value2];
+			}
+		}
+		
+		this.theme.color = function(i) {
+			return _theme["colors"][i];
 		}
 
 		this.render = function() {

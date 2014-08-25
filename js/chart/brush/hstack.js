@@ -10,7 +10,7 @@ jui.define("chart.brush.hstack", [], function() {
 			series = chart.series();
 			count = chart.data().length;
 
-			height = chart.y.rangeBand();
+			height = brush.y.rangeBand();
 			barWidth = height - outerPadding * 2;
 		}
 

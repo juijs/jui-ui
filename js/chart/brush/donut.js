@@ -116,7 +116,7 @@ jui.define("chart.brush.donut", [], function() {
 				}
 
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
-					fill : this.color(i)
+					fill : chart.theme.color(i)
 				});
 
 				group.append(g);

@@ -14,8 +14,8 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : 'black',
-				"stroke-width" : 0.5
+				stroke : chart.theme('gridBorderColor'),
+				"stroke-width" : chart.theme('gridBorderWidth')
 			}))
 		}
 
@@ -42,8 +42,8 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			var path = chart.svg.path({
 
 				"fill" : "none",
-				stroke : "black",
-				"stroke-width" : 0.5
+				stroke : chart.theme('gridBorderColor'),
+				"stroke-width" : chart.theme('gridBorderWidth')
 			});
 
 			for (var i = 0; i < points.length; i++) {
@@ -138,11 +138,11 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 				root.append(chart.svg.line({
 					x1 : centerX,
-					y1 : centerY+0.5,
+					y1 : centerY,
 					x2 : x2,
-					y2 : y2+0.5,
-					"stroke-width" : 0.5,
-					'stroke' : 'black'
+					y2 : y2,
+					stroke : chart.theme('gridBorderColor'),
+					"stroke-width" : chart.theme('gridBorderWidth')
 				}))
 
 				position[i] = {

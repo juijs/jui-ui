@@ -3,18 +3,14 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 	var UI = function() {
 		
 		var self = this; 
-		var _grid = [], _widget = [], _brush = [], _data, _series;
-
-		this.style=  {
-			text : {
-				"font-family" : "arial,Tahoma,verdana",
-				"font-size" : "11px",
-				"fill" : "#666666"
-			}
-		}
+		var _grid = [], _widget = [], _brush = [], _data, _series, _scales = {};
 		
 		this.text = function(attr, textOrCallback) {
-			var el = this.svg.text(_.extend(this.style.text, attr), textOrCallback);
+			var el = this.svg.text(_.extend({
+				"font-family" : this.theme("fontFamily"),
+				"font-size" : this.theme("fontSize"),
+				"fill" : this.theme("fontColor")
+			}, attr), textOrCallback);
 			
 			return el; 
 		}
@@ -194,8 +190,9 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 
 		this.draw = function() {
 			var grid = this.grid();
-
+			var grid_list = {};
 			if (grid != null) {
+				
 				if (grid.type)
 					grid = {
 						c : grid
@@ -215,7 +212,7 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 						orient = 'right';
 						
 					var Grid = jui.include("chart.grid." + (grid[k].type || "block"))
-					this[k] = new Grid(orient, grid[k]).render(this);
+					_scales[k] = new Grid(orient, grid[k]).render(this);
 				}
 			}
 
@@ -223,12 +220,12 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 				for (var i = 0; i < _brush.length; i++) {
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 
-					if (this.x || this.x1)
-						_brush[i].x = (_brush[i].x1) ? this.x1 : this.x;
-					if (this.y || this.y1)
-						_brush[i].y = (_brush[i].y1) ? this.y1 : this.y;
-					if (this.c)
-						_brush[i].c = this.c;
+					if (_scales.x || _scales.x1)
+						_brush[i].x = (_brush[i].x1) ? _scales.x1 : _scales.x;
+					if (_scales.y || _scales.y1)
+						_brush[i].y = (_brush[i].y1) ? _scales.y1 : _scales.y;
+					if (_scales.c)
+						_brush[i].c = _scales.c;
 
 					_brush[i].index = i;
 

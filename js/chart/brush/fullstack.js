@@ -10,7 +10,7 @@ jui.define("chart.brush.fullstack", [], function() {
 			zeroY = brush.y(0);
 			count = chart.data().length;
 
-			width = chart.x.rangeBand();
+			width = brush.x.rangeBand();
 			barWidth = width - outerPadding * 2;
 		}
 

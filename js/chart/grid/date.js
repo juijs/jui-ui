@@ -40,11 +40,11 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 
 				g.append(chart.svg.line({
 					x1 : 0,
-					y1 : height + 0.5,
+					y1 : height,
 					x2 : max,
-					y2 : height + 0.5,
-					stroke : "black",
-					"stroke-width" : 0.5
+					y2 : height,
+					stroke : chart.theme("borderColor"),
+					"stroke-width" : chart.theme("borderWidth")
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -59,8 +59,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 							y1 : barY,
 							x2 : 0,
 							y2 : height,
-							stroke : "black",
-							"stroke-width" : 1
+							stroke : chart.theme("borderColor"),
+							"stroke-width" : chart.theme("borderWidth")
 						}));
 
 					axis.append(chart.text({
@@ -81,8 +81,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0.5,
 					x2 : max,
 					y2 : 0.5,
-					stroke : "black",
-					"stroke-width" : 0.5
+					stroke : chart.theme("borderColor"),
+					"stroke-width" : chart.theme("borderWidth")
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -97,8 +97,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						y1 : 0,
 						x2 : 0.5,
 						y2 : bar,
-						stroke : "black",
-						"stroke-width" : 0.5
+						stroke : chart.theme("borderColor"),
+						"stroke-width" : chart.theme("borderWidth")
 					}));
 
 					group.append(chart.text({
@@ -111,7 +111,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 
 			} else if (orient == 'left') {
-				var width = chart.widget('left').size;
+				var width = chart.widget.size('left');
 				var bar = 6;
 				var barX = width - bar;
 
@@ -120,8 +120,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0,
 					x2 : width + 0.5,
 					y2 : max,
-					stroke : "black",
-					"stroke-width" : 0.5
+					stroke : chart.theme("borderColor"),
+					"stroke-width" : chart.theme("borderWidth")
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -132,12 +132,12 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					})
 					
 					axis.append(chart.svg.line({
-						x1 : barX,
+						x1 : width,
 						y1 : 0.5,
-						x2 : width,
+						x2 : width + chart.area('width'),
 						y2 : 0.5,
-						stroke : "black",
-						"stroke-width" : 0.5
+						stroke : chart.theme("borderColor"),
+						"stroke-width" : chart.theme("borderWidth")
 					}));
 
 					axis.append(chart.text({
@@ -151,7 +151,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 				}
 
 			} else if (orient == 'right') {
-				var width = chart.widget('right').size;
+				var width = chart.widget.size('right');
 				var bar = 6;
 				var barX = width - bar;
 
@@ -160,8 +160,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0,
 					x2 : 0.5,
 					y2 : max,
-					stroke : "black",
-					"stroke-width" : 0.5
+					stroke : chart.theme("borderColor"),
+					"stroke-width" : chart.theme("borderWidth")
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -176,8 +176,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 							y1 : 0.5,
 							x2 : bar,
 							y2 : 0.5,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : chart.theme("borderColor"),
+							"stroke-width" : chart.theme("borderWidth")
 						}));
 
 					axis.append(chart.text({

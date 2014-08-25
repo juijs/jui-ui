@@ -8,7 +8,7 @@ jui.define("chart.brush.area", [], function() {
 			zeroY = brush.y(0);
 			maxY = chart.area('height');
 			count = chart.data().length;
-			width = chart.x.rangeBand();
+			width = brush.x.rangeBand();
 
             for (var i = 0; i < count; i++) {
                 var startX = brush.x(i) + 1, valueSum = 0;

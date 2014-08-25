@@ -10,7 +10,7 @@ jui.define("chart.brush.bar", [], function() {
 			zeroY = brush.y(0);
 			count = chart.data().length;
 
-			width = chart.x.rangeBand();
+			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 		}

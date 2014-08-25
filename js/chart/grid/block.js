@@ -25,7 +25,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			}
 
 			var band = scale.rangeBand();
-			var values = [];
 			var half_band = (full) ? 0 : band / 2;
 			var format = grid.format; 
 
@@ -36,11 +35,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var barY = height - bar;
 
 				for (var i = 0; i < points.length; i++) {
-					values[i] = {
-						point : points[i],
-						band : band
-					};
-
 
 					var axis = chart.svg.group({
 							"transform" : "translate(" + points[i] + ", 0)"
@@ -52,8 +46,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 								y1 : barY,
 								x2 : 0,
 								y2 : height,
-								stroke : "black",
-								"stroke-width" : 0.5
+								stroke : chart.theme("gridBorderColor"),
+								"stroke-width" : chart.theme("gridBorderWidth")
 							})
 						);
 	
@@ -77,8 +71,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y1 : barY,
 							x2 : 0,
 							y2 : height,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : chart.theme("gridBorderColor"),
+							"stroke-width" : chart.theme("gridBorderWidth")
 						});
 					}));
 				}
@@ -89,11 +83,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var barY = height - bar;
 
 				for (var i = 0; i < points.length; i++) {
-					values[i] = {
-						point : points[i],
-						band : band
-					};
-					
+				
 					var axis = chart.svg.group({
 						"transform" : "translate(" + points[i] + ", 0)"
 					})
@@ -103,8 +93,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y1 : 0,
 							x2 : -half_band,
 							y2 : bar,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : chart.theme("gridBorderColor"),
+							"stroke-width" : chart.theme("gridBorderWidth")
 						}));
 
 						axis.append(chart.text({
@@ -124,10 +114,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var barX = width - bar;
 
 				for (var i = 0; i < points.length; i++) {
-					values[i] = {
-						point : points[i],
-						band : band
-					};
 					
 					var axis = chart.svg.group({
 						"transform" : "translate(0, " + points[i] + ")"
@@ -138,8 +124,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y1 : -half_band,
 							x2 : width,
 							y2 : -half_band,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : chart.theme("gridBorderColor"),
+							"stroke-width" : chart.theme("gridBorderWidth")
 						}));
 
 					axis.append(chart.text({
@@ -157,10 +143,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var barX = width - bar;
 
 				for (var i = 0; i < points.length; i++) {
-					values[i] = {
-						point : points[i],
-						band : band
-					};
 
 					var axis = chart.svg.group({
 						"transform" : "translate(0, " + points[i] + ")"
@@ -171,8 +153,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y1 : 0,
 							x2 : bar,
 							y2 : 0,
-							stroke : "black",
-							"stroke-width" : 0.5
+							stroke : chart.theme("gridBorderColor"),
+							"stroke-width" : chart.theme("gridBorderWidth")
 						}));
 
 					axis.append(chart.text({
