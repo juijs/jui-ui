@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <script src="../../../lib/jquery-1.8.3.min.js"></script>
+    <script src="../../../lib/jquery.binder.js"></script>
+    <script src="../../../js/base.js"></script>
+    <script src="../../../js/core.js"></script>
+    <script src="../../../js/util/svg.js"></script>
+    <script src="../../../js/chart/core.js"></script>
+    <script src="../../../js/chart/draw.js"></script>
+    <script src="../../../js/chart/util.js"></script>
+    <script src="../../../js/chart/chart.js"></script>    
+    <script src="../../../js/chart/theme/white.js"></script>    
+    
+    <script src="../../../js/chart/grid/grid.js"></script>
+    <script src="../../../js/chart/grid/block.js"></script>
+    <script src="../../../js/chart/grid/date.js"></script>
+    <script src="../../../js/chart/grid/range.js"></script>
+    <script src="../../../js/chart/grid/radar.js"></script>
+    <script src="../../../js/chart/brush/brush.js"></script>
+    <script src="../../../js/chart/brush/donut.js"></script>
+    <script src="../../../js/chart/brush/area.js"></script>
+    <script src="../../../js/chart/brush/bar.js"></script>
+    <script src="../../../js/chart/brush/bubble.js"></script>
+    <script src="../../../js/chart/brush/equalizer.js"></script>
+    <script src="../../../js/chart/brush/candlestick.js"></script>
+    <script src="../../../js/chart/brush/fullstack.js"></script>
+    <script src="../../../js/chart/brush/gauge.js"></script>
+    <script src="../../../js/chart/brush/hbar.js"></script>
+    <script src="../../../js/chart/brush/hstack.js"></script>
+    <script src="../../../js/chart/brush/line.js"></script>
+    <script src="../../../js/chart/brush/path.js"></script>
+    <script src="../../../js/chart/brush/scatter.js"></script>
+    <script src="../../../js/chart/brush/stack.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+
+function getDate() {
+			return Math.round((Math.random()*1000) % 300)
+		}
+		
+		function getNumber() {
+			return Math.round(Math.random() * 1000  % 500);
+		}
+
+    jui.ready(["chart.chart", "chart.util"], function(Chart, util) {
+            
+			var start = new Date();
+			var end = util.time.add(start, util.time.hours, 5);
+			
+			var data = [];
+			for(var i = 0; i < 30; i++) {
+				data.push({ name : getNumber(), name2 : getNumber(), value : util.time.add(start, util.time.minutes, i*10)} )
+			}
+
+			new Chart("#chart", {
+				width: 400,
+				height : 400,
+				data : data,
+				grid : {
+					
+					x : { 
+						type : "date",  // default type is block 
+						domain : [ start, end ],
+						step : [util.time.hours, 1],
+						format : "hh:mm",
+					    key: "value"
+					},
+					y : { 
+						type : 'range', 
+						target : ["name"], 
+						step : 10
+					}
+				},
+				series : {
+					name : {
+						text : "이름"
+					},
+					name2 : {
+						text : "이름2"
+					},
+					value : {
+						text : "날짜"
+					}
+				},
+				brush : {  
+					type : 'line',
+					//smooth : true, 
+					target : ["name", "name2"]
+				}
+			}).render();
+	})
+</script>
+
+
+</body>
+</html>
