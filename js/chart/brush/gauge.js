@@ -151,69 +151,6 @@ jui.define("chart.brush.gauge", [], function() {
 			return g;
 		}
 
-		this.drawDonut = function(chart, startAngle, endAngle, attr) {
-			var g = chart.svg.group({
-				'class' : 'gauge block'
-			})
-
-			g.translate(this.centerX, this.centerY);
-
-			var path = chart.svg.path(attr)
-
-			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -this.outerRadius;
-			var rate = (this.innerRadius / this.outerRadius);
-
-			var obj = this.rotate(startX, startY, this.radian(startAngle));
-
-			startX = obj.x;
-			startY = obj.y;
-
-			// 시작 하는 위치로 옮김
-			path.MoveTo(startX, startY);
-
-			// outer arc 에 대한 지점 설정
-			obj = this.rotate(startX, startY, this.radian(endAngle));
-
-			// arc 그림
-			path.Arc(this.outerRadius, this.outerRadius, 0, (endAngle >= 180) ? 1 : 0, 1, obj.x, obj.y);
-
-			var innerX, innerY;
-			// inner arc 로 이어지는 직선 그림
-			if (obj.x >= 0 && obj.y >= 0) {
-				innerX = Math.abs(obj.x) * rate;
-				innerY = Math.abs(obj.y) * rate;
-			} else if (obj.x < 0 && obj.y >= 0) {
-				innerX = -Math.abs(obj.x) * rate;
-				innerY = Math.abs(obj.y) * rate;
-			} else if (obj.x >= 0 && obj.y < 0) {
-				innerX = Math.abs(obj.x) * rate;
-				innerY = -Math.abs(obj.y) * rate;
-			} else if (obj.x < 0 && obj.y < 0) {
-				innerX = -Math.abs(obj.x) * rate;
-				innerY = -Math.abs(obj.y) * rate;
-			}
-
-			path.LineTo(innerX, innerY);
-
-			// inner arc 도착점 그림
-			obj = this.rotate(innerX, innerY, this.radian(-endAngle));
-
-			path.Arc(this.innerRadius, this.innerRadius, 0, (endAngle >= 180) ? 1 : 0, 0, obj.x, obj.y);
-
-			// 패스 종료
-			path.ClosePath();
-
-			g.append(path);
-
-			return g;
-		}
-
-		this.radian = function(degree) {
-			return degree * Math.PI / 180;
-		}
-
 		this.draw = function(chart) {
 
 			var s = chart.series(brush.target[0]);
@@ -231,13 +168,13 @@ jui.define("chart.brush.gauge", [], function() {
 			    this.endAngle = 359.99999;
 			}
 			
-			var g = this.drawDonut(chart, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+			var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
 				fill : chart.theme('gaugeBackgroundColor')
 			})
 
 			group.append(g);
 
-			g = this.drawDonut(chart, this.startAngle, currentAngle, {
+			g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle, currentAngle, {
 				fill : chart.theme.color(0) 
 			})
 
@@ -261,4 +198,4 @@ jui.define("chart.brush.gauge", [], function() {
 	}
 
 	return Brush;
-}, "chart.brush");
+}, "chart.brush.donut");
