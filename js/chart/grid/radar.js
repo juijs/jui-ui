@@ -2,7 +2,8 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 	var Grid = function(orient, grid) {
 		var position = [];
-		var self = this; 
+		var self = this;
+		var format ; 
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y);
@@ -67,9 +68,13 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 		this.drawBefore = function(chart) {
 			grid = this.setBlockDomain(chart, grid);
+			
+			
+			format = grid.format;
 		}
 
 		function scale(obj) {
+			
 			var max = grid.max;		
 			var domain = grid.domain;	
 			var that = self;
@@ -113,7 +118,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			var centerX = chart.area('x') + width / 2;
 			var centerY = chart.area('y') + height / 2;
 
-			var startY = -w / 1.5;
+			var startY = -w;
 			var startX = 0;
 			var count = grid.domain.length;
 			var step = grid.step;
@@ -184,10 +189,12 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			}
 
 			if (!grid.line)
-				return;
+				return scale(position[0]);
 
 			// area split line
-			startY = -w / 1.5;
+			startY = -w;
+			var stepBase = 0;
+			var stepValue = grid.max / grid.step;
 
 			for (var i = 0; i < step; i++) {
 
@@ -200,8 +207,14 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				} else {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
+				
+				root.append(chart.text({
+					x : centerX,
+					y : centerY + (startY + h - 5)
+				}, (grid.max - stepBase) + "" ))
 
 				startY += h;
+				stepBase += stepValue;
 			}
 
 			return scale(position[0]);

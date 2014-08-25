@@ -16,7 +16,7 @@ jui.define("chart.brush.gauge", [], function() {
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
-			this.startY = -this.w / 1.5;
+			this.startY = -this.w;
 			this.startX = 0;
 			this.outerRadius = Math.abs(this.startY);
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius / this.rate) * this.empty;
@@ -232,13 +232,13 @@ jui.define("chart.brush.gauge", [], function() {
 			}
 			
 			var g = this.drawDonut(chart, this.startAngle + currentAngle, this.endAngle - currentAngle, {
-				fill : this.color(6)
+				fill : chart.theme('gaugeBackgroundColor')
 			})
 
 			group.append(g);
 
 			g = this.drawDonut(chart, this.startAngle, currentAngle, {
-				fill : this.color(0) 
+				fill : chart.theme.color(0) 
 			})
 
 			group.append(g);

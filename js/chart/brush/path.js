@@ -5,31 +5,36 @@ jui.define("chart.brush.path", [], function() {
 		}
 
 		this.draw = function(chart) {
-			var s = chart.series(brush.target[0]);
+
 			var g = chart.svg.group({
 				'class' : 'brush path'
 			});
-
-			var path = chart.svg.path({
-				fill : this.color(brush.index + 1),
-				"fill-opacity" : 0.7,
-				stroke : this.color(brush.index + 3),
-				"stroke-width" : 1
-			});
-
-			g.append(path);
-
-			for (var i = 0; i < s.data.length; i++) {
-				var obj = brush.c(i, s.data[i]);
-
-				if (i == 0) {
-					path.MoveTo(obj.x, obj.y);
-				} else {
-					path.LineTo(obj.x, obj.y);
+			
+			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
+				var s = chart.series(brush.target[ti]);
+	
+				var path = chart.svg.path({
+					fill : chart.theme.color(ti+2),
+					"fill-opacity" : 0.2,
+					stroke : chart.theme.color(ti+2),
+					"stroke-width" : chart.theme("gridActiveBorderWidth")
+				});
+	
+				g.append(path);
+	
+				for (var i = 0; i < s.data.length; i++) {
+					var obj = brush.c(i, s.data[i]);
+	
+					if (i == 0) {
+						path.MoveTo(obj.x, obj.y);
+					} else {
+						path.LineTo(obj.x, obj.y);
+					}
 				}
+	
+				path.ClosePath();				
 			}
 
-			path.ClosePath();
 
 			return this;
 		}

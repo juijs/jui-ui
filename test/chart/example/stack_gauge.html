@@ -33,6 +33,7 @@
     <script src="../../../js/chart/brush/path.js"></script>
     <script src="../../../js/chart/brush/scatter.js"></script>
     <script src="../../../js/chart/brush/stack.js"></script>
+    <script src="../../../js/chart/brush/stackgauge.js"></script>
 
 </head>
 <body>
@@ -40,38 +41,27 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready(["chart.chart"], function(Chart) {
-			
 
-			new Chart("#chart", {
+
+    jui.ready(["chart.chart", "chart.util"], function(Chart, util) {
+         
+			var c = new Chart("#chart", {
 				width: 400,
 				height : 400,
 				data : [
-					{ key : 'yellow', 	name : 70, 	value : 85 },
-					{ key : 'red',		name : 55, 	value : 6 },
-					{ key : 'black',	name : 8, 	value : 30 },
-					{ key : 'blue',		name : 18, 	value : 5 },
-					{ key : 'green',		name : 18, 	value : 5 },
-					{ key : 'blue2',		name : 8, 	value : 5 },
-					{ key : 'blue3',		name : 50, 	value : 100 },
-					{ key : 'blue4',		name : 18, 	value : 5 },
+					{ title : "OPTION 1", value : 75 },
+					{ title : "OPTION 2", value : 68 },
+					{ title : "OPTION 3", value : 60 },
 				],
-				
-				grid : {
-					type : 'radar', 
-					//shape : 'circle',
-					//line : false, 
-					//extra : true,
-					target : 'key'
-				}, 
-				series : {
-					name : { text : "이름" },
-					value : { text : "값" }
-				},
-				brush : [
-					{ type : 'path', target : ['name', 'value'] }	
-				]
-			}).render();
+				brush : [{
+					type : 'stackgauge',
+                    target : "value",
+                    // title : "title"  생략 가능 
+                    
+				}]
+			});
+    
+            c.render();
 	})
 </script>
 

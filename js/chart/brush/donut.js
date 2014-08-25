@@ -3,7 +3,7 @@ jui.define("chart.brush.donut", [], function() {
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
 			this.empty = brush.empty || 50;
-			this.innerCut = brush.innerCut || 5;
+			this.innerCut = brush.innerCut || 1;
 			
 
 			var width = chart.area('width'), height = chart.area('height');
@@ -18,7 +18,7 @@ jui.define("chart.brush.donut", [], function() {
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
-			this.startY = -this.w / 1.5;
+			this.startY = -this.w;
 			this.startX = 0;
 			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
 			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius / this.rate) * this.empty;
@@ -110,10 +110,6 @@ jui.define("chart.brush.donut", [], function() {
 				var endAngle = all * (data / max);
 
 				var cut = this.innerCut;
-
-				if (i == 1) {
-					cut += 10;
-				}
 
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
 					fill : chart.theme.color(i)
