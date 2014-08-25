@@ -128,9 +128,11 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
             for (var i = 0, len = data.length; i < len; i++) {
                 var row = data[i];
 
-                for (var key in series) {
-                    var obj = series[key];
+                for (var key in row) {
+                    var obj = series[key] || {};
                     var value = row[key];
+                    
+                    series[key] = obj;
 
                     obj.data = obj.data || [];
                     obj.min = obj.min || 0;

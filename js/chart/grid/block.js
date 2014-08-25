@@ -35,15 +35,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var bar = 6;
 				var barY = height - bar;
 
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : height,
-					x2 : max,
-					y2 : height,
-					stroke : "black",
-					"stroke-width" : 1
-				}));
-
 				for (var i = 0; i < points.length; i++) {
 					values[i] = {
 						point : points[i],
@@ -62,7 +53,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 								x2 : 0,
 								y2 : height,
 								stroke : "black",
-								"stroke-width" : 1
+								"stroke-width" : 0.5
 							})
 						);
 	
@@ -87,7 +78,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : 0,
 							y2 : height,
 							stroke : "black",
-							"stroke-width" : 1
+							"stroke-width" : 0.5
 						});
 					}));
 				}
@@ -96,15 +87,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var height = chart.widget.size('bottom');
 				var bar = 6;
 				var barY = height - bar;
-
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : 0.5,
-					x2 : max,
-					y2 : 0.5,
-					stroke : "black",
-					"stroke-width" : 1
-				}));
 
 				for (var i = 0; i < points.length; i++) {
 					values[i] = {
@@ -122,7 +104,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : -half_band,
 							y2 : bar,
 							stroke : "black",
-							"stroke-width" : 1
+							"stroke-width" : 0.5
 						}));
 
 						axis.append(chart.text({
@@ -141,15 +123,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var bar = 6;
 				var barX = width - bar;
 
-				g.append(chart.svg.line({
-					x1 : width,
-					y1 : 0,
-					x2 : width,
-					y2 : max,
-					stroke : "black",
-					"stroke-width" : 1
-				})); 
-
 				for (var i = 0; i < points.length; i++) {
 					values[i] = {
 						point : points[i],
@@ -166,7 +139,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : width,
 							y2 : -half_band,
 							stroke : "black",
-							"stroke-width" : 1
+							"stroke-width" : 0.5
 						}));
 
 					axis.append(chart.text({
@@ -182,15 +155,6 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var width = chart.widget.size('right');
 				var bar = 6;
 				var barX = width - bar;
-
-				g.append(chart.svg.line({
-					x1 : 0,
-					y1 : 0,
-					x2 : 0,
-					y2 : max,
-					stroke : "black",
-					"stroke-width" : 1
-				}));
 
 				for (var i = 0; i < points.length; i++) {
 					values[i] = {
@@ -208,7 +172,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : bar,
 							y2 : 0,
 							stroke : "black",
-							"stroke-width" : 1
+							"stroke-width" : 0.5
 						}));
 
 					axis.append(chart.text({
