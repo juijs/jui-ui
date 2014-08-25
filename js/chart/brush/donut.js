@@ -29,50 +29,37 @@ jui.define("chart.brush.donut", [], function() {
 			var path = chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -outerRadius;
-			var rate = (innerRadius / outerRadius);
+			var obj = this.rotate(0, -outerRadius, this.radian(startAngle));
 
-			var obj = this.rotate(startX, startY, this.radian(startAngle));
-
-			startX = obj.x;
-			startY = obj.y;
+			var startX = obj.x;
+			var startY = obj.y;
 			
-
+			var innerCircle = this.rotate(0, -innerRadius, this.radian(startAngle));
+			
+			var startInnerX = innerCircle.x;
+			var startInnerY = innerCircle.y;
+			
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
 			obj = this.rotate(startX, startY, this.radian(endAngle));
 
-			var cobj = this.rotate(startX, startY, this.radian(endAngle / 2));
-
+			// inner arc 에 대한 지점 설정 			
+			innerCircle = this.rotate(startInnerX, startInnerY, this.radian(endAngle));
+			
+			// 중심점 이동 
 			g.translate(centerX, centerY);
 
-			// arc 그림
+			// outer arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 
-			// inner arc 로 이어지는 직선 그림
-			if (obj.x >= 0 && obj.y >= 0) {
-				var innerX = Math.abs(obj.x) * rate;
-				var innerY = Math.abs(obj.y) * rate;
-			} else if (obj.x < 0 && obj.y > 0) {
-				var innerX = -Math.abs(obj.x) * rate;
-				var innerY = Math.abs(obj.y) * rate;
-			} else if (obj.x > 0 && obj.y < 0) {
-				var innerX = Math.abs(obj.x) * rate;
-				var innerY = -Math.abs(obj.y) * rate;
-			} else if (obj.x < 0 && obj.y < 0) {
-				var innerX = -Math.abs(obj.x) * rate;
-				var innerY = -Math.abs(obj.y) * rate;
-			}
+			// 라인 긋기 
+			path.LineTo(innerCircle.x, innerCircle.y);
 
-			path.LineTo(innerX, innerY);
-
-			// inner arc 도착점 그림
-			obj = this.rotate(innerX, innerY, this.radian(-endAngle));
-
-			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, obj.x, obj.y);
+			// inner arc 그리기 
+			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
+			
 
 			// 패스 종료
 			path.ClosePath();
@@ -104,6 +91,9 @@ jui.define("chart.brush.donut", [], function() {
 			}
 
 			for (var i = 0; i < s.data.length; i++) {
+				
+				//if (i != 1) continue;
+				
 				var data = s.data[i];
 				var endAngle = all * (data / max);
 
