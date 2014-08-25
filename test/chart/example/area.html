@@ -71,11 +71,11 @@
 	                value : { text : "ê°’" },
 	                test : { text : "ê°’" }
 	            },
-	            brush : {
-	                type : 'area',
-	                nest : true,
-	                opacity: 0.3
-	            }
+	            brush : [{
+	                type : 'area'
+	            }, {
+                    type : "line"
+                }]
 	        }).render();
 	})
 </script>

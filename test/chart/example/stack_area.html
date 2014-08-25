@@ -77,9 +77,16 @@
 	            },
 	            brush : [{
 	                type : 'area',
-	                nest : false,
-	                opacity: 0.9
-	            }],
+	                stack : true
+	            }, {
+                    type : "line",
+                    stack : true
+                }, {
+                    type : "scatter",
+                    symbol : "circle",
+                    size: 8,
+                    stack : true
+                }],
 	
 	            event: {
 	                click: function(elem, data) {
