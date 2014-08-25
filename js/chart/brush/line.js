@@ -6,7 +6,7 @@ jui.define("chart.brush.line", [], function() {
 
         function createPath(brush, chart, path, index) {
             var p = chart.svg.path({
-                stroke : self.color(index),
+                stroke : chart.theme.color(index),
                 "stroke-width" : 2,
                 fill : "transparent"
             });

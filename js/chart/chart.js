@@ -279,7 +279,7 @@ jui.defineUI("chart.chart", [ "util" ], function(_) {
 				},
 				
 				// chart
-				"theme" : {},
+				"theme" : "white",
 				"labels" : [],
 				"series" : {},
 				"grid" : null,
