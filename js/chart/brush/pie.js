@@ -1,8 +1,8 @@
-jui.define("chart.brush.donut", [], function() {
+jui.define("chart.brush.pie", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.size = brush.size || 50;
+			this.innerCut = brush.innerCut || 1;
 
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -12,16 +12,17 @@ jui.define("chart.brush.donut", [], function() {
 			}
 
 			// center
+			this.rate = brush.rate || 100;
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
 			this.startY = -this.w;
 			this.startX = 0;
 			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
-			this.innerRadius = this.outerRadius - this.size;
+			this.innerRadius = 0;
 		}
 
-		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, innerCut, attr) {
 			var g = chart.svg.group({
 				'class' : 'donut'
 			});
@@ -37,7 +38,6 @@ jui.define("chart.brush.donut", [], function() {
 
 			startX = obj.x;
 			startY = obj.y;
-			
 
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
@@ -107,7 +107,9 @@ jui.define("chart.brush.donut", [], function() {
 				var data = s.data[i];
 				var endAngle = all * (data / max);
 
-				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
+				var cut = this.innerCut;
+
+				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, cut, {
 					fill : chart.theme.color(i),
 					stroke : chart.theme('pieBorderColor'),
 					"stroke-width" : chart.theme('gridActiveBorderWidth') 

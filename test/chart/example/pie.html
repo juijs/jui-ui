@@ -33,6 +33,7 @@
     <script src="../../../js/chart/brush/path.js"></script>
     <script src="../../../js/chart/brush/scatter.js"></script>
     <script src="../../../js/chart/brush/stack.js"></script>
+    <script src="../../../js/chart/brush/pie.js"></script>
 
 </head>
 <body>
@@ -57,10 +58,8 @@
 					value : { text : "값" }
 				},
 				brush : [{
-					type : 'donut',
-					target : 'name',
-                    empty : 1,
-                    outerRadius : 100
+					type : 'pie',
+					target : 'name'
                     }]
 			}).render();
 	})

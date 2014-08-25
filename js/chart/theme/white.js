@@ -14,6 +14,8 @@ jui.define("chart.theme.white", [], function() {
     	
     	gaugeBackgroundColor : "#ececec",
     	
+    	pieBorderColor : "white",
+    	
     	colors : [
     		"#7977C2",
     		"#7BBAE7",
