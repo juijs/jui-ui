@@ -1,7 +1,7 @@
 jui.define("chart.brush.hbar", [], function() {
 
 	var BarBrush = function(brush) {
-		var g, zeroY, series, count, height, half_height, barHeight;
+		var g, zeroX, series, count, height, half_height, barHeight;
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
@@ -29,7 +29,7 @@ jui.define("chart.brush.hbar", [], function() {
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
-							fill : this.color(j)
+							fill : chart.theme.color(j)
 						});
 
 						g.append(r);
@@ -41,7 +41,7 @@ jui.define("chart.brush.hbar", [], function() {
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
-							fill : this.color(j)
+							fill : chart.theme.color(j)
 						});
 
 						g.append(r);

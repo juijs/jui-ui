@@ -4,7 +4,7 @@ jui.define("chart.brush.line", [], function() {
         var self = this,
             path = [];
 
-        function createPath(brush, chart, path, index) {
+        function createPath(chart, path, index) {
             var p = chart.svg.path({
                 stroke : chart.theme.color(index),
                 "stroke-width" : 2,
@@ -45,7 +45,7 @@ jui.define("chart.brush.line", [], function() {
                 for (var j = 0; j < brush.target.length; j++) {
                     var value = chart.series(brush.target[j]).data[i];
 
-                    if (brush.nest === false && j > 0) {
+                    if (brush.stack && j > 0) {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
                     }
 
@@ -65,16 +65,12 @@ jui.define("chart.brush.line", [], function() {
 		this.draw = function(chart) {
             var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-            this.drawLine(brush, chart, path, g);
-		}
-
-        this.drawLine = function(brush, chart, path, g) {
             for (var k = 0; k < path.length; k++) {
-                var p = createPath(brush, chart, path, k);
+                var p = createPath(chart, path, k);
 
                 g.append(p);
             }
-        }
+		}
 	}
 
 	return LineBrush;

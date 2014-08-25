@@ -1,28 +1,28 @@
 jui.define("chart.brush.scatter", [], function() {
 
 	var ScatterBrush = function(brush) {
-        var self = this;
+        var g, points = [];
 
-        function createScatter(brush, chart, x, y, index) {
-            var elem = null;
-            var target = chart.series(brush.target[index]),
+        function createScatter(chart, x, y, index) {
+            var elem = null,
+                target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
-                w = (brush.size) ? brush.size : 5,
-                h = w;
+                w = h = (brush.size) ? brush.size : 5,
+                color = chart.theme.color(index);
 
             if(symbol == "triangle" || symbol == "cross") {
                 elem = chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
                         var poly = chart.svg.polygon({
-                            fill: self.color(index)
+                            fill: color
                         });
 
                         poly.point(0, h)
                             .point(w, h)
                             .point(w / 2, 0);
                     } else {
-                        chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
-                        chart.svg.line({ stroke: self.color(index), "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
 
                 }).translate(x - (w / 2), y - (h / 2));
@@ -33,7 +33,7 @@ jui.define("chart.brush.scatter", [], function() {
                         height: h,
                         x: x - (w / 2),
                         y: y - (h / 2),
-                        fill: self.color(index)
+                        fill: color
                     });
                 } else {
                     elem = chart.svg.ellipse({
@@ -41,7 +41,7 @@ jui.define("chart.brush.scatter", [], function() {
                         ry: h / 2,
                         cx: x,
                         cy: y,
-                        fill: self.color(index)
+                        fill: color
                     });
                 }
             }
@@ -49,18 +49,15 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
-        this.draw = function(chart) {
-            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
-            var points = [];
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
             for (var i = 0; i < chart.data().length; i++) {
                 points[i] = brush.x(i);
             }
-
-            this.drawScatter(brush, chart, points, g);
         }
 
-		this.drawScatter = function(brush, chart, points, g) {
+		this.draw = function(chart) {
             for (var i = 0; i < points.length; i++) {
                 var valueSum = 0;
 
@@ -68,11 +65,11 @@ jui.define("chart.brush.scatter", [], function() {
                     var obj = chart.series(brush.target[j]),
                         value = obj.data[i];
 
-                    if (brush.nest === false && j > 0) {
+                    if (brush.stack && j > 0) {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
                     }
 
-                    g.append(createScatter(brush, chart, points[i], brush.y(value + valueSum), j));
+                    g.append(createScatter(chart, points[i], brush.y(value + valueSum), j));
                 }
             }
 		}

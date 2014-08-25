@@ -28,9 +28,9 @@ jui.define("chart.brush.bubble", [], function() {
                         cx: points[i],
                         cy: brush.y(value),
                         r: radius,
-                        "fill": this.color(j),
+                        "fill": chart.theme.color(j),
                         "fill-opacity": 0.5,
-                        "stroke": this.color(j),
+                        "stroke": chart.theme.color(j),
                         "stroke-width": 1
                     });
 

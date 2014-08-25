@@ -37,7 +37,7 @@ jui.define("chart.brush.stack", [], function() {
 						y : startY,
 						width : barWidth,
 						height : heightArr[j],
-						fill : this.color(j)
+						fill : chart.theme.color(j)
 					});
 
 					g.append(r);

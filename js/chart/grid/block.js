@@ -1,8 +1,6 @@
 jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 	var Grid = function(orient, grid) {
-		var self = this;
-		var size;
 
 		function drawBlock(chart, orient, g, domain, range, full) {
 

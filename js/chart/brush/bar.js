@@ -28,7 +28,7 @@ jui.define("chart.brush.bar", [], function() {
 							y : startY,
 							width : barWidth,
 							height : Math.abs(zeroY - startY),
-							fill : this.color(j)
+							fill : chart.theme.color(j)
 						});
 
 						g.append(r);
@@ -38,7 +38,7 @@ jui.define("chart.brush.bar", [], function() {
 							y : zeroY,
 							width : barWidth,
 							height : Math.abs(zeroY - startY),
-							fill : this.color(j)
+							fill : chart.theme.color(j)
 						});
 
 						g.append(r);

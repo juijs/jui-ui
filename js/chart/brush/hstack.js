@@ -1,7 +1,7 @@
 jui.define("chart.brush.hstack", [], function() {
 
 	var HStackBrush = function(brush) {
-		var g, zeroY, series, count, height, barWidth;
+		var g, series, count, height, barWidth;
 		var outerPadding = brush.outerPadding || 15;
 
 		this.drawBefore = function(chart) {
@@ -35,7 +35,7 @@ jui.define("chart.brush.hstack", [], function() {
 						y : startY,
 						width : widthArr[j],
 						height : barWidth,
-						fill : this.color(j)
+						fill : chart.theme.color(j)
 					});
 
 					g.append(r);

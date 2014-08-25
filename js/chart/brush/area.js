@@ -16,7 +16,7 @@ jui.define("chart.brush.area", [], function() {
                 for (var j = 0; j < brush.target.length; j++) {
                     var value = chart.series(brush.target[j]).data[i];
 
-                    if (brush.nest === false && j > 0) {
+                    if (brush.stack && j > 0) {
                         valueSum += chart.series(brush.target[j - 1]).data[i];
                     }
 
@@ -38,7 +38,7 @@ jui.define("chart.brush.area", [], function() {
 
 			for (var i = 0; i < path.length; i++) {
 				var p = chart.svg.polygon({
-					fill : this.color(i),
+					fill : chart.theme.color(i),
 					opacity : 0.9
 				});
 
