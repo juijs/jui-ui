@@ -9,7 +9,7 @@ jui.define("chart.theme.white", [], function() {
     	gridActiveBorderColor : "#ff7800",
     	gridFontColor : "#666666",
     	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 0.5,
+    	gridBorderWidth : 1,
     	gridActiveBorderWidth: 2,
     	
     	gaugeBackgroundColor : "#ececec",

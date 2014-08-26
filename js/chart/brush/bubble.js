@@ -4,6 +4,7 @@ jui.define("chart.brush.bubble", [], function() {
         var points = [];
 
         this.drawBefore = function(chart) {
+        	
             for (var i = 0, len = chart.data().length; i < len; i++) {
                 points[i] = brush.x(i);
             }
@@ -12,7 +13,6 @@ jui.define("chart.brush.bubble", [], function() {
         this.draw = function(chart) {
             var g = chart.svg.group({
             	'clip-path' : 'url(#clip)'
-            	
             }).translate(chart.area('x'), chart.area('y'));
 
             for (var i = 0; i < points.length; i++) {

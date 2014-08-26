@@ -30,7 +30,8 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 		}
 
 		this.area = function(key) {
-			if (_area[key]) {
+			
+			if (typeof _area[key] !== "undefined") {
 				return _area[key];
 			}
 

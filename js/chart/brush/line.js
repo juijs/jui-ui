@@ -1,6 +1,7 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
+		var self = this; 
 
         function createLine(brush, chart, pos, index) {
             var p = chart.svg.path({

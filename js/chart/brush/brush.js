@@ -73,7 +73,7 @@ jui.define("chart.brush", [], function() {
         this.getXY = function(brush, chart) {
             var xy = [];
 
-            for (var i = 0; i < chart.data().length; i++) {
+            for (var i = 0, len = chart.data().length; i < len; i++) {
                 var startX = brush.x(i);
 
                 for (var j = 0; j < brush.target.length; j++) {

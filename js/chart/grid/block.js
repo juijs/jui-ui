@@ -45,7 +45,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 								x2 : 0,
 								y2 : height,
 								stroke : chart.theme("gridBorderColor"),
-								"stroke-width" : chart.theme("gridBorderWidth")
+								"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 							})
 						);
 	
@@ -70,7 +71,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : 0,
 							y2 : height,
 							stroke : chart.theme("gridBorderColor"),
-							"stroke-width" : chart.theme("gridBorderWidth")
+							"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 						});
 					}));
 				}
@@ -93,7 +95,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : -half_band,
 							y2 : (grid.line) ? -full_height : bar,
 							stroke : chart.theme("gridBorderColor"),
-							"stroke-width" : chart.theme("gridBorderWidth")
+							"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 						}));
 
 						axis.append(chart.text({
@@ -117,7 +120,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						x2 : -half_band,
 						y2 : (grid.line) ? -full_height : bar,
 						stroke : chart.theme("gridBorderColor"),
-						"stroke-width" : chart.theme("gridBorderWidth")
+						"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 					}));
 					
 					g.append(axis);
@@ -139,7 +143,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : (grid.line) ? width + full_width : width,
 							y2 : -half_band,
 							stroke : chart.theme("gridBorderColor"),
-							"stroke-width" : chart.theme("gridBorderWidth")
+							"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 						}));
 
 					axis.append(chart.text({
@@ -161,7 +166,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : (grid.line) ? width + full_width : width,
 							y2 : -half_band,
 							stroke : chart.theme("gridBorderColor"),
-							"stroke-width" : chart.theme("gridBorderWidth")
+							"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 						}));
 
 					g.append(axis);				
@@ -183,7 +189,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x2 : bar,
 							y2 : 0,
 							stroke : chart.theme("gridBorderColor"),
-							"stroke-width" : chart.theme("gridBorderWidth")
+							"stroke-width" : chart.theme("gridBorderWidth"),
+							"stroke-opacity" : 1
 						}));
 
 					axis.append(chart.text({
@@ -215,20 +222,28 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			
 			var scale = drawBlock(chart, orient, root, grid.domain, [0, max], grid.full);
 			if (orient == 'left') {
-				var x = chart.area('x') - chart.widget('left').size;
+				var x = chart.area('x') - chart.widget.size('left');
 				var y = chart.area('y');
 			} else if (orient == 'right') {
 				var x = chart.area('x2');
 				var y = chart.area('y');
 			} else if (orient == 'top') {
 				var x = chart.area('x');
-				var y = chart.area('y') - chart.widget('top').size;
+				var y = chart.area('y') - chart.widget.size('top');
 			} else if (orient == 'bottom') {
 				var x = chart.area('x');
+				
 				var y = chart.area('y2');
 			}
-
+			
 			root.translate(x, y);
+			
+			if (grid.hide) {
+				root.attr({
+					display : 'none'
+				})
+			}
+			
 			scale.key = grid.key;
 
 			return scale;

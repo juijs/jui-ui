@@ -44,7 +44,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					x2 : max,
 					y2 : height,
 					stroke : chart.theme("gridBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : chart.theme("gridBorderWidth"),
+					"stroke-opacity" : 1
 
 				}));
 
@@ -61,7 +62,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						x2 : 0,
 						y2 : height,
 						stroke : chart.theme("gridBorderColor"),
-						"stroke-width" : chart.theme("gridBorderWidth")
+						"stroke-width" : chart.theme("gridBorderWidth"),
+						"stroke-opacity" : 1
 
 					}));
 
@@ -85,7 +87,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					x2 : max,
 					y2 : 0.5,
 					stroke : chart.theme("gridBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : chart.theme("gridBorderWidth"),
+					"stroke-opacity" : 1
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -101,7 +104,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						x2 : 0,
 						y2 : (grid.line) ? -full_height : bar,
 						stroke : chart.theme("gridBorderColor"),
-						"stroke-width" : chart.theme("gridBorderWidth")
+						"stroke-width" : chart.theme("gridBorderWidth"),
+						"stroke-opacity" : 1
 					}));
 
 					group.append(chart.text({
@@ -124,7 +128,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					x2 : width + 0.5,
 					y2 : max,
 					stroke : chart.theme("gridBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : chart.theme("gridBorderWidth"),
+					"stroke-opacity" : 1
 
 				}));
 
@@ -141,7 +146,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						x2 : width + chart.area('width'),
 						y2 : 0.5,
 						stroke : chart.theme("gridBorderColor"),
-						"stroke-width" : chart.theme("gridBorderWidth")
+						"stroke-width" : chart.theme("gridBorderWidth"),
+						"stroke-opacity" : 1
 
 					}));
 
@@ -165,7 +171,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					x2 : 0.5,
 					y2 : max,
 					stroke : chart.theme("gridBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : chart.theme("gridBorderWidth"),
+					"stroke-opacity" : 1
 
 				}));
 
@@ -182,7 +189,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						x2 : bar,
 						y2 : 0.5,
 						stroke : chart.theme("gridBorderColor"),
-						"stroke-width" : chart.theme("gridBorderWidth")
+						"stroke-width" : chart.theme("gridBorderWidth"),
+						"stroke-opacity" : 1
 
 					}));
 

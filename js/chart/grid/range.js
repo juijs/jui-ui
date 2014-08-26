@@ -32,7 +32,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 						x2 : width,
 						y2 : scale(Math.min(max, min)),
 						stroke : chart.theme("borderColor"),
-						"stroke-width" : chart.theme("borderWidth")
+						"stroke-width" : chart.theme("borderWidth"),
+							"stroke-opacity" : 1
 					}));
 					
 				}
@@ -52,7 +53,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
 							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
-							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")							
+							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	,
+							"stroke-opacity" : 1						
 						}));
 
 					axis.append(chart.text({
@@ -100,7 +102,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : 0.5,
 							y2 : 0 ,
 							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
-							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	
+							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	,
+							"stroke-opacity" : 1
 						}));
 
 					axis.append(chart.text({
@@ -144,7 +147,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : 0,
 							y2 : 6 + chart.area('height'),
 							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
-							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	
+							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth"),
+							"stroke-opacity" : 1	
 						}));
 
 					axis.append(chart.text({
@@ -191,7 +195,8 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							x2 : bar,
 							y2 : 6,
 							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
-							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	
+							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	,
+							"stroke-opacity" : 1
 						}));
 
 					axis.append(chart.text({
@@ -241,9 +246,14 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				var y = chart.area('y2');
 			}
 
-			
-
 			root.translate(x, y);
+			
+			if (grid.hide) {
+				root.attr({
+					display : 'none'
+				})
+			}			
+			
 			scale.key = grid.key;
 			
 			return scale;
