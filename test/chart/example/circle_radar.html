@@ -42,34 +42,35 @@
 <script>
     jui.ready(["chart.chart"], function(Chart) {
 			
-			// bar 
+
 			new Chart("#chart", {
 				width: 400,
 				height : 400,
 				data : [
-					{ name : 2, value : 15 },
-					{ name : -15, value : 6 },
-					{ name : 8, value : 10 },
-					{ name : 18, value : 5 },
+					{ key : 'yellow', 	name : 70, 	value : 85 },
+					{ key : 'red',		name : 55, 	value : 6 },
+					{ key : 'black',	name : 8, 	value : 30 },
+					{ key : 'blue',		name : 18, 	value : 5 },
+					{ key : 'green',		name : 18, 	value : 5 },
+					{ key : 'blue2',		name : 8, 	value : 5 },
+					{ key : 'blue3',		name : 50, 	value : 100 },
+					{ key : 'blue4',		name : 18, 	value : 5 },
 				],
+				
 				grid : {
-					
-					x : { 
-						//type : "block",  // default type is block 
-						domain : [ "week1", "week2", "week3", "week4" ],
-						line : true 
-					},
-					y : { 
-						type : 'range', 
-						target : ["name", "value"], 
-						step : 10
-					}
-				},
+					type : 'radar', 
+					shape : 'circle',
+					//line : false, 
+					//extra : true,
+					target : 'key'
+				}, 
 				series : {
 					name : { text : "이름" },
 					value : { text : "값" }
 				},
-				brush : { type : 'bar', target : ['name', 'value'] }
+				brush : [
+					{ type : 'path', target : ['name', 'value'] }	
+				]
 			}).render();
 	})
 </script>

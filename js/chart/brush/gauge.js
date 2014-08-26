@@ -2,7 +2,6 @@ jui.define("chart.brush.gauge", [], function() {
 
 	var Brush = function(brush) {
 		this.drawBefore = function(chart) {
-			this.empty = (typeof brush.empty == 'undefined') ?  80 : parseInt(brush.empty);
 
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -16,10 +15,11 @@ jui.define("chart.brush.gauge", [], function() {
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
-			this.startY = -this.w;
-			this.startX = 0;
-			this.outerRadius = Math.abs(this.startY);
-			this.innerRadius = (this.rate == 0) ? 0 : (this.outerRadius / this.rate) * this.empty;
+			this.size = brush.size || 60;
+			//this.startY = -this.w;
+			//this.startX = 0;
+			this.outerRadius = this.w;
+			this.innerRadius = this.outerRadius - this.size;
 
 			this.startAngle = typeof brush.startAngle == 'undefined' ? 0 : parseFloat(brush.startAngle);
 			this.endAngle = typeof brush.endAngle == 'undefined' ? 360 : parseFloat(brush.endAngle);

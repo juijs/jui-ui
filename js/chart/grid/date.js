@@ -3,10 +3,10 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 	var Grid = function(orient, grid) {
 		var self = this;
 
-		this.drawDate = function (chart, orient, g, domain, range, step, format) {
+		this.drawDate = function(chart, orient, g, domain, range, step, format) {
 
 			var scale = util.scale.time().domain(domain).rangeRound(range);
-			
+
 			var max = range[0];
 			var min = range[0];
 
@@ -43,8 +43,9 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : height,
 					x2 : max,
 					y2 : height,
-					stroke : chart.theme("borderColor"),
-					"stroke-width" : chart.theme("borderWidth")
+					stroke : chart.theme("gridBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -53,36 +54,38 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					var axis = chart.svg.group({
 						"transform" : "translate(" + values[i] + ", 0)"
 					})
-					
+
 					axis.append(chart.svg.line({
-							x1 : 0,
-							y1 : barY,
-							x2 : 0,
-							y2 : height,
-							stroke : chart.theme("borderColor"),
-							"stroke-width" : chart.theme("borderWidth")
-						}));
+						x1 : 0,
+						y1 : barY,
+						x2 : 0,
+						y2 : height,
+						stroke : chart.theme("gridBorderColor"),
+						"stroke-width" : chart.theme("gridBorderWidth")
+
+					}));
 
 					axis.append(chart.text({
-							x : 0,
-							y : bar * 3,
-							'text-anchor' : 'middle'
-						}, format ? format(ticks[i]) : ticks[i]))
+						x : 0,
+						y : bar * 3,
+						'text-anchor' : 'middle'
+					}, format ? format(ticks[i]) : ticks[i]))
 
 					g.append(axis);
 				}
 			} else if (orient == 'bottom') {
-				var height = chart.widget('bottom').size;
+				var height = chart.widget.size('bottom');
 				var bar = 6;
 				var barY = height - bar;
+				var full_height = chart.area('height');
 
 				g.append(chart.svg.line({
 					x1 : 0,
 					y1 : 0.5,
 					x2 : max,
 					y2 : 0.5,
-					stroke : chart.theme("borderColor"),
-					"stroke-width" : chart.theme("borderWidth")
+					stroke : chart.theme("gridBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -93,12 +96,12 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					})
 
 					group.append(chart.svg.line({
-						x1 : 0.5,
+						x1 : 0,
 						y1 : 0,
-						x2 : 0.5,
-						y2 : bar,
-						stroke : chart.theme("borderColor"),
-						"stroke-width" : chart.theme("borderWidth")
+						x2 : 0,
+						y2 : (grid.line) ? -full_height : bar,
+						stroke : chart.theme("gridBorderColor"),
+						"stroke-width" : chart.theme("gridBorderWidth")
 					}));
 
 					group.append(chart.text({
@@ -120,8 +123,9 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0,
 					x2 : width + 0.5,
 					y2 : max,
-					stroke : chart.theme("borderColor"),
-					"stroke-width" : chart.theme("borderWidth")
+					stroke : chart.theme("gridBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -130,22 +134,22 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					var axis = chart.svg.group({
 						"transform" : "translate(0," + values[i] + ")"
 					})
-					
+
 					axis.append(chart.svg.line({
 						x1 : width,
 						y1 : 0.5,
 						x2 : width + chart.area('width'),
 						y2 : 0.5,
-						stroke : chart.theme("borderColor"),
-						"stroke-width" : chart.theme("borderWidth")
+						stroke : chart.theme("gridBorderColor"),
+						"stroke-width" : chart.theme("gridBorderWidth")
+
 					}));
 
 					axis.append(chart.text({
-							x : bar,
-							y : bar,
-							'text-anchor' : 'end'
-						}, format ? format(ticks[i]) : ticks[i])
-					);					
+						x : bar,
+						y : bar,
+						'text-anchor' : 'end'
+					}, format ? format(ticks[i]) : ticks[i]));
 
 					g.append(axis);
 				}
@@ -160,8 +164,9 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0,
 					x2 : 0.5,
 					y2 : max,
-					stroke : chart.theme("borderColor"),
-					"stroke-width" : chart.theme("borderWidth")
+					stroke : chart.theme("gridBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+
 				}));
 
 				for (var i = 0; i < ticks.length; i++) {
@@ -170,30 +175,29 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					var axis = chart.svg.group({
 						"transform" : "translate(0," + values[i] + ")"
 					})
-					
+
 					axis.append(chart.svg.line({
-							x1 : 0,
-							y1 : 0.5,
-							x2 : bar,
-							y2 : 0.5,
-							stroke : chart.theme("borderColor"),
-							"stroke-width" : chart.theme("borderWidth")
-						}));
+						x1 : 0,
+						y1 : 0.5,
+						x2 : bar,
+						y2 : 0.5,
+						stroke : chart.theme("gridBorderColor"),
+						"stroke-width" : chart.theme("gridBorderWidth")
+
+					}));
 
 					axis.append(chart.text({
-							x : bar * 2,
-							y : bar,
-							'text-anchor' : 'start'
-						}, format ? format(ticks[i]) : ticks[i]))					
+						x : bar * 2,
+						y : bar,
+						'text-anchor' : 'start'
+					}, format ? format(ticks[i]) : ticks[i]))
 
 					g.append(axis);
 				}
 			}
 
-			
 			return this.wrapper(chart, scale, grid.key);
 		}
-
 
 		this.drawBefore = function(chart) {
 			grid = this.setRangeDomain(chart, grid);
@@ -214,14 +218,14 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 			var scale = this.drawDate(chart, orient, root, grid.domain, [0, max], grid.step, grid.format);
 
 			if (orient == 'left') {
-				var x = chart.area('x') - chart.widget('left').size;
+				var x = chart.area('x') - chart.widget.size('left');
 				var y = chart.area('y');
 			} else if (orient == 'right') {
 				var x = chart.area('x2');
 				var y = chart.area('y');
 			} else if (orient == 'top') {
 				var x = chart.area('x');
-				var y = chart.area('y') - chart.widget('top').size;
+				var y = chart.area('y') - chart.widget.size('top');
 			} else if (orient == 'bottom') {
 				var x = chart.area('x');
 				var y = chart.area('y2');
