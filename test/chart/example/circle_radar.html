@@ -41,37 +41,36 @@
 
 <script>
     jui.ready(["chart.chart"], function(Chart) {
-			 new Chart("#chart", {
+			
+
+			new Chart("#chart", {
 				width: 400,
 				height : 400,
 				data : [
-					{ name : 2, value : 15, test : 20 },
-					{ name : 15, value : 6, test : 20 },
-					{ name : 8, value : 10, test : 20 },
-					{ name : 18, value : 5, test : 20 }
+					{ key : 'yellow', 	name : 70, 	value : 85 },
+					{ key : 'red',		name : 55, 	value : 6 },
+					{ key : 'black',	name : 8, 	value : 30 },
+					{ key : 'blue',		name : 18, 	value : 5 },
+					{ key : 'green',		name : 18, 	value : 5 },
+					{ key : 'blue2',		name : 8, 	value : 5 },
+					{ key : 'blue3',		name : 50, 	value : 100 },
+					{ key : 'blue4',		name : 18, 	value : 5 },
 				],
+				
 				grid : {
-					
-					x : { 
-						domain : [ "week1", "week2", "week3", "week4" ]
-					},
-					y : { 
-						type : 'range',
-						target : [ "name", "value", "test" ],
-                        step : 10
-					}
-				},
+					type : 'radar', 
+					shape : 'circle',
+					//line : false, 
+					//extra : true,
+					target : 'key'
+				}, 
 				series : {
-					name : { text : "이름",symbol : "rectangle" },
-					value : { text : "값",symbol : "circle" },
-					test : { text : "테스트값",symbol : "triangle" }
+					name : { text : "이름" },
+					value : { text : "값" }
 				},
-				brush : [{
-                    type : 'scatter',
-                    size : 10,
-                    //symbol: "rectangle",
-                    invert: true
-                }]
+				brush : [
+					{ type : 'path', target : ['name', 'value'] }	
+				]
 			}).render();
 	})
 </script>

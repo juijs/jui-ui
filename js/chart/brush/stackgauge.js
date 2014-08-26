@@ -13,13 +13,11 @@ jui.define("chart.brush.stackgauge", [], function() {
 			this.w = min / 2;
 			this.centerX = width / 2;
 			this.centerY = height / 2;
-			this.startY = -this.w;
-			this.startX = 0;
 			this.outerRadius = this.w;
-			this.cut = 5; 
-			this.size = 24; 
-			this.startAngle = -180;
-			this.endAngle = 360;			
+			this.cut = brush.cut || 5; 
+			this.size = brush.size || 24; 
+			this.startAngle = brush.startAngle || -180;
+			this.endAngle = brush.endAngle || 360;			
 
 
 			this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
@@ -40,17 +38,21 @@ jui.define("chart.brush.stackgauge", [], function() {
 				var rate = (chart.data(i)[brush.target] - this.min) / (this.max - this.min);
 				var currentAngle = (this.endAngle) * rate;
 				
+				var innerRadius = outerRadius - this.size + this.cut;
+				
 				if (this.endAngle >= 360) {
 				    this.endAngle = 359.99999;
 				}
 				
-				var g = this.drawDonut(chart, this.centerX, this.centerY, (outerRadius - this.size + this.cut), outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+				// 빈 공간 그리기 
+				var g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
 					fill : chart.theme('gaugeBackgroundColor')
 				})
 	
 				group.append(g);
 				
-				g = this.drawDonut(chart, this.centerX, this.centerY, (outerRadius - this.size + this.cut ), outerRadius, this.startAngle, currentAngle,{
+				// 채워진 공간 그리기 
+				g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle, currentAngle,{
 					fill : chart.theme.color(i) 
 				})
 	
@@ -66,7 +68,6 @@ jui.define("chart.brush.stackgauge", [], function() {
 				}, chart.data(i)[brush.title]|| chart.data(i).title || ""))
 				
 				outerRadius -= this.size;
-
 				
 			}
 

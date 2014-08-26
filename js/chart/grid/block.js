@@ -79,6 +79,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 				var height = chart.widget.size('bottom');
 				var bar = 6;
 				var barY = height - bar;
+				var full_height = chart.area('height');
 
 				for (var i = 0; i < points.length; i++) {
 				
@@ -90,7 +91,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							x1 : -half_band,
 							y1 : 0,
 							x2 : -half_band,
-							y2 : bar,
+							y2 : (grid.line) ? -full_height : bar,
 							stroke : chart.theme("gridBorderColor"),
 							"stroke-width" : chart.theme("gridBorderWidth")
 						}));
@@ -105,11 +106,26 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 
 					g.append(axis);
 				}
-
+				
+				var axis = chart.svg.group({
+						"transform" : "translate(" + (points[points.length-1] + band) + ", 0)"
+					})
+					
+					axis.append(chart.svg.line({
+						x1 : -half_band,
+						y1 : 0,
+						x2 : -half_band,
+						y2 : (grid.line) ? -full_height : bar,
+						stroke : chart.theme("gridBorderColor"),
+						"stroke-width" : chart.theme("gridBorderWidth")
+					}));
+					
+					g.append(axis);
 			} else if (orient == 'left') {
 				var width = chart.widget.size('left');
 				var bar = 6;
 				var barX = width - bar;
+				var full_width = chart.area('width');
 
 				for (var i = 0; i < points.length; i++) {
 					
@@ -118,9 +134,9 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					})
 					
 					axis.append(chart.svg.line({
-							x1 : barX,
+							x1 : (grid.line) ? width : barX,
 							y1 : -half_band,
-							x2 : width,
+							x2 : (grid.line) ? width + full_width : width,
 							y2 : -half_band,
 							stroke : chart.theme("gridBorderColor"),
 							"stroke-width" : chart.theme("gridBorderWidth")
@@ -134,6 +150,21 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					
 					g.append(axis);
 				}
+				
+					var axis = chart.svg.group({
+						"transform" : "translate(0, " + (points[points.length-1] + band) + ")"
+					})
+					
+					axis.append(chart.svg.line({
+							x1 : (grid.line) ? width : barX,
+							y1 : -half_band,
+							x2 : (grid.line) ? width + full_width : width,
+							y2 : -half_band,
+							stroke : chart.theme("gridBorderColor"),
+							"stroke-width" : chart.theme("gridBorderWidth")
+						}));
+
+					g.append(axis);				
 
 			} else if (orient == 'right') {
 				var width = chart.widget.size('right');
