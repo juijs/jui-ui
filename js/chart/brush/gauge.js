@@ -1,6 +1,6 @@
 jui.define("chart.brush.gauge", [], function() {
 
-	var Brush = function(brush) {
+	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
 
 			var width = chart.area('width'), height = chart.area('height');
@@ -197,5 +197,5 @@ jui.define("chart.brush.gauge", [], function() {
 		}
 	}
 
-	return Brush;
+	return GaugeBrush;
 }, "chart.brush.donut");

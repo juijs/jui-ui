@@ -1,6 +1,6 @@
 jui.define("chart.brush.path", [], function() {
 
-	var Brush = function(brush) {
+	var PathBrush = function(brush) {
 		this.drawBefore = function(chart) {
 		}
 
@@ -40,5 +40,5 @@ jui.define("chart.brush.path", [], function() {
 		}
 	}
 
-	return Brush;
+	return PathBrush;
 }, "chart.brush");

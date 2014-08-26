@@ -1,6 +1,6 @@
 jui.define("chart.brush.donut", [], function() {
 
-	var Brush = function(brush) {
+	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {
 			this.size = brush.size || 50;
 
@@ -110,5 +110,5 @@ jui.define("chart.brush.donut", [], function() {
 		}
 	}
 
-	return Brush;
+	return DonutBrush;
 }, "chart.brush");

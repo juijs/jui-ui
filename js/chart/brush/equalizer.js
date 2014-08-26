@@ -1,6 +1,6 @@
 jui.define("chart.brush.equalizer", [], function() {
 
-	var BarBrush = function(brush) {
+	var EqualizerBrush = function(brush) {
 		var g, zeroY, count, width, barWidth, unit, gap, half_width;
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
@@ -81,5 +81,5 @@ jui.define("chart.brush.equalizer", [], function() {
 		}
 	}
 
-	return BarBrush;
+	return EqualizerBrush;
 }, "chart.brush");

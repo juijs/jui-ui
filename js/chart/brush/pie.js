@@ -1,6 +1,6 @@
 jui.define("chart.brush.pie", [], function() {
 
-	var Brush = function(brush) {
+	var PieBrush = function(brush) {
 		this.drawBefore = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -88,5 +88,5 @@ jui.define("chart.brush.pie", [], function() {
 		}
 	}
 
-	return Brush;
+	return PieBrush;
 }, "chart.brush");

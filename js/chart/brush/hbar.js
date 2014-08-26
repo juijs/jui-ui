@@ -1,6 +1,6 @@
 jui.define("chart.brush.hbar", [], function() {
 
-	var BarBrush = function(brush) {
+	var HorizontalBarBrush = function(brush) {
 		var g, zeroX, series, count, height, half_height, barHeight;
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
@@ -53,5 +53,5 @@ jui.define("chart.brush.hbar", [], function() {
 		}
 	}
 
-	return BarBrush;
+	return HorizontalBarBrush;
 }, "chart.brush");

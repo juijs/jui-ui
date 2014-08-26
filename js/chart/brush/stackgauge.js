@@ -1,6 +1,6 @@
 jui.define("chart.brush.stackgauge", [], function() {
 
-	var Brush = function(brush) {
+	var StackGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
 			var min = width;
@@ -74,5 +74,5 @@ jui.define("chart.brush.stackgauge", [], function() {
 		}
 	}
 
-	return Brush;
+	return StackGaugeBrush;
 }, "chart.brush.donut");
