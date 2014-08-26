@@ -10,7 +10,7 @@
     <script src="../../../js/chart/core.js"></script>
     <script src="../../../js/chart/draw.js"></script>
     <script src="../../../js/chart/util.js"></script>
-    <script src="../../../js/chart/chart.js"></script>    
+    <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
     
     <script src="../../../js/chart/grid/grid.js"></script>
@@ -49,7 +49,7 @@ function getDate() {
             return Math.round(Math.random() * 1000  % 500);
         }
 
-    jui.ready(["chart.chart", "chart.util"], function(Chart, util) {
+    jui.ready(["chart.basic", "chart.util"], function(Chart, util) {
             
             var start = new Date();
             var end = util.time.add(start, util.time.hours, 5);

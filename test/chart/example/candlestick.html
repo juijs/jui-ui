@@ -17,14 +17,14 @@
     <script src="../../../js/chart/grid/range.js"></script>
     <script src="../../../js/chart/brush/brush.js"></script>
     <script src="../../../js/chart/brush/candlestick.js"></script>
-    <script src="../../../js/chart/chart.js"></script>
+    <script src="../../../js/chart/basic.js"></script>
 </head>
 <body>
 
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chart.chart", "util" ], function(chart, _) {
+    jui.ready([ "chart.basic", "util" ], function(chart, _) {
 
         var dataSource = [
             { date: new Date(1994,2,1), l: 24.00, h: 25.00, o: 25.00, c: 24.875 },

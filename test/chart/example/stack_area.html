@@ -10,7 +10,7 @@
     <script src="../../../js/chart/core.js"></script>
     <script src="../../../js/chart/draw.js"></script>
     <script src="../../../js/chart/util.js"></script>
-    <script src="../../../js/chart/chart.js"></script>    
+    <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
     
     <script src="../../../js/chart/grid/grid.js"></script>
@@ -34,10 +34,6 @@
     <script src="../../../js/chart/brush/scatter.js"></script>
     <script src="../../../js/chart/brush/stack.js"></script>
 
-    <script src="../../../js/chart/brush/stackarea.js"></script>
-    <script src="../../../js/chart/brush/stackline.js"></script>
-    <script src="../../../js/chart/brush/stackscatter.js"></script>
-
 </head>
 <body>
 
@@ -46,7 +42,7 @@
 <script>
 
 
-    jui.ready(["chart.chart", "chart.util"], function(Chart, util) {
+    jui.ready(["chart.basic", "chart.util"], function(Chart, util) {
      
 
 			new Chart("#chart", {
@@ -81,13 +77,16 @@
 	                test : { text : "ê°’" }
 	            },
 	            brush : [{
-	                type : 'stackarea'
+	                type : 'area',
+	                stack : true
 	            }, {
-                    type : "stackline"
+                    type : "line",
+                    stack : true
                 }, {
-                    type : "stackscatter",
+                    type : "scatter",
                     symbol : "circle",
-                    size: 8
+                    size: 8,
+                    stack : true
                 }],
 	
 	            event: {
