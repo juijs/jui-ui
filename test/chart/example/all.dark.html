@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>차트 모조리 (Dark) </title>
+	
+	<style>
+	
+		th {
+			background: gray;
+			color:white;
+			padding:10px;
+		}
+		td {
+			text-align:center;
+		}
+		
+		#count {
+			position: fixed;
+			right:20px;
+			border: 1px solid black;
+			font-size: 2em;
+			font-weight:bold;
+			text-align:center;
+			padding:10px;
+			
+		}
+		
+		caption {
+			padding: 20px;
+			background:#7977C2;
+			color:white;
+		}
+		
+		
+		#theme {
+			position: fixed;
+			right:120px;
+			border: 1px solid black;
+			font-size: 2em;
+			font-weight:bold;
+			text-align:center;
+			padding:10px;
+		}
+		
+		#theme select {
+			padding: 10px;
+			border:0px;
+		}		
+		
+	</style>
+	</head>
+	<body>
+		<div id="theme">
+			Themes : 
+			<select onchange="location.href=(this.value == 'dark') ? 'all.dark.html' : 'all.html';">
+				<option value="white">White</option>
+				<option value="dark" selected>Dark</option>
+			</select>
+		</div>		
+		<div id='count'>
+			
+		</div>
+		<table border="0">
+			<caption>Pie & Donut</caption>
+			<tr> 
+				<th>donut</th> 
+				<th>pie</th> 
+  
+			</tr>
+
+			<tr>
+				<td> <iframe width="430" height="430" src="donut.html?theme=dark?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="pie.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>
+		</table>
+		
+		<table border="0">
+			<caption>Gauge</caption>
+			<tr> 
+				<th>gauge</th>			
+				<th>full gauge</th>
+				<th>stack gauge</th>
+  
+			</tr>
+
+			<tr>
+				<td> <iframe width="430" height="430" src="gauge.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" src="full_gauge.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+                <td> <iframe width="430" height="430" src="stack_gauge.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+			</tr>
+		</table>
+		
+		<table border="0">
+			<caption>Bar & Stack</caption>				
+			<tr> 
+				<th>bar</th>
+				<th>hbar</th>
+				<th>hstack</th>				   
+			</tr>
+			
+			<tr>
+				<td> <iframe width="430" height="430" src="bar.html?theme=dark" frameborder="0" scrolling="no"></iframe></td>
+				<td> <iframe width="430" height="430" src="hbar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="hstack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+			</tr>
+			
+
+			<tr>
+				<th>stack</th>				 
+				<th>full stack</th>
+				<th>equalizer </th>
+
+			</tr>
+			<tr>
+				<td> <iframe width="430" height="430" src="stack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+								 
+				<td> <iframe width="430" height="430" src="fullstack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="equalizer.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>
+			
+			<tr>
+				<th>mini bar</th>				 
+			</tr>
+			<tr>
+				<td> <iframe width="430" height="430" src="mini_bar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>
+
+		</table>
+		<table border="0">
+			<caption>Bubble & Scatter</caption>			
+			<tr>
+				<th>scatter</th>				
+				<th>bubble</th>  
+  				<th>bubble(with range)</th>			
+
+			</tr>
+
+			<tr>
+
+				<td><iframe width="430" height="430" src="scatter.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="bubble.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="range_bubble.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				 
+			</tr>
+			
+			<tr>
+				<th>stack scatter</th>				
+				<th>range scatter</th>				
+			</tr>
+
+			<tr>
+
+				<td><iframe width="430" height="430" src="stack_scatter.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" src="range_scatter.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>
+		</table>
+		<table>	
+			<caption>Area</caption>
+			<tr>
+
+				
+				<th>area</th>				  
+				<th>stack area</th>				  
+  
+			</tr>
+
+			<tr>
+				<td> <iframe width="430" height="430" src="area.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td> <iframe width="430" height="430" src="stack_area.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+			</tr>		
+
+		</table>
+		<table border="0">
+			<caption>radar</caption>
+			<tr>
+						<th>radar (path) </th>
+						<th>circle radar </th>
+			</tr>
+			<tr>
+				<td> <iframe width="430" height="430" src="radar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="circle_radar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>					
+				
+		</table>
+		<table border="0">
+			<caption>Line</caption>
+			<tr >
+				<th>line</th>
+				<th>line(with range)</th>  
+				<th>curve line</th>				 
+										
+			</tr>	
+			<tr>
+				<td> <iframe width="430" height="430" src="line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" src="range_line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" src="curve_line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+			</tr>
+			
+			<tr >
+  				<th>step line</th>
+  				<th>stack line</th>
+  				<th>mini line</th>
+			</tr>	
+			<tr>
+				<td> <iframe width="430" height="430" src="step_line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td> <iframe width="430" height="430" src="stack_line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td> <iframe width="430" height="430" src="mini_line.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+			</tr>
+		</table>
+		<table border="0" width="1300">
+			<caption>Candle Stick</caption>
+			<tr>
+				<th colspan="3">candle stick</th>
+			</tr>
+			<tr>
+				<td colspan="3"> <iframe width="100%" height="430" src="candlestick.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+			</tr>			
+		</table>
+		<script>
+			document.getElementById('count').innerHTML = document.getElementsByTagName("th").length;
+		</script>
+	</body>
+</html>

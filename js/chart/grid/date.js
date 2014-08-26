@@ -70,7 +70,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					axis.append(chart.text({
 						x : 0,
 						y : bar * 3,
-						'text-anchor' : 'middle'
+						'text-anchor' : 'middle',
+						fill : chart.theme("gridFontColor")
 					}, format ? format(ticks[i]) : ticks[i]))
 
 					g.append(axis);
@@ -111,7 +112,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					group.append(chart.text({
 						x : 0,
 						y : bar * 4,
-						'text-anchor' : 'middle'
+						'text-anchor' : 'middle',
+						fill : chart.theme("gridFontColor")
 					}, format ? format(ticks[i]) : ticks[i] + ""));
 
 					g.append(group);
@@ -154,7 +156,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					axis.append(chart.text({
 						x : bar,
 						y : bar,
-						'text-anchor' : 'end'
+						'text-anchor' : 'end',
+						fill : chart.theme("gridFontColor")
 					}, format ? format(ticks[i]) : ticks[i]));
 
 					g.append(axis);
@@ -197,7 +200,8 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					axis.append(chart.text({
 						x : bar * 2,
 						y : bar,
-						'text-anchor' : 'start'
+						'text-anchor' : 'start',
+						fill : chart.theme("gridFontColor")
 					}, format ? format(ticks[i]) : ticks[i]))
 
 					g.append(axis);

@@ -346,6 +346,11 @@ jui.define("util.svg",
 
             rootElem.appendChild(root.element);
         }
+        
+        this.css = function(css) {
+			root.css(css);            
+            return this; 
+        }        
 
         function create(obj, type, attr, callback) {
             obj.create(type, attr);

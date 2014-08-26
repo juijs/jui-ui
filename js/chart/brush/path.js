@@ -13,10 +13,11 @@ jui.define("chart.brush.path", [], function() {
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var s = chart.series(brush.target[ti]);
 	
+				var color = chart.theme.color(ti+2);
 				var path = chart.svg.path({
-					fill : chart.theme.color(ti+2),
+					fill : color,
 					"fill-opacity" : 0.2,
-					stroke : chart.theme.color(ti+2),
+					stroke : color,
 					"stroke-width" : chart.theme("gridActiveBorderWidth")
 				});
 	

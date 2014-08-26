@@ -1,11 +1,11 @@
-jui.define("chart.theme.white", [], function() {
+jui.define("chart.theme.dark", [], function() {
     return {
-    	backgroundColor : "white",
+    	backgroundColor : "#232323",
     	fontSize : "11px",
-    	fontColor : "#333333",
+    	fontColor : "#eeeeeee",
 		fontFamily : "arial,Tahoma,verdana",
 
-    	gridFontColor : "#333333",
+    	gridFontColor : "#ececec",
     	gridActiveFontColor : "#ff7800",
     	
     	gridBorderWidth : 1,

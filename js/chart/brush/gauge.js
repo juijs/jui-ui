@@ -123,8 +123,8 @@ jui.define("chart.brush.gauge", [], function() {
 			})
 
 			path.MoveTo(startX, startY);
-			path.LineTo(2, 0);
-			path.LineTo(-2, 0);
+			path.LineTo(5, 0);
+			path.LineTo(-5, 0);
 			path.ClosePath();
 
 			// start angle
@@ -145,7 +145,7 @@ jui.define("chart.brush.gauge", [], function() {
 				cx : 0,
 				cy : 0,
 				r : 2,
-				fill : 'white'
+				fill : 'black'
 			}))
 
 			return g;

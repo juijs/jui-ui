@@ -3,7 +3,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 	var Grid = function(orient, grid) {
 		var position = [];
 		var self = this;
-		var format ; 
+		var format;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y);
@@ -68,44 +68,42 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 
 		this.drawBefore = function(chart) {
 			grid = this.setBlockDomain(chart, grid);
-			
-			
+
 			format = grid.format;
 		}
-
 		function scale(obj) {
-			
-			var max = grid.max;		
-			var domain = grid.domain;	
+
+			var max = grid.max;
+			var domain = grid.domain;
 			var that = self;
 
 			return function(index, value) {
-	            var rate = value / max;
-	
+				var rate = value / max;
+
 				var height = Math.abs(obj.y1) - Math.abs(obj.y2);
 				var pos = height * rate;
 				var unit = 2 * Math.PI / domain.length;
-	
+
 				var cx = obj.x1;
 				var cy = obj.y1;
 				var y = -pos;
 				var x = 0;
-	
+
 				var o = that.rotate(x, y, unit * index);
 				x = o.x;
 				y = o.y;
-	
+
 				return {
 					x : cx + x,
 					y : cy + y
-				}				
+				}
 			}
-
 		}
+
 
 		this.draw = function(chart) {
 			var width = chart.area('width'), height = chart.area('height');
-			grid.line = (typeof grid.line == 'undefined') ? true : grid.line;
+			grid.line = ( typeof grid.line == 'undefined') ? true : grid.line;
 
 			var min = width;
 
@@ -178,7 +176,8 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				root.append(chart.text({
 					x : tx,
 					y : ty,
-					'text-anchor' : talign
+					'text-anchor' : talign,
+					fill : chart.theme("gridFontColor")
 				}, grid.domain[i]))
 
 				var obj = util.rotate(startX, startY, unit);
@@ -207,11 +206,12 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				} else {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
-				
+
 				root.append(chart.text({
 					x : centerX,
-					y : centerY + (startY + h - 5)
-				}, (grid.max - stepBase) + "" ))
+					y : centerY + (startY + h - 5),
+					fill : chart.theme("gridFontColor")
+				}, (grid.max - stepBase) + ""))
 
 				startY += h;
 				stepBase += stepValue;

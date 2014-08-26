@@ -2,7 +2,7 @@ jui.define("chart.brush.hbar", [], function() {
 
 	var HorizontalBarBrush = function(brush) {
 		var g, zeroX, series, count, height, half_height, barHeight;
-		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
+		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));

@@ -12,6 +12,7 @@
     <script src="../../../js/chart/util.js"></script>
     <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
+    <script src="../../../js/chart/theme/dark.js"></script>    
     
     <script src="../../../js/chart/grid/grid.js"></script>
     <script src="../../../js/chart/grid/block.js"></script>
@@ -55,13 +56,14 @@ function getDate() {
             var end = util.time.add(start, util.time.hours, 5);
             
             var data = [];
-            for(var i = 0; i < 300; i++) {
+            for(var i = 0; i < 30; i++) {
                 data.push({ name : getNumber(), name2 : getNumber(), value : util.time.add(start, util.time.minutes, i*10)} )
             }
 
             new Chart("#chart", {
                 width: 400,
                 height : 400,
+	            theme : location.href.split("?")[1].split("=")[1],                
                 data : data,
                 grid : {
                     
@@ -70,7 +72,8 @@ function getDate() {
                         domain : [ start, end ],
                         step : [util.time.hours, 1],
                         format : "hh:mm",
-                        key: "value"
+                        key: "value",
+                        line : true 
                     },
                     y : { 
                         type : 'range', 

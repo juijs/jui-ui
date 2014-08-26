@@ -12,6 +12,7 @@
     <script src="../../../js/chart/util.js"></script>
     <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
+    <script src="../../../js/chart/theme/dark.js"></script>    
     
     <script src="../../../js/chart/grid/grid.js"></script>
     <script src="../../../js/chart/grid/block.js"></script>
@@ -48,14 +49,19 @@
 			var c = new Chart("#chart", {
 				width: 400,
 				height : 400,
+	            theme : location.href.split("?")[1].split("=")[1],				
 				data : [
 					{ title : "OPTION 1", value : 75 },
 					{ title : "OPTION 2", value : 68 },
 					{ title : "OPTION 3", value : 60 },
+					{ title : "OPTION 4", value : 70 },
+					{ title : "OPTION 5", value : 20 },
+					{ title : "OPTION 6", value : 20 },
 				],
 				brush : [{
 					type : 'stackgauge',
                     target : "value",
+                    size : 18
                     // title : "title"  생략 가능 
                     
 				}]

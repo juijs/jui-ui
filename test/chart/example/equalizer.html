@@ -12,6 +12,7 @@
     <script src="../../../js/chart/util.js"></script>
     <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
+    <script src="../../../js/chart/theme/dark.js"></script>    
     
     <script src="../../../js/chart/grid/grid.js"></script>
     <script src="../../../js/chart/grid/block.js"></script>
@@ -47,6 +48,7 @@
 			new Chart("#chart", {
 				width: 400,
 				height : 400,
+	            theme : location.href.split("?")[1].split("=")[1],				
 				data : [
 					{ name : 2, value : 15 },
 					{ name : -32, value : 6 },

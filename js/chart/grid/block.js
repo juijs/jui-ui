@@ -102,7 +102,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						axis.append(chart.text({
 							x : 0,
 							y : 20,
-							'text-anchor' : 'middle'
+							'text-anchor' : 'middle',
+							fill : chart.theme("gridFontColor")
 						}, (format) ? format(domain[i]) : domain[i])
 					)
 
@@ -150,7 +151,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					axis.append(chart.text({
 							x : width-10,
 							y : 0, 
-							'text-anchor' : 'end'
+							'text-anchor' : 'end',
+							fill : chart.theme("gridFontColor")
 						}, (format) ? format(domain[i]) : domain[i]));
 					
 					g.append(axis);
@@ -196,7 +198,8 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 					axis.append(chart.text({
 							x : bar + 5,
 							y : half_band,
-							'text-anchor' : 'start'
+							'text-anchor' : 'start',
+							fill : chart.theme("gridFontColor")
 						}, (format) ? format(domain[i]) : domain[i]))
 					
 					g.append(axis);

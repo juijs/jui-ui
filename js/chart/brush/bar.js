@@ -2,7 +2,7 @@ jui.define("chart.brush.bar", [], function() {
 
 	var BarBrush = function(brush) {
 		var g, zeroY, count, width, barWidth, half_width;
-		var outerPadding = brush.outerPadding || 1, innerPadding = brush.innerPadding || 1;
+		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));

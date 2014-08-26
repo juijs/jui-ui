@@ -11,6 +11,7 @@
     <script src="../../../js/chart/draw.js"></script>
     <script src="../../../js/chart/util.js"></script>
     <script src="../../../js/chart/theme/white.js"></script>
+    <script src="../../../js/chart/theme/dark.js"></script>
     <script src="../../../js/chart/grid/grid.js"></script>
     <script src="../../../js/chart/grid/block.js"></script>
     <script src="../../../js/chart/grid/date.js"></script>
@@ -55,6 +56,7 @@
         chart("#chart", {
             width: 1200,
             height : 400,
+	            theme : location.href.split("?")[1].split("=")[1],            
             data : dataSource,
             grid : {
                 x : {

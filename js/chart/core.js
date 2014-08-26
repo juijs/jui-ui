@@ -67,7 +67,6 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             // 차트 테마 설정
             _theme = jui.include("chart.theme." + this.get("theme"));
 
-
             // UI 바인딩 설정
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
@@ -99,6 +98,10 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			}
 
 			this.svg.reset();
+			this.svg.css({
+				'background' : this.theme("backgroundColor")
+			})
+			
 			calculate(this);
 
 			if (_.typeCheck("function", this.drawBefore)) {
