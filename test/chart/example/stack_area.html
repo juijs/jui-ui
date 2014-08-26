@@ -34,6 +34,10 @@
     <script src="../../../js/chart/brush/scatter.js"></script>
     <script src="../../../js/chart/brush/stack.js"></script>
 
+    <script src="../../../js/chart/brush/stackarea.js"></script>
+    <script src="../../../js/chart/brush/stackline.js"></script>
+    <script src="../../../js/chart/brush/stackscatter.js"></script>
+
 </head>
 <body>
 
@@ -76,16 +80,13 @@
 	                test : { text : "ê°’" }
 	            },
 	            brush : [{
-	                type : 'area',
-	                stack : true
+	                type : 'stackarea'
 	            }, {
-                    type : "line",
-                    stack : true
+                    type : "stackline"
                 }, {
-                    type : "scatter",
+                    type : "stackscatter",
                     symbol : "circle",
-                    size: 8,
-                    stack : true
+                    size: 8
                 }],
 	
 	            event: {

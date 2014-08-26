@@ -69,6 +69,59 @@ jui.define("chart.brush", [], function() {
 
             return tg + minRadius;
         }
+
+        this.getXY = function(brush, chart) {
+            var xy = [];
+
+            for (var i = 0; i < chart.data().length; i++) {
+                var startX = brush.x(i);
+
+                for (var j = 0; j < brush.target.length; j++) {
+                    var startY = brush.y(chart.series(brush.target[j]).data[i]);
+
+                    if (!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: []
+                        };
+                    }
+
+                    xy[j].x.push(startX);
+                    xy[j].y.push(startY);
+                }
+            }
+
+            return xy;
+        }
+
+        this.getStackXY = function(brush, chart) {
+            var xy = [];
+
+            for (var i = 0; i < chart.data().length; i++) {
+                var startX = brush.x(i),
+                    valueSum = 0;
+
+                for (var j = 0; j < brush.target.length; j++) {
+                    var value = chart.series(brush.target[j]).data[i];
+
+                    if(j > 0) {
+                        valueSum += chart.series(brush.target[j - 1]).data[i];
+                    }
+
+                    if (!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: []
+                        };
+                    }
+
+                    xy[j].x.push(startX);
+                    xy[j].y.push(brush.y(value + valueSum));
+                }
+            }
+
+            return xy;
+        }
 	}
 
 	return Brush;

@@ -1,18 +1,16 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
-        var self = this,
-            path = [];
 
-        function createPath(chart, path, index) {
+        function createLine(brush, chart, pos, index) {
             var p = chart.svg.path({
                 stroke : chart.theme.color(index),
                 "stroke-width" : 2,
                 fill : "transparent"
             });
 
-            var x = path[index].x,
-                y = path[index].y;
+            var x = pos.x,
+                y = pos.y;
 
             if(brush.symbol == "curve") {
                 var px = self.curvePoints(x),
@@ -37,40 +35,18 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawBefore = function(chart) {
-            for (var i = 0, len = chart.data().length; i < len; i++) {
-                var startX = brush.x(i),
-                    valueSum = 0;
-
-                for (var j = 0; j < brush.target.length; j++) {
-                    var value = chart.series(brush.target[j]).data[i];
-
-                    if (brush.stack && j > 0) {
-                        valueSum += chart.series(brush.target[j - 1]).data[i];
-                    }
-
-                    if (!path[j]) {
-                        path[j] = {
-                            x : [],
-                            y : []
-                        };
-                    }
-
-                    path[j].x.push(startX);
-                    path[j].y.push(brush.y(value + valueSum));
-                }
-            }
-        }
-
-		this.draw = function(chart) {
+        this.drawLine = function(brush, chart, path) {
             var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
             for (var k = 0; k < path.length; k++) {
-                var p = createPath(chart, path, k);
-
+                var p = createLine(brush, chart, path[k], k);
                 g.append(p);
             }
-		}
+        }
+
+        this.draw = function(chart) {
+            this.drawLine(brush, chart, this.getXY(brush, chart));
+        }
 	}
 
 	return LineBrush;

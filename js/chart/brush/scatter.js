@@ -1,9 +1,8 @@
 jui.define("chart.brush.scatter", [], function() {
 
 	var ScatterBrush = function(brush) {
-        var g, points = [];
 
-        function createScatter(chart, x, y, index) {
+        function createScatter(brush, chart, pos, index) {
             var elem = null,
                 target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
@@ -25,22 +24,22 @@ jui.define("chart.brush.scatter", [], function() {
                         chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
 
-                }).translate(x - (w / 2), y - (h / 2));
+                }).translate(pos.x - (w / 2), pos.y - (h / 2));
             } else {
                 if(symbol == "rectangle") {
                     elem = chart.svg.rect({
                         width: w,
                         height: h,
-                        x: x - (w / 2),
-                        y: y - (h / 2),
+                        x: pos.x - (w / 2),
+                        y: pos.y - (h / 2),
                         fill: color
                     });
                 } else {
                     elem = chart.svg.ellipse({
                         rx: w / 2,
                         ry: h / 2,
-                        cx: x,
-                        cy: y,
+                        cx: pos.x,
+                        cy: pos.y,
                         fill: color
                     });
                 }
@@ -49,30 +48,20 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
-        this.drawBefore = function(chart) {
-            g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+        this.drawScatter = function(brush, chart, points) {
+            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
 
-            for (var i = 0; i < chart.data().length; i++) {
-                points[i] = brush.x(i);
+            for(var i = 0; i < points.length; i++) {
+                for(var j = 0; j < points[i].x.length; j++) {
+                    var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    g.append(p);
+                }
             }
         }
 
-		this.draw = function(chart) {
-            for (var i = 0; i < points.length; i++) {
-                var valueSum = 0;
-
-                for (var j = 0; j < brush.target.length; j++) {
-                    var obj = chart.series(brush.target[j]),
-                        value = obj.data[i];
-
-                    if (brush.stack && j > 0) {
-                        valueSum += chart.series(brush.target[j - 1]).data[i];
-                    }
-
-                    g.append(createScatter(chart, points[i], brush.y(value + valueSum), j));
-                }
-            }
-		}
+        this.draw = function(chart) {
+            this.drawScatter(brush, chart, this.getXY(brush, chart));
+        }
 	}
 
 	return ScatterBrush;
