@@ -78,7 +78,7 @@ jui.define("chart.brush.pie", [], function() {
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.outerRadius, startAngle, endAngle, {
 					fill : chart.theme.color(i),
 					stroke : chart.theme('pieBorderColor'),
-					"stroke-width" : chart.theme('gridActiveBorderWidth') 
+					"stroke-width" : chart.theme('pieBorderWidth')
 				});
 
 				group.append(g);

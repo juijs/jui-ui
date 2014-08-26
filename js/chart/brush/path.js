@@ -16,9 +16,9 @@ jui.define("chart.brush.path", [], function() {
 				var color = chart.theme.color(ti+2);
 				var path = chart.svg.path({
 					fill : color,
-					"fill-opacity" : 0.2,
+					"fill-opacity" : chart.theme("pathOpacity"),
 					stroke : color,
-					"stroke-width" : chart.theme("gridActiveBorderWidth")
+					"stroke-width" : chart.theme("pathBorderWidth")
 				});
 	
 				g.append(path);

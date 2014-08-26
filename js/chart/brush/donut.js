@@ -99,8 +99,8 @@ jui.define("chart.brush.donut", [], function() {
 
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
 					fill : chart.theme.color(i),
-					stroke : chart.theme('pieBorderColor'),
-					"stroke-width" : chart.theme('gridActiveBorderWidth') 
+					stroke : chart.theme('donutBorderColor'),
+					"stroke-width" : chart.theme('donutBorderWidth')
 				});
 
 				group.append(g);

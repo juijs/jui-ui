@@ -44,8 +44,8 @@ jui.define("chart.brush.candlestick", [], function() {
                         y1: brush.y(high),
                         x2: startX,
                         y2: brush.y(low),
-                        stroke: "red",
-                        "stoke-width":1
+                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        "stoke-width": 1
                     });
 
                     r = chart.svg.rect({
@@ -53,8 +53,8 @@ jui.define("chart.brush.candlestick", [], function() {
                         y : y,
                         width : barWidth,
                         height : brush.y(close) - y,
-                        fill : "red",
-                        stroke: "red",
+                        fill : chart.theme("candlestickInvertBackgroundColor"),
+                        stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
@@ -66,7 +66,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         y1: brush.y(high),
                         x2: startX,
                         y2: brush.y(low),
-                        stroke: "black",
+                        stroke: chart.theme("candlestickBorderColor"),
                         "stoke-width":1
                     });
 
@@ -75,8 +75,8 @@ jui.define("chart.brush.candlestick", [], function() {
                         y : y,
                         width : barWidth,
                         height : brush.y(open) - y,
-                        fill : "white",
-                        stroke: "black",
+                        fill : chart.theme("candlestickBackgroundColor"),
+                        stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
                     });
                 }

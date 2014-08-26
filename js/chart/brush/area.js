@@ -9,10 +9,11 @@ jui.define("chart.brush.area", [], function() {
             for (var i = 0; i < path.length; i++) {
                 var p = chart.svg.polygon({
                     fill : chart.theme.color(i),
-                    opacity : 0.5
+                    opacity : chart.theme("areaOpacity")
                 });
 
-                var x = path[i].x, y = path[i].y;
+                var x = path[i].x,
+                    y = path[i].y;
 
                 p.point(x[0], maxY);
 

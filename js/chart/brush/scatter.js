@@ -6,23 +6,27 @@ jui.define("chart.brush.scatter", [], function() {
             var elem = null,
                 target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
-                w = h = (brush.size) ? brush.size : 5,
-                color = chart.theme.color(index);
+                w = h = (brush.size) ? brush.size : 5;
+
+            var color = chart.theme.color(index),
+                borderColor = chart.theme("scatterBorderColor"),
+                borderWidth = chart.theme("scatterBorderWidth");
 
             if(symbol == "triangle" || symbol == "cross") {
                 elem = chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
                         var poly = chart.svg.polygon({
                             fill: color,
-                            stroke : "white"
+                            stroke: borderColor,
+                            "stroke-width": borderWidth
                         });
 
                         poly.point(0, h)
                             .point(w, h)
                             .point(w / 2, 0);
                     } else {
-                        chart.svg.line({ stroke: "white", "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
-                        chart.svg.line({ stroke: "white", "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
 
                 }).translate(pos.x - (w / 2), pos.y - (h / 2));
@@ -34,7 +38,8 @@ jui.define("chart.brush.scatter", [], function() {
                         x: pos.x - (w / 2),
                         y: pos.y - (h / 2),
                         fill: color,
-                        stroke : "white"
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
                     });
                 } else {
                     elem = chart.svg.ellipse({
@@ -43,7 +48,8 @@ jui.define("chart.brush.scatter", [], function() {
                         cx: pos.x,
                         cy: pos.y,
                         fill: color,
-                        stroke : "white"
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
                     });
                 }
             }
