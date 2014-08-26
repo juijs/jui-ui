@@ -74,20 +74,23 @@ jui.define("chart.brush", [], function() {
             var xy = [];
 
             for (var i = 0, len = chart.data().length; i < len; i++) {
-                var startX = brush.x(i);
+                var startX = brush.x(i),
+                    data = chart.data(i);
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var startY = brush.y(chart.series(brush.target[j]).data[i]);
+                    var value = data[brush.target[j]];
 
                     if (!xy[j]) {
                         xy[j] = {
                             x: [],
-                            y: []
+                            y: [],
+                            value: []
                         };
                     }
 
                     xy[j].x.push(startX);
-                    xy[j].y.push(startY);
+                    xy[j].y.push(brush.y(value));
+                    xy[j].value.push(value);
                 }
             }
 
@@ -99,9 +102,8 @@ jui.define("chart.brush", [], function() {
 
             for (var i = 0, len =  chart.data().length; i < len; i++) {
                 var startX = brush.x(i),
+                    data = chart.data(i),
                     valueSum = 0;
-
-				var data = chart.data(i);
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var value = data[brush.target[j]];
@@ -113,12 +115,14 @@ jui.define("chart.brush", [], function() {
                     if (!xy[j]) {
                         xy[j] = {
                             x: [],
-                            y: []
+                            y: [],
+                            value: []
                         };
                     }
 
                     xy[j].x.push(startX);
                     xy[j].y.push(brush.y(value + valueSum));
+                    xy[j].value.push(value);
                 }
             }
 
