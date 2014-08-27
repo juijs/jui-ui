@@ -87,7 +87,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0.5,
 					x2 : max,
 					y2 : 0.5,
-					stroke : chart.theme("gridBorderColor"),
+					stroke : chart.theme("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth"),
 					"stroke-opacity" : 1
 				}));
@@ -104,7 +104,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						y1 : 0,
 						x2 : 0,
 						y2 : (grid.line) ? -full_height : bar,
-						stroke : chart.theme("gridBorderColor"),
+						stroke : chart.theme("gridAxisBorderColor"),
 						"stroke-width" : chart.theme("gridBorderWidth"),
 						"stroke-opacity" : 1
 					}));
@@ -129,7 +129,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 					y1 : 0,
 					x2 : width + 0.5,
 					y2 : max,
-					stroke : chart.theme("gridBorderColor"),
+					stroke : chart.theme("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth"),
 					"stroke-opacity" : 1
 
@@ -147,7 +147,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
 						y1 : 0.5,
 						x2 : width + chart.area('width'),
 						y2 : 0.5,
-						stroke : chart.theme("gridBorderColor"),
+						stroke : chart.theme("gridAxisBorderColor"),
 						"stroke-width" : chart.theme("gridBorderWidth"),
 						"stroke-opacity" : 1
 

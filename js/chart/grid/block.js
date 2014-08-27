@@ -94,7 +94,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 							y1 : 0,
 							x2 : -half_band,
 							y2 : (grid.line) ? -full_height : bar,
-							stroke : chart.theme("gridBorderColor"),
+							stroke : chart.theme("gridAxisBorderColor"),
 							"stroke-width" : chart.theme("gridBorderWidth"),
 							"stroke-opacity" : 1
 						}));
@@ -120,7 +120,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 						y1 : 0,
 						x2 : -half_band,
 						y2 : (grid.line) ? -full_height : bar,
-						stroke : chart.theme("gridBorderColor"),
+						stroke : chart.theme("gridAxisBorderColor"),
 						"stroke-width" : chart.theme("gridBorderWidth"),
 							"stroke-opacity" : 1
 					}));

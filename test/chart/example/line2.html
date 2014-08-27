@@ -46,12 +46,6 @@
 	            width: 400,
 	            height : 400,
 	            theme : location.href.split("?")[1].split("=")[1],	            
-                widget : {
-                    left : { title : 'yellow', size : 50 },
-                    right : { title : 'right', size : 50 },
-                    top : { title : "top", size : 50 },
-                    bottom : { title : "bottom", size : 50 }
-                },
 	            data : [
 	                { name : 2, value : 15 },
 	                { name : 5, value : 11 },
@@ -60,7 +54,8 @@
 	            ],
 	            grid : {
 	                x : {
-	                    domain : [ "week1", "week2", "week3", "week4" ]
+	                    domain : [ "week1", "week2", "week3", "week4" ],
+	                    line : true 
 	                },
 	                y : {
 	                    type : 'range',
@@ -72,7 +67,9 @@
                         target : function(data) {
                             return data.name + data.value + 10;
                         },
-                        step : 10
+                        step : 10,
+                        line : true,
+                        padding : 10 
                     }
 	            },
 	            series : {
@@ -81,7 +78,7 @@
 	            },
 	            brush : [
                     { type : 'line', target: "name"  },
-                    { type : 'line', target: "value"  }
+                    { type : 'line', target: "value", y1 : true }
 
 	            ]
 	        }).render();

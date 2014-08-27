@@ -36,6 +36,7 @@ jui.define("chart.theme.white", [], function() {
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
 		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
 

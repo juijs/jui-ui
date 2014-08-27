@@ -52,7 +52,7 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 							y1 : 0.5,
 							x2 : width + chart.area('width'),
 							y2 : 0.5,
-							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
+							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	,
 							"stroke-opacity" : 1						
 						}));
@@ -119,14 +119,15 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 			} else if (orient == 'top') {
 				var height = chart.widget.size('top');
 				var bar = 6;
-				var barY = height - bar;
-
+				var padding = grid.padding || 0;				
+				var barY = height - bar - padding;
+				
 				if (grid.line) {
 					g.append(chart.svg.line({
 						x1 : 0,
-						y1 : height,
+						y1 : height - padding,
 						x2 : scale(scale.max()),
-						y2 : height,
+						y2 : height - padding,
 						stroke : "black",
 						"stroke-width" : 0.5
 					}));
@@ -168,17 +169,20 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 				var width = chart.widget.size('right');
 				var bar = 6;
 				var barX = width - bar;
+				var padding = grid.padding || 0;
 
 				if (grid.line) {
 					g.append(chart.svg.line({
-						x1 : 0,
+						x1 : padding,
 						y1 : 0,
-						x2 : 0,
+						x2 : padding,
 						y2 : scale(scale.min()),
-						stroke : "black",
-						"stroke-width" : 0.5
+						stroke : chart.theme("gridAxisBorderColor"),
+						"stroke-width" : chart.theme("gridAxisBorderWidth")
 					}));
 				}
+				
+				
 
 				for (var i = 0; i < ticks.length; i++) {
 					values[i] = scale(ticks[i]);
@@ -186,15 +190,16 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 					var isZero = (ticks[i] == 0 && ticks[i] != scale.min());
 
 					var axis = chart.svg.group({
-						"transform" : "translate(0, " + values[i] + ")"
+						"transform" : "translate(" + padding  + ", " + values[i] + ")"
 					})
 					
 					axis.append(chart.svg.line({
 							x1 : 0,
 							y1 : 0,
 							x2 : bar,
-							y2 : 6,
-							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridBorderColor"),
+							y2 : 0,
+						
+							stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 							"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")	,
 							"stroke-opacity" : 1
 						}));
