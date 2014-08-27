@@ -332,7 +332,8 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.svg.element", "util.svg.element.transform", "util.svg.element.path", "util.svg.element.poly" ],
+    [ "util", "util.svg.element", "util.svg.element.transform",
+        "util.svg.element.path", "util.svg.element.poly" ],
     function(_, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(rootElem, rootAttr) {
@@ -347,11 +348,6 @@ jui.define("util.svg",
             rootElem.appendChild(root.element);
         }
         
-        this.css = function(css) {
-			root.css(css);            
-            return this; 
-        }        
-
         function create(obj, type, attr, callback) {
             obj.create(type, attr);
 
@@ -395,6 +391,29 @@ jui.define("util.svg",
         }
 
         /**
+         * getBoundingClientRect() 로 크기를 구할 수 없을 때 사용
+         *
+         * ex) 파폭 버그로   width, height 모두 0이 되므로 아래 함수를 사용해야함
+         */
+        function caculateSize() {
+            var height_list = [ 'height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth' ],
+                width_list = [ 'width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth' ];
+
+            var computedStyle = window.getComputedStyle(root.element),
+                size = { width : 0, height : 0 };
+
+            for(var i = 0; i < height_list.length;i++) {
+                size.height += parseFloat(computedStyle[height_list[i]]);
+            }
+
+            for(var i = 0; i < width_list.length;i++) {
+                size.width += parseFloat(computedStyle[width_list[i]]);
+            }
+
+            return size;
+        }
+
+        /**
          * 일반 메소드
          *
          */
@@ -412,7 +431,7 @@ jui.define("util.svg",
 
                 // if firefox 
                 if (rect.width == 0 && rect.height == 0) {
-                    rect = this.caculateSize();
+                    rect = caculateSize();
                 }
 
                 return {
@@ -420,29 +439,6 @@ jui.define("util.svg",
                     height: rect.height
                 }
             }
-        }
-        
-        /**
-         * getBoundingClientRect() 로 크기를 구할 수 없을 때 사용 
-         * 
-         * ex) 파폭 버그로   width, height 모두 0이 되므로 아래 함수를 사용해야함 
-         */
-        this.caculateSize = function() {
-            var height_list = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'];
-            var width_list = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'];
-            
-            var computedStyle = window.getComputedStyle(root.element);
-            var size = { width : 0, height : 0 };
-            
-            for(var i = 0; i < height_list.length;i++) {
-                size.height += parseFloat(computedStyle[height_list[i]]);
-            }
-            
-            for(var i = 0; i < width_list.length;i++) {
-                size.width += parseFloat(computedStyle[width_list[i]]);
-            }
-            
-            return size; 
         }
 
         this.clear = function() {
@@ -493,6 +489,10 @@ jui.define("util.svg",
 
         this.index = function(obj) {
             return root.index(obj);
+        }
+
+        this.css = function(css) {
+            return root.css(css);
         }
 
         /**
@@ -729,6 +729,57 @@ jui.define("util.svg",
 
         this.feTurbulence = function(attr) {
             return createChild(new Element(), "feTurbulence", attr);
+        }
+
+        /**
+         * 엘리먼트 생성 메소드 (3D)
+         *
+         */
+
+        this.rect3d = function(attr) {
+            var self = this;
+
+            var radian = attr.degree * (Math.PI / 180),
+                x1 = 0, y1 = 0,
+                w1 = attr.width, h1 = attr.height;
+
+            var x2 = (Math.cos(radian) * attr.depth) + x1,
+                y2 = (Math.sin(radian) * attr.depth) + y1;
+
+            var w2 = attr.width + x2,
+                h2 = attr.height + y2;
+
+            var g = this.group({
+                width: w2,
+                height: h2
+            }, function() {
+                delete attr.width;
+                delete attr.height;
+                delete attr.degree;
+                delete attr.depth;
+
+                self.path(attr)
+                    .MoveTo(x2, x1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .LineTo(x1, y2);
+
+                self.path(attr)
+                    .MoveTo(x1, y2)
+                    .LineTo(x1, h2)
+                    .LineTo(w1, h2)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+
+                self.path(attr)
+                    .MoveTo(w1, h2)
+                    .LineTo(w2, h1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+            });
+
+            return g;
         }
 
         init();
