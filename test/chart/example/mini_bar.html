@@ -22,13 +22,13 @@
     <script src="../../../js/chart/brush/brush.js"></script>
     <script src="../../../js/chart/brush/donut.js"></script>
     <script src="../../../js/chart/brush/area.js"></script>
-    <script src="../../../js/chart/brush/bar.js"></script>
     <script src="../../../js/chart/brush/bubble.js"></script>
+    <script src="../../../js/chart/brush/column.js"></script>
     <script src="../../../js/chart/brush/equalizer.js"></script>
     <script src="../../../js/chart/brush/candlestick.js"></script>
     <script src="../../../js/chart/brush/fullstack.js"></script>
     <script src="../../../js/chart/brush/gauge.js"></script>
-    <script src="../../../js/chart/brush/hbar.js"></script>
+    <script src="../../../js/chart/brush/bar.js"></script>
     <script src="../../../js/chart/brush/hstack.js"></script>
     <script src="../../../js/chart/brush/line.js"></script>
     <script src="../../../js/chart/brush/path.js"></script>
@@ -118,7 +118,7 @@
 					name : { text : "이름" },
 					value : { text : "값" }
 				},
-				brush : { type : 'bar', target : ['name', 'value'] }
+				brush : { type : 'column', target : ['name', 'value'] }
 			});
 			
 	        for(var i = 0; i < list.length; i++) {

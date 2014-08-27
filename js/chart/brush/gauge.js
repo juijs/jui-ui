@@ -3,7 +3,7 @@ jui.define("chart.brush.gauge", [], function() {
 	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
 
-			var width = chart.area('width'), height = chart.area('height');
+			var width = chart.width(), height = chart.height();
 			var min = width;
 
 			if (height < min) {
@@ -158,7 +158,7 @@ jui.define("chart.brush.gauge", [], function() {
 				'class' : 'brush donut'
 			})
 
-			group.translate(chart.area('x'), chart.area('y'))
+			group.translate(chart.x(), chart.y())
 
 			var rate = (this.value - this.min) / (this.max - this.min);
 

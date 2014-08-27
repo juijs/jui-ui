@@ -5,7 +5,7 @@ jui.define("chart.brush.equalizer", [], function() {
 		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
 		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+			g = chart.svg.group().translate(chart.x(), chart.y());
 
 			zeroY = brush.y(0);
 			count = chart.data().length;

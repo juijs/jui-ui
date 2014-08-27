@@ -5,7 +5,7 @@ jui.define("chart.brush.fullstack", [], function() {
 		var outerPadding = brush.outerPadding || 15;
 
 		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+			g = chart.svg.group().translate(chart.x(), chart.y());
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -15,7 +15,7 @@ jui.define("chart.brush.fullstack", [], function() {
 		}
 
 		this.draw = function(chart) {
-			var chart_height = chart.area('height');
+			var chart_height = chart.height();
 			for (var i = 0; i < count; i++) {
 
 				var startX = brush.x(i) - barWidth/2;

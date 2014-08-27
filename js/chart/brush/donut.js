@@ -4,7 +4,7 @@ jui.define("chart.brush.donut", [], function() {
 		this.drawBefore = function(chart) {
 			this.size = brush.size || 50;
 
-			var width = chart.area('width'), height = chart.area('height');
+			var width = chart.width(), height = chart.height();
 			var min = width;
 
 			if (height < min) {
@@ -80,7 +80,7 @@ jui.define("chart.brush.donut", [], function() {
 				'class' : 'brush donut'
 			})
 
-			group.translate(chart.area('x'), chart.area('y'))
+			group.translate(chart.x(), chart.y())
 
 			var all = 360;
 			var startAngle = 0;

@@ -2,7 +2,7 @@ jui.define("chart.brush.stackgauge", [], function() {
 
 	var StackGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
-			var width = chart.area('width'), height = chart.area('height');
+			var width = chart.width(), height = chart.height();
 			var min = width;
 
 			if (height < min) {

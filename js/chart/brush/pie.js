@@ -2,7 +2,7 @@ jui.define("chart.brush.pie", [], function() {
 
 	var PieBrush = function(brush) {
 		this.drawBefore = function(chart) {
-			var width = chart.area('width'), height = chart.area('height');
+			var width = chart.width(), height = chart.height();
 			var min = width;
 
 			if (height < min) {
@@ -61,7 +61,7 @@ jui.define("chart.brush.pie", [], function() {
 				'class' : 'brush donut'
 			})
 
-			group.translate(chart.area('x'), chart.area('y'))
+			group.translate(chart.x, chart.y)
 
 			var all = 360;
 			var startAngle = 0;

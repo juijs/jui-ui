@@ -37,7 +37,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(brush, chart, path) {
-            var g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+            var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for (var k = 0; k < path.length; k++) {
                 var p = createLine(brush, chart, path[k], k);

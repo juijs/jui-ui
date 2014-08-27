@@ -37,6 +37,70 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 
 			return _area;
 		}
+		
+		this.height = function(value) {
+		    if (arguments.length == 0) {
+		        return this.area('height');
+		    }
+		    
+		    _area.height = value;
+
+		    return this;
+		}
+
+        this.width = function(value) {
+            if (arguments.length == 0) {
+                return this.area('width');
+            }
+            
+            _area.width = value;
+
+            return this;
+        }
+
+
+        this.x = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x');
+            }
+            
+            _area.x = value;
+
+            return this;
+        }
+
+
+        this.y = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y');
+            }
+            
+            _area.y = value;
+
+            return this;
+        }
+
+        this.x2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x2');
+            }
+            
+            _area.x2 = value;
+
+            return this;
+        }
+
+
+        this.y2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y2');
+            }
+            
+            _area.y2 = value;
+
+            return this;
+        }
+
 
         this.bind = function(bind) {
             var self = this;

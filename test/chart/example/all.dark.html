@@ -8,7 +8,7 @@
 	
 		th {
 			background: gray;
-			color:white;
+			color:dark;
 			padding:10px;
 		}
 		td {
@@ -29,7 +29,7 @@
 		caption {
 			padding: 20px;
 			background:#7977C2;
-			color:white;
+			color:dark;
 		}
 		
 		
@@ -54,7 +54,7 @@
 		<div id="theme">
 			Themes : 
 			<select onchange="location.href=(this.value == 'dark') ? 'all.dark.html' : 'all.html';">
-				<option value="white">White</option>
+				<option value="dark">White</option>
 				<option value="dark" selected>Dark</option>
 			</select>
 		</div>		
@@ -92,33 +92,35 @@
 		</table>
 		
 		<table border="0">
-			<caption>Bar & Stack</caption>				
-			<tr> 
-				<th>bar</th>
-				<th>hbar</th>
-				<th>hstack</th>				   
-			</tr>
-			
-			<tr>
-				<td> <iframe width="430" height="430" src="bar.html?theme=dark" frameborder="0" scrolling="no"></iframe></td>
-				<td> <iframe width="430" height="430" src="hbar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="hstack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
-			</tr>
-			
+			         <caption>Column & Bar</caption>             
+            <tr> 
+                <th>bar</th>
+                <th>stack bar</th>
+                <th>column</th>
+                                   
+            </tr>
+            
+            <tr>
+                <td> <iframe width="430" height="430" src="bar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" src="stack_bar.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" src="column.html?theme=dark" frameborder="0" scrolling="no"></iframe></td>
+                                
+            </tr>
+            
 
-			<tr>
-				<th>stack</th>				 
-				<th>full stack</th>
-				<th>equalizer </th>
+            <tr>
+                <th>stack column</th>                
+                <th>full stack</th>
+                <th>equalizer </th>
 
-			</tr>
-			<tr>
-				<td> <iframe width="430" height="430" src="stack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-								 
-				<td> <iframe width="430" height="430" src="fullstack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="equalizer.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-			</tr>
-			
+            </tr>
+            <tr>
+                <td> <iframe width="430" height="430" src="stack_column.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                                 
+                <td> <iframe width="430" height="430" src="fullstack.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" src="equalizer.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+            </tr>
+            			
 			<tr>
 				<th>mini bar</th>				 
 			</tr>

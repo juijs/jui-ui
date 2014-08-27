@@ -15,7 +15,7 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group().translate(chart.area('x'), chart.area('y'));
+            g = chart.svg.group().translate(chart.x(), chart.y());
 
             count = chart.data().length;
             width = brush.x.rangeBand();

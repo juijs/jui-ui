@@ -28,7 +28,6 @@
     <script src="../../../js/chart/brush/candlestick.js"></script>
     <script src="../../../js/chart/brush/fullstack.js"></script>
     <script src="../../../js/chart/brush/gauge.js"></script>
-    <script src="../../../js/chart/brush/hbar.js"></script>
     <script src="../../../js/chart/brush/hstack.js"></script>
     <script src="../../../js/chart/brush/line.js"></script>
     <script src="../../../js/chart/brush/path.js"></script>
@@ -43,7 +42,6 @@
 <script>
     jui.ready(["chart.basic"], function(Chart) {
 			
-			// bar 
 			new Chart("#chart", {
 				width: 400,
 				height : 400,
@@ -56,12 +54,11 @@
 				],
 				grid : {
 					
-					x : { 
-						//type : "block",  // default type is block 
+					y : { 
 						domain : [ "week1", "week2", "week3", "week4" ],
 						line : true 
 					},
-					y : { 
+					x : { 
 						type : 'range', 
 						target : ["name", "value"], 
 						step : 10
@@ -71,7 +68,10 @@
 					name : { text : "이름" },
 					value : { text : "값" }
 				},
-				brush : { type : 'bar', target : ['name', 'value'] }
+				brush : {  
+					type : 'bar',
+					target : ['name', 'value']
+				}
 			}).render();
 	})
 </script>

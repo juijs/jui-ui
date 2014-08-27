@@ -3,8 +3,8 @@ jui.define("chart.brush.area", [], function() {
 	var AreaBrush = function(brush) {
 
         this.drawArea = function(brush, chart, path) {
-            var g = chart.svg.group().translate(chart.area('x'), chart.area('y')),
-                maxY = chart.area('height');
+            var g = chart.svg.group().translate(chart.x(), chart.y()),
+                maxY = chart.height();
 
             for (var i = 0; i < path.length; i++) {
                 var p = chart.svg.polygon({
