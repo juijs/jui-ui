@@ -1,0 +1,189 @@
+jui.define("chart.grid.rule", ["util.scale"], function(UtilScale) {
+
+	/**
+	 *
+	 * @param {Object} orient
+	 * @param {Object} grid
+	 */
+	var Grid = function(orient, grid) {
+		var self = this;
+
+		this.top = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width()
+				}));
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? chart.height() : -bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : -bar - 4,
+					'text-anchor' : 'middle',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+			}
+		}
+
+		this.bottom = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width()
+				}));
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? -chart.height() : bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : bar * 3,
+					'text-anchor' : 'middle',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+
+				g.append(axis);
+			}
+		}
+
+		this.left = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
+
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? chart.width() : -bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
+				}));
+
+				axis.append(chart.text({
+					x : -bar - 4,
+					y : bar,
+					'text-anchor' : 'end',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+
+			}
+		}
+
+		this.right = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
+			}
+
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? -chart.width() : bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : bar + 4,
+					y : bar,
+					'text-anchor' : 'start',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+			}
+		}
+
+		this.drawBefore = function(chart) {
+			grid = this.setRangeDomain(chart, grid);
+
+			var width = chart.width(), height = chart.height();
+
+			if (orient == 'left' || orient == 'right') {
+				this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
+			} else {
+				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
+			}
+
+			this.step = grid.step || 10;
+			this.nice = grid.nice || false;
+			this.ticks = this.scale.ticks(this.step, this.nice);
+			this.bar = 6;
+
+			this.values = [];
+
+			for (var i = 0, len = this.ticks.length; i < len; i++) {
+				this.values[i] = this.scale(this.ticks[i]);
+			}
+
+		}
+
+		this.draw = function(chart) {
+			return this.drawGrid(chart, orient, 'range', grid);
+		}
+	}
+
+	return Grid;
+}, "chart.grid");

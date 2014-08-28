@@ -185,6 +185,8 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
             clip.append(this.svg.rect({  x : 0, y : 0, width : this.area('width'), height : this.area('height') }));
                         
             defs.append(clip);
+            
+            this.defs = defs;
 			
 		}
 
