@@ -879,7 +879,23 @@
          * @returns {*}
          */
         include: function(name) {
-            return global[name];
+            if(!utility.typeCheck("string", name)) {
+                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+            }
+
+            var module = global[name];
+
+            if(utility.typeCheck([ "function", "object" ], module)) {
+                return module;
+            } else {
+                var modules = getModules(name);
+
+                if(modules == null) {
+                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
+                } else {
+                    return modules;
+                }
+            }
         },
 
         /**
