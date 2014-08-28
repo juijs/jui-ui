@@ -20,9 +20,6 @@ function getX(i) {
 }
 
 jui.ready([ "util", "util.svg", "chart.theme.white" ], function(_, SVGUtil, theme) {
-    console.log(_.radian(60));
-    console.log(_.degree(_.radian(60)));
-
     var svg = new SVGUtil($("#svg").get(0), { width: 1000, height: 1000 });
 
     svg.rect3d({

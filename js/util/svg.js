@@ -332,9 +332,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "chart.util", "util.svg.element", "util.svg.element.transform",
+    [ "util", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.poly" ],
-    function(_, __, Element, TransElement, PathElement, PolyElement) {
+    function(_, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(rootElem, rootAttr) {
         var root = null,
