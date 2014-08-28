@@ -332,9 +332,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.svg.element", "util.svg.element.transform",
+    [ "util", "chart.util", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.poly" ],
-    function(_, Element, TransElement, PathElement, PolyElement) {
+    function(_, __, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(rootElem, rootAttr) {
         var root = null,
@@ -739,7 +739,16 @@ jui.define("util.svg",
         this.rect3d = function(attr) {
             var self = this;
 
-            var radian = attr.degree * (Math.PI / 180),
+            /*
+             radian: function(degree) {
+             return degree * Math.PI / 180;
+             },
+             degree: function(radian) {
+             return radian * 180 / Math.PI;
+             },
+             */
+
+            var radian = attr.degree * Math.PI / 180,
                 x1 = 0, y1 = 0,
                 w1 = attr.width, h1 = attr.height;
 
@@ -753,10 +762,7 @@ jui.define("util.svg",
                 width: w2,
                 height: h2
             }, function() {
-                delete attr.width;
-                delete attr.height;
-                delete attr.degree;
-                delete attr.depth;
+                delete attr.width, attr.height, attr.degree, attr.depth;
 
                 self.path(attr)
                     .MoveTo(x2, x1)
