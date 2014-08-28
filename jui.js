@@ -765,13 +765,17 @@
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
 
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
             if(utility.typeCheck("function", global[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+                parent = "core";
             }
 
             if(!utility.typeCheck("function", global[parent])) {
@@ -1600,7 +1604,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	/**
@@ -1920,7 +1924,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
 
     /**
@@ -2269,7 +2273,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
     }
 
     return UI;
-}, "core");
+});
 jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	/**
@@ -2592,7 +2596,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 	
 	/**
@@ -2784,7 +2788,7 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
@@ -2918,7 +2922,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     }
 
     return UI;
-}, "core");
+});
 jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	
 	/**
@@ -3064,7 +3068,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	/**
@@ -3225,7 +3229,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	var UI = function() {
@@ -3711,7 +3715,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 	
-}, "core")
+});
 
 jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
@@ -3824,7 +3828,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
@@ -4165,7 +4169,7 @@ jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, drop
     }
 	
 	return UI;
-}, "core");
+});
 jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
@@ -6131,7 +6135,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
     }
 	
 	return UI;
-}, "core");
+});
 jui.define("uix.tree.node", [ "jquery" ], function($) {
     var Node = function(data, tplFunc) {
         var self = this;
@@ -7030,7 +7034,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
 	
 	/**
@@ -7279,7 +7283,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
@@ -8145,4 +8149,4 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
     }
 
 	return UI;
-}, "core");
+});

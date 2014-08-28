@@ -131,4 +131,4 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     }
 
     return UI;
-}, "core");
+});

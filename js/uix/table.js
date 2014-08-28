@@ -1963,4 +1963,4 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
     }
 	
 	return UI;
-}, "core");
+});

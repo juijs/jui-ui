@@ -863,4 +863,4 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
     }
 
 	return UI;
-}, "core");
+});

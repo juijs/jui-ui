@@ -483,4 +483,4 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 	
-}, "core")
+});

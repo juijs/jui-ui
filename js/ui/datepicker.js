@@ -346,4 +346,4 @@ jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
     }
 
     return UI;
-}, "core");
+});

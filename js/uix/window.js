@@ -246,4 +246,4 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
     }
 	
 	return UI;
-}, "core");
+});

@@ -765,13 +765,17 @@
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
 
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
             if(utility.typeCheck("function", global[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+                parent = "core";
             }
 
             if(!utility.typeCheck("function", global[parent])) {

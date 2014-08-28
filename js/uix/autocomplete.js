@@ -109,4 +109,4 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
     }
 	
 	return UI;
-}, "core");
+});

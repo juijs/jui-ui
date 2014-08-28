@@ -189,4 +189,4 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});

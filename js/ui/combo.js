@@ -317,4 +317,4 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
