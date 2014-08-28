@@ -24,8 +24,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;
-		var ui_modal = null, is_loading = false;
-        var page = 1;
+		var ui_modal = null, page = 1;
+        var is_loading = false, is_resize = false;
 		
 		
 		/**
@@ -80,9 +80,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 				if(opts.scrollWidth > 0) {
 					var rootWidth = $(self.root).outerWidth();
 					
-					$(self.root).css({ 
+					$(self.root).css({
 						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto"
+						"overflow-x": "auto",
+                        "overflow-y": "hidden"
 					});
 					
 					$(head.root).outerWidth(rootWidth);
@@ -228,16 +229,105 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			self.update(s_rows);
 			self.emit("filter", [ s_rows ]);
 		}
-		
-		function setColumnWidthAuto(self) {
-			var columns = head.listColumn();
-			
-			for(var i = 0; i < columns.length; i++) {
-				if(columns[i].width == null) {
-					$(columns[i].element).outerWidth("auto");
-				}
-			}
-		}
+
+        function setColumnResizeScroll(self) {
+            var column = {},
+                width = {},
+                resizeX = 0;
+
+            // 리사이즈 엘리먼트 삭제
+            $(self.root).find("thead .resize").remove();
+
+            for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+                var $colElem = $(head.getColumn(i).element),
+                    $resizeBar = $("<div class='resize'></div>");
+                var pos = $colElem.position();
+
+                $resizeBar.css({
+                    position: "absolute",
+                    width: "8px",
+                    height: $colElem.outerHeight(),
+                    left: ($colElem.outerWidth() + (pos.left - 1)) + "px",
+                    top: pos.top + "px",
+                    cursor: "w-resize",
+                    "z-index": "1"
+                });
+
+                $colElem.append($resizeBar);
+
+                // Event Start
+                (function(index) {
+                    self.addEvent($resizeBar, "mousedown", function(e) {
+                        if(resizeX == 0) {
+                            resizeX = e.pageX;
+                        }
+
+                        // 컬럼 객체 가져오기
+                        column = {
+                            head: head.getColumn(index),
+                            body: body.getColumn(index)
+                        };
+
+                        width = {
+                            column: $(column.head.element).outerWidth(),
+                            body: $(body.root).outerWidth()
+                        };
+
+                        is_resize = true;
+
+                        return false;
+                    });
+                })(i);
+            }
+
+            self.addEvent("body", "mousemove", function(e) {
+                if(resizeX > 0) {
+                    colResizeWidth(e.pageX - resizeX);
+                }
+            });
+
+            self.addEvent("body", "mouseup", function(e) {
+                if(resizeX > 0) {
+                    resizeX = 0;
+                    is_resize = false;
+
+                    // 리사이징 바, 위치 이동
+                    colResizeBarLeft();
+
+                    head.emit("colresize", [ column.head, e ]);
+
+                    return false;
+                }
+            });
+
+            // 리사이징 바 위치 설정
+            head.on("colshow", colResizeBarLeft);
+            head.on("colhide", colResizeBarLeft);
+
+            function colResizeWidth(disWidth) {
+                var colMinWidth = 30;
+
+                // 최소 크기 체크
+                if (width.column + disWidth < colMinWidth)
+                    return;
+
+                $(column.head.element).outerWidth(width.column + disWidth);
+                $(column.body.element).outerWidth(width.column + disWidth);
+
+                if (disWidth > 0) {
+                    $(body.root).parent().outerWidth(width.body + disWidth);
+                    $(head.root).outerWidth(width.body + disWidth);
+                }
+            }
+
+            function colResizeBarLeft() {
+                for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+                    var $colElem = $(head.getColumn(i).element);
+
+                    $colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
+                }
+            }
+        }
 		
 
 		/**
@@ -300,11 +390,16 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 				opts.sortLoading = (opts.sortLoading === true) ? 500 : opts.sortLoading; 
 			}
 			
-			// 컬럼 리사이징 위치 조정
+			// 컬럼 리사이징 (기본)
 			if(opts.resize) {
 				head.resizeColumns();
 				head.resize();
-			}
+            }
+
+            // 컬럼 리사이징 (가로스크롤)
+            if(!opts.resize && opts.scrollWidth > 0) {
+                setColumnResizeScroll(this);
+            }
 		}
 		
 		this.select = function(index) {
@@ -357,7 +452,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		}
 		
 		this.sort = function(index, order, e, isNotLoading) { // index는 컬럼 key 또는 컬럼 name
-			if(!this.options.fields || !this.options.sort) return;
+			if(!this.options.fields || !this.options.sort || is_resize) return;
 			
 			var self = this, 
 				column = head.getColumn(index);
@@ -768,4 +863,4 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
     }
 
 	return UI;
-}, "core");
+});

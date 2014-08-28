@@ -143,4 +143,4 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});

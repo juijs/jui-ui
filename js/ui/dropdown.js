@@ -320,4 +320,4 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});

@@ -804,6 +804,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
 		var rowIndex = null, checkedList = {};
+        var is_resize = false;
 		
 		
 		/**
@@ -1155,6 +1156,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 						colWidth = $(col.element).outerWidth(),
 						colNextWidth = $(colNext.element).outerWidth();
 						colResize = this;
+                        is_resize = true;
 						
 						return false;
 					});
@@ -1169,12 +1171,14 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 			
 			self.addEvent("body", "mouseup", function(e) {
 				if(resizeX > 0) {
-					self.emit("colresize", [ col, e ]);
 					resizeX = 0;
+                    is_resize = false;
 					
 					// 리사이징 바, 위치 이동
 					var left = $(col.element).offset().left - tablePos.left;
 					$(colResize).css("left", $(col.element).outerWidth() + left - 1);
+
+                    self.emit("colresize", [ col, e ]);
 					
 					return false;
 				}
@@ -1422,7 +1426,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		}
 		
 		this.sort = function(index, order, e) {  // index는 컬럼 key 또는 컬럼 name
-			if(!this.options.fields || !this.options.sort) return;
+			if(!this.options.fields || !this.options.sort || is_resize) return;
 			var column = this.getColumn(index);
 			
 			if(typeof(column.name) == "string") {
@@ -1959,4 +1963,4 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
     }
 	
 	return UI;
-}, "core");
+});
