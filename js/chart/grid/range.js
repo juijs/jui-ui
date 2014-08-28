@@ -1,4 +1,4 @@
-jui.define("chart.grid.range", ["chart.util"], function(util) {
+jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
 
 	/**
 	 *
@@ -201,9 +201,9 @@ jui.define("chart.grid.range", ["chart.util"], function(util) {
 			var width = chart.width(), height = chart.height();
 
 			if (orient == 'left' || orient == 'right') {
-				this.scale = this.scale = util.scale.linear().domain(grid.domain).range([height, 0]);
+				this.scale = this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
 			} else {
-				this.scale = this.scale = util.scale.linear().domain(grid.domain).range([0, width]);
+				this.scale = this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
 			}
 
 		}

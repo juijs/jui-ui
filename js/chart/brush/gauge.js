@@ -1,4 +1,4 @@
-jui.define("chart.brush.gauge", [], function() {
+jui.define("chart.brush.gauge", ["util.math"], function(math) {
 
 	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -70,7 +70,7 @@ jui.define("chart.brush.gauge", [], function() {
 
             if (brush.minText) {
                 // min
-                var obj = this.rotate(startX, startY, this.radian(startAngle));
+                var obj = math.rotate(startX, startY, math.radian(startAngle));
     
                 startX = obj.x;
                 startY = obj.y;
@@ -88,7 +88,7 @@ jui.define("chart.brush.gauge", [], function() {
 			// outer arc 에 대한 지점 설정
 			
 			if (brush.maxText) {
-                var obj = this.rotate(startX, startY, this.radian(endAngle));
+                var obj = math.rotate(startX, startY, math.radian(endAngle));
     
                 g.append(chart.svg.text({
                     x : obj.x - 20,

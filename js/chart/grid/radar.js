@@ -1,4 +1,4 @@
-jui.define("chart.grid.radar", ["chart.util"], function(util) {
+jui.define("chart.grid.radar", ["util.math"], function(math) {
 
 	var Grid = function(orient, grid) {
 		var position = [];
@@ -32,7 +32,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 			var startY = y;
 
 			for (var i = 0; i < count; i++) {
-				var obj = util.rotate(startX, startY, unit);
+				var obj = math.rotate(startX, startY, unit);
 
 				startX = obj.x;
 				startY = obj.y;
@@ -89,7 +89,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 				var y = -pos;
 				var x = 0;
 
-				var o = that.rotate(x, y, unit * index);
+				var o = math.rotate(x, y, unit * index);
 				x = o.x;
 				y = o.y;
 
@@ -180,7 +180,7 @@ jui.define("chart.grid.radar", ["chart.util"], function(util) {
 					fill : chart.theme("gridFontColor")
 				}, grid.domain[i]))
 
-				var obj = util.rotate(startX, startY, unit);
+				var obj = math.rotate(startX, startY, unit);
 
 				startX = obj.x;
 				startY = obj.y;

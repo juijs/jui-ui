@@ -1,4 +1,4 @@
-jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
+jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, UtilScale) {
 
 	var Grid = function(orient, grid) {
 		var self = this;
@@ -8,7 +8,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
             if ( typeof format == 'string') {
                 var str = format;
                 format = function(value) {
-                    return _.dateFormat(value, str);
+                    return UtilTime.format(value, str);
                 }
             }
 
@@ -193,7 +193,7 @@ jui.define("chart.grid.date", ["util", "chart.util"], function(_, util) {
             }
 			
 			var range = [0, max];
-            this.scale = util.scale.time().domain(grid.domain).rangeRound([0, max]);
+            this.scale = UtilScale.time().domain(grid.domain).rangeRound([0, max]);
 
 
             if (grid.realtime) {

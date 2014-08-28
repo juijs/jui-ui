@@ -9,7 +9,9 @@
     <script src="../../../js/util/svg.js"></script>
     <script src="../../../js/chart/core.js"></script>
     <script src="../../../js/chart/draw.js"></script>
-    <script src="../../../js/chart/util.js"></script>
+    <script src="../../../js/util/time.js"></script>
+    <script src="../../../js/util/math.js"></script>    
+    <script src="../../../js/util/scale.js"></script>
     <script src="../../../js/chart/basic.js"></script>    
     <script src="../../../js/chart/theme/white.js"></script>    
     <script src="../../../js/chart/theme/dark.js"></script>    
@@ -28,12 +30,9 @@
     <script src="../../../js/chart/brush/candlestick.js"></script>
     <script src="../../../js/chart/brush/fullstack.js"></script>
     <script src="../../../js/chart/brush/gauge.js"></script>
-    <script src="../../../js/chart/brush/hbar.js"></script>
-    <script src="../../../js/chart/brush/hstack.js"></script>
     <script src="../../../js/chart/brush/line.js"></script>
     <script src="../../../js/chart/brush/path.js"></script>
     <script src="../../../js/chart/brush/scatter.js"></script>
-    <script src="../../../js/chart/brush/stack.js"></script>
 
 </head>
 <body>
@@ -50,14 +49,14 @@ function getDate() {
 			return Math.round(Math.random() * 1000  % 500);
 		}
 
-    jui.ready(["chart.basic", "chart.util"], function(Chart, util) {
+    jui.ready(["chart.basic", "util.time"], function(Chart, time) {
             
 			var start = new Date();
-			var end = util.time.add(start, util.time.hours, 5);
+			var end = time.add(start, time.hours, 5);
 			
 			var data = [];
 			for(var i = 0; i < 30; i++) {
-				data.push({ name : getNumber(), name2 : getNumber(), value : util.time.add(start, util.time.minutes, i*10)} )
+				data.push({ name : getNumber(), name2 : getNumber(), value : time.add(start, time.minutes, i*10)} )
 			}
 
 			new Chart("#chart", {
@@ -70,7 +69,7 @@ function getDate() {
 					x : { 
 						type : "date",  // default type is block 
 						domain : [ start, end ],
-						step : [util.time.hours, 1],
+						step : [time.hours, 1],
 						format : "hh:mm",
 					    key: "value",
 					    line : true

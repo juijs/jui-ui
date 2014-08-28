@@ -7,9 +7,11 @@
     <script src="../../../js/base.js"></script>
     <script src="../../../js/core.js"></script>
     <script src="../../../js/util/svg.js"></script>
+    <script src="../../../js/util/time.js"></script>
+    <script src="../../../js/util/math.js"></script>    
+    <script src="../../../js/util/scale.js"></script>   
     <script src="../../../js/chart/core.js"></script>
     <script src="../../../js/chart/draw.js"></script>
-    <script src="../../../js/chart/util.js"></script>
     <script src="../../../js/chart/theme/white.js"></script>
     <script src="../../../js/chart/theme/dark.js"></script>
     <script src="../../../js/chart/grid/grid.js"></script>
@@ -25,7 +27,7 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chart.basic", "util" ], function(chart, _) {
+    jui.ready([ "chart.basic", "util.time" ], function(chart, time) {
 
         var dataSource = [
             { date: new Date(1994,2,1), l: 24.00, h: 25.00, o: 25.00, c: 24.875 },
@@ -63,7 +65,7 @@
                     type : "block",  // default type is block
                     target : 'date',
                     format: function(d) {
-                        return _.dateFormat(d, "MM-dd");
+                        return time.format(d, "MM-dd");
                     },
                     line: true
                 },

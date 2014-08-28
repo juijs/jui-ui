@@ -1,4 +1,4 @@
-jui.define("chart.brush.pie", [], function() {
+jui.define("chart.brush.pie", ["util.math"], function(math) {
 
 	var PieBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -24,7 +24,7 @@ jui.define("chart.brush.pie", [], function() {
 			var path = chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
-			var obj = this.rotate(0, -outerRadius, this.radian(startAngle));
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
 
 			var startX = obj.x;
 			var startY = obj.y;
@@ -33,7 +33,7 @@ jui.define("chart.brush.pie", [], function() {
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
-			obj = this.rotate(startX, startY, this.radian(endAngle));
+			obj = math.rotate(startX, startY, math.radian(endAngle));
 
 			g.translate(centerX, centerY);
 
@@ -50,10 +50,6 @@ jui.define("chart.brush.pie", [], function() {
 			return g;
 		}
 
-		this.radian = function(degree) {
-			return degree * Math.PI / 180;
-		}
-
 		this.draw = function(chart) {
 
 			var s = chart.series(brush.target[0]);
@@ -61,7 +57,7 @@ jui.define("chart.brush.pie", [], function() {
 				'class' : 'brush donut'
 			})
 
-			group.translate(chart.x, chart.y)
+			group.translate(chart.x(), chart.y())
 
 			var all = 360;
 			var startAngle = 0;

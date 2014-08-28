@@ -1,4 +1,4 @@
-jui.define("chart.grid.block", ["chart.util"], function(util) {
+jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
 
 	var Grid = function(orient, grid) {
 
@@ -185,7 +185,7 @@ jui.define("chart.grid.block", ["chart.util"], function(util) {
 			var height = chart.height();
 			var max = (orient == 'left' || orient == 'right') ? height : width;
 			
-			this.scale = util.scale.ordinal().domain(grid.domain);
+			this.scale = UtilScale.ordinal().domain(grid.domain);
 			var range = [0, max];
 
 			if (grid.full) {

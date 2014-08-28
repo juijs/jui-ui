@@ -1,4 +1,4 @@
-jui.define("chart.widget.text", ["chart.util"], function(util) {
+jui.define("chart.widget.text", [], function() {
 
 	var Widget = function(orient, widget) {
 		var self = this;
@@ -8,7 +8,7 @@ jui.define("chart.widget.text", ["chart.util"], function(util) {
 		}
 
 		this.draw = function(chart) {
-			var width = chart.area('width'), height = chart.area('height');
+			var width = chart.width(), height = chart.height();
 			
 			if (!widget.text) return; 
 
@@ -19,7 +19,7 @@ jui.define("chart.widget.text", ["chart.util"], function(util) {
 				chart.svg.text({x : x , y : y}, widget.text||"").rotate(-90, x, y);
 				
 			} else if (orient == 'right') {
-				var x = chart.area('x2')+10;
+				var x = chart.x2()+10;
 				var y = height/2 + chart.widget.size('top');
 				
 				chart.svg.text({x : x , y : y}, widget.text||"").rotate(90, x, y);
@@ -30,7 +30,7 @@ jui.define("chart.widget.text", ["chart.util"], function(util) {
 				chart.svg.text({x : x , y : y}, widget.text||"");
 			} else if (orient == 'bottom') {
 				var x = width/2 +  chart.widget.size('left');
-				var y = chart.area('y2') + chart.widget.size(orient);
+				var y = chart.y2() + chart.widget.size(orient);
 				
 				chart.svg.text({x : x , y : y}, widget.text||"");
 			}

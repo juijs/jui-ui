@@ -1,4 +1,4 @@
-jui.define("chart.brush.donut", [], function() {
+jui.define("chart.brush.donut", ["util.math"], function(math) {
 
 	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -29,12 +29,12 @@ jui.define("chart.brush.donut", [], function() {
 			var path = chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
-			var obj = this.rotate(0, -outerRadius, this.radian(startAngle));
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
 
 			var startX = obj.x;
 			var startY = obj.y;
 			
-			var innerCircle = this.rotate(0, -innerRadius, this.radian(startAngle));
+			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle));
 			
 			var startInnerX = innerCircle.x;
 			var startInnerY = innerCircle.y;
@@ -43,10 +43,10 @@ jui.define("chart.brush.donut", [], function() {
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
-			obj = this.rotate(startX, startY, this.radian(endAngle));
+			obj = math.rotate(startX, startY, math.radian(endAngle));
 
 			// inner arc 에 대한 지점 설정 			
-			innerCircle = this.rotate(startInnerX, startInnerY, this.radian(endAngle));
+			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle));
 			
 			// 중심점 이동 
 			g.translate(centerX, centerY);
@@ -67,10 +67,6 @@ jui.define("chart.brush.donut", [], function() {
 			g.append(path);
 
 			return g;
-		}
-
-		this.radian = function(degree) {
-			return degree * Math.PI / 180;
 		}
 
 		this.draw = function(chart) {
