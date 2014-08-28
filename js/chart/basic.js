@@ -3,7 +3,7 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 	var UI = function() {
 		
 		var self = this; 
-		var _grid = [], _widget = [], _brush = [], _data, _series, _scales = {};
+		var _grid = {}, _widget = [], _brush = [], _data, _series, _scales = {};
 		
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
@@ -193,10 +193,11 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 			var grid_list = {};
 			if (grid != null) {
 				
-				if (grid.type)
+				if (grid.type) {
 					grid = {
 						c : grid
 					};
+				}
 
 				for (var k in grid) {
 
@@ -214,10 +215,12 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 					if (!_scales[k]) {
 						_scales[k] = [];
 					}
-						
+
+					
 					if (!_.typeCheck("array", grid[k])) {
 						grid[k] = [grid[k]];
 					}
+
 					
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
@@ -244,15 +247,25 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
+					
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 
-					if (_scales.x || _scales.x1)
-						_brush[i].x = (typeof _brush[i].x1 !== 'undefined') ? _scales.x1[_brush[i].x1 || 0] : _scales.x[_brush[i].x || 0];
-					if (_scales.y || _scales.y1)
-						_brush[i].y = (typeof _brush[i].y1 !== 'undefined') ? _scales.y1[_brush[i].y1 || 0] : _scales.y[_brush[i].y || 0];
-					if (_scales.c)
-						_brush[i].c = _scales.c[_brush[i].c || 0];
-
+					if (_scales.x || _scales.x1) {
+						if (!_.typeCheck("function", _brush[i].x)) {
+							_brush[i].x = (typeof _brush[i].x1 !== 'undefined') ? _scales.x1[_brush[i].x1 || 0] : _scales.x[_brush[i].x || 0];
+						}
+					}
+					if (_scales.y || _scales.y1) {
+						if (!_.typeCheck("function", _brush[i].y)) {
+							_brush[i].y = (typeof _brush[i].y1 !== 'undefined') ? _scales.y1[_brush[i].y1 || 0] : _scales.y[_brush[i].y || 0];
+						}
+					}						
+					if (_scales.c){
+						if (!_.typeCheck("function", _brush[i].c)) {
+							_brush[i].c = _scales.c[_brush[i].c || 0];
+						}
+					}
+						
 					_brush[i].index = i;
 
 					new Obj(_brush[i]).render(this);

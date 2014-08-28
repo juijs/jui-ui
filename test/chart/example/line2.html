@@ -66,9 +66,7 @@
                         target : function(data) {
                             return data.name + data.value + 10;
                         },
-                        step : 10,
-                        line : true,
-                        padding : 10 
+                        step : 10 
                     }
 	            },
 	            series : {
@@ -77,7 +75,7 @@
 	            },
 	            brush : [
                     { type : 'line', target: "name"  },
-                    { type : 'line', target: "value", y1 : true }
+                    { type : 'line', target: "value", y1 : 0 }
 
 	            ]
 	        }).render();

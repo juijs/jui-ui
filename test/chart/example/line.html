@@ -43,14 +43,14 @@
 <script>
     jui.ready(["chart.basic"], function(Chart) {
             new Chart("#chart", {
-	            width: 1000,
-	            height : 1000,
+	            width: 400,
+	            height : 400,
 	            theme : location.href.split("?")[1].split("=")[1],	            
                 widget : {
-                    left : { title : 'yellow', size : 200 },
-                    right : { title : 'right', size : 200 },
-                    top : { title : "top", size : 200 },
-                    bottom : { title : "bottom", size : 200 }
+                    left : { title : 'yellow', size : 50 },
+                    right : { title : 'right', size : 50 },
+                    top : { title : "top", size : 50 },
+                    bottom : { title : "bottom", size : 50 }
                 },
 	            data : [
 	                { name : 2, value : 15 },
@@ -60,84 +60,17 @@
 	            ],
 	            grid : {
 	
-	                y : [
-	                {
-	                    type : 'range',
-	                    target : [ "name", "value" ],
-	                    step : 10,
-	                    line : true
+	                x : {
+	                    domain : [ "week1", "week2", "week3", "week4" ],
+	                    line : true 
 	                },
-	                {
-	                    type : 'range',
-	                    target : [ "value" ],
-	                    step : 10,
-	                    dist : 70
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "name", ],
-	                    step : 10,
-	                    dist : 140
-	                }
-	                ],
-	                y1 : [
+	                y : 
 	                {
 	                    type : 'range',
 	                    target : [ "name", "value" ],
 	                    step : 10
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "value" ],
-	                    step : 10,
-	                    dist : 70
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "name", ],
-	                    step : 10,
-	                    dist : 140
 	                }
-	                ],
-					x : [
-	                {
-	                    type : 'range',
-	                    target : [ "name", "value" ],
-	                    step : 10, 
-	                    line : true
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "value" ],
-	                    step : 10,
-	                    dist : 70
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "name", ],
-	                    step : 10,
-	                    dist : 140
-	                }
-	                ],
-	                x1 : [
-	                {
-	                    type : 'range',
-	                    target : [ "name", "value" ],
-	                    step : 10
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "value" ],
-	                    step : 10,
-	                    dist : 70
-	                },
-	                {
-	                    type : 'range',
-	                    target : [ "name", ],
-	                    step : 10,
-	                    dist : 140
-	                }	     
-	             ]              
+	                
 	            },
 	            series : {
 	                name : { text : "test" },

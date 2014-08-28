@@ -71,13 +71,13 @@ function getDate() {
 						domain : [ start, end ],
 						step : [time.hours, 1],
 						format : "hh:mm",
-					    key: "value",
-					    line : true
+					    key: "value"
 					},
 					y : { 
 						type : 'range', 
 						target : ["name"], 
-						step : 10
+						step : 10,
+						line : true 
 					}
 				},
 				series : {
