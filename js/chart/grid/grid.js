@@ -1,4 +1,4 @@
-jui.define("chart.grid", [ ], function() {
+jui.define("chart.grid", [ "util" ], function(_) {
 	var Grid = function() {
 
 		this.setBlockDomain = function(chart, grid) {
@@ -114,6 +114,55 @@ jui.define("chart.grid", [ ], function() {
 			
 			return new_scale;
 		}
+		
+		
+		this.axisLine = function(chart, attr) {
+			return chart.svg.line(_.extend({
+				x1 : 0,
+				y1 : 0,
+				x2 : 0,
+				y2 : 0,
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridAxisBorderWidth"),
+				"stroke-opacity" : 1
+			}, attr));
+		}
+
+		this.line = function(chart, attr) {
+			return chart.svg.line(_.extend({
+				x1 : 0,
+				y1 : 0,
+				x2 : 0,
+				y2 : 0,				
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridBorderWidth"),
+				"stroke-opacity" : 1
+			}, attr));
+		}		
+		
+		this.drawGrid = function(chart, orient, cls, grid) {
+			// create group
+			var root = chart.svg.group({
+				'class' : ['grid', cls].join(" "),
+			})
+
+			// render axis
+			this[orient].call(this, chart, root);
+
+			// wrapped scale
+			this.scale = this.wrapper(chart, this.scale, grid.key);
+
+			// hide
+			if (grid.hide) {
+				root.attr({ display : 'none' })
+			}
+
+			return {
+				root : root,
+				scale : this.scale
+			};
+		}
+		
 	}
 
 	return Grid;

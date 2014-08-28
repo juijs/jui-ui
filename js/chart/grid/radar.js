@@ -217,7 +217,10 @@ jui.define("chart.grid.radar", ["util.math"], function(math) {
 				stepBase += stepValue;
 			}
 
-			return scale(position[0]);
+			return {
+				root : root, 
+				scale : scale(position[0])
+			};
 		}
 	}
 

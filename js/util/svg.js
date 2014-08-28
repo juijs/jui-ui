@@ -17,7 +17,7 @@ jui.define("util.svg.element", [], function() {
             // 기본 속성 설정
             this.attr(attr);
         }
-
+        
         this.each = function(callback) {
             if(typeof(callback) != "function") {
                 for(var i = 0; i < this.childrens.length; i++) {
