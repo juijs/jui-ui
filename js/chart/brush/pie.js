@@ -16,7 +16,7 @@ jui.define("chart.brush.pie", ["util.math"], function(math) {
 			this.outerRadius = brush.outerRadius || this.w;
 		}
 
-		this.drawDonut = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
+		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
 			var g = chart.svg.group({
 				'class' : 'donut'
 			});
@@ -71,7 +71,7 @@ jui.define("chart.brush.pie", ["util.math"], function(math) {
 				var data = s.data[i];
 				var endAngle = all * (data / max);
 
-				var g = this.drawDonut(chart, this.centerX, this.centerY, this.outerRadius, startAngle, endAngle, {
+				var g = this.drawPie(chart, this.centerX, this.centerY, this.outerRadius, startAngle, endAngle, {
 					fill : chart.theme.color(i),
 					stroke : chart.theme('pieBorderColor'),
 					"stroke-width" : chart.theme('pieBorderWidth')
