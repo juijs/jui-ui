@@ -479,7 +479,7 @@
 					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
 					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
 					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object") ? true : false,
+					"object": (typeof(value) == "object" && value !== null) ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
@@ -711,20 +711,58 @@
         btoa: Base64.encode,
         atob: Base64.decode
 	}
+
+
+    /**
+     * Module related functions
+     *
+     */
 	
 	var getDepends = function(depends) {
 		var args = [];
 		
 		for(var i = 0; i < depends.length; i++) {
-			args.push(global[depends[i]]);
+            var module = global[depends[i]];
 			
-			if(!utility.typeCheck([ "function", "object" ], args[i])) {
-				throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
-			}
+			if(!utility.typeCheck([ "function", "object" ], module)) {
+                var modules = getModules(depends[i]);
+
+                if(modules == null) {
+                    throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
+                } else {
+                    args.push(modules);
+                }
+
+			} else {
+                args.push(module);
+            }
 		}
 		
 		return args;
 	}
+
+    var getModules = function(parent) {
+        var modules = null,
+            parent = parent + ".";
+
+        for(var key in global) {
+            if(key.indexOf(parent) != -1) {
+                if(utility.typeCheck([ "function", "object" ], global[key])) {
+                    var child = key.split(parent).join("");
+
+                    if(child.indexOf(".") == -1) {
+                        if(modules == null) {
+                            modules = {};
+                        }
+
+                        modules[child] = global[key];
+                    }
+                }
+            }
+        }
+
+        return modules;
+    }
 
 
 	/**
@@ -748,7 +786,7 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ global["ui"], global["uix"], utility ];
+					args = [ getModules("ui"), getModules("uix"), utility ];
 				}
 
 				callback.apply(null, args);
@@ -758,20 +796,24 @@
         /**
          * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
          *
-         * @param name 'UIGroup.UIName' 형태로 설정해야 하며, ready에서 패키지 형태로 UIGroup 객체를 받을 수 있다.
+         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
          * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
 
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
             if(utility.typeCheck("function", global[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+                parent = "core";
             }
 
             if(!utility.typeCheck("function", global[parent])) {
@@ -781,41 +823,24 @@
                     throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
                 }
             }
-
-            if(name.indexOf(".") == -1) {
-                throw new Error("JUI_CRITICAL_ERR: UI grouping rule must be followed");
-            }
 			
 			var args = getDepends(depends),
-                keys = name.split("."),
                 uiFunc = callback.apply(null, args);
-
-            if(keys.length != 2) {
-                throw new Error("JUI_CRITICAL_ERR: UI naming rule is incorrect");
-            }
-
-            // 상위 객체가 없을 경우...
-            if(utility.typeCheck("undefined", global[keys[0]])) {
-                global[keys[0]] = {};
-            }
 
             // 상속
             utility.inherit(uiFunc, global[parent]);
 
-            // UI 그룹 설정
-            global[keys[0]][keys[1]] = global["core"].init({
+            // UI 고유 설정
+            global[name] = global["core"].init({
                 type: name,
                 "class": uiFunc
             });
-
-            // UI 고유 설정
-            global[name] = global[keys[0]][keys[1]];
 		},
 
         /**
          * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
          *
-         * @param name 'defineUI'와 달리 이름을 설정하는데 제약이 없다.
+         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
          * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
@@ -1600,7 +1625,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	/**
@@ -1920,7 +1945,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
 
     /**
@@ -2269,7 +2294,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
     }
 
     return UI;
-}, "core");
+});
 jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	/**
@@ -2592,7 +2617,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 	
 	/**
@@ -2647,16 +2672,18 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 		}
 		
 		function getModalInfo(self) {
-			var x = "auto", y = "auto", h = 0;
+			var x = "auto", y = "auto", w = 0, h = 0;
 			
 			var target = self.options.target, 
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
-				tPos = (target == "body") ? null : "relative";
+				tPos = (target == "body") ? null : "relative",
+                sLeft = $(target).scrollLeft();
 			
-			x = ($(hTarget).width() / 2) - ($(self.root).width() / 2);
+			x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft();
 			y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
-			
+
+            w = (sLeft > 0) ? $(target).outerWidth() + sLeft : "100%";
 			h = $(target).outerHeight();
 			h = (h > 0) ? h : $(hTarget).outerHeight();
 			
@@ -2669,16 +2696,16 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 			}
 			
 			return {
-				x: x, y: y, pos: pos, tPos: tPos, h: h
+				x: x, y: y, pos: pos, tPos: tPos, w: w, h: h
 			}
 		}
 		
-		function createModal(self, h) {
+		function createModal(self, w, h) {
 			if($modal != null) return;
 			
 			$modal = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
 				position: "absolute",
-				width: "100%",
+				width: w,
 				height: h,
 				left: 0,
 				top: 0,
@@ -2749,7 +2776,7 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
 			$(this.options.target).css("position", info.tPos);
 			$(this.root).show();
 			
-			createModal(this, info.h);
+			createModal(this, info.w, info.h);
 			this.type = "show";
 		}
 
@@ -2782,7 +2809,7 @@ jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
@@ -2916,7 +2943,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     }
 
     return UI;
-}, "core");
+});
 jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	
 	/**
@@ -3062,7 +3089,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	/**
@@ -3223,7 +3250,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	var UI = function() {
@@ -3426,6 +3453,29 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			
 			$resizer.data('event', true);
 		}
+
+        function initLayout(self) {
+            for(var i = 0, len = directions.length; i < len; i++) {
+                var direct = ui_layout[directions[i]];
+
+                if(direct) {
+                    ui_layout.root.append(direct);
+
+                    if(directions[i] != 'center') {
+                        if(ui_options[directions[i]].resize) {
+                            if(!direct.resizer) {
+                                direct.resizer = $("<div class='resize " + directions[i] + "' />");
+                            }
+
+                            ui_layout.root.append(direct.resizer);
+                            setResizer(directions[i]);
+                        }
+                    }
+                }
+            }
+
+            self.resize();
+        }
 	
 	
 		/**
@@ -3473,7 +3523,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			};
 			
 			ui_options = opts;
-			this.update();
+			initLayout(this);
 			
 			$(window).on('resize', function(e) {
 				self.resize();
@@ -3482,31 +3532,9 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 			return this; 			
 		}
 		
-		this.update = function() {
-			for(var i = 0, len = directions.length; i < len; i++) {
-				var direct = ui_layout[directions[i]];
-				
-				if(direct) {
-					ui_layout.root.append(direct);
-					
-					if(directions[i] != 'center') {
-						if(ui_options[directions[i]].resize) {
-							if(!direct.resizer) {
-								direct.resizer = $("<div class='resize " + directions[i] + "' />");
-							}
-
-							ui_layout.root.append(direct.resizer);		
-							setResizer(directions[i]);
-						}
-					}
-				}
-			}
-			
-			this.resize();
-		}
-		
 		this.resize = function() {
-			var $obj = null, $option = null, sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
+			var $obj = null, $option = null;
+            var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
 			
 			$obj = ui_layout.top;
 			$option = this.options.top;
@@ -3708,7 +3736,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 	
-}, "core")
+});
 
 jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
@@ -3717,7 +3745,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 	 * 
 	 */
 	var UI = function() {
-		var ddUi = null, target = null;
+		var ddUi = null, target = null, list = [];
 		
 		
 		/**
@@ -3775,8 +3803,10 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 		function setEventKeyup(self) {
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
-				
-				createDropdown(self, getFilteredWords(self, $(this).val()));
+
+                list = getFilteredWords(self, $(this).val());
+				createDropdown(self, list);
+
 				return false;
 			});
 		}
@@ -3800,6 +3830,10 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 		this.update = function(words) {
 			this.options.words = words;
 		}
+
+        this.list = function() {
+            return list;
+        }
 	}
 
     UI.setting = function() {
@@ -3815,7 +3849,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
@@ -4156,7 +4190,7 @@ jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, drop
     }
 	
 	return UI;
-}, "core");
+});
 jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
         var self = this;
@@ -4963,6 +4997,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
 		var rowIndex = null, checkedList = {};
+        var is_resize = false;
 		
 		
 		/**
@@ -5314,6 +5349,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 						colWidth = $(col.element).outerWidth(),
 						colNextWidth = $(colNext.element).outerWidth();
 						colResize = this;
+                        is_resize = true;
 						
 						return false;
 					});
@@ -5328,12 +5364,14 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 			
 			self.addEvent("body", "mouseup", function(e) {
 				if(resizeX > 0) {
-					self.emit("colresize", [ col, e ]);
 					resizeX = 0;
+                    is_resize = false;
 					
 					// 리사이징 바, 위치 이동
 					var left = $(col.element).offset().left - tablePos.left;
 					$(colResize).css("left", $(col.element).outerWidth() + left - 1);
+
+                    self.emit("colresize", [ col, e ]);
 					
 					return false;
 				}
@@ -5581,7 +5619,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
 		}
 		
 		this.sort = function(index, order, e) {  // index는 컬럼 key 또는 컬럼 name
-			if(!this.options.fields || !this.options.sort) return;
+			if(!this.options.fields || !this.options.sort || is_resize) return;
 			var column = this.getColumn(index);
 			
 			if(typeof(column.name) == "string") {
@@ -6118,7 +6156,7 @@ jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ],
     }
 	
 	return UI;
-}, "core");
+});
 jui.define("uix.tree.node", [ "jquery" ], function($) {
     var Node = function(data, tplFunc) {
         var self = this;
@@ -7017,7 +7055,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
 	
 	/**
@@ -7068,7 +7106,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
 			
 			// 기본 스타일 & Modal 스타일 & Body로 강제 이동
 			$body.children(this.selector).remove();
-			$win_root.css(opts).appendTo($body);
+			$win_root.css($.extend({ position: "absolute" }, opts)).appendTo($body);
 			
 			// 윈도우 이동
 			if(opts.move) {
@@ -7266,7 +7304,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
     }
 	
 	return UI;
-}, "core");
+});
 jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
@@ -7293,8 +7331,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;
-		var ui_modal = null, is_loading = false;
-        var page = 1;
+		var ui_modal = null, page = 1;
+        var is_loading = false, is_resize = false;
 		
 		
 		/**
@@ -7349,9 +7387,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 				if(opts.scrollWidth > 0) {
 					var rootWidth = $(self.root).outerWidth();
 					
-					$(self.root).css({ 
+					$(self.root).css({
 						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto"
+						"overflow-x": "auto",
+                        "overflow-y": "hidden"
 					});
 					
 					$(head.root).outerWidth(rootWidth);
@@ -7497,16 +7536,105 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 			self.update(s_rows);
 			self.emit("filter", [ s_rows ]);
 		}
-		
-		function setColumnWidthAuto(self) {
-			var columns = head.listColumn();
-			
-			for(var i = 0; i < columns.length; i++) {
-				if(columns[i].width == null) {
-					$(columns[i].element).outerWidth("auto");
-				}
-			}
-		}
+
+        function setColumnResizeScroll(self) {
+            var column = {},
+                width = {},
+                resizeX = 0;
+
+            // 리사이즈 엘리먼트 삭제
+            $(self.root).find("thead .resize").remove();
+
+            for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+                var $colElem = $(head.getColumn(i).element),
+                    $resizeBar = $("<div class='resize'></div>");
+                var pos = $colElem.position();
+
+                $resizeBar.css({
+                    position: "absolute",
+                    width: "8px",
+                    height: $colElem.outerHeight(),
+                    left: ($colElem.outerWidth() + (pos.left - 1)) + "px",
+                    top: pos.top + "px",
+                    cursor: "w-resize",
+                    "z-index": "1"
+                });
+
+                $colElem.append($resizeBar);
+
+                // Event Start
+                (function(index) {
+                    self.addEvent($resizeBar, "mousedown", function(e) {
+                        if(resizeX == 0) {
+                            resizeX = e.pageX;
+                        }
+
+                        // 컬럼 객체 가져오기
+                        column = {
+                            head: head.getColumn(index),
+                            body: body.getColumn(index)
+                        };
+
+                        width = {
+                            column: $(column.head.element).outerWidth(),
+                            body: $(body.root).outerWidth()
+                        };
+
+                        is_resize = true;
+
+                        return false;
+                    });
+                })(i);
+            }
+
+            self.addEvent("body", "mousemove", function(e) {
+                if(resizeX > 0) {
+                    colResizeWidth(e.pageX - resizeX);
+                }
+            });
+
+            self.addEvent("body", "mouseup", function(e) {
+                if(resizeX > 0) {
+                    resizeX = 0;
+                    is_resize = false;
+
+                    // 리사이징 바, 위치 이동
+                    colResizeBarLeft();
+
+                    head.emit("colresize", [ column.head, e ]);
+
+                    return false;
+                }
+            });
+
+            // 리사이징 바 위치 설정
+            head.on("colshow", colResizeBarLeft);
+            head.on("colhide", colResizeBarLeft);
+
+            function colResizeWidth(disWidth) {
+                var colMinWidth = 30;
+
+                // 최소 크기 체크
+                if (width.column + disWidth < colMinWidth)
+                    return;
+
+                $(column.head.element).outerWidth(width.column + disWidth);
+                $(column.body.element).outerWidth(width.column + disWidth);
+
+                if (disWidth > 0) {
+                    $(body.root).parent().outerWidth(width.body + disWidth);
+                    $(head.root).outerWidth(width.body + disWidth);
+                }
+            }
+
+            function colResizeBarLeft() {
+                for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+                    var $colElem = $(head.getColumn(i).element);
+
+                    $colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
+                }
+            }
+        }
 		
 
 		/**
@@ -7569,11 +7697,16 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 				opts.sortLoading = (opts.sortLoading === true) ? 500 : opts.sortLoading; 
 			}
 			
-			// 컬럼 리사이징 위치 조정
+			// 컬럼 리사이징 (기본)
 			if(opts.resize) {
 				head.resizeColumns();
 				head.resize();
-			}
+            }
+
+            // 컬럼 리사이징 (가로스크롤)
+            if(!opts.resize && opts.scrollWidth > 0) {
+                setColumnResizeScroll(this);
+            }
 		}
 		
 		this.select = function(index) {
@@ -7626,7 +7759,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 		}
 		
 		this.sort = function(index, order, e, isNotLoading) { // index는 컬럼 key 또는 컬럼 name
-			if(!this.options.fields || !this.options.sort) return;
+			if(!this.options.fields || !this.options.sort || is_resize) return;
 			
 			var self = this, 
 				column = head.getColumn(index);
@@ -8037,4 +8170,4 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
     }
 
 	return UI;
-}, "core");
+});

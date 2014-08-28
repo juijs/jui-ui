@@ -896,4 +896,4 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
     }
 	
 	return UI;
-}, "core");
+});

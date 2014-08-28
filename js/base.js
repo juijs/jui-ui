@@ -479,7 +479,7 @@
 					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
 					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
 					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object") ? true : false,
+					"object": (typeof(value) == "object" && value !== null) ? true : false,
 					"function": (typeof(value) == "function") ? true : false,
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
@@ -711,20 +711,58 @@
         btoa: Base64.encode,
         atob: Base64.decode
 	}
+
+
+    /**
+     * Module related functions
+     *
+     */
 	
 	var getDepends = function(depends) {
 		var args = [];
 		
 		for(var i = 0; i < depends.length; i++) {
-			args.push(global[depends[i]]);
+            var module = global[depends[i]];
 			
-			if(!utility.typeCheck([ "function", "object" ], args[i])) {
-				throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
-			}
+			if(!utility.typeCheck([ "function", "object" ], module)) {
+                var modules = getModules(depends[i]);
+
+                if(modules == null) {
+                    throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
+                } else {
+                    args.push(modules);
+                }
+
+			} else {
+                args.push(module);
+            }
 		}
 		
 		return args;
 	}
+
+    var getModules = function(parent) {
+        var modules = null,
+            parent = parent + ".";
+
+        for(var key in global) {
+            if(key.indexOf(parent) != -1) {
+                if(utility.typeCheck([ "function", "object" ], global[key])) {
+                    var child = key.split(parent).join("");
+
+                    if(child.indexOf(".") == -1) {
+                        if(modules == null) {
+                            modules = {};
+                        }
+
+                        modules[child] = global[key];
+                    }
+                }
+            }
+        }
+
+        return modules;
+    }
 
 
 	/**
@@ -748,7 +786,7 @@
 				if(depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ global["ui"], global["uix"], utility ];
+					args = [ getModules("ui"), getModules("uix"), utility ];
 				}
 
 				callback.apply(null, args);
@@ -758,20 +796,24 @@
         /**
          * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
          *
-         * @param name 'UIGroup.UIName' 형태로 설정해야 하며, ready에서 패키지 형태로 UIGroup 객체를 받을 수 있다.
+         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
          * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck("string", parent)) {
+				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
 
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
             if(utility.typeCheck("function", global[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+            }
+
+            if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+                parent = "core";
             }
 
             if(!utility.typeCheck("function", global[parent])) {
@@ -781,41 +823,24 @@
                     throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
                 }
             }
-
-            if(name.indexOf(".") == -1) {
-                throw new Error("JUI_CRITICAL_ERR: UI grouping rule must be followed");
-            }
 			
 			var args = getDepends(depends),
-                keys = name.split("."),
                 uiFunc = callback.apply(null, args);
-
-            if(keys.length != 2) {
-                throw new Error("JUI_CRITICAL_ERR: UI naming rule is incorrect");
-            }
-
-            // 상위 객체가 없을 경우...
-            if(utility.typeCheck("undefined", global[keys[0]])) {
-                global[keys[0]] = {};
-            }
 
             // 상속
             utility.inherit(uiFunc, global[parent]);
 
-            // UI 그룹 설정
-            global[keys[0]][keys[1]] = global["core"].init({
+            // UI 고유 설정
+            global[name] = global["core"].init({
                 type: name,
                 "class": uiFunc
             });
-
-            // UI 고유 설정
-            global[name] = global[keys[0]][keys[1]];
 		},
 
         /**
          * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
          *
-         * @param name 'defineUI'와 달리 이름을 설정하는데 제약이 없다.
+         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
          * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.

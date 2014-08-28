@@ -158,4 +158,4 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
     }
 	
 	return UI;
-}, "core");
+});

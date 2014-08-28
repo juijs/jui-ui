@@ -186,4 +186,4 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
     }
 	
 	return UI;
-}, "core");
+});

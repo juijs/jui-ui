@@ -338,4 +338,4 @@ jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, drop
     }
 	
 	return UI;
-}, "core");
+});
