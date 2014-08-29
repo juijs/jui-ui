@@ -32,40 +32,61 @@
     <script src="../../../js/chart/brush/line.js"></script>
     <script src="../../../js/chart/brush/path.js"></script>
     <script src="../../../js/chart/brush/scatter.js"></script>
-    <script src="../../../js/chart/brush/circlegauge.js"></script>
+    <script src="../../../js/chart/brush/fillgauge.js"></script>
+
 </head>
 <body>
 
-<div id="chart"></div>
+<span id="chart">
+    
+</span>
+
+<span id="chart2">
+    
+</span>
 
 <script>
 
-
+    
     jui.ready(["chart.basic"], function(Chart) {
          
 			var c = new Chart("#chart", {
-				width: 400,
-				height : 400,
-	            theme : location.href.split("?")[1].split("=")[1],	
+				width: 150,
+				height : 330,
+				widget : 'empty',
+	            theme : location.href.split("?")[1].split("=")[1],
 				brush : {
-					type : 'circlegauge',
+					type : 'fillgauge',
+					shape : 'custom', // default circle
+					direction : 'horizontal', 
                     value : 50,
                     min : 0, 
-                    max : 100 
-                    // title : "title"  생략 가능 
-                    
+                    max : 100,
+                    svg : "woman.svg"
+                                        
 				}
 			});
     
             c.render();
             
-            setInterval(function() {
-                c.brush(0).value = Math.round(Math.random() * 100) % 100
-                c.render();
-            }, 1000)
-            
-            
-	})
+			var c1 = new Chart("#chart2", {
+				width: 150,
+				height : 330,
+				widget : 'empty',
+	            theme : location.href.split("?")[1].split("=")[1],
+				brush : {
+					type : 'fillgauge',
+					shape : 'custom', // default circle 
+                    value : 70,
+                    min : 0, 
+                    max : 100,
+                    svg : "man.svg"
+                                        
+				}
+			});
+    
+            c1.render();            
+	}) 
 </script>
 
 
