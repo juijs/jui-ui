@@ -16,6 +16,7 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 		}
 
 		this.init = function() {
+			
 			this.parent.init.call(this);
 			this.emit("load", []);
 		}
@@ -98,8 +99,7 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
             var data = this.get('data');
             var series = this.get('series');
             var grid = this.get('grid');
-            var widget = this.get('widget');
-            // 내부적으로 완전히 clone 이 안되네?
+            var widget = this.setWidget(this.get('widget'));
             var brush = this.get('brush');
             var series_list = [];
 
@@ -174,6 +174,10 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
             
 		}
 		
+		this.createId = function(key) {
+			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
+		}
+		
 		this.drawDefs = function() {
 			
             // draw defs 
@@ -181,8 +185,10 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
             
 
 			// default clip path             
-            var clip = this.svg.clipPath({ id : 'clip' });
-            clip.append(this.svg.rect({  x : 0, y : 0, width : this.area('width'), height : this.area('height') }));
+			this.clipId = this.createId('clip-id');
+			
+            var clip = this.svg.clipPath({ id : this.clipId });
+            clip.append(this.svg.rect({  x : 0, y : 0, width : this.width(), height : this.height() }));
                         
             defs.append(clip);
             

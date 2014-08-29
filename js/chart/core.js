@@ -7,7 +7,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 		function calculate(self) {
 			_area = {};
 
-			var widget = self.get('widget');
+			var widget = self.setWidget(self.get('widget'));
 			
 			var max = self.svg.size();
 
@@ -24,6 +24,21 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 
 			_area = chart;
 		}
+		
+
+		this.setWidget = function(widget) {
+            if (widget == 'empty') {
+            	widget = {
+					left : { size : 0 },
+					right : { size : 0 },
+					bottom : { size : 0 },
+					top : { size : 0 }
+				};
+            }
+
+			return widget;			
+		}            
+		
 
 		this.get = function(key) {
 			return this.options[key];
@@ -167,11 +182,11 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			})
 			
 			calculate(this);
-
+						
 			if (_.typeCheck("function", this.drawBefore)) {
 				this.drawBefore();
 			}
-
+			
 			this.draw();
 			this.svg.render();
 		}
