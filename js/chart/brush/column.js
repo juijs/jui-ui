@@ -51,4 +51,4 @@ jui.define("chart.brush.column", [], function() {
 	}
 
 	return ColumnBrush;
-}, "chart.brush");
+}, "chart.brush.core");

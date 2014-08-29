@@ -107,4 +107,4 @@ jui.define("chart.brush.donut", ["util.math"], function(math) {
 	}
 
 	return DonutBrush;
-}, "chart.brush");
+}, "chart.brush.core");

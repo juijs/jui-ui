@@ -54,4 +54,4 @@ jui.define("chart.brush.bar", [], function() {
 	}
 
 	return BarBrush;
-}, "chart.brush");
+}, "chart.brush.core");

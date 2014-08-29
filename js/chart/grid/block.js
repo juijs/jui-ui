@@ -1,6 +1,6 @@
 jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
 
-	var Grid = function(orient, grid) {
+	var BlockGrid = function(orient, grid) {
 
 		this.top = function(chart, g, scale) {
 
@@ -203,5 +203,5 @@ jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
 		}
 	}
 
-	return Grid;
-}, "chart.grid");
+	return BlockGrid;
+}, "chart.grid.core");

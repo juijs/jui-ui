@@ -85,4 +85,4 @@ jui.define("chart.brush.pie", ["util.math"], function(math) {
 	}
 
 	return PieBrush;
-}, "chart.brush");
+}, "chart.brush.core");

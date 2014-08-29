@@ -5,7 +5,7 @@ jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
 	 * @param {Object} orient
 	 * @param {Object} grid
 	 */
-	var Grid = function(orient, grid) {
+	var RangeGrid = function(orient, grid) {
 		var self = this;
 
 		this.top = function(chart, g) {
@@ -185,5 +185,5 @@ jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
 		}
 	}
 
-	return Grid;
-}, "chart.grid");
+	return RangeGrid;
+}, "chart.grid.core");

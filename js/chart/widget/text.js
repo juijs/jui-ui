@@ -1,6 +1,6 @@
 jui.define("chart.widget.text", [], function() {
 
-	var Widget = function(orient, widget) {
+	var TextWidget = function(orient, widget) {
 		var self = this;
 
 		this.drawBefore = function(chart) {
@@ -37,5 +37,5 @@ jui.define("chart.widget.text", [], function() {
 		}
 	}
 
-	return Widget;
-}, "chart.widget");
+	return TextWidget;
+}, "chart.widget.core");

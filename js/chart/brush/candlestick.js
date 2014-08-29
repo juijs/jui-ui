@@ -88,4 +88,4 @@ jui.define("chart.brush.candlestick", [], function() {
     }
 
     return CandleStickBrush;
-}, "chart.brush");
+}, "chart.brush.core");

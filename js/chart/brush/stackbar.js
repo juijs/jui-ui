@@ -48,4 +48,4 @@ jui.define("chart.brush.stackbar", [], function() {
 	}
 
 	return StackBarBrush;
-}, "chart.brush");
+}, "chart.brush.core");

@@ -51,4 +51,4 @@ jui.define("chart.brush.circlegauge", ["util.math"], function(math) {
 	}
 
 	return BarGaugeBrush;
-}, "chart.brush");
+}, "chart.brush.core");

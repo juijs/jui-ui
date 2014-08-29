@@ -74,4 +74,4 @@ jui.define("chart.brush.scatter", [], function() {
 	}
 
 	return ScatterBrush;
-}, "chart.brush"); 
+}, "chart.brush.core");

@@ -65,4 +65,4 @@ jui.define("chart.brush.fullstack", [], function() {
 	}
 
 	return FullStackBrush;
-}, "chart.brush");
+}, "chart.brush.core");

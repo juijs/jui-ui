@@ -49,4 +49,4 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	}
 
 	return ColumnStackBrush;
-}, "chart.brush");
+}, "chart.brush.core");

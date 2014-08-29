@@ -73,4 +73,4 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
 	}
 
 	return BarGaugeBrush;
-}, "chart.brush");
+}, "chart.brush.core");

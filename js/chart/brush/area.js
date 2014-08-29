@@ -34,4 +34,4 @@ jui.define("chart.brush.area", [], function() {
 	}
 
 	return AreaBrush;
-}, "chart.brush");
+}, "chart.brush.core");
