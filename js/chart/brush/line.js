@@ -4,27 +4,24 @@ jui.define("chart.brush.line", [], function() {
 		var self = this; 
 
         function createLine(brush, chart, pos, index) {
+            var x = pos.x,
+                y = pos.y;
+
             var p = chart.svg.path({
                 stroke : chart.theme.color(index),
                 "stroke-width" : chart.theme("lineBorderWidth"),
                 fill : "transparent"
-            });
-
-            var x = pos.x,
-                y = pos.y;
+            }).MoveTo(x[0], y[0]);
 
             if(brush.symbol == "curve") {
                 var px = self.curvePoints(x),
                     py = self.curvePoints(y);
 
                 for (var i = 0; i < x.length - 1; i++) {
-                    p.MoveTo(x[i], y[i]);
                     p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
                 }
             } else {
                 for (var i = 0; i < x.length - 1; i++) {
-                    p.MoveTo(x[i], y[i]);
-
                     if(brush.symbol == "step") {
                         p.LineTo(x[i], y[i + 1]);
                     }

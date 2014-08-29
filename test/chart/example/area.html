@@ -32,7 +32,8 @@
     <script src="../../../js/chart/brush/line.js"></script>
     <script src="../../../js/chart/brush/path.js"></script>
     <script src="../../../js/chart/brush/scatter.js"></script>
-
+    <script src="../../../js/chart/brush/stackline.js"></script>
+    <script src="../../../js/chart/brush/stackarea.js"></script>
 </head>
 <body>
 
@@ -47,10 +48,10 @@
 	            height : 400,
 	            theme : location.href.split("?")[1].split("=")[1],
 	            data : [
-	                { name : 2, value : 15, test : 7 },
-	                { name : -15, value : 6, test : 2 },
-	                { name : 8, value : 10, test : 5 },
-	                { name : 18, value : 5, test : 12 }
+	                { name : 2, value : 6, test : 7 },
+	                { name : 5, value : 6, test : 2 },
+	                { name : 8, value : 4, test : 5 },
+	                { name : 10, value : 5, test : 12 }
 	            ],
 	            grid : {
 	                x : {
@@ -60,7 +61,9 @@
 	                },
 	                y : {
 	                    type : 'range',
-	                    target : [ "name", "value", "test" ],
+	                    target : function(data) {
+                            return data.name + data.value + data.test + 10;
+                        },
 	                    step : 10
 	                }
 	            },
@@ -72,9 +75,11 @@
 	                test : { text : "ê°’" }
 	            },
 	            brush : [{
-	                type : 'area'
+	                type : 'stackarea',
+                    symbol: "curve"
 	            }, {
-                    type : "line"
+                    type : "stackline",
+                    symbol: "curve"
                 }]
 	        }).render();
 	})
