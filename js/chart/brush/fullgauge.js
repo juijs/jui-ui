@@ -1,4 +1,4 @@
-jui.define("chart.brush.gauge", ["util.math"], function(math) {
+jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -41,7 +41,7 @@ jui.define("chart.brush.gauge", ["util.math"], function(math) {
 			// current Value
 			g.append(chart.svg.text({
 				x : 0,
-				y : (brush.arrow) ? 70 : 10,
+				y : 10,
 				"text-anchor" : "middle",
 				'font-family' : 'Verdana',
 				'font-size' : '3em',
@@ -53,90 +53,13 @@ jui.define("chart.brush.gauge", ["util.math"], function(math) {
 				// current Value
 				g.append(chart.text({
 					x : 0,
-					y : 100,
+					y : 40,
 					"text-anchor" : "middle",
 					'font-size' : '1.5em',
 					'font-weight' : 500
 				}, brush.unitText))
 	
 			}			
-
-			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -(this.outerRadius);
-
-
-            // min
-            var obj = math.rotate(startX, startY, math.radian(startAngle));
-
-            startX = obj.x;
-            startY = obj.y;
-
-            g.append(chart.text({
-                x : obj.x + 30,
-                y : obj.y + 20,
-                "text-anchor" : "middle",
-                'font-family' : 'Verdana'
-            }, min + ""))
-
-			// max
-			// outer arc 에 대한 지점 설정
-
-            var obj = math.rotate(startX, startY, math.radian(endAngle));
-    
-            g.append(chart.text({
-                x : obj.x - 20,
-                y : obj.y + 20,
-                "text-anchor" : "middle",
-                'font-family' : 'Verdana'
-            }, max + ""))
-
-
-			return g;
-		}
-
-		this.drawArrow = function(chart, startAngle, endAngle) {
-			var g = chart.svg.group({
-				'class' : 'gauge block'
-			})
-
-			g.translate(this.centerX, this.centerY);
-
-			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -(this.outerRadius + 5);
-
-			var path = chart.svg.path({
-				stroke : 'black',
-				"stroke-width" : 0.2,
-				'fill' : 'black'
-			})
-
-			path.MoveTo(startX, startY);
-			path.LineTo(5, 0);
-			path.LineTo(-5, 0);
-			path.ClosePath();
-
-			// start angle
-			path.rotate(startAngle);
-			g.append(path)
-
-			//console.log(startAngle, endAngle + startAngle);
-			path.rotate(endAngle + startAngle);
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 5,
-				fill : 'black'
-			}))
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 2,
-				fill : 'black'
-			}))
 
 			return g;
 		}
@@ -170,12 +93,6 @@ jui.define("chart.brush.gauge", ["util.math"], function(math) {
 
 			group.append(g);
 
-            if (brush.arrow) {
-                g = this.drawArrow(chart, this.startAngle, currentAngle)
-    
-                group.append(g);
-                
-            }
 
             // startAngle, endAngle 에 따른 Text 위치를 선정해야함
             g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
