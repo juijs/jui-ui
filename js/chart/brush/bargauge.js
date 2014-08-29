@@ -20,7 +20,11 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
 			
 			var unit = brush.size || 18;
 			
-			var max = chart.width() - 150;
+			if (brush.split) {
+				var max = chart.width() - 150;	
+			} else {
+				var max = chart.width() - 150;
+			}
 			
 			var y = 0; 
 			var x = 0; 
@@ -58,10 +62,10 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 }))
 
                 g.append(chart.text({
-                    x : x + value + ex  + this.cut *2 ,
+                    x : (brush.split) ? (x + this.cut + value - 1)  : (x + value + ex + this.cut*2),
                     y : y + unit/2 + this.cut,
-                    "text-anchor" : "start",
-                    fill : chart.theme.color(i)
+                    "text-anchor" : (brush.split) ? "end" : "start",
+                    fill : (brush.split) ? 'white' : chart.theme.color(i),
                 }, data.value + "%"))
                 
                 group.append(g);
