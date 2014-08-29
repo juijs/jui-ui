@@ -1,9 +1,8 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
-		var self = this; 
 
-        function createLine(brush, chart, pos, index) {
+        this.createLine = function(brush, chart, pos, index) {
             var x = pos.x,
                 y = pos.y;
 
@@ -14,8 +13,8 @@ jui.define("chart.brush.line", [], function() {
             }).MoveTo(x[0], y[0]);
 
             if(brush.symbol == "curve") {
-                var px = self.curvePoints(x),
-                    py = self.curvePoints(y);
+                var px = this.curvePoints(x),
+                    py = this.curvePoints(y);
 
                 for (var i = 0; i < x.length - 1; i++) {
                     p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
@@ -37,7 +36,7 @@ jui.define("chart.brush.line", [], function() {
             var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for (var k = 0; k < path.length; k++) {
-                var p = createLine(brush, chart, path[k], k);
+                var p = this.createLine(brush, chart, path[k], k);
                 g.append(p);
             }
         }
