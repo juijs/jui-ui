@@ -41,4 +41,4 @@ jui.define("chart.brush.bubble", [], function() {
 	}
 
 	return BubbleBrush;
-}, "chart.brush"); 
+}, "chart.brush.core");

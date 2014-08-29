@@ -82,4 +82,4 @@ jui.define("chart.brush.equalizer", [], function() {
 	}
 
 	return EqualizerBrush;
-}, "chart.brush");
+}, "chart.brush.core");

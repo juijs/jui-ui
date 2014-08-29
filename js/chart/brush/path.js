@@ -42,4 +42,4 @@ jui.define("chart.brush.path", [], function() {
 	}
 
 	return PathBrush;
-}, "chart.brush");
+}, "chart.brush.core");

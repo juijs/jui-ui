@@ -1,6 +1,6 @@
 jui.define("chart.grid.radar", ["util.math"], function(math) {
 
-	var Grid = function(orient, grid) {
+	var RadarGrid = function(orient, grid) {
 		var position = [];
 		var self = this;
 		var format;
@@ -224,5 +224,5 @@ jui.define("chart.grid.radar", ["util.math"], function(math) {
 		}
 	}
 
-	return Grid;
-}, "chart.grid");
+	return RadarGrid;
+}, "chart.grid.core");

@@ -1,5 +1,5 @@
-jui.define("chart.brush", [], function() {
-	var Brush = function() {
+jui.define("chart.brush.core", [], function() {
+	var CoreBrush = function() {
 
 		this.curvePoints = function(K) {
 			var p1 = [];
@@ -130,5 +130,5 @@ jui.define("chart.brush", [], function() {
         }
 	}
 
-	return Brush;
+	return CoreBrush;
 }, "chart.draw"); 

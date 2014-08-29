@@ -1,6 +1,6 @@
 jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, UtilScale) {
 
-	var Grid = function(orient, grid) {
+	var DateGrid = function(orient, grid) {
 		var self = this;
 
 		this.top = function(chart, g) {
@@ -176,5 +176,5 @@ jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, Ut
 		}
 	}
 
-	return Grid;
-}, "chart.grid");
+	return DateGrid;
+}, "chart.grid.core");
