@@ -1,4 +1,4 @@
-jui.define("chart.brush.stackgauge", ["util.math"], function(math) {
+jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	var StackGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {

@@ -1,4 +1,4 @@
-jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
+jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
 		

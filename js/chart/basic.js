@@ -1,4 +1,4 @@
-jui.defineUI("chart.basic", [ "util" ], function(_) {
+jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 	var UI = function() {
 		

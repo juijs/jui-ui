@@ -1,4 +1,4 @@
-jui.define("chart.grid.ruler", ["util.scale"], function(UtilScale) {
+jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 
 	/**
 	 *

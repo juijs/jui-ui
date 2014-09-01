@@ -1,4 +1,4 @@
-jui.define("chart.brush.pie", ["util.math"], function(math) {
+jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
 	var PieBrush = function(brush) {
 		this.drawBefore = function(chart) {

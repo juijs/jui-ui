@@ -1,4 +1,4 @@
-jui.define("chart.brush.circlegauge", ["util.math"], function(math) {
+jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {

@@ -1,4 +1,4 @@
-jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
+jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	/**
 	 *

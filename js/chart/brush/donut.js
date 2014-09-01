@@ -1,4 +1,4 @@
-jui.define("chart.brush.donut", ["util.math"], function(math) {
+jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {

@@ -1,4 +1,4 @@
-jui.define("chart.grid.core", [ "util" ], function(_) {
+jui.define("chart.grid.core", [ "util.base" ], function(_) {
 	var CoreGrid = function() {
 
 		this.setBlockDomain = function(chart, grid) {

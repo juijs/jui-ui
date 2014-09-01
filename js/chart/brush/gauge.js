@@ -1,4 +1,4 @@
-jui.define("chart.brush.gauge", ["util.math"], function(math) {
+jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {

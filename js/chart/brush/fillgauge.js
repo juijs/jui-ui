@@ -1,4 +1,4 @@
-jui.define("chart.brush.fillgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * 내가 원하는 모양의 gauge 를 만드는 클래스 

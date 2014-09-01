@@ -1,4 +1,4 @@
-jui.define("chart.draw", [ "util" ], function(_) {
+jui.define("chart.draw", [ "util.base" ], function(_) {
 	var Draw = function() {
 		
 		this.render = function(chart) {

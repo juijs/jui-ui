@@ -332,7 +332,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 

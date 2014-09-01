@@ -1,15 +1,9 @@
-jui.define("chart.brush.bargauge", ["util.math"], function(math) {
+jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
+        var cut = brush.cut || 5;
 
-			this.cut = brush.cut || 5; 
-
-		}
-
-		this.draw = function(chart) {
-
+        this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
 			})
@@ -37,7 +31,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 
                 g.append(chart.text({
                     x : x,
-                    y : y+unit/2+this.cut,
+                    y : y + unit / 2 + cut,
                     "text-anchor" : "end",
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
@@ -46,7 +40,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 var value = (data.value)  * max / 100;
                 
                 g.append(chart.svg.rect({
-                    x : x + this.cut,
+                    x : x + cut,
                     y : y,
                     width: value,
                     height : unit,
@@ -54,7 +48,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 }))
                 
                 g.append(chart.svg.rect({
-                    x : x + this.cut + value,
+                    x : x + cut + value,
                     y : y,
                     width: ex,
                     height : unit,
@@ -62,17 +56,16 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 }))
 
                 g.append(chart.text({
-                    x : (brush.split) ? (x + this.cut + value - 1)  : (x + value + ex + this.cut*2),
-                    y : y + unit/2 + this.cut,
+                    x : (brush.split) ? (x + cut + value - 1)  : (x + value + ex + cut * 2),
+                    y : y + unit/2 + cut,
                     "text-anchor" : (brush.split) ? "end" : "start",
-                    fill : (brush.split) ? 'white' : chart.theme.color(i),
+                    fill : (brush.split) ? 'white' : chart.theme.color(i)
                 }, data.value + "%"))
                 
                 group.append(g);
                 
-                y += unit + this.cut; 
+                y += unit + cut;
 			}
-
 		}
 	}
 

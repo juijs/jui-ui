@@ -1,4 +1,4 @@
-jui.define("chart.grid.radar", ["util.math"], function(math) {
+jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, grid) {
 		var position = [];
