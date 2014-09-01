@@ -202,7 +202,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
+jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -465,7 +465,7 @@ jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _
 });
 
 
-jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
+jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 	/**
 	 * UI Main Class

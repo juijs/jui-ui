@@ -14,7 +14,7 @@
 <script>
 var b1, b2;
 
-jui.ready([ "util" ], function(_) {
+jui.ready([ "util.base" ], function(_) {
     QUnit.test("타입체크 함수 테스트", function(assert) {
         assert.ok(_.typeCheck("object", {}), "'object' 타입 확인");
         assert.ok(_.typeCheck("object", null) == false, "'object' 타입 확인 (null)");

@@ -371,7 +371,7 @@
 	 * Public Utility Classes
 	 * 
 	 */
-	var utility = global["util"] = {
+	var utility = global["util.base"] = {
 			
 		//-- Properties
 		browser: {

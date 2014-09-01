@@ -1,4 +1,4 @@
-jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
+jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class

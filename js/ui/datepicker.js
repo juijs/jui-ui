@@ -1,4 +1,4 @@
-jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * UI Class

@@ -371,7 +371,7 @@
 	 * Public Utility Classes
 	 * 
 	 */
-	var utility = global["util"] = {
+	var utility = global["util.base"] = {
 			
 		//-- Properties
 		browser: {
@@ -935,7 +935,7 @@
 		logUrl: "jui.mng.html"
 	};
 })(window, jQuery || $);
-jui.define("core", [ "jquery", "util" ], function($, _) {
+jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1453,7 +1453,7 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	return UICore;
 });
-jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -1642,7 +1642,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -1962,7 +1962,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * UI Class
@@ -2634,7 +2634,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -3267,7 +3267,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -3754,7 +3754,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 });
 
-jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -3866,7 +3866,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 	
 	return UI;
 });
-jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -4480,7 +4480,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -4987,7 +4987,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
 });
 
 
-jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -6377,7 +6377,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
+jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -6640,7 +6640,7 @@ jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _
 });
 
 
-jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
+jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 	/**
 	 * UI Main Class
@@ -7072,7 +7072,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
 	
 	return UI;
 });
-jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
+jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -7321,7 +7321,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
 	
 	return UI;
 });
-jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**
