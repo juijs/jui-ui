@@ -23,7 +23,7 @@ var table_data = [
 
 var t1;
 
-jui.ready([ "uix.table", "util" ], function(table, _) {
+jui.ready([ "uix.table", "util.base" ], function(table, _) {
     QUnit.testStart(function() {
         t1 = table("#t1", {
             rows: _.clone(table_data),

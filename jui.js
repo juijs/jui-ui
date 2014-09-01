@@ -371,7 +371,7 @@
 	 * Public Utility Classes
 	 * 
 	 */
-	var utility = global["util"] = {
+	var utility = global["util.base"] = {
 			
 		//-- Properties
 		browser: {
@@ -935,7 +935,7 @@
 		logUrl: "jui.mng.html"
 	};
 })(window, jQuery || $);
-jui.define("core", [ "jquery", "util" ], function($, _) {
+jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -2884,7 +2884,7 @@ jui.define("util.svg",
 
     return SVG;
 });
-jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -3073,7 +3073,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -3393,7 +3393,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * UI Class
@@ -4065,7 +4065,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -4698,7 +4698,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -5185,7 +5185,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 });
 
-jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -5297,7 +5297,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 	
 	return UI;
 });
-jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -5911,7 +5911,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -6418,7 +6418,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
 });
 
 
-jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -7808,7 +7808,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
+jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -8071,7 +8071,7 @@ jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _
 });
 
 
-jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
+jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 	/**
 	 * UI Main Class
@@ -8503,7 +8503,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
 	
 	return UI;
 });
-jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
+jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -8752,7 +8752,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
 	
 	return UI;
 });
-jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**
@@ -10316,6 +10316,55 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
+jui.define("chart.widget.core", [], function() {
+	var CoreWidget = function() {
+		
+	}
+
+	return CoreWidget;
+}, "chart.draw"); 
+jui.define("chart.widget.text", [], function() {
+
+	var TextWidget = function(orient, widget) {
+		var self = this;
+
+		this.drawBefore = function(chart) {
+			
+		}
+
+		this.draw = function(chart) {
+			var width = chart.width(), height = chart.height();
+			
+			if (!widget.text) return; 
+
+			if (orient == 'left') {
+				var x = 10;
+				var y = height/2 + chart.widget.size('top');
+				
+				chart.svg.text({x : x , y : y}, widget.text||"").rotate(-90, x, y);
+				
+			} else if (orient == 'right') {
+				var x = chart.x2()+10;
+				var y = height/2 + chart.widget.size('top');
+				
+				chart.svg.text({x : x , y : y}, widget.text||"").rotate(90, x, y);
+			} else if (orient == 'top') {
+				var x = width/2 + chart.widget.size('left');
+				var y = 20;
+				
+				chart.svg.text({x : x , y : y}, widget.text||"");
+			} else if (orient == 'bottom') {
+				var x = width/2 +  chart.widget.size('left');
+				var y = chart.y2() + chart.widget.size(orient);
+				
+				chart.svg.text({x : x , y : y}, widget.text||"");
+			}
+		}
+	}
+
+	return TextWidget;
+}, "chart.widget.core");
+
 jui.define("chart.grid.core", [ "util" ], function(_) {
 	var CoreGrid = function() {
 
