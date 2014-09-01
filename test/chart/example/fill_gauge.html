@@ -3,73 +3,40 @@
 <head>
     <meta chartset="utf-8" />
     <script src="../../../lib/jquery-1.8.3.min.js"></script>
-    <script src="../../../lib/jquery.binder.js"></script>
-    <script src="../../../js/base.js"></script>
-    <script src="../../../js/core.js"></script>
-    <script src="../../../js/util/svg.js"></script>
-    <script src="../../../js/util/time.js"></script>
-    <script src="../../../js/util/math.js"></script>    
-    <script src="../../../js/util/scale.js"></script>
-    <script src="../../../js/chart/core.js"></script>
-    <script src="../../../js/chart/draw.js"></script>
-    <script src="../../../js/chart/basic.js"></script>
-    <script src="../../../js/chart/theme/white.js"></script>    
-    <script src="../../../js/chart/theme/dark.js"></script>    
-    <script src="../../../js/chart/grid/core.js"></script>
-    <script src="../../../js/chart/grid/block.js"></script>
-    <script src="../../../js/chart/grid/date.js"></script>
-    <script src="../../../js/chart/grid/range.js"></script>
-    <script src="../../../js/chart/grid/radar.js"></script>
-    <script src="../../../js/chart/brush/core.js"></script>
-    <script src="../../../js/chart/brush/donut.js"></script>
-    <script src="../../../js/chart/brush/area.js"></script>
-    <script src="../../../js/chart/brush/bar.js"></script>
-    <script src="../../../js/chart/brush/bubble.js"></script>
-    <script src="../../../js/chart/brush/equalizer.js"></script>
-    <script src="../../../js/chart/brush/candlestick.js"></script>
-    <script src="../../../js/chart/brush/fullstack.js"></script>
-    <script src="../../../js/chart/brush/gauge.js"></script>
-    <script src="../../../js/chart/brush/line.js"></script>
-    <script src="../../../js/chart/brush/path.js"></script>
-    <script src="../../../js/chart/brush/scatter.js"></script>
-    <script src="../../../js/chart/brush/fillgauge.js"></script>
+    <script src="../../../jui.js"></script>
 
 </head>
 <body>
 
-<div id="chart">
-    
-</div>
+<div id="chart"></div>
 
 <script>
+    jui.ready([ "chart.basic" ], function(chart) {
 
-    
-    jui.ready(["chart.basic"], function(Chart) {
-         
-			var c = new Chart("#chart", {
-				width: 400,
-				height : 400,
-	            theme : location.href.split("?")[1].split("=")[1],
-	            grid : {
-	                y : {
-	                   type : 'range',
-	                   domain : [0, 100],
-	                   step : 10,
-	                   dist : -150      
-	                }
-	            },
-				brush : {
-					type : 'fillgauge',
-					//shape : 'rect', // default circle 
-                    value : 70,
-                    min : 0, 
-                    max : 100 
-                    // title : "title"  생략 가능 
-                    
-				}
-			});
-    
-            c.render();
+        var c = chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : location.href.split("?")[1].split("=")[1],
+            grid : {
+                y : {
+                   type : 'range',
+                   domain : [0, 100],
+                   step : 10,
+                   dist : -150
+                }
+            },
+            brush : {
+                type : 'fillgauge',
+                //shape : 'rect', // default circle
+                value : 70,
+                min : 0,
+                max : 100
+                // title : "title"  생략 가능
+
+            }
+        });
+
+        c.render();
 	}) 
 </script>
 

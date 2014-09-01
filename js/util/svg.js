@@ -332,9 +332,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.svg.element", "util.svg.element.transform",
+    [ "util", "util.math", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.poly" ],
-    function(_, Element, TransElement, PathElement, PolyElement) {
+    function(_, math, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(rootElem, rootAttr) {
         var root = null,
@@ -739,16 +739,7 @@ jui.define("util.svg",
         this.rect3d = function(attr) {
             var self = this;
 
-            /*
-             radian: function(degree) {
-             return degree * Math.PI / 180;
-             },
-             degree: function(radian) {
-             return radian * 180 / Math.PI;
-             },
-             */
-
-            var radian = attr.degree * Math.PI / 180,
+            var radian = math.radian(attr.degree),
                 x1 = 0, y1 = 0,
                 w1 = attr.width, h1 = attr.height;
 

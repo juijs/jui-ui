@@ -10,30 +10,33 @@
 
 <script src="../../js/base.js"></script>
 <script src="../../js/core.js"></script>
-<script src="../../js/chart/util.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/time.js"></script>
+<script src="../../js/util/scale.js"></script>
 
 <script>
 
-jui.ready([ "chart.util"], function(util) {
+jui.ready([ "util.math", "util.time", "util.scale" ], function(math, time, scale) {
     QUnit.testStart(function() {
 		
     });
 
     QUnit.test( "time add test", function(assert) {
     	var start = new Date();
-		var end = util.time.add(start, util.time.minutes, 1);
+		var end = time.add(start, time.minutes, 1);
 		
 		start.setMinutes(start.getMinutes() + 1);
 		
 		assert.ok(+start == +end, "Passed!");
     });
-    
+
+    /*/
     QUnit.test( "scale.ordinal test", function(assert) {
     	
     	var domain = ['week', 'week2', 'week3', 'week4'];
     	var range = [0, 1]
     	
-    	var scale = util.scale.ordinal().domain(domain);
+    	var scale = scale.ordinal().domain(domain);
 
     	scale.rangePoints(range);
 
@@ -55,7 +58,7 @@ jui.ready([ "chart.util"], function(util) {
     QUnit.test( "scale.linear test", function(assert) {
     	var domain = [0, 100];
     	var range = [0, 300];
-    	var scale = util.scale.linear().domain(domain).range(range);
+    	var scale = scale.linear().domain(domain).range(range);
     	
     	assert.deepEqual(scale.domain(), domain, "domain check");
     	assert.deepEqual(scale.range(), range, "range check");
@@ -68,6 +71,7 @@ jui.ready([ "chart.util"], function(util) {
     	assert.deepEqual(scale.ticks(10, true), [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], "ticks nice");
     	
     });
+    /**/
 
     QUnit.testDone(function() {
 

@@ -1453,6 +1453,1437 @@ jui.define("core", [ "jquery", "util" ], function($, _) {
 	
 	return UICore;
 });
+jui.define("util.math", [], function() {
+
+	var self = {
+		// 2d rotate
+		rotate : function(x, y, radian) {
+			return {
+				x : x * Math.cos(radian) - y * Math.sin(radian),
+				y : x * Math.sin(radian) + y * Math.cos(radian)
+			}
+		},
+
+		radian : function(degree) {
+			return degree * Math.PI / 180;
+		},
+		
+		degree : function(radian) {
+			return radian * 180 / Math.PI;
+		},
+
+		interpolateNumber : function(a, b) {
+			return function(t) {
+				return a + (b - a) * t;
+			}
+		},
+
+		interpolateRound : function(a, b) {
+			var f = this.interpolateNumber(a, b);
+
+			return function(t) {
+				return Math.round(f(t));
+			}
+		},
+
+		nice : function(min, max, ticks, isNice) {
+			isNice = isNice || false;
+
+			if (min > max) {
+				var _max = min;
+				var _min = max;
+			} else {
+				var _min = min;
+				var _max = max;
+
+			}
+
+			var _ticks = ticks;
+			var _tickSpacing = 0;
+			var _range = [];
+			var _niceMin;
+			var _niceMax;
+
+			function niceNum(range, round) {
+				var exponent = Math.floor(Math.log(range) / Math.LN10);
+				var fraction = range / Math.pow(10, exponent);
+				var nickFraction;
+
+				//console.log(range, exponent, fraction, _ticks);
+
+				if (round) {
+					if (fraction < 1.5)
+						niceFraction = 1;
+					else if (fraction < 3)
+						niceFraction = 2;
+					else if (fraction < 7)
+						niceFraction = 5;
+					else
+						niceFraction = 10;
+				} else {
+					if (fraction <= 1)
+						niceFraction = 1;
+					else if (fraction <= 2)
+						niceFraction = 2;
+					else if (fraction <= 5)
+						niceFraction = 5;
+					else
+						niceFraction = 10;
+
+					//console.log(niceFraction)
+				}
+
+				return niceFraction * Math.pow(10, exponent);
+
+			}
+
+			function caculate() {
+				_range = (isNice) ? niceNum(_max - _min, false) : _max - _min;
+				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
+				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
+				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+			}
+
+			caculate();
+
+			return {
+				min : _niceMin,
+				max : _niceMax,
+				range : _range,
+				spacing : _tickSpacing
+			}
+		}		
+	}
+
+	return self;
+});
+
+jui.define("util.time", ["util"], function(_) {
+
+	var self = {
+
+		// unit
+		years : 0x01,
+		months : 0x02,
+		days : 0x03,
+		hours : 0x04,
+		minutes : 0x05,
+		seconds : 0x06,
+		milliseconds : 0x07,
+		weeks : 0x08,
+
+		// add
+		add : function(date) {
+
+			if (arguments.length <= 2) {
+				return date;
+			}
+
+			if (arguments.length > 2) {
+				var d = new Date(+date);
+
+				for (var i = 1; i < arguments.length; i += 2) {
+
+					var split = arguments[i];
+					var time = arguments[i + 1];
+
+					if (this.years == split) {
+						d.setFullYear(d.getFullYear() + time);
+					} else if (this.months == split) {
+						d.setMonth(d.getMonth() + time);
+					} else if (this.days == split) {
+						d.setDate(d.getDate() + time);
+					} else if (this.hours == split) {
+						d.setHours(d.getHours() + time);
+					} else if (this.minutes == split) {
+						d.setMinutes(d.getMinutes() + time);
+					} else if (this.seconds == split) {
+						d.setSeconds(d.getSeconds() + time);
+					} else if (this.milliseconds == split) {
+						d.setMilliseconds(d.getMilliseconds() + time);
+					} else if (this.weeks == split) {
+						d.setDate(d.getDate() + time * 7);
+					}
+				}
+
+				return d;
+			}
+		},
+		
+		format: function(date, format, utc) {
+			return _.dateFormat(date, format, utc);
+        }		
+	}
+
+	return self;
+});
+
+jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
+
+	var self = {
+
+		/**
+		 * 원형 좌표에 대한 scale 
+		 * 
+		 */
+		circle : function() {// 원형 radar
+
+			var that = this;
+
+			var _domain = [];
+			var _range = [];
+			var _rangeBand = 0;
+
+			function func(t) {
+
+			}
+
+
+			func.domain = function(values) {
+
+				if ( typeof values == 'undefined') {
+					return _domain;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_domain[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.range = function(values) {
+
+				if ( typeof values == 'undefined') {
+					return _range;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_range[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.rangePoints = function(interval, padding) {
+
+				padding = padding || 0;
+
+				var step = _domain.length;
+				var unit = (interval[1] - interval[0] - padding) / step;
+
+				var range = [];
+				for (var i = 0; i < _domain.length; i++) {
+					if (i == 0) {
+						range[i] = interval[0] + padding / 2 + unit / 2;
+					} else {
+						range[i] = range[i - 1] + unit;
+					}
+				}
+
+				_range = range;
+				_rangeBand = unit;
+
+				return func;
+			}
+
+			func.rangeBands = function(interval, padding, outerPadding) {
+
+				padding = padding || 0;
+				outerPadding = outerPadding || 0;
+
+				var count = _domain.length;
+				var step = count - 1;
+				var band = (interval[1] - interval[0]) / step;
+
+				var range = [];
+				for (var i = 0; i < _domain.length; i++) {
+					if (i == 0) {
+						range[i] = interval[0];
+					} else {
+						range[i] = band + range[i - 1];
+					}
+				}
+
+				_rangeBand = band;
+				_range = range;
+
+				return func;
+			}
+
+			func.rangeBand = function() {
+				return _rangeBand;
+			}
+
+			return func;
+
+		},
+
+		/**
+		 * 
+		 * 순서를 가지는 리스트에 대한 scale 
+		 * 
+		 */
+		ordinal : function() {// 순서
+			var that = this;
+
+			var _domain = [];
+			var _range = [];
+			var _rangeBand = 0;
+
+			function func(t) {
+
+				var index = -1;
+				for (var i = 0; i < _domain.length; i++) {
+					if (_domain[i] == t) {
+						index = i;
+						break;
+					}
+				}
+
+				if (index > -1) {
+					return _range[index];
+				} else {
+					if ( typeof _range[t] != 'undefined') {
+						_domain[t] = t;
+						return _range[t];
+					}
+
+					return null;
+				}
+
+			}
+
+
+			func.domain = function(values) {
+
+				if ( typeof values == 'undefined') {
+					return _domain;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_domain[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.range = function(values) {
+
+				if ( typeof values == 'undefined') {
+					return _range;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_range[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.rangePoints = function(interval, padding) {
+
+				padding = padding || 0;
+
+				var step = _domain.length;
+				var unit = (interval[1] - interval[0] - padding) / step;
+
+				var range = [];
+				for (var i = 0; i < _domain.length; i++) {
+					if (i == 0) {
+						range[i] = interval[0] + padding / 2 + unit / 2;
+					} else {
+						range[i] = range[i - 1] + unit;
+					}
+				}
+
+				_range = range;
+				_rangeBand = unit;
+
+				return func;
+			}
+
+			func.rangeBands = function(interval, padding, outerPadding) {
+
+				padding = padding || 0;
+				outerPadding = outerPadding || 0;
+
+				var count = _domain.length;
+				var step = count - 1;
+				var band = (interval[1] - interval[0]) / step;
+
+				var range = [];
+				for (var i = 0; i < _domain.length; i++) {
+					if (i == 0) {
+						range[i] = interval[0];
+					} else {
+						range[i] = band + range[i - 1];
+					}
+				}
+
+				_rangeBand = band;
+				_range = range;
+
+				return func;
+			}
+
+			func.rangeBand = function() {
+				return _rangeBand;
+			}
+
+			return func;
+		},
+
+		/**
+		 * 시간에 대한 scale 
+		 * 
+		 */
+		time : function() {// 시간
+
+			var that = this;
+
+			var _domain = [];
+			var _range = [];
+
+			var func = self.linear();
+
+			var df = func.domain;
+
+			func.domain = function(domain) {
+
+				if (!arguments.length)
+					return df.call(func);
+
+				for (var i = 0; i < domain.length; i++) {
+					_domain[i] = +domain[i];
+				}
+
+				return df.call(func, _domain);
+			}
+
+			func.min = function() {
+				return Math.min(_domain[0], _domain[_domain.length - 1]);
+			}
+
+			func.max = function() {
+				return Math.max(_domain[0], _domain[_domain.length - 1]);
+			}
+
+			func.rate = function(value, max) {
+				return func(func.max() * (value / max));
+			}
+
+			func.ticks = function(type, step) {
+				var start = func.min();
+				var end = func.max();
+
+				var times = [];
+				while (start < end) {
+					times.push(new Date(+start));
+
+					start = _time.add(start, type, step);
+
+					//;console.log(start)
+				}
+
+				times.push(new Date(+start));
+
+				return times;
+
+			}
+
+			func.realTicks = function(type, step) {
+				var start = _domain[0];
+				var end = _domain[1];
+
+				var times = [];
+				var date = new Date(+start)
+				var realStart = null;
+				if (type == _time.years) {
+					realStart = new Date(date.getFullYear(), 0, 1);
+				} else if (type == _time.months) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), 1);
+				} else if (type == _time.days || type == _time.weeks) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+				} else if (type == _time.hours) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0, 0);
+				} else if (type == _time.minutes) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), 0, 0);
+				} else if (type == _time.seconds) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
+				} else if (type == _time.milliseconds) {
+					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+
+				}
+
+				realStart = _time.add(realStart, type, step);
+				while (+realStart < +end) {
+					times.push(new Date(+realStart));
+					realStart = _time.add(realStart, type, step);
+				}
+
+				return times;
+			}
+
+			func.tickFormat = function(count, format) {
+
+			}
+
+			func.invert = function(y) {
+				var f = self.linear().domain(func.range()).range(func.domain());
+
+				return new Date(f(y));
+			}
+
+			return func;
+		},
+		
+		/**
+		 * 범위에 대한 scale 
+		 * 
+		 */
+		linear : function() {// 선형
+
+			var that = this;
+
+			var _domain = [0, 1];
+			var _range = [0, 1];
+			var _isRound = false;
+
+			function func(x) {
+				var index = -1;
+				var target;
+				for (var i = 0, len = _domain.length; i < len; i++) {
+
+					if (i == len - 1) {
+						if (_domain[i - 1] < _domain[i]) {
+							if (x > _domain[i]) {
+								index = i;
+								break;
+							}
+						} else if (_domain[i - 1] >= _domain[i]) {
+							if (x <= _domain[i]) {
+								index = i;
+								break;
+							}
+						}
+					} else {
+						if (_domain[i] < _domain[i + 1]) {
+							if (x >= _domain[i] && x < _domain[i + 1]) {
+								index = i;
+								break;
+							}
+						} else if (_domain[i] >= _domain[i + 1]) {
+							if (x <= _domain[i] && _domain[i + 1] < x) {
+								index = i;
+								break;
+							}
+						}
+					}
+
+				}
+
+				if (!_range) {
+					if (index == 0) {
+						return 0;
+					} else if (index == -1) {
+						return 1;
+					} else {
+						var min = _domain[index - 1];
+						var max = _domain[index];
+
+						var pos = (x - min) / (max - min);
+
+						return pos;
+					}
+				} else {
+
+					if (_domain.length - 1 == index) {
+						return _range[index];
+					} else if (index == -1) {
+						return _range[_range.length - 1];
+					} else {
+
+						var min = _domain[index];
+						var max = _domain[index + 1];
+
+						var minR = _range[index]
+						var maxR = _range[index + 1];
+
+						var pos = (x - min) / (max - min);
+
+						var scale = _isRound ? math.interpolateRound(minR, maxR) : math.interpolateNumber(minR, maxR);
+
+						return scale(pos);
+
+					}
+				}
+
+			}
+
+
+			func.min = function() {
+				return Math.min(_domain[0], _domain[_domain.length - 1]);
+			}
+
+			func.max = function() {
+				return Math.max(_domain[0], _domain[_domain.length - 1]);
+			}
+
+			func.rate = function(value, max) {
+				return func(func.max() * (value / max));
+			}
+
+			func.domain = function(values) {
+
+				if (!arguments.length) {
+					return _domain;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_domain[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.range = function(values) {
+
+				if (!arguments.length) {
+					return _range;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_range[i] = values[i];
+				}
+
+				return this;
+			}
+
+			func.rangeRound = function(values) {
+				_isRound = true;
+				return func.range(values);
+			}
+
+			func.invert = function(y) {
+
+				var f = self.linear().domain(_range).range(_domain);
+				return f(y);
+			}
+
+			func.ticks = function(count, isNice, intNumber) {
+				intNumber = intNumber || 10000;
+				var obj = math.nice(_domain[0], _domain[1], count || 10, isNice || false);
+
+				var arr = [];
+
+				var start = obj.min * intNumber;
+				var end = obj.max * intNumber;
+				while (start <= end) {
+					arr.push(start / intNumber);
+					start += obj.spacing * intNumber;
+				}
+
+				if (arr[arr.length - 1] * intNumber != end && start > end) {
+					arr.push(end / intNumber);
+				}
+
+				return arr;
+			}
+
+			return func;
+		}
+	}
+
+	return self;
+});
+
+jui.define("util.svg.element", [], function() {
+    var Element = function() {
+
+        /**
+         * 엘리먼트 생성 및 조회 메소드
+         *
+         */
+
+        this.create = function(type, attr) {
+            // 퍼블릭 프로퍼티
+            this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
+            this.childrens = [];
+            this.parent = null;
+            this.attributes = {};
+            this.styles = {};
+
+            // 기본 속성 설정
+            this.attr(attr);
+        }
+        
+        this.each = function(callback) {
+            if(typeof(callback) != "function") {
+                for(var i = 0; i < this.childrens.length; i++) {
+                    callback.call(this.childrens[i], i);
+                }
+            }
+
+            return this.childrens;
+        }
+
+        this.get = function(index) {
+            if(this.childrens[index]) {
+                return this.childrens[index];
+            }
+
+            return null;
+        }
+
+        this.index = function(obj) {
+            for(var i = 0; i < this.childrens.length; i++) {
+                if(obj == this.childrens[i]) {
+                    return i;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * 엘리먼트 조작 메소드
+         *
+         */
+
+        this.attr = function(attr) {
+            for(var k in attr) {
+                this.attributes[k] = attr[k];
+            }
+
+            for(var k in this.attributes) {
+                if(k.indexOf("xlink:") != -1) {
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, this.attributes[k]);
+                } else {
+                    this.element.setAttributeNS(null, k, this.attributes[k]);
+                }
+            }
+
+            return this;
+        }
+
+        this.css = function(css) {
+            var list = [];
+
+            for(var k in css) {
+                this.styles[k] = css[k];
+            }
+
+            for(var k in this.styles) {
+                list.push(k + ":" + this.styles[k]);
+            }
+
+            this.attr({ style: list.join(";") });
+
+            return this;
+        }
+
+        this.html = function(html) {
+            this.element.innerHTML = html;
+
+            return this;
+        }
+        
+        this.text = function(text) {
+        	this.element.appendChild(document.createTextNode(text));
+        	
+        	return this; 
+        }
+
+        this.append = function(elem) {
+            this.childrens.push(elem);
+            elem.parent = this;
+
+            return this;
+        }
+
+        this.prepend = function(elem) {
+            return this.insert(0, elem);
+        }
+
+        this.insert = function(index, elem) {
+            this.childrens.splice(index, 0, elem);
+            elem.parent = this;
+
+            return this;
+        }
+
+        this.remove = function() {
+
+            this.parent.element.removeChild(this.element);
+
+            return this;
+        }
+
+        this.on = function(type, handler) {
+            this.element.addEventListener(type, function(e) {
+                if(typeof(handler) == "function") {
+                    handler.call(this, e);
+                }
+            }, false);
+
+            return this;
+        }
+    }
+
+    return Element;
+});
+
+jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+    var TransElement = function() {
+        var orders = {};
+
+        function applyOrders(self) {
+            var orderArr = [];
+
+            for(var key in orders) {
+                if(orders[key]) orderArr.push(orders[key]);
+            }
+
+            self.attr({ transform: orderArr.join(" ") });
+        }
+
+        function getStringArgs(args) {
+            var result = [];
+
+            for(var i = 0; i < args.length; i++) {
+                result.push(args[i]);
+            }
+
+            return result.join(",");
+        }
+
+        this.translate = function() {
+            orders["translate"] = "translate(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.rotate = function() {
+            orders["rotate"] = "rotate(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.scale = function() {
+            orders["scale"] = "scale(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.skew = function() {
+            orders["skew"] = "skew(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+
+        this.matrix = function() {
+            orders["matrix"] = "matrix(" + getStringArgs(arguments) + ")";
+            applyOrders(this);
+
+            return this;
+        }
+    }
+
+    return TransElement;
+}, "util.svg.element");
+
+jui.define("util.svg.element.path", [], function() { // path
+    var PathElement = function() {
+        var orders = [];
+
+        function applyOrders(self) {
+            self.attr({ d: orders.join(" ") });
+        }
+
+        this.moveTo = function(x, y, type) {
+            orders.push( (type || "m") + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.MoveTo = function(x, y) {
+            return this.moveTo(x, y, "M");
+        }
+
+        this.lineTo = function(x, y, type) {
+            orders.push( (type || "l") + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.LineTo = function(x, y) {
+            return this.lineTo(x, y, "L");
+        }
+
+        this.hLineTo = function(x, type) {
+            orders.push( (type || "h") + x );
+            applyOrders(this);
+
+            return this;
+        }
+        this.HLineTo = function(x) {
+            return this.hLineTo(x, "H");
+        }
+
+        this.vLineTo = function(y, type) {
+            orders.push( (type || "v") + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.VLineTo = function(y) {
+            return this.vLineTo(y, "V");
+        }
+
+        this.curveTo = function(x1, y1, x2, y2, x, y, type) {
+            orders.push( (type || "c") + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.CurveTo = function(x1, y1, x2, y2, x, y) {
+            return this.curveTo(x1, y1, x2, y2, x, y, "C");
+        }
+
+        this.sCurveTo = function(x2, y2, x, y, type) {
+            orders.push( (type || "s") + x2 + "," + y2 + " " + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.SCurveTo = function(x2, y2, x, y) {
+            return this.sCurveTo(x2, y2, x, y, "S");
+        }
+
+        this.qCurveTo = function(x1, y1, x, y, type) {
+            orders.push( (type || "q") + x1 + "," + y1 + " " + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.QCurveTo = function(x1, y1, x, y) {
+            return this.qCurveTo(x1, y1, x, y, "Q");
+        }
+
+        this.tCurveTo = function(x1, y1, x, y, type) {
+            orders.push( (type || "t") + x1 + "," + y1 + " " + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.TCurveTo = function(x1, y1, x, y) {
+            return this.tCurveTo(x1, y1, x, y, "T");
+        }
+
+        this.arc = function(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y, type) {
+            large_arc_flag = (large_arc_flag) ? 1 : 0;
+            sweep_flag = (sweep_flag) ? 1 : 0;
+
+            orders.push( (type || "a") + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y );
+            applyOrders(this);
+
+            return this;
+        }
+        this.Arc = function(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y) {
+            return this.arc(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y, "A");
+        }
+
+        this.closePath = function(type) {
+            orders.push( (type || "z") );
+            applyOrders(this);
+
+            return this;
+        }
+        this.ClosePath = function() {
+            return this.closePath("Z");
+        }
+    }
+
+    return PathElement;
+}, "util.svg.element.transform");
+
+jui.define("util.svg.element.poly", [], function() { // polygon, polyline
+    var PolyElement = function() {
+        var orders = [];
+
+        function applyOrders(self) {
+            self.attr({ points: orders.join(" ") });
+        }
+
+        this.point = function(x, y) {
+            orders.push(x + "," + y);
+            applyOrders(this);
+
+            return this;
+        }
+    }
+
+    return PolyElement;
+}, "util.svg.element.transform");
+
+jui.define("util.svg",
+    [ "util", "util.math", "util.svg.element", "util.svg.element.transform",
+        "util.svg.element.path", "util.svg.element.poly" ],
+    function(_, math, Element, TransElement, PathElement, PolyElement) {
+
+    var SVG = function(rootElem, rootAttr) {
+        var root = null,
+            parent = {},
+            depth = 0;
+
+        function init() {
+            root = new Element();
+            root.create("svg", rootAttr);
+
+            rootElem.appendChild(root.element);
+        }
+        
+        function create(obj, type, attr, callback) {
+            obj.create(type, attr);
+
+            if(depth == 0) {
+                root.append(obj);
+            } else {
+                parent[depth].append(obj);
+            }
+
+            if(_.typeCheck("function", callback)) {
+                depth++;
+                parent[depth] = obj;
+
+                callback.call(obj);
+                depth--;
+            }
+
+            return obj;
+        }
+
+        function createChild(obj, type, attr, callback) {
+            if(obj.parent == root) {
+                throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
+            }
+
+            return create(obj, type, attr, callback);
+        }
+
+        function appendAll(target) {
+            for(var i = 0; i < target.childrens.length; i++) {
+                var child = target.childrens[i];
+
+                if(child.parent == target) {
+                    target.element.appendChild(child.element);
+                }
+
+                if(child.childrens.length > 0) {
+                    appendAll(child);
+                }
+            }
+        }
+
+        /**
+         * getBoundingClientRect() 로 크기를 구할 수 없을 때 사용
+         *
+         * ex) 파폭 버그로   width, height 모두 0이 되므로 아래 함수를 사용해야함
+         */
+        function caculateSize() {
+            var height_list = [ 'height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth' ],
+                width_list = [ 'width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth' ];
+
+            var computedStyle = window.getComputedStyle(root.element),
+                size = { width : 0, height : 0 };
+
+            for(var i = 0; i < height_list.length;i++) {
+                size.height += parseFloat(computedStyle[height_list[i]]);
+            }
+
+            for(var i = 0; i < width_list.length;i++) {
+                size.width += parseFloat(computedStyle[width_list[i]]);
+            }
+
+            return size;
+        }
+
+        /**
+         * 일반 메소드
+         *
+         */
+
+        this.size = function() {
+            if(arguments.length == 2) {
+                var w = arguments[0],
+                    h = arguments[1];
+
+                if(_.typeCheck("integer", w) && _.typeCheck("integer", h)) {
+                    root.attr({ width: w, height: h });
+                }
+            } else {
+                var rect = root.element.getBoundingClientRect();
+
+                // if firefox 
+                if (rect.width == 0 && rect.height == 0) {
+                    rect = caculateSize();
+                }
+
+                return {
+                    width: rect.width,
+                    height: rect.height
+                }
+            }
+        }
+
+        this.clear = function() {
+            var newElement = root.element.cloneNode(false);
+
+            root.element.parentNode.removeChild(root.element);
+            root.element = newElement;
+
+            rootElem.appendChild(root.element);
+        }
+
+        this.reset = function() {
+            this.clear();
+            root.childrens = [];
+        }
+
+        this.render = function() {
+            this.clear();
+            appendAll(root);
+        }
+
+        this.download = function(name) {
+            if(_.typeCheck("string", name)) {
+                name = name.split(".")[0];
+            }
+
+            var a = document.createElement('a');
+            a.download = (name) ? name + ".png" : "svg.png";
+            a.href = _.svgToBase64(rootElem.innerHTML);
+
+            document.body.appendChild(a);
+            a.click();
+            a.parentNode.removeChild(a);
+        }
+
+        /**
+         * 루트 엘리먼트 조작 메소드
+         *
+         */
+
+        this.each = function(callback) {
+            return root.each(callback);
+        }
+
+        this.get = function(index) {
+            return root.get(index);
+        }
+
+        this.index = function(obj) {
+            return root.index(obj);
+        }
+
+        this.css = function(css) {
+            return root.css(css);
+        }
+
+        /**
+         * 엘리먼트 생성 메소드
+         *
+         */
+
+        this.custom = function(name, attr, callback) {
+            return create(new Element(), name, attr, callback);
+        }
+
+        this.defs = function(callback) {
+            return create(new Element(), "defs", null, callback);
+        }
+
+        this.symbol = function(attr, callback) {
+            return create(new Element(), "symbol", attr, callback);
+        }
+
+        this.g = this.group = function(attr, callback) {
+            return create(new TransElement(), "g", attr, callback);
+        }
+
+        this.marker = function(attr, callback) {
+            return create(new Element(), "marker", attr, callback);
+        }
+
+        this.a = function(attr, callback) {
+            return create(new TransElement(), "a", attr, callback);
+        }
+
+        this.switch = function(attr, callback) {
+            return create(new Element(), "switch", attr, callback);
+        }
+
+        this.use = function(attr) {
+            return create(new Element(), "use", attr);
+        }
+
+        this.rect = function(attr, callback) {
+            return create(new TransElement(), "rect", attr, callback);
+        }
+
+        this.line = function(attr, callback) {
+            return create(new TransElement(), "line", attr, callback);
+        }
+
+        this.circle = function(attr, callback) {
+            return create(new TransElement(), "circle", attr, callback);
+        }
+
+        this.text = function(attr, textOrCallback) {
+            if(_.typeCheck("string", textOrCallback)) {
+                return create(new TransElement(), "text", attr).text(textOrCallback);
+            }
+
+            return create(new TransElement(), "text", attr, textOrCallback);
+        }
+
+        this.textPath = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "textPath", attr).text(text);
+            }
+
+            return create(new Element(), "textPath", attr);
+        }
+
+        this.tref = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "tref", attr).text(text);
+            }
+
+            return create(new Element(), "tref", attr);
+        }
+
+        this.tspan = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return create(new Element(), "tspan", attr).text(text);
+            }
+
+            return create(new Element(), "tspan", attr);
+        }
+
+        this.ellipse = function(attr, callback) {
+            return create(new TransElement(), "ellipse", attr, callback);
+        }
+
+        this.image = function(attr, callback) {
+            return create(new TransElement(), "image", attr, callback);
+        }
+
+        this.path = function(attr, callback) {
+            return create(new PathElement(), "path", attr, callback);
+        }
+
+        this.polyline = function(attr, callback) {
+            return create(new PolyElement(), "polyline", attr, callback);
+        }
+
+        this.polygon = function(attr, callback) {
+            return create(new PolyElement(), "polygon", attr, callback);
+        }
+
+        this.pattern = function(attr, callback) {
+            return create(new Element(), "pattern", attr, callback);
+        }
+
+        this.mask = function(attr, callback) {
+            return create(new Element(), "mask", attr, callback);
+        }
+
+        this.clipPath = function(attr, callback) {
+            return create(new Element(), "clipPath", attr, callback);
+        }
+
+        this.linearGradient = function(attr, callback) {
+            return create(new Element(), "linearGradient", attr, callback);
+        }
+
+        this.radialGradient = function(attr, callback) {
+            return create(new Element(), "radialGradient", attr, callback);
+        }
+
+        this.filter = function(attr, callback) {
+            return create(new Element(), "filter", attr, callback);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (그라데이션)
+         *
+         */
+
+        this.stop = function(attr) {
+            return createChild(new Element(), "stop", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (애니메이션)
+         *
+         */
+
+        this.animate = function(attr) {
+            return createChild(new Element(), "animate", attr);
+        }
+
+        this.animateColor = function(attr) {
+            return createChild(new Element(), "animateColor", attr);
+        }
+
+        this.animateMotion = function(attr) {
+            return createChild(new Element(), "animateMotion", attr);
+        }
+
+        this.animateTransform = function(attr) {
+            return createChild(new Element(), "animateTransform", attr);
+        }
+
+        this.mpath = function(attr) {
+            return createChild(new Element(), "mpath", attr);
+        }
+
+        this.set = function(attr) {
+            return createChild(new Element(), "set", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (필터)
+         *
+         */
+
+        this.feBlend = function(attr) {
+            return createChild(new Element(), "feBlend", attr);
+        }
+
+        this.feColorMatrix = function(attr) {
+            return createChild(new Element(), "feColorMatrix", attr);
+        }
+
+        this.feComponentTransfer = function(attr) {
+            return createChild(new Element(), "feComponentTransfer", attr);
+        }
+
+        this.feComposite = function(attr) {
+            return createChild(new Element(), "feComposite", attr);
+        }
+
+        this.feConvolveMatrix = function(attr) {
+            return createChild(new Element(), "feConvolveMatrix", attr);
+        }
+
+        this.feDiffuseLighting = function(attr) {
+            return createChild(new Element(), "feDiffuseLighting", attr);
+        }
+
+        this.feDisplacementMap = function(attr) {
+            return createChild(new Element(), "feDisplacementMap", attr);
+        }
+
+        this.feFlood = function(attr) {
+            return createChild(new Element(), "feFlood", attr);
+        }
+
+        this.feGaussianBlur = function(attr) {
+            return createChild(new Element(), "feGaussianBlur", attr);
+        }
+
+        this.feImage = function(attr) {
+            return createChild(new Element(), "feImage", attr);
+        }
+
+        this.feMerge = function(attr, callback) {
+            return createChild(new Element(), "feMerge", attr, callback);
+        }
+
+        this.feMergeNode = function(attr) {
+            return createChild(new Element(), "feMergeNode", attr);
+        }
+
+        this.feMorphology = function(attr) {
+            return createChild(new Element(), "feMorphology", attr);
+        }
+
+        this.feOffset = function(attr) {
+            return createChild(new Element(), "feOffset", attr);
+        }
+
+        this.feSpecularLighting = function(attr) {
+            return createChild(new Element(), "feSpecularLighting", attr);
+        }
+
+        this.feTile = function(attr) {
+            return createChild(new Element(), "feTile", attr);
+        }
+
+        this.feTurbulence = function(attr) {
+            return createChild(new Element(), "feTurbulence", attr);
+        }
+
+        /**
+         * 엘리먼트 생성 메소드 (3D)
+         *
+         */
+
+        this.rect3d = function(attr) {
+            var self = this;
+
+            var radian = math.radian(attr.degree),
+                x1 = 0, y1 = 0,
+                w1 = attr.width, h1 = attr.height;
+
+            var x2 = (Math.cos(radian) * attr.depth) + x1,
+                y2 = (Math.sin(radian) * attr.depth) + y1;
+
+            var w2 = attr.width + x2,
+                h2 = attr.height + y2;
+
+            var g = this.group({
+                width: w2,
+                height: h2
+            }, function() {
+                delete attr.width, attr.height, attr.degree, attr.depth;
+
+                self.path(attr)
+                    .MoveTo(x2, x1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .LineTo(x1, y2);
+
+                self.path(attr)
+                    .MoveTo(x1, y2)
+                    .LineTo(x1, h2)
+                    .LineTo(w1, h2)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+
+                self.path(attr)
+                    .MoveTo(w1, h2)
+                    .LineTo(w2, h1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+            });
+
+            return g;
+        }
+
+        init();
+    }
+
+    return SVG;
+});
 jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
@@ -8187,3 +9618,3437 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 
 	return UI;
 });
+jui.define("chart.draw", [ "util" ], function(_) {
+	var Draw = function() {
+		
+		this.render = function(chart) {
+			if (!_.typeCheck("function", this.draw)) {
+				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+			}
+
+			if (_.typeCheck("function", this.drawBefore)) {
+				this.drawBefore(chart);
+			}
+
+			return this.draw(chart);
+		}
+		
+	}
+
+	return Draw;
+});
+
+jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
+
+	var UIChart = function() {
+		
+		var _area, _theme; 
+		
+		function calculate(self) {
+			_area = {};
+
+			var widget = self.setWidget(self.get('widget'));
+			
+			var max = self.svg.size();
+
+			var chart = {
+				width : max.width - (widget.left.size + widget.right.size),
+				height : max.height - (widget.top.size + widget.bottom.size),
+				x : widget.left.size,
+				y : widget.top.size
+			};
+
+			// chart 영역 계산
+			chart.x2 = chart.x + chart.width;
+			chart.y2 = chart.y + chart.height;
+
+			_area = chart;
+		}
+		
+
+		this.setWidget = function(widget) {
+            if (widget == 'empty') {
+            	widget = {
+					left : { size : 0 },
+					right : { size : 0 },
+					bottom : { size : 0 },
+					top : { size : 0 }
+				};
+            }
+
+			return widget;			
+		}            
+		
+
+		this.get = function(key) {
+			return this.options[key];
+		}
+
+		this.area = function(key) {
+			
+			if (typeof _area[key] !== "undefined") {
+				return _area[key];
+			}
+
+			return _area;
+		}
+		
+		this.height = function(value) {
+		    if (arguments.length == 0) {
+		        return this.area('height');
+		    }
+		    
+		    _area.height = value;
+
+		    return this;
+		}
+
+        this.width = function(value) {
+            if (arguments.length == 0) {
+                return this.area('width');
+            }
+            
+            _area.width = value;
+
+            return this;
+        }
+
+
+        this.x = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x');
+            }
+            
+            _area.x = value;
+
+            return this;
+        }
+
+
+        this.y = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y');
+            }
+            
+            _area.y = value;
+
+            return this;
+        }
+
+        this.x2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x2');
+            }
+            
+            _area.x2 = value;
+
+            return this;
+        }
+
+
+        this.y2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y2');
+            }
+            
+            _area.y2 = value;
+
+            return this;
+        }
+
+
+        this.bind = function(bind) {
+            var self = this;
+
+            bind.callAfter("update", update);
+            bind.callAfter("sort", update);
+            bind.callAfter("append", update);
+            bind.callAfter("insert", update);
+            bind.callAfter("remove", update);
+
+            function update() {
+                var data = [];
+
+                for(var i = 0; i < bind.count(); i++) {
+                    data.push(bind.get(i).data);
+                }
+
+                self.update(data);
+            }
+        }
+
+		this.init = function() {
+			this.svg = new SVGUtil(this.root, {
+				width : this.get("width"),
+				height : this.get("height")
+			});
+
+            // 차트 테마 설정
+            _theme = jui.include("chart.theme." + this.get("theme"));
+
+            // UI 바인딩 설정
+            if(this.get("bind") != null) {
+                this.bind(this.get("bind"));
+            }
+		}
+		
+		this.theme = function(key, value, value2) {
+			
+			if (arguments.length == 0) {
+				return _theme;
+			} else if (arguments.length == 1) {
+				return _theme[key];
+			} else if (arguments.length == 2) {
+				_theme[key] = value;
+				
+				return _theme[key];
+			} else if (arguments.length == 3) {
+				return (key) ? _theme[value] : _theme[value2];
+			}
+		}
+		
+		this.theme.color = function(i) {
+			return _theme["colors"][i];
+		}
+
+		this.render = function() {
+			if (!_.typeCheck("function", this.draw)) {
+				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+			}
+
+			this.svg.reset();
+			this.svg.css({
+				'background' : this.theme("backgroundColor")
+			})
+			
+			calculate(this);
+						
+			if (_.typeCheck("function", this.drawBefore)) {
+				this.drawBefore();
+			}
+			
+			this.draw();
+			this.svg.render();
+		}
+
+		this.update = function(data) {
+			if (!_.typeCheck("array", data))
+				return;
+
+			this.options.data = data;
+			this.render();
+		}
+
+		this.size = function(width, height) {
+			if (!_.typeCheck("integer", width) || !_.typeCheck("integer", height))
+				return;
+
+			this.svg.size(width, height);
+			this.render();
+		}
+	}
+
+	return UIChart;
+}, "core");
+
+jui.defineUI("chart.basic", [ "util" ], function(_) {
+
+	var UI = function() {
+		
+		var self = this; 
+		var _grid = {}, _widget = [], _brush = [], _data, _series, _scales = {};
+		
+		this.text = function(attr, textOrCallback) {
+			var el = this.svg.text(_.extend({
+				"font-family" : this.theme("fontFamily"),
+				"font-size" : this.theme("fontSize"),
+				"fill" : this.theme("fontColor")
+			}, attr), textOrCallback);
+			
+			return el; 
+		}
+
+		this.init = function() {
+			
+			this.parent.init.call(this);
+			this.emit("load", []);
+		}
+
+		this.grid = function(key) {
+			if (_grid[key]) {
+				return _grid[key];
+			}
+
+			return _grid;
+		}
+		
+		this.widget = function(key) {
+			if (_widget[key]) {
+				return _widget[key];
+			}
+
+			return _widget;
+		}
+		
+		this.widget.size = function(key) {
+			var obj = self.widget(key);
+			
+			if (!_.typeCheck("array", obj)) {
+				obj = [obj];
+			}
+			
+			var size = 0;
+			for(var i = 0; i < obj.length; i++) {
+				size += obj[i].size;
+			}
+			
+			return size;
+		}
+
+		this.brush = function(key) {
+			if (_brush[key]) {
+				return _brush[key];
+			}
+
+			return _brush;
+		}
+
+		this.data = function(key) {
+			if (_data[key]) {
+				return _data[key];
+			}
+
+			return _data;
+		}
+
+		this.series = function(key) {
+			if (_series[key]) {
+				return _series[key];
+			}
+
+			return _series;
+		}
+
+		this.attr = function(type, key) {
+			var bAttr = {},
+                cAttr = (_series[key]) ? _series[key].attr : {};
+
+			for (var k in _brush) {
+				var b = _brush[k];
+
+				if (b.type == type) {
+					bAttr = _.clone(b.attr);
+				}
+			}
+			
+			//TODO: attr 에 function 으로 custom 값을 정의 할 수 있어야한다. 
+			//TODO: 그렇다면 매개 변수는 무엇을 넣어야하는가? 
+
+			return $.extend(bAttr, cAttr);
+		}
+
+		this.drawBefore = function() {
+            // 데이타 설정
+            var data = this.get('data');
+            var series = this.get('series');
+            var grid = this.get('grid');
+            var widget = this.setWidget(this.get('widget'));
+            var brush = this.get('brush');
+            var series_list = [];
+
+            for (var k in grid) {
+                _grid[k] = grid[k];
+            }
+            
+            for (var k in widget) {
+                _widget[k] = widget[k];
+            }
+
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+                var obj = series[key];
+                
+                obj.min = 0;
+                obj.max = 0;
+            }
+
+            // series 데이타 구성
+            for (var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                for (var key in row) {
+                    var obj = series[key] || {};
+                    var value = row[key];
+                    
+                    series[key] = obj;
+
+                    obj.data = obj.data || [];
+                    obj.min = obj.min || 0;
+                    obj.max = obj.max || 0;
+                    obj.data[i] = value;
+
+                    if (value < obj.min) {
+                        obj.min = value;
+                    } else if (value > obj.max) {
+                        obj.max = value;
+                    }
+                }
+            }
+
+            // grid 최소, 최대 구성
+            if (brush != null) {
+                if ( typeof brush == 'string') {
+                    brush = [{
+                        type : brush
+                    }];
+                } else if ( typeof brush == 'object' && !brush.length) {
+                    brush = [brush];
+                }
+
+                for (var i = 0, len = brush.length; i < len; i++) {
+                    var b = brush[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [b.target];
+                    }
+                }
+            }
+
+            //_grid = grid;
+            _brush = brush;
+            _data = data;
+            _series = series;
+            
+            
+            this.drawDefs();
+            
+		}
+		
+		this.createId = function(key) {
+			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
+		}
+		
+		this.drawDefs = function() {
+			
+            // draw defs 
+            var defs = this.svg.defs();
+            
+
+			// default clip path             
+			this.clipId = this.createId('clip-id');
+			
+            var clip = this.svg.clipPath({ id : this.clipId });
+            clip.append(this.svg.rect({  x : 0, y : 0, width : this.width(), height : this.height() }));
+                        
+            defs.append(clip);
+            
+            this.defs = defs;
+			
+		}
+
+		this.draw = function() {
+			var grid = this.grid();
+			var grid_list = {};
+			if (grid != null) {
+				
+				if (grid.type) {
+					grid = {
+						c : grid
+					};
+				}
+
+				for (var k in grid) {
+
+					var orient = 'custom';
+
+					if (k == 'x')
+						orient = 'bottom';
+					else if (k == 'x1')
+						orient = 'top';
+					else if (k == 'y')
+						orient = 'left';
+					else if (k == 'y1')
+						orient = 'right';
+						
+					if (!_scales[k]) {
+						_scales[k] = [];
+					}
+
+					
+					if (!_.typeCheck("array", grid[k])) {
+						grid[k] = [grid[k]];
+					}
+
+					
+					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
+						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
+						var obj = new Grid(orient, grid[k][keyIndex]).render(this);
+
+						var dist = grid[k][keyIndex].dist || 0;
+						
+						// grid 별 dist 로 위치선정하기 
+						if (k == 'y') {
+							obj.root.translate(this.x() - dist, this.y());
+						} else if (k == 'y1') {
+							obj.root.translate(this.x2() + dist, this.y());
+						} else if (k == 'x') {
+							obj.root.translate(this.x(), this.y2() + dist);
+						} else if (k == 'x1') {
+							obj.root.translate(this.x(), this.y() - dist);
+						}
+
+						 _scales[k][keyIndex] = obj.scale			
+					}					
+					
+				}
+			}
+
+			if (_brush != null) {
+				for (var i = 0; i < _brush.length; i++) {
+					
+					var Obj = jui.include("chart.brush." + _brush[i].type);
+
+					if (_scales.x || _scales.x1) {
+						if (!_.typeCheck("function", _brush[i].x)) {
+							_brush[i].x = (typeof _brush[i].x1 !== 'undefined') ? _scales.x1[_brush[i].x1 || 0] : _scales.x[_brush[i].x || 0];
+						}
+					}
+					if (_scales.y || _scales.y1) {
+						if (!_.typeCheck("function", _brush[i].y)) {
+							_brush[i].y = (typeof _brush[i].y1 !== 'undefined') ? _scales.y1[_brush[i].y1 || 0] : _scales.y[_brush[i].y || 0];
+						}
+					}						
+					if (_scales.c){
+						if (!_.typeCheck("function", _brush[i].c)) {
+							_brush[i].c = _scales.c[_brush[i].c || 0];
+						}
+					}
+						
+					_brush[i].index = i;
+
+					new Obj(_brush[i]).render(this);
+				}
+
+			}
+			
+			var widget = this.widget();
+			
+			if (widget != null) {
+				for(var k in widget) {
+					
+					if (!_.typeCheck("array", widget[k])) {
+						widget[k] = [widget[k]];
+					}
+					
+					for(var i = 0; i < widget[k].length; i++) {
+						var w  = widget[k][i];
+
+						if (w.type || w.text) {
+							var Obj = jui.include("chart.widget." + (w.type || "text"));
+							new Obj(k, w).render(this);						
+						}
+						
+					}
+					
+
+				}
+			}
+			
+			this.emit("draw", []);
+		}
+	}
+
+	UI.setting = function() {
+		return {
+			options : {
+				"width" : "100%",
+				"height" : "100%",
+
+				// style
+				"widget" : {
+					left : { size : 50 },
+					right : { size : 50 },
+					bottom : { size : 50 },
+					top : { size : 50 }
+				},
+				
+				// chart
+				"theme" : "white",
+				"labels" : [],
+				"series" : {},
+				"grid" : null,
+				"brush" : null,
+				"data" : [],
+                "bind" : null
+			}
+		}
+	}
+
+	return UI;
+}, "chart.core");
+
+jui.define("chart.theme.white", [], function() {
+    var themeColors = [
+        "#7977C2",
+        "#7BBAE7",
+        "#FFC000",
+        "#FF7800",
+        "#87BB66",
+        "#1DA8A0",
+        "#929292",
+        "#555D69",
+        "#0298D5",
+        "#FA5559",
+        "#F5A397",
+        "#06D9B6",
+        "#C6A9D9",
+        "#6E6AFC",
+        "#E3E766",
+        "#C57BC3",
+        "#DF328B",
+        "#96D7EB",
+        "#839CB5",
+        "#9228E4"
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.2,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
+jui.define("chart.theme.dark", [], function() {
+	
+    var themeColors = [
+        "#7977C2",
+        "#7BBAE7",
+        "#FFC000",
+        "#FF7800",
+        "#87BB66",
+        "#1DA8A0",
+        "#929292",
+        "#555D69",
+        "#0298D5",
+        "#FA5559",
+        "#F5A397",
+        "#06D9B6",
+        "#C6A9D9",
+        "#6E6AFC",
+        "#E3E766",
+        "#C57BC3",
+        "#DF328B",
+        "#96D7EB",
+        "#839CB5",
+        "#9228E4"
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "#232323",
+    	fontSize : "11px",
+    	fontColor : "#eeeeee",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#ececec",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : 2,
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.2,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }	
+
+});
+jui.define("chart.grid.core", [ "util" ], function(_) {
+	var CoreGrid = function() {
+
+		this.setBlockDomain = function(chart, grid) {
+			if (grid.type == 'radar' || grid.type == 'block') {
+
+				if (grid.target && !grid.domain) {
+					var domain = [];
+					var data = chart.data();
+					for (var i = 0; i < data.length; i++) {
+						domain.push(data[i][grid.target]);
+					}
+
+					grid.domain = domain;
+					grid.step = grid.step || 10;
+					grid.max = grid.max || 100;
+				}
+			}
+			
+			return grid; 			
+		}
+		
+		this.setRangeDomain = function(chart, grid) {
+			if ( typeof grid.target == 'string' || typeof grid.target == 'function') {
+				grid.target = [grid.target];
+			}
+
+			if (grid.target && grid.target.length) {
+				var max = 0;
+				var min = 0;
+				var data = chart.data();
+				for (var i = 0; i < grid.target.length; i++) {
+					var s = grid.target[i];
+
+					if ( typeof s == 'function') {
+						for (var index = 0; index < data.length; index++) {
+							var row = data[index];
+
+							var value = s(row);
+
+							if (max < value)
+								max = value;
+							if (min > value)
+								min = value;
+
+						}
+					} else {
+						var _max = chart.series(s).max;
+						var _min = chart.series(s).min;
+						if (max < _max)
+							max = _max;
+						if (min > _min)
+							min = _min;
+					}
+
+				}
+
+				grid.max = max;
+				grid.min = min;
+				grid.step = grid.step || 10;
+
+				var unit = Math.ceil((max - min) / grid.step);
+				
+				var start = 0;
+				while (start < max) {
+					start += unit;
+				}
+
+				var end = 0;
+				while (end > min) {
+					end -= unit;
+				}
+
+				if (unit == 0) {
+					grid.domain = [0, 0];
+				} else {
+					grid.domain = [end, start];
+					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
+				}
+
+
+			}			
+			
+			return grid; 
+		}
+		
+		this.wrapper = function(chart, scale, key) {
+			var old_scale = scale; 
+			
+			
+			function new_scale(i) {
+				if (key) {
+					i = chart.data(i)[key];
+				}
+				 
+				return old_scale(i);
+			}	
+			
+			new_scale.max = function() {
+				return old_scale.max.apply(old_scale, arguments);
+			}
+			
+			new_scale.min = function() {
+				return old_scale.min.apply(old_scale, arguments);
+			}
+			
+			new_scale.rangeBand = function() {
+				return old_scale.rangeBand.apply(old_scale, arguments);
+			}
+			
+			new_scale.rate = function() {
+				return old_scale.rate.apply(old_scale, arguments);
+			}
+			
+			return new_scale;
+		}
+		
+		
+		this.axisLine = function(chart, attr) {
+			return chart.svg.line(_.extend({
+				x1 : 0,
+				y1 : 0,
+				x2 : 0,
+				y2 : 0,
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridAxisBorderWidth"),
+				"stroke-opacity" : 1
+			}, attr));
+		}
+
+		this.line = function(chart, attr) {
+			return chart.svg.line(_.extend({
+				x1 : 0,
+				y1 : 0,
+				x2 : 0,
+				y2 : 0,				
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridBorderWidth"),
+				"stroke-opacity" : 1
+			}, attr));
+		}		
+		
+		this.drawGrid = function(chart, orient, cls, grid) {
+			// create group
+			var root = chart.svg.group({
+				'class' : ['grid', cls].join(" "),
+			})
+
+			// render axis
+			this[orient].call(this, chart, root);
+
+			// wrapped scale
+			this.scale = this.wrapper(chart, this.scale, grid.key);
+
+			// hide
+			if (grid.hide) {
+				root.attr({ display : 'none' })
+			}
+
+			return {
+				root : root,
+				scale : this.scale
+			};
+		}
+		
+	}
+
+	return CoreGrid;
+}, "chart.draw"); 
+jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
+
+	var BlockGrid = function(orient, grid) {
+
+		this.top = function(chart, g, scale) {
+
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width(),
+				}))
+			}
+
+			for (var i = 0; i < this.points.length; i++) {
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + this.points[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					x1 : -this.half_band,
+					y1 : 0,
+					x2 : -this.half_band,
+					y2 : -this.bar
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : -20,
+					'text-anchor' : 'middle'
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+
+				g.append(axis);
+			}
+
+			if (!grid.full) {
+				var axis = chart.svg.group({
+					"transform" : "translate(" + chart.width() + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : -this.bar
+				}));
+
+				g.append(axis);
+			}
+
+		}
+		this.bottom = function(chart, g, scale) {
+			var full_height = chart.height();
+
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width(),
+				}))
+			}
+
+			for (var i = 0; i < this.points.length; i++) {
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + this.points[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					x1 : -this.half_band,
+					y1 : 0,
+					x2 : -this.half_band,
+					y2 : (grid.line) ? -full_height : this.bar
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : 20,
+					'text-anchor' : 'middle',
+					fill : chart.theme("gridFontColor")
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+
+				g.append(axis);
+			}
+
+			if (!grid.full) {
+				var axis = chart.svg.group({
+					"transform" : "translate(" + chart.width() + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? -chart.height() : this.bar
+				}));
+
+				g.append(axis);
+
+			}
+
+		}
+		this.left = function(chart, g, scale) {
+			var full_width = chart.width();
+
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}))
+			}
+
+			for (var i = 0; i < this.points.length; i++) {
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? full_width : -this.bar
+				}));
+
+				axis.append(chart.text({
+					x : -this.bar - 4,
+					y : this.half_band,
+					'text-anchor' : 'end'
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+
+				g.append(axis);
+			}
+
+			if (!grid.full) {
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + chart.height() + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? chart.width() : -this.bar
+				}));
+
+				g.append(axis);
+			}
+
+		}
+
+		this.right = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}))
+			}
+
+			for (var i = 0; i < this.points.length; i++) {
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? -chart.width() : this.bar
+				}));
+
+				axis.append(chart.text({
+					x : this.bar + 4,
+					y : this.half_band,
+					'text-anchor' : 'start'
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+
+				g.append(axis);
+			}
+
+			if (!grid.full) {
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + chart.height() + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? -chart.width() : this.bar
+				}));
+
+				g.append(axis);
+
+			}
+		}
+
+		this.drawBefore = function(chart) {
+			grid.type = grid.type || "block";
+			grid = this.setBlockDomain(chart, grid);
+
+			var width = chart.width();
+			var height = chart.height();
+			var max = (orient == 'left' || orient == 'right') ? height : width;
+
+			this.scale = UtilScale.ordinal().domain(grid.domain);
+			var range = [0, max];
+
+			if (grid.full) {
+				this.scale.rangeBands(range);
+			} else {
+				this.scale.rangePoints(range);
+			}
+
+			this.points = this.scale.range();
+			this.domain = this.scale.domain();
+			this.band = this.scale.rangeBand();
+			this.half_band = (grid.full) ? 0 : this.band / 2;
+			this.bar = 6;
+		}
+
+		this.draw = function(chart) {
+
+			return this.drawGrid(chart, orient, 'block', grid);
+		}
+	}
+
+	return BlockGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, UtilScale) {
+
+	var DateGrid = function(orient, grid) {
+		var self = this;
+
+		this.top = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width()
+				}));
+			}
+
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var axis = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? chart.height() : -bar
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : -bar - 4,
+					'text-anchor' : 'middle',
+					fill : chart.theme("gridFontColor")
+				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""))
+
+				g.append(axis);
+			}
+		}
+
+		this.bottom = function(chart, g) {
+
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width(),
+				}));
+			}
+
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var group = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				group.append(this.line(chart, {
+					y2 : (grid.line) ? -chart.height() : bar,
+				}));
+
+				group.append(chart.text({
+					x : 0,
+					y : bar * 3,
+					'text-anchor' : 'middle',
+					fill : chart.theme("gridFontColor")
+				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(group);
+			}
+		}
+
+		this.left = function(chart, g) {
+
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
+
+			}
+
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var axis = chart.svg.group({
+					"transform" : "translate(0," + values[i] + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? chart.width() : -bar,
+				}));
+
+				axis.append(chart.text({
+					x : -bar,
+					y : -bar,
+					'text-anchor' : 'end',
+					fill : chart.theme("gridFontColor")
+				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
+
+				g.append(axis);
+			}
+		}
+
+		this.right = function(chart, g) {
+			
+			if (!grid.line) {
+			g.append(this.axisLine(chart, {
+				y2 : chart.height()
+			}));
+				
+			}
+
+
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+			
+			for (var i = 0; i < ticks.length; i++) {
+				var axis = chart.svg.group({
+					"transform" : "translate(0," + values[i] + ")"
+				})
+
+				axis.append(this.line(chart,{
+					x2 : (grid.line) ? -chart.width() : bar
+				}));
+
+				axis.append(chart.text({
+					x : bar + 4,
+					y : -bar,
+					'text-anchor' : 'start',
+					fill : chart.theme("gridFontColor")
+				}, format ? format(ticks[i]) : ticks[i]))
+
+				g.append(axis);
+			}
+		}
+
+
+		this.drawBefore = function(chart) {
+			grid = this.setRangeDomain(chart, grid);
+
+			var max = chart.height();
+
+			if (orient == 'top' || orient == 'bottom') {
+				max = chart.width();
+			}
+
+			var range = [0, max];
+			this.scale = UtilScale.time().domain(grid.domain).rangeRound([0, max]);
+
+			if (grid.realtime) {
+				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
+			} else {
+				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
+			}
+
+			if ( typeof grid.format == 'string') {
+				var str = grid.format;
+				grid.format = function(value) {
+					return UtilTime.format(value, str);
+				}
+			}
+
+			// step = [this.time.days, 1];
+			this.bar = 6;
+
+			this.values = [];
+
+			for (var i = 0, len = this.ticks.length; i < len; i++) {
+				this.values[i] = this.scale(this.ticks[i]);
+			}
+
+		}
+
+		this.draw = function(chart) {
+
+			return this.drawGrid(chart, orient, 'date', grid);
+		}
+	}
+
+	return DateGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.radar", ["util.math"], function(math) {
+
+	var RadarGrid = function(orient, grid) {
+		var position = [];
+		var self = this;
+		var format;
+
+		function drawCircle(chart, root, centerX, centerY, x, y, count) {
+			var r = Math.abs(y);
+			var cx = centerX;
+			var cy = centerY;
+
+			root.append(chart.svg.circle({
+				cx : cx,
+				cy : cy,
+				r : r,
+				"fill-opacity" : 0,
+				stroke : chart.theme('gridBorderColor'),
+				"stroke-width" : chart.theme('gridBorderWidth')
+			}))
+		}
+
+		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
+
+			var g = chart.svg.group();
+
+			var points = [];
+
+			points.push([centerX + x, centerY + y]);
+
+			var startX = x;
+			var startY = y;
+
+			for (var i = 0; i < count; i++) {
+				var obj = math.rotate(startX, startY, unit);
+
+				startX = obj.x;
+				startY = obj.y;
+
+				points.push([centerX + obj.x, centerY + obj.y]);
+			}
+
+			var path = chart.svg.path({
+
+				"fill" : "none",
+				stroke : chart.theme('gridBorderColor'),
+				"stroke-width" : chart.theme('gridBorderWidth')
+			});
+
+			for (var i = 0; i < points.length; i++) {
+				var point = points[i];
+
+				if (i == 0) {
+					path.MoveTo(point[0], point[1])
+				} else {
+					path.LineTo(point[0], point[1]);
+				}
+			}
+
+			path.LineTo(points[0][0], points[0][1]);
+			//path.ClosePath();
+
+			g.append(path)
+
+			root.append(g);
+		}
+
+
+		this.drawBefore = function(chart) {
+			grid = this.setBlockDomain(chart, grid);
+
+			format = grid.format;
+		}
+		function scale(obj) {
+
+			var max = grid.max;
+			var domain = grid.domain;
+			var that = self;
+
+			return function(index, value) {
+				var rate = value / max;
+
+				var height = Math.abs(obj.y1) - Math.abs(obj.y2);
+				var pos = height * rate;
+				var unit = 2 * Math.PI / domain.length;
+
+				var cx = obj.x1;
+				var cy = obj.y1;
+				var y = -pos;
+				var x = 0;
+
+				var o = math.rotate(x, y, unit * index);
+				x = o.x;
+				y = o.y;
+
+				return {
+					x : cx + x,
+					y : cy + y
+				}
+			}
+		}
+
+
+		this.draw = function(chart) {
+			var width = chart.width(), height = chart.height();
+			grid.line = ( typeof grid.line == 'undefined') ? true : grid.line;
+
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			var w = min / 2;
+			var centerX = chart.x() + width / 2;
+			var centerY = chart.y() + height / 2;
+
+			var startY = -w;
+			var startX = 0;
+			var count = grid.domain.length;
+			var step = grid.step;
+			var unit = 2 * Math.PI / count;
+
+			var h = Math.abs(startY) / step;
+
+			var g = chart.svg.group({
+				'class' : 'grid radar'
+			});
+
+			var root = chart.svg.group();
+
+			g.append(root);
+
+			// domain line
+			position = [];
+			for (var i = 0; i < count; i++) {
+
+				var x2 = centerX + startX;
+				var y2 = centerY + startY;
+
+				root.append(chart.svg.line({
+					x1 : centerX,
+					y1 : centerY,
+					x2 : x2,
+					y2 : y2,
+					stroke : chart.theme('gridBorderColor'),
+					"stroke-width" : chart.theme('gridBorderWidth')
+				}))
+
+				position[i] = {
+					x1 : centerX,
+					y1 : centerY,
+					x2 : x2,
+					y2 : y2
+				};
+
+				var ty = y2;
+				var tx = x2;
+				var talign = 'middle';
+
+				if (y2 > centerY) {
+					ty = y2 + 20;
+				} else if (y2 < centerY) {
+					ty = y2 - 10;
+				}
+
+				if (x2 > centerX) {
+					talign = "start";
+					tx += 10;
+				} else if (x2 < centerX) {
+					talign = "end";
+					tx -= 10;
+				}
+
+				root.append(chart.text({
+					x : tx,
+					y : ty,
+					'text-anchor' : talign,
+					fill : chart.theme("gridFontColor")
+				}, grid.domain[i]))
+
+				var obj = math.rotate(startX, startY, unit);
+
+				startX = obj.x;
+				startY = obj.y;
+
+			}
+
+			if (!grid.line)
+				return scale(position[0]);
+
+			// area split line
+			startY = -w;
+			var stepBase = 0;
+			var stepValue = grid.max / grid.step;
+
+			for (var i = 0; i < step; i++) {
+
+				if (i == 0 && grid.extra) {
+					startY += h;
+					continue;
+				}
+				if (grid.shape == 'circle') {
+					drawCircle(chart, root, centerX, centerY, 0, startY, count);
+				} else {
+					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
+				}
+
+				root.append(chart.text({
+					x : centerX,
+					y : centerY + (startY + h - 5),
+					fill : chart.theme("gridFontColor")
+				}, (grid.max - stepBase) + ""))
+
+				startY += h;
+				stepBase += stepValue;
+			}
+
+			return {
+				root : root, 
+				scale : scale(position[0])
+			};
+		}
+	}
+
+	return RadarGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
+
+	/**
+	 *
+	 * @param {Object} orient
+	 * @param {Object} grid
+	 */
+	var RangeGrid = function(orient, grid) {
+		var self = this;
+
+		this.top = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width()
+				}));
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? chart.height() : -bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : -bar - 4,
+					'text-anchor' : 'middle',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+			}
+		}
+
+		this.bottom = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					x2 : chart.width()
+				}));
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				})
+
+				axis.append(this.line(chart, {
+					y2 : (grid.line) ? -chart.height() : bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : 0,
+					y : bar * 3,
+					'text-anchor' : 'middle',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+
+				g.append(axis);
+			}
+		}
+
+		this.left = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
+
+			}
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? chart.width() : -bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
+				}));
+
+				axis.append(chart.text({
+					x : -bar - 4,
+					y : bar,
+					'text-anchor' : 'end',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+
+			}
+		}
+
+		this.right = function(chart, g) {
+			if (!grid.line) {
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
+			}
+
+
+			var min = this.scale.min();
+			var ticks = this.ticks;
+			var values = this.values;
+			var bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var isZero = (ticks[i] == 0 && ticks[i] != min);
+
+				var axis = chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line(chart, {
+					x2 : (grid.line) ? -chart.width() : bar,
+					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(chart.text({
+					x : bar + 4,
+					y : bar,
+					'text-anchor' : 'start',
+					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+
+				g.append(axis);
+			}
+		}
+
+		this.drawBefore = function(chart) {
+			grid = this.setRangeDomain(chart, grid);
+
+			var width = chart.width(), height = chart.height();
+
+			if (orient == 'left' || orient == 'right') {
+				this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
+			} else {
+				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
+			}
+
+			this.step = grid.step || 10;
+			this.nice = grid.nice || false;
+			this.ticks = this.scale.ticks(this.step, this.nice);
+			this.bar = 6;
+
+			this.values = [];
+
+			for (var i = 0, len = this.ticks.length; i < len; i++) {
+				this.values[i] = this.scale(this.ticks[i]);
+			}
+
+		}
+
+		this.draw = function(chart) {
+			return this.drawGrid(chart, orient, 'range', grid);
+		}
+	}
+
+	return RangeGrid;
+}, "chart.grid.core");
+
+jui.define("chart.brush.core", [], function() {
+	var CoreBrush = function() {
+
+		this.curvePoints = function(K) {
+			var p1 = [];
+			var p2 = [];
+			var n = K.length - 1;
+
+			/*rhs vector*/
+			var a = [];
+			var b = [];
+			var c = [];
+			var r = [];
+
+			/*left most segment*/
+			a[0] = 0;
+			b[0] = 2;
+			c[0] = 1;
+			r[0] = K[0] + 2 * K[1];
+
+			/*internal segments*/
+			for ( i = 1; i < n - 1; i++) {
+				a[i] = 1;
+				b[i] = 4;
+				c[i] = 1;
+				r[i] = 4 * K[i] + 2 * K[i + 1];
+			}
+
+			/*right segment*/
+			a[n - 1] = 2;
+			b[n - 1] = 7;
+			c[n - 1] = 0;
+			r[n - 1] = 8 * K[n - 1] + K[n];
+
+			/*solves Ax=b with the Thomas algorithm (from Wikipedia)*/
+			for (var i = 1; i < n; i++) {
+				var m = a[i] / b[i - 1];
+				b[i] = b[i] - m * c[i - 1];
+				r[i] = r[i] - m * r[i - 1];
+			}
+
+			p1[n - 1] = r[n - 1] / b[n - 1];
+			for (var i = n - 2; i >= 0; --i)
+				p1[i] = (r[i] - c[i] * p1[i + 1]) / b[i];
+
+			/*we have p1, now compute p2*/
+			for (var i = 0; i < n - 1; i++)
+				p2[i] = 2 * K[i + 1] - p1[i + 1];
+
+			p2[n - 1] = 0.5 * (K[n] + p1[n - 1]);
+
+			return {
+				p1 : p1,
+				p2 : p2
+			};
+		}
+
+        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
+            var range = maxRadius - minRadius,
+                tg = range * getPer();
+
+            function getPer() {
+                var range = maxValue - minValue,
+                    tg = value - minValue,
+                    per = tg / range;
+
+                return per;
+            }
+
+            return tg + minRadius;
+        }
+
+        this.getXY = function(brush, chart) {
+            var xy = [];
+
+            for (var i = 0, len = chart.data().length; i < len; i++) {
+                var startX = brush.x(i),
+                    data = chart.data(i);
+
+                for (var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]];
+
+                    if (!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: [],
+                            value: []
+                        };
+                    }
+
+                    xy[j].x.push(startX);
+                    xy[j].y.push(brush.y(value));
+                    xy[j].value.push(value);
+                }
+            }
+
+            return xy;
+        }
+
+        this.getStackXY = function(brush, chart) {
+            var xy = [];
+
+            for (var i = 0, len =  chart.data().length; i < len; i++) {
+                var startX = brush.x(i),
+                    data = chart.data(i),
+                    valueSum = 0;
+
+                for (var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]];
+
+                    if(j > 0) {
+                        valueSum += data[brush.target[j - 1]];
+                    }
+
+                    if (!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: [],
+                            value: []
+                        };
+                    }
+
+                    xy[j].x.push(startX);
+                    xy[j].y.push(brush.y(value + valueSum));
+                    xy[j].value.push(value);
+                }
+            }
+
+            return xy;
+        }
+	}
+
+	return CoreBrush;
+}, "chart.draw"); 
+jui.define("chart.brush.bar", [], function() {
+
+	var BarBrush = function(brush) {
+		var g, zeroX, series, count, height, half_height, barHeight;
+		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			zeroX = brush.x(0);
+			series = chart.series();
+			count = chart.data().length;
+
+			height = brush.y.rangeBand();
+			half_height = height - outerPadding*2;
+			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
+		}
+
+		this.draw = function(chart) {
+			for (var i = 0; i < count; i++) {
+				var startY = brush.y(i) - half_height/2;
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var startX = brush.x(chart.series(brush.target[j]).data[i]);
+
+					if (startX >= zeroX) {
+						var r = chart.svg.rect({
+							x : zeroX,
+							y : startY,
+							height : barHeight,
+							width : Math.abs(zeroX - startX),
+							fill : chart.theme.color(j)
+						});
+
+						g.append(r);
+					} else {
+						var w = Math.abs(zeroX - startX);
+
+						var r = chart.svg.rect({
+							y : startY,
+							x : zeroX - w,
+							height : barHeight,
+							width : w,
+							fill : chart.theme.color(j)
+						});
+
+						g.append(r);
+					}
+
+					startY += barHeight + innerPadding;
+				}
+			}
+		}
+	}
+
+	return BarBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.bubble", [], function() {
+
+	var BubbleBrush = function(brush) {
+        var self = this;
+
+        function createBubble(brush, chart, pos, index) {
+            var r_min = (typeof brush.min != "undefined") ? brush.min : 5,
+                r_max = (typeof brush.min != "undefined") ? brush.max : 30,
+                radius = self.getScaleValue(pos.value, brush.min, brush.max, r_min, r_max);
+
+            return chart.svg.circle({
+                cx: pos.x,
+                cy: pos.y,
+                r: radius,
+                "fill": chart.theme.color(index),
+                "fill-opacity": chart.theme("bubbleOpacity"),
+                "stroke": chart.theme.color(index),
+                "stroke-width": chart.theme("bubbleBorderWidth")
+            });
+        }
+
+        this.drawBubble = function(brush, chart, points) {
+            var g = chart.svg.group({
+                'clip-path' : 'url(#' + chart.clipId + ')'
+            }).translate(chart.x(), chart.y());
+
+            for(var i = 0; i < points.length; i++) {
+                for(var j = 0; j < points[i].x.length; j++) {
+                    var b = createBubble(brush, chart, {
+                        x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
+                    }, i);
+
+                    g.append(b);
+                }
+            }
+        }
+
+        this.draw = function(chart) {
+            this.drawBubble(brush, chart, this.getXY(brush, chart));
+        }
+	}
+
+	return BubbleBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.candlestick", [], function() {
+
+    var CandleStickBrush = function(brush) {
+        var g, count, width = 0, barWidth = 0, barPadding = 0;
+
+        function getTargets(chart) {
+            var target = {};
+
+            for (var j = 0; j < brush.target.length; j++) {
+                var t = chart.series(brush.target[j]);
+                target[t.type] = t;
+            }
+
+            return target;
+        }
+
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.x(), chart.y());
+
+            count = chart.data().length;
+            width = brush.x.rangeBand();
+            barWidth = width * 0.7;
+            barPadding = barWidth / 2;
+        }
+
+        this.draw = function(chart) {
+            var targets = getTargets(chart);
+
+            for (var i = 0; i < count; i++) {
+                var startX = brush.x(i),
+                    r = null,
+                    l = null;
+
+                var open = targets.open.data[i],
+                    close = targets.close.data[i],
+                    low =  targets.low.data[i],
+                    high = targets.high.data[i];
+
+                if(open > close) { // 시가가 종가보다 높을 때 (Red)
+                    var y = brush.y(open);
+
+                    l = chart.svg.line({
+                        x1: startX,
+                        y1: brush.y(high),
+                        x2: startX,
+                        y2: brush.y(low),
+                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        "stoke-width": 1
+                    });
+
+                    r = chart.svg.rect({
+                        x : startX - barPadding,
+                        y : y,
+                        width : barWidth,
+                        height : brush.y(close) - y,
+                        fill : chart.theme("candlestickInvertBackgroundColor"),
+                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        "stroke-width": 1
+                    });
+
+                } else {
+                    var y = brush.y(close);
+
+                    l = chart.svg.line({
+                        x1: startX,
+                        y1: brush.y(high),
+                        x2: startX,
+                        y2: brush.y(low),
+                        stroke: chart.theme("candlestickBorderColor"),
+                        "stoke-width":1
+                    });
+
+                    r = chart.svg.rect({
+                        x : startX - barPadding,
+                        y : y,
+                        width : barWidth,
+                        height : brush.y(open) - y,
+                        fill : chart.theme("candlestickBackgroundColor"),
+                        stroke: chart.theme("candlestickBorderColor"),
+                        "stroke-width": 1
+                    });
+                }
+
+                g.append(l);
+                g.append(r);
+            }
+        }
+    }
+
+    return CandleStickBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.column", [], function() {
+
+	var ColumnBrush = function(brush) {
+		var g, zeroY, count, width, columnWidth, half_width;
+		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			half_width = (width - outerPadding * 2);
+			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+		}
+
+		this.draw = function(chart) {
+			for (var i = 0; i < count; i++) {
+				var startX = brush.x(i) - half_width/2;
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+
+					if (startY <= zeroY) {
+						var r = chart.svg.rect({
+							x : startX,
+							y : startY,
+							width : columnWidth,
+							height : Math.abs(zeroY - startY),
+							fill : chart.theme.color(j)
+						});
+
+						g.append(r);
+					} else {
+						var r = chart.svg.rect({
+							x : startX,
+							y : zeroY,
+							width : columnWidth,
+							height : Math.abs(zeroY - startY),
+							fill : chart.theme.color(j)
+						});
+
+						g.append(r);
+					}
+
+					startX += columnWidth + innerPadding;
+				}
+			}
+		}
+	}
+
+	return ColumnBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.donut", ["util.math"], function(math) {
+
+	var DonutBrush = function(brush) {
+		this.drawBefore = function(chart) {
+			this.size = brush.size || 50;
+
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.startY = -this.w;
+			this.startX = 0;
+			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
+			this.innerRadius = this.outerRadius - this.size;
+		}
+
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+			var g = chart.svg.group({
+				'class' : 'donut'
+			});
+
+			var path = chart.svg.path(attr);
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
+
+			var startX = obj.x;
+			var startY = obj.y;
+			
+			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle));
+			
+			var startInnerX = innerCircle.x;
+			var startInnerY = innerCircle.y;
+			
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			// inner arc 에 대한 지점 설정 			
+			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle));
+			
+			// 중심점 이동 
+			g.translate(centerX, centerY);
+
+			// outer arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+
+			// 라인 긋기 
+			path.LineTo(innerCircle.x, innerCircle.y);
+
+			// inner arc 그리기 
+			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
+			
+
+			// 패스 종료
+			path.ClosePath();
+
+			g.append(path);
+
+			return g;
+		}
+
+		this.draw = function(chart) {
+
+			var s = chart.series(brush.target[0]);
+			var group = chart.svg.group({
+				'class' : 'brush donut'
+			})
+
+			group.translate(chart.x(), chart.y())
+
+			var all = 360;
+			var startAngle = 0;
+
+			var max = 0;
+			for (var i = 0; i < s.data.length; i++) {
+				max += s.data[i];
+			}
+
+			for (var i = 0; i < s.data.length; i++) {
+				
+				//if (i != 1) continue;
+				
+				var data = s.data[i];
+				var endAngle = all * (data / max);
+
+				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
+					fill : chart.theme.color(i),
+					stroke : chart.theme('donutBorderColor'),
+					"stroke-width" : chart.theme('donutBorderWidth')
+				});
+
+				group.append(g);
+
+				startAngle += endAngle;
+			}
+		}
+	}
+
+	return DonutBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.equalizer", [], function() {
+
+	var EqualizerBrush = function(brush) {
+		var g, zeroY, count, width, barWidth, unit, gap, half_width;
+		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+ 
+			width = brush.x.rangeBand();
+			half_width = (width - outerPadding * 2) / 2; 
+			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			unit = brush.unit || 5;
+			gap = brush.gap || 1;
+		}
+
+		this.draw = function(chart) {
+			for (var i = 0; i < count; i++) {
+				var startX = brush.x(i) - half_width;
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+
+					if (startY <= zeroY) {
+
+						var height = Math.abs(zeroY - startY)
+						var padding = 1.5;
+
+						var eY = zeroY;
+						var eMin = startY;
+						var eIndex = 0;
+						while (eY > eMin) {
+
+							var unitHeight = (eY - unit < eMin ) ? Math.abs(eY - eMin) : unit;
+
+							var r = chart.svg.rect({
+								x : startX,
+								y : eY - unitHeight,
+								width : barWidth,
+								height : unitHeight,
+								fill : chart.theme.color(Math.floor(eIndex / gap))
+							});
+
+							eY -= unitHeight + padding;
+							eIndex++;
+
+							g.append(r);
+						}
+					} else {
+
+						var padding = 1.5;
+
+						var eY = zeroY;
+						var eMax = startY;
+						var eIndex = 0;
+						while (eY < eMax) {
+							var unitHeight = (eY + unit > eMax ) ? Math.abs(eY - eMax) : unit;
+							var r = chart.svg.rect({
+								x : startX,
+								y : eY,
+								width : barWidth,
+								height : unitHeight,
+								fill : chart.theme.color(Math.floor(eIndex / gap))
+							});
+
+							eY += unitHeight + padding;
+							eIndex++;
+
+							g.append(r);
+						}
+
+					}
+
+					startX += barWidth + innerPadding;
+				}
+			}
+		}
+	}
+
+	return EqualizerBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.fullstack", [], function() {
+
+	var FullStackBrush = function(brush) {
+		var g, zeroY, count, width, barWidth, gauge;
+		var outerPadding = brush.outerPadding || 15;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			barWidth = width - outerPadding * 2;
+		}
+
+		this.draw = function(chart) {
+			var chart_height = chart.height();
+			for (var i = 0; i < count; i++) {
+
+				var startX = brush.x(i) - barWidth/2;
+
+				var sum = 0;
+				var list = [];
+				for (var j = 0; j < brush.target.length; j++) {
+					var height = chart.series(brush.target[j]).data[i];
+
+					sum += height;
+					list.push(height);
+				}
+
+				var startY = 0;
+				var max  = brush.y.max();
+				var current = max; 
+				
+				for (var j = list.length - 1; j >= 0; j--) {
+					
+					var height = chart_height - brush.y.rate(list[j] , sum); 
+					
+					var r = chart.svg.rect({
+						x : startX,
+						y : startY,
+						width : barWidth,
+						height : height,
+						fill : chart.theme.color(j)
+					});
+					
+					g.append(r);
+
+					if (brush.text) {
+						var percent = Math.round((list[j]/sum)*max);
+						var text = chart.svg.text({
+							x : startX + barWidth/2,
+							y : startY + height/2 + 8,
+							'text-anchor' : 'middle'
+						}, ((current - percent < 0 ) ? current : percent) + "%");					
+						g.append(text);					
+						current -= percent;
+					}
+					
+					startY += height;										
+				}
+			}
+		}
+	}
+
+	return FullStackBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.line", [], function() {
+
+	var LineBrush = function(brush) {
+
+        this.createLine = function(brush, chart, pos, index) {
+            var x = pos.x,
+                y = pos.y;
+
+            var p = chart.svg.path({
+                stroke : chart.theme.color(index),
+                "stroke-width" : chart.theme("lineBorderWidth"),
+                fill : "transparent"
+            }).MoveTo(x[0], y[0]);
+
+            if(brush.symbol == "curve") {
+                var px = this.curvePoints(x),
+                    py = this.curvePoints(y);
+
+                for (var i = 0; i < x.length - 1; i++) {
+                    p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
+                }
+            } else {
+                for (var i = 0; i < x.length - 1; i++) {
+                    if(brush.symbol == "step") {
+                        p.LineTo(x[i], y[i + 1]);
+                    }
+
+                    p.LineTo(x[i + 1], y[i + 1]);
+                }
+            }
+
+            return p;
+        }
+
+        this.drawLine = function(brush, chart, path) {
+            var g = chart.svg.group().translate(chart.x(), chart.y());
+
+            for (var k = 0; k < path.length; k++) {
+                var p = this.createLine(brush, chart, path[k], k);
+                g.append(p);
+            }
+        }
+
+        this.draw = function(chart) {
+            this.drawLine(brush, chart, this.getXY(brush, chart));
+        }
+	}
+
+	return LineBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.path", [], function() {
+
+	var PathBrush = function(brush) {
+		this.drawBefore = function(chart) {
+		}
+
+		this.draw = function(chart) {
+
+			var g = chart.svg.group({
+				'class' : 'brush path'
+			});
+			
+			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
+				var s = chart.series(brush.target[ti]);
+	
+				var color = chart.theme.color(ti+2);
+				var path = chart.svg.path({
+					fill : color,
+					"fill-opacity" : chart.theme("pathOpacity"),
+					stroke : color,
+					"stroke-width" : chart.theme("pathBorderWidth")
+				});
+	
+				g.append(path);
+	
+				for (var i = 0; i < s.data.length; i++) {
+					var obj = brush.c(i, s.data[i]);
+	
+					if (i == 0) {
+						path.MoveTo(obj.x, obj.y);
+					} else {
+						path.LineTo(obj.x, obj.y);
+					}
+				}
+	
+				path.ClosePath();				
+			}
+
+
+			return this;
+		}
+	}
+
+	return PathBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.pie", ["util.math"], function(math) {
+
+	var PieBrush = function(brush) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.outerRadius = brush.outerRadius || this.w;
+		}
+
+		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
+			var g = chart.svg.group({
+				'class' : 'donut'
+			});
+
+			var path = chart.svg.path(attr);
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
+
+			var startX = obj.x;
+			var startY = obj.y;
+			
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			g.translate(centerX, centerY);
+
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+
+			path.LineTo(0, 0);
+
+			// 패스 종료
+			path.ClosePath();
+
+			g.append(path);
+
+			return g;
+		}
+
+		this.draw = function(chart) {
+
+			var s = chart.series(brush.target[0]);
+			var group = chart.svg.group({
+				'class' : 'brush donut'
+			})
+
+			group.translate(chart.x(), chart.y())
+
+			var all = 360;
+			var startAngle = 0;
+
+			var max = 0;
+			for (var i = 0; i < s.data.length; i++) {
+				max += s.data[i];
+			}
+
+			for (var i = 0; i < s.data.length; i++) {
+				var data = s.data[i];
+				var endAngle = all * (data / max);
+
+				var g = this.drawPie(chart, this.centerX, this.centerY, this.outerRadius, startAngle, endAngle, {
+					fill : chart.theme.color(i),
+					stroke : chart.theme('pieBorderColor'),
+					"stroke-width" : chart.theme('pieBorderWidth')
+				});
+
+				group.append(g);
+
+				startAngle += endAngle;
+			}
+		}
+	}
+
+	return PieBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.scatter", [], function() {
+
+	var ScatterBrush = function(brush) {
+
+        function createScatter(brush, chart, pos, index) {
+            var elem = null,
+                target = chart.series(brush.target[index]),
+                symbol = (!target.symbol) ? brush.symbol : target.symbol,
+                w = h = (brush.size) ? brush.size : 5;
+
+            var color = chart.theme.color(index),
+                borderColor = chart.theme("scatterBorderColor"),
+                borderWidth = chart.theme("scatterBorderWidth");
+
+            if(symbol == "triangle" || symbol == "cross") {
+                elem = chart.svg.group({ width: w, height: h }, function() {
+                    if(symbol == "triangle") {
+                        var poly = chart.svg.polygon({
+                            fill: color,
+                            stroke: borderColor,
+                            "stroke-width": borderWidth
+                        });
+
+                        poly.point(0, h)
+                            .point(w, h)
+                            .point(w / 2, 0);
+                    } else {
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
+                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
+                    }
+
+                }).translate(pos.x - (w / 2), pos.y - (h / 2));
+            } else {
+                if(symbol == "rectangle") {
+                    elem = chart.svg.rect({
+                        width: w,
+                        height: h,
+                        x: pos.x - (w / 2),
+                        y: pos.y - (h / 2),
+                        fill: color,
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
+                    });
+                } else {
+                    elem = chart.svg.ellipse({
+                        rx: w / 2,
+                        ry: h / 2,
+                        cx: pos.x,
+                        cy: pos.y,
+                        fill: color,
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
+                    });
+                }
+            }
+
+            return elem;
+        }
+
+        this.drawScatter = function(brush, chart, points) {
+            var g = chart.svg.group().translate(chart.x(), chart.y());
+
+            for(var i = 0; i < points.length; i++) {
+                for(var j = 0; j < points[i].x.length; j++) {
+                    var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    g.append(p);
+                }
+            }
+        }
+
+        this.draw = function(chart) {
+            this.drawScatter(brush, chart, this.getXY(brush, chart));
+        }
+	}
+
+	return ScatterBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.stackbar", [], function() {
+
+	var StackBarBrush = function(brush) {
+		var g, series, count, height, barWidth;
+		var outerPadding = brush.outerPadding || 15;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			series = chart.series();
+			count = chart.data().length;
+
+			height = brush.y.rangeBand();
+			barWidth = height - outerPadding * 2;
+		}
+
+		this.draw = function(chart) {
+			for (var i = 0; i < count; i++) {
+				var startY = brush.y(i) - barWidth/2;
+
+				var widthSum = 0;
+				var widthArr = [];
+				for (var j = 0; j < brush.target.length; j++) {
+					var width = chart.series(brush.target[j]).data[i];
+
+					widthSum += width;
+					widthArr.push(brush.x(width));
+				}
+
+				var startX = 0;
+
+				for (var j = 0; j < widthArr.length; j++) {
+					var r = chart.svg.rect({
+						x : startX,
+						y : startY,
+						width : widthArr[j],
+						height : barWidth,
+						fill : chart.theme.color(j)
+					});
+
+					g.append(r);
+
+					startX += widthArr[j]
+				}
+
+			}
+		}
+	}
+
+	return StackBarBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.stackcolumn", [], function() {
+
+	var ColumnStackBrush = function(brush) {
+		var g, zeroY, count, width, barWidth, gauge;
+		var outerPadding = brush.outerPadding || 15;
+
+		this.drawBefore = function(chart) {
+			g = chart.svg.group().translate(chart.x(), chart.y());
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			barWidth = width - outerPadding * 2;
+		}
+
+		this.draw = function(chart) {
+			var chart_height = chart.height();
+			for (var i = 0; i < count; i++) {
+
+				var startX = brush.x(i) - barWidth/2;
+
+				var heightSum = 0;
+				var heightArr = [];
+				for (var j = 0; j < brush.target.length; j++) {
+					var height = chart.series(brush.target[j]).data[i];
+
+					heightSum += height;
+					heightArr.push(chart_height - brush.y(height));
+				}
+
+				var startY = brush.y(heightSum);
+
+				for (var j = heightArr.length - 1; j >= 0; j--) {
+					var r = chart.svg.rect({
+						x : startX,
+						y : startY,
+						width : barWidth,
+						height : heightArr[j],
+						fill : chart.theme.color(j)
+					});
+
+					g.append(r);
+
+					startY += heightArr[j]
+				}
+			}
+		}
+	}
+
+	return ColumnStackBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.bargauge", ["util.math"], function(math) {
+
+	var BarGaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+
+			this.cut = brush.cut || 5; 
+
+		}
+
+		this.draw = function(chart) {
+
+			var group = chart.svg.group({
+				'class' : 'brush bar gauge'
+			})
+
+			group.translate(chart.x(), chart.y())
+			
+			var len = chart.data().length; 
+			
+			var unit = brush.size || 18;
+			
+			if (brush.split) {
+				var max = chart.width() - 150;	
+			} else {
+				var max = chart.width() - 150;
+			}
+			
+			var y = 0; 
+			var x = 0; 
+			for(var i = 0, len = chart.data().length; i < len; i++) {
+                var data = chart.data(i);
+                
+                var g = chart.svg.group({
+                    'class' : 'bar'
+                });
+                
+                g.append(chart.text({
+                    x : x,
+                    y : y+unit/2+this.cut,
+                    "text-anchor" : "end",
+                    fill : chart.theme.color(i)
+                }, data[brush.title] || data.title || ""))
+                
+                var ex = (100 - data.value)  * max / 100;
+                var value = (data.value)  * max / 100;
+                
+                g.append(chart.svg.rect({
+                    x : x + this.cut,
+                    y : y,
+                    width: value,
+                    height : unit,
+                    fill : chart.theme.color(i)
+                }))
+                
+                g.append(chart.svg.rect({
+                    x : x + this.cut + value,
+                    y : y,
+                    width: ex,
+                    height : unit,
+                    fill : "#ececec"
+                }))
+
+                g.append(chart.text({
+                    x : (brush.split) ? (x + this.cut + value - 1)  : (x + value + ex + this.cut*2),
+                    y : y + unit/2 + this.cut,
+                    "text-anchor" : (brush.split) ? "end" : "start",
+                    fill : (brush.split) ? 'white' : chart.theme.color(i),
+                }, data.value + "%"))
+                
+                group.append(g);
+                
+                y += unit + this.cut; 
+			}
+
+		}
+	}
+
+	return BarGaugeBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.circlegauge", ["util.math"], function(math) {
+
+	var BarGaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+            var width = chart.width(), height = chart.height();
+            var min = width;
+
+            if (height < min) {
+                min = height;
+            }
+
+
+            this.w = min / 2;
+            this.centerX = width / 2;
+            this.centerY = height / 2;
+            this.outerRadius = this.w;
+
+            this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
+            this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
+
+            this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
+
+		}
+
+		this.draw = function(chart) {
+
+			var group = chart.svg.group({
+				'class' : 'brush circle gauge'
+			})
+
+			group.translate(chart.x(), chart.y())
+
+            group.append(chart.svg.circle({
+                cx : this.centerX,
+                cy : this.centerY,
+                r : this.outerRadius,
+                fill : "#ececec",
+                stroke : chart.theme.color(0),
+                "stroke-width" : 2 
+            }))	
+            
+            var rate = (this.value - this.min) / (this.max - this.min);
+            
+            group.append(chart.svg.circle({
+                cx : this.centerX,
+                cy : this.centerY,
+                r : this.outerRadius * rate,
+                fill : chart.theme.color(0)
+            }))            		
+		}
+	}
+
+	return BarGaugeBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.fillgauge", ["util.math"], function(math) {
+
+	/**
+	 * 내가 원하는 모양의 gauge 를 만드는 클래스 
+	 * 
+	 * svg 로드 가능 
+	 * 
+	 * circle, rect 기본 지원 
+	 * 
+	 * use image 사용 가능 ? 
+	 *  
+ 	 * @param {Object} brush
+	 */
+	var FillGaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.outerRadius = this.w;
+
+			this.min = typeof brush.min == 'undefined' ? 0 : parseFloat(brush.min);
+			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
+
+			this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
+			this.shape = typeof brush.shape == 'undefined' ? 'circle' : brush.shape;
+			
+			this.clipId = chart.createId('fill-gauge');
+
+			var clip = chart.svg.clipPath({
+				id : this.clipId
+			})
+
+			this.rect = chart.svg.rect({
+				x : 0,
+				y : 0,
+				width : 0,
+				height : 0
+			})
+
+			clip.append(this.rect);
+
+			chart.defs.append(clip)
+
+		}
+
+		this.drawPath = function(chart, group, path) {
+			group.append(chart.svg.path({
+				x : 0,
+				y : 0,
+				fill : "#ececec",
+				d : path
+			}))
+
+			group.append(chart.svg.path({
+				x : 0,
+				y : 0,
+				fill : chart.theme.color(0),
+				d : path,
+				"clip-path" : "url(#" + this.clipId + ")"
+			}))
+		}
+		
+		this.direction = function(chart, direction) {
+			
+			direction = direction || 'vertical';
+
+			var rate = (this.value - this.min) / (this.max - this.min);
+						
+			if (direction == 'vertical') {
+				var height = chart.height() * rate;
+				var width = chart.width();
+				var x = 0; 
+				var y = chart.height() - height;
+
+				
+			} else {		// horizontal 
+				var height = chart.height();
+				var width = chart.width() * rate;
+				var x = 0; 
+				var y = 0;
+			}
+			
+			this.rect.attr({
+				x : x,
+				y : y,
+				width : width,
+				height : height
+			})
+			
+		}
+
+		this.draw = function(chart) {
+
+			var self = this; 
+			var group = chart.svg.group({
+				'class' : 'brush fill gauge',
+				opacity : 0.8
+			})
+
+			group.translate(chart.x(), chart.y())
+			
+			this.direction(chart, brush.direction);
+			
+			if (this.shape == 'circle') {
+				group.append(chart.svg.circle({
+					cx : this.centerX,
+					cy : this.centerY,
+					r : this.outerRadius,
+					fill : "#ececec"
+				}))
+
+				group.append(chart.svg.circle({
+					cx : this.centerX,
+					cy : this.centerY,
+					r : this.outerRadius,
+					fill : chart.theme.color(2),
+					"clip-path" : "url(#" + this.clipId + ")"
+				}))
+
+			} else if (this.shape == 'rect') {
+				group.append(chart.svg.rect({
+					x : 0,
+					y : 0,
+					width : chart.width(),
+					height : chart.height(),
+					fill : "#ececec"
+				}))
+
+				group.append(chart.svg.rect({
+					x : 0,
+					y : 0,
+					width : chart.width(),
+					height : chart.height(),
+					fill : chart.theme.color(2),
+					"clip-path" : "url(#" + this.clipId + ")"
+				}))
+
+			} else {
+
+				if (brush.svg) {
+					$.ajax({
+						url : brush.svg,
+						async : false,
+						success : function(xml) {
+							var path = $(xml).find("path").attr('d');
+							self.drawPath(chart, group, path);
+						}
+					})
+				} else {
+					self.drawPath(chart, group, brush.path);					
+				}
+
+			}
+
+		}
+	}
+
+	return FillGaugeBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.area", [], function() {
+
+    var AreaBrush = function(brush) {
+
+        this.drawArea = function(brush, chart, path) {
+            var g = chart.svg.group().translate(chart.x(), chart.y()),
+                maxY = chart.height();
+
+            for (var k = 0; k < path.length; k++) {
+                var p = this.createLine(brush, chart, path[k], k),
+                    xList = path[k].x;
+
+                p.LineTo(xList[xList.length - 1], maxY);
+                p.LineTo(xList[0], maxY);
+                p.ClosePath();
+                p.attr({
+                    fill: chart.theme.color(k),
+                    "fill-opacity": chart.theme("areaOpacity"),
+                    "stroke-width": 0
+                });
+
+                g.prepend(p);
+            }
+        }
+
+        this.draw = function(chart) {
+            this.drawArea(brush, chart, this.getXY(brush, chart));
+        }
+    }
+
+    return AreaBrush;
+}, "chart.brush.line");
+
+jui.define("chart.brush.stackline", [], function() {
+
+	var StackLineBrush = function(brush) {
+
+        this.draw = function(chart) {
+            this.drawLine(brush, chart, this.getStackXY(brush, chart));
+        }
+	}
+
+	return StackLineBrush;
+}, "chart.brush.line");
+jui.define("chart.brush.stackarea", [], function() {
+
+	var StackAreaBrush = function(brush) {
+
+		this.draw = function(chart) {
+            this.drawArea(brush, chart, this.getStackXY(brush, chart));
+		}
+	}
+
+	return StackAreaBrush;
+}, "chart.brush.area");
+
+jui.define("chart.brush.stackscatter", [], function() {
+
+	var StackScatterBrush = function(brush) {
+
+        this.draw = function(chart) {
+            this.drawScatter(brush, chart, this.getStackXY(brush, chart));
+        }
+	}
+
+	return StackScatterBrush;
+}, "chart.brush.scatter");
+jui.define("chart.brush.gauge", ["util.math"], function(math) {
+
+	var GaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.rate = typeof brush.rate == 'undefined' ? 100 : parseInt(brush.rate);
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.size = brush.size || 60;
+			//this.startY = -this.w;
+			//this.startX = 0;
+			this.outerRadius = this.w;
+			this.innerRadius = this.outerRadius - this.size;
+
+			this.startAngle = typeof brush.startAngle == 'undefined' ? 0 : parseFloat(brush.startAngle);
+			this.endAngle = typeof brush.endAngle == 'undefined' ? 360 : parseFloat(brush.endAngle);
+
+			this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
+			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
+
+			this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
+
+		}
+
+		this.drawText = function(chart, startAngle, endAngle, min, max, value) {
+			var g = chart.svg.group({
+				'class' : 'gauge text'
+			})
+
+			g.translate(this.centerX, this.centerY);
+
+			// current Value
+			g.append(chart.svg.text({
+				x : 0,
+				y : (brush.arrow) ? 70 : 10,
+				"text-anchor" : "middle",
+				'font-family' : 'Verdana',
+				'font-size' : '3em',
+				'font-weight' : 1000
+
+			}, value + ""))
+			
+			if (brush.unitText) {
+				// current Value
+				g.append(chart.text({
+					x : 0,
+					y : 100,
+					"text-anchor" : "middle",
+					'font-size' : '1.5em',
+					'font-weight' : 500
+				}, brush.unitText))
+	
+			}			
+
+			// 바깥 지름 부터 그림
+			var startX = 0;
+			var startY = -(this.outerRadius);
+
+
+            // min
+            var obj = math.rotate(startX, startY, math.radian(startAngle));
+
+            startX = obj.x;
+            startY = obj.y;
+
+            g.append(chart.text({
+                x : obj.x + 30,
+                y : obj.y + 20,
+                "text-anchor" : "middle",
+                'font-family' : 'Verdana'
+            }, min + ""))
+
+			// max
+			// outer arc 에 대한 지점 설정
+
+            var obj = math.rotate(startX, startY, math.radian(endAngle));
+    
+            g.append(chart.text({
+                x : obj.x - 20,
+                y : obj.y + 20,
+                "text-anchor" : "middle",
+                'font-family' : 'Verdana'
+            }, max + ""))
+
+
+			return g;
+		}
+
+		this.drawArrow = function(chart, startAngle, endAngle) {
+			var g = chart.svg.group({
+				'class' : 'gauge block'
+			})
+
+			g.translate(this.centerX, this.centerY);
+
+			// 바깥 지름 부터 그림
+			var startX = 0;
+			var startY = -(this.outerRadius + 5);
+
+			var path = chart.svg.path({
+				stroke : 'black',
+				"stroke-width" : 0.2,
+				'fill' : 'black'
+			})
+
+			path.MoveTo(startX, startY);
+			path.LineTo(5, 0);
+			path.LineTo(-5, 0);
+			path.ClosePath();
+
+			// start angle
+			path.rotate(startAngle);
+			g.append(path)
+
+			//console.log(startAngle, endAngle + startAngle);
+			path.rotate(endAngle + startAngle);
+
+			g.append(chart.svg.circle({
+				cx : 0,
+				cy : 0,
+				r : 5,
+				fill : 'black'
+			}))
+
+			g.append(chart.svg.circle({
+				cx : 0,
+				cy : 0,
+				r : 2,
+				fill : 'black'
+			}))
+
+			return g;
+		}
+
+		this.draw = function(chart) {
+
+			var s = chart.series(brush.target[0]);
+			var group = chart.svg.group({
+				'class' : 'brush donut'
+			})
+
+			group.translate(chart.x(), chart.y())
+
+			var rate = (this.value - this.min) / (this.max - this.min);
+
+			var currentAngle = (this.endAngle) * rate;
+			
+			if (this.endAngle >= 360) {
+			    this.endAngle = 359.99999;
+			}
+			
+			var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+				fill : chart.theme('gaugeBackgroundColor')
+			})
+
+			group.append(g);
+
+			g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle, currentAngle, {
+				fill : chart.theme.color(0) 
+			})
+
+			group.append(g);
+
+            if (brush.arrow) {
+                g = this.drawArrow(chart, this.startAngle, currentAngle)
+    
+                group.append(g);
+                
+            }
+
+            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
+            g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
+            group.append(g);                
+
+		}
+	}
+
+	return GaugeBrush;
+}, "chart.brush.donut");
+
+jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
+
+	var GaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.rate = typeof brush.rate == 'undefined' ? 100 : parseInt(brush.rate);
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.size = brush.size || 60;
+			//this.startY = -this.w;
+			//this.startX = 0;
+			this.outerRadius = this.w;
+			this.innerRadius = this.outerRadius - this.size;
+
+			this.startAngle = typeof brush.startAngle == 'undefined' ? 0 : parseFloat(brush.startAngle);
+			this.endAngle = typeof brush.endAngle == 'undefined' ? 360 : parseFloat(brush.endAngle);
+
+			this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
+			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
+
+			this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
+
+		}
+
+		this.drawText = function(chart, startAngle, endAngle, min, max, value) {
+			var g = chart.svg.group({
+				'class' : 'gauge text'
+			})
+
+			g.translate(this.centerX, this.centerY);
+
+			// current Value
+			g.append(chart.svg.text({
+				x : 0,
+				y : 10,
+				"text-anchor" : "middle",
+				'font-family' : 'Verdana',
+				'font-size' : '3em',
+				'font-weight' : 1000
+
+			}, value + ""))
+			
+			if (brush.unitText) {
+				// current Value
+				g.append(chart.text({
+					x : 0,
+					y : 40,
+					"text-anchor" : "middle",
+					'font-size' : '1.5em',
+					'font-weight' : 500
+				}, brush.unitText))
+	
+			}			
+
+			return g;
+		}
+
+		this.draw = function(chart) {
+
+			var s = chart.series(brush.target[0]);
+			var group = chart.svg.group({
+				'class' : 'brush donut'
+			})
+
+			group.translate(chart.x(), chart.y())
+
+			var rate = (this.value - this.min) / (this.max - this.min);
+
+			var currentAngle = (this.endAngle) * rate;
+			
+			if (this.endAngle >= 360) {
+			    this.endAngle = 359.99999;
+			}
+			
+			var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+				fill : chart.theme('gaugeBackgroundColor')
+			})
+
+			group.append(g);
+
+			g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle, currentAngle, {
+				fill : chart.theme.color(0) 
+			})
+
+			group.append(g);
+
+
+            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
+            g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
+            group.append(g);                
+
+		}
+	}
+
+	return GaugeBrush;
+}, "chart.brush.donut");
+
+jui.define("chart.brush.stackgauge", ["util.math"], function(math) {
+
+	var StackGaugeBrush = function(brush) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			this.w = min / 2;
+			this.centerX = width / 2;
+			this.centerY = height / 2;
+			this.outerRadius = this.w;
+			this.cut = brush.cut || 5; 
+			this.size = brush.size || 24; 
+			this.startAngle = brush.startAngle || -180;
+			this.endAngle = brush.endAngle || 360;			
+
+
+			this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
+			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
+		}
+
+		this.draw = function(chart) {
+
+			var s = chart.series(brush.target[0]);
+			var group = chart.svg.group({
+				'class' : 'brush donut'
+			})
+
+			group.translate(chart.area('x'), chart.area('y'))
+			
+			var outerRadius = this.outerRadius;
+			for(var i = 0, len = chart.data().length; i < len; i++) {
+				var rate = (chart.data(i)[brush.target] - this.min) / (this.max - this.min);
+				var currentAngle = (this.endAngle) * rate;
+				
+				var innerRadius = outerRadius - this.size + this.cut;
+				
+				if (this.endAngle >= 360) {
+				    this.endAngle = 359.99999;
+				}
+				
+				// 빈 공간 그리기 
+				var g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle + currentAngle, this.endAngle - currentAngle, {
+					fill : chart.theme('gaugeBackgroundColor')
+				})
+	
+				group.append(g);
+				
+				// 채워진 공간 그리기 
+				g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle, currentAngle,{
+					fill : chart.theme.color(i) 
+				})
+	
+				group.append(g);
+				
+				// draw text 
+				group.append(chart.text({
+					x : this.centerX + 2,
+					y : this.centerY + Math.abs(outerRadius) - 5,
+					fill : chart.theme.color(i),
+					'font-size' : '12px',
+					'font-weight' : 'bold'
+				}, chart.data(i)[brush.title]|| chart.data(i).title || ""))
+				
+				outerRadius -= this.size;
+				
+			}
+
+		}
+	}
+
+	return StackGaugeBrush;
+}, "chart.brush.donut");
