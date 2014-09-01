@@ -224,6 +224,7 @@ jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
 
 			var _domain = [];
 			var _range = [];
+			var _rangeBand;
 
 			var func = self.linear();
 
@@ -267,6 +268,12 @@ jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
 				}
 
 				times.push(new Date(+start));
+				
+				var first = func(times[0]);
+				var second = func(times[1]);
+				
+				_rangeBand = second - first; 
+				
 
 				return times;
 
@@ -301,12 +308,17 @@ jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
 					times.push(new Date(+realStart));
 					realStart = _time.add(realStart, type, step);
 				}
+				
+				var first = func(times[1]);
+				var second = func(times[2]);
+				
+				_rangeBand = second - first; 				
 
 				return times;
 			}
 
-			func.tickFormat = function(count, format) {
-
+			func.rangeBand = function() {
+				return _rangeBand;
 			}
 
 			func.invert = function(y) {

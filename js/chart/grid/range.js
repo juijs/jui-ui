@@ -107,12 +107,15 @@ jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 
-				axis.append(chart.text({
-					x : -bar - 4,
-					y : bar,
-					'text-anchor' : 'end',
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				if (!grid.hideText) {
+					axis.append(chart.text({
+						x : -bar - 4,
+						y : bar,
+						'text-anchor' : 'end',
+						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					
+				}
 
 				g.append(axis);
 
