@@ -10,9 +10,15 @@ module.exports = function(grunt) {
     concat : {
         dist : {
             src : [
-                //core
+                // core
                 "js/base.js",
                 "js/core.js",
+
+                // util
+                "js/util/math.js",
+                "js/util/time.js",
+                "js/util/scale.js",
+                "js/util/svg.js",
 
                 // ui
                 "js/ui/button.js",
@@ -31,7 +37,53 @@ module.exports = function(grunt) {
                 "js/uix/table.js",
                 "js/uix/tree.js",
                 "js/uix/window.js",
-                "js/uix/xtable.js"
+                "js/uix/xtable.js",
+
+                // chart (core)
+                "js/chart/draw.js",
+                "js/chart/core.js",
+                "js/chart/basic.js",
+
+                // chart.theme
+                "js/chart/theme/white.js",
+                "js/chart/theme/dark.js",
+
+                // chart.widget
+                "js/chart/theme/core.js",
+                "js/chart/theme/text.js",
+
+                // chart.grid
+                "js/chart/grid/core.js",
+                "js/chart/grid/block.js",
+                "js/chart/grid/date.js",
+                "js/chart/grid/radar.js",
+                "js/chart/grid/range.js",
+
+                // chart.grid
+                "js/chart/brush/core.js",
+                "js/chart/brush/bar.js",
+                "js/chart/brush/bubble.js",
+                "js/chart/brush/candlestick.js",
+                "js/chart/brush/column.js",
+                "js/chart/brush/donut.js",
+                "js/chart/brush/equalizer.js",
+                "js/chart/brush/fullstack.js",
+                "js/chart/brush/line.js",
+                "js/chart/brush/path.js",
+                "js/chart/brush/pie.js",
+                "js/chart/brush/scatter.js",
+                "js/chart/brush/stackbar.js",
+                "js/chart/brush/stackcolumn.js",
+                "js/chart/brush/bargauge.js",
+                "js/chart/brush/circlegauge.js",
+                "js/chart/brush/fillgauge.js",
+                "js/chart/brush/area.js", // extends line
+                "js/chart/brush/stackline.js", // extends line
+                "js/chart/brush/stackarea.js", // extends area
+                "js/chart/brush/stackscatter.js", // extends scatter
+                "js/chart/brush/gauge.js", // extends donut
+                "js/chart/brush/fullgauge.js", // extends donut
+                "js/chart/brush/stackgauge.js" // extends donut
             ],
             dest : "jui.js"
         }
