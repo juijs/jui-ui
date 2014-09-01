@@ -1,8 +1,7 @@
 jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
-		
-		var _area, _theme; 
+		var _area, _theme;
 		
 		function calculate(self) {
 			_area = {};
@@ -39,7 +38,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			return widget;			
 		}            
 		
-
 		this.get = function(key) {
 			return this.options[key];
 		}
@@ -138,6 +136,8 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
+            var self = this;
+
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -150,10 +150,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
             }
+
+            // 테마 컬러 설정
+            this.theme.color = function(i) {
+                // TODO 시리즈 컬러 적용해야 함
+                return _theme["colors"][i];
+            }
 		}
 		
 		this.theme = function(key, value, value2) {
-			
 			if (arguments.length == 0) {
 				return _theme;
 			} else if (arguments.length == 1) {
@@ -165,10 +170,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			} else if (arguments.length == 3) {
 				return (key) ? _theme[value] : _theme[value2];
 			}
-		}
-		
-		this.theme.color = function(i) {
-			return _theme["colors"][i];
 		}
 
 		this.render = function() {

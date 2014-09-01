@@ -9641,8 +9641,7 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
-		
-		var _area, _theme; 
+		var _area, _theme;
 		
 		function calculate(self) {
 			_area = {};
@@ -9679,7 +9678,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			return widget;			
 		}            
 		
-
 		this.get = function(key) {
 			return this.options[key];
 		}
@@ -9778,6 +9776,8 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
+            var self = this;
+
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -9790,10 +9790,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
             }
+
+            // 테마 컬러 설정
+            this.theme.color = function(i) {
+                // TODO 시리즈 컬러 적용해야 함
+                return _theme["colors"][i];
+            }
 		}
 		
 		this.theme = function(key, value, value2) {
-			
 			if (arguments.length == 0) {
 				return _theme;
 			} else if (arguments.length == 1) {
@@ -9805,10 +9810,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			} else if (arguments.length == 3) {
 				return (key) ? _theme[value] : _theme[value2];
 			}
-		}
-		
-		this.theme.color = function(i) {
-			return _theme["colors"][i];
 		}
 
 		this.render = function() {
@@ -9927,24 +9928,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 
 			return _series;
-		}
-
-		this.attr = function(type, key) {
-			var bAttr = {},
-                cAttr = (_series[key]) ? _series[key].attr : {};
-
-			for (var k in _brush) {
-				var b = _brush[k];
-
-				if (b.type == type) {
-					bAttr = _.clone(b.attr);
-				}
-			}
-			
-			//TODO: attr 에 function 으로 custom 값을 정의 할 수 있어야한다. 
-			//TODO: 그렇다면 매개 변수는 무엇을 넣어야하는가? 
-
-			return $.extend(bAttr, cAttr);
 		}
 
 		this.drawBefore = function() {

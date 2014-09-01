@@ -76,24 +76,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _series;
 		}
 
-		this.attr = function(type, key) {
-			var bAttr = {},
-                cAttr = (_series[key]) ? _series[key].attr : {};
-
-			for (var k in _brush) {
-				var b = _brush[k];
-
-				if (b.type == type) {
-					bAttr = _.clone(b.attr);
-				}
-			}
-			
-			//TODO: attr 에 function 으로 custom 값을 정의 할 수 있어야한다. 
-			//TODO: 그렇다면 매개 변수는 무엇을 넣어야하는가? 
-
-			return $.extend(bAttr, cAttr);
-		}
-
 		this.drawBefore = function() {
             // 데이타 설정
             var data = this.get('data');
