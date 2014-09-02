@@ -39,13 +39,13 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 g.append(chart.text({
                     x : x,
-                    y : y + unit / 2 + cut,
+                    y : y + unit / 2 + this.cut,
                     "text-anchor" : "end",
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
                 
                 g.append(chart.svg.rect({
-                    x : x + cut,
+                    x : x + this.cut,
                     y : y,
                     width: max,
                     height : unit,
@@ -101,7 +101,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 group.append(g);
                 
-                y += unit + cut;
+                y += unit + this.cut;
 			}
 		}
 	}

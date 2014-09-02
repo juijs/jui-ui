@@ -1844,6 +1844,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var _domain = [];
 			var _range = [];
+			var _rangeBand;
 
 			var func = self.linear();
 
@@ -1887,6 +1888,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				times.push(new Date(+start));
+				
+				var first = func(times[0]);
+				var second = func(times[1]);
+				
+				_rangeBand = second - first; 
+				
 
 				return times;
 
@@ -1921,12 +1928,17 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					times.push(new Date(+realStart));
 					realStart = _time.add(realStart, type, step);
 				}
+				
+				var first = func(times[1]);
+				var second = func(times[2]);
+				
+				_rangeBand = second - first; 				
 
 				return times;
 			}
 
-			func.tickFormat = function(count, format) {
-
+			func.rangeBand = function() {
+				return _rangeBand;
 			}
 
 			func.invert = function(y) {
@@ -10299,6 +10311,109 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
+jui.define("chart.theme.d3", [], function() {
+	var themeColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
+
+	return {
+		// common styles
+		backgroundColor : "white",
+		fontSize : "11px",
+		fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+		colors : themeColors,
+
+		// grid styles
+		gridFontColor : "#333333",
+		gridActiveFontColor : "#ff7800",
+		gridBorderWidth : 1,
+		gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
+
+		// brush styles
+		gaugeBackgroundColor : "#ececec",
+		pieBorderColor : "white",
+		pieBorderWidth : 1,
+		donutBorderColor : "white",
+		donutBorderWidth : 1,
+		areaOpacity : 0.5,
+		bubbleOpacity : 0.5,
+		bubbleBorderWidth : 1,
+		candlestickBorderColor : "black",
+		candlestickBackgroundColor : "white",
+		candlestickInvertBorderColor : "red",
+		candlestickInvertBackgroundColor : "red",
+		lineBorderWidth : 2,
+		pathOpacity : 0.2,
+		pathBorderWidth : 1,
+		scatterBorderColor : "white",
+		scatterBorderWidth : 1
+	}
+}); 
+jui.define("chart.theme.d20", [], function() {
+	var themeColors = [
+		"#1f77b4",
+		"#aec7e8",
+		"#ff7f0e",
+		"#ffbb78",
+		"#2ca02c",
+		"#98df8a",
+		"#d62728",
+		"#ff9896",
+		"#9467bd",
+		"#c5b0d5",
+		"#8c564b",
+		"#c49c94",
+		"#e377c2",
+		"#f7b6d2",
+		"#7f7f7f",
+		"#c7c7c7",
+		"#bcbd22",
+		"#dbdb8d",
+		"#17becf",
+		"#9edae5"
+	];
+
+	return {
+		// common styles
+		backgroundColor : "white",
+		fontSize : "11px",
+		fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+		colors : themeColors,
+
+		// grid styles
+		gridFontColor : "#333333",
+		gridActiveFontColor : "#ff7800",
+		gridBorderWidth : 1,
+		gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
+
+		// brush styles
+		gaugeBackgroundColor : "#ececec",
+		pieBorderColor : "white",
+		pieBorderWidth : 1,
+		donutBorderColor : "white",
+		donutBorderWidth : 1,
+		areaOpacity : 0.5,
+		bubbleOpacity : 0.5,
+		bubbleBorderWidth : 1,
+		candlestickBorderColor : "black",
+		candlestickBackgroundColor : "white",
+		candlestickInvertBorderColor : "red",
+		candlestickInvertBackgroundColor : "red",
+		lineBorderWidth : 2,
+		pathOpacity : 0.2,
+		pathBorderWidth : 1,
+		scatterBorderColor : "white",
+		scatterBorderWidth : 1
+	}
+}); 
 jui.define("chart.widget.core", [], function() {
 	var CoreWidget = function() {
 		
@@ -11244,12 +11359,15 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 
-				axis.append(chart.text({
-					x : -bar - 4,
-					y : bar,
-					'text-anchor' : 'end',
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				if (!grid.hideText) {
+					axis.append(chart.text({
+						x : -bar - 4,
+						y : bar,
+						'text-anchor' : 'end',
+						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					
+				}
 
 				g.append(axis);
 
@@ -12344,9 +12462,16 @@ jui.define("chart.brush.stackcolumn", [], function() {
 jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
-        var cut = brush.cut || 5;
 
-        this.draw = function(chart) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+
+			this.cut = brush.cut || 5; 
+			this.align = brush.align || 'left';
+
+		}
+
+		this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
 			})
@@ -12355,13 +12480,14 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 			
 			var len = chart.data().length; 
 			
-			var unit = brush.size || 18;
+			var unit = brush.size || 20;
 			
 			if (brush.split) {
-				var max = chart.width() - 150;	
+				var max = chart.width();	
 			} else {
-				var max = chart.width() - 150;
+				var max = chart.width();
 			}
+			
 			
 			var y = 0; 
 			var x = 0; 
@@ -12374,40 +12500,69 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 g.append(chart.text({
                     x : x,
-                    y : y + unit / 2 + cut,
+                    y : y + unit / 2 + this.cut,
                     "text-anchor" : "end",
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
                 
-                var ex = (100 - data.value)  * max / 100;
+                g.append(chart.svg.rect({
+                    x : x + this.cut,
+                    y : y,
+                    width: max,
+                    height : unit,
+                    fill : "#ececec"
+                }))
+                
                 var value = (data.value)  * max / 100;
+                var ex = (100 - data.value)  * max / 100;
+                
+                var startX = x + this.cut; 
+                
+                if (this.align == 'center') {
+                	startX += (max/2 - value/2);
+                } else if (this.align == 'right') {
+                	startX += max - value; 
+                }
                 
                 g.append(chart.svg.rect({
-                    x : x + cut,
+                    x : startX,
                     y : y,
                     width: value,
                     height : unit,
                     fill : chart.theme.color(i)
                 }))
                 
-                g.append(chart.svg.rect({
-                    x : x + cut + value,
-                    y : y,
-                    width: ex,
-                    height : unit,
-                    fill : "#ececec"
-                }))
+                
+                if (brush.split) {
+                	var textX = x + value + this.cut*2 + ex;
+                	var textAlign = "start";
+                	var textColor = chart.theme.color(i);
+                } else {
+                	
+                	var textX = x + this.cut * 2;
+                	var textAlign = "start";
+                	var textColor = "white";                	
+                	
+                	if (this.align == 'center') {
+                		textX = x + this.cut + max / 2;
+                		textAlign = "middle";
+                	} else if (this.align == 'right') {
+                		textX = x + max;
+                		textAlign = "end";                		
+                	}
 
+                }
+                
                 g.append(chart.text({
-                    x : (brush.split) ? (x + cut + value - 1)  : (x + value + ex + cut * 2),
-                    y : y + unit/2 + cut,
-                    "text-anchor" : (brush.split) ? "end" : "start",
-                    fill : (brush.split) ? 'white' : chart.theme.color(i)
-                }, data.value + "%"))
+                    x : textX,
+                    y : y + unit/2 + this.cut,
+                    "text-anchor" : textAlign,
+                    fill : textColor,
+                }, brush.format ? brush.format(data.value) : data.value + "%"))
                 
                 group.append(g);
                 
-                y += unit + cut;
+                y += unit + this.cut;
 			}
 		}
 	}

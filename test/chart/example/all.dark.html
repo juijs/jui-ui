@@ -53,9 +53,11 @@
 	<body>
 		<div id="theme">
 			Themes : 
-			<select onchange="location.href=(this.value == 'dark') ? 'all.dark.html' : 'all.html';">
+			<select onchange="location.href=(this.value == 'white' || this.value == '') ? 'all.html' : 'all.' + this.value + '.html';">
 				<option value="white">White</option>
 				<option value="dark" selected>Dark</option>
+				<option value="d3">D3</option>
+				<option value="d20">D20</option>
 			</select>
 		</div>		
 		<div id='count'>
@@ -70,7 +72,7 @@
 			</tr>
 
 			<tr>
-				<td> <iframe width="430" height="430" src="donut.html?theme=dark?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" src="donut.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 				<td> <iframe width="430" height="430" src="pie.html?theme=dark" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 		</table>
