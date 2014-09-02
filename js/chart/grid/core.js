@@ -7,7 +7,19 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				if (grid.target && !grid.domain) {
 					var domain = [];
 					var data = chart.data();
-					for (var i = 0; i < data.length; i++) {
+					
+                    if (grid.reverse) {
+                        var start = data.length - 1; 
+                        var end = 0;
+                        var step = -1; 
+                    } else {
+                        var start = 0;
+                        var end = data.length -1;
+                        var step = 1;
+                    }
+					
+					
+					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
 						domain.push(data[i][grid.target]);
 					}
 

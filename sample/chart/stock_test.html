@@ -65,10 +65,21 @@
                 x : {
                     type : "block",  // default type is block
                     target : 'date',
+                    reverse : true, 
                     format: function(d) {
-                        return time.format(new Date(d.date), "MM-dd");
-                    },
-                    line: true
+                        
+                        var arr = d.split("-");
+                        
+                        var day = arr[2];
+                        var year = arr[0];
+                        var month = arr[1];
+
+                        if ((day == '01' || day == '02' || day == '03' || day == '04') && month == '01' && parseInt(year) % 2 == 0) {
+                            return year;    
+                        } else {
+                            return "";
+                        }
+                    }
                 },
                 y : {
                     type : 'range',

@@ -53,13 +53,20 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : chart.width(),
 				}))
 			}
+			
+			
+			for (var i = 0, len = this.points.length; i < len; i++) {
 
-			for (var i = 0; i < this.points.length; i++) {
+                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
+                if (domain == '') {
+                    continue;
+                }
+                
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
 				})
-
+				
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
 					y1 : 0,
@@ -72,7 +79,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y : 20,
 					'text-anchor' : 'middle',
 					fill : chart.theme("gridFontColor")
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, domain))
 
 				g.append(axis);
 			}
@@ -195,6 +202,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
+			this.reverse = grid.reverse || false; 
 		}
 
 		this.draw = function(chart) {

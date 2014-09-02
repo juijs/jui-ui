@@ -52,7 +52,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : brush.y(close) - y,
+                        height : Math.abs(brush.y(close) - y),
                         fill : chart.theme("candlestickInvertBackgroundColor"),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
@@ -74,7 +74,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : brush.y(open) - y,
+                        height : Math.abs(brush.y(open) - y),
                         fill : chart.theme("candlestickBackgroundColor"),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width": 1

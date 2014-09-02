@@ -10006,7 +10006,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 }
             }
 
-            var temp_brush = [];
             // grid 최소, 최대 구성
             if (brush != null) {
                 if ( typeof brush == 'string') {
@@ -10014,24 +10013,22 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                         type : brush
                     }];
                 } else if ( typeof brush == 'object' && !brush.length) {
-                    brush = [_.clone(brush)];
+                    brush = [brush];
                 }
 
                 for (var i = 0, len = brush.length; i < len; i++) {
-                    var b = _.clone(brush[i]);
+                    var b = brush[i];
 
                     if (!b.target) {
                         b.target = series_list;
                     } else if ( typeof b.target == 'string') {
                         b.target = [b.target];
                     }
-                    
-                    temp_brush[i] = b; 
                 }
             }
 
             //_grid = grid;
-            _brush = temp_brush;
+            _brush = brush;
             _data = data;
             _series = series;
             
@@ -10123,8 +10120,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
 					
-//					delete _brush[i].x;
-//					delete _brush[i].y;
+					delete _brush[i].x;
+					delete _brush[i].y;
 					
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 
@@ -10713,7 +10710,19 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				if (grid.target && !grid.domain) {
 					var domain = [];
 					var data = chart.data();
-					for (var i = 0; i < data.length; i++) {
+					
+                    if (grid.reverse) {
+                        var start = data.length - 1; 
+                        var end = 0;
+                        var step = -1; 
+                    } else {
+                        var start = 0;
+                        var end = data.length -1;
+                        var step = 1;
+                    }
+					
+					
+					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
 						domain.push(data[i][grid.target]);
 					}
 
@@ -10928,13 +10937,20 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : chart.width(),
 				}))
 			}
+			
+			
+			for (var i = 0, len = this.points.length; i < len; i++) {
 
-			for (var i = 0; i < this.points.length; i++) {
+                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
+                if (domain == '') {
+                    continue;
+                }
+                
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
 				})
-
+				
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
 					y1 : 0,
@@ -10947,7 +10963,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y : 20,
 					'text-anchor' : 'middle',
 					fill : chart.theme("gridFontColor")
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, domain))
 
 				g.append(axis);
 			}
@@ -11070,6 +11086,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
+			this.reverse = grid.reverse || false; 
 		}
 
 		this.draw = function(chart) {
@@ -11974,7 +11991,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : brush.y(close) - y,
+                        height : Math.abs(brush.y(close) - y),
                         fill : chart.theme("candlestickInvertBackgroundColor"),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
@@ -11996,7 +12013,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : brush.y(open) - y,
+                        height : Math.abs(brush.y(open) - y),
                         fill : chart.theme("candlestickBackgroundColor"),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
