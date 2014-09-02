@@ -371,7 +371,7 @@
 	 * Public Utility Classes
 	 * 
 	 */
-	var utility = global["util"] = {
+	var utility = global["util.base"] = {
 			
 		//-- Properties
 		browser: {
@@ -935,7 +935,7 @@
 		logUrl: "jui.mng.html"
 	};
 })(window, jQuery || $);
-jui.define("core", [ "jquery", "util" ], function($, _) {
+jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1558,7 +1558,7 @@ jui.define("util.math", [], function() {
 	return self;
 });
 
-jui.define("util.time", ["util"], function(_) {
+jui.define("util.time", [ "util.base" ], function(_) {
 
 	var self = {
 
@@ -1618,7 +1618,7 @@ jui.define("util.time", ["util"], function(_) {
 	return self;
 });
 
-jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
+jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 	var self = {
 
@@ -2432,7 +2432,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
@@ -2884,7 +2884,7 @@ jui.define("util.svg",
 
     return SVG;
 });
-jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };
@@ -3073,7 +3073,7 @@ jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -3393,7 +3393,7 @@ jui.defineUI("ui.combo", [ "jquery", "util" ], function($, _) {
 	
 	return UI;
 });
-jui.defineUI("ui.datepicker", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * UI Class
@@ -4065,7 +4065,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.modal", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	
 	/**
 	 * Common Logic
@@ -4698,7 +4698,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 	
 	var UI = function() {
 		var ui_layout = null, 
@@ -5185,7 +5185,7 @@ jui.defineUI("ui.layout", [ "jquery", "util" ], function($, _) {
 	
 });
 
-jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -5297,7 +5297,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util", "ui.dropdown" ], function($
 	
 	return UI;
 });
-jui.defineUI("uix.tab", [ "jquery", "util", "ui.dropdown" ], function($, _, dropdown) {
+jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
 	 * UI Class
@@ -5911,7 +5911,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
+jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
     var Base = function(handler, fields) {
         var self = this;
 
@@ -6418,7 +6418,7 @@ jui.define("uix.table.base", [ "jquery", "util", "uix.table.column", "uix.table.
 });
 
 
-jui.defineUI("uix.table", [ "jquery", "util", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
+jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 	
 	/**
 	 * Common Logic
@@ -7808,7 +7808,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 });
 
 
-jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _, Node) {
+jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -8071,7 +8071,7 @@ jui.define("uix.tree.base", [ "jquery", "util", "uix.tree.node" ], function($, _
 });
 
 
-jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
+jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 	/**
 	 * UI Main Class
@@ -8503,7 +8503,7 @@ jui.defineUI("uix.tree", [ "util", "uix.tree.base" ], function(_, Base) {
 	
 	return UI;
 });
-jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, modal) {
+jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
 	
 	/**
 	 * UI Class
@@ -8752,7 +8752,7 @@ jui.defineUI("uix.window", [ "jquery", "util", "ui.modal" ], function($, _, moda
 	
 	return UI;
 });
-jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], function($, _, modal, table) {
+jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
 	/**
@@ -9618,7 +9618,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util", "ui.modal", "uix.table" ], functi
 
 	return UI;
 });
-jui.define("chart.draw", [ "util" ], function(_) {
+jui.define("chart.draw", [ "util.base" ], function(_) {
 	var Draw = function() {
 		
 		this.render = function(chart) {
@@ -9638,11 +9638,10 @@ jui.define("chart.draw", [ "util" ], function(_) {
 	return Draw;
 });
 
-jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
+jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 	var UIChart = function() {
-		
-		var _area, _theme; 
+		var _area, _theme;
 		
 		function calculate(self) {
 			_area = {};
@@ -9679,7 +9678,6 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			return widget;			
 		}            
 		
-
 		this.get = function(key) {
 			return this.options[key];
 		}
@@ -9778,6 +9776,8 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
+            var self = this;
+
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -9790,10 +9790,15 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
             if(this.get("bind") != null) {
                 this.bind(this.get("bind"));
             }
+
+            // 테마 컬러 설정
+            this.theme.color = function(i) {
+                // TODO 시리즈 컬러 적용해야 함
+                return _theme["colors"][i];
+            }
 		}
 		
 		this.theme = function(key, value, value2) {
-			
 			if (arguments.length == 0) {
 				return _theme;
 			} else if (arguments.length == 1) {
@@ -9805,10 +9810,6 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 			} else if (arguments.length == 3) {
 				return (key) ? _theme[value] : _theme[value2];
 			}
-		}
-		
-		this.theme.color = function(i) {
-			return _theme["colors"][i];
 		}
 
 		this.render = function() {
@@ -9851,7 +9852,7 @@ jui.define("chart.core", [ "util", "util.svg" ], function(_, SVGUtil) {
 	return UIChart;
 }, "core");
 
-jui.defineUI("chart.basic", [ "util" ], function(_) {
+jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 	var UI = function() {
 		
@@ -9927,24 +9928,6 @@ jui.defineUI("chart.basic", [ "util" ], function(_) {
 			}
 
 			return _series;
-		}
-
-		this.attr = function(type, key) {
-			var bAttr = {},
-                cAttr = (_series[key]) ? _series[key].attr : {};
-
-			for (var k in _brush) {
-				var b = _brush[k];
-
-				if (b.type == type) {
-					bAttr = _.clone(b.attr);
-				}
-			}
-			
-			//TODO: attr 에 function 으로 custom 값을 정의 할 수 있어야한다. 
-			//TODO: 그렇다면 매개 변수는 무엇을 넣어야하는가? 
-
-			return $.extend(bAttr, cAttr);
 		}
 
 		this.drawBefore = function() {
@@ -10316,7 +10299,56 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
-jui.define("chart.grid.core", [ "util" ], function(_) {
+jui.define("chart.widget.core", [], function() {
+	var CoreWidget = function() {
+		
+	}
+
+	return CoreWidget;
+}, "chart.draw"); 
+jui.define("chart.widget.text", [], function() {
+
+	var TextWidget = function(orient, widget) {
+		var self = this;
+
+		this.drawBefore = function(chart) {
+			
+		}
+
+		this.draw = function(chart) {
+			var width = chart.width(), height = chart.height();
+			
+			if (!widget.text) return; 
+
+			if (orient == 'left') {
+				var x = 10;
+				var y = height/2 + chart.widget.size('top');
+				
+				chart.svg.text({x : x , y : y}, widget.text||"").rotate(-90, x, y);
+				
+			} else if (orient == 'right') {
+				var x = chart.x2()+10;
+				var y = height/2 + chart.widget.size('top');
+				
+				chart.svg.text({x : x , y : y}, widget.text||"").rotate(90, x, y);
+			} else if (orient == 'top') {
+				var x = width/2 + chart.widget.size('left');
+				var y = 20;
+				
+				chart.svg.text({x : x , y : y}, widget.text||"");
+			} else if (orient == 'bottom') {
+				var x = width/2 +  chart.widget.size('left');
+				var y = chart.y2() + chart.widget.size(orient);
+				
+				chart.svg.text({x : x , y : y}, widget.text||"");
+			}
+		}
+	}
+
+	return TextWidget;
+}, "chart.widget.core");
+
+jui.define("chart.grid.core", [ "util.base" ], function(_) {
 	var CoreGrid = function() {
 
 		this.setBlockDomain = function(chart, grid) {
@@ -10485,7 +10517,7 @@ jui.define("chart.grid.core", [ "util" ], function(_) {
 
 	return CoreGrid;
 }, "chart.draw"); 
-jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
+jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	var BlockGrid = function(orient, grid) {
 
@@ -10693,7 +10725,7 @@ jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
 	return BlockGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, UtilScale) {
+jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
 
 	var DateGrid = function(orient, grid) {
 		var self = this;
@@ -10874,7 +10906,7 @@ jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, Ut
 	return DateGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.radar", ["util.math"], function(math) {
+jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, grid) {
 		var position = [];
@@ -11103,7 +11135,7 @@ jui.define("chart.grid.radar", ["util.math"], function(math) {
 	return RadarGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.range", ["util.scale"], function(UtilScale) {
+jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	/**
 	 *
@@ -11676,7 +11708,7 @@ jui.define("chart.brush.column", [], function() {
 	return ColumnBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.donut", ["util.math"], function(math) {
+jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -12038,7 +12070,7 @@ jui.define("chart.brush.path", [], function() {
 	return PathBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.pie", ["util.math"], function(math) {
+jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
 	var PieBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -12309,18 +12341,12 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	return ColumnStackBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.bargauge", ["util.math"], function(math) {
+jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
+        var cut = brush.cut || 5;
 
-			this.cut = brush.cut || 5; 
-
-		}
-
-		this.draw = function(chart) {
-
+        this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
 			})
@@ -12348,7 +12374,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 
                 g.append(chart.text({
                     x : x,
-                    y : y+unit/2+this.cut,
+                    y : y + unit / 2 + cut,
                     "text-anchor" : "end",
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
@@ -12357,7 +12383,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 var value = (data.value)  * max / 100;
                 
                 g.append(chart.svg.rect({
-                    x : x + this.cut,
+                    x : x + cut,
                     y : y,
                     width: value,
                     height : unit,
@@ -12365,7 +12391,7 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 }))
                 
                 g.append(chart.svg.rect({
-                    x : x + this.cut + value,
+                    x : x + cut + value,
                     y : y,
                     width: ex,
                     height : unit,
@@ -12373,24 +12399,23 @@ jui.define("chart.brush.bargauge", ["util.math"], function(math) {
                 }))
 
                 g.append(chart.text({
-                    x : (brush.split) ? (x + this.cut + value - 1)  : (x + value + ex + this.cut*2),
-                    y : y + unit/2 + this.cut,
+                    x : (brush.split) ? (x + cut + value - 1)  : (x + value + ex + cut * 2),
+                    y : y + unit/2 + cut,
                     "text-anchor" : (brush.split) ? "end" : "start",
-                    fill : (brush.split) ? 'white' : chart.theme.color(i),
+                    fill : (brush.split) ? 'white' : chart.theme.color(i)
                 }, data.value + "%"))
                 
                 group.append(g);
                 
-                y += unit + this.cut; 
+                y += unit + cut;
 			}
-
 		}
 	}
 
 	return BarGaugeBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.circlegauge", ["util.math"], function(math) {
+jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -12445,7 +12470,7 @@ jui.define("chart.brush.circlegauge", ["util.math"], function(math) {
 	return BarGaugeBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.fillgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * 내가 원하는 모양의 gauge 를 만드는 클래스 
@@ -12679,7 +12704,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 
 	return StackScatterBrush;
 }, "chart.brush.scatter");
-jui.define("chart.brush.gauge", ["util.math"], function(math) {
+jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	var GaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
@@ -12974,7 +12999,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	return GaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.brush.stackgauge", ["util.math"], function(math) {
+jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	var StackGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {

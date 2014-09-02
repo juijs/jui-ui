@@ -1,4 +1,4 @@
-jui.define("chart.grid.date", ["util.time", "util.scale"], function(UtilTime, UtilScale) {
+jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
 
 	var DateGrid = function(orient, grid) {
 		var self = this;

@@ -1,4 +1,4 @@
-jui.define("chart.grid.block", ["util.scale"], function(UtilScale) {
+jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	var BlockGrid = function(orient, grid) {
 

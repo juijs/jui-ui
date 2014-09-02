@@ -1,4 +1,4 @@
-jui.define("util.scale", ["util.math", "util.time"], function(math, _time) {
+jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 	var self = {
 

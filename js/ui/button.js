@@ -1,4 +1,4 @@
-jui.defineUI("ui.button", [ "jquery", "util" ], function($, _) {
+jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
 		this.data = { index: 0, value: "", elem: null };

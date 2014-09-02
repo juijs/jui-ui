@@ -17,7 +17,7 @@
             height : 400,
             theme : location.href.split("?")[1].split("=")[1],
             data : [
-                { name : 2, value : 6, test : 7 },
+                { name : 2, value : 6, test : 5 },
                 { name : 5, value : 6, test : 2 },
                 { name : 8, value : 4, test : 5 },
                 { name : 10, value : 5, test : 12 }
@@ -45,10 +45,10 @@
             },
             brush : [{
                 type : 'stackarea',
-                symbol: "curve"
+                symbol: "step"
             }, {
                 type : "stackline",
-                symbol: "curve"
+                symbol: "step"
             }, {
                 type : "stackscatter",
                 symbol : "circle",
@@ -57,7 +57,6 @@
         }).render();
 	})
 </script>
-
 
 </body>
 </html>

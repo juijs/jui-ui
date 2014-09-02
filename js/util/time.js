@@ -1,4 +1,4 @@
-jui.define("util.time", ["util"], function(_) {
+jui.define("util.time", [ "util.base" ], function(_) {
 
 	var self = {
 
