@@ -1375,6 +1375,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
                 mainObj.init.prototype.timestamp = new Date().getTime();
                 mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
@@ -1844,6 +1845,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var _domain = [];
 			var _range = [];
+			var _rangeBand;
 
 			var func = self.linear();
 
@@ -1887,6 +1889,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				times.push(new Date(+start));
+				
+				var first = func(times[0]);
+				var second = func(times[1]);
+				
+				_rangeBand = second - first; 
+				
 
 				return times;
 
@@ -1921,12 +1929,17 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					times.push(new Date(+realStart));
 					realStart = _time.add(realStart, type, step);
 				}
+				
+				var first = func(times[1]);
+				var second = func(times[2]);
+				
+				_rangeBand = second - first; 				
 
 				return times;
 			}
 
-			func.tickFormat = function(count, format) {
-
+			func.rangeBand = function() {
+				return _rangeBand;
 			}
 
 			func.invert = function(y) {
@@ -5192,7 +5205,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	 * 
 	 */
 	var UI = function() {
-		var ddUi = null, target = null, list = [];
+		var ddUi = null, target = null,
+            words = [], list = [];
 		
 		
 		/**
@@ -5228,9 +5242,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			ddUi.show();
 		}
 		
-		function getFilteredWords(self, word) {
-			var words = self.options.words,
-				result = [];
+		function getFilteredWords(word) {
+			var result = [];
 			
 			if(word != "") {
 				for(var i = 0; i < words.length; i++) {
@@ -5251,7 +5264,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
 
-                list = getFilteredWords(self, $(this).val());
+                list = getFilteredWords($(this).val());
 				createDropdown(self, list);
 
 				return false;
@@ -5269,13 +5282,16 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			
 			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
-			
+
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
+
+            // 단어 업데이트
+            this.update(opts.words);
 		}		
 		
-		this.update = function(words) {
-			this.options.words = words;
+		this.update = function(newWords) {
+			words = newWords;
 		}
 
         this.list = function() {
@@ -9758,13 +9774,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         this.bind = function(bind) {
             var self = this;
 
-            bind.callAfter("update", update);
-            bind.callAfter("sort", update);
-            bind.callAfter("append", update);
-            bind.callAfter("insert", update);
-            bind.callAfter("remove", update);
+            if(bind.module.type == "uix.table") {
+                bind.callAfter("update", updateTable);
+                bind.callAfter("sort", updateTable);
+                bind.callAfter("append", updateTable);
+                bind.callAfter("insert", updateTable);
+                bind.callAfter("remove", updateTable);
+            }
 
-            function update() {
+            function updateTable() {
                 var data = [];
 
                 for(var i = 0; i < bind.count(); i++) {
@@ -11244,12 +11262,15 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 
-				axis.append(chart.text({
-					x : -bar - 4,
-					y : bar,
-					'text-anchor' : 'end',
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				if (!grid.hideText) {
+					axis.append(chart.text({
+						x : -bar - 4,
+						y : bar,
+						'text-anchor' : 'end',
+						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					
+				}
 
 				g.append(axis);
 
@@ -12344,9 +12365,16 @@ jui.define("chart.brush.stackcolumn", [], function() {
 jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 	var BarGaugeBrush = function(brush) {
-        var cut = brush.cut || 5;
 
-        this.draw = function(chart) {
+		this.drawBefore = function(chart) {
+			var width = chart.width(), height = chart.height();
+
+			this.cut = brush.cut || 5; 
+			this.align = brush.align || 'left';
+
+		}
+
+		this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
 			})
@@ -12355,13 +12383,14 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 			
 			var len = chart.data().length; 
 			
-			var unit = brush.size || 18;
+			var unit = brush.size || 20;
 			
 			if (brush.split) {
-				var max = chart.width() - 150;	
+				var max = chart.width();	
 			} else {
-				var max = chart.width() - 150;
+				var max = chart.width();
 			}
+			
 			
 			var y = 0; 
 			var x = 0; 
@@ -12379,31 +12408,60 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
                 
-                var ex = (100 - data.value)  * max / 100;
-                var value = (data.value)  * max / 100;
-                
                 g.append(chart.svg.rect({
                     x : x + cut,
+                    y : y,
+                    width: max,
+                    height : unit,
+                    fill : "#ececec"
+                }))
+                
+                var value = (data.value)  * max / 100;
+                var ex = (100 - data.value)  * max / 100;
+                
+                var startX = x + this.cut; 
+                
+                if (this.align == 'center') {
+                	startX += (max/2 - value/2);
+                } else if (this.align == 'right') {
+                	startX += max - value; 
+                }
+                
+                g.append(chart.svg.rect({
+                    x : startX,
                     y : y,
                     width: value,
                     height : unit,
                     fill : chart.theme.color(i)
                 }))
                 
-                g.append(chart.svg.rect({
-                    x : x + cut + value,
-                    y : y,
-                    width: ex,
-                    height : unit,
-                    fill : "#ececec"
-                }))
+                
+                if (brush.split) {
+                	var textX = x + value + this.cut*2 + ex;
+                	var textAlign = "start";
+                	var textColor = chart.theme.color(i);
+                } else {
+                	
+                	var textX = x + this.cut * 2;
+                	var textAlign = "start";
+                	var textColor = "white";                	
+                	
+                	if (this.align == 'center') {
+                		textX = x + this.cut + max / 2;
+                		textAlign = "middle";
+                	} else if (this.align == 'right') {
+                		textX = x + max;
+                		textAlign = "end";                		
+                	}
 
+                }
+                
                 g.append(chart.text({
-                    x : (brush.split) ? (x + cut + value - 1)  : (x + value + ex + cut * 2),
-                    y : y + unit/2 + cut,
-                    "text-anchor" : (brush.split) ? "end" : "start",
-                    fill : (brush.split) ? 'white' : chart.theme.color(i)
-                }, data.value + "%"))
+                    x : textX,
+                    y : y + unit/2 + this.cut,
+                    "text-anchor" : textAlign,
+                    fill : textColor,
+                }, brush.format ? brush.format(data.value) : data.value + "%"))
                 
                 group.append(g);
                 

@@ -118,13 +118,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         this.bind = function(bind) {
             var self = this;
 
-            bind.callAfter("update", update);
-            bind.callAfter("sort", update);
-            bind.callAfter("append", update);
-            bind.callAfter("insert", update);
-            bind.callAfter("remove", update);
+            if(bind.module.type == "uix.table") {
+                bind.callAfter("update", updateTable);
+                bind.callAfter("sort", updateTable);
+                bind.callAfter("append", updateTable);
+                bind.callAfter("insert", updateTable);
+                bind.callAfter("remove", updateTable);
+            }
 
-            function update() {
+            function updateTable() {
                 var data = [];
 
                 for(var i = 0; i < bind.count(); i++) {
