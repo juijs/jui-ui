@@ -1375,6 +1375,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
                 mainObj.init.prototype.timestamp = new Date().getTime();
                 mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
@@ -5204,7 +5205,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	 * 
 	 */
 	var UI = function() {
-		var ddUi = null, target = null, list = [];
+		var ddUi = null, target = null,
+            words = [], list = [];
 		
 		
 		/**
@@ -5240,9 +5242,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			ddUi.show();
 		}
 		
-		function getFilteredWords(self, word) {
-			var words = self.options.words,
-				result = [];
+		function getFilteredWords(word) {
+			var result = [];
 			
 			if(word != "") {
 				for(var i = 0; i < words.length; i++) {
@@ -5263,7 +5264,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
 
-                list = getFilteredWords(self, $(this).val());
+                list = getFilteredWords($(this).val());
 				createDropdown(self, list);
 
 				return false;
@@ -5281,13 +5282,16 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			
 			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
-			
+
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
+
+            // 단어 업데이트
+            this.update(opts.words);
 		}		
 		
-		this.update = function(words) {
-			this.options.words = words;
+		this.update = function(newWords) {
+			words = newWords;
 		}
 
         this.list = function() {
@@ -9770,13 +9774,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         this.bind = function(bind) {
             var self = this;
 
-            bind.callAfter("update", update);
-            bind.callAfter("sort", update);
-            bind.callAfter("append", update);
-            bind.callAfter("insert", update);
-            bind.callAfter("remove", update);
+            if(bind.module.type == "uix.table") {
+                bind.callAfter("update", updateTable);
+                bind.callAfter("sort", updateTable);
+                bind.callAfter("append", updateTable);
+                bind.callAfter("insert", updateTable);
+                bind.callAfter("remove", updateTable);
+            }
 
-            function update() {
+            function updateTable() {
                 var data = [];
 
                 for(var i = 0; i < bind.count(); i++) {
