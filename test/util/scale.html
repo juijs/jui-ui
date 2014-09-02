@@ -18,12 +18,15 @@
 
 jui.ready([ "util.math", "util.time", "util.scale" ], function(math, time, scale) {
     QUnit.testStart(function() {
-		
+    });
+
+    QUnit.test("test", function(assert) {
+       assert.ok(1 == 1, "test");
     });
 
     /*/
     QUnit.test( "scale.ordinal test", function(assert) {
-    	
+
     	var domain = ['week', 'week2', 'week3', 'week4'];
     	var range = [0, 1]
     	
@@ -43,9 +46,7 @@ jui.ready([ "util.math", "util.time", "util.scale" ], function(math, time, scale
 		assert.ok(scale(domain[domain.length-1]) == range[1], "last scale")		
 		assert.deepEqual(scale.range(), [0, 0.3333333333333333, 0.6666666666666666, 1], "range band values")
     });
-    
-    
-    
+
     QUnit.test( "scale.linear test", function(assert) {
     	var domain = [0, 100];
     	var range = [0, 300];
@@ -62,10 +63,9 @@ jui.ready([ "util.math", "util.time", "util.scale" ], function(math, time, scale
     	assert.deepEqual(scale.ticks(10, true), [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], "ticks nice");
     	
     });
-    /**/
+     /**/
 
     QUnit.testDone(function() {
-
     });
 });
 </script>

@@ -9777,6 +9777,9 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
                 bind.callAfter("append", updateTable);
                 bind.callAfter("insert", updateTable);
                 bind.callAfter("remove", updateTable);
+            } else if(bind.module.type == "uix.xtable") {
+                bind.callAfter("update", updateTable);
+                bind.callAfter("sort", updateTable);
             }
 
             function updateTable() {
