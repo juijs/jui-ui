@@ -58,7 +58,9 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawScatter = function(brush, chart, points) {
-            var g = chart.svg.group().translate(chart.x(), chart.y());
+            var g = chart.svg.group({
+                'clip-path' : 'url(#' + chart.clipId + ')'
+            }).translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {

@@ -77,6 +77,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		}
 
 		this.drawBefore = function() {
+		    
             // 데이타 설정
             var data = this.get('data');
             var series = this.get('series');
@@ -151,7 +152,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _data = data;
             _series = series;
             
-            
             this.drawDefs();
             
 		}
@@ -179,6 +179,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		}
 
 		this.draw = function() {
+		    _scale = {};
+		    
 			var grid = this.grid();
 			var grid_list = {};
 			if (grid != null) {
@@ -237,6 +239,9 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
+					
+					delete _brush[i].x;
+					delete _brush[i].y;
 					
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 

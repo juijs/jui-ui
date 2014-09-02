@@ -9638,13 +9638,14 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 	var Draw = function() {
 		
 		this.render = function(chart) {
+
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
 			}
-
-			if (_.typeCheck("function", this.drawBefore)) {
-				this.drawBefore(chart);
-			}
+			
+            if (_.typeCheck("function", this.drawBefore)) {
+                this.drawBefore(chart);
+            }			
 
 			return this.draw(chart);
 		}
@@ -9949,6 +9950,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		}
 
 		this.drawBefore = function() {
+		    
             // 데이타 설정
             var data = this.get('data');
             var series = this.get('series');
@@ -10023,7 +10025,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _data = data;
             _series = series;
             
-            
             this.drawDefs();
             
 		}
@@ -10051,6 +10052,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		}
 
 		this.draw = function() {
+		    _scale = {};
+		    
 			var grid = this.grid();
 			var grid_list = {};
 			if (grid != null) {
@@ -10109,6 +10112,9 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
+					
+					delete _brush[i].x;
+					delete _brush[i].y;
 					
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 
@@ -10578,8 +10584,18 @@ jui.define("chart.theme.seoul", [], function() {
 }); 
 jui.define("chart.theme.candy", [], function() {
     var themeColors = [
-        "#369EAD",
-		"#C24642",
+        { type : "linear", 
+        	id : 'gradient',
+        	stop : [
+        		[0, 'red']
+        	]
+        },
+        { type : "pattern", 
+        	stop : [
+        		[0, 'red']
+        	]
+        },
+		"url(#gradient)",
 		"#7F6084",
 		"#86B402",
 		"#A2D1CF",
@@ -12008,7 +12024,7 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - half_width/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+					var startY = brush.y(chart.data(i)[brush.target[j]]);
 
 					if (startY <= zeroY) {
 						var r = chart.svg.rect({
@@ -12552,7 +12568,9 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawScatter = function(brush, chart, points) {
-            var g = chart.svg.group().translate(chart.x(), chart.y());
+            var g = chart.svg.group({
+                'clip-path' : 'url(#' + chart.clipId + ')'
+            }).translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {

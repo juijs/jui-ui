@@ -20,7 +20,7 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - half_width/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+					var startY = brush.y(chart.data(i)[brush.target[j]]);
 
 					if (startY <= zeroY) {
 						var r = chart.svg.rect({
