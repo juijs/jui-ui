@@ -48,11 +48,26 @@
 		}
 		
 	</style>
+	
+	<script>
+		function move_url(theme) {
+			var list = document.getElementsByTagName("iframe");
+			
+			for (var i = 0, len = list.length; i < len; i++) {
+				var iframe = list[i];
+				
+				var url = iframe.getAttribute("data-src");
+				
+				iframe.src = url + "?theme=" + theme; 
+			}
+		}
+	</script>
+	
 	</head>
 	<body>
 		<div id="theme">
 			Themes : 
-			<select onchange="location.href=(this.value == 'white' || this.value == '') ? 'all.html' : 'all.' + this.value + '.html';">
+			<select onchange="move_url(this.value)">
 				<option value="white">White</option>
 				<option value="dark">Dark</option>
 				<option value="d3">D3</option>
@@ -73,8 +88,8 @@
 			</tr>
 
 			<tr>
-				<td> <iframe width="430" height="430" src="donut.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="pie.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="donut.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="pie.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 		</table>
 		
@@ -88,9 +103,9 @@
 			</tr>
 
 			<tr>
-				<td> <iframe width="430" height="430" src="gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="full_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
-                <td> <iframe width="430" height="430" src="stack_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td> <iframe width="430" height="430" data-src="gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="full_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+                <td> <iframe width="430" height="430" data-src="stack_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
 			</tr>
 			<tr> 
 				<th>bar gauge</th>			
@@ -100,9 +115,9 @@
 			</tr>
 
 			<tr>
-				<td> <iframe width="430" height="430" src="bar_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="circle_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
-                <td> <iframe width="430" height="430" src="fill_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td> <iframe width="430" height="430" data-src="bar_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="circle_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+                <td> <iframe width="430" height="430" data-src="fill_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
 			</tr>
 			
 			<tr> 
@@ -111,7 +126,7 @@
 			</tr>
 
 			<tr>
-				<td> <iframe width="430" height="430" src="fill_custom_gauge.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="fill_custom_gauge.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 		</table>
 		
@@ -125,9 +140,9 @@
 			</tr>
 			
 			<tr>
-				<td> <iframe width="430" height="430" src="bar.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="stack_bar.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="column.html?theme=white" frameborder="0" scrolling="no"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="bar.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="stack_bar.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="column.html" frameborder="0" scrolling="no"></iframe></td>
 								
 			</tr>
 			
@@ -139,17 +154,17 @@
 
 			</tr>
 			<tr>
-				<td> <iframe width="430" height="430" src="stack_column.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="stack_column.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 								 
-				<td> <iframe width="430" height="430" src="fullstack.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="equalizer.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="fullstack.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="equalizer.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 			
 			<tr>
 				<th>mini bar</th>				 
 			</tr>
 			<tr>
-				<td> <iframe width="430" height="430" src="mini_bar.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="mini_bar.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 
 		</table>
@@ -164,9 +179,9 @@
 
 			<tr>
 
-				<td><iframe width="430" height="430" src="scatter.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="bubble.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="range_bubble.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" data-src="scatter.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="bubble.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="range_bubble.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 				 
 			</tr>
 			
@@ -177,8 +192,8 @@
 
 			<tr>
 
-				<td><iframe width="430" height="430" src="stack_scatter.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td><iframe width="430" height="430" src="range_scatter.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" data-src="stack_scatter.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td><iframe width="430" height="430" data-src="range_scatter.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 		</table>
 		<table>	
@@ -189,9 +204,9 @@
                 <th>step area</th>
             </tr>
 			<tr>
-				<td> <iframe width="430" height="430" src="area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="curve_area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="step_area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="curve_area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="step_area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>		
 
 		</table>
@@ -204,9 +219,9 @@
             </tr>
 
             <tr>
-                <td> <iframe width="430" height="430" src="stack_area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="stack_curve_area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="stack_step_area.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="stack_area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="stack_curve_area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="stack_step_area.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
             </tr>
 
         </table>
@@ -217,8 +232,8 @@
 						<th>circle radar </th>
 			</tr>
 			<tr>
-				<td> <iframe width="430" height="430" src="radar.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-				<td> <iframe width="430" height="430" src="circle_radar.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="radar.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="circle_radar.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>					
 				
 		</table>
@@ -231,9 +246,9 @@
 										
 			</tr>	
 			<tr>
-				<td> <iframe width="430" height="430" src="line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="curve_line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="step_line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="curve_line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="step_line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
             </tr>
 			
 			<tr>
@@ -242,16 +257,16 @@
   				<th>line (2 y-axis)</th>
 			</tr>	
 			<tr>
-				<td> <iframe width="430" height="430" src="stack_line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="range_line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
-                <td> <iframe width="430" height="430" src="line2.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+				<td> <iframe width="430" height="430" data-src="stack_line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="range_line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="line2.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
 			</tr>
 			
 			<tr >
   				<th>mini line</th>
 			</tr>	
 			<tr>
-                <td> <iframe width="430" height="430" src="mini_line.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
+                <td> <iframe width="430" height="430" data-src="mini_line.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>
             </tr>
 		</table>
 		<table border="0" width="1300">
@@ -260,11 +275,13 @@
 				<th colspan="3">candle stick</th>
 			</tr>
 			<tr>
-				<td colspan="3"> <iframe width="100%" height="430" src="candlestick.html?theme=white" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
+				<td colspan="3"> <iframe width="100%" height="430" data-src="candlestick.html" allowfullscreen="allowfullscreen" frameborder="0"></iframe></td>				
 			</tr>			
 		</table>
 		<script>
 			document.getElementById('count').innerHTML = document.getElementsByTagName("th").length;
+			
+			move_url('white');
 		</script>
 	</body>
 </html>
