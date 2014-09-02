@@ -1,7 +1,17 @@
 jui.define("chart.theme.candy", [], function() {
     var themeColors = [
-        "#369EAD",
-		"#C24642",
+        { type : "linear", 
+        	id : 'gradient',
+        	stop : [
+        		[0, 'red']
+        	]
+        },
+        { type : "pattern", 
+        	stop : [
+        		[0, 'red']
+        	]
+        },
+		"url(#gradient)",
 		"#7F6084",
 		"#86B402",
 		"#A2D1CF",
