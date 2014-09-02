@@ -3762,7 +3762,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	 * 
 	 */
 	var UI = function() {
-		var ddUi = null, target = null, list = [];
+		var ddUi = null, target = null,
+            words = [], list = [];
 		
 		
 		/**
@@ -3798,9 +3799,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			ddUi.show();
 		}
 		
-		function getFilteredWords(self, word) {
-			var words = self.options.words,
-				result = [];
+		function getFilteredWords(word) {
+			var result = [];
 			
 			if(word != "") {
 				for(var i = 0; i < words.length; i++) {
@@ -3821,7 +3821,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			self.addEvent(target, "keyup", function(e) {
 				if(e.which == 38 || e.which == 40 || e.which == 13) return;
 
-                list = getFilteredWords(self, $(this).val());
+                list = getFilteredWords($(this).val());
 				createDropdown(self, list);
 
 				return false;
@@ -3839,13 +3839,16 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			
 			// 타겟 엘리먼트 설정
 			target = (opts.target == null) ? this.root : $(this.root).find(opts.target);
-			
+
 			// 키-업 이벤트 설정
 			setEventKeyup(this);
+
+            // 단어 업데이트
+            this.update(opts.words);
 		}		
 		
-		this.update = function(words) {
-			this.options.words = words;
+		this.update = function(newWords) {
+			words = newWords;
 		}
 
         this.list = function() {
