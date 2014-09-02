@@ -88,7 +88,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, this.startAngle, currentAngle, {
-				fill : chart.theme.color(0) 
+				fill : chart.theme.color(0, brush.colors) 
 			})
 
 			group.append(g);

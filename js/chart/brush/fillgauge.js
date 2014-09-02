@@ -120,7 +120,7 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 					cx : this.centerX,
 					cy : this.centerY,
 					r : this.outerRadius,
-					fill : chart.theme.color(2),
+					fill : chart.theme.color(2, brush.colors),
 					"clip-path" : "url(#" + this.clipId + ")"
 				}))
 
@@ -138,7 +138,7 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
-					fill : chart.theme.color(2),
+					fill : chart.theme.color(2, brush.colors),
 					"clip-path" : "url(#" + this.clipId + ")"
 				}))
 

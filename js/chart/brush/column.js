@@ -28,7 +28,7 @@ jui.define("chart.brush.column", [], function() {
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.theme.color(j)
+							fill : chart.theme.color(j, brush.colors)
 						});
 
 						g.append(r);
@@ -38,7 +38,7 @@ jui.define("chart.brush.column", [], function() {
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.theme.color(j)
+							fill : chart.theme.color(j, brush.colors)
 						});
 
 						g.append(r);

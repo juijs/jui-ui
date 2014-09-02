@@ -35,7 +35,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cy : this.centerY,
                 r : this.outerRadius,
                 fill : "#ececec",
-                stroke : chart.theme.color(0),
+                stroke : chart.theme.color(0, brush.colors),
                 "stroke-width" : 2 
             }))	
             
@@ -45,7 +45,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cx : this.centerX,
                 cy : this.centerY,
                 r : this.outerRadius * rate,
-                fill : chart.theme.color(0)
+                fill : chart.theme.color(0, brush.colors)
             }))            		
 		}
 	}

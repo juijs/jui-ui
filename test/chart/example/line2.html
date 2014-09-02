@@ -42,11 +42,14 @@
             },
             series : {
                 name : { text : "test" },
-                value : { text : "test" }
+                value : { text : "test"},
+                total : {get : function(data) { 
+                	return data.name + data.value; 
+                }}
             },
             brush : [
                 { type : 'line', target: "name"  },
-                { type : 'line', target: "value", y1 : 0 }
+                { type : 'line', target: "value", y1 : 0, colors : ["blue", "green"]  }
 
             ]
         }).render();

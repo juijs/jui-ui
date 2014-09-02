@@ -152,9 +152,12 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
 
             // 테마 컬러 설정
-            this.theme.color = function(i) {
-                // TODO 시리즈 컬러 적용해야 함
-                return _theme["colors"][i];
+            this.theme.color = function(i, colors) {
+                var color;
+                if (_.typeCheck("array", colors)) {
+                	color = colors[i];	
+                }
+                return color || _theme["colors"][i];
             }
 		}
 		

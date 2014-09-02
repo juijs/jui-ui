@@ -42,7 +42,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						y : startY,
 						width : barWidth,
 						height : height,
-						fill : chart.theme.color(j)
+						fill : chart.theme.color(j, brush.colors)
 					});
 					
 					g.append(r);
