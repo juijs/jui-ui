@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <link rel="stylesheet" href="../../jui.css" />
+    <link rel="stylesheet" href="../../lib/animate.min.css" />
+    <script src="../../lib/jquery-1.8.3.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<input type="file" id="xtable_btn" style="margin-bottom: 7px;"><br/>
+
+<div class="row">
+    <table id="xtable" class="table table-classic">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Volume</th>
+            <th>Adj Close</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script data-jui="#xtable" data-tpl="row" type="text/template">
+    <tr>
+        <td><!= date !></td>
+        <td><!= open !></td>
+        <td><!= high !></td>
+        <td><!= low !></td>
+        <td><!= close !></td>
+        <td><!= volume !></td>
+        <td><!= adj_close !></td>
+    </tr>
+</script>
+
+<script>
+    jui.ready([ "chart.basic", "uix.xtable" ], function(chart, table) {
+        var xtable = table("#xtable", {
+            fields: [ "date", "open", "high", "low", "close", "volume", "adj_close" ],
+            sort: true,
+            resize: true,
+            animate: true
+        });
+
+        $("#xtable_btn").change(function(e) {
+            xtable.setCsvFile(e.target.files[0]);
+        });
+	});
+</script>
+
+
+</body>
+</html>
