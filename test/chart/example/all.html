@@ -52,9 +52,11 @@
 	<body>
 		<div id="theme">
 			Themes : 
-			<select onchange="location.href=(this.value == 'dark') ? 'all.dark.html' : 'all.html';">
+			<select onchange="location.href=(this.value == 'white' || this.value == '') ? 'all.html' : 'all.' + this.value + '.html';">
 				<option value="white">White</option>
 				<option value="dark">Dark</option>
+				<option value="d3">D3</option>
+				<option value="d20">D20</option>
 			</select>
 		</div>
 		<div id='count'>

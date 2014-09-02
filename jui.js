@@ -10317,6 +10317,109 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
+jui.define("chart.theme.d3", [], function() {
+	var themeColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
+
+	return {
+		// common styles
+		backgroundColor : "white",
+		fontSize : "11px",
+		fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+		colors : themeColors,
+
+		// grid styles
+		gridFontColor : "#333333",
+		gridActiveFontColor : "#ff7800",
+		gridBorderWidth : 1,
+		gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
+
+		// brush styles
+		gaugeBackgroundColor : "#ececec",
+		pieBorderColor : "white",
+		pieBorderWidth : 1,
+		donutBorderColor : "white",
+		donutBorderWidth : 1,
+		areaOpacity : 0.5,
+		bubbleOpacity : 0.5,
+		bubbleBorderWidth : 1,
+		candlestickBorderColor : "black",
+		candlestickBackgroundColor : "white",
+		candlestickInvertBorderColor : "red",
+		candlestickInvertBackgroundColor : "red",
+		lineBorderWidth : 2,
+		pathOpacity : 0.2,
+		pathBorderWidth : 1,
+		scatterBorderColor : "white",
+		scatterBorderWidth : 1
+	}
+}); 
+jui.define("chart.theme.d20", [], function() {
+	var themeColors = [
+		"#1f77b4",
+		"#aec7e8",
+		"#ff7f0e",
+		"#ffbb78",
+		"#2ca02c",
+		"#98df8a",
+		"#d62728",
+		"#ff9896",
+		"#9467bd",
+		"#c5b0d5",
+		"#8c564b",
+		"#c49c94",
+		"#e377c2",
+		"#f7b6d2",
+		"#7f7f7f",
+		"#c7c7c7",
+		"#bcbd22",
+		"#dbdb8d",
+		"#17becf",
+		"#9edae5"
+	];
+
+	return {
+		// common styles
+		backgroundColor : "white",
+		fontSize : "11px",
+		fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+		colors : themeColors,
+
+		// grid styles
+		gridFontColor : "#333333",
+		gridActiveFontColor : "#ff7800",
+		gridBorderWidth : 1,
+		gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
+
+		// brush styles
+		gaugeBackgroundColor : "#ececec",
+		pieBorderColor : "white",
+		pieBorderWidth : 1,
+		donutBorderColor : "white",
+		donutBorderWidth : 1,
+		areaOpacity : 0.5,
+		bubbleOpacity : 0.5,
+		bubbleBorderWidth : 1,
+		candlestickBorderColor : "black",
+		candlestickBackgroundColor : "white",
+		candlestickInvertBorderColor : "red",
+		candlestickInvertBackgroundColor : "red",
+		lineBorderWidth : 2,
+		pathOpacity : 0.2,
+		pathBorderWidth : 1,
+		scatterBorderColor : "white",
+		scatterBorderWidth : 1
+	}
+}); 
 jui.define("chart.widget.core", [], function() {
 	var CoreWidget = function() {
 		
@@ -12403,13 +12506,13 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 g.append(chart.text({
                     x : x,
-                    y : y + unit / 2 + cut,
+                    y : y + unit / 2 + this.cut,
                     "text-anchor" : "end",
                     fill : chart.theme.color(i)
                 }, data[brush.title] || data.title || ""))
                 
                 g.append(chart.svg.rect({
-                    x : x + cut,
+                    x : x + this.cut,
                     y : y,
                     width: max,
                     height : unit,
@@ -12465,7 +12568,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 group.append(g);
                 
-                y += unit + cut;
+                y += unit + this.cut;
 			}
 		}
 	}
