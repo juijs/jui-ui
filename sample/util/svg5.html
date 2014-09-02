@@ -1,0 +1,137 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../lib/animate.min.css" />
+<script src="../../lib/jquery-1.8.3.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/svg.js"></script>
+
+<script>
+var r1 = null;
+
+/*computes control points given knots K, this is the brain of the operation*/
+function computeControlPoints(K)
+{
+    var p1=new Array();
+    var p2=new Array();
+    var n = K.length-1;
+
+    /*rhs vector*/
+    var a=new Array();
+    var b=new Array();
+    var c=new Array();
+    var r=new Array();
+
+    /*left most segment*/
+    a[0]=0;
+    b[0]=2;
+    c[0]=1;
+    r[0] = K[0]+2*K[1];
+
+    /*internal segments*/
+    for (i = 1; i < n - 1; i++)
+    {
+        a[i]=1;
+        b[i]=4;
+        c[i]=1;
+        r[i] = 4 * K[i] + 2 * K[i+1];
+    }
+
+    /*right segment*/
+    a[n-1]=2;
+    b[n-1]=7;
+    c[n-1]=0;
+    r[n-1] = 8*K[n-1]+K[n];
+
+    /*solves Ax=b with the Thomas algorithm (from Wikipedia)*/
+    for (i = 1; i < n; i++)
+    {
+        m = a[i]/b[i-1];
+        b[i] = b[i] - m * c[i - 1];
+        r[i] = r[i] - m*r[i-1];
+    }
+
+    p1[n-1] = r[n-1]/b[n-1];
+    for (i = n - 2; i >= 0; --i)
+        p1[i] = (r[i] - c[i] * p1[i+1]) / b[i];
+
+    /*we have p1, now compute p2*/
+    for (i=0;i<n-1;i++)
+        p2[i]=2*K[i+1]-p1[i+1];
+
+    p2[n-1]=0.5*(K[n]+p1[n-1]);
+
+    return { p1: p1, p2: p2 };
+}
+
+jui.ready([ "util.svg" ], function(SVGUtil) {
+    svg = new SVGUtil($("#svg").get(0), { width: 500, height: 500 });
+    svg2 = new SVGUtil($("#svg2").get(0), { width: 500, height: 500 });
+    //svg3 = new SVGUtil($("#svg3").get(0), { width: 300, height: 300 });
+    //svg4 = new SVGUtil($("#svg4").get(0), { width: 300, height: 300 });
+
+    //------------------------------
+
+    //61.25 245 | 183.75 476 | 306.25 163 | 428.75 27
+
+    var p = svg.path({
+        stroke: "red",
+        fill: "transparent"
+    });
+
+    p.MoveTo(61.25, 245);
+    p.LineTo(183.75, 476);
+    p.LineTo(306.25, 163);
+    p.LineTo(428.75, 27);
+
+    svg.render();
+
+
+    var defs = svg2.defs();
+    var mask = svg2.mask();
+    var rect = svg2.rect({
+        x :0,
+        y :0,
+        width: 500,
+        height: 500,
+        fill : 'black',
+        id : 'rect'
+    })
+    mask.append(rect);
+    defs.append(mask);
+    var p2 = svg2.path({
+        stroke: "blue",
+        fill: "url(#rect)"
+    });
+
+    var x = [ 61.25, 183.75, 306.25, 428.75 ];
+    var y = [ 245, 476, 163, 27 ];
+
+    var px = computeControlPoints(x);
+    var py = computeControlPoints(y);
+
+    p2.MoveTo(x[0], y[0]);
+    for(var i = 0; i < x.length - 1; i++) {
+        p2.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
+    }
+
+    p2.LineTo(x[x.length - 1], 500);
+    p2.LineTo(x[0], 500);
+    p2.LineTo(x[0], y[0]);
+
+    svg2.render();
+});
+</script>
+</head>
+<body class="jui">
+    <div id="svg" style="float: left; width: 45%;"></div>
+    <div id="svg2" style="float: right; width: 45%;"></div>
+</body>
+</html>
