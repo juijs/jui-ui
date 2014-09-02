@@ -10320,6 +10320,57 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
+jui.define("chart.theme.light", [], function() {
+    var themeColors = [
+        '#058DC7', 
+        '#50B432', 
+        '#ED561B', 
+        '#DDDF00', 
+        '#24CBE5', 
+        '#64E572', 
+        '#FF9655', 
+        '#FFF263', 
+        '#6AF9C4'
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.2,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
 jui.define("chart.theme.d3", [], function() {
 	var themeColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
 
@@ -10528,6 +10579,59 @@ jui.define("chart.theme.seoul", [], function() {
 		scatterBorderWidth : 1
 	}
 }); 
+jui.define("chart.theme.candy", [], function() {
+    var themeColors = [
+        "#369EAD",
+		"#C24642",
+		"#7F6084",
+		"#86B402",
+		"#A2D1CF",
+		"#C8B631",
+		"#6DBCEB",
+		"#52514E",
+		"#4F81BC",
+		"#A064A1",
+		"#F79647"
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.2,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
 jui.define("chart.widget.core", [], function() {
 	var CoreWidget = function() {
 		

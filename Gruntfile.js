@@ -47,11 +47,12 @@ module.exports = function(grunt) {
                 // chart.theme
                 "js/chart/theme/white.js",
                 "js/chart/theme/dark.js",
+                "js/chart/theme/light.js",                
                 "js/chart/theme/d3.js",
                 "js/chart/theme/d20.js",
                 "js/chart/theme/plat.js",
                 "js/chart/theme/seoul.js",
-
+                "js/chart/theme/candy.js",
 
                 // chart.widget
                 "js/chart/widget/core.js",
