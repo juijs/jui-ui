@@ -50,6 +50,7 @@ module.exports = function(grunt) {
                 "js/chart/theme/d3.js",
                 "js/chart/theme/d20.js",
                 "js/chart/theme/plat.js",
+                "js/chart/theme/seoul.js",
 
 
                 // chart.widget
