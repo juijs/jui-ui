@@ -126,6 +126,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 }
             }
 
+            var temp_brush = [];
             // grid 최소, 최대 구성
             if (brush != null) {
                 if ( typeof brush == 'string') {
@@ -133,22 +134,24 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                         type : brush
                     }];
                 } else if ( typeof brush == 'object' && !brush.length) {
-                    brush = [brush];
+                    brush = [_.clone(brush)];
                 }
 
                 for (var i = 0, len = brush.length; i < len; i++) {
-                    var b = brush[i];
+                    var b = _.clone(brush[i]);
 
                     if (!b.target) {
                         b.target = series_list;
                     } else if ( typeof b.target == 'string') {
                         b.target = [b.target];
                     }
+                    
+                    temp_brush[i] = b; 
                 }
             }
 
             //_grid = grid;
-            _brush = brush;
+            _brush = temp_brush;
             _data = data;
             _series = series;
             
@@ -240,8 +243,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
 					
-					delete _brush[i].x;
-					delete _brush[i].y;
+//					delete _brush[i].x;
+//					delete _brush[i].y;
 					
 					var Obj = jui.include("chart.brush." + _brush[i].type);
 
