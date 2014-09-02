@@ -11,7 +11,7 @@
 
 <input type="file" id="xtable_btn" style="margin-bottom: 7px;"><br/>
 
-<div class="row">
+<div class="row" style="margin-bottom: 14px;">
     <table id="xtable" class="table table-classic">
         <thead>
         <tr>
@@ -28,6 +28,10 @@
     </table>
 </div>
 
+<div class="row">
+    <div id="chart"></div>
+</div>
+
 <script data-jui="#xtable" data-tpl="row" type="text/template">
     <tr>
         <td><!= date !></td>
@@ -41,7 +45,7 @@
 </script>
 
 <script>
-    jui.ready([ "chart.basic", "uix.xtable" ], function(chart, table) {
+    jui.ready([ "chart.basic", "uix.xtable", "util.time" ], function(chart, table, time) {
         var xtable = table("#xtable", {
             fields: [ "date", "open", "high", "low", "close", "volume", "adj_close" ],
             sort: true,
@@ -51,6 +55,46 @@
 
         $("#xtable_btn").change(function(e) {
             xtable.setCsvFile(e.target.files[0]);
+        });
+
+        chart("#chart", {
+            width: 1200,
+            height : 400,
+            theme : location.href.split("?")[1].split("=")[1],
+            grid : {
+                x : {
+                    type : "block",  // default type is block
+                    target : 'date',
+                    format: function(d) {
+                        return time.format(new Date(d.date), "MM-dd");
+                    },
+                    line: true
+                },
+                y : {
+                    type : 'range',
+                    target: [ "open", "high", "low", "close" ],
+                    step: 5,
+                    line : true
+                }
+            },
+            series : {
+                low: {
+                    type: "low"
+                },
+                high: {
+                    type: "high"
+                },
+                open: {
+                    type: "open"
+                },
+                close: {
+                    type: "close"
+                }
+            },
+            brush : {
+                type : 'candlestick'
+            },
+            bind: xtable
         });
 	});
 </script>

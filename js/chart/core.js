@@ -121,8 +121,8 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
                 bind.callAfter("insert", updateTable);
                 bind.callAfter("remove", updateTable);
             } else if(bind.module.type == "uix.xtable") {
-                bind.callAfter("update", updateTable);
-                bind.callAfter("sort", updateTable);
+                bind.callAfter("update", updateXTable);
+                bind.callAfter("sort", updateXTable);
             }
 
             function updateTable() {
@@ -133,6 +133,10 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
                 }
 
                 self.update(data);
+            }
+
+            function updateXTable() {
+                self.update(bind.listData());
             }
         }
 
