@@ -4,11 +4,8 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		var _area, _theme;
 		
 		function calculate(self) {
-			_area = {};
-
-			var widget = self.setWidget(self.get('widget'));
-			
-			var max = self.svg.size();
+			var widget = self.setWidget(self.get('widget')),
+                max = self.svg.size();
 
 			var chart = {
 				width : max.width - (widget.left.size + widget.right.size),
@@ -24,7 +21,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			_area = chart;
 		}
 		
-
 		this.setWidget = function(widget) {
             if (widget == 'empty') {
             	widget = {
@@ -138,7 +134,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
-            var self = this;
 
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
@@ -156,9 +151,11 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             // 테마 컬러 설정
             this.theme.color = function(i, colors) {
                 var color;
+
                 if (_.typeCheck("array", colors)) {
                 	color = colors[i];	
                 }
+
                 return color || _theme["colors"][i];
             }
 		}
