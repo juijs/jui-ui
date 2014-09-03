@@ -8983,23 +8983,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			});
 		}
 		
-		function setFilteredData(self, name, callback) {
-			if(o_rows == null) o_rows = rows;
-			else rows = o_rows;
-			
-			var t_rows = rows.slice(),
-				s_rows = [];
-				
-			for(var i = 0, len = t_rows.length; i < len; i++) {
-				if(callback(t_rows[i][name])) {
-					s_rows.push(t_rows[i]);
-				}
-			}
-			
-			self.update(s_rows);
-			self.emit("filter", [ s_rows ]);
-		}
-
         function setColumnResizeScroll(self) {
             var column = {},
                 width = {},
@@ -9281,29 +9264,25 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
     			return "";
 		    }
 		}
-		
-		this.filter = function(index, keyword, callback) { // filter (=포함)
-			if(!this.options.fields) return;
 
-            this.rollback();
-            var column = head.getColumn(index);
+        this.filter = function(callback) {
+            if(typeof(callback) != "function") return;
 
-			if(column.name && keyword) {
-				setFilteredData(this, column.name, function(target) {
-					if(typeof(callback) == "function") {
-						if(callback(target, keyword))
-							return true;
-					} else {
-						if(("" + target).indexOf(("" + keyword)) != -1)
-							return true;
-					}
-					
-					return false;
-				});
-			} else {
-				this.emit("filter", [ rows ]);
-			}
-		}
+            if(o_rows == null) o_rows = rows;
+            else rows = o_rows;
+
+            var t_rows = rows.slice(),
+                s_rows = [];
+
+            for(var i = 0, len = t_rows.length; i < len; i++) {
+                if(callback(t_rows[i]) === true) {
+                    s_rows.push(t_rows[i]);
+                }
+            }
+
+            this.update(s_rows);
+            this.emit("filter", [ s_rows ]);
+        }
 
         this.rollback = function() {
             if(o_rows != null) {
@@ -9576,7 +9555,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 update: [ "array" ],
                 page: [ "integer" ],
                 sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
-                filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
+                filter: [ "function" ],
                 height: [ "integer" ],
                 getColumn: [ [ "integer", "string" ] ],
                 getData: [ [ "integer", "string" ] ],
@@ -10591,18 +10570,6 @@ jui.define("chart.theme.seoul", [], function() {
 }); 
 jui.define("chart.theme.candy", [], function() {
     var themeColors = [
-        { type : "linear", 
-        	id : 'gradient',
-        	stop : [
-        		[0, 'red']
-        	]
-        },
-        { type : "pattern", 
-        	stop : [
-        		[0, 'red']
-        	]
-        },
-		"url(#gradient)",
 		"#7F6084",
 		"#86B402",
 		"#A2D1CF",
