@@ -20,9 +20,6 @@
             <a href="javascript:toggleDatepicker(1, this);" class="btn btn-gray btn-small"><i class="icon-calendar"></i></a>
             <input id="end_date" class="input input-small" />
         </div>
-
-        &nbsp;&nbsp;
-        <a href="javascript:filterTable();" class="btn btn-gray btn-small">Filter</a>
     </div>
     <div class="col col-6" style="text-align: right;">
         <input type="file" id="xtable_btn">
@@ -104,20 +101,19 @@
         dates = datepicker(".datepicker", {
             titleFormat: "yyyy. MM.",
             format: "yyyy-MM-dd",
+            date: "2010-01-01",
             event: {
                 select: function(date, e) {
                     $(".input").eq(this.index).val(date);
                     $(".datepicker").hide();
+
+                    filterTable();
                 }
             },
             tpl: {
                 dates: $("#tpl_dates").html()
             }
         });
-
-        //시작 시간 조정
-        dates[0].select(2010, 1, 1);
-        dates[1].select(2012, 1, 1);
 
         xtable = table("#xtable", {
             fields: [ "date", "open", "high", "low", "close", "volume", "adj_close" ],
