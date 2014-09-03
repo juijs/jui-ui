@@ -19,6 +19,7 @@ jui.ready([ "ui.datepicker" ], function(datepicker) {
     d1 = datepicker("#d1", {
         titleFormat: "yyyy년 MM월",
         format: "yyyy/MM/dd",
+        date: "2014-01-01",
         tpl: {
             dates: $("#tpl_dates").html()
         }
@@ -29,7 +30,6 @@ jui.ready([ "ui.datepicker" ], function(datepicker) {
 <body>
 <script>
     QUnit.test("달력 기본 테스트", function(assert) {
-        d1.select(2014, 01, 01);
         assert.ok($(d1.root).find(".title").text() == "2014년 01월", "월 선택 확인");
 
         $(d1.root).find("td:eq(10)").trigger("click");

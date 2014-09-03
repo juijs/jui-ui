@@ -484,7 +484,8 @@
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
 					"undefined": (typeof(value) == "undefined") ? true: false,
-					"null": (value === null) ? true : false
+					"null": (value === null) ? true : false,
+                    "date": (typeof(value) == "object" && value !== null && typeof(value.getTime) == "function") ? true : false
 				}[type];
 			}
 			
@@ -2144,9 +2145,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          */
 
         this.init = function() {
-            var self = this,
-                opts = this.options;
-            var d = new Date();
+            var d = new Date(this.timestamp);
 
             year = d.getFullYear();
             month = d.getMonth() + 1;
@@ -2160,7 +2159,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             // 화면 초기화
             this.page(year, month);
-            this.select();
+
+            // 기본 날짜 설정
+            this.select(this.options.date);
         }
         
         this.page = function(y, m) {
@@ -2235,7 +2236,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         		m = args[1];
         		d = args[2];
         	} else if(args.length == 1) {
-        		var time = new Date(args[0]);
+        		var time = (_.typeCheck("date", args[0])) ? args[0] : new Date(args[0]);
+
         		y = time.getFullYear();
         		m = time.getMonth() + 1;
         		d = time.getDate();
@@ -2277,11 +2279,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 type: "daily",
                 titleFormat: "yyyy.MM",
                 format: "yyyy-MM-dd",
+                date: new Date(),
                 animate: false
             },
             valid: {
                 page: [ "integer", "integer" ],
-                select: [ "integer", "integer", "integer" ],
+                select: [ [ "date", "string", "integer" ] , "integer", "integer" ],
                 addTime: [ "integer" ],
                 getFormat: [ "string" ]
             },

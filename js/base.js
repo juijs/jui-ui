@@ -484,7 +484,8 @@
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
 					"undefined": (typeof(value) == "undefined") ? true: false,
-					"null": (value === null) ? true : false
+					"null": (value === null) ? true : false,
+                    "date": (typeof(value) == "object" && value !== null && typeof(value.getTime) == "function") ? true : false
 				}[type];
 			}
 			
