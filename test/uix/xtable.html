@@ -54,13 +54,23 @@ jui.ready([ "uix.xtable", "util.base" ], function(xtable, _) {
     });
 
     QUnit.test("테이블 필터 테스트", function(assert) {
-        t1.filter("name", "ng");
-        assert.ok(t1.list().length == 2, "기본 필터 확인");
+        t1.filter(function(row) {
+           if(row.name.indexOf("ng") != -1) {
+               return true;
+           }
 
-        t1.filter("age", 30, function(target, keyword) {
-            if(target >= keyword) return true;
+            return false;
         });
-        assert.ok(t1.list().length == 1, "커스텀 필터 확인");
+        assert.ok(t1.list().length == 2, "단일 필터 확인");
+
+        t1.filter(function(row) {
+            if(row.name.indexOf("rk") != -1 || row.age >= 30) {
+                return true;
+            }
+
+            return false;
+        });
+        assert.ok(t1.list().length == 2, "다중 필터 확인");
     });
 
     QUnit.done(function() {
