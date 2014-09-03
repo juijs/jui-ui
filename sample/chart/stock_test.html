@@ -208,21 +208,16 @@
             edate = $(".input").eq(1).val();
 
         if(sdate != "" && edate != "") {
-            var data = xtable.listData(),
-                newData = [];
-
             var stime = new Date(sdate).getTime(),
                 etime = new Date(edate).getTime();
 
-            for(var i = 0; i < data.length; i++) {
-                var time = new Date(data[i].date).getTime();
+            xtable.filter(function(row) {
+                var time = new Date(row.date).getTime();
 
                 if(time >= stime && time <= etime) {
-                    newData.push(data[i]);
+                    return true;
                 }
-            }
-
-            xtable.update(newData);
+            });
         }
     }
 </script>
