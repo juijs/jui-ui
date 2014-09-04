@@ -484,7 +484,8 @@
 					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
 					"boolean"	: (typeof(value) == "boolean") ? true : false, 
 					"undefined": (typeof(value) == "undefined") ? true: false,
-					"null": (value === null) ? true : false
+					"null": (value === null) ? true : false,
+                    "date": (typeof(value) == "object" && value !== null && typeof(value.getTime) == "function") ? true : false
 				}[type];
 			}
 			
@@ -3587,9 +3588,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          */
 
         this.init = function() {
-            var self = this,
-                opts = this.options;
-            var d = new Date();
+            var d = new Date(this.timestamp);
 
             year = d.getFullYear();
             month = d.getMonth() + 1;
@@ -3603,7 +3602,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             // 화면 초기화
             this.page(year, month);
-            this.select();
+
+            // 기본 날짜 설정
+            this.select(this.options.date);
         }
         
         this.page = function(y, m) {
@@ -3678,7 +3679,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         		m = args[1];
         		d = args[2];
         	} else if(args.length == 1) {
-        		var time = new Date(args[0]);
+        		var time = (_.typeCheck("date", args[0])) ? args[0] : new Date(args[0]);
+
         		y = time.getFullYear();
         		m = time.getMonth() + 1;
         		d = time.getDate();
@@ -3720,11 +3722,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 type: "daily",
                 titleFormat: "yyyy.MM",
                 format: "yyyy-MM-dd",
+                date: new Date(),
                 animate: false
             },
             valid: {
                 page: [ "integer", "integer" ],
-                select: [ "integer", "integer", "integer" ],
+                select: [ [ "date", "string", "integer" ] , "integer", "integer" ],
                 addTime: [ "integer" ],
                 getFormat: [ "string" ]
             },
@@ -8983,23 +8986,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			});
 		}
 		
-		function setFilteredData(self, name, callback) {
-			if(o_rows == null) o_rows = rows;
-			else rows = o_rows;
-			
-			var t_rows = rows.slice(),
-				s_rows = [];
-				
-			for(var i = 0, len = t_rows.length; i < len; i++) {
-				if(callback(t_rows[i][name])) {
-					s_rows.push(t_rows[i]);
-				}
-			}
-			
-			self.update(s_rows);
-			self.emit("filter", [ s_rows ]);
-		}
-
         function setColumnResizeScroll(self) {
             var column = {},
                 width = {},
@@ -9281,29 +9267,25 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
     			return "";
 		    }
 		}
-		
-		this.filter = function(index, keyword, callback) { // filter (=포함)
-			if(!this.options.fields) return;
 
-            this.rollback();
-            var column = head.getColumn(index);
+        this.filter = function(callback) {
+            if(typeof(callback) != "function") return;
 
-			if(column.name && keyword) {
-				setFilteredData(this, column.name, function(target) {
-					if(typeof(callback) == "function") {
-						if(callback(target, keyword))
-							return true;
-					} else {
-						if(("" + target).indexOf(("" + keyword)) != -1)
-							return true;
-					}
-					
-					return false;
-				});
-			} else {
-				this.emit("filter", [ rows ]);
-			}
-		}
+            if(o_rows == null) o_rows = rows;
+            else rows = o_rows;
+
+            var t_rows = rows.slice(),
+                s_rows = [];
+
+            for(var i = 0, len = t_rows.length; i < len; i++) {
+                if(callback(t_rows[i]) === true) {
+                    s_rows.push(t_rows[i]);
+                }
+            }
+
+            this.update(s_rows);
+            this.emit("filter", [ s_rows ]);
+        }
 
         this.rollback = function() {
             if(o_rows != null) {
@@ -9576,7 +9558,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 update: [ "array" ],
                 page: [ "integer" ],
                 sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
-                filter: [ [ "integer", "string" ], [ "integer", "string", "boolean" ], "function" ],
+                filter: [ "function" ],
                 height: [ "integer" ],
                 getColumn: [ [ "integer", "string" ] ],
                 getData: [ [ "integer", "string" ] ],
@@ -10591,18 +10573,6 @@ jui.define("chart.theme.seoul", [], function() {
 }); 
 jui.define("chart.theme.candy", [], function() {
     var themeColors = [
-        { type : "linear", 
-        	id : 'gradient',
-        	stop : [
-        		[0, 'red']
-        	]
-        },
-        { type : "pattern", 
-        	stop : [
-        		[0, 'red']
-        	]
-        },
-		"url(#gradient)",
 		"#7F6084",
 		"#86B402",
 		"#A2D1CF",

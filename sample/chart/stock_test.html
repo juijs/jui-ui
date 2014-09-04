@@ -9,7 +9,22 @@
 </head>
 <body class="jui">
 
-<input type="file" id="xtable_btn" style="margin-bottom: 7px;"><br/>
+<div class="row" style="margin-bottom: 7px;">
+    <div class="col col-6">
+        <div class="group">
+            <a href="javascript:toggleDatepicker(0, this);" class="btn btn-gray btn-small"><i class="icon-calendar"></i></a>
+            <input id="start_date" class="input input-small" />
+        </div>
+        &nbsp;~
+        <div class="group">
+            <a href="javascript:toggleDatepicker(1, this);" class="btn btn-gray btn-small"><i class="icon-calendar"></i></a>
+            <input id="end_date" class="input input-small" />
+        </div>
+    </div>
+    <div class="col col-6" style="text-align: right;">
+        <input type="file" id="xtable_btn">
+    </div>
+</div>
 
 <div class="row" style="margin-bottom: 14px;">
     <table id="xtable" class="table table-classic">
@@ -32,6 +47,41 @@
     <div id="chart"></div>
 </div>
 
+<div class="datepicker">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+
+<div class="datepicker">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+
+<script id="tpl_dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+
 <script data-jui="#xtable" data-tpl="row" type="text/template">
     <tr>
         <td><!= date !></td>
@@ -45,8 +95,27 @@
 </script>
 
 <script>
-    jui.ready([ "chart.basic", "uix.xtable", "util.time" ], function(chart, table, time) {
-        var xtable = table("#xtable", {
+    var dates = null, xtable = null;
+
+    jui.ready([ "chart.basic", "uix.xtable", "ui.datepicker" ], function(chart, table, datepicker) {
+        dates = datepicker(".datepicker", {
+            titleFormat: "yyyy. MM.",
+            format: "yyyy-MM-dd",
+            date: "2010-01-01",
+            event: {
+                select: function(date, e) {
+                    $(".input").eq(this.index).val(date);
+                    $(".datepicker").hide();
+
+                    filterTable();
+                }
+            },
+            tpl: {
+                dates: $("#tpl_dates").html()
+            }
+        });
+
+        xtable = table("#xtable", {
             fields: [ "date", "open", "high", "low", "close", "volume", "adj_close" ],
             sort: true,
             resize: true,
@@ -58,8 +127,8 @@
         });
 
         chart("#chart", {
-            width: 1200,
-            height : 400,
+            width: 1000,
+            height : 500,
             theme : location.href.split("?")[1].split("=")[1],
             grid : {
                 x : {
@@ -108,8 +177,61 @@
             bind: xtable
         });
 	});
+
+    function toggleDatepicker(index) {
+        var offset = {
+            left: (index == 0) ? 8 : 227,
+            top: 34
+        },
+        $root = $(dates[index].root);
+
+        $root.css({
+            left: offset.left,
+            top: offset.top
+        });
+
+        $(".datepicker").hide();
+
+        if($root.css("display") == "block") {
+            $root.hide();
+        } else {
+            $root.show();
+        }
+    }
+
+    function filterTable() {
+        var sdate = $(".input").eq(0).val(),
+            edate = $(".input").eq(1).val();
+
+        if(sdate != "" && edate != "") {
+            var stime = new Date(sdate).getTime(),
+                etime = new Date(edate).getTime();
+
+            xtable.filter(function(row) {
+                var time = new Date(row.date).getTime();
+
+                if(time >= stime && time <= etime) {
+                    return true;
+                }
+            });
+        }
+    }
 </script>
 
+<style>
+    .row {
+        width: 1000px;
+    }
+
+    .datepicker {
+        display: none;
+        position: absolute;
+    }
+
+    .input {
+        width: 158px;
+    }
+</style>
 
 </body>
 </html>
