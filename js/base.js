@@ -430,6 +430,29 @@
 	        
 	        return clone;
 		},
+		deepClone: function(obj) {
+			
+			var value = '';
+			
+			if ($.isArray(obj)) {
+				value = [];
+				
+				for(var i = 0, len = obj.length; i < len; i++) {
+					value[i] = this.deepClone(obj[i]);
+				}				
+			} else if (typeof obj == 'object') {
+				value = {};
+				
+				for(var key in obj) {
+					value[key] = this.deepClone(obj[key]);
+				}
+				
+			} else {
+				value = obj;  
+			}
+			
+			return value ;
+		},
 		sort: function(array) {
 			return new QuickSort(array);
 		},

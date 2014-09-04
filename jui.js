@@ -430,6 +430,29 @@
 	        
 	        return clone;
 		},
+		deepClone: function(obj) {
+			
+			var value = '';
+			
+			if ($.isArray(obj)) {
+				value = [];
+				
+				for(var i = 0, len = obj.length; i < len; i++) {
+					value[i] = this.deepClone(obj[i]);
+				}				
+			} else if (typeof obj == 'object') {
+				value = {};
+				
+				for(var key in obj) {
+					value[key] = this.deepClone(obj[key]);
+				}
+				
+			} else {
+				value = obj;  
+			}
+			
+			return value ;
+		},
 		sort: function(array) {
 			return new QuickSort(array);
 		},
@@ -2087,6 +2110,11 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			func.ticks = function(count, isNice, intNumber) {
 				intNumber = intNumber || 10000;
+				
+				if (_domain[0] == 0 && _domain[1] == 0) {
+					return [];
+				}
+				
 				var obj = math.nice(_domain[0], _domain[1], count || 10, isNice || false);
 
 				var arr = [];
@@ -9941,20 +9969,13 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		this.drawBefore = function() {
 		    
             // 데이타 설정
-            var data = this.get('data');
-            var series = this.get('series');
-            var grid = this.get('grid');
-            var widget = this.setWidget(this.get('widget'));
-            var brush = this.get('brush');
+            var data = _.deepClone(this.get('data'));
+            var series = _.deepClone(this.get('series'));
+            var grid = _.deepClone(this.get('grid'));
+            var widget = _.deepClone(this.setWidget(this.get('widget')));
+            var brush = _.deepClone(this.get('brush'));
+            var parse = this.get('parseValue') || function(data) { return data; };
             var series_list = [];
-
-            for (var k in grid) {
-                _grid[k] = grid[k];
-            }
-            
-            for (var k in widget) {
-                _widget[k] = widget[k];
-            }
 
             // series_list
             for (var key in series) {
@@ -9971,18 +9992,20 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
                 for (var key in row) {
                     var obj = series[key] || {};
-                    var value = row[key];
+                    var value = parse(row[key]);
                     
                     series[key] = obj;
 
                     obj.data = obj.data || [];
-                    obj.min = obj.min || 0;
-                    obj.max = obj.max || 0;
+                    obj.min = typeof obj.min == 'undefined' ?  0 : obj.min;
+                    obj.max = typeof obj.max == 'undefined' ?  0 : obj.max;
                     obj.data[i] = value;
 
                     if (value < obj.min) {
                         obj.min = value;
-                    } else if (value > obj.max) {
+                    }
+                    
+                    if (value > obj.max) {
                         obj.max = value;
                     }
                 }
@@ -10013,7 +10036,9 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _brush = brush;
             _data = data;
             _series = series;
-            
+			_grid = grid;
+			_widget = widget;
+			            
             this.drawDefs();
             
 		}
@@ -10178,7 +10203,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"grid" : null,
 				"brush" : null,
 				"data" : [],
-                "bind" : null
+                "bind" : null,
+                'parseValue' : null
 			}
 		}
 	}
@@ -10242,7 +10268,7 @@ jui.define("chart.theme.white", [], function() {
         candlestickInvertBorderColor : "red",
         candlestickInvertBackgroundColor : "red",
         lineBorderWidth : 2,
-        pathOpacity : 0.2,
+        pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1
@@ -11266,7 +11292,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : chart.theme('gridBorderColor'),
+				stroke : chart.theme('gridAxisBorderColor'),
 				"stroke-width" : chart.theme('gridBorderWidth')
 			}))
 		}
@@ -11294,7 +11320,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			var path = chart.svg.path({
 
 				"fill" : "none",
-				stroke : chart.theme('gridBorderColor'),
+				stroke : chart.theme('gridAxisBorderColor'),
 				"stroke-width" : chart.theme('gridBorderWidth')
 			});
 
@@ -11395,7 +11421,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
-					stroke : chart.theme('gridBorderColor'),
+					stroke : chart.theme('gridAxisBorderColor'),
 					"stroke-width" : chart.theme('gridBorderWidth')
 				}))
 
@@ -11424,13 +11450,15 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					tx -= 10;
 				}
 
-				root.append(chart.text({
-					x : tx,
-					y : ty,
-					'text-anchor' : talign,
-					fill : chart.theme("gridFontColor")
-				}, grid.domain[i]))
-
+				if (!grid.hideText) {
+					root.append(chart.text({
+						x : tx,
+						y : ty,
+						'text-anchor' : talign,
+						fill : chart.theme("gridFontColor")
+					}, grid.domain[i]))
+				}
+				
 				var obj = math.rotate(startX, startY, unit);
 
 				startX = obj.x;
@@ -11438,8 +11466,13 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			}
 
-			if (!grid.line)
-				return scale(position[0]);
+			if (!grid.line) {
+				return {
+					root : root , 
+					scale : scale(position[0])
+				};
+			}
+				
 
 			// area split line
 			startY = -w;
@@ -11458,15 +11491,22 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
 
-				root.append(chart.text({
-					x : centerX,
-					y : centerY + (startY + h - 5),
-					fill : chart.theme("gridFontColor")
-				}, (grid.max - stepBase) + ""))
+				if (!grid.hideText) {
+					root.append(chart.text({
+						x : centerX,
+						y : centerY + (startY + h - 5),
+						fill : chart.theme("gridFontColor")
+					}, (grid.max - stepBase) + ""))
+				}
 
 				startY += h;
 				stepBase += stepValue;
 			}
+			
+			// hide
+			if (grid.hide) {
+				root.attr({ display : 'none' })
+			}			
 
 			return {
 				root : root, 
@@ -13319,15 +13359,18 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			g.translate(this.centerX, this.centerY);
 
 			// current Value
-			g.append(chart.svg.text({
-				x : 0,
-				y : 10,
-				"text-anchor" : "middle",
-				'font-family' : 'Verdana',
-				'font-size' : '3em',
-				'font-weight' : 1000
-
-			}, value + ""))
+			if (brush.text) {
+				g.append(chart.svg.text({
+					x : 0,
+					y : 10,
+					"text-anchor" : "middle",
+					'font-family' : 'Verdana',
+					'font-size' : '3.5em',
+					'font-weight' : 1000
+	
+				}, value + ""))
+				
+			}
 			
 			if (brush.unitText) {
 				// current Value
@@ -13335,7 +13378,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 40,
 					"text-anchor" : "middle",
-					'font-size' : '1.5em',
+					'font-size' : '2em',
 					'font-weight' : 500
 				}, brush.unitText))
 	

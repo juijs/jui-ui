@@ -465,6 +465,11 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			func.ticks = function(count, isNice, intNumber) {
 				intNumber = intNumber || 10000;
+				
+				if (_domain[0] == 0 && _domain[1] == 0) {
+					return [];
+				}
+				
 				var obj = math.nice(_domain[0], _domain[1], count || 10, isNice || false);
 
 				var arr = [];
