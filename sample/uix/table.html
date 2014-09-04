@@ -27,14 +27,16 @@ jui.ready(function(ui, uix, _) {
         {"min":0.014,"max":0.014,"count":1,"sumCpu":0,"hash":1887438955,"sd":0,"tpmc":0,"avgCpu":0,"failure":1,"rate":0.05,"sumTime":0.014,"name":"/oraclesql3.jsp","avgTime":0.014,"success":0}
     ];
 
-    var table_width = $("#xtable").outerWidth();
-
-    xtable = uix.xtable("#xtable", {
+    table = uix.table("#table", {
         fields: [ "min", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
-        data: table_data,
+        csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
         resize: true,
         animate: true
+    });
+
+    $("#table_btn").change(function(e) {
+        table.setCsvFile(e.target.files[0]);
     });
 });
 
@@ -42,25 +44,24 @@ jui.ready(function(ui, uix, _) {
 </head>
 <body class="jui">
 
-<div id="xtable" class="xtable xtable-rect">
-    <table class="table table-simple table-headline">
-        <thead>
-        <tr>
-            <th>Min</th>
-            <th>Max</th>
-            <th>Count</th>
-            <th>Hash</th>
-            <th>Failure</th>
-            <th>SumTime</th>
-            <th>AvgTime</th>
-            <th>Name</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+<input type="file" id="table_btn" /><br/><br/>
+<table id="table" class="table table-simple table-headline">
+    <thead>
+    <tr>
+        <th>Min</th>
+        <th>Max</th>
+        <th>Count</th>
+        <th>Hash</th>
+        <th>Failure</th>
+        <th>SumTime</th>
+        <th>AvgTime</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-<script data-jui="#xtable" data-tpl="row" type="text/template">
+<script data-jui="#table" data-tpl="row" type="text/template">
     <tr>
         <td><!= min !></td>
         <td><!= max !></td>

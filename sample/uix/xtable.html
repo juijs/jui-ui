@@ -35,7 +35,7 @@ jui.ready(function(ui, uix, _) {
 
     xtable = uix.xtable("#xtable", {
         fields: [ "min", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
-        data: table_data,
+        csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
         sortLoading: true,
         scrollWidth: table_width,
@@ -48,12 +48,17 @@ jui.ready(function(ui, uix, _) {
             }
         }
     });
+
+    $("#xtable_btn").change(function(e) {
+        xtable.setCsvFile(e.target.files[0]);
+    });
 });
 
 </script>
 </head>
 <body class="jui">
 
+<input type="file" id="xtable_btn" /><br/><br/>
 <div id="xtable" class="xtable xtable-rect">
     <table class="table table-classic">
         <thead>

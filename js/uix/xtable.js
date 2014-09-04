@@ -643,10 +643,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 		
 		this.setCsv = function(csv) {
-			if(!this.options.fields && !this.options.csv) return;
+            var opts = this.options;
+			if(!opts.fields && !opts.csv) return;
 			
-			var fields = _.getCsvFields(this.options.fields, this.options.csv);
-			this.update(_.csvToData(fields, csv));
+			var fields = _.getCsvFields(opts.fields, opts.csv),
+                csvNumber = (opts.csvNumber) ? _.getCsvFields(opts.fields, opts.csvNumber) : null;
+
+			this.update(_.csvToData(fields, csv, csvNumber));
 		}
 		
 		this.setCsvFile = function(file) {
@@ -663,7 +666,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			var fields = _.getCsvFields(this.options.fields, this.options.csv),
 				len = (rows.length > this.options.csvCount) ? this.options.csvCount : rows.length;
-			
+
 			return _.dataToCsv2({
 				fields: fields,
 				rows: rows,
@@ -760,6 +763,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 fields: null,
                 csv: null,
                 csvNames: null,
+                csvNumber: null,
                 csvCount: 10000,
                 data: [],
                 rows: null, // @Deprecated
