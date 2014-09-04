@@ -10080,6 +10080,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		    _scale = {};
 		    
 			var grid = this.grid();
+			
 			var grid_list = {};
 			if (grid != null) {
 				
@@ -10211,8 +10212,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"theme" : "white",
 				"labels" : [],
 				"series" : {},
-				"grid" : null,
-				"brush" : null,
+				"grid" : {},
+				"brush" : [],
 				"data" : [],
                 "bind" : null
 			}
