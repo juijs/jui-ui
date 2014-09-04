@@ -434,13 +434,15 @@
 			
 			var value = '';
 			
-			if ($.isArray(obj)) {
+			if (this.typeCheck('array', obj)) {
 				value = [];
 				
 				for(var i = 0, len = obj.length; i < len; i++) {
 					value[i] = this.deepClone(obj[i]);
 				}				
-			} else if (typeof obj == 'object') {
+			} else if (this.typeCheck("date", obj)) {
+				value = obj;
+			} else if (this.typeCheck("object", obj)) {
 				value = {};
 				
 				for(var key in obj) {
@@ -10050,7 +10052,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			_widget = widget;
 			            
             this.drawDefs();
-            
 		}
 		
 		this.createId = function(key) {
@@ -10746,6 +10747,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
+				
 				var max = 0;
 				var min = 0;
 				var data = chart.data();
@@ -10756,7 +10758,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
-							var value = s(row);
+							var value = +s(row);
 
 							if (max < value)
 								max = value;
@@ -10774,7 +10776,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					}
 
 				}
-
+				
 				grid.max = max;
 				grid.min = min;
 				grid.step = grid.step || 10;
@@ -10799,7 +10801,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 
 
-			}			
+			}
 			
 			return grid; 
 		}
@@ -10807,12 +10809,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.wrapper = function(chart, scale, key) {
 			var old_scale = scale; 
 			
-			
 			function new_scale(i) {
+				
 				if (key) {
 					i = chart.data(i)[key];
 				}
-				 
+				
 				return old_scale(i);
 			}	
 			
@@ -10831,6 +10833,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			new_scale.rate = function() {
 				return old_scale.rate.apply(old_scale, arguments);
 			}
+			
+			new_scale.key = key;
 			
 			return new_scale;
 		}
@@ -11249,7 +11253,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			}
 
 			var range = [0, max];
-			this.scale = UtilScale.time().domain(grid.domain).rangeRound([0, max]);
+			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
 
 			if (grid.realtime) {
 				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
@@ -11258,10 +11262,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			}
 
 			if ( typeof grid.format == 'string') {
-				var str = grid.format;
-				grid.format = function(value) {
-					return UtilTime.format(value, str);
-				}
+				(function(grid, str) {
+					grid.format = function(value) {
+						return UtilTime.format(value, str);
+					}	
+				})(grid, grid.format)
 			}
 
 			// step = [this.time.days, 1];
@@ -11276,7 +11281,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.draw = function(chart) {
-
 			return this.drawGrid(chart, orient, 'date', grid);
 		}
 	}

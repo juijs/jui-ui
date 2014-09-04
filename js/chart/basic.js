@@ -149,7 +149,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			_widget = widget;
 			            
             this.drawDefs();
-            
 		}
 		
 		this.createId = function(key) {

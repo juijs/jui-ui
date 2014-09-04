@@ -38,6 +38,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
+				
 				var max = 0;
 				var min = 0;
 				var data = chart.data();
@@ -48,7 +49,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
-							var value = s(row);
+							var value = +s(row);
 
 							if (max < value)
 								max = value;
@@ -66,7 +67,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					}
 
 				}
-
+				
 				grid.max = max;
 				grid.min = min;
 				grid.step = grid.step || 10;
@@ -91,7 +92,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 
 
-			}			
+			}
 			
 			return grid; 
 		}
@@ -99,12 +100,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.wrapper = function(chart, scale, key) {
 			var old_scale = scale; 
 			
-			
 			function new_scale(i) {
+				
 				if (key) {
 					i = chart.data(i)[key];
 				}
-				 
+				
 				return old_scale(i);
 			}	
 			
@@ -123,6 +124,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			new_scale.rate = function() {
 				return old_scale.rate.apply(old_scale, arguments);
 			}
+			
+			new_scale.key = key;
 			
 			return new_scale;
 		}

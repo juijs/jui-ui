@@ -96,6 +96,8 @@
 
 <script>
     var dates = null, xtable = null;
+    
+    window.years = {};
 
     jui.ready([ "chart.basic", "uix.xtable", "ui.datepicker" ], function(chart, table, datepicker) {
         dates = datepicker(".datepicker", {
@@ -107,7 +109,9 @@
                     $(".input").eq(this.index).val(date);
                     $(".datepicker").hide();
 
+					window.years = {};
                     filterTable();
+                    
                 }
             },
             tpl: {
@@ -131,7 +135,6 @@
             width: 1000,
             height : 500,
             theme : location.href.split("?")[1].split("=")[1],
-            parseValue : parseFloat,
             grid : {
                 x : {
                     type : "block",  // default type is block
@@ -145,11 +148,10 @@
                         var year = arr[0];
                         var month = arr[1];
 
-                        if ((day == '01' || day == '02' || day == '03' || day == '04') && month == '01' && parseInt(year) % 1 == 0) {
-                            return year;    
-                        } else {
-                            return "";
-                        }
+                    	if (window.years[year]) return "";
+                    	
+                    	window.years[year] = true; 
+                        return (month == '01') ? year : [year, month].join("-");    
                     }
                 },
                 y : {

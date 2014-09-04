@@ -144,7 +144,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			}
 
 			var range = [0, max];
-			this.scale = UtilScale.time().domain(grid.domain).rangeRound([0, max]);
+			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
 
 			if (grid.realtime) {
 				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
@@ -153,10 +153,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			}
 
 			if ( typeof grid.format == 'string') {
-				var str = grid.format;
-				grid.format = function(value) {
-					return UtilTime.format(value, str);
-				}
+				(function(grid, str) {
+					grid.format = function(value) {
+						return UtilTime.format(value, str);
+					}	
+				})(grid, grid.format)
 			}
 
 			// step = [this.time.days, 1];
@@ -171,7 +172,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.draw = function(chart) {
-
 			return this.drawGrid(chart, orient, 'date', grid);
 		}
 	}
