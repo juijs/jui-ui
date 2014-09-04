@@ -1758,14 +1758,16 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 		
 		this.setCsv = function() {
-			if(!this.options.fields && !this.options.csv) return;
+            var opts = this.options;
+			if(!opts.fields && !opts.csv) return;
 			
 			var csv = (arguments.length == 1) ? arguments[0] : arguments[1],
 				key = (arguments.length == 2) ? arguments[0] : null;
-			
-			var fields = _.getCsvFields(this.options.fields, this.options.csv),
-				dataList = _.csvToData(fields, csv);
-			
+
+            var fields = _.getCsvFields(opts.fields, opts.csv),
+                csvNumber = (opts.csvNumber) ? _.getCsvFields(opts.fields, opts.csvNumber) : null,
+                dataList = _.csvToData(fields, csv, csvNumber);
+
 			if(key == null) {
 				this.update(dataList);
 			} else {
@@ -1864,6 +1866,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 fields: null,
                 csv: null,
                 csvNames: null,
+                csvNumber: null,
                 data: [],
                 rows: null, // @Deprecated
                 colshow: false,

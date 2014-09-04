@@ -592,17 +592,21 @@
 		csvToBase64: function(csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
-		csvToData: function(keys, csv) {
+		csvToData: function(keys, csv, csvNumber) {
 			var dataList = [],
-				tmpRowArr = csv.split("\n");
-				
+				tmpRowArr = csv.split("\n")
+
 			for(var i = 1; i < tmpRowArr.length; i++) {
 				if(tmpRowArr[i] != "") {
 					var tmpArr = tmpRowArr[i].split(","),
 						data = {};
 					
 					for(var j = 0; j < keys.length; j++) {
-						data[keys[j]] = tmpArr[j];
+                        data[keys[j]] = tmpArr[j];
+
+                        if($.inArray(keys[j], csvNumber) != -1) {
+                            data[keys[j]] = parseFloat(tmpArr[j]);
+                        }
 					}
 					
 					dataList.push(data);
@@ -612,7 +616,7 @@
 			return dataList;
 		},
 		getCsvFields: function(fields, csvFields) {
-			var tmpFields = (csvFields) ? csvFields : fields;
+			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
 			
 			for(var i = 0; i < tmpFields.length; i++) {
 				if(!isNaN(tmpFields[i])) {
