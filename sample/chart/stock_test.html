@@ -211,8 +211,8 @@
             var stime = new Date(sdate).getTime(),
                 etime = new Date(edate).getTime();
 
-            xtable.filter(function(row) {
-                var time = new Date(row.date).getTime();
+            xtable.filter(function(data) {
+                var time = new Date(data.date).getTime();
 
                 if(time >= stime && time <= etime) {
                     return true;
