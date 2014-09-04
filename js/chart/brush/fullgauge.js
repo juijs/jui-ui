@@ -39,15 +39,18 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			g.translate(this.centerX, this.centerY);
 
 			// current Value
-			g.append(chart.svg.text({
-				x : 0,
-				y : 10,
-				"text-anchor" : "middle",
-				'font-family' : 'Verdana',
-				'font-size' : '3em',
-				'font-weight' : 1000
-
-			}, value + ""))
+			if (brush.text) {
+				g.append(chart.svg.text({
+					x : 0,
+					y : 10,
+					"text-anchor" : "middle",
+					'font-family' : 'Verdana',
+					'font-size' : '3.5em',
+					'font-weight' : 1000
+	
+				}, value + ""))
+				
+			}
 			
 			if (brush.unitText) {
 				// current Value
@@ -55,7 +58,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 40,
 					"text-anchor" : "middle",
-					'font-size' : '1.5em',
+					'font-size' : '2em',
 					'font-weight' : 500
 				}, brush.unitText))
 	

@@ -79,20 +79,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		this.drawBefore = function() {
 		    
             // 데이타 설정
-            var data = this.get('data');
-            var series = this.get('series');
-            var grid = this.get('grid');
-            var widget = this.setWidget(this.get('widget'));
-            var brush = this.get('brush');
+            var data = _.deepClone(this.get('data'));
+            var series = _.deepClone(this.get('series'));
+            var grid = _.deepClone(this.get('grid'));
+            var widget = _.deepClone(this.setWidget(this.get('widget')));
+            var brush = _.deepClone(this.get('brush'));
             var series_list = [];
-
-            for (var k in grid) {
-                _grid[k] = grid[k];
-            }
-            
-            for (var k in widget) {
-                _widget[k] = widget[k];
-            }
 
             // series_list
             for (var key in series) {
@@ -114,13 +106,15 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                     series[key] = obj;
 
                     obj.data = obj.data || [];
-                    obj.min = obj.min || 0;
-                    obj.max = obj.max || 0;
+                    obj.min = typeof obj.min == 'undefined' ?  0 : obj.min;
+                    obj.max = typeof obj.max == 'undefined' ?  0 : obj.max;
                     obj.data[i] = value;
 
                     if (value < obj.min) {
                         obj.min = value;
-                    } else if (value > obj.max) {
+                    }
+                    
+                    if (value > obj.max) {
                         obj.max = value;
                     }
                 }
@@ -151,7 +145,9 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _brush = brush;
             _data = data;
             _series = series;
-            
+			_grid = grid;
+			_widget = widget;
+			            
             this.drawDefs();
             
 		}

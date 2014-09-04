@@ -130,6 +130,7 @@
             width: 1000,
             height : 500,
             theme : location.href.split("?")[1].split("=")[1],
+            parseValue : parseFloat,
             grid : {
                 x : {
                     type : "block",  // default type is block
@@ -143,7 +144,7 @@
                         var year = arr[0];
                         var month = arr[1];
 
-                        if ((day == '01' || day == '02' || day == '03' || day == '04') && month == '01' && parseInt(year) % 2 == 0) {
+                        if ((day == '01' || day == '02' || day == '03' || day == '04') && month == '01' && parseInt(year) % 1 == 0) {
                             return year;    
                         } else {
                             return "";
