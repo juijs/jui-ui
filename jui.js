@@ -615,17 +615,21 @@
 		csvToBase64: function(csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
-		csvToData: function(keys, csv) {
+		csvToData: function(keys, csv, csvNumber) {
 			var dataList = [],
-				tmpRowArr = csv.split("\n");
-				
+				tmpRowArr = csv.split("\n")
+
 			for(var i = 1; i < tmpRowArr.length; i++) {
 				if(tmpRowArr[i] != "") {
 					var tmpArr = tmpRowArr[i].split(","),
 						data = {};
 					
 					for(var j = 0; j < keys.length; j++) {
-						data[keys[j]] = tmpArr[j];
+                        data[keys[j]] = tmpArr[j];
+
+                        if($.inArray(keys[j], csvNumber) != -1) {
+                            data[keys[j]] = parseFloat(tmpArr[j]);
+                        }
 					}
 					
 					dataList.push(data);
@@ -635,7 +639,7 @@
 			return dataList;
 		},
 		getCsvFields: function(fields, csvFields) {
-			var tmpFields = (csvFields) ? csvFields : fields;
+			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
 			
 			for(var i = 0; i < tmpFields.length; i++) {
 				if(!isNaN(tmpFields[i])) {
@@ -7445,14 +7449,16 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 		
 		this.setCsv = function() {
-			if(!this.options.fields && !this.options.csv) return;
+            var opts = this.options;
+			if(!opts.fields && !opts.csv) return;
 			
 			var csv = (arguments.length == 1) ? arguments[0] : arguments[1],
 				key = (arguments.length == 2) ? arguments[0] : null;
-			
-			var fields = _.getCsvFields(this.options.fields, this.options.csv),
-				dataList = _.csvToData(fields, csv);
-			
+
+            var fields = _.getCsvFields(opts.fields, opts.csv),
+                csvNumber = (opts.csvNumber) ? _.getCsvFields(opts.fields, opts.csvNumber) : null,
+                dataList = _.csvToData(fields, csv, csvNumber);
+
 			if(key == null) {
 				this.update(dataList);
 			} else {
@@ -7551,6 +7557,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 fields: null,
                 csv: null,
                 csvNames: null,
+                csvNumber: null,
                 data: [],
                 rows: null, // @Deprecated
                 colshow: false,
@@ -9444,10 +9451,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 		
 		this.setCsv = function(csv) {
-			if(!this.options.fields && !this.options.csv) return;
+            var opts = this.options;
+			if(!opts.fields && !opts.csv) return;
 			
-			var fields = _.getCsvFields(this.options.fields, this.options.csv);
-			this.update(_.csvToData(fields, csv));
+			var fields = _.getCsvFields(opts.fields, opts.csv),
+                csvNumber = (opts.csvNumber) ? _.getCsvFields(opts.fields, opts.csvNumber) : null;
+
+			this.update(_.csvToData(fields, csv, csvNumber));
 		}
 		
 		this.setCsvFile = function(file) {
@@ -9464,7 +9474,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			var fields = _.getCsvFields(this.options.fields, this.options.csv),
 				len = (rows.length > this.options.csvCount) ? this.options.csvCount : rows.length;
-			
+
 			return _.dataToCsv2({
 				fields: fields,
 				rows: rows,
@@ -9561,6 +9571,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 fields: null,
                 csv: null,
                 csvNames: null,
+                csvNumber: null,
                 csvCount: 10000,
                 data: [],
                 rows: null, // @Deprecated
@@ -9974,7 +9985,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             var grid = _.deepClone(this.get('grid'));
             var widget = _.deepClone(this.setWidget(this.get('widget')));
             var brush = _.deepClone(this.get('brush'));
-            var parse = this.get('parseValue') || function(data) { return data; };
             var series_list = [];
 
             // series_list
@@ -9992,7 +10002,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
                 for (var key in row) {
                     var obj = series[key] || {};
-                    var value = parse(row[key]);
+                    var value = row[key];
                     
                     series[key] = obj;
 
@@ -10203,8 +10213,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"grid" : null,
 				"brush" : null,
 				"data" : [],
-                "bind" : null,
-                'parseValue' : null
+                "bind" : null
 			}
 		}
 	}
