@@ -54,7 +54,7 @@ jui.define("chart.theme.white", [], function() {
         candlestickInvertBorderColor : "red",
         candlestickInvertBackgroundColor : "red",
         lineBorderWidth : 2,
-        pathOpacity : 0.2,
+        pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1

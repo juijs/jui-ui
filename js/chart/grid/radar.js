@@ -15,7 +15,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : chart.theme('gridBorderColor'),
+				stroke : chart.theme('gridAxisBorderColor'),
 				"stroke-width" : chart.theme('gridBorderWidth')
 			}))
 		}
@@ -43,7 +43,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			var path = chart.svg.path({
 
 				"fill" : "none",
-				stroke : chart.theme('gridBorderColor'),
+				stroke : chart.theme('gridAxisBorderColor'),
 				"stroke-width" : chart.theme('gridBorderWidth')
 			});
 
@@ -144,7 +144,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
-					stroke : chart.theme('gridBorderColor'),
+					stroke : chart.theme('gridAxisBorderColor'),
 					"stroke-width" : chart.theme('gridBorderWidth')
 				}))
 
@@ -173,13 +173,15 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					tx -= 10;
 				}
 
-				root.append(chart.text({
-					x : tx,
-					y : ty,
-					'text-anchor' : talign,
-					fill : chart.theme("gridFontColor")
-				}, grid.domain[i]))
-
+				if (!grid.hideText) {
+					root.append(chart.text({
+						x : tx,
+						y : ty,
+						'text-anchor' : talign,
+						fill : chart.theme("gridFontColor")
+					}, grid.domain[i]))
+				}
+				
 				var obj = math.rotate(startX, startY, unit);
 
 				startX = obj.x;
@@ -187,8 +189,13 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			}
 
-			if (!grid.line)
-				return scale(position[0]);
+			if (!grid.line) {
+				return {
+					root : root , 
+					scale : scale(position[0])
+				};
+			}
+				
 
 			// area split line
 			startY = -w;
@@ -207,15 +214,22 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
 
-				root.append(chart.text({
-					x : centerX,
-					y : centerY + (startY + h - 5),
-					fill : chart.theme("gridFontColor")
-				}, (grid.max - stepBase) + ""))
+				if (!grid.hideText) {
+					root.append(chart.text({
+						x : centerX,
+						y : centerY + (startY + h - 5),
+						fill : chart.theme("gridFontColor")
+					}, (grid.max - stepBase) + ""))
+				}
 
 				startY += h;
 				stepBase += stepValue;
 			}
+			
+			// hide
+			if (grid.hide) {
+				root.attr({ display : 'none' })
+			}			
 
 			return {
 				root : root, 
