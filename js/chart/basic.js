@@ -86,15 +86,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             var brush = _.deepClone(this.get('brush'));
             var series_list = [];
 
-            // series_list
-            for (var key in series) {
-                series_list.push(key);
-                var obj = series[key];
-                
-                obj.min = 0;
-                obj.max = 0;
-            }
-
             // series 데이타 구성
             for (var i = 0, len = data.length; i < len; i++) {
                 var row = data[i];
@@ -119,6 +110,11 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                     }
                 }
             }
+            
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+            }            
 
             // grid 최소, 최대 구성
             if (brush != null) {
