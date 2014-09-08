@@ -143,8 +143,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _series = series;
 			_grid = grid;
 			_widget = widget;
-			            
-            this.drawDefs();
 		}
 		
 		this.createId = function(key) {
@@ -171,6 +169,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 		    _scale = {};
+		          
+            this.drawDefs();
 		    
 			var grid = this.grid();
 			
