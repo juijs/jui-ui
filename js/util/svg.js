@@ -444,9 +444,11 @@ jui.define("util.svg",
         this.clear = function() {
             var newElement = root.element.cloneNode(false);
 
-            root.element.parentNode.removeChild(root.element);
-            root.element = newElement;
+            if(root.element.parentNode) {
+                root.element.parentNode.removeChild(root.element);
+            }
 
+            root.element = newElement;
             rootElem.appendChild(root.element);
         }
 
