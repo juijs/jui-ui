@@ -75,6 +75,11 @@
             },
             brush : {
                 type : 'candlestick'
+            },
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                }
             }
         }).render();
     })

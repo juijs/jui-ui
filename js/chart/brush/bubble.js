@@ -30,6 +30,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
+                    this.setEvents(brush, chart, b, i, j);
                     g.append(b);
                 }
             }

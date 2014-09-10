@@ -44,7 +44,12 @@
                 size : 10,
                 //symbol: "rectangle",
                 invert: true
-            }]
+            }],
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                }
+            }
         }).render();
 	})
 </script>

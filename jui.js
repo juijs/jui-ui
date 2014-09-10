@@ -11726,6 +11726,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 jui.define("chart.brush.core", [], function() {
 	var CoreBrush = function() {
 
+        /**
+         * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
+         *
+         * @param K
+         * @returns {{p1: Array, p2: Array}}
+         */
 		this.curvePoints = function(K) {
 			var p1 = [];
 			var p2 = [];
@@ -11780,6 +11786,16 @@ jui.define("chart.brush.core", [], function() {
 			};
 		}
 
+        /**
+         * 값에 비례하여 반지름을 구하는 함수
+         *
+         * @param value
+         * @param minValue
+         * @param maxValue
+         * @param minRadius
+         * @param maxRadius
+         * @returns {*}
+         */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
             var range = maxRadius - minRadius,
                 tg = range * getPer();
@@ -11795,6 +11811,13 @@ jui.define("chart.brush.core", [], function() {
             return tg + minRadius;
         }
 
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
         this.getXY = function(brush, chart) {
             var xy = [];
 
@@ -11822,6 +11845,14 @@ jui.define("chart.brush.core", [], function() {
             return xy;
         }
 
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         * 단, 'y' 좌표는 다음 데이터 보다 높게 구해진다.
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
         this.getStackXY = function(brush, chart) {
             var xy = [];
 
@@ -11853,6 +11884,27 @@ jui.define("chart.brush.core", [], function() {
 
             return xy;
         }
+
+        this.setEvents = function(brush, chart, element, targetIndex, dataIndex) {
+            var obj = {
+                key: brush.index,
+                target: brush.target[targetIndex],
+                data: chart.data(dataIndex)
+            };
+
+            element.on("click", function(e) {
+                chart.emit("click", [ obj, e ]);
+            });
+
+            element.on("dblclick", function(e) {
+                chart.emit("dblclick", [ obj, e ]);
+            });
+
+            element.on("contextmenu", function(e) {
+                chart.emit("rclick", [ obj, e ]);
+                e.preventDefault();
+            });
+        }
 	}
 
 	return CoreBrush;
@@ -11880,31 +11932,31 @@ jui.define("chart.brush.bar", [], function() {
 				var startY = brush.y(i) - half_height/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startX = brush.x(chart.series(brush.target[j]).data[i]);
+					var startX = brush.x(chart.series(brush.target[j]).data[i]),
+                        r = null;
 
 					if (startX >= zeroX) {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : zeroX,
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					} else {
 						var w = Math.abs(zeroX - startX);
 
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							y : startY,
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					}
+
+                    this.setEvents(brush, chart, r, i, j);
+                    g.append(r);
 
 					startY += barHeight + innerPadding;
 				}
@@ -11947,6 +11999,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
+                    this.setEvents(brush, chart, b, i, j);
                     g.append(b);
                 }
             }
@@ -12042,6 +12095,8 @@ jui.define("chart.brush.candlestick", [], function() {
                     });
                 }
 
+                this.setEvents(brush, chart, r, null, i);
+
                 g.append(l);
                 g.append(r);
             }
@@ -12073,29 +12128,29 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - half_width/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.data(i)[brush.target[j]]);
+					var startY = brush.y(chart.data(i)[brush.target[j]]),
+                        r = null;
 
 					if (startY <= zeroY) {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : startX,
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					} else {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : startX,
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					}
+
+                    this.setEvents(brush, chart, r, i, j);
+                    g.append(r);
 
 					startX += columnWidth + innerPadding;
 				}
@@ -12207,6 +12262,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('donutBorderWidth')
 				});
 
+                this.setEvents(brush, chart, g, i, null);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12219,88 +12275,79 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.equalizer", [], function() {
 
-	var EqualizerBrush = function(brush) {
-		var g, zeroY, count, width, barWidth, unit, gap, half_width;
-		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
+    var EqualizerBrush = function(brush) {
+        var g, zeroY, count, width, barWidth, unit, gap, half_width;
+        var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
-		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.x(), chart.y());
 
-			zeroY = brush.y(0);
-			count = chart.data().length;
- 
-			width = brush.x.rangeBand();
-			half_width = (width - outerPadding * 2) / 2; 
-			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+            zeroY = brush.y(0);
+            count = chart.data().length;
 
-			unit = brush.unit || 5;
-			gap = brush.gap || 1;
-		}
+            width = brush.x.rangeBand();
+            half_width = (width - outerPadding * 2) / 2;
+            barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
-		this.draw = function(chart) {
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - half_width;
+            unit = brush.unit || 5;
+            gap = brush.gap || 1;
+        }
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+        this.draw = function(chart) {
+            for (var i = 0; i < count; i++) {
+                var startX = brush.x(i) - half_width;
 
-					if (startY <= zeroY) {
+                for (var j = 0; j < brush.target.length; j++) {
+                    var barGroup = chart.svg.group();
+                    var startY = brush.y(chart.series(brush.target[j]).data[i]),
+                        padding = 1.5,
+                        eY = zeroY,
+                        eIndex = 0;
 
-						var height = Math.abs(zeroY - startY)
-						var padding = 1.5;
+                    if (startY <= zeroY) {
+                        while (eY > startY) {
+                            var unitHeight = (eY - unit < startY ) ? Math.abs(eY - startY) : unit;
+                            var r = chart.svg.rect({
+                                x : startX,
+                                y : eY - unitHeight,
+                                width : barWidth,
+                                height : unitHeight,
+                                fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
+                            });
 
-						var eY = zeroY;
-						var eMin = startY;
-						var eIndex = 0;
-						while (eY > eMin) {
+                            eY -= unitHeight + padding;
+                            eIndex++;
 
-							var unitHeight = (eY - unit < eMin ) ? Math.abs(eY - eMin) : unit;
+                            barGroup.append(r);
+                        }
+                    } else {
+                        while (eY < startY) {
+                            var unitHeight = (eY + unit > startY ) ? Math.abs(eY - startY) : unit;
+                            var r = chart.svg.rect({
+                                x : startX,
+                                y : eY,
+                                width : barWidth,
+                                height : unitHeight,
+                                fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
+                            });
 
-							var r = chart.svg.rect({
-								x : startX,
-								y : eY - unitHeight,
-								width : barWidth,
-								height : unitHeight,
-								fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
-							});
+                            eY += unitHeight + padding;
+                            eIndex++;
 
-							eY -= unitHeight + padding;
-							eIndex++;
+                            barGroup.append(r);
+                        }
+                    }
 
-							g.append(r);
-						}
-					} else {
+                    this.setEvents(brush, chart, barGroup, j, i);
+                    g.append(barGroup);
 
-						var padding = 1.5;
+                    startX += barWidth + innerPadding;
+                }
+            }
+        }
+    }
 
-						var eY = zeroY;
-						var eMax = startY;
-						var eIndex = 0;
-						while (eY < eMax) {
-							var unitHeight = (eY + unit > eMax ) ? Math.abs(eY - eMax) : unit;
-							var r = chart.svg.rect({
-								x : startX,
-								y : eY,
-								width : barWidth,
-								height : unitHeight,
-								fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
-							});
-
-							eY += unitHeight + padding;
-							eIndex++;
-
-							g.append(r);
-						}
-
-					}
-
-					startX += barWidth + innerPadding;
-				}
-			}
-		}
-	}
-
-	return EqualizerBrush;
+    return EqualizerBrush;
 }, "chart.brush.core");
 
 jui.define("chart.brush.fullstack", [], function() {
@@ -12411,6 +12458,8 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(brush, chart, path[k], k);
+                this.setEvents(brush, chart, p, k, null);
+
                 g.append(p);
             }
         }
@@ -12547,6 +12596,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('pieBorderWidth')
 				});
 
+                this.setEvents(brush, chart, g, i, null);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12624,6 +12674,8 @@ jui.define("chart.brush.scatter", [], function() {
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    this.setEvents(brush, chart, p, i, j);
+
                     g.append(p);
                 }
             }
@@ -12676,6 +12728,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
+                    this.setEvents(brush, chart, r, i, j);
 					g.append(r);
 
 					startX += widthArr[j]
@@ -12730,6 +12783,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
+                    this.setEvents(brush, chart, r, i, j);
 					g.append(r);
 
 					startY += heightArr[j]

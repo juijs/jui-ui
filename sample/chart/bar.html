@@ -40,6 +40,11 @@
             brush : {
                 type : 'bar',
                 target : ['name', 'value']
+            },
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                }
             }
         }).render();
 	})
