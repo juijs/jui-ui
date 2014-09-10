@@ -20,29 +20,29 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - half_width/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.data(i)[brush.target[j]]);
+					var startY = brush.y(chart.data(i)[brush.target[j]]),
+                        r = null;
 
 					if (startY <= zeroY) {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : startX,
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					} else {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : startX,
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					}
+
+                    this.addEvent(brush, chart, r, i, j);
+                    g.append(r);
 
 					startX += columnWidth + innerPadding;
 				}

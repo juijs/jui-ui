@@ -53,8 +53,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		    }
 		    
 		    _area.height = value;
-
-		    return this;
 		}
 
         this.width = function(value) {
@@ -63,8 +61,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
             
             _area.width = value;
-
-            return this;
         }
 
 
@@ -74,8 +70,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
             
             _area.x = value;
-
-            return this;
         }
 
 
@@ -85,8 +79,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
             
             _area.y = value;
-
-            return this;
         }
 
         this.x2 = function(value) {
@@ -95,8 +87,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
             
             _area.x2 = value;
-
-            return this;
         }
 
 
@@ -106,8 +96,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
             
             _area.y2 = value;
-
-            return this;
         }
 
 

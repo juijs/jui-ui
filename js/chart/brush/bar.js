@@ -21,31 +21,31 @@ jui.define("chart.brush.bar", [], function() {
 				var startY = brush.y(i) - half_height/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startX = brush.x(chart.series(brush.target[j]).data[i]);
+					var startX = brush.x(chart.series(brush.target[j]).data[i]),
+                        r = null;
 
 					if (startX >= zeroX) {
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							x : zeroX,
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					} else {
 						var w = Math.abs(zeroX - startX);
 
-						var r = chart.svg.rect({
+						r = chart.svg.rect({
 							y : startY,
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
 							fill : chart.theme.color(j, brush.colors)
 						});
-
-						g.append(r);
 					}
+
+                    this.addEvent(brush, chart, r, i, j);
+                    g.append(r);
 
 					startY += barHeight + innerPadding;
 				}

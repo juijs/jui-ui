@@ -1,6 +1,12 @@
 jui.define("chart.brush.core", [], function() {
 	var CoreBrush = function() {
 
+        /**
+         * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
+         *
+         * @param K
+         * @returns {{p1: Array, p2: Array}}
+         */
 		this.curvePoints = function(K) {
 			var p1 = [];
 			var p2 = [];
@@ -55,6 +61,16 @@ jui.define("chart.brush.core", [], function() {
 			};
 		}
 
+        /**
+         * 값에 비례하여 반지름을 구하는 함수
+         *
+         * @param value
+         * @param minValue
+         * @param maxValue
+         * @param minRadius
+         * @param maxRadius
+         * @returns {*}
+         */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
             var range = maxRadius - minRadius,
                 tg = range * getPer();
@@ -70,6 +86,13 @@ jui.define("chart.brush.core", [], function() {
             return tg + minRadius;
         }
 
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
         this.getXY = function(brush, chart) {
             var xy = [];
 
@@ -97,6 +120,14 @@ jui.define("chart.brush.core", [], function() {
             return xy;
         }
 
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         * 단, 'y' 좌표는 다음 데이터 보다 높게 구해진다.
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
         this.getStackXY = function(brush, chart) {
             var xy = [];
 
@@ -127,6 +158,36 @@ jui.define("chart.brush.core", [], function() {
             }
 
             return xy;
+        }
+
+        /**
+         * 브러쉬 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param brush
+         * @param chart
+         * @param element
+         * @param targetIndex
+         * @param dataIndex
+         */
+        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
+            var obj = {
+                key: brush.index,
+                target: brush.target[targetIndex],
+                data: chart.data(dataIndex)
+            };
+
+            element.on("click", function(e) {
+                chart.emit("click", [ obj, e ]);
+            });
+
+            element.on("dblclick", function(e) {
+                chart.emit("dblclick", [ obj, e ]);
+            });
+
+            element.on("contextmenu", function(e) {
+                chart.emit("rclick", [ obj, e ]);
+                e.preventDefault();
+            });
         }
 	}
 

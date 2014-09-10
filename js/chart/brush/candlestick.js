@@ -81,6 +81,8 @@ jui.define("chart.brush.candlestick", [], function() {
                     });
                 }
 
+                this.addEvent(brush, chart, r, null, i);
+
                 g.append(l);
                 g.append(r);
             }

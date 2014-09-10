@@ -1,85 +1,76 @@
 jui.define("chart.brush.equalizer", [], function() {
 
-	var EqualizerBrush = function(brush) {
-		var g, zeroY, count, width, barWidth, unit, gap, half_width;
-		var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
+    var EqualizerBrush = function(brush) {
+        var g, zeroY, count, width, barWidth, unit, gap, half_width;
+        var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
 
-		this.drawBefore = function(chart) {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.x(), chart.y());
 
-			zeroY = brush.y(0);
-			count = chart.data().length;
- 
-			width = brush.x.rangeBand();
-			half_width = (width - outerPadding * 2) / 2; 
-			barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+            zeroY = brush.y(0);
+            count = chart.data().length;
 
-			unit = brush.unit || 5;
-			gap = brush.gap || 1;
-		}
+            width = brush.x.rangeBand();
+            half_width = (width - outerPadding * 2) / 2;
+            barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
-		this.draw = function(chart) {
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - half_width;
+            unit = brush.unit || 5;
+            gap = brush.gap || 1;
+        }
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.series(brush.target[j]).data[i]);
+        this.draw = function(chart) {
+            for (var i = 0; i < count; i++) {
+                var startX = brush.x(i) - half_width;
 
-					if (startY <= zeroY) {
+                for (var j = 0; j < brush.target.length; j++) {
+                    var barGroup = chart.svg.group();
+                    var startY = brush.y(chart.series(brush.target[j]).data[i]),
+                        padding = 1.5,
+                        eY = zeroY,
+                        eIndex = 0;
 
-						var height = Math.abs(zeroY - startY)
-						var padding = 1.5;
+                    if (startY <= zeroY) {
+                        while (eY > startY) {
+                            var unitHeight = (eY - unit < startY ) ? Math.abs(eY - startY) : unit;
+                            var r = chart.svg.rect({
+                                x : startX,
+                                y : eY - unitHeight,
+                                width : barWidth,
+                                height : unitHeight,
+                                fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
+                            });
 
-						var eY = zeroY;
-						var eMin = startY;
-						var eIndex = 0;
-						while (eY > eMin) {
+                            eY -= unitHeight + padding;
+                            eIndex++;
 
-							var unitHeight = (eY - unit < eMin ) ? Math.abs(eY - eMin) : unit;
+                            barGroup.append(r);
+                        }
+                    } else {
+                        while (eY < startY) {
+                            var unitHeight = (eY + unit > startY ) ? Math.abs(eY - startY) : unit;
+                            var r = chart.svg.rect({
+                                x : startX,
+                                y : eY,
+                                width : barWidth,
+                                height : unitHeight,
+                                fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
+                            });
 
-							var r = chart.svg.rect({
-								x : startX,
-								y : eY - unitHeight,
-								width : barWidth,
-								height : unitHeight,
-								fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
-							});
+                            eY += unitHeight + padding;
+                            eIndex++;
 
-							eY -= unitHeight + padding;
-							eIndex++;
+                            barGroup.append(r);
+                        }
+                    }
 
-							g.append(r);
-						}
-					} else {
+                    this.addEvent(brush, chart, barGroup, j, i);
+                    g.append(barGroup);
 
-						var padding = 1.5;
+                    startX += barWidth + innerPadding;
+                }
+            }
+        }
+    }
 
-						var eY = zeroY;
-						var eMax = startY;
-						var eIndex = 0;
-						while (eY < eMax) {
-							var unitHeight = (eY + unit > eMax ) ? Math.abs(eY - eMax) : unit;
-							var r = chart.svg.rect({
-								x : startX,
-								y : eY,
-								width : barWidth,
-								height : unitHeight,
-								fill : chart.theme.color(Math.floor(eIndex / gap), brush.colors)
-							});
-
-							eY += unitHeight + padding;
-							eIndex++;
-
-							g.append(r);
-						}
-
-					}
-
-					startX += barWidth + innerPadding;
-				}
-			}
-		}
-	}
-
-	return EqualizerBrush;
+    return EqualizerBrush;
 }, "chart.brush.core");

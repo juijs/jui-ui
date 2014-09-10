@@ -65,6 +65,8 @@ jui.define("chart.brush.scatter", [], function() {
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    this.addEvent(brush, chart, p, i, j);
+
                     g.append(p);
                 }
             }
