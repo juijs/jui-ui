@@ -44,7 +44,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
                     g.append(r);
 
 					startY += barHeight + innerPadding;

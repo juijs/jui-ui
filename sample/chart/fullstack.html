@@ -45,6 +45,11 @@
             brush : {
                 type : 'fullstack',
                 target : ['name', 'value', 'test']
+            },
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                }
             }
         }).render();
 	})

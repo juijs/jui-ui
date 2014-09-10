@@ -160,7 +160,16 @@ jui.define("chart.brush.core", [], function() {
             return xy;
         }
 
-        this.setEvents = function(brush, chart, element, targetIndex, dataIndex) {
+        /**
+         * 브러쉬 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param brush
+         * @param chart
+         * @param element
+         * @param targetIndex
+         * @param dataIndex
+         */
+        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
             var obj = {
                 key: brush.index,
                 target: brush.target[targetIndex],

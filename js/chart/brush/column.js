@@ -41,7 +41,7 @@ jui.define("chart.brush.column", [], function() {
 						});
 					}
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
                     g.append(r);
 
 					startX += columnWidth + innerPadding;

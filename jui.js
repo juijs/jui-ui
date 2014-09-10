@@ -11885,7 +11885,16 @@ jui.define("chart.brush.core", [], function() {
             return xy;
         }
 
-        this.setEvents = function(brush, chart, element, targetIndex, dataIndex) {
+        /**
+         * 브러쉬 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param brush
+         * @param chart
+         * @param element
+         * @param targetIndex
+         * @param dataIndex
+         */
+        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
             var obj = {
                 key: brush.index,
                 target: brush.target[targetIndex],
@@ -11955,7 +11964,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
                     g.append(r);
 
 					startY += barHeight + innerPadding;
@@ -11999,7 +12008,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
-                    this.setEvents(brush, chart, b, i, j);
+                    this.addEvent(brush, chart, b, i, j);
                     g.append(b);
                 }
             }
@@ -12095,7 +12104,7 @@ jui.define("chart.brush.candlestick", [], function() {
                     });
                 }
 
-                this.setEvents(brush, chart, r, null, i);
+                this.addEvent(brush, chart, r, null, i);
 
                 g.append(l);
                 g.append(r);
@@ -12149,7 +12158,7 @@ jui.define("chart.brush.column", [], function() {
 						});
 					}
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
                     g.append(r);
 
 					startX += columnWidth + innerPadding;
@@ -12262,7 +12271,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('donutBorderWidth')
 				});
 
-                this.setEvents(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, i, null);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12338,7 +12347,7 @@ jui.define("chart.brush.equalizer", [], function() {
                         }
                     }
 
-                    this.setEvents(brush, chart, barGroup, j, i);
+                    this.addEvent(brush, chart, barGroup, j, i);
                     g.append(barGroup);
 
                     startX += barWidth + innerPadding;
@@ -12396,7 +12405,8 @@ jui.define("chart.brush.fullstack", [], function() {
 						height : height,
 						fill : chart.theme.color(j, brush.colors)
 					});
-					
+
+                    this.addEvent(brush, chart, r, j, i);
 					g.append(r);
 
 					if (brush.text) {
@@ -12458,7 +12468,7 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(brush, chart, path[k], k);
-                this.setEvents(brush, chart, p, k, null);
+                this.addEvent(brush, chart, p, k, null);
 
                 g.append(p);
             }
@@ -12596,7 +12606,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('pieBorderWidth')
 				});
 
-                this.setEvents(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, i, null);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12674,7 +12684,7 @@ jui.define("chart.brush.scatter", [], function() {
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
-                    this.setEvents(brush, chart, p, i, j);
+                    this.addEvent(brush, chart, p, i, j);
 
                     g.append(p);
                 }
@@ -12728,7 +12738,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
 					g.append(r);
 
 					startX += widthArr[j]
@@ -12783,7 +12793,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
 					g.append(r);
 
 					startY += heightArr[j]

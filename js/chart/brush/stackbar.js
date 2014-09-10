@@ -38,7 +38,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
 					g.append(r);
 
 					startX += widthArr[j]

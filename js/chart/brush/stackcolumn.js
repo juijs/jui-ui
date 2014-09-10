@@ -40,7 +40,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						fill : chart.theme.color(j, brush.colors)
 					});
 
-                    this.setEvents(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, i, j);
 					g.append(r);
 
 					startY += heightArr[j]
