@@ -430,6 +430,30 @@
 	        
 	        return clone;
 		},
+        deepClone: function(obj) {
+            var value = '';
+
+            if (this.typeCheck('array', obj)) {
+                value = [];
+
+                for(var i = 0, len = obj.length; i < len; i++) {
+                    value[i] = this.deepClone(obj[i]);
+                }
+            } else if (this.typeCheck("date", obj)) {
+                value = obj;
+            } else if (this.typeCheck("object", obj)) {
+                value = {};
+
+                for(var key in obj) {
+                    value[key] = this.deepClone(obj[key]);
+                }
+
+            } else {
+                value = obj;
+            }
+
+            return value ;
+        },
 		sort: function(array) {
 			return new QuickSort(array);
 		},
@@ -1436,7 +1460,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add({ type: UI.type, list: list, selector: selector, options: options, index: UIManager.size() });
+            UIManager.add({ type: UI.type, list: list, selector: selector, options: options });
 
             return (list.length == 1) ? list[0] : list;
         }
