@@ -631,8 +631,6 @@
         },
         dateFormat: function(date, format, utc) {
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             var ddd = ["\x03", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -921,11 +919,12 @@
         /**
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
+         * @param logUrl
          * @returns {Window}
          */
-		log: function() {
+		log: function(logUrl) {
 			var jui_mng = window.open(
-	    		this.logUrl, 
+                (logUrl) ? logUrl :this.logUrl,
 	    		"JUIM",
 	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
 	    	);
