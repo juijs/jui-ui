@@ -179,6 +179,10 @@ jui.define("chart.brush.core", [], function() {
             element.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
+            
+            element.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
 
             element.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
