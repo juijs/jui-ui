@@ -430,31 +430,6 @@
 	        
 	        return clone;
 		},
-		deepClone: function(obj) {
-			
-			var value = '';
-			
-			if (this.typeCheck('array', obj)) {
-				value = [];
-				
-				for(var i = 0, len = obj.length; i < len; i++) {
-					value[i] = this.deepClone(obj[i]);
-				}				
-			} else if (this.typeCheck("date", obj)) {
-				value = obj;
-			} else if (this.typeCheck("object", obj)) {
-				value = {};
-				
-				for(var key in obj) {
-					value[key] = this.deepClone(obj[key]);
-				}
-				
-			} else {
-				value = obj;  
-			}
-			
-			return value ;
-		},
 		sort: function(array) {
 			return new QuickSort(array);
 		},
@@ -655,8 +630,6 @@
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
         dateFormat: function(date, format, utc) {
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -946,11 +919,12 @@
         /**
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
+         * @param logUrl
          * @returns {Window}
          */
-		log: function() {
+		log: function(logUrl) {
 			var jui_mng = window.open(
-	    		this.logUrl, 
+                (logUrl) ? logUrl :this.logUrl,
 	    		"JUIM",
 	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
 	    	);
