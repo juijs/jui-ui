@@ -495,7 +495,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add({ type: UI.type, list: list, selector: selector, options: options, index: UIManager.size() });
+            UIManager.add({ type: UI.type, list: list, selector: selector, options: options });
 
             return (list.length == 1) ? list[0] : list;
         }

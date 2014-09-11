@@ -430,6 +430,30 @@
 	        
 	        return clone;
 		},
+        deepClone: function(obj) {
+            var value = '';
+
+            if (this.typeCheck('array', obj)) {
+                value = [];
+
+                for(var i = 0, len = obj.length; i < len; i++) {
+                    value[i] = this.deepClone(obj[i]);
+                }
+            } else if (this.typeCheck("date", obj)) {
+                value = obj;
+            } else if (this.typeCheck("object", obj)) {
+                value = {};
+
+                for(var key in obj) {
+                    value[key] = this.deepClone(obj[key]);
+                }
+
+            } else {
+                value = obj;
+            }
+
+            return value ;
+        },
 		sort: function(array) {
 			return new QuickSort(array);
 		},
