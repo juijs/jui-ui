@@ -430,31 +430,30 @@
 	        
 	        return clone;
 		},
-		deepClone: function(obj) {
-			
-			var value = '';
-			
-			if (this.typeCheck('array', obj)) {
-				value = [];
-				
-				for(var i = 0, len = obj.length; i < len; i++) {
-					value[i] = this.deepClone(obj[i]);
-				}				
-			} else if (this.typeCheck("date", obj)) {
-				value = obj;
-			} else if (this.typeCheck("object", obj)) {
-				value = {};
-				
-				for(var key in obj) {
-					value[key] = this.deepClone(obj[key]);
-				}
-				
-			} else {
-				value = obj;  
-			}
-			
-			return value ;
-		},
+        deepClone: function(obj) {
+            var value = '';
+
+            if (this.typeCheck('array', obj)) {
+                value = [];
+
+                for(var i = 0, len = obj.length; i < len; i++) {
+                    value[i] = this.deepClone(obj[i]);
+                }
+            } else if (this.typeCheck("date", obj)) {
+                value = obj;
+            } else if (this.typeCheck("object", obj)) {
+                value = {};
+
+                for(var key in obj) {
+                    value[key] = this.deepClone(obj[key]);
+                }
+
+            } else {
+                value = obj;
+            }
+
+            return value ;
+        },
 		sort: function(array) {
 			return new QuickSort(array);
 		},
@@ -655,8 +654,6 @@
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
         dateFormat: function(date, format, utc) {
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -946,11 +943,12 @@
         /**
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
+         * @param logUrl
          * @returns {Window}
          */
-		log: function() {
+		log: function(logUrl) {
 			var jui_mng = window.open(
-	    		this.logUrl, 
+                (logUrl) ? logUrl :this.logUrl,
 	    		"JUIM",
 	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
 	    	);
@@ -1462,7 +1460,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add({ type: UI.type, list: list, selector: selector, options: options, index: UIManager.size() });
+            UIManager.add({ type: UI.type, list: list, selector: selector, options: options });
 
             return (list.length == 1) ? list[0] : list;
         }
@@ -2272,6 +2270,22 @@ jui.define("util.svg.element", [], function() {
             this.element.addEventListener(type, function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
+                }
+            }, false);
+
+            return this;
+        }
+
+        this.hover = function(overHandler, outHandler) {
+            this.element.addEventListener("mouseover", function(e) {
+                if(typeof(overHandler) == "function") {
+                    overHandler.call(this, e);
+                }
+            }, false);
+
+            this.element.addEventListener("mouseout", function(e) {
+                if(typeof(outHandler) == "function") {
+                    outHandler.call(this, e);
                 }
             }, false);
 
@@ -12016,6 +12030,10 @@ jui.define("chart.brush.core", [], function() {
             element.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
+            
+            element.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
 
             element.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
@@ -12746,11 +12764,7 @@ jui.define("chart.brush.scatter", [], function() {
             if(symbol == "triangle" || symbol == "cross") {
                 elem = chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
-                        var poly = chart.svg.polygon({
-                            fill: color,
-                            stroke: borderColor,
-                            "stroke-width": borderWidth
-                        });
+                        var poly = chart.svg.polygon();
 
                         poly.point(0, h)
                             .point(w, h)
@@ -12767,23 +12781,28 @@ jui.define("chart.brush.scatter", [], function() {
                         width: w,
                         height: h,
                         x: pos.x - (w / 2),
-                        y: pos.y - (h / 2),
-                        fill: color,
-                        stroke: borderColor,
-                        "stroke-width": borderWidth
+                        y: pos.y - (h / 2)
                     });
                 } else {
                     elem = chart.svg.ellipse({
                         rx: w / 2,
                         ry: h / 2,
                         cx: pos.x,
-                        cy: pos.y,
-                        fill: color,
-                        stroke: borderColor,
-                        "stroke-width": borderWidth
+                        cy: pos.y
                     });
                 }
             }
+
+            elem.attr({
+                fill: color,
+                stroke: borderColor,
+                "stroke-width": borderWidth
+            })
+            .hover(function() {
+                elem.attr({ stroke: color });
+            }, function() {
+                elem.attr({ stroke: borderColor });
+            });
 
             return elem;
         }
