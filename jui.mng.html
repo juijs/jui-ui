@@ -101,16 +101,13 @@ function juiSetTotalCount() {
 }
 
 function juiSetTypeCount() {
-	var types = [ 
-		"button", "combo", "dropdown", "modal", "paging", "tooltip", 
-		"autocomplete", "tab", "table", "tree", "window", "xtable" 
-	],
-	counts = {};
+	var types = p_jui.getClassAll(),
+	    counts = {};
 
 	for(var i = 0; i < types.length; i++) {
 		var uiList = p_jui.get(types[i]);
 
-		counts[types[i]] = { 
+		counts[types[i].type] = {
 			caller: uiList.length,
 			obj: 0
 		}
