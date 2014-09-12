@@ -43,9 +43,10 @@ jui.define("chart.theme.dark", [], function() {
 
         // brush styles
     	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
+    	stackGaugeBackgroundColor : "#232323",
+    	pieBorderColor : "#232323",
         pieBorderWidth : 1,
-        donutBorderColor : "white",
+        donutBorderColor : "#232323",
         donutBorderWidth : 1,
     	areaOpacity : 0.5,
         bubbleOpacity : 0.5,

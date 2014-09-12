@@ -159,7 +159,14 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			if (arguments.length == 0) {
 				return _theme;
 			} else if (arguments.length == 1) {
-				return _theme[key];
+				
+				if (_theme[key]) {
+					return _theme[key];
+				}
+				
+				if (_.typeCheck("string", key)) {
+					 _theme = jui.include("chart.theme." + key);
+				}
 			} else if (arguments.length == 2) {
 				_theme[key] = value;
 				
