@@ -17,36 +17,31 @@
             height : 400,
             theme : location.href.split("?")[1].split("=")[1],
             data : [
-                { name : 2, value : 15 },
-                { name : 5, value : 11 },
-                { name : 8, value : 10 },
-                { name : 1, value : 12 },
+                { name : 2, value : 15, domain: "week1" },
+                { name : 13, value : 6, domain: "week2" },
+                { name : 8, value : 10, domain: "week3" },
+                { name : 2, value : 5, domain: "week4" },
             ],
             grid : {
                 x : {
-                    domain : [ "week1", "week2", "week3", "week4" ],
+                    target : "domain",
                     line : true
                 },
-                y : {
+                y :
+                {
                     type : 'range',
                     target : [ "name", "value" ],
-                    step : 10
-                },
-                y1 : {
-                    type : "range",
-                    target : function(data) {
-                        return data.name + data.value + 10;
-                    },
                     step : 10
                 }
             },
             series : {
                 name : { text : "test" },
-                value : { text : "test"}
+                value : { text : "test" }
             },
             brush : [
-                { type : 'line', target : "name", colors : [ "#7977C2" ] },
-                { type : 'line', target : "value", y1 : 0, colors : [ "#7BBAE7" ]   }
+                { type : "column", target : "value", colors : [ "#7977C2" ] },
+                { type : "line", symbol: "curve", target : "name", colors : [ "#7BBAE7" ] },
+                { type : "scatter", size: 7, target : "name", colors : [ "#7BBAE7" ] }
             ]
         }).render();
 	})
