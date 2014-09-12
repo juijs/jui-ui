@@ -1,4 +1,4 @@
-jui.define("chart.theme.white", [], function() {
+jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
         "#7977C2",
         "#7BBAE7",

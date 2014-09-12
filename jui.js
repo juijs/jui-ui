@@ -9832,7 +9832,7 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			});
 
             // 차트 테마 설정
-            _theme = jui.include("chart.theme." + this.get("theme"));
+            this.setTheme(this.get('theme'))
 
             // UI 바인딩 설정
             if(this.get("bind") != null) {
@@ -9851,6 +9851,11 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
 		}
 		
+		this.setTheme = function(theme) {
+			 _theme = jui.include("chart.theme." + theme);
+
+		}
+		
 		this.theme = function(key, value, value2) {
 			if (arguments.length == 0) {
 				return _theme;
@@ -9858,10 +9863,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 				
 				if (_theme[key]) {
 					return _theme[key];
-				}
-				
-				if (_.typeCheck("string", key)) {
-					 _theme = jui.include("chart.theme." + key);
 				}
 			} else if (arguments.length == 2) {
 				_theme[key] = value;
@@ -10178,7 +10179,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				},
 				
 				// chart
-				"theme" : "white",
+				"theme" : "jennifer",
 				"labels" : [],
 				"series" : {},
 				"grid" : {},
@@ -10192,7 +10193,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	return UI;
 }, "chart.core");
 
-jui.define("chart.theme.white", [], function() {
+jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
         "#7977C2",
         "#7BBAE7",

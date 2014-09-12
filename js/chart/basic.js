@@ -264,7 +264,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				},
 				
 				// chart
-				"theme" : "white",
+				"theme" : "jennifer",
 				"labels" : [],
 				"series" : {},
 				"grid" : {},
