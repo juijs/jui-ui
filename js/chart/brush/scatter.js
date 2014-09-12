@@ -21,10 +21,22 @@ jui.define("chart.brush.scatter", [], function() {
                             .point(w, h)
                             .point(w / 2, 0);
                     } else {
-                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h });
-                        chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
-                    }
+                        var l1 = chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h }),
+                            l2 = chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
 
+                        l1.hover(over, out);
+                        l2.hover(over, out);
+
+                        function over() {
+                            l1.attr({ "stroke-width": 3 });
+                            l2.attr({ "stroke-width": 3 });
+                        }
+
+                        function out() {
+                            l1.attr({ "stroke-width": 2 });
+                            l2.attr({ "stroke-width": 2 });
+                        }
+                    }
                 }).translate(pos.x - (w / 2), pos.y - (h / 2));
             } else {
                 if(symbol == "rectangle") {
