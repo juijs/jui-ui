@@ -4,14 +4,14 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		var _area, _theme;
 		
 		function calculate(self) {
-			var widget = self.setWidget(self.get('widget')),
+			var padding = self.setPadding(self.get('padding')),
                 max = self.svg.size();
 
 			var chart = {
-				width : max.width - (widget.left.size + widget.right.size),
-				height : max.height - (widget.top.size + widget.bottom.size),
-				x : widget.left.size,
-				y : widget.top.size
+				width : max.width - (padding.left + padding.right),
+				height : max.height - (padding.top + padding.bottom),
+				x : padding.left,
+				y : padding.top
 			};
 
 			// chart 영역 계산
@@ -21,17 +21,17 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			_area = chart;
 		}
 		
-		this.setWidget = function(widget) {
-            if (widget == 'empty') {
-            	widget = {
-					left : { size : 0 },
-					right : { size : 0 },
-					bottom : { size : 0 },
-					top : { size : 0 }
+		this.setPadding = function(padding) {
+            if (padding == 'empty') {
+            	padding = {
+					left : 0 ,
+					right : 0 ,
+					bottom : 0 ,
+					top : 0 
 				};
             }
 
-			return widget;			
+			return padding;			
 		}            
 		
 		this.get = function(key) {

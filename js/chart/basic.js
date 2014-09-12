@@ -3,7 +3,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	var UI = function() {
 		
 		var self = this; 
-		var _grid = {}, _widget = [], _brush = [], _data, _series, _scales = {};
+		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {};
 		
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
@@ -29,29 +29,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _grid;
 		}
 		
-		this.widget = function(key) {
-			if (_widget[key]) {
-				return _widget[key];
+		this.padding = function(key) {
+			if (_padding[key]) {
+				return _padding[key];
 			}
 
-			return _widget;
+			return _padding;
 		}
 		
-		this.widget.size = function(key) {
-			var obj = self.widget(key);
-			
-			if (!_.typeCheck("array", obj)) {
-				obj = [obj];
-			}
-			
-			var size = 0;
-			for(var i = 0; i < obj.length; i++) {
-				size += obj[i].size;
-			}
-			
-			return size;
-		}
-
 		this.brush = function(key) {
 			if (_brush[key]) {
 				return _brush[key];
@@ -82,7 +67,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             var data = _.deepClone(this.get('data'));
             var series = _.deepClone(this.get('series'));
             var grid = _.deepClone(this.get('grid'));
-            var widget = _.deepClone(this.setWidget(this.get('widget')));
+            var padding = _.deepClone(this.setPadding(this.get('padding')));
             var brush = _.deepClone(this.get('brush'));
             var series_list = [];
 
@@ -142,7 +127,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _data = data;
             _series = series;
 			_grid = grid;
-			_widget = widget;
+			_padding = padding;
 		}
 		
 		this.createId = function(key) {
@@ -260,29 +245,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			}
 			
-			var widget = this.widget();
-			
-			if (widget != null) {
-				for(var k in widget) {
-					
-					if (!_.typeCheck("array", widget[k])) {
-						widget[k] = [widget[k]];
-					}
-					
-					for(var i = 0; i < widget[k].length; i++) {
-						var w  = widget[k][i];
-
-						if (w.type || w.text) {
-							var Obj = jui.include("chart.widget." + (w.type || "text"));
-							new Obj(k, w).render(this);						
-						}
-						
-					}
-					
-
-				}
-			}
-			
 			this.emit("draw", []);
 		}
 	}
@@ -294,11 +256,11 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"height" : "100%",
 
 				// style
-				"widget" : {
-					left : { size : 50 },
-					right : { size : 50 },
-					bottom : { size : 50 },
-					top : { size : 50 }
+				"padding" : {
+					left : 50 ,
+					right : 50,
+					bottom : 50,
+					top : 50 
 				},
 				
 				// chart

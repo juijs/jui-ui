@@ -9700,14 +9700,14 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		var _area, _theme;
 		
 		function calculate(self) {
-			var widget = self.setWidget(self.get('widget')),
+			var padding = self.setPadding(self.get('padding')),
                 max = self.svg.size();
 
 			var chart = {
-				width : max.width - (widget.left.size + widget.right.size),
-				height : max.height - (widget.top.size + widget.bottom.size),
-				x : widget.left.size,
-				y : widget.top.size
+				width : max.width - (padding.left + padding.right),
+				height : max.height - (padding.top + padding.bottom),
+				x : padding.left,
+				y : padding.top
 			};
 
 			// chart 영역 계산
@@ -9717,17 +9717,17 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			_area = chart;
 		}
 		
-		this.setWidget = function(widget) {
-            if (widget == 'empty') {
-            	widget = {
-					left : { size : 0 },
-					right : { size : 0 },
-					bottom : { size : 0 },
-					top : { size : 0 }
+		this.setPadding = function(padding) {
+            if (padding == 'empty') {
+            	padding = {
+					left : 0 ,
+					right : 0 ,
+					bottom : 0 ,
+					top : 0 
 				};
             }
 
-			return widget;			
+			return padding;			
 		}            
 		
 		this.get = function(key) {
@@ -9910,7 +9910,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	var UI = function() {
 		
 		var self = this; 
-		var _grid = {}, _widget = [], _brush = [], _data, _series, _scales = {};
+		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {};
 		
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
@@ -9936,29 +9936,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _grid;
 		}
 		
-		this.widget = function(key) {
-			if (_widget[key]) {
-				return _widget[key];
+		this.padding = function(key) {
+			if (_padding[key]) {
+				return _padding[key];
 			}
 
-			return _widget;
+			return _padding;
 		}
 		
-		this.widget.size = function(key) {
-			var obj = self.widget(key);
-			
-			if (!_.typeCheck("array", obj)) {
-				obj = [obj];
-			}
-			
-			var size = 0;
-			for(var i = 0; i < obj.length; i++) {
-				size += obj[i].size;
-			}
-			
-			return size;
-		}
-
 		this.brush = function(key) {
 			if (_brush[key]) {
 				return _brush[key];
@@ -9989,7 +9974,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             var data = _.deepClone(this.get('data'));
             var series = _.deepClone(this.get('series'));
             var grid = _.deepClone(this.get('grid'));
-            var widget = _.deepClone(this.setWidget(this.get('widget')));
+            var padding = _.deepClone(this.setPadding(this.get('padding')));
             var brush = _.deepClone(this.get('brush'));
             var series_list = [];
 
@@ -10049,7 +10034,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _data = data;
             _series = series;
 			_grid = grid;
-			_widget = widget;
+			_padding = padding;
 		}
 		
 		this.createId = function(key) {
@@ -10167,29 +10152,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			}
 			
-			var widget = this.widget();
-			
-			if (widget != null) {
-				for(var k in widget) {
-					
-					if (!_.typeCheck("array", widget[k])) {
-						widget[k] = [widget[k]];
-					}
-					
-					for(var i = 0; i < widget[k].length; i++) {
-						var w  = widget[k][i];
-
-						if (w.type || w.text) {
-							var Obj = jui.include("chart.widget." + (w.type || "text"));
-							new Obj(k, w).render(this);						
-						}
-						
-					}
-					
-
-				}
-			}
-			
 			this.emit("draw", []);
 		}
 	}
@@ -10201,11 +10163,11 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"height" : "100%",
 
 				// style
-				"widget" : {
-					left : { size : 50 },
-					right : { size : 50 },
-					bottom : { size : 50 },
-					top : { size : 50 }
+				"padding" : {
+					left : 50 ,
+					right : 50,
+					bottom : 50,
+					top : 50 
 				},
 				
 				// chart
@@ -10934,55 +10896,6 @@ jui.define("chart.theme.korea", [], function() {
         scatterBorderWidth : 1
     }
 });
-jui.define("chart.widget.core", [], function() {
-	var CoreWidget = function() {
-		
-	}
-
-	return CoreWidget;
-}, "chart.draw"); 
-jui.define("chart.widget.text", [], function() {
-
-	var TextWidget = function(orient, widget) {
-		var self = this;
-
-		this.drawBefore = function(chart) {
-			
-		}
-
-		this.draw = function(chart) {
-			var width = chart.width(), height = chart.height();
-			
-			if (!widget.text) return; 
-
-			if (orient == 'left') {
-				var x = 10;
-				var y = height/2 + chart.widget.size('top');
-				
-				chart.svg.text({x : x , y : y}, widget.text||"").rotate(-90, x, y);
-				
-			} else if (orient == 'right') {
-				var x = chart.x2()+10;
-				var y = height/2 + chart.widget.size('top');
-				
-				chart.svg.text({x : x , y : y}, widget.text||"").rotate(90, x, y);
-			} else if (orient == 'top') {
-				var x = width/2 + chart.widget.size('left');
-				var y = 20;
-				
-				chart.svg.text({x : x , y : y}, widget.text||"");
-			} else if (orient == 'bottom') {
-				var x = width/2 +  chart.widget.size('left');
-				var y = chart.y2() + chart.widget.size(orient);
-				
-				chart.svg.text({x : x , y : y}, widget.text||"");
-			}
-		}
-	}
-
-	return TextWidget;
-}, "chart.widget.core");
-
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
 	var CoreGrid = function() {
 
