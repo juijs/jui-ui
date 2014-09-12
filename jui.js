@@ -12025,19 +12025,25 @@ jui.define("chart.brush.core", [], function() {
                     data = chart.data(i);
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]];
+                    var key = brush.target[j],
+                        value = data[key],
+                        series = chart.series(key);
 
                     if (!xy[j]) {
                         xy[j] = {
                             x: [],
                             y: [],
-                            value: []
+                            value: [],
+                            min: [],
+                            max: []
                         };
                     }
 
                     xy[j].x.push(startX);
                     xy[j].y.push(brush.y(value));
                     xy[j].value.push(value);
+                    xy[j].min.push((value == series.min) ? true : false);
+                    xy[j].max.push((value == series.max) ? true : false);
                 }
             }
 
@@ -12052,32 +12058,23 @@ jui.define("chart.brush.core", [], function() {
          * @param chart
          * @returns {Array}
          */
-        this.getStackXY = function(brush, chart) {
-            var xy = [];
 
-            for (var i = 0, len =  chart.data().length; i < len; i++) {
-                var startX = brush.x(i),
-                    data = chart.data(i),
+        this.getStackXY = function(brush, chart) {
+            var xy = this.getXY(brush, chart);
+
+            for (var i = 0, len = chart.data().length; i < len; i++) {
+                var data = chart.data(i),
                     valueSum = 0;
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]];
+                    var key = brush.target[j],
+                        value = data[key];
 
                     if(j > 0) {
                         valueSum += data[brush.target[j - 1]];
                     }
 
-                    if (!xy[j]) {
-                        xy[j] = {
-                            x: [],
-                            y: [],
-                            value: []
-                        };
-                    }
-
-                    xy[j].x.push(startX);
-                    xy[j].y.push(brush.y(value + valueSum));
-                    xy[j].value.push(value);
+                    xy[j].y[i] = brush.y(value + valueSum);
                 }
             }
 
