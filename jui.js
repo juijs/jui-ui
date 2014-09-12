@@ -430,31 +430,30 @@
 	        
 	        return clone;
 		},
-		deepClone: function(obj) {
-			
-			var value = '';
-			
-			if (this.typeCheck('array', obj)) {
-				value = [];
-				
-				for(var i = 0, len = obj.length; i < len; i++) {
-					value[i] = this.deepClone(obj[i]);
-				}				
-			} else if (this.typeCheck("date", obj)) {
-				value = obj;
-			} else if (this.typeCheck("object", obj)) {
-				value = {};
-				
-				for(var key in obj) {
-					value[key] = this.deepClone(obj[key]);
-				}
-				
-			} else {
-				value = obj;  
-			}
-			
-			return value ;
-		},
+        deepClone: function(obj) {
+            var value = '';
+
+            if (this.typeCheck('array', obj)) {
+                value = [];
+
+                for(var i = 0, len = obj.length; i < len; i++) {
+                    value[i] = this.deepClone(obj[i]);
+                }
+            } else if (this.typeCheck("date", obj)) {
+                value = obj;
+            } else if (this.typeCheck("object", obj)) {
+                value = {};
+
+                for(var key in obj) {
+                    value[key] = this.deepClone(obj[key]);
+                }
+
+            } else {
+                value = obj;
+            }
+
+            return value ;
+        },
 		sort: function(array) {
 			return new QuickSort(array);
 		},
@@ -655,8 +654,6 @@
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
         dateFormat: function(date, format, utc) {
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -946,11 +943,12 @@
         /**
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
+         * @param logUrl
          * @returns {Window}
          */
-		log: function() {
+		log: function(logUrl) {
 			var jui_mng = window.open(
-	    		this.logUrl, 
+                (logUrl) ? logUrl :this.logUrl,
 	    		"JUIM",
 	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
 	    	);
@@ -1462,7 +1460,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add({ type: UI.type, list: list, selector: selector, options: options, index: UIManager.size() });
+            UIManager.add({ type: UI.type, list: list, selector: selector, options: options });
 
             return (list.length == 1) ? list[0] : list;
         }
@@ -10489,7 +10487,7 @@ jui.define("chart.theme.d20", [], function() {
 		scatterBorderWidth : 1
 	}
 }); 
-jui.define("chart.theme.plat", [], function() {
+jui.define("chart.theme.flat", [], function() {
     var themeColors = [
         "#3A738A",
         "#EBD9A7",
@@ -10501,6 +10499,55 @@ jui.define("chart.theme.plat", [], function() {
         "#A7FFC6",
         "#FF7A62",
         "#CC6462"
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.2,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
+jui.define("chart.theme.flat2", [], function() {
+    var themeColors = [
+		"#4a87ee",
+		"#43cee6",
+		"#66cc33", 
+		"#f0b840", 
+		"#ef4e3a", 
+		"#8a6de9", 
+		"#444" 
     ];
 
     return {
@@ -10729,6 +10776,108 @@ jui.define("chart.theme.sns", [], function() {
         "#5DC8FF", // vimeo
         "#F9F9FB", // instagram
         "#9CA3AB", // wordpress
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.5,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
+jui.define("chart.theme.google", [], function() {
+    var themeColors = [
+		'#e2431e',
+        '#e7711b',
+        '#f1ca3a',
+        '#6f9654',
+        '#1c91c0',
+        '#43459d'
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.5,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
+jui.define("chart.theme.korea", [], function() {
+    var themeColors = [
+        "#2b2dc2",
+        "#e90026",
+        "#FFd200",
+        "#00a358",
+        "#00b5f1",
+        "#fe5dcb",
+        "#ff9600",
+        "#80144c",
+        "#0a2c76",
+        "#7d45ad",
+        "#fdd0cd",
+        "#bfc1c3"
     ];
 
     return {
@@ -12016,6 +12165,10 @@ jui.define("chart.brush.core", [], function() {
             element.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
+            
+            element.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
 
             element.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
@@ -12303,9 +12456,15 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			this.startX = 0;
 			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
 			this.innerRadius = this.outerRadius - this.size;
+			
 		}
 
-		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
+		    
+		    hasCircle = hasCircle || false; 
+		    
+		    var dist = Math.abs(outerRadius - innerRadius);
+		    
 			var g = chart.svg.group({
 				'class' : 'donut'
 			});
@@ -12323,6 +12482,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			var startInnerX = innerCircle.x;
 			var startInnerY = innerCircle.y;
 			
+			
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
@@ -12331,7 +12491,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 			// inner arc 에 대한 지점 설정 			
 			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle));
-			
+
 			// 중심점 이동 
 			g.translate(centerX, centerY);
 
@@ -12341,6 +12501,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			// 라인 긋기 
 			path.LineTo(innerCircle.x, innerCircle.y);
 
+
 			// inner arc 그리기 
 			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
 			
@@ -12349,6 +12510,36 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			path.ClosePath();
 
 			g.append(path);
+
+
+            if (hasCircle) {
+                var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle));
+                
+                var cX = centerCircle.x;
+                var cY = centerCircle.y;
+    
+                centerCircleLine = math.rotate(cX, cY, math.radian(endAngle));
+    
+                var circle = chart.svg.circle({
+                    cx : centerCircleLine.x,
+                    cy : centerCircleLine.y,
+                    r : dist/2,
+                    fill  : attr.fill
+                });
+                
+                g.append(circle);
+    
+                var circle2 = chart.svg.circle({
+                    cx : centerCircleLine.x,
+                    cy : centerCircleLine.y,
+                    r : 3,
+                    fill  : 'white'
+                });
+                
+                g.append(circle2);
+                    
+            }
+
 
 			return g;
 		}
@@ -13671,7 +13862,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				// 채워진 공간 그리기 
 				g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle, currentAngle,{
 					fill : chart.theme.color(i, brush.colors) 
-				})
+				}, true)
 	
 				group.append(g);
 				

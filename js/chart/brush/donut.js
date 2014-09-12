@@ -19,9 +19,15 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			this.startX = 0;
 			this.outerRadius = brush.outerRadius || Math.abs(this.startY);
 			this.innerRadius = this.outerRadius - this.size;
+			
 		}
 
-		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr) {
+		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
+		    
+		    hasCircle = hasCircle || false; 
+		    
+		    var dist = Math.abs(outerRadius - innerRadius);
+		    
 			var g = chart.svg.group({
 				'class' : 'donut'
 			});
@@ -39,6 +45,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			var startInnerX = innerCircle.x;
 			var startInnerY = innerCircle.y;
 			
+			
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
@@ -47,7 +54,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 			// inner arc 에 대한 지점 설정 			
 			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle));
-			
+
 			// 중심점 이동 
 			g.translate(centerX, centerY);
 
@@ -57,6 +64,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			// 라인 긋기 
 			path.LineTo(innerCircle.x, innerCircle.y);
 
+
 			// inner arc 그리기 
 			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
 			
@@ -65,6 +73,36 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			path.ClosePath();
 
 			g.append(path);
+
+
+            if (hasCircle) {
+                var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle));
+                
+                var cX = centerCircle.x;
+                var cY = centerCircle.y;
+    
+                centerCircleLine = math.rotate(cX, cY, math.radian(endAngle));
+    
+                var circle = chart.svg.circle({
+                    cx : centerCircleLine.x,
+                    cy : centerCircleLine.y,
+                    r : dist/2,
+                    fill  : attr.fill
+                });
+                
+                g.append(circle);
+    
+                var circle2 = chart.svg.circle({
+                    cx : centerCircleLine.x,
+                    cy : centerCircleLine.y,
+                    r : 3,
+                    fill  : 'white'
+                });
+                
+                g.append(circle2);
+                    
+            }
+
 
 			return g;
 		}

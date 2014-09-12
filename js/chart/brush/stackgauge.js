@@ -54,7 +54,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				// 채워진 공간 그리기 
 				g = this.drawDonut(chart, this.centerX, this.centerY, innerRadius, outerRadius, this.startAngle, currentAngle,{
 					fill : chart.theme.color(i, brush.colors) 
-				})
+				}, true)
 	
 				group.append(g);
 				

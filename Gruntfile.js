@@ -50,11 +50,15 @@ module.exports = function(grunt) {
                 "js/chart/theme/light.js",                
                 "js/chart/theme/d3.js",
                 "js/chart/theme/d20.js",
-                "js/chart/theme/plat.js",
+                "js/chart/theme/flat.js",
+                "js/chart/theme/flat2.js",                
                 "js/chart/theme/seoul.js",
                 "js/chart/theme/candy.js",
                 "js/chart/theme/holo.js",
                 "js/chart/theme/sns.js",
+                "js/chart/theme/google.js",
+                "js/chart/theme/korea.js",
+
 
                 // chart.widget
                 "js/chart/widget/core.js",
