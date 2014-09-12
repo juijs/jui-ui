@@ -129,6 +129,22 @@ jui.define("util.svg.element", [], function() {
 
             return this;
         }
+
+        this.hover = function(overHandler, outHandler) {
+            this.element.addEventListener("mouseover", function(e) {
+                if(typeof(overHandler) == "function") {
+                    overHandler.call(this, e);
+                }
+            }, false);
+
+            this.element.addEventListener("mouseout", function(e) {
+                if(typeof(outHandler) == "function") {
+                    outHandler.call(this, e);
+                }
+            }, false);
+
+            return this;
+        }
     }
 
     return Element;

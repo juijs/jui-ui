@@ -2275,6 +2275,22 @@ jui.define("util.svg.element", [], function() {
 
             return this;
         }
+
+        this.hover = function(overHandler, outHandler) {
+            this.element.addEventListener("mouseover", function(e) {
+                if(typeof(overHandler) == "function") {
+                    overHandler.call(this, e);
+                }
+            }, false);
+
+            this.element.addEventListener("mouseout", function(e) {
+                if(typeof(outHandler) == "function") {
+                    outHandler.call(this, e);
+                }
+            }, false);
+
+            return this;
+        }
     }
 
     return Element;
@@ -12937,11 +12953,7 @@ jui.define("chart.brush.scatter", [], function() {
             if(symbol == "triangle" || symbol == "cross") {
                 elem = chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
-                        var poly = chart.svg.polygon({
-                            fill: color,
-                            stroke: borderColor,
-                            "stroke-width": borderWidth
-                        });
+                        var poly = chart.svg.polygon();
 
                         poly.point(0, h)
                             .point(w, h)
@@ -12958,23 +12970,28 @@ jui.define("chart.brush.scatter", [], function() {
                         width: w,
                         height: h,
                         x: pos.x - (w / 2),
-                        y: pos.y - (h / 2),
-                        fill: color,
-                        stroke: borderColor,
-                        "stroke-width": borderWidth
+                        y: pos.y - (h / 2)
                     });
                 } else {
                     elem = chart.svg.ellipse({
                         rx: w / 2,
                         ry: h / 2,
                         cx: pos.x,
-                        cy: pos.y,
-                        fill: color,
-                        stroke: borderColor,
-                        "stroke-width": borderWidth
+                        cy: pos.y
                     });
                 }
             }
+
+            elem.attr({
+                fill: color,
+                stroke: borderColor,
+                "stroke-width": borderWidth
+            })
+            .hover(function() {
+                elem.attr({ stroke: color });
+            }, function() {
+                elem.attr({ stroke: borderColor });
+            });
 
             return elem;
         }
