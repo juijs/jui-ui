@@ -1,4 +1,4 @@
-jui.define("chart.brush.core", [], function() {
+jui.define("chart.brush.core", [ "jquery" ], function($) {
 	var CoreBrush = function() {
 
         /**
@@ -166,28 +166,34 @@ jui.define("chart.brush.core", [], function() {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
+        this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
             var obj = {
                 key: brush.index,
                 target: brush.target[targetIndex],
                 data: chart.data(dataIndex)
             };
 
-            element.on("click", function(e) {
+            var $tooltip = null;
+
+            elem.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
-            
-            element.on("mouseover", function(e) {
-                chart.emit("mouseover", [ obj, e ]);
-            });
 
-            element.on("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
             });
 
-            element.on("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                chart.emit("mouseout", [ obj, e ]);
             });
         }
 	}

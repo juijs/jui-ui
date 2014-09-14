@@ -9825,7 +9825,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
-
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -9849,6 +9848,11 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
                 return color || _theme["colors"][i];
             }
+
+            // 차트 기본 스타일
+            $(this.root).css({
+                position: "relative"
+            });
 		}
 		
 		this.setTheme = function(theme) {
@@ -11922,7 +11926,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 	return RangeGrid;
 }, "chart.grid.core");
 
-jui.define("chart.brush.core", [], function() {
+jui.define("chart.brush.core", [ "jquery" ], function($) {
 	var CoreBrush = function() {
 
         /**
@@ -12090,28 +12094,34 @@ jui.define("chart.brush.core", [], function() {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
+        this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
             var obj = {
                 key: brush.index,
                 target: brush.target[targetIndex],
                 data: chart.data(dataIndex)
             };
 
-            element.on("click", function(e) {
+            var $tooltip = null;
+
+            elem.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
-            
-            element.on("mouseover", function(e) {
-                chart.emit("mouseover", [ obj, e ]);
-            });
 
-            element.on("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
             });
 
-            element.on("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                chart.emit("mouseout", [ obj, e ]);
             });
         }
 	}
