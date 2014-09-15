@@ -58,6 +58,7 @@ module.exports = function(grunt) {
                 "js/chart/theme/sns.js",
                 "js/chart/theme/google.js",
                 "js/chart/theme/korea.js",
+                "js/chart/theme/korea2.js",
 
                 // chart.grid
                 "js/chart/grid/core.js",

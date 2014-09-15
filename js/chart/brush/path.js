@@ -13,7 +13,7 @@ jui.define("chart.brush.path", [], function() {
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var s = chart.series(brush.target[ti]);
 	
-				var color = chart.theme.color(ti+2, brush.colors);
+				var color = chart.theme.color(ti, brush.colors);
 				var path = chart.svg.path({
 					fill : color,
 					"fill-opacity" : chart.theme("pathOpacity"),

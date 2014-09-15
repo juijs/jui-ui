@@ -10905,6 +10905,58 @@ jui.define("chart.theme.korea", [], function() {
         scatterBorderWidth : 1
     }
 });
+jui.define("chart.theme.korea2", [], function() {
+    var themeColors = [
+    	"#014FDE",
+        "#DD0000",
+        "#FCDB00",
+        "#0E9400",
+        "#FB9902",
+        "#00C5AB",
+        "#81014C",
+        "#B1B300",
+        "#A143E3",
+        "#323232"
+    ];
+
+    return {
+        // common styles
+    	backgroundColor : "white",
+    	fontSize : "11px",
+    	fontColor : "#333333",
+		fontFamily : "arial,Tahoma,verdana",
+        colors : themeColors,
+
+        // grid styles
+    	gridFontColor : "#333333",
+    	gridActiveFontColor : "#ff7800",
+    	gridBorderWidth : 1,
+    	gridBorderColor : "#ececec",
+		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderWidth : "2px",
+    	gridActiveBorderColor : "#ff7800",
+    	gridActiveBorderWidth: 1,
+
+        // brush styles
+    	gaugeBackgroundColor : "#ececec",
+    	pieBorderColor : "white",
+        pieBorderWidth : 1,
+        donutBorderColor : "white",
+        donutBorderWidth : 1,
+    	areaOpacity : 0.5,
+        bubbleOpacity : 0.5,
+        bubbleBorderWidth : 1,
+        candlestickBorderColor : "black",
+        candlestickBackgroundColor : "white",
+        candlestickInvertBorderColor : "red",
+        candlestickInvertBackgroundColor : "red",
+        lineBorderWidth : 2,
+        pathOpacity : 0.5,
+        pathBorderWidth : 1,
+        scatterBorderColor : "white",
+        scatterBorderWidth : 1
+    }
+});
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
 	var CoreGrid = function() {
 
@@ -12737,7 +12789,7 @@ jui.define("chart.brush.path", [], function() {
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var s = chart.series(brush.target[ti]);
 	
-				var color = chart.theme.color(ti+2, brush.colors);
+				var color = chart.theme.color(ti, brush.colors);
 				var path = chart.svg.path({
 					fill : color,
 					"fill-opacity" : chart.theme("pathOpacity"),
