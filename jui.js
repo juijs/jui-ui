@@ -9825,7 +9825,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
         }
 
 		this.init = function() {
-
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -9849,6 +9848,11 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
                 return color || _theme["colors"][i];
             }
+
+            // 차트 기본 스타일
+            $(this.root).css({
+                position: "relative"
+            });
 		}
 		
 		this.setTheme = function(theme) {
@@ -10066,11 +10070,52 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.defs = defs;
 			
 		}
+		
+		this.drawTitle = function() {
+			var title = this.get('title');
+			
+			if (_.typeCheck("string", title)) {
+				title = { text : title, top : true, align : 'center' }
+			}
+
+			title.top = typeof title.top == 'undefined' ? true : title.top;
+			title.bottom = typeof title.bottom == 'undefined' ? true : title.bottom;
+			title.align = typeof title.align == 'undefined' ? 'center' : title.align;
+			
+			var x = 0;
+			var y = 0;
+			var anchor = 'middle';
+			if (title.top) {
+				y = 5; 
+			} else if (title.bottom) {
+				y = this.y2() + this.padding('bottom') -5;
+			}
+			
+			if (title.align == 'center') {
+				x = this.x() - this.width()/2;
+				anchor = 'middle';
+			} else if (title.align == 'left') {
+				x = this.x();
+				anchor = 'start';
+				
+			} else {
+				x = this.x2();
+				anchor = 'end';
+			}
+			
+			this.text({
+				x : x,
+				y : y,
+				'text-anchor' : anchor
+			}, title.text).attr(title.attr);
+		}
 
 		this.draw = function() {
 		    _scale = {};
 		          
             this.drawDefs();
+            
+            this.drawTitle();
 		    
 			var grid = this.grid();
 			
@@ -10180,7 +10225,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				
 				// chart
 				"theme" : "jennifer",
-				"labels" : [],
+				"title" : "",
 				"series" : {},
 				"grid" : {},
 				"brush" : [],
@@ -11974,7 +12019,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 	return RangeGrid;
 }, "chart.grid.core");
 
-jui.define("chart.brush.core", [], function() {
+jui.define("chart.brush.core", [ "jquery" ], function($) {
 	var CoreBrush = function() {
 
         /**
@@ -12077,19 +12122,25 @@ jui.define("chart.brush.core", [], function() {
                     data = chart.data(i);
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]];
+                    var key = brush.target[j],
+                        value = data[key],
+                        series = chart.series(key);
 
                     if (!xy[j]) {
                         xy[j] = {
                             x: [],
                             y: [],
-                            value: []
+                            value: [],
+                            min: [],
+                            max: []
                         };
                     }
 
                     xy[j].x.push(startX);
                     xy[j].y.push(brush.y(value));
                     xy[j].value.push(value);
+                    xy[j].min.push((value == series.min) ? true : false);
+                    xy[j].max.push((value == series.max) ? true : false);
                 }
             }
 
@@ -12104,32 +12155,23 @@ jui.define("chart.brush.core", [], function() {
          * @param chart
          * @returns {Array}
          */
-        this.getStackXY = function(brush, chart) {
-            var xy = [];
 
-            for (var i = 0, len =  chart.data().length; i < len; i++) {
-                var startX = brush.x(i),
-                    data = chart.data(i),
+        this.getStackXY = function(brush, chart) {
+            var xy = this.getXY(brush, chart);
+
+            for (var i = 0, len = chart.data().length; i < len; i++) {
+                var data = chart.data(i),
                     valueSum = 0;
 
                 for (var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]];
+                    var key = brush.target[j],
+                        value = data[key];
 
                     if(j > 0) {
                         valueSum += data[brush.target[j - 1]];
                     }
 
-                    if (!xy[j]) {
-                        xy[j] = {
-                            x: [],
-                            y: [],
-                            value: []
-                        };
-                    }
-
-                    xy[j].x.push(startX);
-                    xy[j].y.push(brush.y(value + valueSum));
-                    xy[j].value.push(value);
+                    xy[j].y[i] = brush.y(value + valueSum);
                 }
             }
 
@@ -12145,28 +12187,34 @@ jui.define("chart.brush.core", [], function() {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(brush, chart, element, targetIndex, dataIndex) {
+        this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
             var obj = {
                 key: brush.index,
                 target: brush.target[targetIndex],
                 data: chart.data(dataIndex)
             };
 
-            element.on("click", function(e) {
+            var $tooltip = null;
+
+            elem.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
-            
-            element.on("mouseover", function(e) {
-                chart.emit("mouseover", [ obj, e ]);
-            });
 
-            element.on("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 chart.emit("dblclick", [ obj, e ]);
             });
 
-            element.on("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                chart.emit("mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                chart.emit("mouseout", [ obj, e ]);
             });
         }
 	}

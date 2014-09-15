@@ -2,12 +2,19 @@
 <html>
 <head>
     <meta chartset="utf-8" />
+    <link rel="stylesheet" href="../../jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
 </head>
-<body>
+<body class="jui">
 
 <div id="chart"></div>
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-right tooltip-black">
+        <div class="anchor"></div>
+        <div class="title"><!= obj.target !>: <!= obj.data[obj.target] !></div>
+    </div>
+</script>
 
 <script>
     jui.ready([ "chart.basic" ], function(chart) {
@@ -23,7 +30,6 @@
                 { name : 18, value : 5, test : 20 }
             ],
             grid : {
-
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
@@ -43,12 +49,28 @@
                 type : 'scatter',
                 size : 10,
                 //symbol: "rectangle",
-                invert: true
+                tooltip: true
             }],
             event: {
                 click: function(obj, e) {
                     console.log(obj);
+                },
+                mouseover: function(obj, e) {
+                    var pos = $(e.toElement).position();
+
+                    $tooltip = $(this.tpl.tooltip(obj)).css({
+                        left: pos.left + 10,
+                        top: pos.top - 5
+                    });
+
+                    $(this.root).append($tooltip);
+                },
+                mouseout: function(obj, e) {
+                    $(this.root).find(".tooltip").remove();
                 }
+            },
+            tpl: {
+                tooltip: $("#tpl_tooltip").html()
             }
         }).render();
 	})
