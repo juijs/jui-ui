@@ -1001,18 +1001,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			return instances;
 		}
 
-        this.remove = function(key) {
-            if(_.typeCheck("integer", key)) { // UI 객체 인덱스
-                return instances.splice(key, 1)[0];
-            } else if(_.typeCheck("string", key)) { // UI 객체 셀렉터
-                for(var i = 0; i < instances.length; i++) {
-                    if (key == instances[i].selector) {
-                        return instances.splice(i, 1)[0];
-                    }
-                }
+        this.remove = function(index) {
+            if(_.typeCheck("integer", index)) { // UI 객체 인덱스
+                return instances.splice(index, 1)[0];
             }
-
-            return null;
         }
 
         this.shift = function() {
@@ -1021,20 +1013,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         this.pop = function() {
             return instances.pop();
-        }
-
-        this.destroy = function(type) {
-            for(var i = 0; i < instances.length; i++) {
-                var obj = instances.splice(i, 1)[0];
-
-                if(!type) {
-                    obj.destroy();
-                } else {
-                    if (type == obj.type) {
-                        obj.destroy();
-                    }
-                }
-            }
         }
 		
 		this.size = function() {
