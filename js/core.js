@@ -34,6 +34,30 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		this.getAll = function() {
 			return instances;
 		}
+
+        this.remove = function(key) {
+            if(_.typeCheck("integer", key)) { // UI 객체 인덱스
+                return instances.splice(key, 1)[0];
+            } else if(_.typeCheck("string", key)) { // UI 객체 셀렉터
+                for(var i = 0; i < instances.length; i++) {
+                    if (key == instances[i].selector) {
+                        return instances.splice(i, 1)[0];
+                    }
+                }
+            }
+        }
+
+        this.removeAll = function() {
+            instances = [];
+        }
+
+        this.shift = function() {
+            return instances.shift();
+        }
+
+        this.pop = function() {
+            return instances.pop();
+        }
 		
 		this.size = function() {
 			return instances.length;
@@ -131,6 +155,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			return classes;
 		}
 
+        /**
+         * UI 객체 동적 생성 메소드
+         *
+         * @param type
+         * @param selector
+         * @param options
+         * @returns {*}
+         */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
 
