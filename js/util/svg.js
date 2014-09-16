@@ -115,8 +115,21 @@ jui.define("util.svg.element", [], function() {
 
         this.remove = function() {
 
-            this.parent.element.removeChild(this.element);
+			var index = 0;
+			var arr = []
+			for(var i = 0; i < this.parent.childrens.length; i++) {
+				if (this.parent.childrens[i].element == this.element) {
+					this.parent.element.removeChild(this.element);
+					index = i;
+					break;	
+				}
+				
+				arr.push(this.parent.childrens[i]);
+				
+			}
 
+			this.parent.childrens = arr;
+			
             return this;
         }
 
@@ -490,6 +503,19 @@ jui.define("util.svg",
             document.body.appendChild(a);
             a.click();
             a.parentNode.removeChild(a);
+        }
+        
+        this.getTextRect = function(text) {
+        	
+        	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
+        	
+        	root.element.appendChild(el.element);
+        	
+        	var rect = el.element.getBoundingClientRect();
+        	
+        	el.remove();
+        	
+        	return { width : rect.width, height : rect.height }; 
         }
 
         /**

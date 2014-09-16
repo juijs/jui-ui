@@ -15,8 +15,10 @@
         chart("#chart", {
             width: 400,
             height : 400,
-            //title : { text : "Title", top : true(default), align : "center", attr : {  'font-size', 'font-family', 'fill' } },
-            // title : "title",
+            title : { text : "Title", top : true, align : "right", dy : 50, attr : {  fill : "red", 'font-size' : '30pt' } },
+            //legend : [],
+            legend: { name : "red", value : 'blue', 'test' : 'green' },
+            //legend: ['red', 'blue', 'green'],
             theme : location.href.split("?")[1].split("=")[1],
             data : [
                 { name : 2, value : 15, test : 7 },
@@ -38,11 +40,6 @@
             },
 
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
-            series : {
-                name : { text : "ì´ë¦„" },
-                value : { text : "ê°’" },
-                test : { text : "ê°’" }
-            },
             brush : [{
                 type : 'area'
             }, {

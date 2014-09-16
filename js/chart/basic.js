@@ -3,7 +3,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	var UI = function() {
 		
 		var self = this; 
-		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {};
+		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {}, _legend;
 		
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
@@ -60,6 +60,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			return _series;
 		}
+		
+		this.legend = function(key) {
+			if (_legend[key]) {
+				return _legend[key];
+			}
+
+			return _legend;
+		}
 
 		this.drawBefore = function() {
 		    
@@ -69,6 +77,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             var grid = _.deepClone(this.get('grid'));
             var padding = _.deepClone(this.setPadding(this.get('padding')));
             var brush = _.deepClone(this.get('brush'));
+            var legend = _.deepClone(this.get('legend'));
             var series_list = [];
 
             // series 데이타 구성
@@ -128,6 +137,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _series = series;
 			_grid = grid;
 			_padding = padding;
+			_legend = legend;
 		}
 		
 		this.createId = function(key) {
@@ -158,22 +168,26 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			if (_.typeCheck("string", title)) {
 				title = { text : title, top : true, align : 'center' }
 			}
+			
+			if (title.text == "") {
+				return; 
+			}
 
 			title.top = typeof title.top == 'undefined' ? true : title.top;
-			title.bottom = typeof title.bottom == 'undefined' ? true : title.bottom;
+			title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
 			title.align = typeof title.align == 'undefined' ? 'center' : title.align;
 			
 			var x = 0;
 			var y = 0;
 			var anchor = 'middle';
-			if (title.top) {
-				y = 5; 
-			} else if (title.bottom) {
-				y = this.y2() + this.padding('bottom') -5;
+			if (title.bottom) {
+				y = this.y2() + this.padding('bottom') -20;
+			} else if (title.top) {
+				y = 20; 
 			}
 			
 			if (title.align == 'center') {
-				x = this.x() - this.width()/2;
+				x = this.x() + this.width()/2;
 				anchor = 'middle';
 			} else if (title.align == 'left') {
 				x = this.x();
@@ -185,11 +199,91 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 			
 			this.text({
-				x : x,
-				y : y,
+				x : x + (title.dx || 0),
+				y : y + (title.dy || 0),
 				'text-anchor' : anchor
 			}, title.text).attr(title.attr);
 		}
+		
+		this.drawLegend = function() {
+			var legend = this.legend();
+			
+			
+			var isTop = legend.top || false;
+			var isBottom = legend.bottom || false;
+			var isLeft = legend.left || false;
+			var isRight = legend.right || false;
+
+			
+			if (!(isTop || isBottom || isLeft || isRight)) {
+				isBottom = true; 
+			}			
+			
+			var x = 0;
+			var y = 0;
+			var anchor = 'middle';
+			if (isBottom) {
+				y = this.y2() + this.padding('bottom') - 20;
+			} else if (isTop) {
+				y = 20; 
+			} else if (isLeft) {
+				y = this.x() - this.padding('left') + 20; 
+			} else if (isTop) {
+				y = this.x2() + this.padding('right') - 20; 
+			}
+
+			var series = this.series();
+			var group = this.svg.group({ "class" : 'legend'}).translate(0.5, 0.5);
+			
+			var width = [];
+			var height = [];
+			
+			var itemWidth = 10;
+			var itemHeight = 10;
+			
+			var x = 0;
+			var y = 0; 
+			
+			for(var k in series) {
+				var name = k;
+				var color = "#ffffff";
+				
+				if (series[k] && series[k].text) {
+					name = series[k].text;
+				}
+				
+				if (series[k] && series[k].color) {
+					color = series[k].color;
+				}
+				
+				var rect = this.svg.getTextRect(name);
+				
+				width.push(rect.width);
+				height.push(rect.height);
+				
+				group.append(this.svg.rect({
+					x : x,
+					y : y + (rect.height/2 - itemHeight/2),
+					width : itemWidth,
+					height : itemHeight,
+					fill : color,
+					stroke : "black",
+					"stroke-width" : 1
+				}))
+				
+				group.append(this.svg.text({
+					x : x + itemWidth + 10,
+					y : y + rect.height-2,
+					
+				}, name));
+				
+				x += itemWidth + rect.width + 10*2 
+			}
+
+			
+
+			// TODO: legend 그리기 패턴 연구 			
+		}		
 
 		this.draw = function() {
 		    _scale = {};
@@ -197,6 +291,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.drawDefs();
             
             this.drawTitle();
+            
+            this.drawLegend();
 		    
 			var grid = this.grid();
 			
@@ -307,6 +403,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				// chart
 				"theme" : "jennifer",
 				"title" : "",
+				"legend" : "",
 				"series" : {},
 				"grid" : {},
 				"brush" : [],
