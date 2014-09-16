@@ -9903,11 +9903,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
                 return color || _theme["colors"][i];
             }
-
-            // 차트 기본 스타일
-            $(this.root).css({
-                position: "relative"
-            });
 		}
 		
 		this.setTheme = function(theme) {

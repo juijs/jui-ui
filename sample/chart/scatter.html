@@ -10,7 +10,7 @@
 
 <div id="chart"></div>
 <script id="tpl_tooltip" type="text/template">
-    <div class="tooltip tooltip-right tooltip-black">
+    <div class="tooltip tooltip-top tooltip-black">
         <div class="anchor"></div>
         <div class="title"><!= obj.target !>: <!= obj.data[obj.target] !></div>
     </div>
@@ -56,14 +56,14 @@
                     console.log(obj);
                 },
                 mouseover: function(obj, e) {
-                    var pos = $(e.toElement).position();
-
-                    $tooltip = $(this.tpl.tooltip(obj)).css({
-                        left: pos.left + 10,
-                        top: pos.top - 5
-                    });
+                    var $tooltip = $(this.tpl.tooltip(obj));
 
                     $(this.root).append($tooltip);
+
+                    $tooltip.css({
+                        left: e.pageX - $tooltip.width() / 2,
+                        top: e.pageY - $tooltip.height() - 15
+                    });
                 },
                 mouseout: function(obj, e) {
                     $(this.root).find(".tooltip").remove();
