@@ -967,6 +967,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIManager = new function() {
 		var instances = [], classes = [];
+
 		
 		/**
 		 * Public Methods, Instance
@@ -999,6 +1000,20 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		this.getAll = function() {
 			return instances;
 		}
+
+        this.remove = function(index) {
+            if(_.typeCheck("integer", index)) { // UI 객체 인덱스
+                return instances.splice(index, 1)[0];
+            }
+        }
+
+        this.shift = function() {
+            return instances.shift();
+        }
+
+        this.pop = function() {
+            return instances.pop();
+        }
 		
 		this.size = function() {
 			return instances.length;
@@ -1096,6 +1111,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			return classes;
 		}
 
+        /**
+         * UI 객체 동적 생성 메소드
+         *
+         * @param type
+         * @param selector
+         * @param options
+         * @returns {*}
+         */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
 
@@ -1107,7 +1130,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 	
-	var UIListener = function(obj) {
+	var UIListener = function() {
 		var list = [];
 		
 		/**
@@ -1209,6 +1232,25 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			return list.length;
 		}
 	}
+
+
+    /**
+     * UIManager에서 관리되는 객체
+     * 객체 생성 정보와 목록을 가지고 있음
+     */
+    var UICoreSet = function(type, list, selector, options) {
+
+        this.type = type;
+        this.list = list;
+        this.selector = selector;
+        this.options = options;
+
+        this.destroy = function() {
+            for(var i = 0; i < this.list.length; i++) {
+                this.list[i].destroy();
+            }
+        }
+    }
 	
 	
 	/** 
@@ -1355,6 +1397,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
+
+        this.destroy = function() {
+            if(!this.__proto__) return;
+
+            for(var i = 0; i < this.listen.size(); i++) {
+                var obj = this.listen.get(i);
+                obj.target.unbind(obj.type);
+            }
+
+            for(var key in this.__proto__) {
+                delete this.__proto__[key];
+            }
+        }
 	};
 
     UICore.build = function(UI) {
@@ -1460,7 +1515,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add({ type: UI.type, list: list, selector: selector, options: options });
+            UIManager.add(new UICoreSet(UI.type, list, selector, options));
 
             return (list.length == 1) ? list[0] : list;
         }
