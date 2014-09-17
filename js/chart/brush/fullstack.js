@@ -23,7 +23,7 @@ jui.define("chart.brush.fullstack", [], function() {
 				var sum = 0;
 				var list = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.series(brush.target[j]).data[i];
+					var height = chart.data(i, brush.target[j]);
 
 					sum += height;
 					list.push(height);

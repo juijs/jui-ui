@@ -26,7 +26,7 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				for (var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, data[i][brush.target[ti]]);
+					var obj = brush.c(i, chart.data(i, brush.target[ti]));
 	
 					if (i == 0) {
 						path.MoveTo(obj.x, obj.y);

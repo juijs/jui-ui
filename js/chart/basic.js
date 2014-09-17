@@ -1,10 +1,19 @@
 jui.defineUI("chart.basic", [ "util.base" ], function(_) {
-
+	/**
+	 * Chart 구현 
+	 * 
+	 */
 	var UI = function() {
 		
 		var self = this; 
 		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {}, _legend;
 		
+		/**
+		 * 현재 text 관련 theme 가 정해진 text element 생성 
+		 * 
+		 * @param {object} attr
+		 * @param {string|function} textOrCallback
+		 */
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
 				"font-family" : this.theme("fontFamily"),
@@ -15,12 +24,22 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return el; 
 		}
 
+		/**
+		 * 생성자 재정의 
+		 * 
+		 */
 		this.init = function() {
 			
 			this.parent.init.call(this);
 			this.emit("load", []);
 		}
 
+		/**
+		 * grid 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.grid = function(key) {
 			if (_grid[key]) {
 				return _grid[key];
@@ -29,6 +48,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _grid;
 		}
 		
+		/**
+		 * padding 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.padding = function(key) {
 			if (_padding[key]) {
 				return _padding[key];
@@ -37,6 +62,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _padding;
 		}
 		
+		/**
+		 * brush 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.brush = function(key) {
 			if (_brush[key]) {
 				return _brush[key];
@@ -44,15 +75,32 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			return _brush;
 		}
-
-		this.data = function(key) {
-			if (_data[key]) {
-				return _data[key];
+		
+		/**
+		 * data 옵션 리턴 
+		 * 
+		 * @param {integer} index
+		 * 
+		 */
+		this.data = function(index, field) {
+			if (_data[index]) {
+				
+				if (typeof field != 'undefined') {
+					return _data[index][field];	
+				} 
+				
+				return _data[index];
 			}
 
 			return _data;
 		}
-
+		
+		/**
+		 * series 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.series = function(key) {
 			if (_series[key]) {
 				return _series[key];
@@ -61,6 +109,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _series;
 		}
 		
+		/**
+		 * legend 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */		
 		this.legend = function(key) {
 			if (_legend[key]) {
 				return _legend[key];
@@ -69,9 +123,13 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _legend;
 		}
 
+		/**
+		 * draw 이전에 환경 셋팅 
+		 * 
+		 */
 		this.drawBefore = function() {
 		    
-            // 데이타 설정
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음 
             var data = _.deepClone(this.get('data'));
             var series = _.deepClone(this.get('series'));
             var grid = _.deepClone(this.get('grid'));
@@ -144,10 +202,19 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 		}
 		
+		/**
+		 * chart 내에서 사용될 유일한 키 생성 
+		 * 
+		 * @param {string} key 
+		 */
 		this.createId = function(key) {
 			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
 		}
 		
+		/**
+		 * svg 기본 defs element 생성  
+		 * 
+		 */
 		this.drawDefs = function() {
 			
             // draw defs 
@@ -165,7 +232,22 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.defs = defs;
 			
 		}
-		
+
+		/**
+		 * title 그리기 
+		 * 
+		 * title 객체 옵션 
+		 * 
+		 * {
+		 * 	text : "Title",		// 실제 표시될 title 문자열 
+		 *  align : "center"	// left, right, center 를 지정 , default center 
+		 *  top : true,			// chart 에서 title 위치 , 기본값 true
+		 *  bottom : true		// chart 에서 title 위치 , 기본값 false 
+		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+		 * }
+		 * 
+		 */		
 		this.drawTitle = function() {
 			var title = this.get('title');
 			
@@ -209,6 +291,23 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}, title.text).attr(title.attr);
 		}
 		
+		/**
+		 * legend 그리기 
+		 * 
+		 * {
+		 *  top : true,			// chart 에서 title 위치 , 기본값 true
+		 *  bottom : false,		// chart 에서 title 위치 , 기본값 false, 
+		 *  left : false,		// chart 에서 title 위치 , 기본값 false, 
+		 *  right : false,		// chart 에서 title 위치 , 기본값 false,
+		 * 
+		 *  align : 'middle',	// start, end, middle,  기본값은 middle 
+		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+		 * } 
+		 * 
+		 * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
+		 * 
+		 */
 		this.drawLegend = function() {
 			var legend = this.legend();
 			
@@ -291,6 +390,16 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			group.translate(x, y);
 		}		
 		
+		/**
+		 * grid 그리기 
+		 * 
+		 * 설정된 grid 객체를 통해서 
+		 * 
+		 * x(bottom), y(left), x1(top), y1(right) 
+		 * 
+		 * 의 방향으로 grid 를 생성  
+		 * 
+		 */
 		this.drawGrid = function() {
 			var grid = this.grid();
 			
@@ -350,6 +459,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}			
 		}
 		
+		/**
+		 * brush 그리기 
+		 * 
+		 */
 		this.drawWidget = function(brush) {
 			if (!_.typeCheck("array", brush.widget)) {
 				brush.widget = [brush.widget];
@@ -366,13 +479,26 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 					clone[key] = brush[key];
 				}
 				
-				clone.type = widget;
+				if (_.typeCheck("string", widget)) {
+					clone.type = widget;	
+				} else if (_.typeCheck("object", widget)) {
+					for(var key in widget) {
+						clone[key] = widget[key];
+					}
+				}
+				
 				
 				
 				new WidgetObj(clone).render(this);
 			}
 		}
 		
+		/**
+		 * brush 그리기 
+		 * 
+		 * brush 에 맞는 x, y 축(grid) 설정 
+		 * 
+		 */
 		this.drawBrush = function() {
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
@@ -410,6 +536,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 		}
 
+		/**
+		 * draw 재정의 
+		 * 
+		 */
 		this.draw = function() {
 		    _scale = {};
 		          
@@ -417,10 +547,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             
             this.drawGrid();
 		    
-
 			this.drawBrush();
 			
-            
             this.drawTitle();
             
             this.drawLegend();			
@@ -432,8 +560,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	UI.setting = function() {
 		return {
 			options : {
-				"width" : "100%",
-				"height" : "100%",
+				"width" : "100%",		// chart 기본 넓이 
+				"height" : "100%",		// chart 기본 높이 
 
 				// style
 				"padding" : {
@@ -444,7 +572,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				},
 				
 				// chart
-				"theme" : "jennifer",
+				"theme" : "jennifer",	// 기본 테마 jennifer
 				"title" : "",
 				"legend" : "",
 				"series" : {},

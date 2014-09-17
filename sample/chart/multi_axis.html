@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta chartset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.basic" ], function(chart) {
+
+        chart("#chart", {
+            width: 800,
+            height : 400,
+            theme : location.href.split("?")[1].split("=")[1],
+            padding : {right : 120 },
+            data : [
+            { month : 'Jan', rainfall : 49.9, sealevel : 1016, temperature  : 7.0}, 
+			{ month : 'Feb', rainfall : 71.5, sealevel : 1016, temperature  : 6.9 }, 
+			{ month : 'Mar', rainfall : 106.49, sealevel : 1015.9, temperature  : 9.5 }, 
+			{ month : 'Apr', rainfall : 129.2, sealevel : 1015.5, temperature  : 14.5 }, 
+			{ month : 'May', rainfall : 144.0, sealevel : 1012.3, temperature  : 18.2 }, 
+			{ month : 'Jun', rainfall : 176.0, sealevel : 1009.5, temperature  : 21.5 }, 
+			{ month : 'Jul', rainfall : 135.6, sealevel : 1009.6, temperature  : 25.2 }, 
+			{ month : 'Aug', rainfall : 148.5, sealevel : 1010.2, temperature  : 26.5 }, 
+			{ month :  'Sep', rainfall : 216.4, sealevel : 1013.1, temperature  : 23.3 }, 
+			{ month :  'Oct', rainfall : 194.1, sealevel : 1016.9, temperature  : 18.3 }, 
+			{ month :  'Nov', rainfall : 95.6, sealevel : 1018.2, temperature  : 13.9}, 
+			{ month :  'Dec', rainfall : 54.4, sealevel : 1016.7, temperature  : 9.6} 
+			],
+            grid : {
+                x : { target : "month", line : true },
+                y : { type : 'range', domain: [0, 300], step : 6, format : function(value) { return value + " mm"} },
+                y1 : [
+                	{ type : 'range', domain : [1008, 1020], step : 6, dist : 50, format : function(value) { return value + " mb"} },
+                	{ type : 'range', domain : [5, 35], step : 6, format : function(value) { return value + " ℃" } }
+                ]
+            },
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            },
+            brush : [
+            	{ type : 'column', target : 'rainfall', colors : ['#7cb5ec'], outerPadding : 15 },
+            	{ type : 'line', target : 'sealevel', y1 : 0, colors : ["#434348"], symbol : 'curve' },
+            	{ type : 'line', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'curve' },
+            	{ type : 'scatter', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'triangle', size : 8 },
+            ]
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

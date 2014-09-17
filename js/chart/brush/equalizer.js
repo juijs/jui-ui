@@ -24,7 +24,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(chart.series(brush.target[j]).data[i]),
+                    var startY = brush.y(chart.data(i, brush.target[j])),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;

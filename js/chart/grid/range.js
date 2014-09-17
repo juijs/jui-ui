@@ -1,7 +1,8 @@
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	/**
-	 *
+	 * 숫자 범위(range) 그리드 객체 
+	 *  
 	 * @param {Object} orient
 	 * @param {Object} grid
 	 */

@@ -1,5 +1,9 @@
 jui.define("util.time", [ "util.base" ], function(_) {
 
+	/**
+	 * time 객체 
+	 * 
+	 */
 	var self = {
 
 		// unit
@@ -12,7 +16,15 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		milliseconds : 0x07,
 		weeks : 0x08,
 
-		// add
+		/**
+		 * 시간 더하기 
+		 * var date = new Date(); 
+		 * 
+		 * time.add(date, time.hours, 1); 		// 현재시간에서 1시간 추가  
+		 * time.add(date, time.hours, 1, time.minutes, 2); 		// 현재시간에서 1시간 2분 추가   
+		 * 
+ 		 * @param {Object} date
+		 */
 		add : function(date) {
 
 			if (arguments.length <= 2) {
@@ -50,6 +62,13 @@ jui.define("util.time", [ "util.base" ], function(_) {
 			}
 		},
 		
+		/**
+		 * jui.util.dateFormat 의 alias 
+		 * 
+		 * @param {Object} date
+		 * @param {Object} format
+		 * @param {Object} utc
+		 */
 		format: function(date, format, utc) {
 			return _.dateFormat(date, format, utc);
         }		

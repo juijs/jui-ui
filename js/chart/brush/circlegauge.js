@@ -1,6 +1,18 @@
 jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
-	var BarGaugeBrush = function(brush) {
+	/**
+	 * Circle Gauge Brush 객체  
+	 * 
+	 * {
+	 * 	type : 'circlegauge',
+	 *  min : 0,
+	 *  max : 100,
+	 *  value : 30 
+	 * }
+	 * 
+ 	 * @param {Object} brush
+	 */
+	var CircleGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
             var width = chart.width(), height = chart.height();
             var min = width;
@@ -50,5 +62,5 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 		}
 	}
 
-	return BarGaugeBrush;
+	return CircleGaugeBrush;
 }, "chart.brush.core");

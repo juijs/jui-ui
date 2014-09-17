@@ -1,5 +1,20 @@
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
-
+	/**
+	 * Donut Brush 객체 
+	 * 
+	 * <code>
+	 * {
+	 * 	type : 'donut',
+	 *  target : 'field1',
+	 *  size : 50,				// donut 안쪽과 바깥쪽 사이 거리   
+	 *  outerRadius : 200		// donut 의 반지름 
+	 *  colors : []				// custom color
+	 *  
+	 * } 
+	 * </code>
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {
 			this.size = brush.size || 50;

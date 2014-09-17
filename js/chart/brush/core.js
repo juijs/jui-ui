@@ -197,6 +197,12 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
         }
         
+        /**
+         * brush 에서 생성되는 legend 아이콘 리턴 
+         * 
+         * @param {object} chart
+         * @param {object} brush
+         */
 		this.getLegendIcon = function(chart, brush) {
 
 			

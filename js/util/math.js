@@ -1,5 +1,9 @@
 jui.define("util.math", [], function() {
 
+	/**
+	 * math 객체 
+	 *  
+	 */
 	var self = {
 		// 2d rotate
 		rotate : function(x, y, radian) {
@@ -9,20 +13,24 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		// degree to radian
 		radian : function(degree) {
 			return degree * Math.PI / 180;
 		},
 		
+		// radian to degree 
 		degree : function(radian) {
 			return radian * 180 / Math.PI;
 		},
 
+		// 중간값 계산 하기 
 		interpolateNumber : function(a, b) {
 			return function(t) {
 				return a + (b - a) * t;
 			}
 		},
 
+		// 중간값 round 해서 계산하기
 		interpolateRound : function(a, b) {
 			var f = this.interpolateNumber(a, b);
 
@@ -31,6 +39,14 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		/**
+		 * 특정 구간의 값을 자동으로 계산 
+		 * 
+		 * @param {Object} min
+		 * @param {Object} max
+		 * @param {Object} ticks
+		 * @param {Object} isNice
+		 */
 		nice : function(min, max, ticks, isNice) {
 			isNice = isNice || false;
 

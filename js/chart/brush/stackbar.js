@@ -21,7 +21,7 @@ jui.define("chart.brush.stackbar", [], function() {
 				var widthSum = 0;
 				var widthArr = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.series(brush.target[j]).data[i];
+					var width = chart.data(i, brush.target[j]);
 
 					widthSum += width;
 					widthArr.push(brush.x(width));

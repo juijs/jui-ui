@@ -23,7 +23,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 				var heightSum = 0;
 				var heightArr = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.series(brush.target[j]).data[i];
+					var height = chart.data(i, brush.target[j]);
 
 					heightSum += height;
 					heightArr.push(chart_height - brush.y(height));

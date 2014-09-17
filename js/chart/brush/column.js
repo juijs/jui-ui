@@ -1,5 +1,18 @@
 jui.define("chart.brush.column", [], function() {
 
+	/**
+	 * Column Brush 
+	 * 
+	 * {
+	 * 	type : 'column',
+	 *  target : ['field'],
+	 *  outerPadding : 2,
+	 *  innerPadding : 1, 	
+	 * 
+	 * } 
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var ColumnBrush = function(brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
 		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;

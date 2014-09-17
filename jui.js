@@ -1539,6 +1539,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 });
 jui.define("util.math", [], function() {
 
+	/**
+	 * math 객체 
+	 *  
+	 */
 	var self = {
 		// 2d rotate
 		rotate : function(x, y, radian) {
@@ -1548,20 +1552,24 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		// degree to radian
 		radian : function(degree) {
 			return degree * Math.PI / 180;
 		},
 		
+		// radian to degree 
 		degree : function(radian) {
 			return radian * 180 / Math.PI;
 		},
 
+		// 중간값 계산 하기 
 		interpolateNumber : function(a, b) {
 			return function(t) {
 				return a + (b - a) * t;
 			}
 		},
 
+		// 중간값 round 해서 계산하기
 		interpolateRound : function(a, b) {
 			var f = this.interpolateNumber(a, b);
 
@@ -1570,6 +1578,14 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		/**
+		 * 특정 구간의 값을 자동으로 계산 
+		 * 
+		 * @param {Object} min
+		 * @param {Object} max
+		 * @param {Object} ticks
+		 * @param {Object} isNice
+		 */
 		nice : function(min, max, ticks, isNice) {
 			isNice = isNice || false;
 
@@ -1644,6 +1660,10 @@ jui.define("util.math", [], function() {
 
 jui.define("util.time", [ "util.base" ], function(_) {
 
+	/**
+	 * time 객체 
+	 * 
+	 */
 	var self = {
 
 		// unit
@@ -1656,7 +1676,15 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		milliseconds : 0x07,
 		weeks : 0x08,
 
-		// add
+		/**
+		 * 시간 더하기 
+		 * var date = new Date(); 
+		 * 
+		 * time.add(date, time.hours, 1); 		// 현재시간에서 1시간 추가  
+		 * time.add(date, time.hours, 1, time.minutes, 2); 		// 현재시간에서 1시간 2분 추가   
+		 * 
+ 		 * @param {Object} date
+		 */
 		add : function(date) {
 
 			if (arguments.length <= 2) {
@@ -1694,6 +1722,13 @@ jui.define("util.time", [ "util.base" ], function(_) {
 			}
 		},
 		
+		/**
+		 * jui.util.dateFormat 의 alias 
+		 * 
+		 * @param {Object} date
+		 * @param {Object} format
+		 * @param {Object} utc
+		 */
 		format: function(date, format, utc) {
 			return _.dateFormat(date, format, utc);
         }		
@@ -1704,6 +1739,10 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
+	/**
+	 * 범위(scale)에 대한 계산 
+	 * 
+	 */
 	var self = {
 
 		/**
@@ -9755,18 +9794,34 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 	return UI;
 });
 jui.define("chart.draw", [ "util.base" ], function(_) {
+	/**
+	 * 그리기 Base 클래스
+	 * 
+	 * 
+	 */
 	var Draw = function() {
 		
+		/**
+		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
+		 * 
+		 */
 		this.render = function(chart) {
 
+			/**
+			 * 
+			 * 그리기 객체는 draw 함수를 항상 정의해야한다. 
+			 * 
+			 */
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
 			}
 			
+			// drawBefore
             if (_.typeCheck("function", this.drawBefore)) {
                 this.drawBefore(chart);
             }			
 
+			// draw 함수 실행 
 			return this.draw(chart);
 		}
 		
@@ -9777,9 +9832,22 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 
 jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
+	/**
+	 * Chart 기본 클래스 
+	 * 
+	 */
 	var UIChart = function() {
 		var _area, _theme;
 		
+		/**
+		 * chart 기본 영역 계산 
+		 * 
+		 * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함 
+		 * 
+		 * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐 
+		 * 
+ 		 * @param {Object} self
+		 */
 		function calculate(self) {
 			var padding = self.setPadding(self.get('padding')),
                 max = self.svg.size();
@@ -9798,6 +9866,11 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			_area = chart;
 		}
 		
+		/**
+		 * 기본 padding 설정 
+		 * 
+		 * @param {object|string}  padding  default 값은  모든 방향 50, empty 를 쓰면  padding 영역이 사라짐  
+		 */
 		this.setPadding = function(padding) {
             if (padding == 'empty') {
             	padding = {
@@ -9811,10 +9884,28 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			return padding;			
 		}            
 		
+		/**
+		 * chart 에 설정된 옵션값 반환 
+		 * 
+		 * <code>chart.get('key') == chart.options.key</code> 
+		 * 
+		 * @param {string} key
+		 */
 		this.get = function(key) {
 			return this.options[key];
 		}
 
+		/**
+		 * 계산된 차트 영역에 대한 값 리턴 
+		 * 
+		 * <code>
+		 * ex) 
+		 * chart.area('x');
+		 * chart.area('width');
+		 * </code>
+		 * 
+		 * @param {string} key
+		 */
 		this.area = function(key) {
 			
 			if (typeof _area[key] !== "undefined") {
@@ -9824,6 +9915,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			return _area;
 		}
 		
+		/**
+		 * chart 높이 얻어오기 
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart 높이 
+		 * var height = chart.height();
+		 * 
+		 * // 매개변수가 있을 때는 chart 높이 설정 
+		 * chart.height(150); // chart 높이를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value 
+		 */
 		this.height = function(value) {
 		    if (arguments.length == 0) {
 		        return this.area('height');
@@ -9832,6 +9936,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		    _area.height = value;
 		}
 
+		/**
+		 * chart 넓이 얻어오기 
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart 넓이 
+		 * var width = chart.width();
+		 * 
+		 * // 매개변수가 있을 때는 chart 넓이 설정 
+		 * chart.width(150); // chart 넓이를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
         this.width = function(value) {
             if (arguments.length == 0) {
                 return this.area('width');
@@ -9840,7 +9957,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             _area.width = value;
         }
 
-
+		/**
+		 * chart 의 시작 x 좌표 얻기  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart x좌표
+		 * var x = chart.x();
+		 * 
+		 * // 매개변수가 있을 때는 chart x좌표 설정 
+		 * chart.x(150); // chart x좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
         this.x = function(value) {
             if (arguments.length == 0) {
                 return this.area('x');
@@ -9849,7 +9978,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             _area.x = value;
         }
 
-
+		/**
+		 * chart 의 시작 y 좌표 얻기  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart y좌표
+		 * var y = chart.y();
+		 * 
+		 * // 매개변수가 있을 때는 chart y좌표 설정 
+		 * chart.y(150); // chart y좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
         this.y = function(value) {
             if (arguments.length == 0) {
                 return this.area('y');
@@ -9858,6 +9999,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             _area.y = value;
         }
 
+		/**
+		 * chart 의 끝 x 좌표 얻기(x2)  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart x2좌표
+		 * var x2 = chart.x2();
+		 * 
+		 * // 매개변수가 있을 때는 chart x2좌표 설정 
+		 * chart.x2(150); // chart x2좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
         this.x2 = function(value) {
             if (arguments.length == 0) {
                 return this.area('x2');
@@ -9866,7 +10020,19 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             _area.x2 = value;
         }
 
-
+		/**
+		 * chart 의 끝 y 좌표 얻기(y2)  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart y2좌표
+		 * var y2 = chart.y2();
+		 * 
+		 * // 매개변수가 있을 때는 chart y2좌표 설정 
+		 * chart.y2(150); // chart y2좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
         this.y2 = function(value) {
             if (arguments.length == 0) {
                 return this.area('y2');
@@ -9875,7 +10041,15 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             _area.y2 = value;
         }
 
-
+		/**
+		 * jui component binding 
+		 * 
+		 * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음. 
+		 * 
+		 * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+		 * 
+		 * @param {object} bind   uix.table, uix.xtable 객체 사용 
+		 */
         this.bind = function(bind) {
             var self = this;
 
@@ -9905,8 +10079,13 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
         }
 
+		/**
+		 * chart 초기화 함수 
+		 * 
+		 */
 		this.init = function() {
 
+			// svg 기본 객체 생성 
 			this.svg = new SVGUtil(this.root, {
 				width : this.get("width"),
 				height : this.get("height")
@@ -9932,11 +10111,37 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
 		}
 		
+		/**
+		 * chart 의 theme 설정 
+		 * 
+		 * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임 
+		 */
 		this.setTheme = function(theme) {
 			 _theme = jui.include("chart.theme." + theme);
-
 		}
 		
+		/**
+		 * theme 의 요소에 대한 값 구하기 
+		 * 
+		 * <code>
+		 * 
+		 * // theme 전체 객체 얻어오기 
+		 * var theme = chart.theme();
+		 * 
+		 * // 부분 속성 얻어오기 
+		 * var fontColor = chart.theme("fontColor");
+		 * 
+		 * // 속성 설정하기 
+		 * chart.theme("fontColor", "red");  // fontColor 를 red 로 설정 
+		 * 
+		 * // 값 비교해서 얻어오기 
+		 * chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴  
+		 * 
+		 * 
+		 * </code>
+		 * 
+		 * 
+		 */
 		this.theme = function(key, value, value2) {
 			if (arguments.length == 0) {
 				return _theme;
@@ -9954,26 +10159,43 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			}
 		}
 
+		/**
+		 * chart render 함수 재정의 
+		 * 
+		 */
 		this.render = function() {
+			
+			// draw 함수 체크 
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
 			}
 
+			// svg rest 
 			this.svg.reset();
+			
 			this.svg.css({
 				'background' : this.theme("backgroundColor")
 			})
-			
+
+			// chart 영역 계산 			
 			calculate(this);
 						
 			if (_.typeCheck("function", this.drawBefore)) {
 				this.drawBefore();
 			}
 			
+			// chart 관련된 요소 draw  
 			this.draw();
+			
+			// svg 태그 rendering 
 			this.svg.render();
 		}
 
+		/**
+		 * data 업데이트 후 차트 다시 생성 
+		 * 
+		 * @param {array} data 
+		 */
 		this.update = function(data) {
 			if (!_.typeCheck("array", data))
 				return;
@@ -9982,6 +10204,12 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			this.render();
 		}
 
+		/**
+		 * chart 사이즈 조정 
+		 * 
+		 * @param {integer} width
+		 * @param {integer} height
+		 */
 		this.size = function(width, height) {
 			if (!_.typeCheck("integer", width) || !_.typeCheck("integer", height))
 				return;
@@ -9995,12 +10223,21 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 }, "core");
 
 jui.defineUI("chart.basic", [ "util.base" ], function(_) {
-
+	/**
+	 * Chart 구현 
+	 * 
+	 */
 	var UI = function() {
 		
 		var self = this; 
 		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {}, _legend;
 		
+		/**
+		 * 현재 text 관련 theme 가 정해진 text element 생성 
+		 * 
+		 * @param {object} attr
+		 * @param {string|function} textOrCallback
+		 */
 		this.text = function(attr, textOrCallback) {
 			var el = this.svg.text(_.extend({
 				"font-family" : this.theme("fontFamily"),
@@ -10011,12 +10248,22 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return el; 
 		}
 
+		/**
+		 * 생성자 재정의 
+		 * 
+		 */
 		this.init = function() {
 			
 			this.parent.init.call(this);
 			this.emit("load", []);
 		}
 
+		/**
+		 * grid 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.grid = function(key) {
 			if (_grid[key]) {
 				return _grid[key];
@@ -10025,6 +10272,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _grid;
 		}
 		
+		/**
+		 * padding 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.padding = function(key) {
 			if (_padding[key]) {
 				return _padding[key];
@@ -10033,6 +10286,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _padding;
 		}
 		
+		/**
+		 * brush 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.brush = function(key) {
 			if (_brush[key]) {
 				return _brush[key];
@@ -10040,15 +10299,32 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 			return _brush;
 		}
-
-		this.data = function(key) {
-			if (_data[key]) {
-				return _data[key];
+		
+		/**
+		 * data 옵션 리턴 
+		 * 
+		 * @param {integer} index
+		 * 
+		 */
+		this.data = function(index, field) {
+			if (_data[index]) {
+				
+				if (typeof field != 'undefined') {
+					return _data[index][field];	
+				} 
+				
+				return _data[index];
 			}
 
 			return _data;
 		}
-
+		
+		/**
+		 * series 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
 		this.series = function(key) {
 			if (_series[key]) {
 				return _series[key];
@@ -10057,6 +10333,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _series;
 		}
 		
+		/**
+		 * legend 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */		
 		this.legend = function(key) {
 			if (_legend[key]) {
 				return _legend[key];
@@ -10065,9 +10347,13 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _legend;
 		}
 
+		/**
+		 * draw 이전에 환경 셋팅 
+		 * 
+		 */
 		this.drawBefore = function() {
 		    
-            // 데이타 설정
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음 
             var data = _.deepClone(this.get('data'));
             var series = _.deepClone(this.get('series'));
             var grid = _.deepClone(this.get('grid'));
@@ -10140,10 +10426,19 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 		}
 		
+		/**
+		 * chart 내에서 사용될 유일한 키 생성 
+		 * 
+		 * @param {string} key 
+		 */
 		this.createId = function(key) {
 			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
 		}
 		
+		/**
+		 * svg 기본 defs element 생성  
+		 * 
+		 */
 		this.drawDefs = function() {
 			
             // draw defs 
@@ -10161,7 +10456,22 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.defs = defs;
 			
 		}
-		
+
+		/**
+		 * title 그리기 
+		 * 
+		 * title 객체 옵션 
+		 * 
+		 * {
+		 * 	text : "Title",		// 실제 표시될 title 문자열 
+		 *  align : "center"	// left, right, center 를 지정 , default center 
+		 *  top : true,			// chart 에서 title 위치 , 기본값 true
+		 *  bottom : true		// chart 에서 title 위치 , 기본값 false 
+		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+		 * }
+		 * 
+		 */		
 		this.drawTitle = function() {
 			var title = this.get('title');
 			
@@ -10205,6 +10515,23 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}, title.text).attr(title.attr);
 		}
 		
+		/**
+		 * legend 그리기 
+		 * 
+		 * {
+		 *  top : true,			// chart 에서 title 위치 , 기본값 true
+		 *  bottom : false,		// chart 에서 title 위치 , 기본값 false, 
+		 *  left : false,		// chart 에서 title 위치 , 기본값 false, 
+		 *  right : false,		// chart 에서 title 위치 , 기본값 false,
+		 * 
+		 *  align : 'middle',	// start, end, middle,  기본값은 middle 
+		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+		 * } 
+		 * 
+		 * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
+		 * 
+		 */
 		this.drawLegend = function() {
 			var legend = this.legend();
 			
@@ -10287,6 +10614,16 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			group.translate(x, y);
 		}		
 		
+		/**
+		 * grid 그리기 
+		 * 
+		 * 설정된 grid 객체를 통해서 
+		 * 
+		 * x(bottom), y(left), x1(top), y1(right) 
+		 * 
+		 * 의 방향으로 grid 를 생성  
+		 * 
+		 */
 		this.drawGrid = function() {
 			var grid = this.grid();
 			
@@ -10346,6 +10683,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}			
 		}
 		
+		/**
+		 * brush 그리기 
+		 * 
+		 */
 		this.drawWidget = function(brush) {
 			if (!_.typeCheck("array", brush.widget)) {
 				brush.widget = [brush.widget];
@@ -10369,6 +10710,12 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 		}
 		
+		/**
+		 * brush 그리기 
+		 * 
+		 * brush 에 맞는 x, y 축(grid) 설정 
+		 * 
+		 */
 		this.drawBrush = function() {
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
@@ -10406,6 +10753,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			}
 		}
 
+		/**
+		 * draw 재정의 
+		 * 
+		 */
 		this.draw = function() {
 		    _scale = {};
 		          
@@ -10413,10 +10764,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             
             this.drawGrid();
 		    
-
 			this.drawBrush();
 			
-            
             this.drawTitle();
             
             this.drawLegend();			
@@ -10428,8 +10777,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	UI.setting = function() {
 		return {
 			options : {
-				"width" : "100%",
-				"height" : "100%",
+				"width" : "100%",		// chart 기본 넓이 
+				"height" : "100%",		// chart 기본 높이 
 
 				// style
 				"padding" : {
@@ -10440,7 +10789,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				},
 				
 				// chart
-				"theme" : "jennifer",
+				"theme" : "jennifer",	// 기본 테마 jennifer
 				"title" : "",
 				"legend" : "",
 				"series" : {},
@@ -11220,8 +11569,16 @@ jui.define("chart.theme.korea2", [], function() {
     }
 });
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
+	/**
+	 * Grid Core 객체 
+	 * 
+	 */
 	var CoreGrid = function() {
 
+		/**
+		 * block,radar grid 에 대한 domain 설정
+		 *  
+		 */
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == 'radar' || grid.type == 'block') {
 
@@ -11253,6 +11610,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			return grid; 			
 		}
 		
+		/**
+		 * range grid 의 domain 설정 
+		 * 
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
+		 * 
+		 */
 		this.setRangeDomain = function(chart, grid) {
 			if ( typeof grid.target == 'string' || typeof grid.target == 'function') {
 				grid.target = [grid.target];
@@ -11318,6 +11681,23 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			return grid; 
 		}
 		
+		/**
+		 * scale wrapper 
+		 * 
+		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
+		 * 
+		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
+		 * 
+		 * ex) 
+		 * 
+		 * // 그리드 속성에 키가 없을 때 
+		 * scale(0);		// 0 인덱스에 대한 값  (block, radar)
+		 * 
+		 * // grid 속성에 key 가 있을 때  
+		 * grid { key : 'field' }
+		 * scale(0)			// field 값으로 scale 설정 (range, date)
+		 * 
+		 */
 		this.wrapper = function(chart, scale, key) {
 			var old_scale = scale; 
 			
@@ -11351,7 +11731,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			return new_scale;
 		}
 		
-		
+		/**
+		 * theme 이 적용된  axis line 리턴 
+		 * 
+		 */
 		this.axisLine = function(chart, attr) {
 			return chart.svg.line(_.extend({
 				x1 : 0,
@@ -11364,6 +11747,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}, attr));
 		}
 
+		/**
+		 * theme 이 적용된  line 리턴 
+		 * 
+		 */
 		this.line = function(chart, attr) {
 			return chart.svg.line(_.extend({
 				x1 : 0,
@@ -11375,7 +11762,11 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				"stroke-opacity" : 1
 			}, attr));
 		}		
-		
+
+		/**
+		 * grid 그리기  
+		 * 
+		 */		
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group({
@@ -11388,7 +11779,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			// wrapped scale
 			this.scale = this.wrapper(chart, this.scale, grid.key);
 
-			// hide
+			// hide grid 
 			if (grid.hide) {
 				root.attr({ display : 'none' })
 			}
@@ -11405,8 +11796,17 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
+	/**
+	 * Block Grid 
+	 * 
+	 * @param {Object} orient		// grid 방향 
+	 * @param {Object} grid
+	 */
 	var BlockGrid = function(orient, grid) {
 
+		/**
+		 * top 그리기 
+		 */
 		this.top = function(chart, g, scale) {
 
 			if (!grid.line) {
@@ -11450,6 +11850,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 		}
+		
+		/**
+		 * bottom 그리기
+		 */
 		this.bottom = function(chart, g, scale) {
 			var full_height = chart.height();
 
@@ -11503,6 +11907,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 		}
+		
+		/**
+		 * left 그리기 
+		 */
 		this.left = function(chart, g, scale) {
 			var full_width = chart.width();
 
@@ -11545,6 +11953,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 		}
 
+		/**
+		 * right 그리기 
+		 * 
+		 */
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -11592,7 +12004,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			var width = chart.width();
 			var height = chart.height();
 			var max = (orient == 'left' || orient == 'right') ? height : width;
-
+	
+			// scale 설정 
 			this.scale = UtilScale.ordinal().domain(grid.domain);
 			var range = [0, max];
 
@@ -12046,7 +12459,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	/**
-	 *
+	 * 숫자 범위(range) 그리드 객체 
+	 *  
 	 * @param {Object} orient
 	 * @param {Object} grid
 	 */
@@ -12435,6 +12849,12 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
         }
         
+        /**
+         * brush 에서 생성되는 legend 아이콘 리턴 
+         * 
+         * @param {object} chart
+         * @param {object} brush
+         */
 		this.getLegendIcon = function(chart, brush) {
 
 			
@@ -12484,6 +12904,21 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 }, "chart.draw"); 
 jui.define("chart.brush.bar", [], function() {
 
+	/**
+	 * Bar Brush 객체 
+	 * 
+	 * <code>
+	 * {
+	 * 	type : 'bar',
+	 *  target : ['field1', 'field2'],  // 생략하면 모든 series 를 target 으로 설정
+	 *  outerPadding : 2,	// bar 바깥쪽 padding 
+	 *  innerPadding : 1	// bar 안쪽 padding 
+	 *  
+	 * } 
+	 * </code>
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var BarBrush = function(brush) {
 		var g, zeroX, series, count, height, half_height, barHeight;
 		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
@@ -12492,7 +12927,6 @@ jui.define("chart.brush.bar", [], function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
 			zeroX = brush.x(0);
-			series = chart.series();
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
@@ -12505,7 +12939,7 @@ jui.define("chart.brush.bar", [], function() {
 				var startY = brush.y(i) - half_height/2;
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startX = brush.x(chart.series(brush.target[j]).data[i]),
+					var startX = brush.x(chart.data(i, brush.target[j])),
                         r = null;
 
 					if (startX >= zeroX) {
@@ -12541,7 +12975,21 @@ jui.define("chart.brush.bar", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.bubble", [], function() {
-
+	/**
+	 * Bubble Gauge Brush 객체 
+	 * 
+	 * <code>
+	 * {
+	 * 	type : 'bubble',
+	 *  target : 'field1',  // 생략하면 모든 series 를 target 으로 설정
+	 *  min : 5,	// 최소 bubble 사이즈  
+	 *  max : 30,	// 최대 bubble 사이즈 
+	 *  colors : []	// custom color 
+	 * } 
+	 * </code>
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var BubbleBrush = function(brush) {
         var self = this;
 
@@ -12681,6 +13129,19 @@ jui.define("chart.brush.candlestick", [], function() {
 
 jui.define("chart.brush.column", [], function() {
 
+	/**
+	 * Column Brush 
+	 * 
+	 * {
+	 * 	type : 'column',
+	 *  target : ['field'],
+	 *  outerPadding : 2,
+	 *  innerPadding : 1, 	
+	 * 
+	 * } 
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var ColumnBrush = function(brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
 		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
@@ -12735,7 +13196,22 @@ jui.define("chart.brush.column", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
-
+	/**
+	 * Donut Brush 객체 
+	 * 
+	 * <code>
+	 * {
+	 * 	type : 'donut',
+	 *  target : 'field1',
+	 *  size : 50,				// donut 안쪽과 바깥쪽 사이 거리   
+	 *  outerRadius : 200		// donut 의 반지름 
+	 *  colors : []				// custom color
+	 *  
+	 * } 
+	 * </code>
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var DonutBrush = function(brush) {
 		this.drawBefore = function(chart) {
 			this.size = brush.size || 50;
@@ -12910,7 +13386,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(chart.series(brush.target[j]).data[i]),
+                    var startY = brush.y(chart.data(i, brush.target[j])),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;
@@ -12986,7 +13462,7 @@ jui.define("chart.brush.fullstack", [], function() {
 				var sum = 0;
 				var list = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.series(brush.target[j]).data[i];
+					var height = chart.data(i, brush.target[j]);
 
 					sum += height;
 					list.push(height);
@@ -13111,7 +13587,7 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				for (var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, data[i][brush.target[ti]]);
+					var obj = brush.c(i, chart.data(i, brush.target[ti]));
 	
 					if (i == 0) {
 						path.MoveTo(obj.x, obj.y);
@@ -13338,7 +13814,7 @@ jui.define("chart.brush.stackbar", [], function() {
 				var widthSum = 0;
 				var widthArr = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.series(brush.target[j]).data[i];
+					var width = chart.data(i, brush.target[j]);
 
 					widthSum += width;
 					widthArr.push(brush.x(width));
@@ -13393,7 +13869,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 				var heightSum = 0;
 				var heightArr = [];
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.series(brush.target[j]).data[i];
+					var height = chart.data(i, brush.target[j]);
 
 					heightSum += height;
 					heightArr.push(chart_height - brush.y(height));
@@ -13423,7 +13899,21 @@ jui.define("chart.brush.stackcolumn", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
-
+	/**
+	 * Bar Gauge Brush 객체 
+	 * 
+	 * <code>
+	 * {
+	 * 	type : 'bargauge',
+	 *  target : 'field1',  // 생략하면 모든 series 를 target 으로 설정
+	 *  cut : 5,	// gauge 사이의 거리  
+	 *  align : 'left'	// gauge 정렬 방식 
+	 *  
+	 * } 
+	 * </code>
+	 * 
+ 	 * @param {Object} brush
+	 */
 	var BarGaugeBrush = function(brush) {
 
 		this.drawBefore = function(chart) {
@@ -13535,7 +14025,19 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
-	var BarGaugeBrush = function(brush) {
+	/**
+	 * Circle Gauge Brush 객체  
+	 * 
+	 * {
+	 * 	type : 'circlegauge',
+	 *  min : 0,
+	 *  max : 100,
+	 *  value : 30 
+	 * }
+	 * 
+ 	 * @param {Object} brush
+	 */
+	var CircleGaugeBrush = function(brush) {
 		this.drawBefore = function(chart) {
             var width = chart.width(), height = chart.height();
             var min = width;
@@ -13585,7 +14087,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 		}
 	}
 
-	return BarGaugeBrush;
+	return CircleGaugeBrush;
 }, "chart.brush.core");
 
 jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
