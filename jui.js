@@ -1260,19 +1260,25 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UICore = function() {
         var vo = null;
 
-        this.emit = function(type, args) {
-            var result = null;
+        this.emit = function(type, args, unique) {
+            var result = null,
+                unique = (!unique) ? false : true;
 
             for(var i = 0; i < this.event.length; i++) {
-                var tmpEvent = this.event[i];
+                var e = this.event[i];
 
-                if(tmpEvent.type == type.toLowerCase()) {
+                if(e.type == type.toLowerCase() && e.unique === unique) {
                     if(typeof(args) == "object" && args.length != undefined) {
-                        result = tmpEvent.callback.apply(this, args);
+                        result = e.callback.apply(this, args);
                     } else {
-                        result = tmpEvent.callback.call(this, args);
+                        result = e.callback.call(this, args);
                     }
                 }
+            }
+
+            // unique emitting!!
+            if(unique === false) {
+                return this.emit(type, args, true);
             }
 
             return result;
@@ -1280,7 +1286,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         this.on = function(type, callback) {
             if(typeof(type) != "string" && typeof(callback) != "object") return;
-            this.event.push({ type: type.toLowerCase(), callback: callback });
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
+        }
+
+        this.bind = function(type, callback) {
+            if(typeof(type) != "string" && typeof(callback) != "object") return;
+
+            this.unbind(type);
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: true });
+        }
+
+        this.unbind = function(type) {
+            var event = [];
+
+            for(var i = 0; i < this.event.length; i++) {
+                var e = this.event[i];
+
+                if (e.type != type.toLowerCase() || e.unique === false)
+                    event.push(e);
+            }
+
+            this.event = event;
         }
 
         this.addEvent = function() {
@@ -2746,13 +2772,10 @@ jui.define("util.svg",
         }
         
         this.getTextRect = function(text) {
-        	
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
         	
         	root.element.appendChild(el.element);
-        	
         	var rect = el.element.getBoundingClientRect();
-        	
         	el.remove();
         	
         	return { width : rect.width, height : rect.height }; 
@@ -9849,7 +9872,7 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
  		 * @param {Object} self
 		 */
 		function calculate(self) {
-			var padding = self.setPadding(self.get('padding')),
+			var padding = self.setPadding(self.options.padding),
                 max = self.svg.size();
 
 			var chart = {
@@ -9882,17 +9905,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
 
 			return padding;			
-		}            
-		
-		/**
-		 * chart 에 설정된 옵션값 반환 
-		 * 
-		 * <code>chart.get('key') == chart.options.key</code> 
-		 * 
-		 * @param {string} key
-		 */
-		this.get = function(key) {
-			return this.options[key];
 		}
 
 		/**
@@ -9907,7 +9919,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		 * @param {string} key
 		 */
 		this.area = function(key) {
-			
 			if (typeof _area[key] !== "undefined") {
 				return _area[key];
 			}
@@ -10050,32 +10061,32 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		 * 
 		 * @param {object} bind   uix.table, uix.xtable 객체 사용 
 		 */
-        this.bind = function(bind) {
+        this.bindUI = function(uiObj) {
             var self = this;
 
-            if(bind.module.type == "uix.table") {
-                bind.callAfter("update", updateTable);
-                bind.callAfter("sort", updateTable);
-                bind.callAfter("append", updateTable);
-                bind.callAfter("insert", updateTable);
-                bind.callAfter("remove", updateTable);
-            } else if(bind.module.type == "uix.xtable") {
-                bind.callAfter("update", updateXTable);
-                bind.callAfter("sort", updateXTable);
+            if(uiObj.module.type == "uix.table") {
+                uiObj.callAfter("update", updateTable);
+                uiObj.callAfter("sort", updateTable);
+                uiObj.callAfter("append", updateTable);
+                uiObj.callAfter("insert", updateTable);
+                uiObj.callAfter("remove", updateTable);
+            } else if(uiObj.module.type == "uix.xtable") {
+                uiObj.callAfter("update", updateXTable);
+                uiObj.callAfter("sort", updateXTable);
             }
 
             function updateTable() {
                 var data = [];
 
-                for(var i = 0; i < bind.count(); i++) {
-                    data.push(bind.get(i).data);
+                for(var i = 0; i < uiObj.count(); i++) {
+                    data.push(uiObj.get(i).data);
                 }
 
                 self.update(data);
             }
 
             function updateXTable() {
-                self.update(bind.listData());
+                self.update(uiObj.listData());
             }
         }
 
@@ -10087,16 +10098,16 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 			// svg 기본 객체 생성 
 			this.svg = new SVGUtil(this.root, {
-				width : this.get("width"),
-				height : this.get("height")
+				width : this.options.width,
+				height : this.options.height
 			});
 
             // 차트 테마 설정
-            this.setTheme(this.get('theme'))
+            this.setTheme(this.options.theme)
 
             // UI 바인딩 설정
-            if(this.get("bind") != null) {
-                this.bind(this.get("bind"));
+            if(this.options.bind != null) {
+                this.bindUI(this.options.bind);
             }
 
             // 테마 컬러 설정
@@ -10228,11 +10239,47 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	 * 
 	 */
 	var UI = function() {
-		
-		var self = this; 
-		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {}, _legend;
-		
-		/**
+		var _grid = {}, _brush = [], _widget = [];
+		var _padding = [], _scales = {};
+        var _data, _series, _legend;
+
+        /**
+         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
+         * Widget도 같이 사용한다.
+         *
+         * @param draws
+         * @param series_list
+         * @returns {*}
+         */
+        function createBrushData(draws, series_list) {
+            var result = null;
+
+            if (draws != null) {
+                if ( typeof draws == 'string') {
+                    result = [{
+                        type : draws
+                    }];
+                } else if ( typeof draws == 'object' && !draws.length) {
+                    result = [ draws ];
+                } else {
+                    result = draws;
+                }
+
+                for (var i = 0, len = result.length; i < len; i++) {
+                    var b = result[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [ b.target ];
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /**
 		 * 현재 text 관련 theme 가 정해진 text element 생성 
 		 * 
 		 * @param {object} attr
@@ -10253,7 +10300,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.init = function() {
-			
 			this.parent.init.call(this);
 			this.emit("load", []);
 		}
@@ -10352,15 +10398,15 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.drawBefore = function() {
-		    
-            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음 
-            var data = _.deepClone(this.get('data'));
-            var series = _.deepClone(this.get('series'));
-            var grid = _.deepClone(this.get('grid'));
-            var padding = _.deepClone(this.setPadding(this.get('padding')));
-            var brush = _.deepClone(this.get('brush'));
-            var legend = _.deepClone(this.get('legend'));
-            var series_list = [];
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
+            var data = _.deepClone(this.options.data),
+                series = _.deepClone(this.options.series),
+                grid = _.deepClone(this.options.grid),
+                padding = _.deepClone(this.setPadding(this.options.padding)),
+                brush = _.deepClone(this.options.brush),
+                widget = _.deepClone(this.options.widget),
+                legend = _.deepClone(this.options.legend),
+                series_list = [];
 
             // series 데이타 구성
             for (var i = 0, len = data.length; i < len; i++) {
@@ -10392,29 +10438,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 series_list.push(key);
             }            
 
-            // grid 최소, 최대 구성
-            if (brush != null) {
-                if ( typeof brush == 'string') {
-                    brush = [{
-                        type : brush
-                    }];
-                } else if ( typeof brush == 'object' && !brush.length) {
-                    brush = [brush];
-                }
-
-                for (var i = 0, len = brush.length; i < len; i++) {
-                    var b = brush[i];
-
-                    if (!b.target) {
-                        b.target = series_list;
-                    } else if ( typeof b.target == 'string') {
-                        b.target = [b.target];
-                    }
-                }
-            }
-
-            //_grid = grid;
-            _brush = brush;
+            _brush = createBrushData(brush, series_list);
+            _widget = createBrushData(widget, series_list);
             _data = data;
             _series = series;
 			_grid = grid;
@@ -10440,21 +10465,18 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.drawDefs = function() {
-			
-            // draw defs 
+            // draw defs
             var defs = this.svg.defs();
-            
 
 			// default clip path             
 			this.clipId = this.createId('clip-id');
 			
             var clip = this.svg.clipPath({ id : this.clipId });
+
             clip.append(this.svg.rect({  x : 0, y : 0, width : this.width(), height : this.height() }));
-                        
             defs.append(clip);
             
             this.defs = defs;
-			
 		}
 
 		/**
@@ -10473,7 +10495,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */		
 		this.drawTitle = function() {
-			var title = this.get('title');
+			var title = this.options.title;
 			
 			if (_.typeCheck("string", title)) {
 				title = { text : title, top : true, align : 'center' }
@@ -10627,9 +10649,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		this.drawGrid = function() {
 			var grid = this.grid();
 			
-			var grid_list = {};
 			if (grid != null) {
-				
 				if (grid.type) {
 					grid = {
 						c : grid
@@ -10637,7 +10657,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				}
 
 				for (var k in grid) {
-
 					var orient = 'custom';
 
 					if (k == 'x')
@@ -10653,12 +10672,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 						_scales[k] = [];
 					}
 
-					
 					if (!_.typeCheck("array", grid[k])) {
 						grid[k] = [grid[k]];
 					}
 
-					
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
 						var obj = new Grid(orient, grid[k][keyIndex]).render(this);
@@ -10678,43 +10695,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 						 _scales[k][keyIndex] = obj.scale			
 					}					
-					
 				}
 			}			
-		}
-		
-		/**
-		 * brush 그리기 
-		 * 
-		 */
-		this.drawWidget = function(brush) {
-			if (!_.typeCheck("array", brush.widget)) {
-				brush.widget = [brush.widget];
-			}
-			
-			for(var index = 0; index < brush.widget.length; index++) {
-				var widget = brush.widget[index];
-				
-				var WidgetObj = jui.include("chart.brush." + widget);
-				
-				var clone = {};
-				
-				for(var key in brush) {
-					clone[key] = brush[key];
-				}
-				
-				if (_.typeCheck("string", widget)) {
-					clone.type = widget;	
-				} else if (_.typeCheck("object", widget)) {
-					for(var key in widget) {
-						clone[key] = widget[key];
-					}
-				}
-				
-				
-				
-				new WidgetObj(clone).render(this);
-			}
 		}
 		
 		/**
@@ -10723,39 +10705,37 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * brush 에 맞는 x, y 축(grid) 설정 
 		 * 
 		 */
-		this.drawBrush = function() {
-			if (_brush != null) {
-				for (var i = 0; i < _brush.length; i++) {
+		this.drawBrush = function(type) {
+            var draws = (type == "brush") ? _brush : _widget;
+
+			if (draws != null) {
+				for (var i = 0; i < draws.length; i++) {
 					
-					delete _brush[i].x;
-					delete _brush[i].y;
+					delete draws[i].x;
+					delete draws[i].y;
 					
-					var Obj = jui.include("chart.brush." + _brush[i].type);
+					var Obj = jui.include("chart." + type + "." + draws[i].type);
 
 					if (_scales.x || _scales.x1) {
-						if (!_.typeCheck("function", _brush[i].x)) {
-							_brush[i].x = (typeof _brush[i].x1 !== 'undefined') ? _scales.x1[_brush[i].x1 || 0] : _scales.x[_brush[i].x || 0];
+						if (!_.typeCheck("function", draws[i].x)) {
+                            draws[i].x = (typeof draws[i].x1 !== 'undefined') ? _scales.x1[draws[i].x1 || 0] : _scales.x[draws[i].x || 0];
 						}
 					}
 					if (_scales.y || _scales.y1) {
-						if (!_.typeCheck("function", _brush[i].y)) {
-							_brush[i].y = (typeof _brush[i].y1 !== 'undefined') ? _scales.y1[_brush[i].y1 || 0] : _scales.y[_brush[i].y || 0];
+						if (!_.typeCheck("function", draws[i].y)) {
+                            draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
 						}
 					}						
 					if (_scales.c){
-						if (!_.typeCheck("function", _brush[i].c)) {
-							_brush[i].c = _scales.c[_brush[i].c || 0];
+						if (!_.typeCheck("function", draws[i].c)) {
+                            draws[i].c = _scales.c[draws[i].c || 0];
 						}
 					}
-						
-					_brush[i].index = i;
 
-					_brush[i].obj = new Obj(_brush[i]);
-					_brush[i].obj.render(this);
-					
-					if (_brush[i].widget) {
-						this.drawWidget(_brush[i]);
-					}
+                    draws[i].index = i;
+
+                    draws[i].obj = new Obj(draws[i]);
+                    draws[i].obj.render(this);
 				}
 			}
 		}
@@ -10765,19 +10745,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.draw = function() {
-		    _scale = {};
-		          
             this.drawDefs();
-            
             this.drawGrid();
-		    
-			this.drawBrush();
-			
+			this.drawBrush("brush");
+            this.drawBrush("widget");
             this.drawTitle();
-            
-            this.drawLegend();			
+            this.drawLegend();
 			
-			this.emit("draw", []);
+			this.emit("draw");
 		}
 	}
 
@@ -10801,7 +10776,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"legend" : "",
 				"series" : {},
 				"grid" : {},
-				"brush" : [],
+				"brush" : null,
+                "widget" : null,
 				"data" : [],
                 "bind" : null
 			}
@@ -10870,7 +10846,13 @@ jui.define("chart.theme.jennifer", [], function() {
         pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
-        scatterBorderWidth : 1
+        scatterBorderWidth : 1,
+
+        // widget styles
+        tooltipFontColor : "#333",
+        tooltipFontSize : "12px",
+        tooltipBackgroundColor : "white",
+        tooltipBorderColor : "#aaaaaa"
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -11483,58 +11465,6 @@ jui.define("chart.theme.korea", [], function() {
         "#7d45ad",
         "#fdd0cd",
         "#bfc1c3"
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.5,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.korea2", [], function() {
-    var themeColors = [
-    	"#014FDE",
-        "#DD0000",
-        "#FCDB00",
-        "#0E9400",
-        "#FB9902",
-        "#00C5AB",
-        "#81014C",
-        "#B1B300",
-        "#A143E3",
-        "#323232"
     ];
 
     return {
@@ -12832,8 +12762,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
                 data: chart.data(dataIndex)
             };
 
-            var $tooltip = null;
-
             elem.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
@@ -12863,8 +12791,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
          * @param {object} brush
          */
 		this.getLegendIcon = function(chart, brush) {
-
-			
 			var arr = [];
 			
 			for(var i = 0; i < brush.target.length; i++) {
@@ -12903,8 +12829,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 			}
 			
 			return arr;
-			
-		}        
+		}
 	}
 
 	return CoreBrush;
@@ -14705,3 +14630,49 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	return StackGaugeBrush;
 }, "chart.brush.donut");
+
+jui.define("chart.widget.tooltip", [], function() {
+    var TooltipWidget = function(widget) {
+        var g, text, rect;
+        var padding = 7, border = 1;
+
+        this.drawBefore = function(chart) {
+            g = chart.svg.group({}, function() {
+                rect = chart.svg.rect({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": border
+                });
+
+                text = chart.svg.text({
+                    "font-family" : chart.theme("fontFamily"),
+                    "font-size" : chart.theme("tooltipFontSize"),
+                    "font-weight" : "bold",
+                    "fill" : chart.theme("tooltipFontColor")
+                });
+            });
+        }
+
+        this.draw = function(chart) {
+            chart.bind("mouseover", function(obj, e) {
+                if(widget.brush != obj.key || !obj.target) return;
+
+                // 툴팁 텍스트 출력
+                var t = chart.series(obj.target);
+                text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+
+                var bbox = text.element.getBBox();
+                rect.attr({
+                    width: bbox.width + (padding * 2),
+                    height: bbox.height + padding,
+                    x: -padding,
+                    y: -bbox.height
+                });
+
+                g.translate(e.offsetX - (bbox.width / 2), e.offsetY - bbox.height);
+            });
+        }
+    }
+
+    return TooltipWidget;
+}, "chart.draw");

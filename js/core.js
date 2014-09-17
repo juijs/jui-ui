@@ -295,19 +295,25 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UICore = function() {
         var vo = null;
 
-        this.emit = function(type, args) {
-            var result = null;
+        this.emit = function(type, args, unique) {
+            var result = null,
+                unique = (!unique) ? false : true;
 
             for(var i = 0; i < this.event.length; i++) {
-                var tmpEvent = this.event[i];
+                var e = this.event[i];
 
-                if(tmpEvent.type == type.toLowerCase()) {
+                if(e.type == type.toLowerCase() && e.unique === unique) {
                     if(typeof(args) == "object" && args.length != undefined) {
-                        result = tmpEvent.callback.apply(this, args);
+                        result = e.callback.apply(this, args);
                     } else {
-                        result = tmpEvent.callback.call(this, args);
+                        result = e.callback.call(this, args);
                     }
                 }
+            }
+
+            // unique emitting!!
+            if(unique === false) {
+                return this.emit(type, args, true);
             }
 
             return result;
@@ -315,7 +321,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         this.on = function(type, callback) {
             if(typeof(type) != "string" && typeof(callback) != "object") return;
-            this.event.push({ type: type.toLowerCase(), callback: callback });
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
+        }
+
+        this.bind = function(type, callback) {
+            if(typeof(type) != "string" && typeof(callback) != "object") return;
+
+            this.unbind(type);
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: true });
+        }
+
+        this.unbind = function(type) {
+            var event = [];
+
+            for(var i = 0; i < this.event.length; i++) {
+                var e = this.event[i];
+
+                if (e.type != type.toLowerCase() || e.unique === false)
+                    event.push(e);
+            }
+
+            this.event = event;
         }
 
         this.addEvent = function() {

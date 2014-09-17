@@ -506,13 +506,10 @@ jui.define("util.svg",
         }
         
         this.getTextRect = function(text) {
-        	
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
         	
         	root.element.appendChild(el.element);
-        	
         	var rect = el.element.getBoundingClientRect();
-        	
         	el.remove();
         	
         	return { width : rect.width, height : rect.height }; 

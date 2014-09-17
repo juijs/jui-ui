@@ -173,8 +173,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
                 data: chart.data(dataIndex)
             };
 
-            var $tooltip = null;
-
             elem.on("click", function(e) {
                 chart.emit("click", [ obj, e ]);
             });
@@ -204,8 +202,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
          * @param {object} brush
          */
 		this.getLegendIcon = function(chart, brush) {
-
-			
 			var arr = [];
 			
 			for(var i = 0; i < brush.target.length; i++) {
@@ -244,8 +240,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 			}
 			
 			return arr;
-			
-		}        
+		}
 	}
 
 	return CoreBrush;

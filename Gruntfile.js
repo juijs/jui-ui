@@ -67,7 +67,7 @@ module.exports = function(grunt) {
                 "js/chart/grid/radar.js",
                 "js/chart/grid/range.js",
 
-                // chart.grid
+                // chart.brush
                 "js/chart/brush/core.js",
                 "js/chart/brush/bar.js",
                 "js/chart/brush/bubble.js",
@@ -91,7 +91,10 @@ module.exports = function(grunt) {
                 "js/chart/brush/stackscatter.js", // extends scatter
                 "js/chart/brush/gauge.js", // extends donut
                 "js/chart/brush/fullgauge.js", // extends donut
-                "js/chart/brush/stackgauge.js" // extends donut
+                "js/chart/brush/stackgauge.js", // extends donut
+
+                // chart.widget
+                "js/chart/widget/tooltip.js"
             ],
             dest : "jui.js"
         }

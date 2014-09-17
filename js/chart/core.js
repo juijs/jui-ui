@@ -17,7 +17,7 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
  		 * @param {Object} self
 		 */
 		function calculate(self) {
-			var padding = self.setPadding(self.get('padding')),
+			var padding = self.setPadding(self.options.padding),
                 max = self.svg.size();
 
 			var chart = {
@@ -50,17 +50,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
             }
 
 			return padding;			
-		}            
-		
-		/**
-		 * chart 에 설정된 옵션값 반환 
-		 * 
-		 * <code>chart.get('key') == chart.options.key</code> 
-		 * 
-		 * @param {string} key
-		 */
-		this.get = function(key) {
-			return this.options[key];
 		}
 
 		/**
@@ -75,7 +64,6 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		 * @param {string} key
 		 */
 		this.area = function(key) {
-			
 			if (typeof _area[key] !== "undefined") {
 				return _area[key];
 			}
@@ -218,32 +206,32 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 		 * 
 		 * @param {object} bind   uix.table, uix.xtable 객체 사용 
 		 */
-        this.bind = function(bind) {
+        this.bindUI = function(uiObj) {
             var self = this;
 
-            if(bind.module.type == "uix.table") {
-                bind.callAfter("update", updateTable);
-                bind.callAfter("sort", updateTable);
-                bind.callAfter("append", updateTable);
-                bind.callAfter("insert", updateTable);
-                bind.callAfter("remove", updateTable);
-            } else if(bind.module.type == "uix.xtable") {
-                bind.callAfter("update", updateXTable);
-                bind.callAfter("sort", updateXTable);
+            if(uiObj.module.type == "uix.table") {
+                uiObj.callAfter("update", updateTable);
+                uiObj.callAfter("sort", updateTable);
+                uiObj.callAfter("append", updateTable);
+                uiObj.callAfter("insert", updateTable);
+                uiObj.callAfter("remove", updateTable);
+            } else if(uiObj.module.type == "uix.xtable") {
+                uiObj.callAfter("update", updateXTable);
+                uiObj.callAfter("sort", updateXTable);
             }
 
             function updateTable() {
                 var data = [];
 
-                for(var i = 0; i < bind.count(); i++) {
-                    data.push(bind.get(i).data);
+                for(var i = 0; i < uiObj.count(); i++) {
+                    data.push(uiObj.get(i).data);
                 }
 
                 self.update(data);
             }
 
             function updateXTable() {
-                self.update(bind.listData());
+                self.update(uiObj.listData());
             }
         }
 
@@ -255,16 +243,16 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 
 			// svg 기본 객체 생성 
 			this.svg = new SVGUtil(this.root, {
-				width : this.get("width"),
-				height : this.get("height")
+				width : this.options.width,
+				height : this.options.height
 			});
 
             // 차트 테마 설정
-            this.setTheme(this.get('theme'))
+            this.setTheme(this.options.theme)
 
             // UI 바인딩 설정
-            if(this.get("bind") != null) {
-                this.bind(this.get("bind"));
+            if(this.options.bind != null) {
+                this.bindUI(this.options.bind);
             }
 
             // 테마 컬러 설정

@@ -4,11 +4,47 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	 * 
 	 */
 	var UI = function() {
-		
-		var self = this; 
-		var _grid = {}, _padding = [], _brush = [], _data, _series, _scales = {}, _legend;
-		
-		/**
+		var _grid = {}, _brush = [], _widget = [];
+		var _padding = [], _scales = {};
+        var _data, _series, _legend;
+
+        /**
+         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
+         * Widget도 같이 사용한다.
+         *
+         * @param draws
+         * @param series_list
+         * @returns {*}
+         */
+        function createBrushData(draws, series_list) {
+            var result = null;
+
+            if (draws != null) {
+                if ( typeof draws == 'string') {
+                    result = [{
+                        type : draws
+                    }];
+                } else if ( typeof draws == 'object' && !draws.length) {
+                    result = [ draws ];
+                } else {
+                    result = draws;
+                }
+
+                for (var i = 0, len = result.length; i < len; i++) {
+                    var b = result[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [ b.target ];
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /**
 		 * 현재 text 관련 theme 가 정해진 text element 생성 
 		 * 
 		 * @param {object} attr
@@ -29,7 +65,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.init = function() {
-			
 			this.parent.init.call(this);
 			this.emit("load", []);
 		}
@@ -128,15 +163,15 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.drawBefore = function() {
-		    
-            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음 
-            var data = _.deepClone(this.get('data'));
-            var series = _.deepClone(this.get('series'));
-            var grid = _.deepClone(this.get('grid'));
-            var padding = _.deepClone(this.setPadding(this.get('padding')));
-            var brush = _.deepClone(this.get('brush'));
-            var legend = _.deepClone(this.get('legend'));
-            var series_list = [];
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
+            var data = _.deepClone(this.options.data),
+                series = _.deepClone(this.options.series),
+                grid = _.deepClone(this.options.grid),
+                padding = _.deepClone(this.setPadding(this.options.padding)),
+                brush = _.deepClone(this.options.brush),
+                widget = _.deepClone(this.options.widget),
+                legend = _.deepClone(this.options.legend),
+                series_list = [];
 
             // series 데이타 구성
             for (var i = 0, len = data.length; i < len; i++) {
@@ -168,29 +203,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 series_list.push(key);
             }            
 
-            // grid 최소, 최대 구성
-            if (brush != null) {
-                if ( typeof brush == 'string') {
-                    brush = [{
-                        type : brush
-                    }];
-                } else if ( typeof brush == 'object' && !brush.length) {
-                    brush = [brush];
-                }
-
-                for (var i = 0, len = brush.length; i < len; i++) {
-                    var b = brush[i];
-
-                    if (!b.target) {
-                        b.target = series_list;
-                    } else if ( typeof b.target == 'string') {
-                        b.target = [b.target];
-                    }
-                }
-            }
-
-            //_grid = grid;
-            _brush = brush;
+            _brush = createBrushData(brush, series_list);
+            _widget = createBrushData(widget, series_list);
             _data = data;
             _series = series;
 			_grid = grid;
@@ -216,21 +230,18 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.drawDefs = function() {
-			
-            // draw defs 
+            // draw defs
             var defs = this.svg.defs();
-            
 
 			// default clip path             
 			this.clipId = this.createId('clip-id');
 			
             var clip = this.svg.clipPath({ id : this.clipId });
+
             clip.append(this.svg.rect({  x : 0, y : 0, width : this.width(), height : this.height() }));
-                        
             defs.append(clip);
             
             this.defs = defs;
-			
 		}
 
 		/**
@@ -249,7 +260,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */		
 		this.drawTitle = function() {
-			var title = this.get('title');
+			var title = this.options.title;
 			
 			if (_.typeCheck("string", title)) {
 				title = { text : title, top : true, align : 'center' }
@@ -403,9 +414,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		this.drawGrid = function() {
 			var grid = this.grid();
 			
-			var grid_list = {};
 			if (grid != null) {
-				
 				if (grid.type) {
 					grid = {
 						c : grid
@@ -413,7 +422,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				}
 
 				for (var k in grid) {
-
 					var orient = 'custom';
 
 					if (k == 'x')
@@ -429,12 +437,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 						_scales[k] = [];
 					}
 
-					
 					if (!_.typeCheck("array", grid[k])) {
 						grid[k] = [grid[k]];
 					}
 
-					
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
 						var obj = new Grid(orient, grid[k][keyIndex]).render(this);
@@ -454,43 +460,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 						 _scales[k][keyIndex] = obj.scale			
 					}					
-					
 				}
 			}			
-		}
-		
-		/**
-		 * brush 그리기 
-		 * 
-		 */
-		this.drawWidget = function(brush) {
-			if (!_.typeCheck("array", brush.widget)) {
-				brush.widget = [brush.widget];
-			}
-			
-			for(var index = 0; index < brush.widget.length; index++) {
-				var widget = brush.widget[index];
-				
-				var WidgetObj = jui.include("chart.brush." + widget);
-				
-				var clone = {};
-				
-				for(var key in brush) {
-					clone[key] = brush[key];
-				}
-				
-				if (_.typeCheck("string", widget)) {
-					clone.type = widget;	
-				} else if (_.typeCheck("object", widget)) {
-					for(var key in widget) {
-						clone[key] = widget[key];
-					}
-				}
-				
-				
-				
-				new WidgetObj(clone).render(this);
-			}
 		}
 		
 		/**
@@ -499,39 +470,37 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * brush 에 맞는 x, y 축(grid) 설정 
 		 * 
 		 */
-		this.drawBrush = function() {
-			if (_brush != null) {
-				for (var i = 0; i < _brush.length; i++) {
+		this.drawBrush = function(type) {
+            var draws = (type == "brush") ? _brush : _widget;
+
+			if (draws != null) {
+				for (var i = 0; i < draws.length; i++) {
 					
-					delete _brush[i].x;
-					delete _brush[i].y;
+					delete draws[i].x;
+					delete draws[i].y;
 					
-					var Obj = jui.include("chart.brush." + _brush[i].type);
+					var Obj = jui.include("chart." + type + "." + draws[i].type);
 
 					if (_scales.x || _scales.x1) {
-						if (!_.typeCheck("function", _brush[i].x)) {
-							_brush[i].x = (typeof _brush[i].x1 !== 'undefined') ? _scales.x1[_brush[i].x1 || 0] : _scales.x[_brush[i].x || 0];
+						if (!_.typeCheck("function", draws[i].x)) {
+                            draws[i].x = (typeof draws[i].x1 !== 'undefined') ? _scales.x1[draws[i].x1 || 0] : _scales.x[draws[i].x || 0];
 						}
 					}
 					if (_scales.y || _scales.y1) {
-						if (!_.typeCheck("function", _brush[i].y)) {
-							_brush[i].y = (typeof _brush[i].y1 !== 'undefined') ? _scales.y1[_brush[i].y1 || 0] : _scales.y[_brush[i].y || 0];
+						if (!_.typeCheck("function", draws[i].y)) {
+                            draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
 						}
 					}						
 					if (_scales.c){
-						if (!_.typeCheck("function", _brush[i].c)) {
-							_brush[i].c = _scales.c[_brush[i].c || 0];
+						if (!_.typeCheck("function", draws[i].c)) {
+                            draws[i].c = _scales.c[draws[i].c || 0];
 						}
 					}
-						
-					_brush[i].index = i;
 
-					_brush[i].obj = new Obj(_brush[i]);
-					_brush[i].obj.render(this);
-					
-					if (_brush[i].widget) {
-						this.drawWidget(_brush[i]);
-					}
+                    draws[i].index = i;
+
+                    draws[i].obj = new Obj(draws[i]);
+                    draws[i].obj.render(this);
 				}
 			}
 		}
@@ -541,19 +510,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.draw = function() {
-		    _scale = {};
-		          
             this.drawDefs();
-            
             this.drawGrid();
-		    
-			this.drawBrush();
-			
+			this.drawBrush("brush");
+            this.drawBrush("widget");
             this.drawTitle();
-            
-            this.drawLegend();			
+            this.drawLegend();
 			
-			this.emit("draw", []);
+			this.emit("draw");
 		}
 	}
 
@@ -577,7 +541,8 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				"legend" : "",
 				"series" : {},
 				"grid" : {},
-				"brush" : [],
+				"brush" : null,
+                "widget" : null,
 				"data" : [],
                 "bind" : null
 			}
