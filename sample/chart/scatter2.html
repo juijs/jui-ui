@@ -42,13 +42,13 @@
             brush : [{
                 type : 'scatter',
                 size : 10,
-                //symbol: "rectangle",
-                tooltip: true
+                //symbol: "rectangle"
             }],
-            widget : [{
-                type: "tooltip",
-                brush: 0
-            }],
+            widget : [
+                { type: "tooltip", brush: 0 },
+                { type: "title", text : "Title", align : 'left', attr : { 'font-size' : '20pt' } },
+                { type : 'legend' }
+            ],
             event : {
                 mouseover : function(obj, e) {
                     console.log("on");

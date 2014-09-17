@@ -10241,7 +10241,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	var UI = function() {
 		var _grid = {}, _brush = [], _widget = [];
 		var _padding = [], _scales = {};
-        var _data, _series, _legend;
+        var _data, _series;
 
         /**
          * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
@@ -10379,20 +10379,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _series;
 		}
 		
-		/**
-		 * legend 옵션 리턴 
-		 * 
-		 * @param {string} key
-		 * 
-		 */		
-		this.legend = function(key) {
-			if (_legend[key]) {
-				return _legend[key];
-			}
-
-			return _legend;
-		}
-
+		
 		/**
 		 * draw 이전에 환경 셋팅 
 		 * 
@@ -10405,7 +10392,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 padding = _.deepClone(this.setPadding(this.options.padding)),
                 brush = _.deepClone(this.options.brush),
                 widget = _.deepClone(this.options.widget),
-                legend = _.deepClone(this.options.legend),
                 series_list = [];
 
             // series 데이타 구성
@@ -10444,7 +10430,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _series = series;
 			_grid = grid;
 			_padding = padding;
-			_legend = legend;
 			
 			if (!_.typeCheck("array", _data)) {
 				_data = [_data];
@@ -10479,162 +10464,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.defs = defs;
 		}
 
-		/**
-		 * title 그리기 
-		 * 
-		 * title 객체 옵션 
-		 * 
-		 * {
-		 * 	text : "Title",		// 실제 표시될 title 문자열 
-		 *  align : "center"	// left, right, center 를 지정 , default center 
-		 *  top : true,			// chart 에서 title 위치 , 기본값 true
-		 *  bottom : true		// chart 에서 title 위치 , 기본값 false 
-		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-		 * }
-		 * 
-		 */		
-		this.drawTitle = function() {
-			var title = this.options.title;
-			
-			if (_.typeCheck("string", title)) {
-				title = { text : title, top : true, align : 'center' }
-			}
-			
-			if (title.text == "") {
-				return; 
-			}
-
-			title.top = typeof title.top == 'undefined' ? true : title.top;
-			title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
-			title.align = typeof title.align == 'undefined' ? 'center' : title.align;
-			
-			var x = 0;
-			var y = 0;
-			var anchor = 'middle';
-			if (title.bottom) {
-				y = this.y2() + this.padding('bottom') -20;
-			} else if (title.top) {
-				y = 20; 
-			}
-			
-			if (title.align == 'center') {
-				x = this.x() + this.width()/2;
-				anchor = 'middle';
-			} else if (title.align == 'left') {
-				x = this.x();
-				anchor = 'start';
-				
-			} else {
-				x = this.x2();
-				anchor = 'end';
-			}
-			
-			this.text({
-				x : x + (title.dx || 0),
-				y : y + (title.dy || 0),
-				'text-anchor' : anchor
-			}, title.text).attr(title.attr);
-		}
-		
-		/**
-		 * legend 그리기 
-		 * 
-		 * {
-		 *  top : true,			// chart 에서 title 위치 , 기본값 true
-		 *  bottom : false,		// chart 에서 title 위치 , 기본값 false, 
-		 *  left : false,		// chart 에서 title 위치 , 기본값 false, 
-		 *  right : false,		// chart 에서 title 위치 , 기본값 false,
-		 * 
-		 *  align : 'middle',	// start, end, middle,  기본값은 middle 
-		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-		 * } 
-		 * 
-		 * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
-		 * 
-		 */
-		this.drawLegend = function() {
-			var legend = this.legend();
-			
-			if (!legend) return;
-
-			legend.brush = legend.brush || [0];			
-			var align = legend.align || "middle";
-			var isTop = legend.top || false;
-			var isBottom = legend.bottom || false;
-			var isLeft = legend.left || false;
-			var isRight = legend.right || false;
-
-			
-			if (!(isTop || isBottom || isLeft || isRight)) {
-				isBottom = true; 
-			}			
-			
-			var group = this.svg.group({ "class" : 'legend'});
-			
-			var x = 0;
-			var y = 0; 
-
-			var total_width = 0;
-			var total_height = 0;
-			
-			var max_width = 0;
-			var max_height = 0; 
-			
-			for(var i = 0; i < legend.brush.length; i++) {
-				var index = legend.brush[i];
-				var arr = _brush[index].obj.getLegendIcon(this, _brush[index]);
-			
-
-				for(var k = 0; k < arr.length; k++) {
-					group.append(arr[k].icon);
-					
-					arr[k].icon.translate(x, y);
-					if (isBottom || isTop) {						
-						x += arr[k].width;
-						total_width += arr[k].width;
-						
-						if (max_height < arr[k].height) {
-							max_height = arr[k].height;
-						}
-					} else if (isLeft || isRight) {
-						y += arr[k].height;
-						total_height += arr[k].height;
-						
-						if (max_width < arr[k].width) {
-							max_width = arr[k].width;
-						}
-					}
-				}					
-
-			}
-			
-			// legend 위치  선정
-			if (isBottom || isTop) {
-				var y = (isBottom) ? this.y2() + this.padding('bottom') - max_height : this.y()-this.padding('top');
-				
-				if (align == 'start') {
-					x = this.x();
-				} else if (align == 'middle') {
-					x = this.x() + (this.width()/2- total_width/2);
-				} else if (align == 'end') {
-					x = this.x2() - total_width;
-				}
-			} else if (isLeft || isRight) {
-				var x = (isLeft) ? this.x() - this.padding('left') : this.x2() + this.padding('right') - max_width;
-				
-				if (align == 'start') {
-					y = this.y();
-				} else if (align == 'middle') {
-					y = this.y() + (this.height()/2 - total_height/2);
-				} else if (align == 'end') {
-					y = this.y2() - total_height;
-				}
-			} 
-			
-			group.translate(x, y);
-		}		
 		
 		/**
 		 * grid 그리기 
@@ -10749,8 +10578,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.drawGrid();
 			this.drawBrush("brush");
             this.drawBrush("widget");
-            this.drawTitle();
-            this.drawLegend();
 			
 			this.emit("draw");
 		}
@@ -10772,8 +10599,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				
 				// chart
 				"theme" : "jennifer",	// 기본 테마 jennifer
-				"title" : "",
-				"legend" : "",
 				"series" : {},
 				"grid" : {},
 				"brush" : null,
@@ -10920,261 +10745,6 @@ jui.define("chart.theme.dark", [], function() {
     }	
 
 });
-jui.define("chart.theme.light", [], function() {
-    var themeColors = [
-        '#058DC7', 
-        '#50B432', 
-        '#ED561B', 
-        '#DDDF00', 
-        '#24CBE5', 
-        '#64E572', 
-        '#FF9655', 
-        '#FFF263', 
-        '#6AF9C4'
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.2,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.d3", [], function() {
-	var themeColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
-
-	return {
-		// common styles
-		backgroundColor : "white",
-		fontSize : "11px",
-		fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-		colors : themeColors,
-
-		// grid styles
-		gridFontColor : "#333333",
-		gridActiveFontColor : "#ff7800",
-		gridBorderWidth : 1,
-		gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-		gridActiveBorderColor : "#ff7800",
-		gridActiveBorderWidth : 1,
-
-		// brush styles
-		gaugeBackgroundColor : "#ececec",
-		pieBorderColor : "white",
-		pieBorderWidth : 1,
-		donutBorderColor : "white",
-		donutBorderWidth : 1,
-		areaOpacity : 0.5,
-		bubbleOpacity : 0.5,
-		bubbleBorderWidth : 1,
-		candlestickBorderColor : "black",
-		candlestickBackgroundColor : "white",
-		candlestickInvertBorderColor : "red",
-		candlestickInvertBackgroundColor : "red",
-		lineBorderWidth : 2,
-		pathOpacity : 0.2,
-		pathBorderWidth : 1,
-		scatterBorderColor : "white",
-		scatterBorderWidth : 1
-	}
-}); 
-jui.define("chart.theme.d20", [], function() {
-	var themeColors = [
-		"#1f77b4",
-		"#aec7e8",
-		"#ff7f0e",
-		"#ffbb78",
-		"#2ca02c",
-		"#98df8a",
-		"#d62728",
-		"#ff9896",
-		"#9467bd",
-		"#c5b0d5",
-		"#8c564b",
-		"#c49c94",
-		"#e377c2",
-		"#f7b6d2",
-		"#7f7f7f",
-		"#c7c7c7",
-		"#bcbd22",
-		"#dbdb8d",
-		"#17becf",
-		"#9edae5"
-	];
-
-	return {
-		// common styles
-		backgroundColor : "white",
-		fontSize : "11px",
-		fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-		colors : themeColors,
-
-		// grid styles
-		gridFontColor : "#333333",
-		gridActiveFontColor : "#ff7800",
-		gridBorderWidth : 1,
-		gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-		gridActiveBorderColor : "#ff7800",
-		gridActiveBorderWidth : 1,
-
-		// brush styles
-		gaugeBackgroundColor : "#ececec",
-		pieBorderColor : "white",
-		pieBorderWidth : 1,
-		donutBorderColor : "white",
-		donutBorderWidth : 1,
-		areaOpacity : 0.5,
-		bubbleOpacity : 0.5,
-		bubbleBorderWidth : 1,
-		candlestickBorderColor : "black",
-		candlestickBackgroundColor : "white",
-		candlestickInvertBorderColor : "red",
-		candlestickInvertBackgroundColor : "red",
-		lineBorderWidth : 2,
-		pathOpacity : 0.2,
-		pathBorderWidth : 1,
-		scatterBorderColor : "white",
-		scatterBorderWidth : 1
-	}
-}); 
-jui.define("chart.theme.flat", [], function() {
-    var themeColors = [
-        "#3A738A",
-        "#EBD9A7",
-        "#89AD78",
-        "#FF766D",
-        "#C76160",
-        "#3D7799",
-        "#90B8CC",
-        "#A7FFC6",
-        "#FF7A62",
-        "#CC6462"
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.2,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.flat2", [], function() {
-    var themeColors = [
-		"#4a87ee",
-		"#43cee6",
-		"#66cc33", 
-		"#f0b840", 
-		"#ef4e3a", 
-		"#8a6de9", 
-		"#444" 
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.2,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
 jui.define("chart.theme.seoul", [], function() {
 	var themeColors = [
 		"#FBB13C",		// 은행노란색
@@ -11228,283 +10798,6 @@ jui.define("chart.theme.seoul", [], function() {
 		scatterBorderWidth : 1
 	}
 }); 
-jui.define("chart.theme.candy", [], function() {
-    var themeColors = [
-		"#7F6084",
-		"#86B402",
-		"#A2D1CF",
-		"#C8B631",
-		"#6DBCEB",
-		"#52514E",
-		"#4F81BC",
-		"#A064A1",
-		"#F79647"
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.2,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.holo", [], function() {
-    var themeColors = [
-
-        "#f39c12",
-        "#16a085",
-        "#d35400",
-        "#27ae60",
-        "#c0392b" ,
-        "#2980b9" ,
-        "#bdc3c7",
-        "#8e44ad",
-        "#7f8c8d",
-        "#2c3e50",
-        
-
-        
-        "#f1c40f" ,
-        "#e67e22",
-        "#e74c3c" ,
-        "#ecf0f1" ,
-        "#95a5a6",
-            
-        "#1abc9c",
-        "#2ecc71" ,
-        "#3498db",
-        "#9b59b6",
-        "#34495e" ,
-        
-        
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.5,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.sns", [], function() {
-    var themeColors = [
-        "#3b5998", // facebook
-        "#33ccff",  // twitter
-        "#d34836",  // google plus 
-        "#FE0000",  // youtube
-        "#5989BA",  // digg
-        "#1276FF",
-        "#F7A42C",  // rss
-        "#F5699A",
-        "#85C441", // ever note 
-        "#3C5A76", // tumblr
-        "#5DC8FF", // vimeo
-        "#F9F9FB", // instagram
-        "#9CA3AB", // wordpress
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.5,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.google", [], function() {
-    var themeColors = [
-		'#e2431e',
-        '#e7711b',
-        '#f1ca3a',
-        '#6f9654',
-        '#1c91c0',
-        '#43459d'
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.5,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
-jui.define("chart.theme.korea", [], function() {
-    var themeColors = [
-        "#2b2dc2",
-        "#e90026",
-        "#FFd200",
-        "#00a358",
-        "#00b5f1",
-        "#fe5dcb",
-        "#ff9600",
-        "#80144c",
-        "#0a2c76",
-        "#7d45ad",
-        "#fdd0cd",
-        "#bfc1c3"
-    ];
-
-    return {
-        // common styles
-    	backgroundColor : "white",
-    	fontSize : "11px",
-    	fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
-        colors : themeColors,
-
-        // grid styles
-    	gridFontColor : "#333333",
-    	gridActiveFontColor : "#ff7800",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
-
-        // brush styles
-    	gaugeBackgroundColor : "#ececec",
-    	pieBorderColor : "white",
-        pieBorderWidth : 1,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
-    	areaOpacity : 0.5,
-        bubbleOpacity : 0.5,
-        bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        lineBorderWidth : 2,
-        pathOpacity : 0.5,
-        pathBorderWidth : 1,
-        scatterBorderColor : "white",
-        scatterBorderWidth : 1
-    }
-});
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
 	/**
 	 * Grid Core 객체 
@@ -14696,4 +13989,186 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     }
 
     return TooltipWidget;
+}, "chart.draw");
+jui.define("chart.widget.title", [ "util.base" ], function(_) {
+
+        /**
+         * title 그리기 
+         * 
+         * title 객체 옵션 
+         * 
+         * {
+         *  text : "Title",     // 실제 표시될 title 문자열 
+         *  align : "center"    // left, right, center 를 지정 , default center 
+         *  top : true,         // chart 에서 title 위치 , 기본값 true
+         *  bottom : true       // chart 에서 title 위치 , 기본값 false 
+         *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+         *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+         * }
+         * 
+         */     
+
+    var TitleWidget = function(widget) {
+
+        var title, x = 0, y = 0, anchor = 'middle';
+
+        this.drawBefore = function(chart) {
+             
+            title = widget;
+
+            title.top = typeof title.top == 'undefined' ? true : title.top;
+            title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
+            title.align = typeof title.align == 'undefined' ? 'center' : title.align;
+
+
+            if (title.bottom) {
+                y = chart.y2() + chart.padding('bottom') -20;
+            } else if (title.top) {
+                y = 20; 
+            }
+            
+            if (title.align == 'center') {
+                x = chart.x() + chart.width()/2;
+                anchor = 'middle';
+            } else if (title.align == 'left') {
+                x = chart.x();
+                anchor = 'start';
+                
+            } else {
+                x = chart.x2();
+                anchor = 'end';
+            }
+
+        }
+
+        this.draw = function(chart) {
+            
+            if (title.text == "") {
+                return; 
+            }
+
+            chart.text({
+                x : x + (title.dx || 0),
+                y : y + (title.dy || 0),
+                'text-anchor' : anchor
+            }, title.text).attr(title.attr);
+            
+        }
+    }
+
+    return TitleWidget;
+}, "chart.draw");
+jui.define("chart.widget.legend", ["util.base" ], function( _) {
+    
+        /**
+         * legend 그리기 
+         * 
+         * {
+         *  top : true,         // chart 에서 title 위치 , 기본값 true
+         *  bottom : false,     // chart 에서 title 위치 , 기본값 false, 
+         *  left : false,       // chart 에서 title 위치 , 기본값 false, 
+         *  right : false,      // chart 에서 title 위치 , 기본값 false,
+         * 
+         *  align : 'middle',   // start, end, middle,  기본값은 middle 
+         *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
+         *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
+         * } 
+         * 
+         * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
+         * 
+         */
+    
+    var LegendWidget = function(widget) {
+        
+        var legend, align, isTop, isBottom, isLeft, isRight;
+
+        this.drawBefore = function(chart) {
+            legend = widget;
+
+            legend.brush = legend.brush || [0];         
+            align = legend.align || "middle";
+            isTop = legend.top || false;
+            isBottom = legend.bottom || false;
+            isLeft = legend.left || false;
+            isRight = legend.right || false;
+
+            if (!(isTop || isBottom || isLeft || isRight)) {
+                isBottom = true; 
+            }      
+
+        }
+
+        this.draw = function(chart) {
+            if (!legend) return;
+
+            
+            var group = chart.svg.group({ "class" : 'widget legend'});
+            
+            var x = 0;
+            var y = 0; 
+
+            var total_width = 0;
+            var total_height = 0;
+            
+            var max_width = 0;
+            var max_height = 0; 
+            
+            for(var i = 0; i < legend.brush.length; i++) {
+                var index = legend.brush[i];
+                var brush = chart.brush(index);
+                var arr = brush.obj.getLegendIcon(chart, brush);
+            
+
+                for(var k = 0; k < arr.length; k++) {
+                    group.append(arr[k].icon);
+                    
+                    arr[k].icon.translate(x, y);
+                    if (isBottom || isTop) {                        
+                        x += arr[k].width;
+                        total_width += arr[k].width;
+                        
+                        if (max_height < arr[k].height) {
+                            max_height = arr[k].height;
+                        }
+                    } else if (isLeft || isRight) {
+                        y += arr[k].height;
+                        total_height += arr[k].height;
+                        
+                        if (max_width < arr[k].width) {
+                            max_width = arr[k].width;
+                        }
+                    }
+                }                   
+
+            }
+            
+            // legend 위치  선정
+            if (isBottom || isTop) {
+                var y = (isBottom) ? chart.y2() + chart.padding('bottom') - max_height : chart.y()-chart.padding('top');
+                
+                if (align == 'start') {
+                    x = chart.x();
+                } else if (align == 'middle') {
+                    x = chart.x() + (chart.width()/2- total_width/2);
+                } else if (align == 'end') {
+                    x = chart.x2() - total_width;
+                }
+            } else if (isLeft || isRight) {
+                var x = (isLeft) ? chart.x() - chart.padding('left') : chart.x2() + chart.padding('right') - max_width;
+                
+                if (align == 'start') {
+                    y = chart.y();
+                } else if (align == 'middle') {
+                    y = chart.y() + (chart.height()/2 - total_height/2);
+                } else if (align == 'end') {
+                    y = chart.y2() - total_height;
+                }
+            } 
+            
+            group.translate(x, y);
+            
+        }
+    }
+
+    return LegendWidget;
 }, "chart.draw");

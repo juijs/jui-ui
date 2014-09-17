@@ -6,7 +6,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 	var UI = function() {
 		var _grid = {}, _brush = [], _widget = [];
 		var _padding = [], _scales = {};
-        var _data, _series, _legend;
+        var _data, _series;
 
         /**
          * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
@@ -144,20 +144,7 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			return _series;
 		}
 		
-		/**
-		 * legend 옵션 리턴 
-		 * 
-		 * @param {string} key
-		 * 
-		 */		
-		this.legend = function(key) {
-			if (_legend[key]) {
-				return _legend[key];
-			}
-
-			return _legend;
-		}
-
+		
 		/**
 		 * draw 이전에 환경 셋팅 
 		 * 
@@ -170,7 +157,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
                 padding = _.deepClone(this.setPadding(this.options.padding)),
                 brush = _.deepClone(this.options.brush),
                 widget = _.deepClone(this.options.widget),
-                legend = _.deepClone(this.options.legend),
                 series_list = [];
 
             // series 데이타 구성
@@ -209,7 +195,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             _series = series;
 			_grid = grid;
 			_padding = padding;
-			_legend = legend;
 			
 			if (!_.typeCheck("array", _data)) {
 				_data = [_data];
@@ -244,162 +229,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.defs = defs;
 		}
 
-		/**
-		 * title 그리기 
-		 * 
-		 * title 객체 옵션 
-		 * 
-		 * {
-		 * 	text : "Title",		// 실제 표시될 title 문자열 
-		 *  align : "center"	// left, right, center 를 지정 , default center 
-		 *  top : true,			// chart 에서 title 위치 , 기본값 true
-		 *  bottom : true		// chart 에서 title 위치 , 기본값 false 
-		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-		 * }
-		 * 
-		 */		
-		this.drawTitle = function() {
-			var title = this.options.title;
-			
-			if (_.typeCheck("string", title)) {
-				title = { text : title, top : true, align : 'center' }
-			}
-			
-			if (title.text == "") {
-				return; 
-			}
-
-			title.top = typeof title.top == 'undefined' ? true : title.top;
-			title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
-			title.align = typeof title.align == 'undefined' ? 'center' : title.align;
-			
-			var x = 0;
-			var y = 0;
-			var anchor = 'middle';
-			if (title.bottom) {
-				y = this.y2() + this.padding('bottom') -20;
-			} else if (title.top) {
-				y = 20; 
-			}
-			
-			if (title.align == 'center') {
-				x = this.x() + this.width()/2;
-				anchor = 'middle';
-			} else if (title.align == 'left') {
-				x = this.x();
-				anchor = 'start';
-				
-			} else {
-				x = this.x2();
-				anchor = 'end';
-			}
-			
-			this.text({
-				x : x + (title.dx || 0),
-				y : y + (title.dy || 0),
-				'text-anchor' : anchor
-			}, title.text).attr(title.attr);
-		}
-		
-		/**
-		 * legend 그리기 
-		 * 
-		 * {
-		 *  top : true,			// chart 에서 title 위치 , 기본값 true
-		 *  bottom : false,		// chart 에서 title 위치 , 기본값 false, 
-		 *  left : false,		// chart 에서 title 위치 , 기본값 false, 
-		 *  right : false,		// chart 에서 title 위치 , 기본값 false,
-		 * 
-		 *  align : 'middle',	// start, end, middle,  기본값은 middle 
-		 *  dx : 0,				// 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-		 *  dy : 0				// 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-		 * } 
-		 * 
-		 * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
-		 * 
-		 */
-		this.drawLegend = function() {
-			var legend = this.legend();
-			
-			if (!legend) return;
-
-			legend.brush = legend.brush || [0];			
-			var align = legend.align || "middle";
-			var isTop = legend.top || false;
-			var isBottom = legend.bottom || false;
-			var isLeft = legend.left || false;
-			var isRight = legend.right || false;
-
-			
-			if (!(isTop || isBottom || isLeft || isRight)) {
-				isBottom = true; 
-			}			
-			
-			var group = this.svg.group({ "class" : 'legend'});
-			
-			var x = 0;
-			var y = 0; 
-
-			var total_width = 0;
-			var total_height = 0;
-			
-			var max_width = 0;
-			var max_height = 0; 
-			
-			for(var i = 0; i < legend.brush.length; i++) {
-				var index = legend.brush[i];
-				var arr = _brush[index].obj.getLegendIcon(this, _brush[index]);
-			
-
-				for(var k = 0; k < arr.length; k++) {
-					group.append(arr[k].icon);
-					
-					arr[k].icon.translate(x, y);
-					if (isBottom || isTop) {						
-						x += arr[k].width;
-						total_width += arr[k].width;
-						
-						if (max_height < arr[k].height) {
-							max_height = arr[k].height;
-						}
-					} else if (isLeft || isRight) {
-						y += arr[k].height;
-						total_height += arr[k].height;
-						
-						if (max_width < arr[k].width) {
-							max_width = arr[k].width;
-						}
-					}
-				}					
-
-			}
-			
-			// legend 위치  선정
-			if (isBottom || isTop) {
-				var y = (isBottom) ? this.y2() + this.padding('bottom') - max_height : this.y()-this.padding('top');
-				
-				if (align == 'start') {
-					x = this.x();
-				} else if (align == 'middle') {
-					x = this.x() + (this.width()/2- total_width/2);
-				} else if (align == 'end') {
-					x = this.x2() - total_width;
-				}
-			} else if (isLeft || isRight) {
-				var x = (isLeft) ? this.x() - this.padding('left') : this.x2() + this.padding('right') - max_width;
-				
-				if (align == 'start') {
-					y = this.y();
-				} else if (align == 'middle') {
-					y = this.y() + (this.height()/2 - total_height/2);
-				} else if (align == 'end') {
-					y = this.y2() - total_height;
-				}
-			} 
-			
-			group.translate(x, y);
-		}		
 		
 		/**
 		 * grid 그리기 
@@ -514,8 +343,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
             this.drawGrid();
 			this.drawBrush("brush");
             this.drawBrush("widget");
-            this.drawTitle();
-            this.drawLegend();
 			
 			this.emit("draw");
 		}
@@ -537,8 +364,6 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				
 				// chart
 				"theme" : "jennifer",	// 기본 테마 jennifer
-				"title" : "",
-				"legend" : "",
 				"series" : {},
 				"grid" : {},
 				"brush" : null,

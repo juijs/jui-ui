@@ -46,19 +46,8 @@ module.exports = function(grunt) {
 
                 // chart.theme
                 "js/chart/theme/jennifer.js",
-                "js/chart/theme/dark.js",
-                "js/chart/theme/light.js",                
-                "js/chart/theme/d3.js",
-                "js/chart/theme/d20.js",
-                "js/chart/theme/flat.js",
-                "js/chart/theme/flat2.js",                
+                "js/chart/theme/dark.js",                
                 "js/chart/theme/seoul.js",
-                "js/chart/theme/candy.js",
-                "js/chart/theme/holo.js",
-                "js/chart/theme/sns.js",
-                "js/chart/theme/google.js",
-                "js/chart/theme/korea.js",
-                "js/chart/theme/korea2.js",
 
                 // chart.grid
                 "js/chart/grid/core.js",
@@ -94,7 +83,9 @@ module.exports = function(grunt) {
                 "js/chart/brush/stackgauge.js", // extends donut
 
                 // chart.widget
-                "js/chart/widget/tooltip.js"
+                "js/chart/widget/tooltip.js",
+                "js/chart/widget/title.js",
+                "js/chart/widget/legend.js"
             ],
             dest : "jui.js"
         }
