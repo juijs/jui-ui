@@ -1938,10 +1938,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			// Select
 			this.addEvent($combo_drop, "click", "li", function(e) {
 				hideAll();
-				
-				var elem = getElement(e.target),
-					value = $(elem).attr("value"),
-					text = $(elem).html();
+
+                var elem = getElement(this),
+                    value = $(elem).attr("value"),
+                    text = $(elem).text();
 					
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
