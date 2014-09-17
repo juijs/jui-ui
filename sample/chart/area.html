@@ -15,9 +15,14 @@
         chart("#chart", {
             width: 400,
             height : 400,
-            title : { text : "Title", top : true, align : "right", dy : 50, attr : {  fill : "red", 'font-size' : '30pt' } },
+            title : "Title",
             //legend : [],
-            legend: { name : "red", value : 'blue', 'test' : 'green' },
+            
+            //padding : { left : 100 },
+            
+            legend: { align : 'middle' },
+            
+            //legend: { colors : ["red", "blue", "green"], target: ["name", "value"] },
             //legend: ['red', 'blue', 'green'],
             theme : location.href.split("?")[1].split("=")[1],
             data : [
@@ -41,9 +46,7 @@
 
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
             brush : [{
-                type : 'area'
-            }, {
-                type : "line"
+                type : 'area', target : ["name", "value"], size : 8, tooltip : true, widget : ['line','scatter']
             }]
         }).render();
 	})

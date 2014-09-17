@@ -156,7 +156,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 
             return xy;
         }
-
+        
         /**
          * 브러쉬 엘리먼트에 대한 공통 이벤트 정의
          *
@@ -196,6 +196,50 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
                 chart.emit("mouseout", [ obj, e ]);
             });
         }
+        
+		this.getLegendIcon = function(chart, brush) {
+
+			
+			var arr = [];
+			
+			for(var i = 0; i < brush.target.length; i++) {
+				var target = brush.target[i];
+				var text = chart.series(target).text || target;
+				var rect = chart.svg.getTextRect(text);
+				
+				var width = Math.min(rect.width,rect.height)-2;
+				var height = width;				
+								 
+				var group = chart.svg.group({
+					'class' : 'legend icon'
+				})
+				
+				group.append(chart.svg.rect({
+					x: 0, 
+					y : 0, 
+					width: width, 
+					height : height,
+					fill : chart.theme.color(i, brush.colors),
+					stroke : 'black',
+					'stroke-width' : 1
+				}))
+				
+ 				group.append(chart.text({
+					x : width + 10,
+					y : 10,
+					"text-anchor" : 'start'
+				}, text)) 
+				
+				arr.push({
+					icon : group,
+					width : width + 10 + rect.width,
+					height : height + 4
+				});
+			}
+			
+			return arr;
+			
+		}        
 	}
 
 	return CoreBrush;

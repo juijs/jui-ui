@@ -10,9 +10,11 @@ jui.define("chart.brush.path", [], function() {
 				'class' : 'brush path'
 			});
 			
+			var data = chart.data();
+			var data_count = data.length;
+			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				var s = chart.series(brush.target[ti]);
-	
+				
 				var color = chart.theme.color(ti, brush.colors);
 				var path = chart.svg.path({
 					fill : color,
@@ -23,8 +25,8 @@ jui.define("chart.brush.path", [], function() {
 	
 				g.append(path);
 	
-				for (var i = 0; i < s.data.length; i++) {
-					var obj = brush.c(i, s.data[i]);
+				for (var i = 0; i < data_count; i++) {
+					var obj = brush.c(i, data[i][brush.target[ti]]);
 	
 					if (i == 0) {
 						path.MoveTo(obj.x, obj.y);

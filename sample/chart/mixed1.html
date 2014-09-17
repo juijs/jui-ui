@@ -13,9 +13,10 @@
     jui.ready([ "chart.basic" ], function(chart) {
 
         chart("#chart", {
-            width: 400,
-            height : 400,
+            width: 300,
+            height : 300,
             theme : location.href.split("?")[1].split("=")[1],
+            padding : 'empty',
             data : [
                 { name : 2, value : 15, domain: "week1" },
                 { name : 13, value : 6, domain: "week2" },
@@ -25,13 +26,15 @@
             grid : {
                 x : {
                     target : "domain",
-                    line : true
+                    line : true,
+                    hide : true
                 },
                 y :
                 {
                     type : 'range',
                     target : [ "name", "value" ],
-                    step : 10
+                    step : 10,
+                    hide : true
                 }
             },
             series : {

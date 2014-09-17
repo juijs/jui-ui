@@ -138,6 +138,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 			_grid = grid;
 			_padding = padding;
 			_legend = legend;
+			
+			if (!_.typeCheck("array", _data)) {
+				_data = [_data];
+			}
 		}
 		
 		this.createId = function(key) {
@@ -208,7 +212,10 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 		this.drawLegend = function() {
 			var legend = this.legend();
 			
-			
+			if (!legend) return;
+
+			legend.brush = legend.brush || [0];			
+			var align = legend.align || "middle";
 			var isTop = legend.top || false;
 			var isBottom = legend.bottom || false;
 			var isLeft = legend.left || false;
@@ -219,81 +226,72 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 				isBottom = true; 
 			}			
 			
-			var x = 0;
-			var y = 0;
-			var anchor = 'middle';
-			if (isBottom) {
-				y = this.y2() + this.padding('bottom') - 20;
-			} else if (isTop) {
-				y = 20; 
-			} else if (isLeft) {
-				y = this.x() - this.padding('left') + 20; 
-			} else if (isTop) {
-				y = this.x2() + this.padding('right') - 20; 
-			}
-
-			var series = this.series();
-			var group = this.svg.group({ "class" : 'legend'}).translate(0.5, 0.5);
-			
-			var width = [];
-			var height = [];
-			
-			var itemWidth = 10;
-			var itemHeight = 10;
+			var group = this.svg.group({ "class" : 'legend'});
 			
 			var x = 0;
 			var y = 0; 
+
+			var total_width = 0;
+			var total_height = 0;
 			
-			for(var k in series) {
-				var name = k;
-				var color = "#ffffff";
-				
-				if (series[k] && series[k].text) {
-					name = series[k].text;
-				}
-				
-				if (series[k] && series[k].color) {
-					color = series[k].color;
-				}
-				
-				var rect = this.svg.getTextRect(name);
-				
-				width.push(rect.width);
-				height.push(rect.height);
-				
-				group.append(this.svg.rect({
-					x : x,
-					y : y + (rect.height/2 - itemHeight/2),
-					width : itemWidth,
-					height : itemHeight,
-					fill : color,
-					stroke : "black",
-					"stroke-width" : 1
-				}))
-				
-				group.append(this.svg.text({
-					x : x + itemWidth + 10,
-					y : y + rect.height-2,
+			var max_width = 0;
+			var max_height = 0; 
+			
+			for(var i = 0; i < legend.brush.length; i++) {
+				var index = legend.brush[i];
+				var arr = _brush[index].obj.getLegendIcon(this, _brush[index]);
+			
+
+				for(var k = 0; k < arr.length; k++) {
+					group.append(arr[k].icon);
 					
-				}, name));
-				
-				x += itemWidth + rect.width + 10*2 
+					arr[k].icon.translate(x, y);
+					if (isBottom || isTop) {						
+						x += arr[k].width;
+						total_width += arr[k].width;
+						
+						if (max_height < arr[k].height) {
+							max_height = arr[k].height;
+						}
+					} else if (isLeft || isRight) {
+						y += arr[k].height;
+						total_height += arr[k].height;
+						
+						if (max_width < arr[k].width) {
+							max_width = arr[k].width;
+						}
+					}
+				}					
+
 			}
-
 			
-
-			// TODO: legend 그리기 패턴 연구 			
+			// legend 위치  선정
+			if (isBottom || isTop) {
+				var y = (isBottom) ? this.y2() + this.padding('bottom') - max_height : this.y()-this.padding('top');
+				
+				if (align == 'start') {
+					x = this.x();
+				} else if (align == 'middle') {
+					x = this.x() + (this.width()/2- total_width/2);
+				} else if (align == 'end') {
+					x = this.x2() - total_width;
+				}
+			} else if (isLeft || isRight) {
+				var x = (isLeft) ? this.x() - this.padding('left') : this.x2() + this.padding('right') - max_width;
+				
+				if (align == 'start') {
+					y = this.y();
+				} else if (align == 'middle') {
+					y = this.y() + (this.height()/2 - total_height/2);
+				} else if (align == 'end') {
+					y = this.y2() - total_height;
+				}
+			} 
+			
+			group.translate(x, y);
 		}		
-
-		this.draw = function() {
-		    _scale = {};
-		          
-            this.drawDefs();
-            
-            this.drawTitle();
-            
-            this.drawLegend();
-		    
+		
+		this.drawGrid = function() {
 			var grid = this.grid();
 			
 			var grid_list = {};
@@ -349,8 +347,33 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 					}					
 					
 				}
+			}			
+		}
+		
+		this.drawWidget = function(brush) {
+			if (!_.typeCheck("array", brush.widget)) {
+				brush.widget = [brush.widget];
 			}
-
+			
+			for(var index = 0; index < brush.widget.length; index++) {
+				var widget = brush.widget[index];
+				
+				var WidgetObj = jui.include("chart.brush." + widget);
+				
+				var clone = {};
+				
+				for(var key in brush) {
+					clone[key] = brush[key];
+				}
+				
+				clone.type = widget;
+				
+				
+				new WidgetObj(clone).render(this);
+			}
+		}
+		
+		this.drawBrush = function() {
 			if (_brush != null) {
 				for (var i = 0; i < _brush.length; i++) {
 					
@@ -377,10 +400,30 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 						
 					_brush[i].index = i;
 
-					new Obj(_brush[i]).render(this);
+					_brush[i].obj = new Obj(_brush[i]);
+					_brush[i].obj.render(this);
+					
+					if (_brush[i].widget) {
+						this.drawWidget(_brush[i]);
+					}
 				}
-
 			}
+		}
+
+		this.draw = function() {
+		    _scale = {};
+		          
+            this.drawDefs();
+            
+            this.drawGrid();
+		    
+
+			this.drawBrush();
+			
+            
+            this.drawTitle();
+            
+            this.drawLegend();			
 			
 			this.emit("draw", []);
 		}
