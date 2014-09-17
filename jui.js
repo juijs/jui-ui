@@ -12782,6 +12782,10 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             elem.on("mouseout", function(e) {
                 chart.emit("mouseout", [ obj, e ]);
             });
+
+            elem.on("mousemove", function(e) {
+                chart.emit("mousemove", [ obj, e ]);
+            });
         }
         
         /**
@@ -14631,7 +14635,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 	return StackGaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.widget.tooltip", [], function() {
+jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
         var padding = 7, border = 1;
@@ -14654,8 +14658,11 @@ jui.define("chart.widget.tooltip", [], function() {
         }
 
         this.draw = function(chart) {
+            var isActive = false;
+
             chart.bind("mouseover", function(obj, e) {
-                if(widget.brush != obj.key || !obj.target) return;
+                if(($.inArray(obj.key, widget.brush) == -1 && widget.brush != obj.key)
+                    || !obj.target) return;
 
                 // 툴팁 텍스트 출력
                 var t = chart.series(obj.target);
@@ -14669,7 +14676,21 @@ jui.define("chart.widget.tooltip", [], function() {
                     y: -bbox.height
                 });
 
+                isActive = true;
+            });
+
+            chart.bind("mousemove", function(obj, e) {
+                if(!isActive) return;
+
+                var bbox = text.element.getBBox();
                 g.translate(e.offsetX - (bbox.width / 2), e.offsetY - bbox.height);
+            });
+
+            chart.bind("mouseout", function(obj, e) {
+                if(!isActive) return;
+
+                g.translate(-100, -100);
+                isActive = false;
             });
         }
     }

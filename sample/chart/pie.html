@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta chartset="utf-8" />
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
 </head>
@@ -29,7 +29,11 @@
             brush : [{
                 type : 'pie',
                 target : 'name'
-                }]
+            }],
+            widget : {
+                type : "tooltip",
+                brush : 0
+            }
         }).render();
 	})
 </script>

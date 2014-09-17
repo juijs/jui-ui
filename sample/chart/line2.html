@@ -46,8 +46,14 @@
             },
             brush : [
                 { type : 'line', target : "name", colors : [ "#7977C2" ] },
-                { type : 'line', target : "value", y1 : 0, colors : [ "#7BBAE7" ]   }
-            ]
+                { type : 'line', target : "value", y1 : 0, colors : [ "#7BBAE7" ]   },
+                { type : 'scatter', target : "name", colors : [ "#7977C2" ], size : 7 },
+                { type : 'scatter', target : "value", y1 : 0, colors : [ "#7BBAE7" ], size : 7 }
+            ],
+            widget : {
+                type : "tooltip",
+                brush : [ 2, 3 ]
+            }
         }).render();
 	})
 </script>

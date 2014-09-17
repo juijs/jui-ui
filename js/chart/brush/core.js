@@ -193,6 +193,10 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             elem.on("mouseout", function(e) {
                 chart.emit("mouseout", [ obj, e ]);
             });
+
+            elem.on("mousemove", function(e) {
+                chart.emit("mousemove", [ obj, e ]);
+            });
         }
         
         /**
