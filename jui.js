@@ -14669,7 +14669,7 @@ jui.define("chart.widget.tooltip", [], function() {
                     y: -bbox.height
                 });
 
-                g.translate(e.pageX - (bbox.width / 2), e.pageY - bbox.height);
+                g.translate(e.offsetX - (bbox.width / 2), e.offsetY - bbox.height);
             });
         }
     }
