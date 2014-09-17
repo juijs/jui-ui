@@ -10703,7 +10703,14 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 					clone[key] = brush[key];
 				}
 				
-				clone.type = widget;
+				if (_.typeCheck("string", widget)) {
+					clone.type = widget;	
+				} else if (_.typeCheck("object", widget)) {
+					for(var key in widget) {
+						clone[key] = widget[key];
+					}
+				}
+				
 				
 				
 				new WidgetObj(clone).render(this);
