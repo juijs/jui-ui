@@ -59,7 +59,13 @@ jui.define("chart.theme.dark", [], function() {
         pathOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
-        scatterBorderWidth : 1
+        scatterBorderWidth : 1,
+
+        // widget styles
+        tooltipFontColor : "#ececec",
+        tooltipFontSize : "12px",
+        tooltipBackgroundColor : "black",
+        tooltipBorderColor : "#ececec"
     }	
 
 });

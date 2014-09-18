@@ -3503,10 +3503,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			// Select
 			this.addEvent($combo_drop, "click", "li", function(e) {
 				hideAll();
-				
-				var elem = getElement(e.target),
-					value = $(elem).attr("value"),
-					text = $(elem).html();
+
+                var elem = getElement(this),
+                    value = $(elem).attr("value"),
+                    text = $(elem).text();
 					
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
@@ -8566,10 +8566,32 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		}
 		
 		this.update = function(index, data) {
-			this.uit.updateNode(index, data);
-			reloadUI(this);
+            var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
+                index = (arguments.length == 2) ? arguments[0] : null;
+
+            if(index != null) {
+                this.uit.updateNode(index, dataList);
+            } else {
+                var iParser = _.index();
+
+                // 전체 로우 제거
+                this.uit.removeNodes();
+
+                // 트리 로우 추가
+                for(var i = 0; i < dataList.length; i++) {
+                    var pIndex = iParser.getParentIndex(dataList[i].index);
+
+                    if(pIndex == null) {
+                        this.uit.appendNode(dataList[i].data);
+                    } else {
+                        this.uit.appendNode(pIndex, dataList[i].data);
+                    }
+                }
+            }
+
+            reloadUI(this);
 		}
-		
+
 		this.append = function() {
 			var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
 				index = (arguments.length == 2) ? arguments[0] : null;
@@ -8710,7 +8732,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
                 dragChild: true
             },
             valid: {
-                update: [ "string", "object" ],
+                update: [ [ "string", "object" ], "array" ],
                 append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
                 insert: [ "string", [ "object", "array" ] ],
                 select: [ "string" ],
@@ -10731,7 +10753,13 @@ jui.define("chart.theme.dark", [], function() {
         pathOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
-        scatterBorderWidth : 1
+        scatterBorderWidth : 1,
+
+        // widget styles
+        tooltipFontColor : "#ececec",
+        tooltipFontSize : "12px",
+        tooltipBackgroundColor : "black",
+        tooltipBorderColor : "#ececec"
     }	
 
 });
@@ -10785,7 +10813,13 @@ jui.define("chart.theme.seoul", [], function() {
 		pathOpacity : 0.2,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
-		scatterBorderWidth : 1
+		scatterBorderWidth : 1,
+
+        // widget styles
+        tooltipFontColor : "#333",
+        tooltipFontSize : "12px",
+        tooltipBackgroundColor : "white",
+        tooltipBorderColor : "#aaaaaa"
 	}
 }); 
 jui.define("chart.grid.core", [ "util.base" ], function(_) {

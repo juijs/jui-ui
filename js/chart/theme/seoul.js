@@ -48,6 +48,12 @@ jui.define("chart.theme.seoul", [], function() {
 		pathOpacity : 0.2,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
-		scatterBorderWidth : 1
+		scatterBorderWidth : 1,
+
+        // widget styles
+        tooltipFontColor : "#333",
+        tooltipFontSize : "12px",
+        tooltipBackgroundColor : "white",
+        tooltipBorderColor : "#aaaaaa"
 	}
 }); 
