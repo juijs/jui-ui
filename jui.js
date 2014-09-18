@@ -10198,7 +10198,7 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			// chart 관련된 요소 draw  
 			this.draw();
 			
-			// svg 태그 rendering 
+			// svg 태그 rendering
 			this.svg.render();
 		}
 
@@ -10611,6 +10611,762 @@ jui.defineUI("chart.basic", [ "util.base" ], function(_) {
 
 	return UI;
 }, "chart.core");
+
+jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) {
+	/**
+	 * Chart Builder 구현 
+	 * 
+	 */
+	var UI = function() {
+		var _grid = {}, _brush = [], _widget = [];
+		var _padding = [], _scales = {};
+        var _data, _series;
+		var _area, _theme;        
+		var builder = this; 
+		
+		/************************
+		 *  Private Method
+		 ***********************/
+		
+		/**
+		 * chart 기본 영역 계산 
+		 * 
+		 * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함 
+		 * 
+		 * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐 
+		 * 
+ 		 * @param {Object} self
+		 */
+		function calculate(builder) {
+			var padding = builder.setPadding(builder.options.padding),
+                max = builder.svg.size();
+
+			var chart = {
+				width : max.width - (padding.left + padding.right),
+				height : max.height - (padding.top + padding.bottom),
+				x : padding.left,
+				y : padding.top
+			};
+
+			// chart 영역 계산
+			chart.x2 = chart.x + chart.width;
+			chart.y2 = chart.y + chart.height;
+
+			_area = chart;
+		}
+		
+        /**
+         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
+         * Widget도 같이 사용한다.
+         *
+         * @param draws
+         * @param series_list
+         * @returns {*}
+         */
+        function createBrushData(draws, series_list) {
+            var result = null;
+
+            if (draws != null) {
+                if ( typeof draws == 'string') {
+                    result = [{
+                        type : draws
+                    }];
+                } else if ( typeof draws == 'object' && !draws.length) {
+                    result = [ draws ];
+                } else {
+                    result = draws;
+                }
+
+                for (var i = 0, len = result.length; i < len; i++) {
+                    var b = result[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [ b.target ];
+                    }
+                }
+            }
+
+            return result;
+        }		
+        
+		/**
+		 * svg 기본 defs element 생성  
+		 * 
+		 */
+		function drawDefs() {
+            // draw defs
+            var defs = builder.svg.defs();
+
+			// default clip path             
+			builder.clipId = builder.createId('clip-id');
+			
+            var clip = builder.svg.clipPath({ id : builder.clipId });
+
+            clip.append(builder.svg.rect({  x : 0, y : 0, width : builder.width(), height : builder.height() }));
+            defs.append(clip);
+            
+            builder.defs = defs;
+		}
+
+		
+		/**
+		 * grid 그리기 
+		 * 
+		 * 설정된 grid 객체를 통해서 
+		 * 
+		 * x(bottom), y(left), x1(top), y1(right) 
+		 * 
+		 * 의 방향으로 grid 를 생성  
+		 * 
+		 */
+		function drawGrid() {
+			var grid = builder.grid();
+			
+			if (grid != null) {
+				if (grid.type) {
+					grid = {
+						c : grid
+					};
+				}
+
+				for (var k in grid) {
+					var orient = 'custom';
+
+					if (k == 'x')
+						orient = 'bottom';
+					else if (k == 'x1')
+						orient = 'top';
+					else if (k == 'y')
+						orient = 'left';
+					else if (k == 'y1')
+						orient = 'right';
+						
+					if (!_scales[k]) {
+						_scales[k] = [];
+					}
+
+					if (!_.typeCheck("array", grid[k])) {
+						grid[k] = [grid[k]];
+					}
+
+					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
+						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
+						var obj = new Grid(orient, grid[k][keyIndex]).render(builder);
+
+						var dist = grid[k][keyIndex].dist || 0;
+						
+						// grid 별 dist 로 위치선정하기 
+						if (k == 'y') {
+							obj.root.translate(builder.x() - dist, builder.y());
+						} else if (k == 'y1') {
+							obj.root.translate(builder.x2() + dist, builder.y());
+						} else if (k == 'x') {
+							obj.root.translate(builder.x(), builder.y2() + dist);
+						} else if (k == 'x1') {
+							obj.root.translate(builder.x(), builder.y() - dist);
+						}
+
+						 _scales[k][keyIndex] = obj.scale			
+					}					
+				}
+			}			
+		}
+		
+		/**
+		 * brush 그리기 
+		 * 
+		 * brush 에 맞는 x, y 축(grid) 설정 
+		 * 
+		 */
+		function drawBrush (type) {
+            var draws = (type == "brush") ? _brush : _widget;
+
+			if (draws != null) {
+				for (var i = 0; i < draws.length; i++) {
+					
+					delete draws[i].x;
+					delete draws[i].y;
+					
+					var Obj = jui.include("chart." + type + "." + draws[i].type);
+
+					if (_scales.x || _scales.x1) {
+						if (!_.typeCheck("function", draws[i].x)) {
+                            draws[i].x = (typeof draws[i].x1 !== 'undefined') ? _scales.x1[draws[i].x1 || 0] : _scales.x[draws[i].x || 0];
+						}
+					}
+					if (_scales.y || _scales.y1) {
+						if (!_.typeCheck("function", draws[i].y)) {
+                            draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
+						}
+					}						
+					if (_scales.c){
+						if (!_.typeCheck("function", draws[i].c)) {
+                            draws[i].c = _scales.c[draws[i].c || 0];
+						}
+					}
+
+                    draws[i].index = i;
+
+                    draws[i].obj = new Obj(draws[i]);
+                    draws[i].obj.render(builder);
+				}
+			}
+		}        
+		
+		/************************
+		 *  Public Method
+		 ***********************/		
+		
+		/**
+		 * 기본 padding 설정 
+		 * 
+		 * @param {object|string}  padding  default 값은  모든 방향 50, empty 를 쓰면  padding 영역이 사라짐  
+		 */
+		this.setPadding = function(padding) {
+            if (padding == 'empty') {
+            	padding = {
+					left : 0 ,
+					right : 0 ,
+					bottom : 0 ,
+					top : 0 
+				};
+            }
+
+			return padding;			
+		}
+
+		/**
+		 * 계산된 차트 영역에 대한 값 리턴 
+		 * 
+		 * <code>
+		 * ex) 
+		 * chart.area('x');
+		 * chart.area('width');
+		 * </code>
+		 * 
+		 * @param {string} key
+		 */
+		this.area = function(key) {
+			if (typeof _area[key] !== "undefined") {
+				return _area[key];
+			}
+
+			return _area;
+		}
+		
+		/**
+		 * chart 높이 얻어오기 
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart 높이 
+		 * var height = chart.height();
+		 * 
+		 * // 매개변수가 있을 때는 chart 높이 설정 
+		 * chart.height(150); // chart 높이를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value 
+		 */
+		this.height = function(value) {
+		    if (arguments.length == 0) {
+		        return this.area('height');
+		    }
+		    
+		    _area.height = value;
+		}
+
+		/**
+		 * chart 넓이 얻어오기 
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart 넓이 
+		 * var width = chart.width();
+		 * 
+		 * // 매개변수가 있을 때는 chart 넓이 설정 
+		 * chart.width(150); // chart 넓이를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
+        this.width = function(value) {
+            if (arguments.length == 0) {
+                return this.area('width');
+            }
+            
+            _area.width = value;
+        }
+
+		/**
+		 * chart 의 시작 x 좌표 얻기  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart x좌표
+		 * var x = chart.x();
+		 * 
+		 * // 매개변수가 있을 때는 chart x좌표 설정 
+		 * chart.x(150); // chart x좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
+        this.x = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x');
+            }
+            
+            _area.x = value;
+        }
+
+		/**
+		 * chart 의 시작 y 좌표 얻기  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart y좌표
+		 * var y = chart.y();
+		 * 
+		 * // 매개변수가 있을 때는 chart y좌표 설정 
+		 * chart.y(150); // chart y좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
+        this.y = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y');
+            }
+            
+            _area.y = value;
+        }
+
+		/**
+		 * chart 의 끝 x 좌표 얻기(x2)  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart x2좌표
+		 * var x2 = chart.x2();
+		 * 
+		 * // 매개변수가 있을 때는 chart x2좌표 설정 
+		 * chart.x2(150); // chart x2좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
+        this.x2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('x2');
+            }
+            
+            _area.x2 = value;
+        }
+
+		/**
+		 * chart 의 끝 y 좌표 얻기(y2)  
+		 * 
+		 * <code>
+		 * // 매개변수가 없을 때는 chart y2좌표
+		 * var y2 = chart.y2();
+		 * 
+		 * // 매개변수가 있을 때는 chart y2좌표 설정 
+		 * chart.y2(150); // chart y2좌표를 150 으로 설정 
+		 * </code> 
+		 * 
+		 * @param {integer} value  
+		 */
+        this.y2 = function(value) {
+            if (arguments.length == 0) {
+                return this.area('y2');
+            }
+            
+            _area.y2 = value;
+        }
+
+		/**
+		 * jui component binding 
+		 * 
+		 * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음. 
+		 * 
+		 * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+		 * 
+		 * @param {object} bind   uix.table, uix.xtable 객체 사용 
+		 */
+        this.bindUI = function(uiObj) {
+            var self = this;
+
+            if(uiObj.module.type == "uix.table") {
+                uiObj.callAfter("update", updateTable);
+                uiObj.callAfter("sort", updateTable);
+                uiObj.callAfter("append", updateTable);
+                uiObj.callAfter("insert", updateTable);
+                uiObj.callAfter("remove", updateTable);
+            } else if(uiObj.module.type == "uix.xtable") {
+                uiObj.callAfter("update", updateXTable);
+                uiObj.callAfter("sort", updateXTable);
+            }
+
+            function updateTable() {
+                var data = [];
+
+                for(var i = 0; i < uiObj.count(); i++) {
+                    data.push(uiObj.get(i).data);
+                }
+
+                self.update(data);
+            }
+
+            function updateXTable() {
+                self.update(uiObj.listData());
+            }
+        }		
+
+
+
+        /**
+		 * 현재 text 관련 theme 가 정해진 text element 생성 
+		 * 
+		 * @param {object} attr
+		 * @param {string|function} textOrCallback
+		 */
+		this.text = function(attr, textOrCallback) {
+			var el = this.svg.text(_.extend({
+				"font-family" : this.theme("fontFamily"),
+				"font-size" : this.theme("fontSize"),
+				"fill" : this.theme("fontColor")
+			}, attr), textOrCallback);
+			
+			return el; 
+		}
+
+		/**
+		 * 생성자 재정의 
+		 * 
+		 */
+		this.init = function() {
+
+			// svg 기본 객체 생성 
+			builder.svg = new SVGUtil(builder.root, {
+				width : builder.options.width,
+				height : builder.options.height
+			});
+
+            // 차트 테마 설정
+            builder.setTheme(builder.options.theme)
+
+            // UI 바인딩 설정
+            if(builder.options.bind != null) {
+                builder.bindUI(builder.options.bind);
+            }
+
+            // 테마 컬러 설정
+            builder.theme.color = function(i, colors) {
+                var color;
+
+                if (_.typeCheck("array", colors)) {
+                	color = colors[i];	
+                }
+
+                return color || _theme["colors"][i];
+            }
+
+			builder.emit("load", []);
+		}
+		
+		/**
+		 * chart 의 theme 설정 
+		 * 
+		 * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임 
+		 */
+		this.setTheme = function(theme) {
+			 _theme = jui.include("chart.theme." + theme);
+		}
+		
+		/**
+		 * theme 의 요소에 대한 값 구하기 
+		 * 
+		 * <code>
+		 * 
+		 * // theme 전체 객체 얻어오기 
+		 * var theme = chart.theme();
+		 * 
+		 * // 부분 속성 얻어오기 
+		 * var fontColor = chart.theme("fontColor");
+		 * 
+		 * // 속성 설정하기 
+		 * chart.theme("fontColor", "red");  // fontColor 를 red 로 설정 
+		 * 
+		 * // 값 비교해서 얻어오기 
+		 * chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴  
+		 * 
+		 * 
+		 * </code>
+		 * 
+		 * 
+		 */
+		this.theme = function(key, value, value2) {
+			if (arguments.length == 0) {
+				return _theme;
+			} else if (arguments.length == 1) {
+				
+				if (_theme[key]) {
+					return _theme[key];
+				}
+			} else if (arguments.length == 2) {
+				_theme[key] = value;
+				
+				return _theme[key];
+			} else if (arguments.length == 3) {
+				return (key) ? _theme[value] : _theme[value2];
+			}
+		}		
+
+		/**
+		 * grid 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
+		this.grid = function(key) {
+			if (_grid[key]) {
+				return _grid[key];
+			}
+
+			return _grid;
+		}
+		
+		/**
+		 * padding 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
+		this.padding = function(key) {
+			if (_padding[key]) {
+				return _padding[key];
+			}
+
+			return _padding;
+		}
+		
+		/**
+		 * brush 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
+		this.brush = function(key) {
+			if (_brush[key]) {
+				return _brush[key];
+			}
+
+			return _brush;
+		}
+		
+		/**
+		 * data 옵션 리턴 
+		 * 
+		 * @param {integer} index
+		 * 
+		 */
+		this.data = function(index, field) {
+			if (_data[index]) {
+				
+				if (typeof field != 'undefined') {
+					return _data[index][field];	
+				} 
+				
+				return _data[index];
+			}
+
+			return _data;
+		}
+		
+		/**
+		 * series 옵션 리턴 
+		 * 
+		 * @param {string} key
+		 * 
+		 */
+		this.series = function(key) {
+			if (_series[key]) {
+				return _series[key];
+			}
+
+			return _series;
+		}
+		
+		
+		/**
+		 * draw 이전에 환경 셋팅 
+		 * 
+		 */
+		this.drawBefore = function() {
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
+            var data = _.deepClone(this.options.data),
+                series = _.deepClone(this.options.series),
+                grid = _.deepClone(this.options.grid),
+                padding = _.deepClone(this.setPadding(this.options.padding)),
+                brush = _.deepClone(this.options.brush),
+                widget = _.deepClone(this.options.widget),
+                series_list = [];
+
+            // series 데이타 구성
+            for (var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                for (var key in row) {
+                    var obj = series[key] || {};
+                    var value = row[key];
+                    
+                    series[key] = obj;
+
+                    obj.data = obj.data || [];
+                    obj.min = typeof obj.min == 'undefined' ?  0 : obj.min;
+                    obj.max = typeof obj.max == 'undefined' ?  0 : obj.max;
+                    obj.data[i] = value;
+
+                    if (value < obj.min) {
+                        obj.min = value;
+                    }
+                    
+                    if (value > obj.max) {
+                        obj.max = value;
+                    }
+                }
+            }
+            
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+            }            
+
+            _brush = createBrushData(brush, series_list);
+            _widget = createBrushData(widget, series_list);
+            _data = data;
+            _series = series;
+			_grid = grid;
+			_padding = padding;
+			
+			if (!_.typeCheck("array", _data)) {
+				_data = [_data];
+			}
+		}
+		
+		/**
+		 * chart 내에서 사용될 유일한 키 생성 
+		 * 
+		 * @param {string} key 
+		 */
+		this.createId = function(key) {
+			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
+		}
+		
+
+
+		/**
+		 * draw 재정의 
+		 * 
+		 */
+		this.draw = function() {
+            drawDefs();
+            drawGrid();
+            
+			drawBrush("brush");
+            drawBrush("widget");
+			
+			this.emit("draw");
+		}
+		
+		
+		/**
+		 * chart render 함수 재정의 
+		 * 
+		 */
+		this.render = function() {
+			
+			// draw 함수 체크 
+			if (!_.typeCheck("function", this.draw)) {
+				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+			}
+
+			// svg rest 
+			this.svg.reset();
+			
+			this.svg.css({
+				'background' : this.theme("backgroundColor")
+			})
+
+			// chart 영역 계산 			
+			calculate(this);
+						
+			if (_.typeCheck("function", this.drawBefore)) {
+				this.drawBefore();
+			}
+			
+			// chart 관련된 요소 draw  
+			this.draw();
+			
+			// svg 태그 rendering
+			this.svg.render();
+		}
+
+		/**
+		 * data 업데이트 후 차트 다시 생성 
+		 * 
+		 * @param {array} data 
+		 */
+		this.update = function(data) {
+			if (!_.typeCheck("array", data))
+				return;
+
+			this.options.data = data;
+			this.render();
+		}
+
+		/**
+		 * chart 사이즈 조정 
+		 * 
+		 * @param {integer} width
+		 * @param {integer} height
+		 */
+		this.size = function(width, height) {
+			if (!_.typeCheck("integer", width) || !_.typeCheck("integer", height))
+				return;
+
+			this.svg.size(width, height);
+			this.render();
+		}		
+		
+	}
+
+	UI.setting = function() {
+		return {
+			options : {
+				"width" : "100%",		// chart 기본 넓이 
+				"height" : "100%",		// chart 기본 높이 
+
+				// style
+				"padding" : {
+					left : 50 ,
+					right : 50,
+					bottom : 50,
+					top : 50 
+				},
+				
+				// chart
+				"theme" : "jennifer",	// 기본 테마 jennifer
+				"series" : {},
+				"grid" : {},
+				"brush" : null,
+                "widget" : null,
+				"data" : [],
+                "bind" : null
+			}
+		}
+	}
+
+	return UI;
+}, "core");
 
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [

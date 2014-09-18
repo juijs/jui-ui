@@ -343,7 +343,7 @@ jui.define("chart.core", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 			// chart 관련된 요소 draw  
 			this.draw();
 			
-			// svg 태그 rendering 
+			// svg 태그 rendering
 			this.svg.render();
 		}
 

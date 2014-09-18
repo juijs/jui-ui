@@ -10,20 +10,11 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chart.basic" ], function(chart) {
+    jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
             width: 400,
             height : 400,
-            title : "Title",
-            //legend : [],
-            
-            //padding : { left : 100 },
-            
-            legend: { align : 'middle' },
-            
-            //legend: { colors : ["red", "blue", "green"], target: ["name", "value"] },
-            //legend: ['red', 'blue', 'green'],
             theme : location.href.split("?")[1].split("=")[1],
             data : [
                 { name : 2, value : 15, test : 7 },
@@ -47,7 +38,12 @@
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
             brush : [{
                 type : 'area', target : ["name", "value"], size : 8, tooltip : true, widget : ['line','scatter']
-            }]
+            }],
+            
+            widget : [
+            	{ type : 'title', text : 'Text'},
+            	{ type : 'legend' }
+            ]
         }).render();
 	})
 </script>
