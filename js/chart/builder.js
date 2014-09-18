@@ -1,32 +1,31 @@
 jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) {
 	/**
-	 * Chart Builder 구현 
-	 * 
+	 * Chart Builder 구현
+	 *
 	 */
 	var UI = function() {
-        var builder = this;
         var _grid = {}, _brush = [], _widget = [];
 		var _padding = [], _scales = {};
         var _data, _series;
-		var _area, _theme;        
+		var _area, _theme;
 
-		
+
 		/************************
 		 *  Private Method
 		 ***********************/
-		
+
 		/**
-		 * chart 기본 영역 계산 
-		 * 
-		 * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함 
-		 * 
-		 * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐 
-		 * 
+		 * chart 기본 영역 계산
+		 *
+		 * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
+		 *
+		 * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐
+		 *
  		 * @param {Object} self
 		 */
-		function calculate() {
-			var padding = builder.setPadding(builder.options.padding),
-                max = builder.svg.size();
+		function calculate(self) {
+			var padding = self.setPadding(self.options.padding),
+                max = self.svg.size();
 
 			var chart = {
 				width : max.width - (padding.left + padding.right),
@@ -42,15 +41,15 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			_area = chart;
 		}
 
-        function wrappingGroup() {
-            var g = builder.svg.group({ fill: "none" }).translate(0.5, 0.5);
+        function wrappingGroup(self) {
+            var g = self.svg.group({ fill: "none" }).translate(0.5, 0.5);
             var nChild = [];
 
-            builder.svg.root.each(function() {
+            self.svg.root.each(function() {
                 if(g != this) {
                     nChild.push(this);
                 } else {
-                    builder.svg.root.childrens = [ this ];
+                    self.svg.root.childrens = [ this ];
                 }
             });
 
@@ -58,55 +57,19 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 g.append(nChild[i]);
             }
         }
-		
-        /**
-         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
-         * Widget도 같이 사용한다.
-         *
-         * @param draws
-         * @param series_list
-         * @returns {*}
-         */
-        function createBrushData(draws, series_list) {
-            var result = null;
-
-            if (draws != null) {
-                if ( typeof draws == 'string') {
-                    result = [{
-                        type : draws
-                    }];
-                } else if ( typeof draws == 'object' && !draws.length) {
-                    result = [ draws ];
-                } else {
-                    result = draws;
-                }
-
-                for (var i = 0, len = result.length; i < len; i++) {
-                    var b = result[i];
-
-                    if (!b.target) {
-                        b.target = series_list;
-                    } else if ( typeof b.target == 'string') {
-                        b.target = [ b.target ];
-                    }
-                }
-            }
-
-            return result;
-        }
 
         /**
          * draw 이전에 환경 셋팅
          *
          */
-        function drawBefore() {
+        function drawBefore(self) {
             // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
-            var data = _.deepClone(builder.options.data),
-                series = _.deepClone(builder.options.series),
-                grid = _.deepClone(builder.options.grid),
-                padding = _.deepClone(builder.setPadding(builder.options.padding)),
-                brush = _.deepClone(builder.options.brush),
-                widget = _.deepClone(builder.options.widget),
+            var data = _.deepClone(self.options.data),
+                series = _.deepClone(self.options.series),
+                grid = _.deepClone(self.options.grid),
+                padding = _.deepClone(self.setPadding(self.options.padding)),
+                brush = _.deepClone(self.options.brush),
+                widget = _.deepClone(self.options.widget),
                 series_list = [];
 
             // series 데이타 구성
@@ -152,38 +115,38 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
         }
 
 		/**
-		 * svg 기본 defs element 생성  
-		 * 
+		 * svg 기본 defs element 생성
+		 *
 		 */
-		function drawDefs() {
+		function drawDefs(self) {
             // draw defs
-            var defs = builder.svg.defs();
+            var defs = self.svg.defs();
 
-			// default clip path             
-			builder.clipId = builder.createId('clip-id');
-			
-            var clip = builder.svg.clipPath({ id : builder.clipId });
+			// default clip path
+			self.clipId = self.createId('clip-id');
 
-            clip.append(builder.svg.rect({  x : 0, y : 0, width : builder.width(), height : builder.height() }));
+            var clip = self.svg.clipPath({ id : self.clipId });
+
+            clip.append(self.svg.rect({  x : 0, y : 0, width : self.width(), height : self.height() }));
             defs.append(clip);
-            
-            builder.defs = defs;
+
+            self.defs = defs;
 		}
 
-		
+
 		/**
-		 * grid 그리기 
-		 * 
-		 * 설정된 grid 객체를 통해서 
-		 * 
-		 * x(bottom), y(left), x1(top), y1(right) 
-		 * 
-		 * 의 방향으로 grid 를 생성  
-		 * 
+		 * grid 그리기
+		 *
+		 * 설정된 grid 객체를 통해서
+		 *
+		 * x(bottom), y(left), x1(top), y1(right)
+		 *
+		 * 의 방향으로 grid 를 생성
+		 *
 		 */
-		function drawGrid() {
-			var grid = builder.grid();
-			
+		function drawGrid(self) {
+			var grid = self.grid();
+
 			if (grid != null) {
 				if (grid.type) {
 					grid = {
@@ -202,7 +165,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 						orient = 'left';
 					else if (k == 'y1')
 						orient = 'right';
-						
+
 					if (!_scales[k]) {
 						_scales[k] = [];
 					}
@@ -213,42 +176,42 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
-						var obj = new Grid(orient, grid[k][keyIndex]).render(builder);
+						var obj = new Grid(orient, grid[k][keyIndex]).render(self);
 
 						var dist = grid[k][keyIndex].dist || 0;
-						
-						// grid 별 dist 로 위치선정하기 
+
+						// grid 별 dist 로 위치선정하기
 						if (k == 'y') {
-							obj.root.translate(builder.x() - dist, builder.y());
+							obj.root.translate(self.x() - dist, self.y());
 						} else if (k == 'y1') {
-							obj.root.translate(builder.x2() + dist, builder.y());
+							obj.root.translate(self.x2() + dist, self.y());
 						} else if (k == 'x') {
-							obj.root.translate(builder.x(), builder.y2() + dist);
+							obj.root.translate(self.x(), self.y2() + dist);
 						} else if (k == 'x1') {
-							obj.root.translate(builder.x(), builder.y() - dist);
+							obj.root.translate(self.x(), self.y() - dist);
 						}
 
-						 _scales[k][keyIndex] = obj.scale			
-					}					
+						 _scales[k][keyIndex] = obj.scale
+					}
 				}
-			}			
+			}
 		}
-		
+
 		/**
-		 * brush 그리기 
-		 * 
-		 * brush 에 맞는 x, y 축(grid) 설정 
-		 * 
+		 * brush 그리기
+		 *
+		 * brush 에 맞는 x, y 축(grid) 설정
+		 *
 		 */
-		function drawBrush (type) {
+		function drawBrush(self, type) {
             var draws = (type == "brush") ? _brush : _widget;
 
 			if (draws != null) {
 				for (var i = 0; i < draws.length; i++) {
-					
+
 					delete draws[i].x;
 					delete draws[i].y;
-					
+
 					var Obj = jui.include("chart." + type + "." + draws[i].type);
 
 					if (_scales.x || _scales.x1) {
@@ -260,7 +223,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 						if (!_.typeCheck("function", draws[i].y)) {
                             draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
 						}
-					}						
+					}
 					if (_scales.c){
 						if (!_.typeCheck("function", draws[i].c)) {
                             draws[i].c = _scales.c[draws[i].c || 0];
@@ -270,31 +233,64 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                     draws[i].index = i;
 
                     draws[i].obj = new Obj(draws[i]);
-                    draws[i].obj.render(builder);
+                    draws[i].obj.render(self);
 				}
 			}
 		}
 
-        this.init = function() {
-            // 객체 스코프 변경
-            builder = this;
+        /**
+         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
+         * Widget도 같이 사용한다.
+         *
+         * @param draws
+         * @param series_list
+         * @returns {*}
+         */
+        function createBrushData(draws, series_list) {
+            var result = null;
 
+            if (draws != null) {
+                if ( typeof draws == 'string') {
+                    result = [{
+                        type : draws
+                    }];
+                } else if ( typeof draws == 'object' && !draws.length) {
+                    result = [ draws ];
+                } else {
+                    result = draws;
+                }
+
+                for (var i = 0, len = result.length; i < len; i++) {
+                    var b = result[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if ( typeof b.target == 'string') {
+                        b.target = [ b.target ];
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        this.init = function() {
             // svg 기본 객체 생성
-            builder.svg = new SVGUtil(builder.root, {
-                width : builder.options.width,
-                height : builder.options.height
+            this.svg = new SVGUtil(this.root, {
+                width : this.options.width,
+                height : this.options.height
             });
 
             // 차트 테마 설정
-            builder.setTheme(builder.options.theme)
+            this.setTheme(this.options.theme)
 
             // UI 바인딩 설정
-            if(builder.options.bind != null) {
-                builder.bindUI(builder.options.bind);
+            if(this.options.bind != null) {
+                this.bindUI(this.options.bind);
             }
 
             // 테마 컬러 설정
-            builder.theme.color = function(i, colors) {
+            this.theme.color = function(i, colors) {
                 var color;
 
                 if (_.typeCheck("array", colors)) {
@@ -304,7 +300,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 return color || _theme["colors"][i];
             }
 
-            builder.emit("load", []);
+            this.emit("load", []);
         }
 		
 		/************************
@@ -673,17 +669,17 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			})
 
 			// chart 영역 계산 			
-			calculate();
+			calculate(this);
 						
 			// chart 관련된 요소 draw
-            drawBefore();
-            drawDefs();
-            drawGrid();
-            drawBrush("brush");
-            drawBrush("widget");
+            drawBefore(this);
+            drawDefs(this);
+            drawGrid(this);
+            drawBrush(this, "brush");
+            drawBrush(this, "widget");
 
             // chart 기본 위치 보정
-            //wrappingGroup();
+            //wrappingGroup(this);
 
 			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
