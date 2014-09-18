@@ -4,11 +4,12 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 * 
 	 */
 	var UI = function() {
-		var _grid = {}, _brush = [], _widget = [];
+        var builder = this;
+        var _grid = {}, _brush = [], _widget = [];
 		var _padding = [], _scales = {};
         var _data, _series;
 		var _area, _theme;        
-		var builder = this; 
+
 		
 		/************************
 		 *  Private Method
@@ -23,7 +24,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		 * 
  		 * @param {Object} self
 		 */
-		function calculate(builder) {
+		function calculate() {
 			var padding = builder.setPadding(builder.options.padding),
                 max = builder.svg.size();
 
@@ -40,6 +41,23 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			_area = chart;
 		}
+
+        function wrappingGroup() {
+            var g = builder.svg.group({ fill: "none" }).translate(0.5, 0.5);
+            var nChild = [];
+
+            builder.svg.root.each(function() {
+                if(g != this) {
+                    nChild.push(this);
+                } else {
+                    builder.svg.root.childrens = [ this ];
+                }
+            });
+
+            for(var i = 0; i < nChild.length; i++) {
+                g.append(nChild[i]);
+            }
+        }
 		
         /**
          * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
@@ -75,8 +93,64 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             }
 
             return result;
-        }		
-        
+        }
+
+        /**
+         * draw 이전에 환경 셋팅
+         *
+         */
+        function drawBefore() {
+            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
+            var data = _.deepClone(builder.options.data),
+                series = _.deepClone(builder.options.series),
+                grid = _.deepClone(builder.options.grid),
+                padding = _.deepClone(builder.setPadding(builder.options.padding)),
+                brush = _.deepClone(builder.options.brush),
+                widget = _.deepClone(builder.options.widget),
+                series_list = [];
+
+            // series 데이타 구성
+            for (var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                for (var key in row) {
+                    var obj = series[key] || {};
+                    var value = row[key];
+
+                    series[key] = obj;
+
+                    obj.data = obj.data || [];
+                    obj.min = typeof obj.min == 'undefined' ?  0 : obj.min;
+                    obj.max = typeof obj.max == 'undefined' ?  0 : obj.max;
+                    obj.data[i] = value;
+
+                    if (value < obj.min) {
+                        obj.min = value;
+                    }
+
+                    if (value > obj.max) {
+                        obj.max = value;
+                    }
+                }
+            }
+
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+            }
+
+            _brush = createBrushData(brush, series_list);
+            _widget = createBrushData(widget, series_list);
+            _data = data;
+            _series = series;
+            _grid = grid;
+            _padding = padding;
+
+            if (!_.typeCheck("array", _data)) {
+                _data = [_data];
+            }
+        }
+
 		/**
 		 * svg 기본 defs element 생성  
 		 * 
@@ -199,12 +273,44 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                     draws[i].obj.render(builder);
 				}
 			}
-		}        
+		}
+
+        this.init = function() {
+            // 객체 스코프 변경
+            builder = this;
+
+            // svg 기본 객체 생성
+            builder.svg = new SVGUtil(builder.root, {
+                width : builder.options.width,
+                height : builder.options.height
+            });
+
+            // 차트 테마 설정
+            builder.setTheme(builder.options.theme)
+
+            // UI 바인딩 설정
+            if(builder.options.bind != null) {
+                builder.bindUI(builder.options.bind);
+            }
+
+            // 테마 컬러 설정
+            builder.theme.color = function(i, colors) {
+                var color;
+
+                if (_.typeCheck("array", colors)) {
+                    color = colors[i];
+                }
+
+                return color || _theme["colors"][i];
+            }
+
+            builder.emit("load", []);
+        }
 		
 		/************************
 		 *  Public Method
-		 ***********************/		
-		
+		 ***********************/
+
 		/**
 		 * 기본 padding 설정 
 		 * 
@@ -406,8 +512,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             }
         }		
 
-
-
         /**
 		 * 현재 text 관련 theme 가 정해진 text element 생성 
 		 * 
@@ -424,40 +528,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			return el; 
 		}
 
-		/**
-		 * 생성자 재정의 
-		 * 
-		 */
-		this.init = function() {
-
-			// svg 기본 객체 생성 
-			builder.svg = new SVGUtil(builder.root, {
-				width : builder.options.width,
-				height : builder.options.height
-			});
-
-            // 차트 테마 설정
-            builder.setTheme(builder.options.theme)
-
-            // UI 바인딩 설정
-            if(builder.options.bind != null) {
-                builder.bindUI(builder.options.bind);
-            }
-
-            // 테마 컬러 설정
-            builder.theme.color = function(i, colors) {
-                var color;
-
-                if (_.typeCheck("array", colors)) {
-                	color = colors[i];	
-                }
-
-                return color || _theme["colors"][i];
-            }
-
-			builder.emit("load", []);
-		}
-		
 		/**
 		 * chart 의 theme 설정 
 		 * 
@@ -580,64 +650,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			return _series;
 		}
-		
-		
-		/**
-		 * draw 이전에 환경 셋팅 
-		 * 
-		 */
-		this.drawBefore = function() {
-            // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
-            var data = _.deepClone(this.options.data),
-                series = _.deepClone(this.options.series),
-                grid = _.deepClone(this.options.grid),
-                padding = _.deepClone(this.setPadding(this.options.padding)),
-                brush = _.deepClone(this.options.brush),
-                widget = _.deepClone(this.options.widget),
-                series_list = [];
 
-            // series 데이타 구성
-            for (var i = 0, len = data.length; i < len; i++) {
-                var row = data[i];
-
-                for (var key in row) {
-                    var obj = series[key] || {};
-                    var value = row[key];
-                    
-                    series[key] = obj;
-
-                    obj.data = obj.data || [];
-                    obj.min = typeof obj.min == 'undefined' ?  0 : obj.min;
-                    obj.max = typeof obj.max == 'undefined' ?  0 : obj.max;
-                    obj.data[i] = value;
-
-                    if (value < obj.min) {
-                        obj.min = value;
-                    }
-                    
-                    if (value > obj.max) {
-                        obj.max = value;
-                    }
-                }
-            }
-            
-            // series_list
-            for (var key in series) {
-                series_list.push(key);
-            }            
-
-            _brush = createBrushData(brush, series_list);
-            _widget = createBrushData(widget, series_list);
-            _data = data;
-            _series = series;
-			_grid = grid;
-			_padding = padding;
-			
-			if (!_.typeCheck("array", _data)) {
-				_data = [_data];
-			}
-		}
-		
 		/**
 		 * chart 내에서 사용될 유일한 키 생성 
 		 * 
@@ -647,52 +660,32 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
 		}
 		
-
-
-		/**
-		 * draw 재정의 
-		 * 
-		 */
-		this.draw = function() {
-            drawDefs();
-            drawGrid();
-            
-			drawBrush("brush");
-            drawBrush("widget");
-			
-			this.emit("draw");
-		}
-		
-		
 		/**
 		 * chart render 함수 재정의 
 		 * 
 		 */
 		this.render = function() {
-			
-			// draw 함수 체크 
-			if (!_.typeCheck("function", this.draw)) {
-				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
-			}
-
 			// svg rest 
 			this.svg.reset();
-			
+
 			this.svg.css({
 				'background' : this.theme("backgroundColor")
 			})
 
 			// chart 영역 계산 			
-			calculate(this);
+			calculate();
 						
-			if (_.typeCheck("function", this.drawBefore)) {
-				this.drawBefore();
-			}
-			
-			// chart 관련된 요소 draw  
-			this.draw();
-			
-			// svg 태그 rendering
+			// chart 관련된 요소 draw
+            drawBefore();
+            drawDefs();
+            drawGrid();
+            drawBrush("brush");
+            drawBrush("widget");
+
+            // chart 기본 위치 보정
+            //wrappingGroup();
+
+			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
 		}
 
@@ -722,7 +715,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			this.svg.size(width, height);
 			this.render();
 		}		
-		
 	}
 
 	UI.setting = function() {

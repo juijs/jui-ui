@@ -19,10 +19,11 @@ jui.define("util.svg.element", [], function() {
         }
         
         this.each = function(callback) {
-            if(typeof(callback) != "function") {
-                for(var i = 0; i < this.childrens.length; i++) {
-                    callback.call(this.childrens[i], i);
-                }
+            if(typeof(callback) != "function") return;
+
+            for(var i = 0; i < this.childrens.length; i++) {
+                var self = this.childrens[i];
+                callback.apply(self, [ i, self ]);
             }
 
             return this.childrens;
@@ -47,7 +48,49 @@ jui.define("util.svg.element", [], function() {
         }
 
         /**
-         * 엘리먼트 조작 메소드
+         * 엘리먼트 관계 메소드
+         *
+         */
+
+        this.append = function(elem) {
+            this.childrens.push(elem);
+            elem.parent = this;
+
+            return this;
+        }
+
+        this.prepend = function(elem) {
+            return this.insert(0, elem);
+        }
+
+        this.insert = function(index, elem) {
+            this.childrens.splice(index, 0, elem);
+            elem.parent = this;
+
+            return this;
+        }
+
+        this.remove = function() {
+            var index = 0,
+                nChild = [],
+                pChild = this.parent.childrens;
+
+            for(var i = 0; i < pChild.length; i++) {
+                if (pChild[i] == this) {
+                    index = i;
+                    break;
+                }
+
+                nChild.push(pChild[i]);
+            }
+
+            this.parent.childrens = nChild;
+
+            return this;
+        }
+
+        /**
+         * 엘리먼트 DOM 조작 메소드
          *
          */
 
@@ -95,43 +138,10 @@ jui.define("util.svg.element", [], function() {
         	return this; 
         }
 
-        this.append = function(elem) {
-            this.childrens.push(elem);
-            elem.parent = this;
-
-            return this;
-        }
-
-        this.prepend = function(elem) {
-            return this.insert(0, elem);
-        }
-
-        this.insert = function(index, elem) {
-            this.childrens.splice(index, 0, elem);
-            elem.parent = this;
-
-            return this;
-        }
-
-        this.remove = function() {
-
-			var index = 0;
-			var arr = []
-			for(var i = 0; i < this.parent.childrens.length; i++) {
-				if (this.parent.childrens[i].element == this.element) {
-					this.parent.element.removeChild(this.element);
-					index = i;
-					break;	
-				}
-				
-				arr.push(this.parent.childrens[i]);
-				
-			}
-
-			this.parent.childrens = arr;
-			
-            return this;
-        }
+        /**
+         * 엘리먼트 DOM 이벤트 메소드
+         *
+         */
 
         this.on = function(type, handler) {
             this.element.addEventListener(type, function(e) {
@@ -366,12 +376,13 @@ jui.define("util.svg",
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
     var SVG = function(rootElem, rootAttr) {
-        var root = null,
+        var self = this,
+            root = null,
             parent = {},
             depth = 0;
 
         function init() {
-            root = new Element();
+            self.root = root = new Element();
             root.create("svg", rootAttr);
 
             rootElem.appendChild(root.element);
@@ -507,7 +518,7 @@ jui.define("util.svg",
         
         this.getTextRect = function(text) {
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
-        	
+
         	root.element.appendChild(el.element);
         	var rect = el.element.getBoundingClientRect();
         	el.remove();

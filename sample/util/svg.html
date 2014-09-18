@@ -11,6 +11,7 @@
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
 <script src="../../js/util/svg.js"></script>
 
 <script>
@@ -52,6 +53,23 @@ jui.ready([ "util.svg" ], function(SVGUtil) {
 
     l1.rotate(10);
     g1.append(l1);
+
+    var g = svg.group().translate(0.5, 0.5);
+    var nChild = [];
+
+    svg.root.each(function() {
+        if(g != this) {
+            nChild.push(this);
+        } else {
+            svg.root.childrens = [ this ];
+        }
+    });
+
+    for(var i = 0; i < nChild.length; i++) {
+        g.append(nChild[i]);
+    }
+
+    //g.remove();
 
     svg.clear();
     svg.render();

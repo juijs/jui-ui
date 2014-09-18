@@ -20,7 +20,7 @@
         return Math.round(Math.random() * 1000  % 500);
     }
 
-    jui.ready([ "chart.basic", "util.time" ], function(chart, time) {
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
             var start = new Date();
             var end = time.add(start, time.hours, 5);
             
