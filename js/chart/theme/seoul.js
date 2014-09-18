@@ -27,7 +27,7 @@ jui.define("chart.theme.seoul", [], function() {
 		gridBorderWidth : 1,
 		gridBorderColor : "#ececec",
 		gridAxisBorderColor : "#aaaaaa",
-		gridAxisBorderWidth : "2px",
+		gridAxisBorderWidth : 1,
 		gridActiveBorderColor : "#ff7800",
 		gridActiveBorderWidth : 1,
 

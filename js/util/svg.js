@@ -420,11 +420,11 @@ jui.define("util.svg",
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
 
-                if(child.parent == target) {
+                if(child && child.parent == target) {
                     target.element.appendChild(child.element);
                 }
 
-                if(child.childrens.length > 0) {
+                if(child && child.childrens.length > 0) {
                     appendAll(child);
                 }
             }

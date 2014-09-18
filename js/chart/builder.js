@@ -41,23 +41,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			_area = chart;
 		}
 
-        function wrappingGroup(self) {
-            var g = self.svg.group({ fill: "none" }).translate(0.5, 0.5);
-            var nChild = [];
-
-            self.svg.root.each(function() {
-                if(g != this) {
-                    nChild.push(this);
-                } else {
-                    self.svg.root.childrens = [ this ];
-                }
-            });
-
-            for(var i = 0; i < nChild.length; i++) {
-                g.append(nChild[i]);
-            }
-        }
-
         /**
          * draw 이전에 환경 셋팅
          *
@@ -195,6 +178,17 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 					}
 				}
 			}
+		}
+		
+		function fixedPixel(builder) {
+			var allElement = $(builder.svg.root.element).find(">:not(defs)");
+			
+			var g = builder.svg.group({
+				"class" : 'fixed-pixel'
+			}).translate(0.5, 0.5);
+			$(g.element).append(allElement);
+			
+			builder.svg.root.element.appendChild(g.element);			
 		}
 
 		/**
@@ -678,11 +672,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             drawBrush(this, "brush");
             drawBrush(this, "widget");
 
-            // chart 기본 위치 보정
-            //wrappingGroup(this);
-
 			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
+			
+			// fixel 조정 (0.5, 0.5)
+			fixedPixel(this);			
 		}
 
 		/**

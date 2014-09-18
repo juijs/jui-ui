@@ -25,8 +25,7 @@
             grid : {
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    full: true,
-                    line : true
+                    full: true
                 },
                 y : {
                     type : 'range',
@@ -37,7 +36,7 @@
 
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
             brush : [{
-                type : 'area', target : ["name", "value"], size : 8, tooltip : true, widget : ['line','scatter']
+                type : 'area', target : ["name", "value"], size : 8, symbol : 'curve'
             }],
             
             widget : [
