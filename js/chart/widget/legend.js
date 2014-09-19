@@ -78,9 +78,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
 					y : 0, 
 					width: width, 
 					height : height,
-					fill : chart.theme.color(i, brush.colors),
-					stroke : 'black',
-					'stroke-width' : 1
+					fill : chart.theme.color(i, brush.colors)
 				}))
 				
  				group.append(chart.text({
