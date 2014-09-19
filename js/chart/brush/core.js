@@ -209,9 +209,23 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 		this.getLegendIcon = function(chart, brush) {
 			var arr = [];
 			
-			for(var i = 0; i < brush.target.length; i++) {
-				var target = brush.target[i];
-				var text = chart.series(target).text || target;
+			var data = brush.target; 
+			
+			if (brush.legend) {
+				data = chart.data();
+			}
+			
+			var count = data.length;
+			
+			for(var i = 0; i < count; i++) {
+				
+				if (brush.legend) {
+					var text = chart.series(brush.legend).text || data[i][brush.legend];					
+				} else {
+					var target = brush.target[i];
+					var text = chart.series(target).text || target;					
+				}
+
 				var rect = chart.svg.getTextRect(text);
 				
 				var width = Math.min(rect.width,rect.height)-2;
