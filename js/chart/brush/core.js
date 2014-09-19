@@ -246,14 +246,14 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
 				}))
 				
  				group.append(chart.text({
-					x : width + 10,
+					x : width + 4,
 					y : 10,
 					"text-anchor" : 'start'
 				}, text)) 
 				
 				arr.push({
 					icon : group,
-					width : width + 10 + rect.width,
+					width : width + 4 + rect.width + 10,
 					height : height + 4
 				});
 			}
