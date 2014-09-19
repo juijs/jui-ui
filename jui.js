@@ -10671,7 +10671,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
@@ -10740,7 +10740,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
@@ -10801,7 +10801,7 @@ jui.define("chart.theme.seoul", [], function() {
 		gridActiveFontColor : "#ff7800",
 		gridBorderWidth : 1,
 		gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
 		gridActiveBorderColor : "#ff7800",
 		gridActiveBorderWidth : 1,
@@ -14117,7 +14117,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
 
 				var rect = chart.svg.getTextRect(text);
 				
-				var width = Math.min(rect.width,rect.height)-2;
+				var width = Math.min(rect.width,rect.height);
 				var height = width;				
 								 
 				var group = chart.svg.group({
@@ -14129,9 +14129,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
 					y : 0, 
 					width: width, 
 					height : height,
-					fill : chart.theme.color(i, brush.colors),
-					stroke : 'black',
-					'stroke-width' : 1
+					fill : chart.theme.color(i, brush.colors)
 				}))
 				
  				group.append(chart.text({

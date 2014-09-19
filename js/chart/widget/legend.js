@@ -66,7 +66,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
 
 				var rect = chart.svg.getTextRect(text);
 				
-				var width = Math.min(rect.width,rect.height)-2;
+				var width = Math.min(rect.width,rect.height);
 				var height = width;				
 								 
 				var group = chart.svg.group({
