@@ -37,8 +37,6 @@ jui.define("chart.brush.bar", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var startX = brush.x(chart.data(i, brush.target[j])),
                         r = null;
-                        
-                        console.log(chart.data(i, brush.target[j]), startX, zeroX);
 
 					if (startX >= zeroX) {
 						r = chart.svg.rect({
@@ -60,7 +58,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, j, i);
                     g.append(r);
 
 					startY += barHeight + innerPadding;
