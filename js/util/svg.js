@@ -54,7 +54,9 @@ jui.define("util.svg.element", [], function() {
 
         this.append = function(elem) {
         	
-            elem.remove();        	
+        	if (elem.parent) {
+        		elem.remove();	
+        	}
         	
             this.childrens.push(elem);
             elem.parent = this;
