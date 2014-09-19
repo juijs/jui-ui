@@ -86,7 +86,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				grid.step = grid.step || 10;
 
-				var unit = Math.ceil((max - min) / grid.step);
+				var unit = grid.unit || Math.ceil((max - min) / grid.step);
 				
 				var start = 0;
 				while (start < max) {

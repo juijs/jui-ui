@@ -2319,6 +2319,9 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
+        	
+            elem.remove();        	
+        	
             this.childrens.push(elem);
             elem.parent = this;
 
@@ -10910,7 +10913,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				grid.step = grid.step || 10;
 
-				var unit = Math.ceil((max - min) / grid.step);
+				var unit = grid.unit || Math.ceil((max - min) / grid.step);
 				
 				var start = 0;
 				while (start < max) {
@@ -12093,6 +12096,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
 
             elem.on("mouseover", function(e) {
+                console.log(obj);
                 chart.emit("mouseover", [ obj, e ]);
             });
 
@@ -12602,7 +12606,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('donutBorderWidth')
 				});
 
-                this.addEvent(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12939,7 +12943,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('pieBorderWidth')
 				});
 
-                this.addEvent(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;

@@ -187,6 +187,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
 
             elem.on("mouseover", function(e) {
+                console.log(obj);
                 chart.emit("mouseover", [ obj, e ]);
             });
 
