@@ -166,7 +166,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
                 }
             } 
             
-            group.translate(x, y);
+            group.translate(Math.floor(x), Math.floor(y));
             
         }
     }
