@@ -37,6 +37,8 @@ jui.define("chart.brush.bar", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var startX = brush.x(chart.data(i, brush.target[j])),
                         r = null;
+                        
+                        console.log(chart.data(i, brush.target[j]), startX, zeroX);
 
 					if (startX >= zeroX) {
 						r = chart.svg.rect({

@@ -10887,8 +10887,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			if (grid.target && grid.target.length) {
 				
-				var max = 0;
-				var min = 0;
+				var max = grid.max || 0;
+				var min = grid.min || 0;
 				var data = chart.data();
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -12205,6 +12205,8 @@ jui.define("chart.brush.bar", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var startX = brush.x(chart.data(i, brush.target[j])),
                         r = null;
+                        
+                        console.log(chart.data(i, brush.target[j]), startX, zeroX);
 
 					if (startX >= zeroX) {
 						r = chart.svg.rect({
