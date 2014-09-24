@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Tab</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/dropdown.js"></script>
+<script src="../../js/uix/tab.js"></script>
+
+<script>
+var t1;
+
+jui.ready([ "uix.tab" ], function(tab) {
+    t1 = tab("#t1", {
+        target: "#t1_contents",
+        index: 2
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("탭 기본 테스트", function(assert) {
+        assert.ok($(t1.root).find("li:last-child").hasClass("active"), "활성화 탭 확인");
+        assert.ok($("#t1_contents").find("div:last-child").text() == "script", "활성화 탭 내용 확인");
+    });
+
+    QUnit.test("탭 클릭 테스트", function(assert) {
+        $(t1.root).find("li:eq(1)").trigger("click");
+
+        assert.ok($("#t1").find("li:eq(1)").hasClass("active"), "활성화 탭 확인");
+        assert.ok($("#t1_contents").find("div:eq(1)").text() == "css", "활성화 탭 내용 확인");
+    });
+
+    QUnit.done(function() {
+        $(t1.root).remove();
+        $("#t1_contents").remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<ul id="t1">
+    <li>
+        <a href="#home">Home</a>
+    </li>
+    <li><a href="#css">CSS</a></li>
+    <li><a href="#script">Script</a></li>
+</ul>
+<div id="t1_contents">
+    <div id="home">home</div>
+    <div id="css">css</div>
+    <div id="script">script</div>
+</div>
+
+</body>
+</html>

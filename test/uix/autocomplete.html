@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Auto Complete</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/dropdown.js"></script>
+<script src="../../js/uix/autocomplete.js"></script>
+
+<script>
+var ac_words = [
+    "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
+    "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran", "Groovy",
+    "Haskell", "Java", "JavaScript", "Lisp", "Perl", "PHP",
+    "Python", "Ruby", "Scala", "Scheme"
+];
+
+var ac1;
+
+jui.ready([ "uix.autocomplete" ], function(autocomplete) {
+    ac1 = autocomplete("#ac1", {
+        target: "input[type=text]",
+        words: ac_words,
+        tpl: {
+            words: $("#tpl_words").html()
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("자동완성 필터링 테스트", function(assert) {
+        $(ac1.root).find("[type=text]").val("b").trigger("keyup");
+
+        assert.ok(ac1.list().length == $("#ac1_menu").find("li").size(), "필터링 리스트 개수 확인");
+        assert.equal(ac1.list()[0], $("#ac1_menu").find("li:first-child").text(), "필터링 리스트 값 확인");
+    });
+
+    QUnit.done(function() {
+        $(ac1.root).remove();
+        $("#ac1_menu").remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<span id="ac1">
+	<input type="text" />
+</span>
+
+<script id="tpl_words" type="text/template">
+    <div id="ac1_menu">
+        <ul>
+            <! for(var i = 0; i < words.length; i++) { !>
+            <li><!= words[i] !></li>
+            <! } !>
+        </ul>
+    </div>
+</script>
+
+</body>
+</html>

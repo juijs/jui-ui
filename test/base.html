@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Base</title>
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../js/base.js"></script>
+<script src="../js/core.js"></script>
+
+<script>
+jui.ready([ "util.base" ], function(_) {
+    QUnit.test("[전역 함수] - jui.include", function(assert) {
+        assert.ok(_.typeCheck("object", jui.include("util.base")), "유틸 모듈 로드 확인");
+        assert.ok(_.typeCheck("function", jui.include("core")), "코어 모듈 로드 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.includeAll", function(assert) {
+        assert.ok(jui.includeAll().length == 3, "로드된 모듈 개수 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.define", function(assert) {
+        jui.define("sample", [ "util.base" ], function(__) {
+            assert.ok(_.typeCheck("object", __), "유틸 모듈 로드 확인");
+            assert.equal(_, __, "유틸 모듈 참조 확인");
+
+            return function() {
+                this.toString = function() {
+                    return "sample";
+                }
+            }
+        });
+
+        jui.define("sample.child", [ "util.base" ], function(__) {
+            return function() {
+                this.test = function() {
+                    return "test";
+                }
+            }
+        }, "sample");
+
+        var Sample = jui.include("sample"),
+            SampleChild = jui.include("sample.child"),
+            obj = new Sample(),
+            objChild = new SampleChild();
+
+        assert.ok(obj.toString() == "sample", "커스텀 모듈 객체 확인");
+        assert.ok(objChild.test() == "test", "커스텀 모듈 객체 확인 (자식)");
+        assert.ok(objChild.toString() == "sample", "커스텀 모듈 상속 유무 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.defineUI", function(assert) {
+        jui.defineUI("ui.sample", [ "util.base" ], function(_) {
+            var UI = function() {
+                this.init = function() {
+                }
+            }
+
+            return UI;
+        });
+
+        assert.ok(_.typeCheck("function", jui.include("ui.sample")), "모듈 로드 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.getClass", function(assert) {
+        var module = jui.getClass("ui.sample");
+
+        assert.ok(module["type"] == "ui.sample", "정의된 모듈 타입 확인");
+        assert.ok(module["class"] == jui.include("ui.sample"), "정의된 모듈 클래스 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.getClassAll", function(assert) {
+        jui.defineUI("ui.sample2", [ "util.base" ], function(_) {
+            var UI = function() {
+                this.init = function() {
+                }
+            }
+
+            return UI;
+        });
+
+        assert.ok(jui.getClassAll().length == 2, "정의된 모듈 클래스 개수 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.get", function(assert) {
+        var ui = jui.include("ui.sample")("#sample");
+
+        assert.ok(jui.get("ui.sample")[0].list[0] == ui, "생성된 모듈 객체 확인");
+    });
+
+    QUnit.test("[전역 함수] - jui.getAll", function(assert) {
+        assert.ok(jui.getAll().length == 1, "생성된 객체 모듈 개수 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - inherit", function(assert) {
+        var Parent = function() {
+            this.toString = function() {
+                return "parent";
+            }
+        }
+
+        var Child = function() {
+            this.toString = function() {
+                return "child";
+            }
+        }
+
+        _.inherit(Child, Parent);
+        var c = new Child();
+
+        assert.ok(c.toString() == "child", "오버라이딩 확인");
+        assert.ok(c.parent.toString() == "parent", "부모 참조 프로퍼티 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - extend", function(assert) {
+        var origin = {
+            name: "Hong"
+        };
+
+        _.extend(origin, { name: "Park", age: 20 });
+        assert.ok(origin.name == "Park" && origin.age == 20, "객체 확장 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - pxToInt", function(assert) {
+        assert.ok(_.pxToInt("10px") === 10, "수치 변환 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - clone", function(assert) {
+        var origin = {
+            name: "Hong"
+        };
+
+        var obj = origin,
+            clone = _.clone(origin);
+
+        assert.equal(origin, obj, "객체 참조 확인");
+        assert.notEqual(origin, clone, "객체 복사 확인");
+        assert.ok(origin.name == clone.name, "객체 복사 내용 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - sort", function(assert) {
+        var data = [
+            { name: "Hong", age: 29 },
+            { name: "Yoon", age: 22 },
+            { name: "Park", age: 33 }
+        ],
+        sort = _.sort(data);
+
+        sort.setCompare(function(a, b) {
+            return (a.name > b.name) ? true : false;
+        });
+        sort.run();
+        assert.ok(data[0].name == "Yoon", "문자열 내림차순 정렬 확인");
+
+        sort.setCompare(function(a, b) {
+            return (a.name < b.name) ? true : false;
+        });
+        sort.run();
+        assert.ok(data[0].name == "Hong", "문자열 오름차순 정렬 확인");
+
+        sort.setCompare(function(a, b) {
+            return (a.age > b.age) ? true : false;
+        });
+        sort.run();
+        assert.ok(data[0].age == 33, "숫자 내림차순 정렬 확인");
+
+        sort.setCompare(function(a, b) {
+            return (a.age < b.age) ? true : false;
+        });
+        sort.run();
+        assert.ok(data[0].age == 22, "숫자 오름차순 정렬 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - template", function(assert) {
+        var tpl = _.template("<label><! if(value > 100) { !>High<! } else { !>Low<! } !></label>");
+
+        assert.ok(tpl({ value: 101 }) == "<label>High</label>", "템플릿 동작 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - index", function(assert) {
+        var index = _.index(),
+            indexList = index.getIndexList("1.1.2");
+
+        assert.ok(index.isIndexDepth("1.1") && !index.isIndexDepth("2"), "인덱스 깊이 확인");
+        assert.ok(indexList[0] == 1 && indexList[1] == 1 && indexList[2] == 2, "인덱스 배열 변환 확인");
+        assert.ok(index.getNextIndex("1.2.3") == "1.2.4", "다음 인덱스 확인");
+        assert.ok(index.getParentIndex("1.2.3") == "1.2", "부모 인덱스 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - chunk", function(assert) {
+        var arr = [ 0, 1, 2, 3, 4 ],
+            newArr = _.chunk(arr, 3);
+
+        assert.ok(newArr[0].length == 3 && newArr[1].length == 2, "배열 분할 확인");
+        assert.ok(newArr[0][2] == 2 && newArr[1][1] == 4, "분할된 배열 데이터 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - typeCheck", function(assert) {
+        assert.ok(_.typeCheck("object", {}), "'object' 타입 확인");
+        assert.ok(_.typeCheck("object", null) == false, "'object' 타입 확인 (null)");
+    });
+
+    QUnit.test("[유틸리티 함수] - dataToCsv", function(assert) {
+        var data = [
+            { name: "Hong", age: 29 },
+            { name: "Yoon", age: 22 }
+        ];
+
+        assert.ok(_.dataToCsv([ "name", "age" ], data) == "name,age\nHong,29\nYoon,22\n", "데이터 변환 확인");
+        assert.ok(_.dataToCsv([ "name", "age" ], data, 1) == "name,age\nHong,29\n", "데이터 변환 확인 (개수 제한)");
+    });
+
+    QUnit.test("[유틸리티 함수] - dataToCsv2", function(assert) {
+        var data = [
+            { name: "Hong", age: 29 },
+            { name: "Yoon", age: 22 }
+        ];
+
+        var csv = _.dataToCsv2({
+            fields: [ "name", "age" ],
+            names: [ "이름", "나이" ],
+            rows: data
+        });
+
+        assert.ok(csv == "이름,나이\nHong,29\nYoon,22\n", "데이터 변환 확인 (커스텀 컬럼)");
+    });
+
+    QUnit.test("[유틸리티 함수] - csvToData", function(assert) {
+        var csv = "name,age\nHong,29\nYoon,22\n",
+            data = _.csvToData([ "name", "age" ], csv);
+
+        assert.ok(data[0].name == "Hong" && data[1].name == "Yoon", "데이터 변환 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - getCsvFields", function(assert) {
+        assert.ok(_.getCsvFields([ "name", "age" ], [ "name" ]).length == 1, "필드 변환 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - dateFormat", function(assert) {
+        var date = new Date("1986/06/15 09:15");
+
+        assert.ok(_.dateFormat(date, "yy.MM.dd") == "86.06.15", "날짜 변경 확인");
+        assert.ok(_.dateFormat(date, "yy.MM.dd hh-mm") == "86.06.15 09-15", "날짜/숫자 변경 확인");
+    });
+});
+</script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<div id="sample"></div>
+</body>
+</html>

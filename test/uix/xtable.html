@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - XTable</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/dropdown.js"></script>
+<script src="../../js/ui/modal.js"></script>
+<script src="../../js/uix/table.js"></script>
+<script src="../../js/uix/xtable.js"></script>
+
+<script>
+var table_data = [
+    { name: "Hong", age: 20, location: "Ilsan", etc: "AA" },
+    { name: "Jung", age: 30, location: "Seoul", etc: "123" },
+    { name: "Park", age: 10, location: "Dangjin", etc: "BB" }
+];
+
+var t1;
+
+jui.ready([ "uix.xtable" ], function(xtable) {
+    t1 = xtable("#t1", {
+        fields: [ "name", "age", "location", "etc" ],
+        sort: true,
+        data: table_data,
+        tpl: {
+            row: $("#tpl_row").html()
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("테이블 갱신 테스트", function(assert) {
+        assert.ok(t1.count() == 3, "로우 개수 확인");
+        assert.equal(t1.get(1).element, $("#t1").find("tbody > tr").get(1), "로우 엘리먼트 확인");
+    });
+
+    QUnit.test("테이블 정렬 테스트", function(assert) {
+        $(t1.root).find("th:last-child").trigger("click");
+        assert.ok(t1.get(0).data.etc == "BB", "내림차순 정렬 확인");
+
+        $(t1.root).find("th:last-child").trigger("click");
+        assert.ok(t1.get(0).data.etc == "123", "오름차순 정렬 확인");
+    });
+
+    QUnit.test("테이블 필터 테스트", function(assert) {
+        t1.filter(function(data) {
+           if(data.name.indexOf("ng") != -1) {
+               return true;
+           }
+
+            return false;
+        });
+        assert.ok(t1.list().length == 2, "단일 필터 확인");
+
+        t1.filter(function(data) {
+            if(data.name.indexOf("rk") != -1 || data.age >= 30) {
+                return true;
+            }
+
+            return false;
+        });
+        assert.ok(t1.list().length == 2, "다중 필터 확인");
+    });
+
+    QUnit.done(function() {
+        $(t1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<table id="t1">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Location</th>
+        <th>Etc</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script id="tpl_row" type="text/template">
+    <tr>
+        <td><!= name !></td>
+        <td><!= age !></td>
+        <td><!= location !></td>
+        <td><!= etc !></td>
+    </tr>
+</script>
+
+</body>
+</html>

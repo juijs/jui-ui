@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Table</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/dropdown.js"></script>
+<script src="../../js/ui/modal.js"></script>
+<script src="../../js/uix/table.js"></script>
+
+<script>
+var table_data = [
+    { name: "Hong", age: 20, location: "Ilsan", etc: "AA" },
+    { name: "Jung", age: 30, location: "Seoul", etc: "123" },
+    { name: "Park", age: 10, location: "Dangjin", etc: "BB" }
+];
+
+var t1;
+
+jui.ready([ "uix.table" ], function(table) {
+    t1 = table("#t1", {
+        fields: [ "name", "age", "location", "etc" ],
+        sort: true,
+        data: table_data,
+        expand: true,
+        editRow: true,
+        tpl: {
+            row: $("#tpl_row").html(),
+            expand: $("#tpl_expand").html()
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("테이블 갱신 테스트", function(assert) {
+        assert.ok(t1.count() == 3, "로우 개수 확인");
+        assert.equal(t1.get(1).element, $("#t1").find("tbody > tr:not(.expand)").get(1), "로우 엘리먼트 확인");
+    });
+
+    QUnit.test("테이블 정렬 테스트", function(assert) {
+        $(t1.root).find("th:last-child").trigger("click");
+        assert.ok(t1.get(0).data.etc == "BB", "내림차순 정렬 확인");
+
+        $(t1.root).find("th:last-child").trigger("click");
+        assert.ok(t1.get(0).data.etc == "123", "오름차순 정렬 확인");
+    });
+
+    QUnit.test("테이블 조작 테스트", function(assert) {
+        assert.ok(t1.count() == 3, "로우 개수 확인 (3개)");
+
+        t1.remove(1);
+        assert.ok(t1.get(0).data.name == "Jung", "로우 삭제 확인");
+
+        t1.append({ name: "Shin", age: 40, location: "Seoul", etc: "CC123" });
+        assert.ok(t1.get(2).data.name == "Shin", "로우 추가 확인");
+
+        t1.update(1, { name: "Yoon" });
+        assert.ok(t1.get(1).data.name == "Yoon", "로우 수정 확인");
+
+        t1.insert(1, { name: "Kim", age: 50, location: "Suncheon", etc: "BBCCAA" });
+        assert.ok(t1.get(1).data.name == "Kim", "로우 끼워넣기 확인");
+        assert.ok(t1.get(2).data.name == "Yoon", "로우 인덱스 변경 확인");
+
+        assert.ok(t1.count() == 4, "로우 개수 확인 (4개)");
+    });
+
+    QUnit.test("테이블 컬럼 테스트", function(assert) {
+        t1.hideColumn(1);
+        assert.ok($(t1.root).find("th:visible").size() == 3, "컬럼 숨기기 확인");
+
+        t1.showColumn(1);
+        assert.ok($(t1.root).find("th:visible").size() == 4, "컬럼 보이기 확인");
+    });
+
+    QUnit.test("테이블 확장영역 테스트", function(assert) {
+        t1.showExpand(1);
+        assert.ok($(t1.root).find("tr.expand").css("display") == "table-row", "확장영역 보이기 확인");
+
+        t1.hideExpand();
+        assert.ok($(t1.root).find("tr.expand").css("display") == "none", "확장영역 숨기기 확인");
+    });
+
+    QUnit.test("테이블 수정영역 테스트", function(assert) {
+        t1.showEditRow(1);
+        assert.ok($(t1.root).find("input.edit").size() == 4, "수정영역 보이기 확인");
+
+        t1.hideEditRow();
+        assert.ok($(t1.root).find("input.edit").size() == 0, "수정영역 숨기기 확인");
+    });
+
+    QUnit.test("테이블 체크 테스트", function(assert) {
+        t1.check(0);
+        t1.check(1);
+        assert.ok($(t1.root).find(".checked").size() == 2 && t1.listChecked().length == 2, "로우 체크 확인");
+
+        t1.uncheck(1);
+        assert.ok($(t1.root).find(".checked").size() == 1 && t1.listChecked().length == 1, "로우 체크해제 확인");
+
+        assert.ok(t1.listChecked()[0].data.name == "Jung", "로우 체크 데이터 확인");
+        t1.uncheck(0);
+    });
+
+    QUnit.test("계층형 테이블 테스트", function(assert) {
+        t1.append("1", { name: "Jung II", age: 5, location: "Seoul", etc: "Test" });
+        assert.ok(t1.get("1.0").data.name == "Jung II", "로우 추가 확인");
+
+        t1.insert("1.0.0", { name: "Jung III", age: 3, location: "Seoul", etc: "Test" });
+        assert.ok(t1.get("1.0.0").data.name == "Jung III", "로우 끼워넣기 확인");
+
+        assert.ok(t1.getAll("1").length == 3, "로우 개수 확인 (자식 로우 포함)");
+
+        t1.remove("1.0");
+        assert.ok(t1.getAll("1").length == 1, "로우 삭제 확인 (자식 로우)");
+    });
+
+    QUnit.done(function() {
+        $(t1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<table id="t1">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Location</th>
+        <th>Etc</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script id="tpl_row" type="text/template">
+    <tr>
+        <td style="padding-left: <!= row.depth * 10 !>px"><!= name !></td>
+        <td><!= age !></td>
+        <td><!= location !></td>
+        <td><!= etc !></td>
+    </tr>
+</script>
+
+<script id="tpl_expand" type="text/template">
+    <tr>
+        <td colspan="4">Expand Section</td>
+    </tr>
+</script>
+
+</body>
+</html>

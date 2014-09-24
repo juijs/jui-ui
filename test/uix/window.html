@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Window</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/modal.js"></script>
+<script src="../../js/uix/window.js"></script>
+
+<script>
+var w1;
+
+jui.ready([ "uix.window" ], function(win) {
+    w1 = win("#w1", {
+        width: 500,
+        height: 300,
+        left: 100,
+        top: 100
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("윈도우 기본 테스트", function(assert) {
+        assert.equal(w1.root, $("#w1")[0], "엘리먼트 확인");
+        assert.ok($(w1.root).css("display") == "none", "엘리먼트 숨김 상태 확인");
+        w1.show();
+        assert.ok($(w1.root).css("display") == "block", "엘리먼트 보임 상태 확인");
+    });
+
+    QUnit.test("윈도우 갱신 테스트", function(assert) {
+        w1.setTitle("Test1");
+        assert.ok($(w1.root).find(".title").text() == "Test1", "변경된 타이틀 확인");
+        w1.update("Test2");
+        assert.ok($(w1.root).find(".body").text() == "Test2", "변경된 컨텐츠 확인");
+    });
+
+    QUnit.test("윈도우 숨김 테스트", function(assert) {
+        $("#w1").find(".close").trigger("click");
+        assert.ok($(w1.root).css("display") == "none", "엘리먼트 숨김 상태 확인");
+    });
+
+    QUnit.done(function() {
+        $(w1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<div id="w1" class="window">
+    <div class="head">
+        <div class="title">HOME</div>
+        <div>
+            <a href="#" class='close'>X</a>
+        </div>
+    </div>
+    <div class="body">
+        Contents...<br/>
+    </div>
+</div>
+
+</body>
+</html>
