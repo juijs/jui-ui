@@ -1693,8 +1693,8 @@
 .jui [class*=" icon-"].icon-stop {
   background-position: -16px -80px;
 }
-.jui [class^="icon-"].icon-add-dir3,
-.jui [class*=" icon-"].icon-add-dir3 {
+.jui [class^="icon-"].icon-save,
+.jui [class*=" icon-"].icon-save {
   background-position: -32px -80px;
 }
 .jui [class^="icon-"].icon-white,
@@ -1925,8 +1925,8 @@
 .jui [class*=" icon-"].icon-large.icon-stop {
   background-position: -20px -100px;
 }
-.jui [class^="icon-"].icon-large.icon-add-dir3,
-.jui [class*=" icon-"].icon-large.icon-add-dir3 {
+.jui [class^="icon-"].icon-large.icon-save,
+.jui [class*=" icon-"].icon-large.icon-save {
   background-position: -40px -100px;
 }
 .jui [class^="icon-"].icon-large.icon-white,
@@ -2233,8 +2233,8 @@
 .jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-stop {
   background-position: -20px -100px;
 }
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-add-dir3,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-add-dir3 {
+.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-save,
+.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-save {
   background-position: -40px -100px;
 }
 .jui .btn-gray-black.active > [class^="icon-"],
@@ -2565,10 +2565,10 @@
 .jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-stop {
   background-position: -20px -100px;
 }
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-add-dir3,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-add-dir3,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-add-dir3,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-add-dir3 {
+.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-save,
+.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-save,
+.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-save,
+.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-save {
   background-position: -40px -100px;
 }
 .jui .pill li.active [class^="icon-"],
