@@ -53,6 +53,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
+        	
+        	if (elem.parent) {
+        		elem.remove();	
+        	}
+        	
             this.childrens.push(elem);
             elem.parent = this;
 
@@ -64,6 +69,11 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.insert = function(index, elem) {
+        	
+        	if (elem.parent) {
+        		elem.remove();	
+        	}        	
+        	
             this.childrens.splice(index, 0, elem);
             elem.parent = this;
 

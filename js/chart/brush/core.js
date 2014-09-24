@@ -187,6 +187,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
 
             elem.on("mouseover", function(e) {
+                console.log(obj);
                 chart.emit("mouseover", [ obj, e ]);
             });
 
@@ -199,52 +200,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
         }
         
-        /**
-         * brush 에서 생성되는 legend 아이콘 리턴 
-         * 
-         * @param {object} chart
-         * @param {object} brush
-         */
-		this.getLegendIcon = function(chart, brush) {
-			var arr = [];
-			
-			for(var i = 0; i < brush.target.length; i++) {
-				var target = brush.target[i];
-				var text = chart.series(target).text || target;
-				var rect = chart.svg.getTextRect(text);
-				
-				var width = Math.min(rect.width,rect.height)-2;
-				var height = width;				
-								 
-				var group = chart.svg.group({
-					'class' : 'legend icon'
-				})
-				
-				group.append(chart.svg.rect({
-					x: 0, 
-					y : 0, 
-					width: width, 
-					height : height,
-					fill : chart.theme.color(i, brush.colors),
-					stroke : 'black',
-					'stroke-width' : 1
-				}))
-				
- 				group.append(chart.text({
-					x : width + 10,
-					y : 10,
-					"text-anchor" : 'start'
-				}, text)) 
-				
-				arr.push({
-					icon : group,
-					width : width + 10 + rect.width,
-					height : height + 4
-				});
-			}
-			
-			return arr;
-		}
+
 	}
 
 	return CoreBrush;

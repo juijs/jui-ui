@@ -2319,6 +2319,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
+        	
+        	if (elem.parent) {
+        		elem.remove();	
+        	}
+        	
             this.childrens.push(elem);
             elem.parent = this;
 
@@ -2330,6 +2335,11 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.insert = function(index, elem) {
+        	
+        	if (elem.parent) {
+        		elem.remove();	
+        	}        	
+        	
             this.childrens.splice(index, 0, elem);
             elem.parent = this;
 
@@ -10661,7 +10671,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
@@ -10730,7 +10740,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
@@ -10791,7 +10801,7 @@ jui.define("chart.theme.seoul", [], function() {
 		gridActiveFontColor : "#ff7800",
 		gridBorderWidth : 1,
 		gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#aaaaaa",
+		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
 		gridActiveBorderColor : "#ff7800",
 		gridActiveBorderWidth : 1,
@@ -10877,8 +10887,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			if (grid.target && grid.target.length) {
 				
-				var max = 0;
-				var min = 0;
+				var max = grid.max || 0;
+				var min = grid.min || 0;
 				var data = chart.data();
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -10910,7 +10920,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				grid.step = grid.step || 10;
 
-				var unit = Math.ceil((max - min) / grid.step);
+				var unit = grid.unit || Math.ceil((max - min) / grid.step);
 				
 				var start = 0;
 				while (start < max) {
@@ -12093,6 +12103,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
 
             elem.on("mouseover", function(e) {
+                console.log(obj);
                 chart.emit("mouseover", [ obj, e ]);
             });
 
@@ -12105,52 +12116,7 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
         }
         
-        /**
-         * brush 에서 생성되는 legend 아이콘 리턴 
-         * 
-         * @param {object} chart
-         * @param {object} brush
-         */
-		this.getLegendIcon = function(chart, brush) {
-			var arr = [];
-			
-			for(var i = 0; i < brush.target.length; i++) {
-				var target = brush.target[i];
-				var text = chart.series(target).text || target;
-				var rect = chart.svg.getTextRect(text);
-				
-				var width = Math.min(rect.width,rect.height)-2;
-				var height = width;				
-								 
-				var group = chart.svg.group({
-					'class' : 'legend icon'
-				})
-				
-				group.append(chart.svg.rect({
-					x: 0, 
-					y : 0, 
-					width: width, 
-					height : height,
-					fill : chart.theme.color(i, brush.colors),
-					stroke : 'black',
-					'stroke-width' : 1
-				}))
-				
- 				group.append(chart.text({
-					x : width + 10,
-					y : 10,
-					"text-anchor" : 'start'
-				}, text)) 
-				
-				arr.push({
-					icon : group,
-					width : width + 10 + rect.width,
-					height : height + 4
-				});
-			}
-			
-			return arr;
-		}
+
 	}
 
 	return CoreBrush;
@@ -12215,7 +12181,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(brush, chart, r, j, i);
                     g.append(r);
 
 					startY += barHeight + innerPadding;
@@ -12602,7 +12568,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('donutBorderWidth')
 				});
 
-                this.addEvent(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -12939,12 +12905,13 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme('pieBorderWidth')
 				});
 
-                this.addEvent(brush, chart, g, i, null);
+                this.addEvent(brush, chart, g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
 			}
 		}
+		
 	}
 
 	return PieBrush;
@@ -14121,6 +14088,66 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
             }      
 
         }
+        
+        /**
+         * brush 에서 생성되는 legend 아이콘 리턴 
+         * 
+         * @param {object} chart
+         * @param {object} brush
+         */
+		this.getLegendIcon = function(chart, brush) {
+			var arr = [];
+			
+			var data = brush.target; 
+			
+			if (brush.legend) {
+				data = chart.data();
+			}
+			
+			var count = data.length;
+			
+			for(var i = 0; i < count; i++) {
+				
+				if (brush.legend) {
+					var text = chart.series(brush.legend).text || data[i][brush.legend];					
+				} else {
+					var target = brush.target[i];
+					var text = chart.series(target).text || target;					
+				}
+
+				var rect = chart.svg.getTextRect(text);
+				
+				var width = Math.min(rect.width,rect.height);
+				var height = width;				
+								 
+				var group = chart.svg.group({
+					'class' : 'legend icon'
+				})
+				
+				group.append(chart.svg.rect({
+					x: 0, 
+					y : 0, 
+					width: width, 
+					height : height,
+					fill : chart.theme.color(i, brush.colors)
+				}))
+				
+ 				group.append(chart.text({
+					x : width + 4,
+					y : 10,
+					"text-anchor" : 'start'
+				}, text)) 
+				
+				arr.push({
+					icon : group,
+					width : width + 4 + rect.width + 10,
+					height : height + 4
+				});
+			}
+			
+			return arr;
+		}        
+        
 
         this.draw = function(chart) {
             if (!legend) return;
@@ -14140,8 +14167,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
             for(var i = 0; i < legend.brush.length; i++) {
                 var index = legend.brush[i];
                 var brush = chart.brush(index);
-                var arr = brush.obj.getLegendIcon(chart, brush);
-            
+                var arr = this.getLegendIcon(chart, brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
@@ -14189,7 +14215,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
                 }
             } 
             
-            group.translate(x, y);
+            group.translate(Math.floor(x), Math.floor(y));
             
         }
     }

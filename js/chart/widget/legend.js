@@ -37,6 +37,66 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
             }      
 
         }
+        
+        /**
+         * brush 에서 생성되는 legend 아이콘 리턴 
+         * 
+         * @param {object} chart
+         * @param {object} brush
+         */
+		this.getLegendIcon = function(chart, brush) {
+			var arr = [];
+			
+			var data = brush.target; 
+			
+			if (brush.legend) {
+				data = chart.data();
+			}
+			
+			var count = data.length;
+			
+			for(var i = 0; i < count; i++) {
+				
+				if (brush.legend) {
+					var text = chart.series(brush.legend).text || data[i][brush.legend];					
+				} else {
+					var target = brush.target[i];
+					var text = chart.series(target).text || target;					
+				}
+
+				var rect = chart.svg.getTextRect(text);
+				
+				var width = Math.min(rect.width,rect.height);
+				var height = width;				
+								 
+				var group = chart.svg.group({
+					'class' : 'legend icon'
+				})
+				
+				group.append(chart.svg.rect({
+					x: 0, 
+					y : 0, 
+					width: width, 
+					height : height,
+					fill : chart.theme.color(i, brush.colors)
+				}))
+				
+ 				group.append(chart.text({
+					x : width + 4,
+					y : 10,
+					"text-anchor" : 'start'
+				}, text)) 
+				
+				arr.push({
+					icon : group,
+					width : width + 4 + rect.width + 10,
+					height : height + 4
+				});
+			}
+			
+			return arr;
+		}        
+        
 
         this.draw = function(chart) {
             if (!legend) return;
@@ -56,8 +116,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
             for(var i = 0; i < legend.brush.length; i++) {
                 var index = legend.brush[i];
                 var brush = chart.brush(index);
-                var arr = brush.obj.getLegendIcon(chart, brush);
-            
+                var arr = this.getLegendIcon(chart, brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
@@ -105,7 +164,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
                 }
             } 
             
-            group.translate(x, y);
+            group.translate(Math.floor(x), Math.floor(y));
             
         }
     }

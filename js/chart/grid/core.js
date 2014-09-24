@@ -53,8 +53,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			if (grid.target && grid.target.length) {
 				
-				var max = 0;
-				var min = 0;
+				var max = grid.max || 0;
+				var min = grid.min || 0;
 				var data = chart.data();
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -86,7 +86,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				grid.step = grid.step || 10;
 
-				var unit = Math.ceil((max - min) / grid.step);
+				var unit = grid.unit || Math.ceil((max - min) / grid.step);
 				
 				var start = 0;
 				while (start < max) {

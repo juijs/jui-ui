@@ -18,7 +18,7 @@
             theme : location.href.split("?")[1].split("=")[1],
             data : [
                 { name : 2, value : 15 },
-                { name : -15, value : 6 },
+                { name : -15, value : -35 },
                 { name : 8, value : 10 },
                 { name : 18, value : 5 },
             ],
@@ -33,18 +33,13 @@
                     step : 10
                 }
             },
-            series : {
-                name : { text : "이름" },
-                value : { text : "값" }
-            },
+            widget : [
+            	{ type : 'title', text : 'Bar Sample' },
+            	{ type : 'legend' }
+            ],
             brush : {
                 type : 'bar',
                 target : ['name', 'value']
-            },
-            event: {
-                click: function(obj, e) {
-                    console.log(obj);
-                }
             }
         }).render();
 	})
