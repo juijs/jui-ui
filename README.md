@@ -8,7 +8,7 @@ http://seogi1004.github.io/jui/
 
 ## Maintainers
 
-Created by Alvin and Yoha.
+Created by Alvin and Jayden, Yoha
 
 ## License
 
