@@ -12103,7 +12103,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             });
 
             elem.on("mouseover", function(e) {
-                console.log(obj);
                 chart.emit("mouseover", [ obj, e ]);
             });
 
@@ -12115,8 +12114,6 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
                 chart.emit("mousemove", [ obj, e ]);
             });
         }
-        
-
 	}
 
 	return CoreBrush;
