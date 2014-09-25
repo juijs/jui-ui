@@ -31,60 +31,23 @@
 			background:#7977C2;
 			color:white;
 		}
-		
-		#theme {
-			position: fixed;
-			right:120px;
-			border: 1px solid black;
-			font-size: 2em;
-			font-weight:bold;
-			text-align:center;
-			padding:10px;
-		}
-		
-		#theme select {
-			padding: 10px;
-			border:0px;
-		}
-		
 	</style>
 	
 	<script>
-		function move_url(theme) {
+		function move_url() {
 			var list = document.getElementsByTagName("iframe");
-			
+
 			for (var i = 0, len = list.length; i < len; i++) {
-				var iframe = list[i];
+				var iframe = list[i],
+                    url = iframe.getAttribute("data-src");
 				
-				var url = iframe.getAttribute("data-src");
-				
-				iframe.src = url + "?theme=" + theme; 
+				iframe.src = url;
 			}
 		}
 	</script>
 	
 	</head>
 	<body>
-		<div id="theme">
-			Themes : 
-			<select onchange="move_url(this.value)">
-				<option value="jennifer">Jennifer</option>
-				<option value="dark">Dark</option>
-				<option value="light">Light</option>				
-				<option value="d3">D3</option>
-				<option value="d20">D20</option>
-				<option value="flat">Flat</option>
-				<option value="flat2">Flat 2</option>
-				<option value="seoul">Seoul</option>								
-				<option value="candy">Candy</option>								
-				<option value="holo">Holo</option>								
-				<option value="sns">SNS</option>								
-				<option value="google">Google</option>								
-				<option value="korea">Korea</option>								
-				<option value="korea2">Korea2</option>								
-								
-			</select>
-		</div>
 		<div id='count'>
 			
 		</div>
@@ -298,8 +261,7 @@
         </table>
         <script>
 			document.getElementById('count').innerHTML = document.getElementsByTagName("th").length;
-			
-			move_url('jennifer');
+			move_url();
 		</script>
 	</body>
 </html>
