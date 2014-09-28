@@ -10689,6 +10689,9 @@ jui.define("chart.theme.jennifer", [], function() {
         candlestickBackgroundColor : "white",
         candlestickInvertBorderColor : "red",
         candlestickInvertBackgroundColor : "red",
+        ohlcBorderColor : "black",
+        ohlcInvertBorderColor : "red",
+        ohlcBorderRadius : 5,
         lineBorderWidth : 2,
         pathOpacity : 0.5,
         pathBorderWidth : 1,
@@ -10759,6 +10762,9 @@ jui.define("chart.theme.dark", [], function() {
         candlestickBackgroundColor : "white",
         candlestickInvertBorderColor : "red",
         candlestickInvertBackgroundColor : "red",
+        ohlcBorderColor : "black",
+        ohlcInvertBorderColor : "red",
+        ohlcBorderRadius : 5,
         lineBorderWidth : 2,
         pathOpacity : 0.2,
         pathBorderWidth : 1,
@@ -10819,6 +10825,9 @@ jui.define("chart.theme.seoul", [], function() {
 		candlestickBackgroundColor : "white",
 		candlestickInvertBorderColor : "red",
 		candlestickInvertBackgroundColor : "red",
+        ohlcBorderColor : "black",
+        ohlcInvertBorderColor : "red",
+        ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
 		pathOpacity : 0.2,
 		pathBorderWidth : 1,
@@ -12296,7 +12305,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x2: startX,
                         y2: brush.y(low),
                         stroke: chart.theme("candlestickInvertBorderColor"),
-                        "stoke-width": 1
+                        "stroke-width": 1
                     });
 
                     r = chart.svg.rect({
@@ -12318,7 +12327,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x2: startX,
                         y2: brush.y(low),
                         stroke: chart.theme("candlestickBorderColor"),
-                        "stoke-width":1
+                        "stroke-width":1
                     });
 
                     r = chart.svg.rect({
@@ -12341,6 +12350,78 @@ jui.define("chart.brush.candlestick", [], function() {
     }
 
     return CandleStickBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.ohlc", [], function() {
+
+    var OHLCBrush = function(brush) {
+        var g, count, width = 0;
+
+        function getTargets(chart) {
+            var target = {};
+
+            for (var j = 0; j < brush.target.length; j++) {
+                var t = chart.series(brush.target[j]);
+                target[t.type] = t;
+            }
+
+            return target;
+        }
+
+        this.drawBefore = function(chart) {
+            g = chart.svg.group().translate(chart.x(), chart.y());
+            count = chart.data().length;
+        }
+
+        this.draw = function(chart) {
+            var targets = getTargets(chart);
+
+            for (var i = 0; i < count; i++) {
+                var startX = brush.x(i);
+
+                var open = targets.open.data[i],
+                    close = targets.close.data[i],
+                    low =  targets.low.data[i],
+                    high = targets.high.data[i],
+                    color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
+
+                var lowHigh = chart.svg.line({
+                    x1: startX,
+                    y1: brush.y(high),
+                    x2: startX,
+                    y2: brush.y(low),
+                    stroke: color,
+                    "stroke-width": 1
+                });
+
+                var close = chart.svg.line({
+                    x1: startX,
+                    y1: brush.y(close),
+                    x2: startX + chart.theme("ohlcBorderRadius"),
+                    y2: brush.y(close),
+                    stroke: color,
+                    "stroke-width": 1
+                });
+
+                var open = chart.svg.line({
+                    x1: startX,
+                    y1: brush.y(open),
+                    x2: startX - chart.theme("ohlcBorderRadius"),
+                    y2: brush.y(open),
+                    stroke: color,
+                    "stroke-width": 1
+                });
+
+                this.addEvent(brush, chart, lowHigh, null, i);
+
+                g.append(lowHigh);
+                g.append(close);
+                g.append(open);
+            }
+        }
+    }
+
+    return OHLCBrush;
 }, "chart.brush.core");
 
 jui.define("chart.brush.column", [], function() {

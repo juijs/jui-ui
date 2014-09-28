@@ -60,6 +60,7 @@ module.exports = function(grunt) {
                 "js/chart/brush/bar.js",
                 "js/chart/brush/bubble.js",
                 "js/chart/brush/candlestick.js",
+                "js/chart/brush/ohlc.js",
                 "js/chart/brush/column.js",
                 "js/chart/brush/donut.js",
                 "js/chart/brush/equalizer.js",
