@@ -4,10 +4,10 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 *
 	 */
 	var UI = function() {
+        var _data = [], _page = 1;
         var _grid = {}, _brush = [], _widget = [];
 		var _padding = [], _scales = {};
-        var _data, _series;
-		var _area, _theme;
+        var _series, _area, _theme;
 
 
 		/************************
@@ -47,8 +47,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
          */
         function drawBefore(self) {
             // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
-            var data = _.deepClone(self.options.data),
-                series = _.deepClone(self.options.series),
+            var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
                 padding = _.deepClone(self.setPadding(self.options.padding)),
                 brush = _.deepClone(self.options.brush),
@@ -56,8 +55,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 series_list = [];
 
             // series 데이타 구성
-            for (var i = 0, len = data.length; i < len; i++) {
-                var row = data[i];
+            for (var i = 0, len = _data.length; i < len; i++) {
+                var row = _data[i];
 
                 for (var key in row) {
                     var obj = series[key] || {};
@@ -87,14 +86,9 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             _brush = createBrushData(brush, series_list);
             _widget = createBrushData(widget, series_list);
-            _data = data;
             _series = series;
             _grid = grid;
             _padding = padding;
-
-            if (!_.typeCheck("array", _data)) {
-                _data = [_data];
-            }
         }
 
 		/**
@@ -294,6 +288,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 return color || _theme["colors"][i];
             }
 
+            // 데이터 업데이트 및 커스텀 이벤트 발생
+            this.update();
             this.emit("load", []);
         }
 		
@@ -451,7 +447,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		 * var y2 = chart.y2();
 		 * 
 		 * // 매개변수가 있을 때는 chart y2좌표 설정 
-		 * chart.y2(150); // chart y2좌표를 150 으로 설정 
+		 * chart.y2(150); // chart y2좌표를 150 으로 설정
 		 * </code> 
 		 * 
 		 * @param {integer} value  
@@ -685,12 +681,47 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		 * @param {array} data 
 		 */
 		this.update = function(data) {
-			if (!_.typeCheck("array", data))
-				return;
+            if(data) { // 데이터가 있을 경우...
+                this.options.data = data;
+            }
 
-			this.options.data = data;
-			this.render();
+            if(this.options.buffer) {
+                this.page(1);
+            } else {
+                _data = this.options.data;
+                this.render();
+            }
 		}
+
+        this.page = function(pNo) {
+            if(!this.options.buffer) return;
+            if(this.getPage() == pNo) return;
+
+            // 최소 페이지 설정
+            _page = (pNo < 1) ? 1 : pNo;
+
+            var dataList = this.options.data;
+            var start = (_page - 1) * this.options.bufferCount,
+                end = start + this.options.bufferCount;
+
+            // 마지막 페이지 처리
+            end = (end > dataList.length) ? dataList.length : end;
+
+            if(end <= dataList.length) {
+                _data = [];
+
+                for(var i = start; i < end; i++) {
+                    _data.push(dataList[i]);
+                }
+
+                this.render();
+                if(dataList.length > 0) _page++;
+            }
+        }
+
+        this.getPage = function() {
+            return _page - 1;
+        }
 
 		/**
 		 * chart 사이즈 조정 
@@ -699,9 +730,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		 * @param {integer} height
 		 */
 		this.size = function(width, height) {
-			if (!_.typeCheck("integer", width) || !_.typeCheck("integer", height))
-				return;
-
 			this.svg.size(width, height);
 			this.render();
 		}		
@@ -728,8 +756,17 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 				"brush" : null,
                 "widget" : null,
 				"data" : [],
-                "bind" : null
-			}
+                "bind" : null,
+
+                // buffer
+                "buffer" : false,
+                "bufferCount" : 100
+			},
+            valid: {
+                update : [ "array" ],
+                page : [ "integer" ],
+                size : [ "integer", "integer" ]
+            }
 		}
 	}
 

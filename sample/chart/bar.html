@@ -12,7 +12,7 @@
 <script>
     jui.ready([ "chart.builder" ], function(chart) {
 
-        chart("#chart", {
+        c = chart("#chart", {
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -20,8 +20,9 @@
                 { name : 2, value : 15 },
                 { name : -15, value : -35 },
                 { name : 8, value : 10 },
-                { name : 18, value : 5 },
+                { name : 18, value : 5 }
             ],
+            buffer : true,
             grid : {
                 y : {
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -41,7 +42,7 @@
                 type : 'bar',
                 target : ['name', 'value']
             }
-        }).render();
+        });
 	})
 </script>
 

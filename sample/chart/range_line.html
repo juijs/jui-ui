@@ -27,7 +27,7 @@
 				data.push({ name : getNumber(), name2 : getNumber(), value : time.add(start, time.minutes, i*10)} )
 			}
 
-			chart("#chart", {
+			var c = chart("#chart", {
 				width: 400,
 				height : 400,
 	            theme : "jennifer",
@@ -64,7 +64,9 @@
 					//smooth : true, 
 					target : ["name", "name2"]
 				}
-			}).render();
+			});
+
+
 	})
 </script>
 
