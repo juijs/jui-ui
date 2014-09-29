@@ -9903,9 +9903,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 */
 	var UI = function() {
         var _data = [], _page = 1;
-        var _grid = {}, _brush = [], _widget = [];
-		var _padding = [], _scales = {};
-        var _series, _area, _theme;
+        var _grid = {}, _brush = [], _widget = [], _scales = [];
+        var _padding, _series, _area, _theme;
 
 
 		/************************
@@ -9922,14 +9921,13 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
  		 * @param {Object} self
 		 */
 		function calculate(self) {
-			var padding = self.setPadding(self.options.padding),
-                max = self.svg.size();
+			var max = self.svg.size();
 
 			var chart = {
-				width : max.width - (padding.left + padding.right),
-				height : max.height - (padding.top + padding.bottom),
-				x : padding.left,
-				y : padding.top
+				width : max.width - (_padding.left + _padding.right),
+				height : max.height - (_padding.top + _padding.bottom),
+				x : _padding.left,
+				y : _padding.top
 			};
 
 			// chart 영역 계산
@@ -9947,7 +9945,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
             var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
-                padding = _.deepClone(self.setPadding(self.options.padding)),
                 brush = _.deepClone(self.options.brush),
                 widget = _.deepClone(self.options.widget),
                 series_list = [];
@@ -9986,7 +9983,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _widget = createBrushData(widget, series_list);
             _series = series;
             _grid = grid;
-            _padding = padding;
         }
 
 		/**
@@ -10161,18 +10157,32 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
         }
 
         this.init = function() {
+            var opts = this.options;
+
+            // 패딩 옵션 설정
+            if(opts.padding == "empty") {
+                _padding = {
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    top: 0
+                };
+            } else {
+                _padding = opts.padding;
+            }
+
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
-                width : this.options.width,
-                height : this.options.height
+                width : opts.width,
+                height : opts.height
             });
 
             // 차트 테마 설정
-            this.setTheme(this.options.theme)
+            this.setTheme(opts.theme)
 
             // UI 바인딩 설정
-            if(this.options.bind != null) {
-                this.bindUI(this.options.bind);
+            if(opts.bind != null) {
+                this.bindUI(opts.bind);
             }
 
             // 테마 컬러 설정
@@ -10194,24 +10204,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		/************************
 		 *  Public Method
 		 ***********************/
-
-		/**
-		 * 기본 padding 설정 
-		 * 
-		 * @param {object|string}  padding  default 값은  모든 방향 50, empty 를 쓰면  padding 영역이 사라짐  
-		 */
-		this.setPadding = function(padding) {
-            if (padding == 'empty') {
-            	padding = {
-					left : 0 ,
-					right : 0 ,
-					bottom : 0 ,
-					top : 0 
-				};
-            }
-
-			return padding;			
-		}
 
 		/**
 		 * 계산된 차트 영역에 대한 값 리턴 
