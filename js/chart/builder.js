@@ -756,7 +756,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 				"brush" : null,
                 "widget" : null,
 				"data" : [],
-                "bindUI" : null,
+                "bind" : null,
 
                 // buffer
                 "buffer" : false,
