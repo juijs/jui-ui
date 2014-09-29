@@ -112,6 +112,47 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 		
 		/**
+		 * date grid 의 domain 설정 
+		 * 
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
+		 * 
+		 */
+		this.setDateDomain = function(chart, grid) {
+			if ( typeof grid.target == 'string' || typeof grid.target == 'function') {
+				grid.target = [grid.target];
+			}
+
+			if (grid.target && grid.target.length) {
+				
+				var data = chart.data();
+				var min = undefined;
+				var max = undefined;
+				
+				for (var i = 0; i < grid.target.length; i++) {
+					var s = grid.target[i];
+					
+					for(var index = 0; index < data.length; index++) {
+						var value = +data[index][s];
+						if (typeof min == 'undefined') min = value;
+						else if (min > value) min = value;
+						
+						if (typeof max == 'undefined') max = value;
+						else if (max < value) max = value;						
+					}
+
+
+				}
+				
+				grid.max = max;
+				grid.min = min;
+				
+				grid.domain = [grid.min, grid.max];
+			}
+			
+			return grid; 
+		}		
+		
+		/**
 		 * scale wrapper 
 		 * 
 		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 

@@ -60,7 +60,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
                 for (var key in row) {
                     var obj = series[key] || {};
-                    var value = row[key];
+                    var value = +row[key];
 
                     series[key] = obj;
 
