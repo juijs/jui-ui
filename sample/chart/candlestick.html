@@ -38,11 +38,13 @@
             { date: new Date(1994,2,31), l: 24.75, h: 27.00, o: 26.50, c: 25.25 }
         ];
 
-        chart("#chart", {
+        c = chart("#chart", {
             width: 1200,
             height : 400,
-	            theme : "jennifer",
+            theme : "jennifer",
             data : dataSource,
+            bufferCount : 10,
+            shiftCount : 5,
             grid : {
                 x : {
                     type : "block",  // default type is block
@@ -81,7 +83,7 @@
                     console.log(obj);
                 }
             }
-        }).render();
+        });
     })
 </script>
 

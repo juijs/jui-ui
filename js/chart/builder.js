@@ -4,7 +4,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 *
 	 */
 	var UI = function() {
-        var _data = [], _page = 1;
+        var _data = [], _page = 1, _start = 0;
         var _grid = {}, _brush = [], _widget = [], _scales = [];
         var _padding, _series, _area, _theme;
 
@@ -598,24 +598,25 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 this.options.data = data;
             }
 
-            if(this.options.buffer) {
-                this.page(1);
-            } else {
-                _data = this.options.data;
-                this.render();
-            }
+            this.page(1);
 		}
 
         this.page = function(pNo) {
-            if(!this.options.buffer) return;
             if(this.getPage() == pNo) return;
 
-            // 최소 페이지 설정
-            _page = (pNo < 1) ? 1 : pNo;
+            var dataList = this.options.data,
+                limit = this.options.bufferCount,
+                maxPage = Math.ceil(dataList.length / limit);
 
-            var dataList = this.options.data;
-            var start = (_page - 1) * this.options.bufferCount,
-                end = start + this.options.bufferCount;
+            // 최소 & 최대 페이지 설정
+            if(pNo < 1) {
+                _page = 1;
+            } else {
+                _page = (pNo > maxPage) ? maxPage : pNo;
+            }
+
+            var start = (_page - 1) * limit,
+                end = start + limit;
 
             // 마지막 페이지 처리
             end = (end > dataList.length) ? dataList.length : end;
@@ -634,6 +635,44 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
         this.getPage = function() {
             return _page - 1;
+        }
+
+        this.next = function() {
+            var dataList = this.options.data,
+                limit = this.options.bufferCount,
+                step = this.options.shiftCount;
+
+            _start += step;
+            _data = [];
+
+            var isLimit = (_start + limit > dataList.length),
+                end = (isLimit) ? dataList.length : _start + limit;
+
+            _start = (isLimit) ? dataList.length - limit : _start;
+            for(var i = _start; i < end; i++) {
+                _data.push(dataList[i]);
+            }
+
+            this.render();
+        }
+
+        this.prev = function() {
+            var dataList = this.options.data,
+                limit = this.options.bufferCount,
+                step = this.options.shiftCount;
+
+            _start -= step;
+            _data = [];
+
+            var isLimit = (_start < 0),
+                end = (isLimit) ? limit : _start + limit;
+
+            _start = (isLimit) ? 0 : _start;
+            for(var i = _start; i < end; i++) {
+                _data.push(dataList[i]);
+            }
+
+            this.render();
         }
 
 		/**
@@ -672,8 +711,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 "bind" : null,
 
                 // buffer
-                "buffer" : false,
-                "bufferCount" : 100
+                "bufferCount" : 100,
+                "shiftCount" : 1
 			},
             valid: {
                 area : [ "string" ],
