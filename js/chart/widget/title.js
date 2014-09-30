@@ -30,7 +30,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
 
 
             if (title.bottom) {
-                y = chart.y2() + chart.padding('bottom') -20;
+                y = chart.y2() + chart.padding('bottom') - 20;
             } else if (title.top) {
                 y = 20; 
             }

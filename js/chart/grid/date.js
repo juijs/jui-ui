@@ -137,8 +137,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.drawBefore = function(chart) {
 			grid = this.setDateDomain(chart, grid);
 			
-			console.log(grid.domain);
-
 			var max = chart.height();
 
 			if (orient == 'top' || orient == 'bottom') {

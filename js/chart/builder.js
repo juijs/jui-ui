@@ -172,13 +172,13 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		
 		function fixedPixel(builder) {
 			var allElement = $(builder.svg.root.element).find(">:not(defs)");
-			
+
 			var g = builder.svg.group({
 				"class" : 'fixed-pixel'
 			}).translate(0.5, 0.5);
 			$(g.element).append(allElement);
-			
-			builder.svg.root.element.appendChild(g.element);			
+
+			builder.svg.root.element.appendChild(g.element);
 		}
 
 		/**
@@ -273,6 +273,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 _padding = opts.padding;
             }
 
+            // UI 바인딩 설정
+            if(opts.bind != null) {
+                this.bindUI(opts.bind);
+            }
+
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width : opts.width,
@@ -281,22 +286,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             // 차트 테마 설정
             this.setTheme(opts.theme)
-
-            // UI 바인딩 설정
-            if(opts.bind != null) {
-                this.bindUI(opts.bind);
-            }
-
-            // 테마 컬러 설정
-            this.theme.color = function(i, colors) {
-                var color;
-
-                if (_.typeCheck("array", colors)) {
-                    color = colors[i];
-                }
-
-                return color || _theme["colors"][i];
-            }
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
@@ -325,20 +314,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			return _area;
 		}
-		
-		/**
-		 * chart 높이 얻어오기 
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart 높이 
-		 * var height = chart.height();
-		 * 
-		 * // 매개변수가 있을 때는 chart 높이 설정 
-		 * chart.height(150); // chart 높이를 150 으로 설정 
-		 * </code> 
-		 * 
-		 * @param {integer} value 
-		 */
+
 		this.height = function(value) {
 		    if (arguments.length == 0) {
 		        return this.area('height');
@@ -347,19 +323,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		    _area.height = value;
 		}
 
-		/**
-		 * chart 넓이 얻어오기 
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart 넓이 
-		 * var width = chart.width();
-		 * 
-		 * // 매개변수가 있을 때는 chart 넓이 설정 
-		 * chart.width(150); // chart 넓이를 150 으로 설정 
-		 * </code> 
-		 * 
-		 * @param {integer} value  
-		 */
         this.width = function(value) {
             if (arguments.length == 0) {
                 return this.area('width');
@@ -368,19 +331,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _area.width = value;
         }
 
-		/**
-		 * chart 의 시작 x 좌표 얻기  
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart x좌표
-		 * var x = chart.x();
-		 * 
-		 * // 매개변수가 있을 때는 chart x좌표 설정 
-		 * chart.x(150); // chart x좌표를 150 으로 설정 
-		 * </code> 
-		 * 
-		 * @param {integer} value  
-		 */
         this.x = function(value) {
             if (arguments.length == 0) {
                 return this.area('x');
@@ -389,19 +339,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _area.x = value;
         }
 
-		/**
-		 * chart 의 시작 y 좌표 얻기  
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart y좌표
-		 * var y = chart.y();
-		 * 
-		 * // 매개변수가 있을 때는 chart y좌표 설정 
-		 * chart.y(150); // chart y좌표를 150 으로 설정 
-		 * </code> 
-		 * 
-		 * @param {integer} value  
-		 */
         this.y = function(value) {
             if (arguments.length == 0) {
                 return this.area('y');
@@ -410,19 +347,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _area.y = value;
         }
 
-		/**
-		 * chart 의 끝 x 좌표 얻기(x2)  
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart x2좌표
-		 * var x2 = chart.x2();
-		 * 
-		 * // 매개변수가 있을 때는 chart x2좌표 설정 
-		 * chart.x2(150); // chart x2좌표를 150 으로 설정 
-		 * </code> 
-		 * 
-		 * @param {integer} value  
-		 */
         this.x2 = function(value) {
             if (arguments.length == 0) {
                 return this.area('x2');
@@ -431,19 +355,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _area.x2 = value;
         }
 
-		/**
-		 * chart 의 끝 y 좌표 얻기(y2)  
-		 * 
-		 * <code>
-		 * // 매개변수가 없을 때는 chart y2좌표
-		 * var y2 = chart.y2();
-		 * 
-		 * // 매개변수가 있을 때는 chart y2좌표 설정 
-		 * chart.y2(150); // chart y2좌표를 150 으로 설정
-		 * </code> 
-		 * 
-		 * @param {integer} value  
-		 */
         this.y2 = function(value) {
             if (arguments.length == 0) {
                 return this.area('y2');
@@ -452,43 +363,29 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _area.y2 = value;
         }
 
-		/**
-		 * jui component binding 
-		 * 
-		 * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음. 
-		 * 
-		 * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
-		 * 
-		 * @param {object} bind   uix.table, uix.xtable 객체 사용 
-		 */
-        this.bindUI = function(uiObj) {
-            var self = this;
-
-            if(uiObj.module.type == "uix.table") {
-                uiObj.callAfter("update", updateTable);
-                uiObj.callAfter("sort", updateTable);
-                uiObj.callAfter("append", updateTable);
-                uiObj.callAfter("insert", updateTable);
-                uiObj.callAfter("remove", updateTable);
-            } else if(uiObj.module.type == "uix.xtable") {
-                uiObj.callAfter("update", updateXTable);
-                uiObj.callAfter("sort", updateXTable);
+        /**
+         * padding 옵션 리턴
+         *
+         * @param {string} key
+         *
+         */
+        this.padding = function(key) {
+            if (_padding[key]) {
+                return _padding[key];
             }
 
-            function updateTable() {
-                var data = [];
+            return _padding;
+        }
 
-                for(var i = 0; i < uiObj.count(); i++) {
-                    data.push(uiObj.get(i).data);
-                }
+        this.color = function(i, colors) {
+            var color;
 
-                self.update(data);
+            if (_.typeCheck("array", colors)) {
+                color = colors[i];
             }
 
-            function updateXTable() {
-                self.update(uiObj.listData());
-            }
-        }		
+            return color || _theme["colors"][i];
+        }
 
         /**
 		 * 현재 text 관련 theme 가 정해진 text element 생성 
@@ -506,15 +403,15 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			return el; 
 		}
 
-		/**
-		 * chart 의 theme 설정 
-		 * 
-		 * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임 
-		 */
-		this.setTheme = function(theme) {
-			 _theme = jui.include("chart.theme." + theme);
-		}
-		
+        /**
+         * chart 의 theme 설정
+         *
+         * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임
+         */
+        this.setTheme = function(theme) {
+            _theme = jui.include("chart.theme." + theme);
+        }
+
 		/**
 		 * theme 의 요소에 대한 값 구하기 
 		 * 
@@ -554,33 +451,33 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 			}
 		}		
 
-		/**
-		 * grid 옵션 리턴 
-		 * 
-		 * @param {string} key
-		 * 
-		 */
-		this.grid = function(key) {
-			if (_grid[key]) {
-				return _grid[key];
-			}
+        /**
+         * series 옵션 리턴
+         *
+         * @param {string} key
+         *
+         */
+        this.series = function(key) {
+            if (_series[key]) {
+                return _series[key];
+            }
 
-			return _grid;
-		}
-		
-		/**
-		 * padding 옵션 리턴 
-		 * 
-		 * @param {string} key
-		 * 
-		 */
-		this.padding = function(key) {
-			if (_padding[key]) {
-				return _padding[key];
-			}
+            return _series;
+        }
 
-			return _padding;
-		}
+        /**
+         * grid 옵션 리턴
+         *
+         * @param {string} key
+         *
+         */
+        this.grid = function(key) {
+            if (_grid[key]) {
+                return _grid[key];
+            }
+
+            return _grid;
+        }
 		
 		/**
 		 * brush 옵션 리턴 
@@ -616,20 +513,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		}
 		
 		/**
-		 * series 옵션 리턴 
-		 * 
-		 * @param {string} key
-		 * 
-		 */
-		this.series = function(key) {
-			if (_series[key]) {
-				return _series[key];
-			}
-
-			return _series;
-		}
-
-		/**
 		 * chart 내에서 사용될 유일한 키 생성 
 		 * 
 		 * @param {string} key 
@@ -637,6 +520,44 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		this.createId = function(key) {
 			return [key || "chart-id", (+new Date), Math.round(Math.random()*100)%100].join("-")
 		}
+
+        /**
+         * jui component binding
+         *
+         * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
+         *
+         * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+         *
+         * @param {object} bind   uix.table, uix.xtable 객체 사용
+         */
+        this.bindUI = function(uiObj) {
+            var self = this;
+
+            if(uiObj.module.type == "uix.table") {
+                uiObj.callAfter("update", updateTable);
+                uiObj.callAfter("sort", updateTable);
+                uiObj.callAfter("append", updateTable);
+                uiObj.callAfter("insert", updateTable);
+                uiObj.callAfter("remove", updateTable);
+            } else if(uiObj.module.type == "uix.xtable") {
+                uiObj.callAfter("update", updateXTable);
+                uiObj.callAfter("sort", updateXTable);
+            }
+
+            function updateTable() {
+                var data = [];
+
+                for(var i = 0; i < uiObj.count(); i++) {
+                    data.push(uiObj.get(i).data);
+                }
+
+                self.update(data);
+            }
+
+            function updateXTable() {
+                self.update(uiObj.listData());
+            }
+        }
 		
 		/**
 		 * chart render 함수 재정의 
@@ -755,6 +676,24 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 "bufferCount" : 100
 			},
             valid: {
+                area : [ "string" ],
+                width : [ "integer" ],
+                height : [ "integer" ],
+                x : [ "integer" ],
+                y : [ "integer" ],
+                x2 : [ "integer" ],
+                y2 : [ "integer" ],
+                padding : [ "string" ],
+                color : [ "integer", [ "undefined", "array" ] ], // undefined 제거 요망
+                text : [ "object", [ "string", "function" ] ],
+                setTheme : [ "string" ],
+                theme : [ [ "string", "boolean" ], "string", "string" ],
+                series : [ [ "undefined", "string" ] ], // undefined 제거 요망
+                grid : [ "string" ],
+                brush : [ "integer" ],
+                data : [ [ "null", "integer" ], "string" ],  // null 제거 요망
+                createId : [ "string" ],
+                bindUI : [ "object" ],
                 update : [ "array" ],
                 page : [ "integer" ],
                 size : [ "integer", "integer" ]

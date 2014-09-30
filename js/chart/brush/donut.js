@@ -147,7 +147,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				var endAngle = all * (data / max);
 
 				var g = this.drawDonut(chart, this.centerX, this.centerY, this.innerRadius, this.outerRadius, startAngle, endAngle, {
-					fill : chart.theme.color(i, brush.colors),
+					fill : chart.color(i, brush.colors),
 					stroke : chart.theme('donutBorderColor'),
 					"stroke-width" : chart.theme('donutBorderWidth')
 				});

@@ -1,4 +1,4 @@
-jui.define("chart.widget.legend", ["util.base" ], function( _) {
+jui.define("chart.widget.legend", [ "util.base" ], function(_) {
     
         /**
          * legend 그리기 
@@ -78,7 +78,7 @@ jui.define("chart.widget.legend", ["util.base" ], function( _) {
 					y : 0, 
 					width: width, 
 					height : height,
-					fill : chart.theme.color(i, brush.colors)
+					fill : chart.color(i, brush.colors)
 				}))
 				
  				group.append(chart.text({
