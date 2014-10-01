@@ -3355,6 +3355,10 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                 });
             }
 		}
+
+        this.update = function(newTitle) {
+            title = newTitle;
+        }
 	}
 
     UI.setting = function() {
@@ -3373,6 +3377,9 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                                 "<div class='anchor'></div><div class='title'><!= title !></div>" +
                             "</div>"
                 }
+            },
+            valid: {
+                update: [ "string" ]
             }
         }
     }
