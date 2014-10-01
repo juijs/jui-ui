@@ -600,6 +600,10 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             this.page(1);
 		}
+		
+		this.subdata = function(start, end) {
+			_data = this.options.data.slice(start, end);
+		}
 
         this.page = function(pNo) {
             if(this.getPage() == pNo) return;
@@ -622,11 +626,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             end = (end > dataList.length) ? dataList.length : end;
 
             if(end <= dataList.length) {
-                _data = [];
-
-                for(var i = start; i < end; i++) {
-                    _data.push(dataList[i]);
-                }
+                this.subdata(start, end);
 
                 this.render();
                 if(dataList.length > 0) _page++;
@@ -643,15 +643,12 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 step = this.options.shiftCount;
 
             _start += step;
-            _data = [];
 
             var isLimit = (_start + limit > dataList.length),
                 end = (isLimit) ? dataList.length : _start + limit;
 
             _start = (isLimit) ? dataList.length - limit : _start;
-            for(var i = _start; i < end; i++) {
-                _data.push(dataList[i]);
-            }
+            this.subdata(_start, end);
 
             this.render();
         }
@@ -662,15 +659,12 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 step = this.options.shiftCount;
 
             _start -= step;
-            _data = [];
 
             var isLimit = (_start < 0),
                 end = (isLimit) ? limit : _start + limit;
 
             _start = (isLimit) ? 0 : _start;
-            for(var i = _start; i < end; i++) {
-                _data.push(dataList[i]);
-            }
+            this.subdata(_start, end);
 
             this.render();
         }
