@@ -39,12 +39,12 @@
         ];
 
         c = chart("#chart", {
-            width: 1200,
+            width: 600,
             height : 400,
             theme : "jennifer",
             data : dataSource,
-            //bufferCount : 10,
-            //shiftCount : 5,
+            bufferCount : 10,
+            shiftCount : 1,
             grid : {
                 x : {
                     type : "block",  // default type is block
@@ -52,7 +52,7 @@
                     format: function(d) {
                         return time.format(d, "MM-dd");
                     },
-                    line: true
+                    line : true
                 },
                 y : {
                     type : 'range',
@@ -75,14 +75,12 @@
                     type: "close"
                 }
             },
-            brush : {
+            brush : [{
                 type : 'candlestick'
-            },
-            event: {
-                click: function(obj, e) {
-                    console.log(obj);
-                }
-            }
+            }],
+            widget : [{
+                type : "scroll"
+            }]
         });
     })
 </script>

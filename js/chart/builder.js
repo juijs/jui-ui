@@ -278,6 +278,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 this.bindUI(opts.bind);
             }
 
+            // 드래그 이벤트 막기
+            $(this.root).on("selectstart", function(e) {
+                e.preventDefault();
+            });
+
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width : opts.width,
