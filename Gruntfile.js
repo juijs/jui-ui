@@ -121,11 +121,9 @@ module.exports = function(grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('default', [
-    'less',
-    'cssmin',
-    "qunit",
-  	"concat",    
-    'uglify'
-  ]);
+  grunt.registerTask('default', ["concat", 'uglify' ]);
+  
+  grunt.registerTask('all', [ 'less', 'cssmin', "concat", 'uglify' ]);
+  
+  grunt.registerTask('test', [ "qunit" ]);
 };
