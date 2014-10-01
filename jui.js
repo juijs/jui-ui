@@ -10499,10 +10499,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             this.page(1);
 		}
 		
-		this.subdata = function(start, end) {
-			_data = this.options.data.slice(start, end);
-		}
-
         this.page = function(pNo) {
             if(this.getPage() == pNo) return;
 
@@ -10521,10 +10517,13 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 end = start + limit;
 
             // 마지막 페이지 처리
-            end = (end > dataList.length) ? dataList.length : end;
+            if(end > dataList.length) {
+                start = dataList.length - limit;
+                end = dataList.length;
+            }
 
             if(end <= dataList.length) {
-                this.subdata(start, end);
+                _data = dataList.slice(start, end);
 
                 this.render();
                 if(dataList.length > 0) _page++;
@@ -10546,7 +10545,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 end = (isLimit) ? dataList.length : _start + limit;
 
             _start = (isLimit) ? dataList.length - limit : _start;
-            this.subdata(_start, end);
+            _data = dataList.slice(_start, end);
 
             this.render();
         }
@@ -10562,8 +10561,18 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 end = (isLimit) ? limit : _start + limit;
 
             _start = (isLimit) ? 0 : _start;
-            this.subdata(_start, end);
+            _data = dataList.slice(_start, end);
 
+            this.render();
+        }
+
+        this.zoom = function(start, end) {
+            var dataList = this.options.data;
+
+            if(start < 0) start = 0;
+            if(end > dataList.length) end = dataList.length;
+
+            _data = dataList.slice(start, end + 1);
             this.render();
         }
 
@@ -10627,7 +10636,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 bindUI : [ "object" ],
                 update : [ "array" ],
                 page : [ "integer" ],
-                size : [ "integer", "integer" ]
+                size : [ "integer", "integer" ],
+                zoom : [ "integer", "integer" ]
             }
 		}
 	}
