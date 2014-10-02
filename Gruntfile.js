@@ -1,77 +1,72 @@
 module.exports = function(grunt) {
-
-  grunt.initConfig({
-    qunit: {
-        options: {
-            timeout: 10000
+    grunt.initConfig({
+        qunit: {
+            options: {
+                timeout: 10000
+            },
+            all: [ "test/*.html", "test/*/*.html" ]
         },
-        all: [ 'test/*.html', 'test/*/*.html' ]
-    },
-    concat : {
-        dist : {
-            src : [
-                //core
-                "js/base.js",
-                "js/core.js",
+        concat : {
+            dist : {
+                src : [
+                    // core
+                    "js/base.js",
+                    "js/core.js",
 
-                // ui
-                "js/ui/button.js",
-                "js/ui/combo.js",
-                "js/ui/datepicker.js",
-                "js/ui/dropdown.js",
-                "js/ui/modal.js",
-                "js/ui/notify.js",
-                "js/ui/paging.js",
-                "js/ui/tooltip.js",
-                "js/ui/layout.js",
+                    // ui
+                    "js/ui/button.js",
+                    "js/ui/combo.js",
+                    "js/ui/datepicker.js",
+                    "js/ui/dropdown.js",
+                    "js/ui/modal.js",
+                    "js/ui/notify.js",
+                    "js/ui/paging.js",
+                    "js/ui/tooltip.js",
+                    "js/ui/layout.js",
 
-                // uix
-                "js/uix/autocomplete.js",
-                "js/uix/tab.js",
-                "js/uix/table.js",
-                "js/uix/tree.js",
-                "js/uix/window.js",
-                "js/uix/xtable.js"
-            ],
-            dest : "jui.js"
-        }
-    },
+                    // uix
+                    "js/uix/autocomplete.js",
+                    "js/uix/tab.js",
+                    "js/uix/table.js",
+                    "js/uix/tree.js",
+                    "js/uix/window.js",
+                    "js/uix/xtable.js"
+                ],
+                dest : "jui.js"
+            }
+        },
 
-    uglify: {
+        uglify: {
+            dist : {
+                files : {
+                    "jui.min.js" : [ "jui.js" ]
+                }
+            }
+        },
+        cssmin: {
+            dist: {
+                files: {
+                    "jui.min.css": "jui.css"
+                }
+            }
+        },
 
-      dist : {
-        files : {
-            "jui.min.js" : [ "jui.js" ]
-        }
-      }
-    },
-    cssmin: {
-      dist: {
-        files: {
-          'jui.min.css': 'jui.css'
-        }
-      }
-    },
+        less: {
+            dist: {
+                files: {
+                    "jui.css" : [
+                        "less/_main.less"
+                    ]
+                }
+            }
+        },
+        pkg: grunt.file.readJSON("package.json")
+    });
 
-    less: {
-      dist: {
-        files: {
-            "jui.css" : [
-                "less/_main.less"
-            ]
-        }
-      }
-    },
-    pkg: grunt.file.readJSON('package.json')
-  });
+    require("load-grunt-tasks")(grunt);
 
-  require('load-grunt-tasks')(grunt);
-
-  grunt.registerTask('default', [
-    'less',
-    'cssmin',
-    "qunit",
-  	"concat",    
-    'uglify'
-  ]);
+    grunt.registerTask("default", [ "concat", "uglify" ]);
+    grunt.registerTask("css", [ "less", "cssmin" ]);
+    grunt.registerTask("test", [ "qunit" ]);
+    grunt.registerTask("all", [ "css", "test", "default" ]);
 };

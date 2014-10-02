@@ -1469,1112 +1469,222 @@
   border-bottom: 9px solid #434343 !important;
 }
 .jui {
-  /* Icon Position (Absolute) */
-  /* Icon Sizes */
-  /* Buttons Exception */
-  /* Tab Exception */
+  /* Icon Position */
+  /* Icon Colors */
+  /* Icon Color in Buttons */
+  /* Icon Color in Tabs */
+}
+@font-face {
+  font-family: 'jui-icon-list';
+  src: url('img/icon-list.eot?2jwwu9');
+  src: url('img/icon-list.eot?#iefix2jwwu9') format('embedded-opentype'), url('img/icon-list.woff?2jwwu9') format('woff'), url('img/icon-list.ttf?2jwwu9') format('truetype'), url('img/icon-list.svg?2jwwu9#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 .jui [class^="icon-"],
 .jui [class*=" icon-"] {
-  display: inline-block;
-  background-image: url("img/icon-list.png");
-  background-repeat: no-repeat;
-  *margin-right: .3em;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: 16px 16px;
-}
-.jui [class^="icon-"].icon-new-window,
-.jui [class*=" icon-"].icon-new-window {
-  background-position: 0                    0;
-}
-.jui [class^="icon-"].icon-gear,
-.jui [class*=" icon-"].icon-gear {
-  background-position: -16px 0;
-}
-.jui [class^="icon-"].icon-calendar,
-.jui [class*=" icon-"].icon-calendar {
-  background-position: -32px 0;
-}
-.jui [class^="icon-"].icon-download,
-.jui [class*=" icon-"].icon-download {
-  background-position: -48px 0;
-}
-.jui [class^="icon-"].icon-upload,
-.jui [class*=" icon-"].icon-upload {
-  background-position: -64px 0;
-}
-.jui [class^="icon-"].icon-hide,
-.jui [class*=" icon-"].icon-hide {
-  background-position: -80px 0;
-}
-.jui [class^="icon-"].icon-refresh,
-.jui [class*=" icon-"].icon-refresh {
-  background-position: -96px 0;
-}
-.jui [class^="icon-"].icon-printer,
-.jui [class*=" icon-"].icon-printer {
-  background-position: -112px 0;
-}
-.jui [class^="icon-"].icon-search,
-.jui [class*=" icon-"].icon-search {
-  background-position: -128px 0;
-}
-.jui [class^="icon-"].icon-home,
-.jui [class*=" icon-"].icon-home {
-  background-position: -144px 0;
-}
-.jui [class^="icon-"].icon-pause,
-.jui [class*=" icon-"].icon-pause {
-  background-position: 0 -16px;
-}
-.jui [class^="icon-"].icon-play,
-.jui [class*=" icon-"].icon-play {
-  background-position: -16px -16px;
-}
-.jui [class^="icon-"].icon-check,
-.jui [class*=" icon-"].icon-check {
-  background-position: -32px -16px;
-}
-.jui [class^="icon-"].icon-chevron-right,
-.jui [class*=" icon-"].icon-chevron-right {
-  background-position: -48px -16px;
-}
-.jui [class^="icon-"].icon-chevron-left,
-.jui [class*=" icon-"].icon-chevron-left {
-  background-position: -64px -16px;
-}
-.jui [class^="icon-"].icon-plus,
-.jui [class*=" icon-"].icon-plus {
-  background-position: -80px -16px;
-}
-.jui [class^="icon-"].icon-trashcan,
-.jui [class*=" icon-"].icon-trashcan {
-  background-position: -96px -16px;
-}
-.jui [class^="icon-"].icon-edit,
-.jui [class*=" icon-"].icon-edit {
-  background-position: -112px -16px;
-}
-.jui [class^="icon-"].icon-help,
-.jui [class*=" icon-"].icon-help {
-  background-position: -128px -16px;
-}
-.jui [class^="icon-"].icon-return,
-.jui [class*=" icon-"].icon-return {
-  background-position: -144px -16px;
-}
-.jui [class^="icon-"].icon-dashboardlist,
-.jui [class*=" icon-"].icon-dashboardlist {
-  background-position: 0 -32px;
-}
-.jui [class^="icon-"].icon-realtime,
-.jui [class*=" icon-"].icon-realtime {
-  background-position: -16px -32px;
-}
-.jui [class^="icon-"].icon-arrow2,
-.jui [class*=" icon-"].icon-arrow2 {
-  background-position: -32px -32px;
-}
-.jui [class^="icon-"].icon-arrow1,
-.jui [class*=" icon-"].icon-arrow1 {
-  background-position: -48px -32px;
+  font-family: 'jui-icon-list';
+  speak: none;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Default Color */
+  color: #343434;
 }
-.jui [class^="icon-"].icon-close,
-.jui [class*=" icon-"].icon-close {
-  background-position: -64px -32px;
+.jui .icon-add-dir:before {
+  content: "\e600";
 }
-.jui [class^="icon-"].icon-left,
-.jui [class*=" icon-"].icon-left {
-  background-position: -80px -32px;
+.jui .icon-add-dir2:before {
+  content: "\e601";
 }
-.jui [class^="icon-"].icon-right,
-.jui [class*=" icon-"].icon-right {
-  background-position: -96px -32px;
+.jui .icon-align-center:before {
+  content: "\e602";
 }
-.jui [class^="icon-"].icon-resize,
-.jui [class*=" icon-"].icon-resize {
-  background-position: -112px -32px;
+.jui .icon-align-left:before {
+  content: "\e603";
 }
-.jui [class^="icon-"].icon-exit,
-.jui [class*=" icon-"].icon-exit {
-  background-position: -128px -32px;
+.jui .icon-align-right:before {
+  content: "\e604";
 }
-.jui [class^="icon-"].icon-arrow3,
-.jui [class*=" icon-"].icon-arrow3 {
-  background-position: -144px -32px;
+.jui .icon-arrow1:before {
+  content: "\e605";
 }
-.jui [class^="icon-"].icon-more,
-.jui [class*=" icon-"].icon-more {
-  background-position: 0 -48px;
+.jui .icon-arrow2:before {
+  content: "\e606";
 }
-.jui [class^="icon-"].icon-chart,
-.jui [class*=" icon-"].icon-chart {
-  background-position: -16px -48px;
+.jui .icon-arrow3:before {
+  content: "\e607";
 }
-.jui [class^="icon-"].icon-link,
-.jui [class*=" icon-"].icon-link {
-  background-position: -32px -48px;
-}
-.jui [class^="icon-"].icon-image,
-.jui [class*=" icon-"].icon-image {
-  background-position: -48px -48px;
-}
-.jui [class^="icon-"].icon-table,
-.jui [class*=" icon-"].icon-table {
-  background-position: -64px -48px;
-}
-.jui [class^="icon-"].icon-html,
-.jui [class*=" icon-"].icon-html {
-  background-position: -80px -48px;
-}
-.jui [class^="icon-"].icon-align-left,
-.jui [class*=" icon-"].icon-align-left {
-  background-position: -96px -48px;
-}
-.jui [class^="icon-"].icon-align-center,
-.jui [class*=" icon-"].icon-align-center {
-  background-position: -112px -48px;
-}
-.jui [class^="icon-"].icon-align-right,
-.jui [class*=" icon-"].icon-align-right {
-  background-position: -128px -48px;
-}
-.jui [class^="icon-"].icon-orderedlist,
-.jui [class*=" icon-"].icon-orderedlist {
-  background-position: -144px -48px;
-}
-.jui [class^="icon-"].icon-unorderedlist,
-.jui [class*=" icon-"].icon-unorderedlist {
-  background-position: 0 -64px;
-}
-.jui [class^="icon-"].icon-textcolor,
-.jui [class*=" icon-"].icon-textcolor {
-  background-position: -16px -64px;
-}
-.jui [class^="icon-"].icon-underline,
-.jui [class*=" icon-"].icon-underline {
-  background-position: -32px -64px;
-}
-.jui [class^="icon-"].icon-italic,
-.jui [class*=" icon-"].icon-italic {
-  background-position: -48px -64px;
-}
-.jui [class^="icon-"].icon-bold,
-.jui [class*=" icon-"].icon-bold {
-  background-position: -64px -64px;
-}
-.jui [class^="icon-"].icon-text,
-.jui [class*=" icon-"].icon-text {
-  background-position: -80px -64px;
-}
-.jui [class^="icon-"].icon-preview,
-.jui [class*=" icon-"].icon-preview {
-  background-position: -96px -64px;
-}
-.jui [class^="icon-"].icon-document,
-.jui [class*=" icon-"].icon-document {
-  background-position: -112px -64px;
-}
-.jui [class^="icon-"].icon-refresh2,
-.jui [class*=" icon-"].icon-refresh2 {
-  background-position: -128px -64px;
-}
-.jui [class^="icon-"].icon-add-dir,
-.jui [class*=" icon-"].icon-add-dir {
-  background-position: -144px -64px;
-}
-.jui [class^="icon-"].icon-add-dir2,
-.jui [class*=" icon-"].icon-add-dir2 {
-  background-position: 0 -80px;
-}
-.jui [class^="icon-"].icon-stop,
-.jui [class*=" icon-"].icon-stop {
-  background-position: -16px -80px;
-}
-.jui [class^="icon-"].icon-save,
-.jui [class*=" icon-"].icon-save {
-  background-position: -32px -80px;
-}
-.jui [class^="icon-"].icon-white,
-.jui [class*=" icon-"].icon-white {
-  background-image: url("img/icon-list-white.png");
-}
-.jui [class^="icon-"].icon-gray,
-.jui [class*=" icon-"].icon-gray {
-  background-image: url("img/icon-list-gray.png");
-}
-.jui [class^="icon-"].icon-purple,
-.jui [class*=" icon-"].icon-purple {
-  background-image: url("img/icon-list-purple.png");
-}
-.jui [class^="icon-"].icon-large,
-.jui [class*=" icon-"].icon-large {
-  background-image: url("img/icon-list-large.png");
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  background-position: 20px 20px;
-}
-.jui [class^="icon-"].icon-large.icon-new-window,
-.jui [class*=" icon-"].icon-large.icon-new-window {
-  background-position: 0                    0;
-}
-.jui [class^="icon-"].icon-large.icon-gear,
-.jui [class*=" icon-"].icon-large.icon-gear {
-  background-position: -20px 0;
-}
-.jui [class^="icon-"].icon-large.icon-calendar,
-.jui [class*=" icon-"].icon-large.icon-calendar {
-  background-position: -40px 0;
-}
-.jui [class^="icon-"].icon-large.icon-download,
-.jui [class*=" icon-"].icon-large.icon-download {
-  background-position: -60px 0;
-}
-.jui [class^="icon-"].icon-large.icon-upload,
-.jui [class*=" icon-"].icon-large.icon-upload {
-  background-position: -80px 0;
-}
-.jui [class^="icon-"].icon-large.icon-hide,
-.jui [class*=" icon-"].icon-large.icon-hide {
-  background-position: -100px 0;
-}
-.jui [class^="icon-"].icon-large.icon-refresh,
-.jui [class*=" icon-"].icon-large.icon-refresh {
-  background-position: -120px 0;
-}
-.jui [class^="icon-"].icon-large.icon-printer,
-.jui [class*=" icon-"].icon-large.icon-printer {
-  background-position: -140px 0;
-}
-.jui [class^="icon-"].icon-large.icon-search,
-.jui [class*=" icon-"].icon-large.icon-search {
-  background-position: -160px 0;
-}
-.jui [class^="icon-"].icon-large.icon-home,
-.jui [class*=" icon-"].icon-large.icon-home {
-  background-position: -180px 0;
-}
-.jui [class^="icon-"].icon-large.icon-pause,
-.jui [class*=" icon-"].icon-large.icon-pause {
-  background-position: 0 -20px;
-}
-.jui [class^="icon-"].icon-large.icon-play,
-.jui [class*=" icon-"].icon-large.icon-play {
-  background-position: -20px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-check,
-.jui [class*=" icon-"].icon-large.icon-check {
-  background-position: -40px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-chevron-right,
-.jui [class*=" icon-"].icon-large.icon-chevron-right {
-  background-position: -60px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-chevron-left,
-.jui [class*=" icon-"].icon-large.icon-chevron-left {
-  background-position: -80px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-plus,
-.jui [class*=" icon-"].icon-large.icon-plus {
-  background-position: -100px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-trashcan,
-.jui [class*=" icon-"].icon-large.icon-trashcan {
-  background-position: -120px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-edit,
-.jui [class*=" icon-"].icon-large.icon-edit {
-  background-position: -140px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-help,
-.jui [class*=" icon-"].icon-large.icon-help {
-  background-position: -160px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-return,
-.jui [class*=" icon-"].icon-large.icon-return {
-  background-position: -180px -20px;
-}
-.jui [class^="icon-"].icon-large.icon-dashboardlist,
-.jui [class*=" icon-"].icon-large.icon-dashboardlist {
-  background-position: 0 -40px;
-}
-.jui [class^="icon-"].icon-large.icon-realtime,
-.jui [class*=" icon-"].icon-large.icon-realtime {
-  background-position: -20px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-arrow2,
-.jui [class*=" icon-"].icon-large.icon-arrow2 {
-  background-position: -40px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-arrow1,
-.jui [class*=" icon-"].icon-large.icon-arrow1 {
-  background-position: -60px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-close,
-.jui [class*=" icon-"].icon-large.icon-close {
-  background-position: -80px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-left,
-.jui [class*=" icon-"].icon-large.icon-left {
-  background-position: -100px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-right,
-.jui [class*=" icon-"].icon-large.icon-right {
-  background-position: -120px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-resize,
-.jui [class*=" icon-"].icon-large.icon-resize {
-  background-position: -140px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-exit,
-.jui [class*=" icon-"].icon-large.icon-exit {
-  background-position: -160px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-arrow3,
-.jui [class*=" icon-"].icon-large.icon-arrow3 {
-  background-position: -180px -40px;
-}
-.jui [class^="icon-"].icon-large.icon-more,
-.jui [class*=" icon-"].icon-large.icon-more {
-  background-position: 0 -60px;
-}
-.jui [class^="icon-"].icon-large.icon-chart,
-.jui [class*=" icon-"].icon-large.icon-chart {
-  background-position: -20px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-link,
-.jui [class*=" icon-"].icon-large.icon-link {
-  background-position: -40px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-image,
-.jui [class*=" icon-"].icon-large.icon-image {
-  background-position: -60px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-table,
-.jui [class*=" icon-"].icon-large.icon-table {
-  background-position: -80px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-html,
-.jui [class*=" icon-"].icon-large.icon-html {
-  background-position: -100px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-align-left,
-.jui [class*=" icon-"].icon-large.icon-align-left {
-  background-position: -120px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-align-center,
-.jui [class*=" icon-"].icon-large.icon-align-center {
-  background-position: -140px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-align-right,
-.jui [class*=" icon-"].icon-large.icon-align-right {
-  background-position: -160px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-orderedlist,
-.jui [class*=" icon-"].icon-large.icon-orderedlist {
-  background-position: -180px -60px;
-}
-.jui [class^="icon-"].icon-large.icon-unorderedlist,
-.jui [class*=" icon-"].icon-large.icon-unorderedlist {
-  background-position: 0 -80px;
-}
-.jui [class^="icon-"].icon-large.icon-textcolor,
-.jui [class*=" icon-"].icon-large.icon-textcolor {
-  background-position: -20px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-underline,
-.jui [class*=" icon-"].icon-large.icon-underline {
-  background-position: -40px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-italic,
-.jui [class*=" icon-"].icon-large.icon-italic {
-  background-position: -60px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-bold,
-.jui [class*=" icon-"].icon-large.icon-bold {
-  background-position: -80px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-text,
-.jui [class*=" icon-"].icon-large.icon-text {
-  background-position: -100px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-preview,
-.jui [class*=" icon-"].icon-large.icon-preview {
-  background-position: -120px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-document,
-.jui [class*=" icon-"].icon-large.icon-document {
-  background-position: -140px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-refresh2,
-.jui [class*=" icon-"].icon-large.icon-refresh2 {
-  background-position: -160px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-add-dir,
-.jui [class*=" icon-"].icon-large.icon-add-dir {
-  background-position: -180px -80px;
-}
-.jui [class^="icon-"].icon-large.icon-add-dir2,
-.jui [class*=" icon-"].icon-large.icon-add-dir2 {
-  background-position: 0 -100px;
-}
-.jui [class^="icon-"].icon-large.icon-stop,
-.jui [class*=" icon-"].icon-large.icon-stop {
-  background-position: -20px -100px;
-}
-.jui [class^="icon-"].icon-large.icon-save,
-.jui [class*=" icon-"].icon-large.icon-save {
-  background-position: -40px -100px;
-}
-.jui [class^="icon-"].icon-large.icon-white,
-.jui [class*=" icon-"].icon-large.icon-white {
-  background-image: url("img/icon-list-white-large.png");
-}
-.jui [class^="icon-"].icon-large.icon-gray,
-.jui [class*=" icon-"].icon-large.icon-gray {
-  background-image: url("img/icon-list-gray-large.png");
-}
-.jui [class^="icon-"].icon-large.icon-purple,
-.jui [class*=" icon-"].icon-large.icon-purple {
-  background-image: url("img/icon-list-purple-large.png");
-}
-.jui .icon-color {
-  width: 10px;
-  height: 10px;
-  border: 1px solid #fff;
-  margin-top: 1px !important;
-  margin-right: 2px;
+.jui .icon-bold:before {
+  content: "\e608";
+}
+.jui .icon-calendar:before {
+  content: "\e609";
+}
+.jui .icon-chart:before {
+  content: "\e60a";
+}
+.jui .icon-check:before {
+  content: "\e60b";
+}
+.jui .icon-chevron-left:before {
+  content: "\e60c";
+}
+.jui .icon-chevron-right:before {
+  content: "\e60d";
+}
+.jui .icon-close:before {
+  content: "\e60e";
+}
+.jui .icon-dashboardlist:before {
+  content: "\e60f";
+}
+.jui .icon-document:before {
+  content: "\e610";
+}
+.jui .icon-download:before {
+  content: "\e611";
+}
+.jui .icon-edit:before {
+  content: "\e612";
+}
+.jui .icon-exit:before {
+  content: "\e613";
+}
+.jui .icon-gear:before {
+  content: "\e614";
+}
+.jui .icon-help:before {
+  content: "\e615";
+}
+.jui .icon-hide:before {
+  content: "\e616";
+}
+.jui .icon-home:before {
+  content: "\e617";
+}
+.jui .icon-html:before {
+  content: "\e618";
+}
+.jui .icon-image:before {
+  content: "\e619";
+}
+.jui .icon-italic:before {
+  content: "\e61a";
+}
+.jui .icon-left:before {
+  content: "\e61b";
+}
+.jui .icon-link:before {
+  content: "\e61c";
+}
+.jui .icon-more:before {
+  content: "\e61d";
+}
+.jui .icon-new-window:before {
+  content: "\e61e";
+}
+.jui .icon-orderedlist:before {
+  content: "\e61f";
+}
+.jui .icon-pause:before {
+  content: "\e620";
+}
+.jui .icon-play:before {
+  content: "\e621";
+}
+.jui .icon-plus:before {
+  content: "\e622";
+}
+.jui .icon-preview:before {
+  content: "\e623";
+}
+.jui .icon-printer:before {
+  content: "\e624";
+}
+.jui .icon-realtime:before {
+  content: "\e625";
+}
+.jui .icon-refresh:before {
+  content: "\e626";
+}
+.jui .icon-refresh2:before {
+  content: "\e627";
+}
+.jui .icon-resize:before {
+  content: "\e628";
+}
+.jui .icon-return:before {
+  content: "\e629";
+}
+.jui .icon-right:before {
+  content: "\e62a";
+}
+.jui .icon-save:before {
+  content: "\e62b";
+}
+.jui .icon-search:before {
+  content: "\e62c";
+}
+.jui .icon-stop:before {
+  content: "\e62d";
+}
+.jui .icon-table:before {
+  content: "\e62e";
+}
+.jui .icon-text:before {
+  content: "\e62f";
+}
+.jui .icon-textcolor:before {
+  content: "\e630";
+}
+.jui .icon-trashcan:before {
+  content: "\e631";
+}
+.jui .icon-underline:before {
+  content: "\e632";
+}
+.jui .icon-unorderedlist:before {
+  content: "\e633";
+}
+.jui .icon-upload:before {
+  content: "\e634";
 }
 .jui .icon-edge {
-  position: absolute !important;
-  margin: auto !important;
-  top: 0;
-  bottom: 0;
-  right: 5px;
-  z-index: 0;
+  text-align: right;
 }
-.jui .btn > [class^="icon-"],
-.jui .label > [class^="icon-"],
-.jui .btn [class*=" icon-"],
-.jui .label [class*=" icon-"] {
-  margin-bottom: -0.219em;
+.jui .icon-black {
+  color: #343434;
 }
-.jui .btn-small > [class^="icon-"],
-.jui .label-small > [class^="icon-"],
-.jui .btn-small [class*=" icon-"],
-.jui .label-small [class*=" icon-"] {
-  margin-bottom: -0.25em;
+.jui .icon-purple {
+  color: #8a5ad1;
 }
-.jui .btn-mini > [class^="icon-"],
-.jui .label-mini > [class^="icon-"],
-.jui .btn-mini [class*=" icon-"],
-.jui .label-mini [class*=" icon-"] {
-  margin-bottom: -0.297em;
+.jui .icon-white {
+  color: #ffffff;
 }
-.jui .btn-large > [class^="icon-"],
-.jui .label-large > [class^="icon-"],
-.jui .btn-large [class*=" icon-"],
-.jui .label-large [class*=" icon-"] {
-  margin-bottom: -0.313em;
-}
-.jui .dropdown li > [class^="icon-"],
-.jui .dropdown li [class*=" icon-"] {
-  margin-top: 0.125em;
-}
-.jui .dropdown-large li > [class^="icon-"],
-.jui .dropdown-large li [class*=" icon-"] {
-  margin-top: 0;
-}
-.jui .tab li > a > [class^="icon-"],
-.jui .pill li > a > [class^="icon-"],
-.jui .tab li > a [class*=" icon-"],
-.jui .pill li > a [class*=" icon-"] {
-  margin-top: -0.219em;
-}
-.jui .table th > [class^="icon-"],
-.jui .table td > [class^="icon-"],
-.jui .dropdown li > [class^="icon-"],
-.jui .tab li > a > [class^="icon-"],
-.jui .pill li > a > [class^="icon-"],
-.jui .table th [class*=" icon-"],
-.jui .table td [class*=" icon-"],
-.jui .dropdown li [class*=" icon-"],
-.jui .tab li > a [class*=" icon-"],
-.jui .pill li > a [class*=" icon-"] {
-  vertical-align: top;
-}
-.jui .panel > .head > [class^="icon-"],
-.jui .panel > .foot > [class^="icon-"],
-.jui .panel > .head [class*=" icon-"],
-.jui .panel > .foot [class*=" icon-"] {
-  margin-bottom: -0.219em;
-  margin-left: -0.297em;
+.jui .icon-gray {
+  color: #bdbdbd;
 }
 .jui .btn-black-gray.active > [class^="icon-"],
 .jui .btn-black-gray:active > [class^="icon-"] {
-  background-image: url("img/icon-list.png");
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large {
-  background-image: url("img/icon-list-large.png");
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  background-position: 20px 20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-new-window,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-new-window {
-  background-position: 0                    0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-gear,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-gear {
-  background-position: -20px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-calendar,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-calendar {
-  background-position: -40px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-download,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-download {
-  background-position: -60px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-upload,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-upload {
-  background-position: -80px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-hide,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-hide {
-  background-position: -100px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-refresh,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-refresh {
-  background-position: -120px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-printer,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-printer {
-  background-position: -140px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-search,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-search {
-  background-position: -160px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-home,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-home {
-  background-position: -180px 0;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-pause,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-pause {
-  background-position: 0 -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-play,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-play {
-  background-position: -20px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-check,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-check {
-  background-position: -40px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-chevron-right,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-chevron-right {
-  background-position: -60px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-chevron-left,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-chevron-left {
-  background-position: -80px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-plus,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-plus {
-  background-position: -100px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-trashcan,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-trashcan {
-  background-position: -120px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-edit,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-edit {
-  background-position: -140px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-help,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-help {
-  background-position: -160px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-return,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-return {
-  background-position: -180px -20px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-dashboardlist,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-dashboardlist {
-  background-position: 0 -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-realtime,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-realtime {
-  background-position: -20px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-arrow2,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-arrow2 {
-  background-position: -40px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-arrow1,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-arrow1 {
-  background-position: -60px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-close,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-close {
-  background-position: -80px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-left,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-left {
-  background-position: -100px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-right,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-right {
-  background-position: -120px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-resize,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-resize {
-  background-position: -140px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-exit,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-exit {
-  background-position: -160px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-arrow3,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-arrow3 {
-  background-position: -180px -40px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-more,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-more {
-  background-position: 0 -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-chart,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-chart {
-  background-position: -20px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-link,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-link {
-  background-position: -40px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-image,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-image {
-  background-position: -60px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-table,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-table {
-  background-position: -80px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-html,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-html {
-  background-position: -100px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-align-left,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-align-left {
-  background-position: -120px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-align-center,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-align-center {
-  background-position: -140px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-align-right,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-align-right {
-  background-position: -160px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-orderedlist,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-orderedlist {
-  background-position: -180px -60px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-unorderedlist,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-unorderedlist {
-  background-position: 0 -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-textcolor,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-textcolor {
-  background-position: -20px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-underline,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-underline {
-  background-position: -40px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-italic,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-italic {
-  background-position: -60px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-bold,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-bold {
-  background-position: -80px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-text,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-text {
-  background-position: -100px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-preview,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-preview {
-  background-position: -120px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-document,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-document {
-  background-position: -140px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-refresh2,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-refresh2 {
-  background-position: -160px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-add-dir,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-add-dir {
-  background-position: -180px -80px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-add-dir2,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-add-dir2 {
-  background-position: 0 -100px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-stop,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-stop {
-  background-position: -20px -100px;
-}
-.jui .btn-black-gray.active > [class^="icon-"].icon-large.icon-save,
-.jui .btn-black-gray:active > [class^="icon-"].icon-large.icon-save {
-  background-position: -40px -100px;
+  color: #343434;
 }
 .jui .btn-gray-black.active > [class^="icon-"],
 .jui .btn-gray-black:active > [class^="icon-"],
 .jui .btn-purple-black.active > [class^="icon-"],
 .jui .btn-purple-black:active > [class^="icon-"] {
-  background-image: url("img/icon-list-white.png");
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large {
-  background-image: url("img/icon-list-white-large.png");
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  background-position: 20px 20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-new-window,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-new-window,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-new-window,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-new-window {
-  background-position: 0                    0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-gear,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-gear,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-gear,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-gear {
-  background-position: -20px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-calendar,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-calendar,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-calendar,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-calendar {
-  background-position: -40px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-download,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-download,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-download,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-download {
-  background-position: -60px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-upload,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-upload,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-upload,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-upload {
-  background-position: -80px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-hide,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-hide,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-hide,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-hide {
-  background-position: -100px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-refresh,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-refresh,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-refresh,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-refresh {
-  background-position: -120px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-printer,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-printer,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-printer,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-printer {
-  background-position: -140px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-search,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-search,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-search,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-search {
-  background-position: -160px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-home,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-home,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-home,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-home {
-  background-position: -180px 0;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-pause,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-pause,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-pause,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-pause {
-  background-position: 0 -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-play,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-play,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-play,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-play {
-  background-position: -20px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-check,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-check,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-check,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-check {
-  background-position: -40px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-chevron-right,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-chevron-right,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-chevron-right,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-chevron-right {
-  background-position: -60px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-chevron-left,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-chevron-left,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-chevron-left,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-chevron-left {
-  background-position: -80px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-plus,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-plus,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-plus,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-plus {
-  background-position: -100px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-trashcan,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-trashcan,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-trashcan,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-trashcan {
-  background-position: -120px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-edit,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-edit,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-edit,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-edit {
-  background-position: -140px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-help,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-help,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-help,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-help {
-  background-position: -160px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-return,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-return,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-return,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-return {
-  background-position: -180px -20px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-dashboardlist,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-dashboardlist,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-dashboardlist,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-dashboardlist {
-  background-position: 0 -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-realtime,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-realtime,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-realtime,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-realtime {
-  background-position: -20px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-arrow2,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-arrow2,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-arrow2,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-arrow2 {
-  background-position: -40px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-arrow1,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-arrow1,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-arrow1,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-arrow1 {
-  background-position: -60px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-close,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-close,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-close,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-close {
-  background-position: -80px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-left,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-left,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-left,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-left {
-  background-position: -100px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-right,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-right,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-right,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-right {
-  background-position: -120px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-resize,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-resize,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-resize,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-resize {
-  background-position: -140px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-exit,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-exit,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-exit,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-exit {
-  background-position: -160px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-arrow3,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-arrow3,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-arrow3,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-arrow3 {
-  background-position: -180px -40px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-more,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-more,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-more,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-more {
-  background-position: 0 -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-chart,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-chart,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-chart,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-chart {
-  background-position: -20px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-link,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-link,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-link,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-link {
-  background-position: -40px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-image,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-image,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-image,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-image {
-  background-position: -60px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-table,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-table,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-table,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-table {
-  background-position: -80px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-html,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-html,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-html,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-html {
-  background-position: -100px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-align-left,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-align-left,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-align-left,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-align-left {
-  background-position: -120px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-align-center,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-align-center,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-align-center,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-align-center {
-  background-position: -140px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-align-right,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-align-right,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-align-right,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-align-right {
-  background-position: -160px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-orderedlist,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-orderedlist,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-orderedlist,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-orderedlist {
-  background-position: -180px -60px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-unorderedlist,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-unorderedlist,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-unorderedlist,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-unorderedlist {
-  background-position: 0 -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-textcolor,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-textcolor,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-textcolor,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-textcolor {
-  background-position: -20px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-underline,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-underline,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-underline,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-underline {
-  background-position: -40px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-italic,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-italic,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-italic,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-italic {
-  background-position: -60px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-bold,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-bold,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-bold,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-bold {
-  background-position: -80px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-text,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-text,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-text,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-text {
-  background-position: -100px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-preview,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-preview,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-preview,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-preview {
-  background-position: -120px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-document,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-document,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-document,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-document {
-  background-position: -140px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-refresh2,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-refresh2,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-refresh2,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-refresh2 {
-  background-position: -160px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-add-dir,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-add-dir,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-add-dir,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-add-dir {
-  background-position: -180px -80px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-add-dir2,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-add-dir2,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-add-dir2,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-add-dir2 {
-  background-position: 0 -100px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-stop,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-stop,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-stop,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-stop {
-  background-position: -20px -100px;
-}
-.jui .btn-gray-black.active > [class^="icon-"].icon-large.icon-save,
-.jui .btn-gray-black:active > [class^="icon-"].icon-large.icon-save,
-.jui .btn-purple-black.active > [class^="icon-"].icon-large.icon-save,
-.jui .btn-purple-black:active > [class^="icon-"].icon-large.icon-save {
-  background-position: -40px -100px;
+  color: #ffffff;
 }
 .jui .pill li.active [class^="icon-"],
 .jui .pill li.menu-keep [class^="icon-"],
 .jui .tab li.menu-keep [class^="icon-"] {
-  background-image: url("img/icon-list-white.png");
+  color: #ffffff;
 }
 .jui .group,
 .jui .combo,

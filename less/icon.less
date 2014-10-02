@@ -15,215 +15,222 @@
 // <i class="icon-inbox icon-white"></i>
 
 .jui {
-  .settingIconSize(@icon-size) {
-    width: @icon-size;
-    height: @icon-size;
-    line-height: @icon-size;
-    background-position: @icon-size @icon-size;
-    
-    &.icon-new-window    { background-position: 0                    0; }
-    &.icon-gear          { background-position: -(@icon-size * 1)    0; }
-    &.icon-calendar      { background-position: -(@icon-size * 2)    0; }
-    &.icon-download      { background-position: -(@icon-size * 3)    0; }
-    &.icon-upload        { background-position: -(@icon-size * 4)    0; }
-    &.icon-hide          { background-position: -(@icon-size * 5)    0; }
-    &.icon-refresh       { background-position: -(@icon-size * 6)    0; }
-    &.icon-printer       { background-position: -(@icon-size * 7)    0; }
-    &.icon-search        { background-position: -(@icon-size * 8)    0; }
-    &.icon-home          { background-position: -(@icon-size * 9)    0; }
-    
-    &.icon-pause         { background-position: 0                    -(@icon-size * 1); }
-    &.icon-play          { background-position: -(@icon-size * 1)    -(@icon-size * 1); }
-    &.icon-check         { background-position: -(@icon-size * 2)    -(@icon-size * 1); }
-    &.icon-chevron-right { background-position: -(@icon-size * 3)    -(@icon-size * 1); }
-    &.icon-chevron-left  { background-position: -(@icon-size * 4)    -(@icon-size * 1); }
-    &.icon-plus          { background-position: -(@icon-size * 5)    -(@icon-size * 1); }
-    &.icon-trashcan      { background-position: -(@icon-size * 6)    -(@icon-size * 1); }
-    &.icon-edit          { background-position: -(@icon-size * 7)    -(@icon-size * 1); }
-    &.icon-help          { background-position: -(@icon-size * 8)    -(@icon-size * 1); }
-    &.icon-return        { background-position: -(@icon-size * 9)    -(@icon-size * 1); }
-    
-    &.icon-dashboardlist { background-position: 0                    -(@icon-size * 2); }
-    &.icon-realtime      { background-position: -(@icon-size * 1)    -(@icon-size * 2); }
-    &.icon-arrow2        { background-position: -(@icon-size * 2)    -(@icon-size * 2); }
-    &.icon-arrow1        { background-position: -(@icon-size * 3)    -(@icon-size * 2); }
-    &.icon-close         { background-position: -(@icon-size * 4)    -(@icon-size * 2); }
-    &.icon-left          { background-position: -(@icon-size * 5)    -(@icon-size * 2); }
-    &.icon-right         { background-position: -(@icon-size * 6)    -(@icon-size * 2); }
-    &.icon-resize        { background-position: -(@icon-size * 7)    -(@icon-size * 2); }
-    &.icon-exit          { background-position: -(@icon-size * 8)    -(@icon-size * 2); }
-    &.icon-arrow3        { background-position: -(@icon-size * 9)    -(@icon-size * 2); }
-
-    &.icon-more          { background-position: 0                    -(@icon-size * 3); }
-    &.icon-chart         { background-position: -(@icon-size * 1)    -(@icon-size * 3); }
-    &.icon-link          { background-position: -(@icon-size * 2)    -(@icon-size * 3); }
-    &.icon-image         { background-position: -(@icon-size * 3)    -(@icon-size * 3); }
-    &.icon-table         { background-position: -(@icon-size * 4)    -(@icon-size * 3); }
-    &.icon-html          { background-position: -(@icon-size * 5)    -(@icon-size * 3); }
-    &.icon-align-left    { background-position: -(@icon-size * 6)    -(@icon-size * 3); }
-    &.icon-align-center  { background-position: -(@icon-size * 7)    -(@icon-size * 3); }
-    &.icon-align-right   { background-position: -(@icon-size * 8)    -(@icon-size * 3); }
-    &.icon-orderedlist   { background-position: -(@icon-size * 9)    -(@icon-size * 3); }
-
-    &.icon-unorderedlist { background-position: 0                    -(@icon-size * 4); }
-    &.icon-textcolor     { background-position: -(@icon-size * 1)    -(@icon-size * 4); }
-    &.icon-underline     { background-position: -(@icon-size * 2)    -(@icon-size * 4); }
-    &.icon-italic        { background-position: -(@icon-size * 3)    -(@icon-size * 4); }
-    &.icon-bold          { background-position: -(@icon-size * 4)    -(@icon-size * 4); }
-    &.icon-text          { background-position: -(@icon-size * 5)    -(@icon-size * 4); }
-    &.icon-preview       { background-position: -(@icon-size * 6)    -(@icon-size * 4); }
-    &.icon-document      { background-position: -(@icon-size * 7)    -(@icon-size * 4); }
-    &.icon-refresh2      { background-position: -(@icon-size * 8)    -(@icon-size * 4); }
-    &.icon-add-dir       { background-position: -(@icon-size * 9)    -(@icon-size * 4); }
-
-    &.icon-add-dir2      { background-position: 0                    -(@icon-size * 5); }
-    &.icon-stop          { background-position: -(@icon-size * 1)    -(@icon-size * 5); }
-    &.icon-save          { background-position: -(@icon-size * 2)    -(@icon-size * 5); }
-  }
-  
-  [class^="icon-"],[class*=" icon-"] {
-    display: inline-block;
-    background-image: url("@{icon-list}");
-    background-repeat: no-repeat;
-    .ie7-restore-right-whitespace();
-    .settingIconSize(16px);
-    
-    &.icon-white {
-      background-image: url("@{icon-list-white}");
-    } 
-
-    &.icon-gray {
-      background-image: url("@{icon-list-gray}");
-    } 
-
-    &.icon-purple {
-      background-image: url("@{icon-list-purple}");
-    } 
-    
-    &.icon-large {
-      background-image: url("@{icon-list-large}");
-      .settingIconSize(20px);
-      
-      &.icon-white {
-        background-image: url("@{icon-list-white-large}");
-      } 
-
-      &.icon-gray {
-        background-image: url("@{icon-list-gray-large}");
-      } 
-
-      &.icon-purple {
-        background-image: url("@{icon-list-purple-large}");
-      } 
-    }
-  }
-  
-  .icon-color { 
-    width: 10px; height: 10px; border: 1px solid #fff; margin-top: 1px !important; margin-right: 2px;
+  @font-face {
+    font-family: 'jui-icon-list';
+    src: url('img/icon-list.eot?2jwwu9');
+    src: url('img/icon-list.eot?#iefix2jwwu9') format('embedded-opentype'),
+    url('img/icon-list.woff?2jwwu9') format('woff'),
+    url('img/icon-list.ttf?2jwwu9') format('truetype'),
+    url('img/icon-list.svg?2jwwu9#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
   }
 
-  
-  /* Icon Position (Absolute) */
+  [class^="icon-"], [class*=" icon-"] {
+    font-family: 'jui-icon-list';
+    speak: none;
+    font-size: inherit;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
 
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Default Color */
+    .icon-black;
+  }
+
+  .icon-add-dir:before {
+    content: "\e600";
+  }
+  .icon-add-dir2:before {
+    content: "\e601";
+  }
+  .icon-align-center:before {
+    content: "\e602";
+  }
+  .icon-align-left:before {
+    content: "\e603";
+  }
+  .icon-align-right:before {
+    content: "\e604";
+  }
+  .icon-arrow1:before {
+    content: "\e605";
+  }
+  .icon-arrow2:before {
+    content: "\e606";
+  }
+  .icon-arrow3:before {
+    content: "\e607";
+  }
+  .icon-bold:before {
+    content: "\e608";
+  }
+  .icon-calendar:before {
+    content: "\e609";
+  }
+  .icon-chart:before {
+    content: "\e60a";
+  }
+  .icon-check:before {
+    content: "\e60b";
+  }
+  .icon-chevron-left:before {
+    content: "\e60c";
+  }
+  .icon-chevron-right:before {
+    content: "\e60d";
+  }
+  .icon-close:before {
+    content: "\e60e";
+  }
+  .icon-dashboardlist:before {
+    content: "\e60f";
+  }
+  .icon-document:before {
+    content: "\e610";
+  }
+  .icon-download:before {
+    content: "\e611";
+  }
+  .icon-edit:before {
+    content: "\e612";
+  }
+  .icon-exit:before {
+    content: "\e613";
+  }
+  .icon-gear:before {
+    content: "\e614";
+  }
+  .icon-help:before {
+    content: "\e615";
+  }
+  .icon-hide:before {
+    content: "\e616";
+  }
+  .icon-home:before {
+    content: "\e617";
+  }
+  .icon-html:before {
+    content: "\e618";
+  }
+  .icon-image:before {
+    content: "\e619";
+  }
+  .icon-italic:before {
+    content: "\e61a";
+  }
+  .icon-left:before {
+    content: "\e61b";
+  }
+  .icon-link:before {
+    content: "\e61c";
+  }
+  .icon-more:before {
+    content: "\e61d";
+  }
+  .icon-new-window:before {
+    content: "\e61e";
+  }
+  .icon-orderedlist:before {
+    content: "\e61f";
+  }
+  .icon-pause:before {
+    content: "\e620";
+  }
+  .icon-play:before {
+    content: "\e621";
+  }
+  .icon-plus:before {
+    content: "\e622";
+  }
+  .icon-preview:before {
+    content: "\e623";
+  }
+  .icon-printer:before {
+    content: "\e624";
+  }
+  .icon-realtime:before {
+    content: "\e625";
+  }
+  .icon-refresh:before {
+    content: "\e626";
+  }
+  .icon-refresh2:before {
+    content: "\e627";
+  }
+  .icon-resize:before {
+    content: "\e628";
+  }
+  .icon-return:before {
+    content: "\e629";
+  }
+  .icon-right:before {
+    content: "\e62a";
+  }
+  .icon-save:before {
+    content: "\e62b";
+  }
+  .icon-search:before {
+    content: "\e62c";
+  }
+  .icon-stop:before {
+    content: "\e62d";
+  }
+  .icon-table:before {
+    content: "\e62e";
+  }
+  .icon-text:before {
+    content: "\e62f";
+  }
+  .icon-textcolor:before {
+    content: "\e630";
+  }
+  .icon-trashcan:before {
+    content: "\e631";
+  }
+  .icon-underline:before {
+    content: "\e632";
+  }
+  .icon-unorderedlist:before {
+    content: "\e633";
+  }
+  .icon-upload:before {
+    content: "\e634";
+  }
+
+  /* Icon Position */
   .icon-edge {
-    position: absolute !important;
-    margin: auto !important;
-    top: 0; 
-    bottom: 0; 
-    right: 5px;
-    z-index: 0;
+    text-align: right;
   }
 
-  
-  /* Icon Sizes */
-  
-  .btn, .label {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-bottom: -0.219em; // -3.5px
-    }
-  }
+  /* Icon Colors */
+  .icon-black   { color: #343434 }
+  .icon-purple  { color: #8a5ad1 }
+  .icon-white   { color: #fff }
+  .icon-gray    { color: #bdbdbd }
 
-  .btn-small, .label-small {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-bottom: -0.250em; // -4px
-    }
-  }
-  
-  .btn-mini, .label-mini {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-bottom: -0.297em; // -4.75px
-    }
-  }
-  
-  .btn-large, .label-large {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-bottom: -0.313em; // -5px
-    }
-  }
-
-  .dropdown li {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-top: 0.125em; // 2px
-    }
-  }
-
-  .dropdown-large li {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-top: 0;
-    }
-  }
-
-  .tab li > a, .pill li > a {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-top: -0.219em; // -3.5px
-    }
-  }
-
-  .table th, .table td, .dropdown li, 
-  .tab li > a, .pill li > a { // 로우 밀리는 현상 제거 코드
-    > [class^="icon-"], [class*=" icon-"] {
-      vertical-align: top;
-    }
-  }
-  
-  .panel > .head, .panel > .foot {
-    > [class^="icon-"], [class*=" icon-"] {
-      margin-bottom: -0.219em; // -3.5px
-      margin-left: -0.297em; // -4.75px
-    }
-  }
-  
-  
-  /* Buttons Exception */
-  
-  .btn-black-gray.active > [class^="icon-"], 
+  /* Icon Color in Buttons */
+  .btn-black-gray.active > [class^="icon-"],
   .btn-black-gray:active > [class^="icon-"] {
-    background-image: url("@{icon-list}");
-    
-    &.icon-large {
-      background-image: url("@{icon-list-large}");
-      .settingIconSize(20px);
-    }
+    .icon-black;
+  }
+  .btn-gray-black.active > [class^="icon-"],
+  .btn-gray-black:active > [class^="icon-"],
+  .btn-purple-black.active > [class^="icon-"],
+  .btn-purple-black:active > [class^="icon-"] {
+    .icon-white;
   }
 
-  .btn-gray-black.active > [class^="icon-"], 
-  .btn-gray-black:active > [class^="icon-"],
-  .btn-purple-black.active > [class^="icon-"], 
-  .btn-purple-black:active > [class^="icon-"] {
-    background-image: url("@{icon-list-white}");
-    
-    &.icon-large {
-      background-image: url("@{icon-list-white-large}");
-      .settingIconSize(20px);
-    }
-  }
-  
-  
-  /* Tab Exception */
-  
+  /* Icon Color in Tabs */
   .pill li.active [class^="icon-"],
   .pill li.menu-keep [class^="icon-"], .tab li.menu-keep [class^="icon-"] {
-  	background-image: url("@{icon-list-white}");
+    .icon-white;
   }
 }
 
