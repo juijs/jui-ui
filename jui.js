@@ -14381,7 +14381,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
             thumbLeft = 0,
             thumbLimit = 0,
             bufferCount = 0,
-            dataLength = 0;
+            dataLength = 0,
+            totalWidth = 0,
+            piece = 0,
+            rate = 0 ;
 
         function setScrollEvent(chart, thumb) {
             var isMove = false,
@@ -14412,30 +14415,20 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
                 thumb.translate(gap, 1);
                 thumbLeft = gap;
+
                 
-                var currentStep = Math.ceil((gap + thumbWidth/2) / totalCount) - 1;
+                var startgap = gap * rate;
+                var endgap = (gap + thumbWidth) * rate;
                 
-                var start = 0;
-                var end = 0; 
-                var half = Math.ceil(bufferCount / 2); 
+                var start = startgap == 0 ? 0 : Math.floor(startgap / piece);
                 
-               	if (currentStep > half) {
-               		start = currentStep - half;
-               	} else {
-               		start = 0;
-               	}
-               	
-               	end = start + bufferCount-1;
-               	
-               	if (end + half > dataLength) {
-               		start = dataLength - bufferCount;
-               		end = dataLength - 1;
-               	}
-               	
-               	console.log(gap, half, totalCount, bufferCount, dataLength, start, end);
+                if (gap + thumbWidth == chart.width()) {
+                	start += 1;
+                }
+                
+                var end = start + bufferCount-1;
                	
                	chart.zoom(start,end);
-               	
                 
             });
 
@@ -14454,8 +14447,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
 			dataLength =  opts.data.length; 
 			bufferCount = opts.bufferCount;
-            thumbWidth = chart.width() / bufferCount;
-            totalCount = chart.width() / opts.data.length;
+			
+			
+			piece = chart.width() / bufferCount;
+			totalWidth = piece * dataLength;
+			rate = totalWidth/chart.width();
+            thumbWidth = chart.width() * (bufferCount / dataLength )+2 ;
             thumbLimit = (chart.width() - thumbWidth) / limit;
         }
 
