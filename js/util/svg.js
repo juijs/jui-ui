@@ -388,21 +388,44 @@ jui.define("util.svg",
     var SVG = function(rootElem, rootAttr) {
         var self = this,
             root = null,
+            main = null,
+            sub = null,
             parent = {},
             depth = 0;
+        var isFirst = false; // 첫번째 렌더링 체크
 
         function init() {
             self.root = root = new Element();
+            main = new TransElement();
+            sub = new TransElement();
+
             root.create("svg", rootAttr);
+            main.create("g");
+            sub.create("g");
+
+            main.translate(0.5, 0.5);
+            sub.translate(0.5, 0.5);
 
             rootElem.appendChild(root.element);
+            root.append(main);
+            root.append(sub);
         }
         
         function create(obj, type, attr, callback) {
+            var autoRender = (attr != null && attr.autoRender === false) ? false : true;
+
+            if(autoRender === false) {
+                delete attr.autoRender;
+            }
+
             obj.create(type, attr);
 
             if(depth == 0) {
-                root.append(obj);
+                if(autoRender === false) {
+                    sub.append(obj);
+                } else {
+                    main.append(obj);
+                }
             } else {
                 parent[depth].append(obj);
             }
@@ -419,7 +442,7 @@ jui.define("util.svg",
         }
 
         function createChild(obj, type, attr, callback) {
-            if(obj.parent == root) {
+            if(obj.parent == main) {
                 throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
             }
 
@@ -492,24 +515,35 @@ jui.define("util.svg",
         }
 
         this.clear = function() {
-            var newElement = root.element.cloneNode(false);
+            var newElement = main.element.cloneNode(false)
 
-            if(root.element.parentNode) {
-                root.element.parentNode.removeChild(root.element);
+            if(main.element.parentNode) {
+                this.root.element.removeChild(main.element);
             }
 
-            root.element = newElement;
-            rootElem.appendChild(root.element);
+            main.element = newElement;
+
+            if(isFirst !== false) {
+                this.root.element.insertBefore(main.element, sub.element);
+            } else { // 최초 렌더링시
+                this.root.element.appendChild(main.element);
+            }
         }
 
         this.reset = function() {
             this.clear();
-            root.childrens = [];
+            main.childrens = [];
         }
 
         this.render = function() {
             this.clear();
-            appendAll(root);
+
+            if(isFirst === false) {
+                appendAll(root);
+                isFirst = true;
+            } else {
+                appendAll(main);
+            }
         }
 
         this.download = function(name) {

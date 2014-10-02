@@ -2654,21 +2654,44 @@ jui.define("util.svg",
     var SVG = function(rootElem, rootAttr) {
         var self = this,
             root = null,
+            main = null,
+            sub = null,
             parent = {},
             depth = 0;
+        var isFirst = false; // 첫번째 렌더링 체크
 
         function init() {
             self.root = root = new Element();
+            main = new TransElement();
+            sub = new TransElement();
+
             root.create("svg", rootAttr);
+            main.create("g");
+            sub.create("g");
+
+            main.translate(0.5, 0.5);
+            sub.translate(0.5, 0.5);
 
             rootElem.appendChild(root.element);
+            root.append(main);
+            root.append(sub);
         }
         
         function create(obj, type, attr, callback) {
+            var autoRender = (attr != null && attr.autoRender === false) ? false : true;
+
+            if(autoRender === false) {
+                delete attr.autoRender;
+            }
+
             obj.create(type, attr);
 
             if(depth == 0) {
-                root.append(obj);
+                if(autoRender === false) {
+                    sub.append(obj);
+                } else {
+                    main.append(obj);
+                }
             } else {
                 parent[depth].append(obj);
             }
@@ -2685,7 +2708,7 @@ jui.define("util.svg",
         }
 
         function createChild(obj, type, attr, callback) {
-            if(obj.parent == root) {
+            if(obj.parent == main) {
                 throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
             }
 
@@ -2758,24 +2781,35 @@ jui.define("util.svg",
         }
 
         this.clear = function() {
-            var newElement = root.element.cloneNode(false);
+            var newElement = main.element.cloneNode(false)
 
-            if(root.element.parentNode) {
-                root.element.parentNode.removeChild(root.element);
+            if(main.element.parentNode) {
+                this.root.element.removeChild(main.element);
             }
 
-            root.element = newElement;
-            rootElem.appendChild(root.element);
+            main.element = newElement;
+
+            if(isFirst !== false) {
+                this.root.element.insertBefore(main.element, sub.element);
+            } else { // 최초 렌더링시
+                this.root.element.appendChild(main.element);
+            }
         }
 
         this.reset = function() {
             this.clear();
-            root.childrens = [];
+            main.childrens = [];
         }
 
         this.render = function() {
             this.clear();
-            appendAll(root);
+
+            if(isFirst === false) {
+                appendAll(root);
+                isFirst = true;
+            } else {
+                appendAll(main);
+            }
         }
 
         this.download = function(name) {
@@ -10067,17 +10101,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 				}
 			}
 		}
-		
-		function fixedPixel(builder) {
-			var allElement = $(builder.svg.root.element).find(">:not(defs)");
-
-			var g = builder.svg.group({
-				"class" : 'fixed-pixel'
-			}).translate(0.5, 0.5);
-			$(g.element).append(allElement);
-
-			builder.svg.root.element.appendChild(g.element);
-		}
 
 		/**
 		 * brush 그리기
@@ -10181,14 +10204,15 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 e.preventDefault();
             });
 
+            // 차트 테마 설정
+            this.setTheme(opts.theme);
+
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width : opts.width,
-                height : opts.height
+                height : opts.height,
+                background : this.theme("backgroundColor")
             });
-
-            // 차트 테마 설정
-            this.setTheme(opts.theme)
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
@@ -10467,14 +10491,10 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		 * 
 		 */
 		this.render = function() {
-			// svg rest 
-			this.svg.reset();
+            // SVG 메인 리셋
+            this.svg.reset();
 
-			this.svg.css({
-				'background' : this.theme("backgroundColor")
-			})
-
-			// chart 영역 계산 			
+			// chart 영역 계산
 			calculate(this);
 						
 			// chart 관련된 요소 draw
@@ -10486,9 +10506,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
-			
-			// fixel 조정 (0.5, 0.5)
-			fixedPixel(this);			
 		}
 
 		/**
@@ -14426,7 +14443,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
         }
 
         this.draw = function(chart) {
-            return chart.svg.group({}, function() {
+            chart.svg.group({ autoRender: false }, function() {
                 chart.svg.rect({
                     width: chart.width(),
                     height: 7,
@@ -14446,8 +14463,6 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
             }).translate(chart.x(), chart.y2());
         }
-
-        this.repaint = false;
     }
 
     return ScrollWidget;
