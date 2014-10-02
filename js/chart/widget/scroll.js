@@ -1,7 +1,7 @@
 jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
     var ScrollWidget = function(widget) {
-        var thumbWidth = 10,
+        var thumbWidth = 0,
             thumbLeft = 0,
             thumbLimit = 0;
 
@@ -41,7 +41,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
                     step = 0;
                 } else {
-                    step++;
+                    step += Math.abs(gap - thumbLeft);
                 }
 
                 thumb.translate(gap, 1);
@@ -59,10 +59,9 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
         this.drawBefore = function(chart) {
             var opts = chart.options,
-                limit = (opts.data.length - opts.bufferCount) * opts.shiftCount,
-                width = chart.width() / (opts.data.length / opts.bufferCount);
+                limit = (opts.data.length - opts.bufferCount) * opts.shiftCount;
 
-            thumbWidth = (width < thumbWidth) ? thumbWidth : width;
+            thumbWidth = chart.width() / (opts.data.length / opts.bufferCount);
             thumbLimit = (chart.width() - thumbWidth) / limit;
         }
 
