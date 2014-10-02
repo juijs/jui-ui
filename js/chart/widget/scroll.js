@@ -3,7 +3,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
     var ScrollWidget = function(widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
-            thumbLimit = 0;
+            thumbLimit = 0,
+            bufferCount = 0;
 
         function setScrollEvent(chart, thumb) {
             var isMove = false,
@@ -32,20 +33,26 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                     }
                 }
 
-                if(step > thumbLimit) {
-                    if(gap < thumbLeft) {
-                        chart.prev();
-                    } else {
-                        chart.next();
-                    }
-
-                    step = 0;
-                } else {
-                    step += Math.abs(gap - thumbLeft);
-                }
-
                 thumb.translate(gap, 1);
                 thumbLeft = gap;
+                
+                var currentStep = Math.ceil(gap / thumbWidth) - 1;
+                
+                var start = 0;
+                var end = 0; 
+                var half = bufferCount / 2; 
+                
+               	if (currentStep > half) {
+               		start = currentStep - half;
+               	} else {
+               		start = 0;
+               	}
+               	
+               	end = start + 9;
+               	
+               	chart.zoom(start,end);
+               	
+                
             });
 
             $("body").on("mouseup", function(e) {
@@ -61,7 +68,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
             var opts = chart.options,
                 limit = (opts.data.length - opts.bufferCount) * opts.shiftCount;
 
-            thumbWidth = chart.width() / (opts.data.length / opts.bufferCount);
+			bufferCount = opts.bufferCount;
+            thumbWidth = chart.width() / opts.data.length;
             thumbLimit = (chart.width() - thumbWidth) / limit;
         }
 
