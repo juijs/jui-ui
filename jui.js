@@ -14380,7 +14380,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
         var thumbWidth = 0,
             thumbLeft = 0,
             thumbLimit = 0,
-            bufferCount = 0;
+            bufferCount = 0,
+            dataLength = 0;
 
         function setScrollEvent(chart, thumb) {
             var isMove = false,
@@ -14426,6 +14427,11 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                	
                	end = start + 9;
                	
+               	if (end >= dataLength) {
+               		start = dataLength - 10;
+               		end = dataLength - 1;
+               	}
+               	
                	chart.zoom(start,end);
                	
                 
@@ -14444,6 +14450,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
             var opts = chart.options,
                 limit = (opts.data.length - opts.bufferCount) * opts.shiftCount;
 
+			dataLength =  opts.data.length; 
 			bufferCount = opts.bufferCount;
             thumbWidth = chart.width() / opts.data.length;
             thumbLimit = (chart.width() - thumbWidth) / limit;
