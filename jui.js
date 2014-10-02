@@ -14413,7 +14413,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                 thumb.translate(gap, 1);
                 thumbLeft = gap;
                 
-                var currentStep = Math.ceil(gap / thumbWidth) - 1;
+                var currentStep = Math.ceil((gap + thumbWidth/2) / totalCount) - 1;
                 
                 var start = 0;
                 var end = 0; 
@@ -14427,10 +14427,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                	
                	end = start + bufferCount-1;
                	
-               	if (end >= dataLength) {
+               	if (end + half > dataLength) {
                		start = dataLength - bufferCount;
                		end = dataLength - 1;
                	}
+               	
+               	console.log(gap, half, totalCount, bufferCount, dataLength, start, end);
                	
                	chart.zoom(start,end);
                	
@@ -14452,7 +14454,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
 
 			dataLength =  opts.data.length; 
 			bufferCount = opts.bufferCount;
-            thumbWidth = chart.width() / opts.data.length;
+            thumbWidth = chart.width() / bufferCount;
+            totalCount = chart.width() / opts.data.length;
             thumbLimit = (chart.width() - thumbWidth) / limit;
         }
 
