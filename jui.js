@@ -14417,7 +14417,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                 
                 var start = 0;
                 var end = 0; 
-                var half = bufferCount / 2; 
+                var half = Math.ceil(bufferCount / 2); 
                 
                	if (currentStep > half) {
                		start = currentStep - half;
@@ -14425,10 +14425,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                		start = 0;
                	}
                	
-               	end = start + 9;
+               	end = start + bufferCount-1;
                	
                	if (end >= dataLength) {
-               		start = dataLength - 10;
+               		start = dataLength - bufferCount;
                		end = dataLength - 1;
                	}
                	
