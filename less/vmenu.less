@@ -18,21 +18,21 @@
     border: 1px solid #e5e5e5;
   	color: #333;
   	font-weight: bold;
-  	.buttonBackground2Color(#fff, #f7f7f7);
+  	.btn-bgcolor-2(#fff, #f7f7f7);
   	
     &.active {
-	  	.buttonBackground2Color(#ad81e4, #7d51b6);
+	  	.btn-bgcolor-2(#ad81e4, #7d51b6);
 	  	color: #fff;
 	  	border: 1px solid #a281cc;
 	  	cursor: default;
     }
     
     &:hover:not(.active):not(.submenu) {
-	  	.buttonBackground2Color(#f8f8f8, #f1f1f1);
+	  	.btn-bgcolor-2(#f8f8f8, #f1f1f1);
     }
 
     &.submenu {
-      .buttonBackground2Color(#fff, #fff);
+      .btn-bgcolor-2(#fff, #fff);
 	  	.submenu-white();
     }
   }
@@ -41,18 +41,18 @@
   .vmenu.vmenu-flat > * {
     border: 1px solid #e5e5e5 !important;
     color: #333 !important;
-    .buttonBackground2Color(#fff, #fff) !important;
+    .btn-bgcolor-2(#fff, #fff) !important;
     
     &.active {
       color: #6836c4 !important;
     }
     
     &:hover:not(.active):not(.submenu) {
-      .buttonBackground2Color(#eee, #eee) !important;
+      .btn-bgcolor-2(#eee, #eee) !important;
     }
     
     &.submenu {
-      .buttonBackground2Color(#f5f5f5, #f5f5f5) !important;
+      .btn-bgcolor-2(#f5f5f5, #f5f5f5) !important;
       .submenu-white();
     }
   }
@@ -61,16 +61,16 @@
   .vmenu-black > * {
   	border: 1px solid #373737 !important;
   	color: #fff !important;
-  	.buttonBackground2Color(#2e2e2e, #1a1a1a) !important;
+  	.btn-bgcolor-2(#2e2e2e, #1a1a1a) !important;
   	
   	&.active {
-      .buttonBackground2Color(#ad81e4, #7d51b6) !important;
+      .btn-bgcolor-2(#ad81e4, #7d51b6) !important;
       color: #fff !important;
       border: 1px solid #9165c9 !important;
     }
   	
   	&:hover:not(.active):not(.submenu) {
-	  	.buttonBackground2Color(#464646, #333) !important;
+	  	.btn-bgcolor-2(#464646, #333) !important;
     }
     
     &.submenu {
@@ -82,14 +82,14 @@
   .vmenu-black.vmenu-flat > * {
   	border: 1px solid #373737 !important;
   	color: #fff !important;
-  	.buttonBackground2Color(#1a1a1a, #1a1a1a) !important;
+  	.btn-bgcolor-2(#1a1a1a, #1a1a1a) !important;
   	
   	&.active {
       color: #ac7eff !important;
     }
   	
   	&:hover:not(.active):not(.submenu) {
-	  	.buttonBackground2Color(#272727, #272727) !important;
+	  	.btn-bgcolor-2(#272727, #272727) !important;
     }
 
     &.submenu {
@@ -120,7 +120,7 @@
   
   // Color, Black-Submenu
   .submenu-black() {
-    .buttonBackground2Color(#333, #333) !important;
+    .btn-bgcolor-2(#333, #333) !important;
       
     > li {
       &:hover:not(.active) {
@@ -170,5 +170,10 @@
         font-weight: inherit;
       }
     }
+  }
+
+  /* Icon position in Tab */
+  .vmenu > * > [class^="icon-"] {
+    float: right;
   }
 }
