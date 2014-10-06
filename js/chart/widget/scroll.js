@@ -3,7 +3,6 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
     var ScrollWidget = function(widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
-            thumbLimit = 0,
             bufferCount = 0,
             dataLength = 0,
             totalWidth = 0,
@@ -13,8 +12,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
         function setScrollEvent(chart, thumb) {
             var isMove = false,
                 mouseStart = 0,
-                thumbStart = 0,
-                step = 0;
+                thumbStart = 0;
 
             thumb.on("mousedown", function(e) {
                 if(isMove) return;
@@ -40,20 +38,14 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                 thumb.translate(gap, 1);
                 thumbLeft = gap;
 
-                
-                var startgap = gap * rate;
-                var endgap = (gap + thumbWidth) * rate;
-                
-                var start = startgap == 0 ? 0 : Math.floor(startgap / piece);
+                var startgap = gap * rate,
+                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
                 
                 if (gap + thumbWidth == chart.width()) {
                 	start += 1;
                 }
-                
-                var end = start + bufferCount-1;
-               	
-               	chart.zoom(start,end);
-                
+
+               	chart.zoom(start, start + bufferCount);
             });
 
             $("body").on("mouseup", function(e) {
@@ -66,18 +58,15 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function(chart) {
-            var opts = chart.options,
-                limit = (opts.data.length - opts.bufferCount) * opts.shiftCount;
+            var opts = chart.options;
 
 			dataLength =  opts.data.length; 
 			bufferCount = opts.bufferCount;
-			
-			
+
 			piece = chart.width() / bufferCount;
 			totalWidth = piece * dataLength;
-			rate = totalWidth/chart.width();
-            thumbWidth = chart.width() * (bufferCount / dataLength )+2 ;
-            thumbLimit = (chart.width() - thumbWidth) / limit;
+			rate = totalWidth / chart.width();
+            thumbWidth = chart.width() * (bufferCount / dataLength) + 2;
         }
 
         this.draw = function(chart) {
@@ -85,14 +74,14 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                 chart.svg.rect({
                     width: chart.width(),
                     height: 7,
-                    fill: "#dcdcdc"
+                    fill: chart.theme("scrollBackgroundColor")
                 });
 
                 var thumb = chart.svg.rect({
                     width: thumbWidth,
                     height: 5,
-                    fill: "#b2b2b2",
-                    stroke: "#9f9fa4",
+                    fill: chart.theme("scrollThumbBackgroundColor"),
+                    stroke: chart.theme("scrollThumbBorderColor"),
                     "stroke-width": 1
                 }).translate(thumbLeft, 1);
 

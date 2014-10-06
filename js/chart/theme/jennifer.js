@@ -66,6 +66,9 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
-        tooltipBorderColor : "#aaaaaa"
+        tooltipBorderColor : "#aaaaaa",
+        scrollBackgroundColor : "#dcdcdc",
+        scrollThumbBackgroundColor : "#b2b2b2",
+        scrollThumbBorderColor : "#9f9fa4"
     }
 });
