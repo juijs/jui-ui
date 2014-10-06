@@ -16,7 +16,7 @@
 
 .jui {
   @font-face {
-    font-family: 'jui-icon-list';
+    font-family: 'iconjui';
     src: url('img/icon-list.eot?2jwwu9');
     src: url('img/icon-list.eot?#iefix2jwwu9') format('embedded-opentype'),
     url('img/icon-list.woff?2jwwu9') format('woff'),
@@ -27,7 +27,7 @@
   }
 
   [class^="icon-"], [class*=" icon-"] {
-    font-family: 'jui-icon-list';
+    font-family: 'iconjui';
     speak: none;
     font-size: inherit;
     font-style: normal;
@@ -39,9 +39,6 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    /* Default Color */
-    .icon-black;
   }
 
   .icon-add-dir:before {
@@ -204,34 +201,11 @@
     content: "\e634";
   }
 
-  /* Icon Position */
-  .icon-edge {
-    text-align: right;
-  }
-
   /* Icon Colors */
   .icon-black   { color: #343434 }
   .icon-purple  { color: #8a5ad1 }
   .icon-white   { color: #fff }
   .icon-gray    { color: #bdbdbd }
-
-  /* Icon Color in Buttons */
-  .btn-black-gray.active > [class^="icon-"],
-  .btn-black-gray:active > [class^="icon-"] {
-    .icon-black;
-  }
-  .btn-gray-black.active > [class^="icon-"],
-  .btn-gray-black:active > [class^="icon-"],
-  .btn-purple-black.active > [class^="icon-"],
-  .btn-purple-black:active > [class^="icon-"] {
-    .icon-white;
-  }
-
-  /* Icon Color in Tabs */
-  .pill li.active [class^="icon-"],
-  .pill li.menu-keep [class^="icon-"], .tab li.menu-keep [class^="icon-"] {
-    .icon-white;
-  }
 }
 
 

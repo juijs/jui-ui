@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Window</title>
+
+<link rel="stylesheet" href="../../jui.css" />
+</head>
+<body class="jui">
+
+<div class="page-header">
+	<h1>Window</h1>
+</div>
+
+<section>
+	<h2>Default</h2>
+	<p>
+		윈도우는 총 3가지의 스타일을 제공하며, <strong>head</strong>, <strong>body</strong> 그리고 <strong>foot</strong>으로 구성되어 있습니다.
+		
+		<div style="position: relative; height: 540px;">
+			<div class="window" style="width: 360px; height: 250px;">
+				<div class="head">
+					<div class="left">HOME</div>
+					<div class="right">
+						<i class='icon-close close'></i>
+					</div>
+			    </div>
+				<div class="body">
+					Contents...<br/>
+				</div>
+			</div>
+	
+			<div class="window window-white" style="right: 0px; width: 360px; height: 250px;">
+				<div class="head">
+					<div class="left">HOME</div>
+					<div class="right">
+						<a href="javascript:alert('plus');"><i class="icon-plus"></i></a> 
+						<a href="javascript:alert('search');"><i class="icon-search"></i></a> 
+						<a href="#" class='close'><i class='icon-exit'></i></a>
+					</div>
+			    </div>
+				<div class="body">
+					Contents...<br/>
+				</div>
+				<div class="foot" align="center">
+					<a href="#" class="btn btn-purple">Save</a> 
+					<a href="#" class="btn btn-gray">Close</a>
+				</div>
+			</div>
+	
+			<div class="window window-black" style="top: 270px; width: 360px; height: 250px;">
+				<div class="head">
+					<div class="left">HOME</div>
+					<div class="right">
+						<a href="javascript:alert('plus');"><i class="icon-plus icon-white"></i></a> 
+						<a href="javascript:alert('search');"><i class="icon-search icon-white"></i></a> 
+						<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+					</div>
+			    </div>
+				<div class="body">
+					Contents...<br/>
+				</div>
+				<div class="foot">
+					<a href="#" class="btn btn-black">Save</a> 
+					<a href="#" class="btn btn-black">Close</a>
+				</div>
+			</div>
+		</div>
+	</p>
+	
+	<p class="br">
+		<strong>right</strong> 태그와 <strong>foot</strong> 태그는 필요에 따라 옵션 형태로 사용할 수 있습니다.
+		
+<pre><code class="language-markup">&lt;div class="window"&gt;
+	&lt;div class="head"&gt;
+		&lt;div class="left"&gt;HOME&lt;/div&gt;
+		&lt;div class="right"&gt;
+			&lt;a href="javascript:alert('plus');"&gt;&lt;i class="icon-plus icon-white"&gt;&lt;/i&gt;&lt;/a&gt; 
+			&lt;a href="javascript:alert('search');"&gt;&lt;i class="icon-search icon-white"&gt;&lt;/i&gt;&lt;/a&gt; 
+			&lt;a href="#" class='close'&gt;&lt;i class='icon-exit icon-white'&gt;&lt;/i&gt;&lt;/a&gt;
+		&lt;/div&gt;
+    &lt;/div&gt;
+	&lt;div class="body"&gt;
+		Contents...&lt;br/&gt;
+	&lt;/div&gt;
+	&lt;div class="foot"&gt;
+		&lt;a href="#" class="btn btn-black"&gt;Save&lt;/a&gt; 
+		&lt;a href="#" class="btn btn-black"&gt;Close&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="window window-white"&gt;...&lt;/div&gt;
+&lt;div class="window window-black"&gt;...&lt;/div&gt;</code></pre>
+	</p>
+</section>
+</body>
+</html>

@@ -1001,6 +1001,16 @@
   filter: alpha(opacity=50);
   cursor: not-allowed;
 }
+.jui .btn-black-gray.active > [class^="icon-"],
+.jui .btn-black-gray:active > [class^="icon-"] {
+  color: #343434;
+}
+.jui .btn-gray-black.active > [class^="icon-"],
+.jui .btn-gray-black:active > [class^="icon-"],
+.jui .btn-purple-black.active > [class^="icon-"],
+.jui .btn-purple-black:active > [class^="icon-"] {
+  color: #fff;
+}
 .jui .dropup,
 .jui .dropdown,
 .jui .combo {
@@ -1469,13 +1479,10 @@
   border-bottom: 9px solid #434343 !important;
 }
 .jui {
-  /* Icon Position */
   /* Icon Colors */
-  /* Icon Color in Buttons */
-  /* Icon Color in Tabs */
 }
 @font-face {
-  font-family: 'jui-icon-list';
+  font-family: 'iconjui';
   src: url('img/icon-list.eot?2jwwu9');
   src: url('img/icon-list.eot?#iefix2jwwu9') format('embedded-opentype'), url('img/icon-list.woff?2jwwu9') format('woff'), url('img/icon-list.ttf?2jwwu9') format('truetype'), url('img/icon-list.svg?2jwwu9#icomoon') format('svg');
   font-weight: normal;
@@ -1483,7 +1490,7 @@
 }
 .jui [class^="icon-"],
 .jui [class*=" icon-"] {
-  font-family: 'jui-icon-list';
+  font-family: 'iconjui';
   speak: none;
   font-size: inherit;
   font-style: normal;
@@ -1494,8 +1501,6 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Default Color */
-  color: #343434;
 }
 .jui .icon-add-dir:before {
   content: "\e600";
@@ -1656,9 +1661,6 @@
 .jui .icon-upload:before {
   content: "\e634";
 }
-.jui .icon-edge {
-  text-align: right;
-}
 .jui .icon-black {
   color: #343434;
 }
@@ -1670,21 +1672,6 @@
 }
 .jui .icon-gray {
   color: #bdbdbd;
-}
-.jui .btn-black-gray.active > [class^="icon-"],
-.jui .btn-black-gray:active > [class^="icon-"] {
-  color: #343434;
-}
-.jui .btn-gray-black.active > [class^="icon-"],
-.jui .btn-gray-black:active > [class^="icon-"],
-.jui .btn-purple-black.active > [class^="icon-"],
-.jui .btn-purple-black:active > [class^="icon-"] {
-  color: #ffffff;
-}
-.jui .pill li.active [class^="icon-"],
-.jui .pill li.menu-keep [class^="icon-"],
-.jui .tab li.menu-keep [class^="icon-"] {
-  color: #ffffff;
 }
 .jui .group,
 .jui .combo,
@@ -2009,6 +1996,10 @@
   cursor: pointer;
   right: 0px;
 }
+.jui .window > .head > .right > a {
+  text-decoration: none;
+  color: inherit;
+}
 .jui .window > .head > * {
   position: absolute;
   padding: 8px 8px 6px 8px;
@@ -2029,19 +2020,6 @@
   -webkit-border-radius: 0 0 5px 5px;
   -moz-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
-  /*/
-      > .btn-large {
-        margin-top: 4px;
-      }
-      
-      > .btn-small {
-        margin-top: 11px;
-      }
-      
-      > .btn-mini {
-        margin-top: 13px;
-      }
-      /**/
 }
 .jui .window > .foot > .btn {
   margin-top: 9px;
@@ -3500,6 +3478,9 @@
   width: 10px;
   height: 10px;
 }
+.jui {
+  /* Icon color in Tab */
+}
 .jui .tab,
 .jui .pill {
   *zoom: 1;
@@ -3810,6 +3791,11 @@
   border-left: 9px solid transparent;
   border-top: 9px solid #ffffff;
 }
+.jui .pill li.active [class^="icon-"],
+.jui .pill li.menu-keep [class^="icon-"],
+.jui .tab li.menu-keep [class^="icon-"] {
+  color: #fff;
+}
 .jui .msgbox {
   position: absolute;
   margin: 0 auto;
@@ -3844,6 +3830,10 @@
   position: absolute;
   cursor: pointer;
   right: 12px;
+}
+.jui .msgbox > .head > a {
+  text-decoration: none;
+  color: inherit;
 }
 .jui .msgbox > .body {
   position: relative;
@@ -4829,6 +4819,9 @@
 .jui .vgroup-center > * {
   text-align: center;
 }
+.jui {
+  /* Icon position in Tab */
+}
 .jui .vmenu > * {
   position: relative;
   display: inline-block;
@@ -5045,6 +5038,9 @@
 }
 .jui .vmenu > .submenu > li.active > * {
   font-weight: inherit;
+}
+.jui .vmenu > * > [class^="icon-"] {
+  float: right;
 }
 .jui .paging {
   display: block;
@@ -5771,6 +5767,10 @@
   position: absolute;
   top: 4px;
   right: 4px;
+}
+.jui .notify > a {
+  text-decoration: none;
+  color: inherit;
 }
 .jui .notify > .title {
   color: #4d4d4d;
