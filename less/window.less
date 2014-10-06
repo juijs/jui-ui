@@ -32,17 +32,17 @@
                   cursor: pointer;
                   right: 0px;
                 }
-
-                > a {
-                  text-decoration: none;
-                  color: inherit;
-                }
 			}
 		}
 	  
 		> .head > * {
 			position: absolute;
 			padding: 8px 8px 6px 8px;
+
+            > a {
+              text-decoration: none;
+              color: inherit;
+            }
 		}
 
 		> .body {
@@ -85,7 +85,7 @@
 
 		> .head {
 			color: #fff;
-			.buttonBackground2Color(#3b3b3b, #121212);
+			.btn-bgcolor-2(#3b3b3b, #121212);
 		}
 	
 		> .body {
@@ -94,7 +94,7 @@
 		}
 
 		> .foot {
-			.buttonBackground2Color(#f7f7f7, #ececec);
+			.btn-bgcolor-2(#f7f7f7, #ececec);
 			border-top: 1px solid #e5e5e5;
 		}
 	}
@@ -104,7 +104,7 @@
 		background-color: #545454;
 	
 		> .head {
-			.buttonBackground2Color(#424242, #141414);
+			.btn-bgcolor-2(#424242, #141414);
 		}
 
 		> .body {
@@ -113,7 +113,7 @@
 		}
 		
 		> .foot {
-			.buttonBackground2Color(#424242, #252525);
+			.btn-bgcolor-2(#424242, #252525);
 			border-top: 1px solid #5c5c5c;
 		}
 	}
@@ -124,7 +124,7 @@
 
 		> .head {
 			color: #333;
-			.buttonBackground2Color(#fff, #f3f3f3);
+			.btn-bgcolor-2(#fff, #f3f3f3);
 		}
 		
 		> .body {
@@ -134,14 +134,14 @@
 		}
 		
 		> .foot {
-			.buttonBackground2Color(#f7f7f7, #ececec);
+			.btn-bgcolor-2(#f7f7f7, #ececec);
 			border-top: 1px solid #e5e5e5;
 		}
 	}
 	
 	.window-scroll-white {
         &::-webkit-scrollbar-track {
-		    .buttonBackground2Color(#f2f2f2, #fff, left);
+		    .btn-bgcolor-2(#f2f2f2, #fff, left);
 		    border: 1px solid #e6e6e6;
 	  	}
 	    
@@ -159,7 +159,7 @@
 
 	.window-scroll-black {
         &::-webkit-scrollbar-track {
-		    .buttonBackground2Color(#636363, #7a7a7a, left);
+		    .btn-bgcolor-2(#636363, #7a7a7a, left);
 		    border: 1px solid #7a7a7a;
 	  	}
 	    
