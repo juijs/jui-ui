@@ -10522,7 +10522,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		}
 		
         this.page = function(pNo) {
-            if(this.getPage() == pNo) return;
+            if(arguments.length == 0) {
+                return _page - 1;
+            }
+
+            if(this.page() == pNo) return;
 
             var dataList = this.options.data,
                 limit = this.options.bufferCount,
@@ -10550,10 +10554,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 this.render();
                 if(dataList.length > 0) _page++;
             }
-        }
-
-        this.getPage = function() {
-            return _page - 1;
         }
 
         this.next = function() {
@@ -10589,6 +10589,15 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
         }
 
         this.zoom = function(start, end) {
+            if(arguments.length == 0) {
+                return {
+                    start: _start,
+                    end: _end
+                }
+            }
+
+            if(_start == start && _end == end) return;
+
             var dataList = this.options.data;
 
             _end = (end > dataList.length) ? dataList.length : end;
@@ -10596,13 +10605,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             _data = dataList.slice(_start, _end);
 
             this.render();
-        }
-
-        this.getZoom = function() {
-            return {
-                start: _start,
-                end: _end
-            }
         }
 
 		/**
