@@ -241,7 +241,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group({
-				'class' : ['grid', cls].join(" "),
+				'class' : ['grid', cls].join(" ")
 			})
 
 			// render axis

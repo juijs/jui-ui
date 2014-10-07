@@ -131,10 +131,11 @@
             xtable.setCsvFile(e.target.files[0]);
         });
 
-        chart("#chart", {
+        c = chart("#chart", {
             width: 1000,
             height : 500,
             theme : "jennifer",
+            bufferCount: 10000,
             grid : {
                 x : {
                     type : "block",  // default type is block
@@ -177,6 +178,9 @@
             },
             brush : {
                 type : 'candlestick'
+            },
+            widget : {
+                type : "zoom"
             },
             bind: xtable
         });

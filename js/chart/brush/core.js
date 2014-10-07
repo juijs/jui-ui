@@ -197,6 +197,14 @@ jui.define("chart.brush.core", [ "jquery" ], function($) {
             elem.on("mousemove", function(e) {
                 chart.emit("mousemove", [ obj, e ]);
             });
+
+            elem.on("mousedown", function(e) {
+                chart.emit("mousedown", [ obj, e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                chart.emit("mouseup", [ obj, e ]);
+            });
         }
 	}
 

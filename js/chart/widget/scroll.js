@@ -1,4 +1,4 @@
-jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
+jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
     var ScrollWidget = function(widget) {
         var thumbWidth = 0,
@@ -22,7 +22,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                 thumbStart = thumbLeft;
             });
 
-            $("body").on("mousemove", function(e) {
+            chart.addEvent("body", "mousemove", function(e) {
                 if(!isMove) return;
 
                 var gap = thumbStart + e.offsetX - mouseStart;
@@ -48,7 +48,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function(_) {
                	chart.zoom(start, start + bufferCount);
             });
 
-            $("body").on("mouseup", function(e) {
+            chart.addEvent("body", "mouseup", function(e) {
                 if(!isMove) return;
 
                 isMove = false;

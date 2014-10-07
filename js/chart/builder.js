@@ -247,6 +247,61 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             return result;
         }
 
+        function setChartEvent(self) {
+            var elem = self.svg.root;
+
+            elem.on("click", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.click", [ e ]);
+            });
+
+            elem.on("dblclick", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.dblclick", [ e ]);
+            });
+
+            elem.on("contextmenu", function(e) {
+                if(!checkPosition(e)) return;
+
+                self.emit("bg.rclick", [ e ]);
+                e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.mouseover", [ e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.mouseout", [ e ]);
+            });
+
+            elem.on("mousemove", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.mousemove", [ e ]);
+            });
+
+            elem.on("mousedown", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.mousedown", [ e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                if(!checkPosition(e)) return;
+                self.emit("bg.mouseup", [ e ]);
+            });
+
+            function checkPosition(e) {
+                if(e.offsetX - self.padding("left") < 0) return;
+                if(e.offsetX - self.padding("right") > self.width()) return;
+                if(e.offsetY - self.padding("top") < 0) return;
+                if(e.offsetY - self.padding("bottom") > self.height()) return;
+
+                return true;
+            }
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -285,6 +340,9 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
             this.emit("load", []);
+
+            // 차트 배경 이벤트
+            setChartEvent(this);
         }
 		
 		/************************
@@ -594,8 +652,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 return _page - 1;
             }
 
-            if(this.page() == pNo) return;
-
             var dataList = this.options.data,
                 limit = this.options.bufferCount,
                 maxPage = Math.ceil(dataList.length / limit);
@@ -617,6 +673,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             }
 
             if(_end <= dataList.length) {
+                _start = (_start < 0) ? 0 : _start;
                 _data = dataList.slice(_start, _end);
 
                 this.render();
@@ -635,6 +692,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             _end = (isLimit) ? dataList.length : _start + limit;
             _start = (isLimit) ? dataList.length - limit : _start;
+            _start = (_start < 0) ? 0 : _start;
             _data = dataList.slice(_start, _end);
 
             this.render();
@@ -664,7 +722,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 }
             }
 
-            if(_start == start && _end == end) return;
+            if(start == end) return;
 
             var dataList = this.options.data;
 

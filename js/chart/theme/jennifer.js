@@ -69,6 +69,8 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipBorderColor : "#aaaaaa",
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
-        scrollThumbBorderColor : "#9f9fa4"
+        scrollThumbBorderColor : "#9f9fa4",
+        zoomBackgroundColor : "red",
+        zoomFocusColor : "gray"
     }
 });
