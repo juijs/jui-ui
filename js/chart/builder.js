@@ -4,6 +4,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 *
 	 */
 	var UI = function() {
+        var _initialize = false;
         var _data = [], _page = 1, _start = 0, _end = 0;
         var _grid = {}, _brush = [], _widget = [], _scales = [];
         var _padding, _series, _area, _theme;
@@ -181,7 +182,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			if (draws != null) {
 				for (var i = 0; i < draws.length; i++) {
-
 					delete draws[i].x;
 					delete draws[i].y;
 
@@ -197,14 +197,13 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                             draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
 						}
 					}
-					if (_scales.c){
+					if (_scales.c) {
 						if (!_.typeCheck("function", draws[i].c)) {
                             draws[i].c = _scales.c[draws[i].c || 0];
 						}
 					}
 
                     draws[i].index = i;
-
                     draws[i].obj = new Obj(draws[i]);
                     draws[i].obj.render(self);
 				}
@@ -343,6 +342,9 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             // 차트 배경 이벤트
             setChartEvent(this);
+
+            // 차트 초기화 설정
+            _initialize = true;
         }
 		
 		/************************
@@ -628,7 +630,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             drawDefs(this);
             drawGrid(this);
             drawBrush(this, "brush");
-            drawBrush(this, "widget");
+
+            // 위젯은 한번만 draw
+            if(!_initialize) {
+                drawBrush(this, "widget");
+            }
 
 			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
@@ -742,7 +748,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		this.size = function(width, height) {
 			this.svg.size(width, height);
 			this.render();
-		}		
+		}
 	}
 
 	UI.setting = function() {

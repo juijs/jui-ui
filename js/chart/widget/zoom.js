@@ -8,14 +8,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            chart.bind("bg.mousedown", function(e) {
-                if(isMove || chart.zoom().start > 0) return;
+            chart.on("bg.mousedown", function(e) {
+                if(isMove) return;
 
                 isMove = true;
                 mouseStart = e.offsetX;
             });
 
-            chart.bind("bg.mousemove", function(e) {
+            chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.offsetX - mouseStart;
@@ -67,13 +67,15 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
         this.draw = function(chart) {
             var r = chart.svg.rect({
+                autoRender: false,
                 height: chart.height(),
                 fill: chart.theme("zoomBackgroundColor"),
                 opacity: 0.3
             });
 
             var bg = chart.svg.group({
-                visibility: (chart.zoom().start == 0) ? "hidden" : "visible"
+                autoRender: false,
+                visibility: "hidden"
             }, function() {
                 chart.svg.rect({
                     width: chart.width(),

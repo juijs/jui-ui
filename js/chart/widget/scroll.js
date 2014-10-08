@@ -70,7 +70,9 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function(chart) {
-            chart.svg.group({ autoRender: false }, function() {
+            chart.svg.group({
+                autoRender: false
+            }, function() {
                 chart.svg.rect({
                     width: chart.width(),
                     height: 7,

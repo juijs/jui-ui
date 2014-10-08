@@ -50,12 +50,12 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
         }
 
         this.draw = function(chart) {
-            
             if (title.text == "") {
                 return; 
             }
 
             chart.text({
+                autoRender : false,
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
                 'text-anchor' : anchor

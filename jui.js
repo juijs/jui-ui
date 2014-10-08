@@ -9936,6 +9936,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 	 *
 	 */
 	var UI = function() {
+        var _initialize = false;
         var _data = [], _page = 1, _start = 0, _end = 0;
         var _grid = {}, _brush = [], _widget = [], _scales = [];
         var _padding, _series, _area, _theme;
@@ -10113,7 +10114,6 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
 			if (draws != null) {
 				for (var i = 0; i < draws.length; i++) {
-
 					delete draws[i].x;
 					delete draws[i].y;
 
@@ -10129,14 +10129,13 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                             draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
 						}
 					}
-					if (_scales.c){
+					if (_scales.c) {
 						if (!_.typeCheck("function", draws[i].c)) {
                             draws[i].c = _scales.c[draws[i].c || 0];
 						}
 					}
 
                     draws[i].index = i;
-
                     draws[i].obj = new Obj(draws[i]);
                     draws[i].obj.render(self);
 				}
@@ -10275,6 +10274,9 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
             // 차트 배경 이벤트
             setChartEvent(this);
+
+            // 차트 초기화 설정
+            _initialize = true;
         }
 		
 		/************************
@@ -10560,7 +10562,11 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             drawDefs(this);
             drawGrid(this);
             drawBrush(this, "brush");
-            drawBrush(this, "widget");
+
+            // 위젯은 한번만 draw
+            if(!_initialize) {
+                drawBrush(this, "widget");
+            }
 
 			// 커스텀 이벤트 발생 및 렌더링
 			this.svg.render();
@@ -10674,7 +10680,7 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 		this.size = function(width, height) {
 			this.svg.size(width, height);
 			this.render();
-		}		
+		}
 	}
 
 	UI.setting = function() {
@@ -14167,7 +14173,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, border = 1;
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group({}, function() {
+            g = chart.svg.group({ autoRender: false }, function() {
                 rect = chart.svg.rect({
                     fill: chart.theme("tooltipBackgroundColor"),
                     stroke: chart.theme("tooltipBorderColor"),
@@ -14186,7 +14192,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.draw = function(chart) {
             var isActive = false;
 
-            chart.bind("mouseover", function(obj, e) {
+            chart.on("mouseover", function(obj, e) {
                 if(($.inArray(obj.key, widget.brush) == -1 && widget.brush != obj.key)
                     || !obj.target) return;
 
@@ -14205,14 +14211,14 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = true;
             });
 
-            chart.bind("mousemove", function(obj, e) {
+            chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var bbox = text.element.getBBox();
                 g.translate(e.offsetX - (bbox.width / 2), e.offsetY - bbox.height);
             });
 
-            chart.bind("mouseout", function(obj, e) {
+            chart.on("mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.translate(-100, -100);
@@ -14275,12 +14281,12 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
         }
 
         this.draw = function(chart) {
-            
             if (title.text == "") {
                 return; 
             }
 
             chart.text({
+                autoRender : false,
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
                 'text-anchor' : anchor
@@ -14395,7 +14401,10 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             if (!legend) return;
 
             
-            var group = chart.svg.group({ "class" : 'widget legend'});
+            var group = chart.svg.group({
+                "class" : "widget legend",
+                autoRender : false
+            });
             
             var x = 0;
             var y = 0; 
@@ -14458,7 +14467,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             } 
             
             group.translate(Math.floor(x), Math.floor(y));
-            
         }
     }
 
@@ -14536,7 +14544,9 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function(chart) {
-            chart.svg.group({ autoRender: false }, function() {
+            chart.svg.group({
+                autoRender: false
+            }, function() {
                 chart.svg.rect({
                     width: chart.width(),
                     height: 7,
@@ -14570,14 +14580,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            chart.bind("bg.mousedown", function(e) {
-                if(isMove || chart.zoom().start > 0) return;
+            chart.on("bg.mousedown", function(e) {
+                if(isMove) return;
 
                 isMove = true;
                 mouseStart = e.offsetX;
             });
 
-            chart.bind("bg.mousemove", function(e) {
+            chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.offsetX - mouseStart;
@@ -14629,13 +14639,15 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
         this.draw = function(chart) {
             var r = chart.svg.rect({
+                autoRender: false,
                 height: chart.height(),
                 fill: chart.theme("zoomBackgroundColor"),
                 opacity: 0.3
             });
 
             var bg = chart.svg.group({
-                visibility: (chart.zoom().start == 0) ? "hidden" : "visible"
+                autoRender: false,
+                visibility: "hidden"
             }, function() {
                 chart.svg.rect({
                     width: chart.width(),

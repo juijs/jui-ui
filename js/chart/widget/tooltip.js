@@ -4,7 +4,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, border = 1;
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group({}, function() {
+            g = chart.svg.group({ autoRender: false }, function() {
                 rect = chart.svg.rect({
                     fill: chart.theme("tooltipBackgroundColor"),
                     stroke: chart.theme("tooltipBorderColor"),
@@ -23,7 +23,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.draw = function(chart) {
             var isActive = false;
 
-            chart.bind("mouseover", function(obj, e) {
+            chart.on("mouseover", function(obj, e) {
                 if(($.inArray(obj.key, widget.brush) == -1 && widget.brush != obj.key)
                     || !obj.target) return;
 
@@ -42,14 +42,14 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = true;
             });
 
-            chart.bind("mousemove", function(obj, e) {
+            chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var bbox = text.element.getBBox();
                 g.translate(e.offsetX - (bbox.width / 2), e.offsetY - bbox.height);
             });
 
-            chart.bind("mouseout", function(obj, e) {
+            chart.on("mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.translate(-100, -100);
