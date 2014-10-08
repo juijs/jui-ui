@@ -14611,8 +14611,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(!isMove) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
-                var start = Math.round(x / tick),
-                    end = Math.round((x + Math.abs(thumbWidth)) / tick);
+                var start = Math.ceil(x / tick),
+                    end = Math.ceil((x + Math.abs(thumbWidth)) / tick);
 
                 // 차트 줌
                 if(start < end) {
@@ -14631,16 +14631,21 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function(chart) {
-            var opts = chart.options;
+            var opts = chart.options,
+                len = opts.data.length;
 
-            count = (opts.data.length < opts.bufferCount) ? opts.data.length : opts.bufferCount;
+            count = (len < opts.bufferCount && len > 0) ? len : opts.bufferCount;
             tick = chart.width() / count;
         }
 
         this.draw = function(chart) {
-            var r = chart.svg.rect({
+            var cw = chart.width(),
+                ch = chart.height(),
+                r = 12;
+
+            var thumb = chart.svg.rect({
                 autoRender: false,
-                height: chart.height(),
+                height: ch,
                 fill: chart.theme("zoomBackgroundColor"),
                 opacity: 0.3
             });
@@ -14650,23 +14655,36 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 visibility: "hidden"
             }, function() {
                 chart.svg.rect({
-                    width: chart.width(),
-                    height: chart.height(),
+                    width: cw,
+                    height: ch,
                     fill: chart.theme("zoomFocusColor"),
                     opacity: 0.2
                 });
 
-                chart.svg.path({
-                    d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
-                    fill: chart.theme("zoomFocusColor"),
+                chart.svg.group({
                     cursor: "pointer"
+                }, function() {
+                    chart.svg.path({
+                        d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                        fill: chart.theme("zoomFocusColor"),
+                        x: cw - r,
+                        y: -r
+                    }).translate(cw - r, -r);
+
+                    chart.svg.circle({
+                        r: r,
+                        cx: cw,
+                        cy: 0,
+                        opacity: 0
+                    });
                 }).on("click", function(e) {
                     bg.attr({ visibility: "hidden" });
                     chart.page(1);
-                }).translate(chart.width() - 12, -12)
+                });
+
             }).translate(chart.x(), chart.y());
 
-            setDragEvent(chart, r, bg);
+            setDragEvent(chart, thumb, bg);
         }
     }
 
