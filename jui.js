@@ -1613,6 +1613,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			// Event
 			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
+
+                self.ui.emit("click", [ self.data, e ]);
 				self.ui.emit("change", [ self.data, e ]);
 
 				e.preventDefault();
@@ -1702,13 +1704,21 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		this.setIndex = function(indexList) {
-			ui_list[this.options.type].options.index = indexList;
-			ui_list[this.options.type]._setting("init", null, "index");
+            var btn = ui_list[this.options.type];
+
+			btn.options.index = indexList;
+            btn._setting("init", null, "index");
+
+            this.emit("change", [ btn.data ]);
 		}
 
 		this.setValue = function(valueList) {
-			ui_list[this.options.type].options.value = valueList;
-			ui_list[this.options.type]._setting("init", null, "value");
+            var btn = ui_list[this.options.type];
+
+            btn.options.value = valueList;
+            btn._setting("init", null, "value");
+
+            this.emit("change", [ btn.data ]);
 		}
 		
 		this.getData = function() {
@@ -1794,7 +1804,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$combo_text = ui_list["text"],
 				$combo_drop = ui_list["drop"],
 				$combo_list = $combo_drop.children("li");
-			
+
 			$combo_list.each(function(i) {
 				var elem = getElement(this),
 					value = $(elem).attr("value"),
@@ -1962,7 +1972,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			});
 			
 			// Select
-			this.addEvent($combo_drop, "click", "li", function(e) {
+			this.addEvent($combo_drop, "click", "li:not(.divider)", function(e) {
 				hideAll();
 
                 var elem = getElement(this),
@@ -1972,8 +1982,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
 				$combo_root.attr("value", value);
-				
+
+                self.emit("click", [ ui_data, e ]);
 				self.emit("change", [ ui_data, e ]);
+
 				e.preventDefault();
 			});
 			
@@ -2526,43 +2538,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				return result;
 			}
 		}
-		
-		function setEventKeydown(self) {
-			if(!self.options.keydown) return;
-			
-			self.addEvent(window, "keydown", function(e) {
-				if(self.type == "hide") return;
-				var $list = ui_list.menu.find("li");
-				
-				if(e.which == 38) { // up
-					if(index < 1) index = $list.size() - 1;
-					else index--;
-					
-					selectItem(self, function() {
-						index--;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 40) { // down
-					if(index < $list.size() - 1) index++;
-					else index = 0;
-					
-					selectItem(self, function() {
-						index++;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 13) { // enter
-					self.addTrigger($list.eq(index), "click");
-					index = -1;
-				}
-				
-				return false;
-			});
-		}
-		
+
 		function selectItem(self, callback) {
 			var $list = ui_list.menu.find("li"),
 				$target = $list.eq(index);
@@ -2589,7 +2565,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			var $dd_root = $(this.root),
 				$dd_menu = $dd_root.find("ul"),

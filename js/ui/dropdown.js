@@ -101,43 +101,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				return result;
 			}
 		}
-		
-		function setEventKeydown(self) {
-			if(!self.options.keydown) return;
-			
-			self.addEvent(window, "keydown", function(e) {
-				if(self.type == "hide") return;
-				var $list = ui_list.menu.find("li");
-				
-				if(e.which == 38) { // up
-					if(index < 1) index = $list.size() - 1;
-					else index--;
-					
-					selectItem(self, function() {
-						index--;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 40) { // down
-					if(index < $list.size() - 1) index++;
-					else index = 0;
-					
-					selectItem(self, function() {
-						index++;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 13) { // enter
-					self.addTrigger($list.eq(index), "click");
-					index = -1;
-				}
-				
-				return false;
-			});
-		}
-		
+
 		function selectItem(self, callback) {
 			var $list = ui_list.menu.find("li"),
 				$target = $list.eq(index);
@@ -164,7 +128,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			var $dd_root = $(this.root),
 				$dd_menu = $dd_root.find("ul"),

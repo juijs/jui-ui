@@ -40,7 +40,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$combo_text = ui_list["text"],
 				$combo_drop = ui_list["drop"],
 				$combo_list = $combo_drop.children("li");
-			
+
 			$combo_list.each(function(i) {
 				var elem = getElement(this),
 					value = $(elem).attr("value"),
@@ -208,7 +208,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			});
 			
 			// Select
-			this.addEvent($combo_drop, "click", "li", function(e) {
+			this.addEvent($combo_drop, "click", "li:not(.divider)", function(e) {
 				hideAll();
 
                 var elem = getElement(this),
@@ -218,8 +218,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
 				$combo_root.attr("value", value);
-				
+
+                self.emit("click", [ ui_data, e ]);
 				self.emit("change", [ ui_data, e ]);
+
 				e.preventDefault();
 			});
 			
