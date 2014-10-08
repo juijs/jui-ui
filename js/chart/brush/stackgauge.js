@@ -68,8 +68,9 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				}, chart.data(i)[brush.title]|| chart.data(i).title || ""))
 				
 				outerRadius -= this.size;
-				
 			}
+
+            return group;
 
 		}
 	}

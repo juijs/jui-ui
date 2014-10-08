@@ -157,6 +157,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 				startAngle += endAngle;
 			}
+
+            return group;
 		}
 	}
 

@@ -9899,9 +9899,14 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
             }			
 
 			// draw 함수 실행 
-			return this.draw(chart);
+			var obj = this.draw(chart);
+
+            if (!_.typeCheck("object", obj)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the svg element");
+            }
+
+            return obj;
 		}
-		
 	}
 
 	return Draw;
@@ -12353,6 +12358,8 @@ jui.define("chart.brush.bar", [], function() {
 					startY += barHeight + innerPadding;
 				}
 			}
+
+            return g;
 		}
 	}
 
@@ -12409,10 +12416,12 @@ jui.define("chart.brush.bubble", [], function() {
                     g.append(b);
                 }
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawBubble(brush, chart, this.getXY(brush, chart));
+            return this.drawBubble(brush, chart, this.getXY(brush, chart));
         }
 	}
 
@@ -12506,6 +12515,8 @@ jui.define("chart.brush.candlestick", [], function() {
                 g.append(l);
                 g.append(r);
             }
+
+            return g;
         }
     }
 
@@ -12578,6 +12589,8 @@ jui.define("chart.brush.ohlc", [], function() {
                 g.append(close);
                 g.append(open);
             }
+
+            return g;
         }
     }
 
@@ -12646,6 +12659,8 @@ jui.define("chart.brush.column", [], function() {
 					startX += columnWidth + innerPadding;
 				}
 			}
+
+            return g;
 		}
 	}
 
@@ -12811,6 +12826,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 				startAngle += endAngle;
 			}
+
+            return group;
 		}
 	}
 
@@ -12888,6 +12905,8 @@ jui.define("chart.brush.equalizer", [], function() {
                     startX += barWidth + innerPadding;
                 }
             }
+
+            return g;
         }
     }
 
@@ -12958,6 +12977,8 @@ jui.define("chart.brush.fullstack", [], function() {
 					startY += height;										
 				}
 			}
+
+            return g;
 		}
 	}
 
@@ -13007,10 +13028,12 @@ jui.define("chart.brush.line", [], function() {
 
                 g.append(p);
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawLine(brush, chart, this.getXY(brush, chart));
+            return this.drawLine(brush, chart, this.getXY(brush, chart));
         }
 	}
 
@@ -13056,8 +13079,7 @@ jui.define("chart.brush.path", [], function() {
 				path.ClosePath();				
 			}
 
-
-			return this;
+			return g;
 		}
 	}
 
@@ -13148,6 +13170,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
 				startAngle += endAngle;
 			}
+
+            return group;
 		}
 		
 	}
@@ -13238,10 +13262,12 @@ jui.define("chart.brush.scatter", [], function() {
                     g.append(p);
                 }
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawScatter(brush, chart, this.getXY(brush, chart));
+            return this.drawScatter(brush, chart, this.getXY(brush, chart));
         }
 	}
 
@@ -13292,8 +13318,9 @@ jui.define("chart.brush.stackbar", [], function() {
 
 					startX += widthArr[j]
 				}
-
 			}
+
+            return g;
 		}
 	}
 
@@ -13318,12 +13345,12 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		this.draw = function(chart) {
 			var chart_height = chart.height();
+
 			for (var i = 0; i < count; i++) {
-
 				var startX = brush.x(i) - barWidth/2;
-
 				var heightSum = 0;
 				var heightArr = [];
+
 				for (var j = 0; j < brush.target.length; j++) {
 					var height = chart.data(i, brush.target[j]);
 
@@ -13348,6 +13375,8 @@ jui.define("chart.brush.stackcolumn", [], function() {
 					startY += heightArr[j]
 				}
 			}
+
+            return g;
 		}
 	}
 
@@ -13383,9 +13412,9 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 		this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
-			})
+			});
 
-			group.translate(chart.x(), chart.y())
+			group.translate(chart.x(), chart.y());
 			
 			var len = chart.data().length; 
 			
@@ -13473,6 +13502,8 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 y += unit + this.cut;
 			}
+
+            return group;
 		}
 	}
 
@@ -13521,7 +13552,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 				'class' : 'brush circle gauge'
 			})
 
-			group.translate(chart.x(), chart.y())
+			group.translate(chart.x(), chart.y());
 
             group.append(chart.svg.circle({
                 cx : this.centerX,
@@ -13530,7 +13561,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 fill : "#ececec",
                 stroke : chart.color(0, brush.colors),
                 "stroke-width" : 2 
-            }))	
+            }));
             
             var rate = (this.value - this.min) / (this.max - this.min);
             
@@ -13539,7 +13570,9 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cy : this.centerY,
                 r : this.outerRadius * rate,
                 fill : chart.color(0, brush.colors)
-            }))            		
+            }));
+
+            return group;
 		}
 	}
 
@@ -13707,6 +13740,7 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 
 			}
 
+            return group;
 		}
 	}
 
@@ -13736,10 +13770,12 @@ jui.define("chart.brush.area", [], function() {
 
                 g.prepend(p);
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawArea(brush, chart, this.getXY(brush, chart));
+            return this.drawArea(brush, chart, this.getXY(brush, chart));
         }
     }
 
@@ -13751,7 +13787,7 @@ jui.define("chart.brush.stackline", [], function() {
 	var StackLineBrush = function(brush) {
 
         this.draw = function(chart) {
-            this.drawLine(brush, chart, this.getStackXY(brush, chart));
+            return this.drawLine(brush, chart, this.getStackXY(brush, chart));
         }
 	}
 
@@ -13762,7 +13798,7 @@ jui.define("chart.brush.stackarea", [], function() {
 	var StackAreaBrush = function(brush) {
 
 		this.draw = function(chart) {
-            this.drawArea(brush, chart, this.getStackXY(brush, chart));
+            return this.drawArea(brush, chart, this.getStackXY(brush, chart));
 		}
 	}
 
@@ -13774,7 +13810,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 	var StackScatterBrush = function(brush) {
 
         this.draw = function(chart) {
-            this.drawScatter(brush, chart, this.getStackXY(brush, chart));
+            return this.drawScatter(brush, chart, this.getStackXY(brush, chart));
         }
 	}
 
@@ -13963,6 +13999,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
             group.append(g);                
 
+            return group;
 		}
 	}
 
@@ -14072,6 +14109,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             g = this.drawText(chart, this.startAngle, this.endAngle, this.min, this.max, this.value);
             group.append(g);                
 
+            return group;
 		}
 	}
 
@@ -14148,8 +14186,9 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				}, chart.data(i)[brush.title]|| chart.data(i).title || ""))
 				
 				outerRadius -= this.size;
-				
 			}
+
+            return group;
 
 		}
 	}

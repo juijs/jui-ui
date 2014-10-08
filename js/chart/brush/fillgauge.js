@@ -159,6 +159,7 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 
 			}
 
+            return group;
 		}
 	}
 

@@ -43,8 +43,9 @@ jui.define("chart.brush.stackbar", [], function() {
 
 					startX += widthArr[j]
 				}
-
 			}
+
+            return g;
 		}
 	}
 

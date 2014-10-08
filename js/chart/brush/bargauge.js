@@ -27,9 +27,9 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 		this.draw = function(chart) {
 			var group = chart.svg.group({
 				'class' : 'brush bar gauge'
-			})
+			});
 
-			group.translate(chart.x(), chart.y())
+			group.translate(chart.x(), chart.y());
 			
 			var len = chart.data().length; 
 			
@@ -117,6 +117,8 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 
                 y += unit + this.cut;
 			}
+
+            return group;
 		}
 	}
 

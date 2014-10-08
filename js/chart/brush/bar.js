@@ -64,6 +64,8 @@ jui.define("chart.brush.bar", [], function() {
 					startY += barHeight + innerPadding;
 				}
 			}
+
+            return g;
 		}
 	}
 

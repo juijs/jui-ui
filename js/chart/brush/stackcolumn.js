@@ -16,12 +16,12 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		this.draw = function(chart) {
 			var chart_height = chart.height();
+
 			for (var i = 0; i < count; i++) {
-
 				var startX = brush.x(i) - barWidth/2;
-
 				var heightSum = 0;
 				var heightArr = [];
+
 				for (var j = 0; j < brush.target.length; j++) {
 					var height = chart.data(i, brush.target[j]);
 
@@ -46,6 +46,8 @@ jui.define("chart.brush.stackcolumn", [], function() {
 					startY += heightArr[j]
 				}
 			}
+
+            return g;
 		}
 	}
 

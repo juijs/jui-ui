@@ -62,6 +62,8 @@ jui.define("chart.brush.fullstack", [], function() {
 					startY += height;										
 				}
 			}
+
+            return g;
 		}
 	}
 

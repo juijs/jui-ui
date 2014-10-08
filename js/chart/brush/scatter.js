@@ -81,10 +81,12 @@ jui.define("chart.brush.scatter", [], function() {
                     g.append(p);
                 }
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawScatter(brush, chart, this.getXY(brush, chart));
+            return this.drawScatter(brush, chart, this.getXY(brush, chart));
         }
 	}
 

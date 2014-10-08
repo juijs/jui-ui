@@ -69,6 +69,8 @@ jui.define("chart.brush.equalizer", [], function() {
                     startX += barWidth + innerPadding;
                 }
             }
+
+            return g;
         }
     }
 

@@ -41,10 +41,12 @@ jui.define("chart.brush.line", [], function() {
 
                 g.append(p);
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawLine(brush, chart, this.getXY(brush, chart));
+            return this.drawLine(brush, chart, this.getXY(brush, chart));
         }
 	}
 

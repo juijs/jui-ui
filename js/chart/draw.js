@@ -27,9 +27,14 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
             }			
 
 			// draw 함수 실행 
-			return this.draw(chart);
+			var obj = this.draw(chart);
+
+            if (!_.typeCheck("object", obj)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the svg element");
+            }
+
+            return obj;
 		}
-		
 	}
 
 	return Draw;

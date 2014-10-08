@@ -82,6 +82,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
 				startAngle += endAngle;
 			}
+
+            return group;
 		}
 		
 	}

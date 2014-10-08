@@ -60,6 +60,8 @@ jui.define("chart.brush.column", [], function() {
 					startX += columnWidth + innerPadding;
 				}
 			}
+
+            return g;
 		}
 	}
 

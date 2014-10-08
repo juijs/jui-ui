@@ -64,6 +64,8 @@ jui.define("chart.brush.ohlc", [], function() {
                 g.append(close);
                 g.append(open);
             }
+
+            return g;
         }
     }
 

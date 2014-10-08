@@ -48,10 +48,12 @@ jui.define("chart.brush.bubble", [], function() {
                     g.append(b);
                 }
             }
+
+            return g;
         }
 
         this.draw = function(chart) {
-            this.drawBubble(brush, chart, this.getXY(brush, chart));
+            return this.drawBubble(brush, chart, this.getXY(brush, chart));
         }
 	}
 

@@ -40,7 +40,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 				'class' : 'brush circle gauge'
 			})
 
-			group.translate(chart.x(), chart.y())
+			group.translate(chart.x(), chart.y());
 
             group.append(chart.svg.circle({
                 cx : this.centerX,
@@ -49,7 +49,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 fill : "#ececec",
                 stroke : chart.color(0, brush.colors),
                 "stroke-width" : 2 
-            }))	
+            }));
             
             var rate = (this.value - this.min) / (this.max - this.min);
             
@@ -58,7 +58,9 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cy : this.centerY,
                 r : this.outerRadius * rate,
                 fill : chart.color(0, brush.colors)
-            }))            		
+            }));
+
+            return group;
 		}
 	}
 
