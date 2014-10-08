@@ -9,7 +9,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 thumbWidth = 0;
 
             chart.on("bg.mousedown", function(e) {
-                if(isMove) return;
+                if(isMove || chart.zoom().start > 0) return;
 
                 isMove = true;
                 mouseStart = e.offsetX;
