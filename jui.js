@@ -2310,7 +2310,7 @@ jui.define("util.svg.element", [], function() {
                 }
             }
 
-            return null;
+            return -1;
         }
 
         /**
@@ -2319,8 +2319,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
-        	
-        	if (elem.parent) {
+        	if(elem.parent) {
         		elem.remove();	
         	}
         	
@@ -2335,8 +2334,7 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.insert = function(index, elem) {
-        	
-        	if (elem.parent) {
+        	if(elem.parent) {
         		elem.remove();	
         	}        	
         	
@@ -2678,20 +2676,10 @@ jui.define("util.svg",
         }
         
         function create(obj, type, attr, callback) {
-            var autoRender = (attr != null && attr.autoRender === false) ? false : true;
-
-            if(autoRender === false) {
-                delete attr.autoRender;
-            }
-
             obj.create(type, attr);
 
             if(depth == 0) {
-                if(autoRender === false) {
-                    sub.append(obj);
-                } else {
-                    main.append(obj);
-                }
+                main.append(obj);
             } else {
                 parent[depth].append(obj);
             }
@@ -2825,6 +2813,16 @@ jui.define("util.svg",
             a.click();
             a.parentNode.removeChild(a);
         }
+
+        this.autoRender = function(elem, isAuto) {
+            if(depth > 0) return;
+
+            if(!isAuto) {
+                sub.append(elem);
+            } else {
+                main.append(elem);
+            }
+        }
         
         this.getTextRect = function(text) {
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
@@ -2834,27 +2832,6 @@ jui.define("util.svg",
         	el.remove();
         	
         	return { width : rect.width, height : rect.height }; 
-        }
-
-        /**
-         * 루트 엘리먼트 조작 메소드
-         *
-         */
-
-        this.each = function(callback) {
-            return root.each(callback);
-        }
-
-        this.get = function(index) {
-            return root.get(index);
-        }
-
-        this.index = function(obj) {
-            return root.index(obj);
-        }
-
-        this.css = function(css) {
-            return root.css(css);
         }
 
         /**
@@ -10137,10 +10114,23 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
                     draws[i].index = i;
                     draws[i].obj = new Obj(draws[i]);
-                    draws[i].obj.render(self);
+
+                    drawBrushAfter(self, type, draws[i].obj.render(self));
 				}
 			}
 		}
+
+        /**
+         * 브러쉬(or 위젯) 엘리먼트 생성 이후에 호출되는 함수
+         *
+         * @param elem
+         * @param type
+         */
+        function drawBrushAfter(self, type, elem) {
+            if(type == "widget") {
+                self.svg.autoRender(elem, false);
+            }
+        }
 
         /**
          * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
@@ -11246,7 +11236,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}))
 			}
 
@@ -11294,7 +11284,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}))
 			}
 			
@@ -11507,7 +11497,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}));
 			}
 
@@ -11521,7 +11511,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				})
 
 				group.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : bar,
+					y2 : (grid.line) ? -chart.height() : bar
 				}));
 
 				group.append(chart.text({
@@ -11554,7 +11544,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.width() : -bar,
+					x2 : (grid.line) ? chart.width() : -bar
 				}));
 
 				axis.append(chart.text({
@@ -14173,7 +14163,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, border = 1;
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group({ autoRender: false }, function() {
+            g = chart.svg.group({}, function() {
                 rect = chart.svg.rect({
                     fill: chart.theme("tooltipBackgroundColor"),
                     stroke: chart.theme("tooltipBorderColor"),
@@ -14224,6 +14214,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 g.translate(-100, -100);
                 isActive = false;
             });
+
+            return g;
         }
     }
 
@@ -14285,13 +14277,11 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
                 return; 
             }
 
-            chart.text({
-                autoRender : false,
+            return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
                 'text-anchor' : anchor
             }, title.text).attr(title.attr);
-            
         }
     }
 
@@ -14400,10 +14390,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         this.draw = function(chart) {
             if (!legend) return;
 
-            
             var group = chart.svg.group({
-                "class" : "widget legend",
-                autoRender : false
+                "class" : "widget legend"
             });
             
             var x = 0;
@@ -14467,6 +14455,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             } 
             
             group.translate(Math.floor(x), Math.floor(y));
+
+            return group;
         }
     }
 
@@ -14544,9 +14534,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function(chart) {
-            chart.svg.group({
-                autoRender: false
-            }, function() {
+            return chart.svg.group({}, function() {
                 chart.svg.rect({
                     width: chart.width(),
                     height: 7,
@@ -14643,48 +14631,48 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 ch = chart.height(),
                 r = 12;
 
-            var thumb = chart.svg.rect({
-                autoRender: false,
-                height: ch,
-                fill: chart.theme("zoomBackgroundColor"),
-                opacity: 0.3
-            });
-
-            var bg = chart.svg.group({
-                autoRender: false,
-                visibility: "hidden"
-            }, function() {
-                chart.svg.rect({
-                    width: cw,
+            return chart.svg.group({}, function() {
+                var thumb = chart.svg.rect({
                     height: ch,
-                    fill: chart.theme("zoomFocusColor"),
-                    opacity: 0.2
+                    fill: chart.theme("zoomBackgroundColor"),
+                    opacity: 0.3
                 });
 
-                chart.svg.group({
-                    cursor: "pointer"
+                var bg = chart.svg.group({
+                    visibility: "hidden"
                 }, function() {
-                    chart.svg.path({
-                        d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                    chart.svg.rect({
+                        width: cw,
+                        height: ch,
                         fill: chart.theme("zoomFocusColor"),
-                        x: cw - r,
-                        y: -r
-                    }).translate(cw - r, -r);
-
-                    chart.svg.circle({
-                        r: r,
-                        cx: cw,
-                        cy: 0,
-                        opacity: 0
+                        opacity: 0.2
                     });
-                }).on("click", function(e) {
-                    bg.attr({ visibility: "hidden" });
-                    chart.page(1);
-                });
 
-            }).translate(chart.x(), chart.y());
+                    chart.svg.group({
+                        cursor: "pointer"
+                    }, function() {
+                        chart.svg.path({
+                            d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                            fill: chart.theme("zoomFocusColor"),
+                            x: cw - r,
+                            y: -r
+                        }).translate(cw - r, -r);
 
-            setDragEvent(chart, thumb, bg);
+                        chart.svg.circle({
+                            r: r,
+                            cx: cw,
+                            cy: 0,
+                            opacity: 0
+                        });
+                    }).on("click", function(e) {
+                        bg.attr({ visibility: "hidden" });
+                        chart.page(1);
+                    });
+
+                }).translate(chart.x(), chart.y());
+
+                setDragEvent(chart, thumb, bg);
+            });
         }
     }
 

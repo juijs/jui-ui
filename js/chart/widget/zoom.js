@@ -71,48 +71,48 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 ch = chart.height(),
                 r = 12;
 
-            var thumb = chart.svg.rect({
-                autoRender: false,
-                height: ch,
-                fill: chart.theme("zoomBackgroundColor"),
-                opacity: 0.3
-            });
-
-            var bg = chart.svg.group({
-                autoRender: false,
-                visibility: "hidden"
-            }, function() {
-                chart.svg.rect({
-                    width: cw,
+            return chart.svg.group({}, function() {
+                var thumb = chart.svg.rect({
                     height: ch,
-                    fill: chart.theme("zoomFocusColor"),
-                    opacity: 0.2
+                    fill: chart.theme("zoomBackgroundColor"),
+                    opacity: 0.3
                 });
 
-                chart.svg.group({
-                    cursor: "pointer"
+                var bg = chart.svg.group({
+                    visibility: "hidden"
                 }, function() {
-                    chart.svg.path({
-                        d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                    chart.svg.rect({
+                        width: cw,
+                        height: ch,
                         fill: chart.theme("zoomFocusColor"),
-                        x: cw - r,
-                        y: -r
-                    }).translate(cw - r, -r);
-
-                    chart.svg.circle({
-                        r: r,
-                        cx: cw,
-                        cy: 0,
-                        opacity: 0
+                        opacity: 0.2
                     });
-                }).on("click", function(e) {
-                    bg.attr({ visibility: "hidden" });
-                    chart.page(1);
-                });
 
-            }).translate(chart.x(), chart.y());
+                    chart.svg.group({
+                        cursor: "pointer"
+                    }, function() {
+                        chart.svg.path({
+                            d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                            fill: chart.theme("zoomFocusColor"),
+                            x: cw - r,
+                            y: -r
+                        }).translate(cw - r, -r);
 
-            setDragEvent(chart, thumb, bg);
+                        chart.svg.circle({
+                            r: r,
+                            cx: cw,
+                            cy: 0,
+                            opacity: 0
+                        });
+                    }).on("click", function(e) {
+                        bg.attr({ visibility: "hidden" });
+                        chart.page(1);
+                    });
+
+                }).translate(chart.x(), chart.y());
+
+                setDragEvent(chart, thumb, bg);
+            });
         }
     }
 

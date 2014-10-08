@@ -44,7 +44,7 @@ jui.define("util.svg.element", [], function() {
                 }
             }
 
-            return null;
+            return -1;
         }
 
         /**
@@ -53,8 +53,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
-        	
-        	if (elem.parent) {
+        	if(elem.parent) {
         		elem.remove();	
         	}
         	
@@ -69,8 +68,7 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.insert = function(index, elem) {
-        	
-        	if (elem.parent) {
+        	if(elem.parent) {
         		elem.remove();	
         	}        	
         	
@@ -412,20 +410,10 @@ jui.define("util.svg",
         }
         
         function create(obj, type, attr, callback) {
-            var autoRender = (attr != null && attr.autoRender === false) ? false : true;
-
-            if(autoRender === false) {
-                delete attr.autoRender;
-            }
-
             obj.create(type, attr);
 
             if(depth == 0) {
-                if(autoRender === false) {
-                    sub.append(obj);
-                } else {
-                    main.append(obj);
-                }
+                main.append(obj);
             } else {
                 parent[depth].append(obj);
             }
@@ -559,6 +547,16 @@ jui.define("util.svg",
             a.click();
             a.parentNode.removeChild(a);
         }
+
+        this.autoRender = function(elem, isAuto) {
+            if(depth > 0) return;
+
+            if(!isAuto) {
+                sub.append(elem);
+            } else {
+                main.append(elem);
+            }
+        }
         
         this.getTextRect = function(text) {
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
@@ -568,27 +566,6 @@ jui.define("util.svg",
         	el.remove();
         	
         	return { width : rect.width, height : rect.height }; 
-        }
-
-        /**
-         * 루트 엘리먼트 조작 메소드
-         *
-         */
-
-        this.each = function(callback) {
-            return root.each(callback);
-        }
-
-        this.get = function(index) {
-            return root.get(index);
-        }
-
-        this.index = function(obj) {
-            return root.index(obj);
-        }
-
-        this.css = function(css) {
-            return root.css(css);
         }
 
         /**

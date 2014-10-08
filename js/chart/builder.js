@@ -205,10 +205,23 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
 
                     draws[i].index = i;
                     draws[i].obj = new Obj(draws[i]);
-                    draws[i].obj.render(self);
+
+                    drawBrushAfter(self, type, draws[i].obj.render(self));
 				}
 			}
 		}
+
+        /**
+         * 브러쉬(or 위젯) 엘리먼트 생성 이후에 호출되는 함수
+         *
+         * @param elem
+         * @param type
+         */
+        function drawBrushAfter(self, type, elem) {
+            if(type == "widget") {
+                self.svg.autoRender(elem, false);
+            }
+        }
 
         /**
          * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.

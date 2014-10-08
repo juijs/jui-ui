@@ -101,10 +101,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         this.draw = function(chart) {
             if (!legend) return;
 
-            
             var group = chart.svg.group({
-                "class" : "widget legend",
-                autoRender : false
+                "class" : "widget legend"
             });
             
             var x = 0;
@@ -168,6 +166,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             } 
             
             group.translate(Math.floor(x), Math.floor(y));
+
+            return group;
         }
     }
 

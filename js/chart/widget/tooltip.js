@@ -4,7 +4,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, border = 1;
 
         this.drawBefore = function(chart) {
-            g = chart.svg.group({ autoRender: false }, function() {
+            g = chart.svg.group({}, function() {
                 rect = chart.svg.rect({
                     fill: chart.theme("tooltipBackgroundColor"),
                     stroke: chart.theme("tooltipBorderColor"),
@@ -55,6 +55,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 g.translate(-100, -100);
                 isActive = false;
             });
+
+            return g;
         }
     }
 

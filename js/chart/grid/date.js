@@ -38,7 +38,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}));
 			}
 
@@ -52,7 +52,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				})
 
 				group.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : bar,
+					y2 : (grid.line) ? -chart.height() : bar
 				}));
 
 				group.append(chart.text({
@@ -85,7 +85,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.width() : -bar,
+					x2 : (grid.line) ? chart.width() : -bar
 				}));
 
 				axis.append(chart.text({

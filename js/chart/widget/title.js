@@ -54,13 +54,11 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
                 return; 
             }
 
-            chart.text({
-                autoRender : false,
+            return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
                 'text-anchor' : anchor
             }, title.text).attr(title.attr);
-            
         }
     }
 

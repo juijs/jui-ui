@@ -15,7 +15,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}))
 			}
 
@@ -63,7 +63,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width(),
+					x2 : chart.width()
 				}))
 			}
 			
