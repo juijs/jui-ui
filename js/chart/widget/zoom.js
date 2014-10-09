@@ -121,4 +121,4 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
     }
 
     return ZoomWidget;
-}, "chart.draw");
+}, "chart.widget.core");

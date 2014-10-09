@@ -1,11 +1,12 @@
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     var CrossWidget = function(widget) {
-        var g, xline, yline;
+        var self = this;
+        var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
+        var g, xline, yline, xTooltip, yTooltip;
 
         this.drawBefore = function(chart) {
-            console.log(widget);
-
+            // SVG 차트 기본 속성
             chart.svg.root.attr({ cursor: "none" });
 
             g = chart.svg.group({
@@ -30,6 +31,36 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     "stroke-width": 1,
                     opacity: 0.8
                 });
+
+                xTooltip = chart.svg.group({}, function() {
+                    chart.svg.polygon({
+                        fill: "black",
+                        points: self.balloonPoints("left", tw, th, ta)
+                    });
+
+                    chart.svg.text({
+                        "font-family" : chart.theme("fontFamily"),
+                        "font-size" : chart.theme("tooltipFontSize"),
+                        "fill" : "white",
+                        x: 8,
+                        y: 13
+                    });
+                });
+
+                yTooltip = chart.svg.group({}, function() {
+                    chart.svg.polygon({
+                        fill: "black",
+                        points: self.balloonPoints("bottom", tw, th, ta)
+                    });
+
+                    chart.svg.text({
+                        "font-family" : chart.theme("fontFamily"),
+                        "font-size" : chart.theme("tooltipFontSize"),
+                        "fill" : "white",
+                        x: 4,
+                        y: 18
+                    });
+                });
             }).translate(chart.x(), chart.y());
         }
 
@@ -43,8 +74,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             });
 
             chart.on("bg.mousemove", function(e) {
-                var left = chart.padding("left") - 2,
-                    top = chart.padding("top") - 2;
+                var left = chart.x() - 2,
+                    top = chart.y() - 2;
 
                 xline.attr({
                     y1: e.offsetY - top,
@@ -55,6 +86,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     x1: e.offsetX - left,
                     x2: e.offsetX - left
                 });
+
+                xTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
+                yTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
+
+                // 텍스트 넣기
+                xTooltip.get(1).html("500");
+                yTooltip.get(1).html("1000");
             });
 
             return g;
@@ -62,4 +100,4 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     }
 
     return CrossWidget;
-}, "chart.draw");
+}, "chart.widget.core");

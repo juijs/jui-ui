@@ -63,4 +63,4 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
     }
 
     return TitleWidget;
-}, "chart.draw");
+}, "chart.widget.core");

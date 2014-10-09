@@ -93,4 +93,4 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
     }
 
     return ScrollWidget;
-}, "chart.draw");
+}, "chart.widget.core");

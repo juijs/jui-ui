@@ -1,4 +1,4 @@
-jui.define("chart.brush.core", [ "jquery" ], function($) {
+jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
         /**

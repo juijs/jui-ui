@@ -82,6 +82,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/stackgauge.js", // extends donut
 
                     // chart.widget
+                    "js/chart/widget/core.js",
                     "js/chart/widget/tooltip.js",
                     "js/chart/widget/title.js",
                     "js/chart/widget/legend.js",

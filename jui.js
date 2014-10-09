@@ -12086,7 +12086,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 	return RangeGrid;
 }, "chart.grid.core");
 
-jui.define("chart.brush.core", [ "jquery" ], function($) {
+jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
         /**
@@ -14202,6 +14202,52 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 	return StackGaugeBrush;
 }, "chart.brush.donut");
 
+jui.define("chart.widget.core", [ "util.base" ], function(_) {
+	var CoreWidget = function() {
+
+        this.balloonPoints = function(type, w, h, anchor) {
+            var d = [];
+
+            if(type == "top") {
+                d.push([ 0, 0 ].join(","));
+                d.push([ w, 0 ].join(","));
+                d.push([ w, h ].join(","));
+                d.push([ (w / 2) + (a / 2), h ].join(","));
+                d.push([ (w / 2), h + a ].join(","));
+                d.push([ (w / 2) - (a / 2), h ].join(","))
+                d.push([ 0, h ].join(","));
+            } else if(type == "bottom") {
+                d.push([ 0, anchor ].join(","));
+                d.push([ (w / 2) - (anchor / 2), anchor ].join(","));
+                d.push([ (w / 2), 0 ].join(","));
+                d.push([ (w / 2) + (anchor / 2), anchor ].join(","));
+                d.push([ w, anchor ].join(","));
+                d.push([ w, anchor + h ].join(","))
+                d.push([ 0, anchor + h ].join(","));
+            } else if(type == "left") {
+                d.push([ 0, 0 ].join(","));
+                d.push([ w, 0 ].join(","));
+                d.push([ w, (h / 2) - (anchor / 2) ].join(","));
+                d.push([ w + anchor, (h / 2) ].join(","));
+                d.push([ w, (h / 2) + (anchor / 2) ].join(","));
+                d.push([ w, h ].join(","));
+                d.push([ 0, h ].join(","));
+            } else if(type == "right") {
+                d.push([ 0, 0 ].join(","));
+                d.push([ w, 0 ].join(","));
+                d.push([ w, h ].join(","));
+                d.push([ 0, h ].join(","));
+                d.push([ 0, (h / 2) + (anchor / 2) ].join(","));
+                d.push([ 0 - anchor, (h / 2) ].join(","));
+                d.push([ 0, (h / 2) - (anchor / 2) ].join(","));
+            }
+
+            return d.join(" ");
+        }
+	}
+
+	return CoreWidget;
+}, "chart.draw"); 
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
@@ -14265,7 +14311,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     }
 
     return TooltipWidget;
-}, "chart.draw");
+}, "chart.widget.core");
 jui.define("chart.widget.title", [ "util.base" ], function(_) {
 
         /**
@@ -14331,7 +14377,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
     }
 
     return TitleWidget;
-}, "chart.draw");
+}, "chart.widget.core");
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
     
         /**
@@ -14506,7 +14552,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
     }
 
     return LegendWidget;
-}, "chart.draw");
+}, "chart.widget.core");
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
     var ScrollWidget = function(widget) {
@@ -14602,7 +14648,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
     }
 
     return ScrollWidget;
-}, "chart.draw");
+}, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(widget) {
@@ -14726,15 +14772,16 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
     }
 
     return ZoomWidget;
-}, "chart.draw");
+}, "chart.widget.core");
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     var CrossWidget = function(widget) {
-        var g, xline, yline;
+        var self = this;
+        var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
+        var g, xline, yline, xTooltip, yTooltip;
 
         this.drawBefore = function(chart) {
-            console.log(widget);
-
+            // SVG 차트 기본 속성
             chart.svg.root.attr({ cursor: "none" });
 
             g = chart.svg.group({
@@ -14759,6 +14806,36 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     "stroke-width": 1,
                     opacity: 0.8
                 });
+
+                xTooltip = chart.svg.group({}, function() {
+                    chart.svg.polygon({
+                        fill: "black",
+                        points: self.balloonPoints("left", tw, th, ta)
+                    });
+
+                    chart.svg.text({
+                        "font-family" : chart.theme("fontFamily"),
+                        "font-size" : chart.theme("tooltipFontSize"),
+                        "fill" : "white",
+                        x: 8,
+                        y: 13
+                    });
+                });
+
+                yTooltip = chart.svg.group({}, function() {
+                    chart.svg.polygon({
+                        fill: "black",
+                        points: self.balloonPoints("bottom", tw, th, ta)
+                    });
+
+                    chart.svg.text({
+                        "font-family" : chart.theme("fontFamily"),
+                        "font-size" : chart.theme("tooltipFontSize"),
+                        "fill" : "white",
+                        x: 4,
+                        y: 18
+                    });
+                });
             }).translate(chart.x(), chart.y());
         }
 
@@ -14772,8 +14849,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             });
 
             chart.on("bg.mousemove", function(e) {
-                var left = chart.padding("left") - 2,
-                    top = chart.padding("top") - 2;
+                var left = chart.x() - 2,
+                    top = chart.y() - 2;
 
                 xline.attr({
                     y1: e.offsetY - top,
@@ -14784,6 +14861,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     x1: e.offsetX - left,
                     x2: e.offsetX - left
                 });
+
+                xTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
+                yTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
+
+                // 텍스트 넣기
+                xTooltip.get(1).html("500");
+                yTooltip.get(1).html("1000");
             });
 
             return g;
@@ -14791,4 +14875,4 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     }
 
     return CrossWidget;
-}, "chart.draw");
+}, "chart.widget.core");

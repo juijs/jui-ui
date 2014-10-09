@@ -61,4 +61,4 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     }
 
     return TooltipWidget;
-}, "chart.draw");
+}, "chart.widget.core");

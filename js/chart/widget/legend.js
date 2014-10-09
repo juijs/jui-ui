@@ -172,4 +172,4 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
     }
 
     return LegendWidget;
-}, "chart.draw");
+}, "chart.widget.core");
