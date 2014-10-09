@@ -10222,6 +10222,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 self.emit("bg.mouseup", [ e ]);
             });
 
+            // 드래그 이벤트 막기
+            $(self.root).on("selectstart", function(e) {
+                e.preventDefault();
+            });
+
             function checkPosition(e) {
                 var pos = $(self.root).offset();
 
@@ -10249,18 +10254,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 _padding = opts.padding;
             }
 
-            // UI 바인딩 설정
-            if(opts.bind != null) {
-                this.bindUI(opts.bind);
-            }
-
-            // 드래그 이벤트 막기
-            $(this.root).on("selectstart", function(e) {
-                e.preventDefault();
-            });
-
             // 차트 테마 설정
             this.setTheme(opts.theme);
+
+            // 차트 테마 스타일 설정
+            if(opts.style) {
+                _theme = $.extend(_theme, opts.style);
+            }
+
+            // UI 바인딩 설정
+            if(opts.bind) {
+                this.bindUI(opts.bind);
+            }
 
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
@@ -10687,11 +10692,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 	UI.setting = function() {
 		return {
 			options : {
-				"width" : "100%",		// chart 기본 넓이 
-				"height" : "100%",		// chart 기본 높이 
+				width : "100%",		// chart 기본 넓이
+				height : "100%",		// chart 기본 높이
 
 				// style
-				"padding" : {
+				padding : {
 					left : 50 ,
 					right : 50,
 					bottom : 50,
@@ -10699,17 +10704,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 				},
 				
 				// chart
-				"theme" : "jennifer",	// 기본 테마 jennifer
-				"series" : {},
-				"grid" : {},
-				"brush" : null,
-                "widget" : null,
-				"data" : [],
-                "bind" : null,
+				theme : "jennifer",	// 기본 테마 jennifer
+                style : {},
+				series : {},
+				grid : {},
+				brush : null,
+                widget : null,
+				data : [],
+                bind : null,
 
                 // buffer
-                "bufferCount" : 100,
-                "shiftCount" : 1
+                bufferCount : 100,
+                shiftCount : 1
 			},
             valid: {
                 area : [ "string" ],
