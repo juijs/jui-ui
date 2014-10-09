@@ -30,7 +30,7 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 			var obj = this.draw(chart);
 
             if (!_.typeCheck("object", obj)) {
-                throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the svg element");
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             }
 
             return obj;
