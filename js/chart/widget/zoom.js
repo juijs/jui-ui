@@ -36,10 +36,10 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             });
 
             chart.addEvent(chart.root, "mouseup", function(e) {
-                if(!isMove) return;
+                if(!isMove || thumbWidth == 0) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
-                var start = Math.ceil(x / tick),
+                var start = Math.floor(x / tick),
                     end = Math.ceil((x + Math.abs(thumbWidth)) / tick);
 
                 // 차트 줌
@@ -48,14 +48,18 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     bg.attr({ "visibility": "visible" });
                 }
 
-                // 엘리먼트 및 데이터 초기화
+                resetDragStatus();
+            });
+
+            function resetDragStatus() { // 엘리먼트 및 데이터 초기화
                 isMove = false;
                 mouseStart = 0;
+                thumbWidth = 0;
 
                 thumb.attr({
                     width: 0
                 });
-            });
+            }
         }
 
         this.drawBefore = function(chart) {

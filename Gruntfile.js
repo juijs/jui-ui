@@ -86,7 +86,8 @@ module.exports = function(grunt) {
                     "js/chart/widget/title.js",
                     "js/chart/widget/legend.js",
                     "js/chart/widget/scroll.js",
-                    "js/chart/widget/zoom.js"
+                    "js/chart/widget/zoom.js",
+                    "js/chart/widget/cross.js"
                 ],
                 dest : "jui.js"
             }

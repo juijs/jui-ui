@@ -1,4 +1,4 @@
-jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($, _, SVGUtil) {
 	/**
 	 * Chart Builder 구현
 	 *
@@ -260,7 +260,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
         }
 
         function setChartEvent(self) {
-            var elem = self.svg.root;
+            var elem = self.svg.root,
+                isMouseOver = false;
 
             elem.on("click", function(e) {
                 if(!checkPosition(e)) return;
@@ -279,19 +280,22 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 e.preventDefault();
             });
 
-            elem.on("mouseover", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mouseover", [ e ]);
-            });
-
-            elem.on("mouseout", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mouseout", [ e ]);
-            });
-
             elem.on("mousemove", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mousemove", [ e ]);
+                if(!checkPosition(e)) {
+                    if(isMouseOver) {
+                        self.emit("bg.mouseout", [ e ]);
+                        isMouseOver = false;
+                    }
+
+                    return;
+                }
+
+                if(isMouseOver) {
+                    self.emit("bg.mousemove", [ e ]);
+                } else {
+                    self.emit("bg.mouseover", [ e ]);
+                    isMouseOver = true;
+                }
             });
 
             elem.on("mousedown", function(e) {
@@ -305,10 +309,12 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             });
 
             function checkPosition(e) {
-                if(e.offsetX - self.padding("left") < 0) return;
-                if(e.offsetX - self.padding("right") > self.width()) return;
-                if(e.offsetY - self.padding("top") < 0) return;
-                if(e.offsetY - self.padding("bottom") > self.height()) return;
+                var pos = $(self.root).offset();
+
+                if(pos.left + self.padding("left") > e.x) return;
+                if(pos.left + self.padding("left") + self.width() < e.x) return;
+                if(pos.top + self.padding("top") > e.y) return;
+                if(pos.top + self.padding("top") + self.height() < e.y) return;
 
                 return true;
             }

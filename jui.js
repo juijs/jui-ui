@@ -9912,7 +9912,7 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 	return Draw;
 });
 
-jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($, _, SVGUtil) {
 	/**
 	 * Chart Builder 구현
 	 *
@@ -10174,7 +10174,8 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
         }
 
         function setChartEvent(self) {
-            var elem = self.svg.root;
+            var elem = self.svg.root,
+                isMouseOver = false;
 
             elem.on("click", function(e) {
                 if(!checkPosition(e)) return;
@@ -10193,19 +10194,22 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
                 e.preventDefault();
             });
 
-            elem.on("mouseover", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mouseover", [ e ]);
-            });
-
-            elem.on("mouseout", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mouseout", [ e ]);
-            });
-
             elem.on("mousemove", function(e) {
-                if(!checkPosition(e)) return;
-                self.emit("bg.mousemove", [ e ]);
+                if(!checkPosition(e)) {
+                    if(isMouseOver) {
+                        self.emit("bg.mouseout", [ e ]);
+                        isMouseOver = false;
+                    }
+
+                    return;
+                }
+
+                if(isMouseOver) {
+                    self.emit("bg.mousemove", [ e ]);
+                } else {
+                    self.emit("bg.mouseover", [ e ]);
+                    isMouseOver = true;
+                }
             });
 
             elem.on("mousedown", function(e) {
@@ -10219,10 +10223,12 @@ jui.defineUI("chart.builder", [ "util.base", "util.svg" ], function(_, SVGUtil) 
             });
 
             function checkPosition(e) {
-                if(e.offsetX - self.padding("left") < 0) return;
-                if(e.offsetX - self.padding("right") > self.width()) return;
-                if(e.offsetY - self.padding("top") < 0) return;
-                if(e.offsetY - self.padding("bottom") > self.height()) return;
+                var pos = $(self.root).offset();
+
+                if(pos.left + self.padding("left") > e.x) return;
+                if(pos.left + self.padding("left") + self.width() < e.x) return;
+                if(pos.top + self.padding("top") > e.y) return;
+                if(pos.top + self.padding("top") + self.height() < e.y) return;
 
                 return true;
             }
@@ -14635,10 +14641,10 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             });
 
             chart.addEvent(chart.root, "mouseup", function(e) {
-                if(!isMove) return;
+                if(!isMove || thumbWidth == 0) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
-                var start = Math.ceil(x / tick),
+                var start = Math.floor(x / tick),
                     end = Math.ceil((x + Math.abs(thumbWidth)) / tick);
 
                 // 차트 줌
@@ -14647,14 +14653,18 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     bg.attr({ "visibility": "visible" });
                 }
 
-                // 엘리먼트 및 데이터 초기화
+                resetDragStatus();
+            });
+
+            function resetDragStatus() { // 엘리먼트 및 데이터 초기화
                 isMove = false;
                 mouseStart = 0;
+                thumbWidth = 0;
 
                 thumb.attr({
                     width: 0
                 });
-            });
+            }
         }
 
         this.drawBefore = function(chart) {
@@ -14716,4 +14726,69 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
     }
 
     return ZoomWidget;
+}, "chart.draw");
+jui.define("chart.widget.cross", [ "util.base" ], function(_) {
+
+    var CrossWidget = function(widget) {
+        var g, xline, yline;
+
+        this.drawBefore = function(chart) {
+            console.log(widget);
+
+            chart.svg.root.attr({ cursor: "none" });
+
+            g = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                xline = chart.svg.line({
+                    x1: 0,
+                    y1: 0,
+                    x2: chart.width(),
+                    y2: 0,
+                    stroke: "#a9a9a9",
+                    "stroke-width": 1,
+                    opacity: 0.8
+                });
+
+                yline = chart.svg.line({
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: chart.height(),
+                    stroke: "#a9a9a9",
+                    "stroke-width": 1,
+                    opacity: 0.8
+                });
+            }).translate(chart.x(), chart.y());
+        }
+
+        this.draw = function(chart) {
+            chart.on("bg.mouseover", function(e) {
+                g.attr({ visibility: "visible" });
+            });
+
+            chart.on("bg.mouseout", function(e) {
+                g.attr({ visibility: "hidden" });
+            });
+
+            chart.on("bg.mousemove", function(e) {
+                var left = chart.padding("left") - 2,
+                    top = chart.padding("top") - 2;
+
+                xline.attr({
+                    y1: e.offsetY - top,
+                    y2: e.offsetY - top
+                });
+
+                yline.attr({
+                    x1: e.offsetX - left,
+                    x2: e.offsetX - left
+                });
+            });
+
+            return g;
+        }
+    }
+
+    return CrossWidget;
 }, "chart.draw");
