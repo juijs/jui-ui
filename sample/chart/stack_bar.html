@@ -31,9 +31,11 @@
                 },
                 x : {
                     type : 'range',
+                    reverse : true, 
                     target : function(data) {
                         return data.name + data.value + data.test;
-                    }
+                    },
+                    hide : true
                 }
             },
             series : {

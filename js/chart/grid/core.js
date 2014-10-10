@@ -101,8 +101,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				if (unit == 0) {
 					grid.domain = [0, 0];
 				} else {
-					grid.domain = [end, start];
+					grid.domain = [end, start];					
+					if (grid.reverse) {
+						grid.domain.reverse();
+					}
 					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
+					
 				}
 
 
@@ -147,6 +151,11 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				
 				grid.domain = [grid.min, grid.max];
+				
+				if (grid.reverse) {
+					grid.domain.reverse();
+				}				
+				
 			}
 			
 			return grid; 

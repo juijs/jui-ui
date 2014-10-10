@@ -187,21 +187,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 					var Obj = jui.include("chart." + type + "." + draws[i].type);
 
+					var drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
+
 					if (_scales.x || _scales.x1) {
+						
 						if (!_.typeCheck("function", draws[i].x)) {
-                            draws[i].x = (typeof draws[i].x1 !== 'undefined') ? _scales.x1[draws[i].x1 || 0] : _scales.x[draws[i].x || 0];
+                            draws[i].x = (typeof drawObject.x1 !== 'undefined') ? _scales.x1[drawObject.x1 || 0] : _scales.x[drawObject.x || 0];
 						}
 					}
 					if (_scales.y || _scales.y1) {
 						if (!_.typeCheck("function", draws[i].y)) {
-                            draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
+                            draws[i].y = (typeof drawObject.y1 !== 'undefined') ? _scales.y1[drawObject.y1 || 0] : _scales.y[drawObject.y || 0];
 						}
 					}
 					if (_scales.c) {
 						if (!_.typeCheck("function", draws[i].c)) {
-                            draws[i].c = _scales.c[draws[i].c || 0];
+                            draws[i].c = _scales.c[drawObject.c || 0];
 						}
 					}
+
 
                     draws[i].index = i;
                     draws[i].obj = new Obj(draws[i]);

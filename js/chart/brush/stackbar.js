@@ -16,33 +16,34 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
+				
+				var group = chart.svg.group();
+				
 				var startY = brush.y(i) - barWidth/2;
-
-				var widthSum = 0;
-				var widthArr = [];
+				var startX = brush.x(0);
+				var value = 0;
+				
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.data(i, brush.target[j]);
+					var xValue = chart.data(i, brush.target[j]) + value;
+					 
+					var endX = brush.x(xValue);
 
-					widthSum += width;
-					widthArr.push(brush.x(width));
-				}
-
-				var startX = 0;
-
-				for (var j = 0; j < widthArr.length; j++) {
 					var r = chart.svg.rect({
-						x : startX,
+						x : (startX < endX) ? startX : endX,
 						y : startY,
-						width : widthArr[j],
+						width : Math.abs(startX - endX),
 						height : barWidth,
 						fill : chart.color(j, brush.colors)
 					});
 
                     this.addEvent(brush, chart, r, i, j);
-					g.append(r);
-
-					startX += widthArr[j]
+					group.append(r);					
+					
+					startX = endX;
+					value = xValue;
 				}
+				
+				g.append(group);
 			}
 
             return g;

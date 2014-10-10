@@ -12,7 +12,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		 * top 그리기 
 		 */
 		this.top = function(chart, g, scale) {
-
+			var full_height = chart.height();
+			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
@@ -20,6 +21,12 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+
+               var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+
+                if (domain == '') {
+                    continue;
+                }
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
@@ -29,7 +36,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x1 : -this.half_band,
 					y1 : 0,
 					x2 : -this.half_band,
-					y2 : -this.bar
+					y2 : (grid.line) ? full_height : this.bar
 				}));
 
 				axis.append(chart.text({
@@ -47,7 +54,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					y2 : -this.bar
+					y2 : (grid.line) ? full_height : this.bar
 				}));
 
 				g.append(axis);
@@ -103,7 +110,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : this.bar
+					y2 : (grid.line) ? -full_height : this.bar
 				}));
 
 				g.append(axis);

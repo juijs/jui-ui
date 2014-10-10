@@ -10101,21 +10101,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 					var Obj = jui.include("chart." + type + "." + draws[i].type);
 
+					var drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
+
 					if (_scales.x || _scales.x1) {
+						
 						if (!_.typeCheck("function", draws[i].x)) {
-                            draws[i].x = (typeof draws[i].x1 !== 'undefined') ? _scales.x1[draws[i].x1 || 0] : _scales.x[draws[i].x || 0];
+                            draws[i].x = (typeof drawObject.x1 !== 'undefined') ? _scales.x1[drawObject.x1 || 0] : _scales.x[drawObject.x || 0];
 						}
 					}
 					if (_scales.y || _scales.y1) {
 						if (!_.typeCheck("function", draws[i].y)) {
-                            draws[i].y = (typeof draws[i].y1 !== 'undefined') ? _scales.y1[draws[i].y1 || 0] : _scales.y[draws[i].y || 0];
+                            draws[i].y = (typeof drawObject.y1 !== 'undefined') ? _scales.y1[drawObject.y1 || 0] : _scales.y[drawObject.y || 0];
 						}
 					}
 					if (_scales.c) {
 						if (!_.typeCheck("function", draws[i].c)) {
-                            draws[i].c = _scales.c[draws[i].c || 0];
+                            draws[i].c = _scales.c[drawObject.c || 0];
 						}
 					}
+
 
                     draws[i].index = i;
                     draws[i].obj = new Obj(draws[i]);
@@ -11072,8 +11076,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				if (unit == 0) {
 					grid.domain = [0, 0];
 				} else {
-					grid.domain = [end, start];
+					grid.domain = [end, start];					
+					if (grid.reverse) {
+						grid.domain.reverse();
+					}
 					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
+					
 				}
 
 
@@ -11118,6 +11126,11 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.min = min;
 				
 				grid.domain = [grid.min, grid.max];
+				
+				if (grid.reverse) {
+					grid.domain.reverse();
+				}				
+				
 			}
 			
 			return grid; 
@@ -11254,7 +11267,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		 * top 그리기 
 		 */
 		this.top = function(chart, g, scale) {
-
+			var full_height = chart.height();
+			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
@@ -11262,6 +11276,12 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+
+               var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+
+                if (domain == '') {
+                    continue;
+                }
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
@@ -11271,7 +11291,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x1 : -this.half_band,
 					y1 : 0,
 					x2 : -this.half_band,
-					y2 : -this.bar
+					y2 : (grid.line) ? full_height : this.bar
 				}));
 
 				axis.append(chart.text({
@@ -11289,7 +11309,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					y2 : -this.bar
+					y2 : (grid.line) ? full_height : this.bar
 				}));
 
 				g.append(axis);
@@ -11345,7 +11365,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : this.bar
+					y2 : (grid.line) ? -full_height : this.bar
 				}));
 
 				g.append(axis);
@@ -12345,6 +12365,8 @@ jui.define("chart.brush.bar", [], function() {
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
 				var startY = brush.y(i) - half_height/2;
+				
+				var group = chart.svg.group();
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var startX = brush.x(chart.data(i, brush.target[j])),
@@ -12371,10 +12393,12 @@ jui.define("chart.brush.bar", [], function() {
 					}
 
                     this.addEvent(brush, chart, r, j, i);
-                    g.append(r);
+                    group.append(r);
 
 					startY += barHeight + innerPadding;
 				}
+				
+				g.append(group);
 			}
 
             return g;
@@ -13309,33 +13333,34 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
+				
+				var group = chart.svg.group();
+				
 				var startY = brush.y(i) - barWidth/2;
-
-				var widthSum = 0;
-				var widthArr = [];
+				var startX = brush.x(0);
+				var value = 0;
+				
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.data(i, brush.target[j]);
+					var xValue = chart.data(i, brush.target[j]) + value;
+					 
+					var endX = brush.x(xValue);
 
-					widthSum += width;
-					widthArr.push(brush.x(width));
-				}
-
-				var startX = 0;
-
-				for (var j = 0; j < widthArr.length; j++) {
 					var r = chart.svg.rect({
-						x : startX,
+						x : (startX < endX) ? startX : endX,
 						y : startY,
-						width : widthArr[j],
+						width : Math.abs(startX - endX),
 						height : barWidth,
 						fill : chart.color(j, brush.colors)
 					});
 
                     this.addEvent(brush, chart, r, i, j);
-					g.append(r);
-
-					startX += widthArr[j]
+					group.append(r);					
+					
+					startX = endX;
+					value = xValue;
 				}
+				
+				g.append(group);
 			}
 
             return g;
@@ -13365,33 +13390,36 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			var chart_height = chart.height();
 
 			for (var i = 0; i < count; i++) {
+				
+				var group = chart.svg.group();
+				
 				var startX = brush.x(i) - barWidth/2;
-				var heightSum = 0;
-				var heightArr = [];
+				var startY = brush.y(0);
+				var value = 0;
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.data(i, brush.target[j]);
 
-					heightSum += height;
-					heightArr.push(chart_height - brush.y(height));
-				}
-
-				var startY = brush.y(heightSum);
-
-				for (var j = heightArr.length - 1; j >= 0; j--) {
+				for(var j = 0; j < brush.target.length; j++) {
+					var yValue = chart.data(i, brush.target[j]) + value; 
+					
+					var endY = brush.y(yValue);
+					
 					var r = chart.svg.rect({
 						x : startX,
-						y : startY,
+						y : (startY > endY) ? endY : startY,
 						width : barWidth,
-						height : heightArr[j],
+						height : Math.abs(startY - endY),
 						fill : chart.color(j, brush.colors)
 					});
-
+					
                     this.addEvent(brush, chart, r, i, j);
-					g.append(r);
-
-					startY += heightArr[j]
+					group.append(r);					
+					
+					startY = endY;
+					value = yValue;
 				}
+				
+				g.append(group);
+
 			}
 
             return g;
@@ -14224,9 +14252,9 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 d.push([ 0, 0 ].join(","));
                 d.push([ w, 0 ].join(","));
                 d.push([ w, h ].join(","));
-                d.push([ (w / 2) + (a / 2), h ].join(","));
-                d.push([ (w / 2), h + a ].join(","));
-                d.push([ (w / 2) - (a / 2), h ].join(","))
+                d.push([ (w / 2) + (anchor / 2), h ].join(","));
+                d.push([ (w / 2), h + anchor ].join(","));
+                d.push([ (w / 2) - (anchor / 2), h ].join(","))
                 d.push([ 0, h ].join(","));
             } else if(type == "bottom") {
                 d.push([ 0, anchor ].join(","));
@@ -14822,7 +14850,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 xTooltip = chart.svg.group({}, function() {
                     chart.svg.polygon({
                         fill: "black",
-                        points: self.balloonPoints("left", tw, th, ta)
+                        'fill-opacity' : 0.5,                        
+                        points: self.balloonPoints("top", tw, th, ta)
                     });
 
                     chart.svg.text({
@@ -14838,6 +14867,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 yTooltip = chart.svg.group({}, function() {
                     chart.svg.polygon({
                         fill: "black",
+                        'fill-opacity' : 0.5,
                         points: self.balloonPoints("bottom", tw, th, ta)
                     });
 

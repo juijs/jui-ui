@@ -35,7 +35,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 xTooltip = chart.svg.group({}, function() {
                     chart.svg.polygon({
                         fill: "black",
-                        points: self.balloonPoints("left", tw, th, ta)
+                        'fill-opacity' : 0.5,                        
+                        points: self.balloonPoints("top", tw, th, ta)
                     });
 
                     chart.svg.text({
@@ -51,6 +52,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 yTooltip = chart.svg.group({}, function() {
                     chart.svg.polygon({
                         fill: "black",
+                        'fill-opacity' : 0.5,
                         points: self.balloonPoints("bottom", tw, th, ta)
                     });
 

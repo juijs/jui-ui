@@ -18,33 +18,36 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			var chart_height = chart.height();
 
 			for (var i = 0; i < count; i++) {
+				
+				var group = chart.svg.group();
+				
 				var startX = brush.x(i) - barWidth/2;
-				var heightSum = 0;
-				var heightArr = [];
+				var startY = brush.y(0);
+				var value = 0;
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.data(i, brush.target[j]);
 
-					heightSum += height;
-					heightArr.push(chart_height - brush.y(height));
-				}
-
-				var startY = brush.y(heightSum);
-
-				for (var j = heightArr.length - 1; j >= 0; j--) {
+				for(var j = 0; j < brush.target.length; j++) {
+					var yValue = chart.data(i, brush.target[j]) + value; 
+					
+					var endY = brush.y(yValue);
+					
 					var r = chart.svg.rect({
 						x : startX,
-						y : startY,
+						y : (startY > endY) ? endY : startY,
 						width : barWidth,
-						height : heightArr[j],
+						height : Math.abs(startY - endY),
 						fill : chart.color(j, brush.colors)
 					});
-
+					
                     this.addEvent(brush, chart, r, i, j);
-					g.append(r);
-
-					startY += heightArr[j]
+					group.append(r);					
+					
+					startY = endY;
+					value = yValue;
 				}
+				
+				g.append(group);
+
 			}
 
             return g;

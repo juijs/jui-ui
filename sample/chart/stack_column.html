@@ -24,12 +24,13 @@
             ],
             grid : {
 
-                x : {
+                x1 : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
                 },
                 y : {
                     type : 'range',
+                    reverse : true, 
                     target : function(data) {
                         return data.name + data.value + data.test;
                     },
@@ -43,6 +44,7 @@
             },
             brush : {
                 type : 'stackcolumn',
+                x1 : 0,
                 target : ['name', 'value', 'test']
             }
         }).render();

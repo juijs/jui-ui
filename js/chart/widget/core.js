@@ -8,9 +8,9 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 d.push([ 0, 0 ].join(","));
                 d.push([ w, 0 ].join(","));
                 d.push([ w, h ].join(","));
-                d.push([ (w / 2) + (a / 2), h ].join(","));
-                d.push([ (w / 2), h + a ].join(","));
-                d.push([ (w / 2) - (a / 2), h ].join(","))
+                d.push([ (w / 2) + (anchor / 2), h ].join(","));
+                d.push([ (w / 2), h + anchor ].join(","));
+                d.push([ (w / 2) - (anchor / 2), h ].join(","))
                 d.push([ 0, h ].join(","));
             } else if(type == "bottom") {
                 d.push([ 0, anchor ].join(","));
