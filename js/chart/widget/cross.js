@@ -42,7 +42,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         "font-family" : chart.theme("fontFamily"),
                         "font-size" : chart.theme("tooltipFontSize"),
                         "fill" : "white",
-                        x: 8,
+                        'text-anchor' : 'middle',                        
+                        x: tw/2,
                         y: 13
                     });
                 });
@@ -57,7 +58,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         "font-family" : chart.theme("fontFamily"),
                         "font-size" : chart.theme("tooltipFontSize"),
                         "fill" : "white",
-                        x: 4,
+                        'text-anchor' : 'middle',
+                        x: tw/2,
                         y: 18
                     });
                 });
@@ -91,8 +93,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 yTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
 
                 // 텍스트 넣기
-                xTooltip.get(1).html("500");
-                yTooltip.get(1).html("1000");
+                xTooltip.get(1).html(widget.y.invert(1000));
+                yTooltip.get(1).html(widget.x.invert(500));
             });
 
             return g;
