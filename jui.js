@@ -14847,9 +14847,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function(chart) {
-            // SVG 차트 기본 속성
-            chart.svg.root.attr({ cursor: "none" });
-
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
