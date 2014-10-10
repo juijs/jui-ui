@@ -11168,6 +11168,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				return old_scale.rate.apply(old_scale, arguments);
 			}
 			
+			new_scale.invert = function() {
+				return old_scale.invert.apply(old_scale, arguments);
+			}
+			
 			new_scale.key = key;
 			
 			return new_scale;
@@ -11456,13 +11460,15 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			} else {
 				this.scale.rangePoints(range);
 			}
+			
 
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
-			this.reverse = grid.reverse || false; 
+			this.reverse = grid.reverse || false;
+			 
 		}
 
 		this.draw = function(chart) {

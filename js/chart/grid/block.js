@@ -218,13 +218,15 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			} else {
 				this.scale.rangePoints(range);
 			}
+			
 
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
-			this.reverse = grid.reverse || false; 
+			this.reverse = grid.reverse || false;
+			 
 		}
 
 		this.draw = function(chart) {
