@@ -57,7 +57,6 @@
             }],
             widget : [
                 { type : 'title', text : 'Cross Widget Sample' },
-                { type : 'tooltip', brush : 0 },
                 {
                     type : 'cross',
                     format : function(d) {
@@ -67,7 +66,8 @@
                             return Math.round(d);
                         }
                     }
-                }
+                },
+                { type : 'tooltip', brush : 0 }
             ],
             style : {
                 scatterBorderWidth: 2,
