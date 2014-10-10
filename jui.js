@@ -10824,7 +10824,14 @@ jui.define("chart.theme.jennifer", [], function() {
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
-        zoomFocusColor : "gray"
+        zoomFocusColor : "gray",
+        crossBorderColor : "#a9a9a9",
+        crossBorderWidth : 1,
+        crossBorderOpacity : 0.8,
+        crossBalloonFontSize : "11px",
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonOpacity : 0.5
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -10902,7 +10909,14 @@ jui.define("chart.theme.dark", [], function() {
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
-        zoomFocusColor : "gray"
+        zoomFocusColor : "gray",
+        crossBorderColor : "#a9a9a9",
+        crossBorderWidth : 1,
+        crossBorderOpacity : 0.8,
+        crossBalloonFontSize : "11px",
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonOpacity : 0.5
     }	
 
 });
@@ -10970,7 +10984,14 @@ jui.define("chart.theme.seoul", [], function() {
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
-        zoomFocusColor : "gray"
+        zoomFocusColor : "gray",
+        crossBorderColor : "#a9a9a9",
+        crossBorderWidth : 1,
+        crossBorderOpacity : 0.8,
+        crossBalloonFontSize : "11px",
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonOpacity : 0.5
 	}
 }); 
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
@@ -14820,6 +14841,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
         var g, xline, yline, xTooltip, yTooltip;
 
+        function getTooltipData(data) {
+            if(!_.typeCheck("function", widget.format)) return;
+            return widget.format(data);
+        }
+
         this.drawBefore = function(chart) {
             // SVG 차트 기본 속성
             chart.svg.root.attr({ cursor: "none" });
@@ -14832,9 +14858,9 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     y1: 0,
                     x2: chart.width(),
                     y2: 0,
-                    stroke: "#a9a9a9",
-                    "stroke-width": 1,
-                    opacity: 0.8
+                    stroke: chart.theme("crossBorderColor"),
+                    "stroke-width": chart.theme("crossBorderWidth"),
+                    opacity: chart.theme("crossBorderOpacity")
                 });
 
                 yline = chart.svg.line({
@@ -14842,44 +14868,48 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     y1: 0,
                     x2: 0,
                     y2: chart.height(),
-                    stroke: "#a9a9a9",
-                    "stroke-width": 1,
-                    opacity: 0.8
+                    stroke: chart.theme("crossBorderColor"),
+                    "stroke-width": chart.theme("crossBorderWidth"),
+                    opacity: chart.theme("crossBorderOpacity")
                 });
 
-                xTooltip = chart.svg.group({}, function() {
-                    chart.svg.polygon({
-                        fill: "black",
-                        'fill-opacity' : 0.5,                        
-                        points: self.balloonPoints("top", tw, th, ta)
-                    });
+                // 포맷 옵션이 없을 경우, 툴팁을 생성하지 않음
+                if(widget.format) {
+                    yTooltip = chart.svg.group({}, function () {
+                        chart.svg.polygon({
+                            fill: chart.theme("crossBalloonBackgroundColor"),
+                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            points: self.balloonPoints("left", tw, th, ta)
+                        });
 
-                    chart.svg.text({
-                        "font-family" : chart.theme("fontFamily"),
-                        "font-size" : chart.theme("tooltipFontSize"),
-                        "fill" : "white",
-                        'text-anchor' : 'middle',                        
-                        x: tw/2,
-                        y: 13
-                    });
-                });
+                        chart.svg.text({
+                            "font-family": chart.theme("fontFamily"),
+                            "font-size": chart.theme("crossBalloonFontSize"),
+                            "fill": chart.theme("crossBalloonFontColor"),
+                            "text-anchor": "middle",
+                            x: tw / 2,
+                            y: 12
+                        });
+                    }).translate(-(tw + ta), 0);
 
-                yTooltip = chart.svg.group({}, function() {
-                    chart.svg.polygon({
-                        fill: "black",
-                        'fill-opacity' : 0.5,
-                        points: self.balloonPoints("bottom", tw, th, ta)
-                    });
+                    xTooltip = chart.svg.group({}, function () {
+                        chart.svg.polygon({
+                            fill: chart.theme("crossBalloonBackgroundColor"),
+                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            points: self.balloonPoints("bottom", tw, th, ta)
+                        });
 
-                    chart.svg.text({
-                        "font-family" : chart.theme("fontFamily"),
-                        "font-size" : chart.theme("tooltipFontSize"),
-                        "fill" : "white",
-                        'text-anchor' : 'middle',
-                        x: tw/2,
-                        y: 18
-                    });
-                });
+                        chart.svg.text({
+                            "font-family": chart.theme("fontFamily"),
+                            "font-size": chart.theme("crossBalloonFontSize"),
+                            "fill": chart.theme("crossBalloonFontColor"),
+                            "text-anchor": "middle",
+                            x: tw / 2,
+                            y: 17
+                        });
+                    }).translate(0, chart.height() + ta);
+                }
+
             }).translate(chart.x(), chart.y());
         }
 
@@ -14906,12 +14936,15 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     x2: e.offsetX - left
                 });
 
-                xTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
-                yTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
+                if(yTooltip) {
+                    yTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
+                    yTooltip.get(1).html(getTooltipData(widget.y.invert(e.offsetY - chart.y())));
+                }
 
-                // 텍스트 넣기
-                xTooltip.get(1).html(widget.y.invert(1000));
-                yTooltip.get(1).html(widget.x.invert(500));
+                if(xTooltip) {
+                    xTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
+                    xTooltip.get(1).html(getTooltipData(widget.x.invert(e.offsetX - chart.x())));
+                }
             });
 
             return g;

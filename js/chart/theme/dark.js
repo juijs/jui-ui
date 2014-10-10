@@ -73,7 +73,14 @@ jui.define("chart.theme.dark", [], function() {
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
-        zoomFocusColor : "gray"
+        zoomFocusColor : "gray",
+        crossBorderColor : "#a9a9a9",
+        crossBorderWidth : 1,
+        crossBorderOpacity : 0.8,
+        crossBalloonFontSize : "11px",
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonOpacity : 0.5
     }	
 
 });
