@@ -14328,10 +14328,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             if(obj.target) {
                 var t = chart.series(obj.target);
 
-                text.attr({
-                    "text-anchor": "middle",
-                    y: textY + anchor
-                });
+                // 위젯 포지션에 따른 별도 처리
+                if(widget.position == "bottom") {
+                    text.attr({ y: textY + anchor });
+                }
+
+                text.attr({ "text-anchor": "middle" });
                 text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
             } else {
                 var list = [];
