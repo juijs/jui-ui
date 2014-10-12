@@ -57,7 +57,10 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
-                'text-anchor' : anchor
+                'text-anchor' : anchor,
+                'font-family' : chart.theme("fontFamily"),
+                'font-size' : chart.theme("titleFontSize"),
+                'fill' : chart.theme("titleFontColor")
             }, title.text).attr(title.attr);
         }
     }

@@ -168,7 +168,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          */
         this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
             var obj = {
-                key: brush.index,
+                index: brush.index,
                 target: brush.target[targetIndex],
                 data: chart.data(dataIndex)
             };

@@ -65,10 +65,13 @@ jui.define("chart.theme.dark", [], function() {
         scatterBorderWidth : 1,
 
         // widget styles
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         tooltipFontColor : "#ececec",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "#ececec",
+        tooltipOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",

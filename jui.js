@@ -10816,10 +10816,13 @@ jui.define("chart.theme.jennifer", [], function() {
         scatterBorderWidth : 1,
 
         // widget styles
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
+        tooltipOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -10901,10 +10904,13 @@ jui.define("chart.theme.dark", [], function() {
         scatterBorderWidth : 1,
 
         // widget styles
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         tooltipFontColor : "#ececec",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "#ececec",
+        tooltipOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -10976,10 +10982,13 @@ jui.define("chart.theme.seoul", [], function() {
 		scatterBorderWidth : 1,
 
         // widget styles
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
+        tooltipOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -12309,7 +12318,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          */
         this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
             var obj = {
-                key: brush.index,
+                index: brush.index,
                 target: brush.target[targetIndex],
                 data: chart.data(dataIndex)
             };
@@ -14312,7 +14321,13 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
-        var padding = 7;
+        var padding = 7, textY = 14;
+        var position = (widget.position) ? widget.position : "top";
+
+        function printTooltip(chart, obj) {
+            var t = chart.series(obj.target);
+            text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+        }
 
         this.drawBefore = function(chart) {
             g = chart.svg.group({
@@ -14330,7 +14345,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     "font-size": chart.theme("tooltipFontSize"),
                     "fill": chart.theme("tooltipFontColor"),
                     "text-anchor": "middle",
-                    y: 14
+                    y: textY
                 });
             });
         }
@@ -14338,27 +14353,22 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.draw = function(chart) {
             var self = this,
                 isActive = false,
-                w, h, a;
+                w, h, a = 7;
 
             chart.on("mouseover", function(obj, e) {
-                console.log(123);
+                var brush = (widget.brush) ? widget.brush : 0;
 
-                if(($.inArray(obj.key, widget.brush) == -1 && widget.brush != obj.key)
-                    || !obj.target) return;
-
-                if(isActive) return;
+                if(isActive || ($.inArray(obj.index, brush) == -1 && brush != obj.index)) return;
 
                 // 툴팁 텍스트 출력
-                var t = chart.series(obj.target);
-                text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+                printTooltip(chart, obj);
 
                 var bbox = text.element.getBBox();
-                w = bbox.width + (padding * 2),
+                w = bbox.width + (padding * 2);
                 h = bbox.height + padding;
-                a = w / 10;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints("top", w, h, a) });
+                rect.attr({ points: self.balloonPoints(position, w, h, a) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -14369,6 +14379,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 var x = e.offsetX - (w / 2),
                     y = e.offsetY - h - a - (padding / 2);
+
+                if(position == "left" || position == "right") {
+                    y = e.offsetY - (h / 2) - (padding / 2);
+                }
+
+                if(position == "left") {
+                    x = e.offsetX - w - a;
+                } else if(position == "right") {
+                    x = e.offsetX + a;
+                } else if(position == "bottom") {
+                    y = e.offsetY + h;
+                    text.attr({ y: textY + a });
+                }
 
                 g.translate(x, y);
             });
@@ -14445,7 +14468,10 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
-                'text-anchor' : anchor
+                'text-anchor' : anchor,
+                'font-family' : chart.theme("fontFamily"),
+                'font-size' : chart.theme("titleFontSize"),
+                'fill' : chart.theme("titleFontColor")
             }, title.text).attr(title.attr);
         }
     }

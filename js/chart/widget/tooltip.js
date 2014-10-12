@@ -1,7 +1,13 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
-        var padding = 7;
+        var padding = 7, textY = 14;
+        var position = (widget.position) ? widget.position : "top";
+
+        function printTooltip(chart, obj) {
+            var t = chart.series(obj.target);
+            text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+        }
 
         this.drawBefore = function(chart) {
             g = chart.svg.group({
@@ -19,7 +25,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     "font-size": chart.theme("tooltipFontSize"),
                     "fill": chart.theme("tooltipFontColor"),
                     "text-anchor": "middle",
-                    y: 14
+                    y: textY
                 });
             });
         }
@@ -27,25 +33,22 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.draw = function(chart) {
             var self = this,
                 isActive = false,
-                w, h, a;
+                w, h, a = 7;
 
             chart.on("mouseover", function(obj, e) {
-                if(($.inArray(obj.key, widget.brush) == -1 && widget.brush != obj.key)
-                    || !obj.target) return;
+                var brush = (widget.brush) ? widget.brush : 0;
 
-                if(isActive) return;
+                if(isActive || ($.inArray(obj.index, brush) == -1 && brush != obj.index)) return;
 
                 // 툴팁 텍스트 출력
-                var t = chart.series(obj.target);
-                text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+                printTooltip(chart, obj);
 
                 var bbox = text.element.getBBox();
-                w = bbox.width + (padding * 2),
+                w = bbox.width + (padding * 2);
                 h = bbox.height + padding;
-                a = w / 10;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints("top", w, h, a) });
+                rect.attr({ points: self.balloonPoints(position, w, h, a) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -56,6 +59,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 var x = e.offsetX - (w / 2),
                     y = e.offsetY - h - a - (padding / 2);
+
+                if(position == "left" || position == "right") {
+                    y = e.offsetY - (h / 2) - (padding / 2);
+                }
+
+                if(position == "left") {
+                    x = e.offsetX - w - a;
+                } else if(position == "right") {
+                    x = e.offsetX + a;
+                } else if(position == "bottom") {
+                    y = e.offsetY + h;
+                    text.attr({ y: textY + a });
+                }
 
                 g.translate(x, y);
             });
