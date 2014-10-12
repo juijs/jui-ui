@@ -65,6 +65,8 @@ jui.define("chart.theme.jennifer", [], function() {
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",

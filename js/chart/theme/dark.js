@@ -67,6 +67,8 @@ jui.define("chart.theme.dark", [], function() {
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
         tooltipFontColor : "#ececec",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",

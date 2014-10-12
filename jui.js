@@ -10812,6 +10812,8 @@ jui.define("chart.theme.jennifer", [], function() {
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
@@ -10900,6 +10902,8 @@ jui.define("chart.theme.dark", [], function() {
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
         tooltipFontColor : "#ececec",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
@@ -10978,6 +10982,8 @@ jui.define("chart.theme.seoul", [], function() {
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
@@ -14270,43 +14276,43 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 	var CoreWidget = function() {
 
         this.balloonPoints = function(type, w, h, anchor) {
-            var d = [];
+            var points = [];
 
             if(type == "top") {
-                d.push([ 0, 0 ].join(","));
-                d.push([ w, 0 ].join(","));
-                d.push([ w, h ].join(","));
-                d.push([ (w / 2) + (anchor / 2), h ].join(","));
-                d.push([ (w / 2), h + anchor ].join(","));
-                d.push([ (w / 2) - (anchor / 2), h ].join(","))
-                d.push([ 0, h ].join(","));
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ (w / 2) + (anchor / 2), h ].join(","));
+                points.push([ (w / 2), h + anchor ].join(","));
+                points.push([ (w / 2) - (anchor / 2), h ].join(","))
+                points.push([ 0, h ].join(","));
             } else if(type == "bottom") {
-                d.push([ 0, anchor ].join(","));
-                d.push([ (w / 2) - (anchor / 2), anchor ].join(","));
-                d.push([ (w / 2), 0 ].join(","));
-                d.push([ (w / 2) + (anchor / 2), anchor ].join(","));
-                d.push([ w, anchor ].join(","));
-                d.push([ w, anchor + h ].join(","))
-                d.push([ 0, anchor + h ].join(","));
+                points.push([ 0, anchor ].join(","));
+                points.push([ (w / 2) - (anchor / 2), anchor ].join(","));
+                points.push([ (w / 2), 0 ].join(","));
+                points.push([ (w / 2) + (anchor / 2), anchor ].join(","));
+                points.push([ w, anchor ].join(","));
+                points.push([ w, anchor + h ].join(","))
+                points.push([ 0, anchor + h ].join(","));
             } else if(type == "left") {
-                d.push([ 0, 0 ].join(","));
-                d.push([ w, 0 ].join(","));
-                d.push([ w, (h / 2) - (anchor / 2) ].join(","));
-                d.push([ w + anchor, (h / 2) ].join(","));
-                d.push([ w, (h / 2) + (anchor / 2) ].join(","));
-                d.push([ w, h ].join(","));
-                d.push([ 0, h ].join(","));
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, (h / 2) - (anchor / 2) ].join(","));
+                points.push([ w + anchor, (h / 2) ].join(","));
+                points.push([ w, (h / 2) + (anchor / 2) ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ 0, h ].join(","));
             } else if(type == "right") {
-                d.push([ 0, 0 ].join(","));
-                d.push([ w, 0 ].join(","));
-                d.push([ w, h ].join(","));
-                d.push([ 0, h ].join(","));
-                d.push([ 0, (h / 2) + (anchor / 2) ].join(","));
-                d.push([ 0 - anchor, (h / 2) ].join(","));
-                d.push([ 0, (h / 2) - (anchor / 2) ].join(","));
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ 0, h ].join(","));
+                points.push([ 0, (h / 2) + (anchor / 2) ].join(","));
+                points.push([ 0 - anchor, (h / 2) ].join(","));
+                points.push([ 0, (h / 2) - (anchor / 2) ].join(","));
             }
 
-            return d.join(" ");
+            return points.join(" ");
         }
 	}
 
@@ -14449,33 +14455,33 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
 
     var TitleWidget = function(widget) {
 
-        var title, x = 0, y = 0, anchor = 'middle';
+        var title, x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function(chart) {
              
             title = widget;
 
-            title.top = typeof title.top == 'undefined' ? true : title.top;
-            title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
-            title.align = typeof title.align == 'undefined' ? 'center' : title.align;
+            title.top = typeof title.top == "undefined" ? true : title.top;
+            title.bottom = typeof title.bottom == "undefined" ? false : title.bottom;
+            title.align = typeof title.align == "undefined" ? "center" : title.align;
 
 
             if (title.bottom) {
-                y = chart.y2() + chart.padding('bottom') - 20;
+                y = chart.y2() + chart.padding("bottom") - 20;
             } else if (title.top) {
                 y = 20; 
             }
             
-            if (title.align == 'center') {
+            if (title.align == "center") {
                 x = chart.x() + chart.width()/2;
-                anchor = 'middle';
-            } else if (title.align == 'left') {
+                anchor = "middle";
+            } else if (title.align == "left") {
                 x = chart.x();
-                anchor = 'start';
+                anchor = "start";
                 
             } else {
                 x = chart.x2();
-                anchor = 'end';
+                anchor = "end";
             }
 
         }
@@ -14488,10 +14494,10 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
-                'text-anchor' : anchor,
-                'font-family' : chart.theme("fontFamily"),
-                'font-size' : chart.theme("titleFontSize"),
-                'fill' : chart.theme("titleFontColor")
+                "text-anchor" : anchor,
+                "font-family" : chart.theme("fontFamily"),
+                "font-size" : chart.theme("titleFontSize"),
+                "fill" : chart.theme("titleFontColor")
             }, title.text).attr(title.attr);
         }
     }
@@ -14509,7 +14515,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          *  left : false,       // chart 에서 title 위치 , 기본값 false, 
          *  right : false,      // chart 에서 title 위치 , 기본값 false,
          * 
-         *  align : 'middle',   // start, end, middle,  기본값은 middle 
+         *  align : "middle",   // start, end, middle,  기본값은 middle 
          *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
          *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
          * } 
@@ -14535,7 +14541,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             if (!(isTop || isBottom || isLeft || isRight)) {
                 isBottom = true; 
             }      
-
         }
         
         /**
@@ -14545,9 +14550,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          * @param {object} brush
          */
 		this.getLegendIcon = function(chart, brush) {
-			var arr = [];
-			
-			var data = brush.target; 
+			var arr = [],
+                data = brush.target;
 			
 			if (brush.legend) {
 				data = chart.data();
@@ -14564,14 +14568,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					var text = chart.series(target).text || target;					
 				}
 
-				var rect = chart.svg.getTextRect(text);
-				
-				var width = Math.min(rect.width,rect.height);
-				var height = width;				
+				var rect = chart.svg.getTextRect(text),
+                    width = Math.min(rect.width, rect.height),
+                    height = width;
 								 
 				var group = chart.svg.group({
-					'class' : 'legend icon'
-				})
+					"class" : "legend icon"
+				});
 				
 				group.append(chart.svg.rect({
 					x: 0, 
@@ -14579,12 +14582,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					width: width, 
 					height : height,
 					fill : chart.color(i, brush.colors)
-				}))
+				}));
 				
  				group.append(chart.text({
 					x : width + 4,
-					y : 10,
-					"text-anchor" : 'start'
+					y : 13,
+                    "font-family" : chart.theme("fontFamily"),
+                    "font-size" : chart.theme("legendFontSize"),
+                    "fill" : chart.theme("legendFontColor"),
+					"text-anchor" : "start"
 				}, text)) 
 				
 				arr.push({
@@ -14639,28 +14645,27 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }                   
-
             }
             
             // legend 위치  선정
             if (isBottom || isTop) {
-                var y = (isBottom) ? chart.y2() + chart.padding('bottom') - max_height : chart.y()-chart.padding('top');
+                var y = (isBottom) ? chart.y2() + chart.padding("bottom") - max_height : chart.y()-chart.padding("top");
                 
-                if (align == 'start') {
+                if (align == "start") {
                     x = chart.x();
-                } else if (align == 'middle') {
+                } else if (align == "middle") {
                     x = chart.x() + (chart.width()/2- total_width/2);
-                } else if (align == 'end') {
+                } else if (align == "end") {
                     x = chart.x2() - total_width;
                 }
             } else if (isLeft || isRight) {
-                var x = (isLeft) ? chart.x() - chart.padding('left') : chart.x2() + chart.padding('right') - max_width;
+                var x = (isLeft) ? chart.x() - chart.padding("left") : chart.x2() + chart.padding("right") - max_width;
                 
-                if (align == 'start') {
+                if (align == "start") {
                     y = chart.y();
-                } else if (align == 'middle') {
+                } else if (align == "middle") {
                     y = chart.y() + (chart.height()/2 - total_height/2);
-                } else if (align == 'end') {
+                } else if (align == "end") {
                     y = chart.y2() - total_height;
                 }
             } 

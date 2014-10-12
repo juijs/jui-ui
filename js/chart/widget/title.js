@@ -18,33 +18,33 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
 
     var TitleWidget = function(widget) {
 
-        var title, x = 0, y = 0, anchor = 'middle';
+        var title, x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function(chart) {
              
             title = widget;
 
-            title.top = typeof title.top == 'undefined' ? true : title.top;
-            title.bottom = typeof title.bottom == 'undefined' ? false : title.bottom;
-            title.align = typeof title.align == 'undefined' ? 'center' : title.align;
+            title.top = typeof title.top == "undefined" ? true : title.top;
+            title.bottom = typeof title.bottom == "undefined" ? false : title.bottom;
+            title.align = typeof title.align == "undefined" ? "center" : title.align;
 
 
             if (title.bottom) {
-                y = chart.y2() + chart.padding('bottom') - 20;
+                y = chart.y2() + chart.padding("bottom") - 20;
             } else if (title.top) {
                 y = 20; 
             }
             
-            if (title.align == 'center') {
+            if (title.align == "center") {
                 x = chart.x() + chart.width()/2;
-                anchor = 'middle';
-            } else if (title.align == 'left') {
+                anchor = "middle";
+            } else if (title.align == "left") {
                 x = chart.x();
-                anchor = 'start';
+                anchor = "start";
                 
             } else {
                 x = chart.x2();
-                anchor = 'end';
+                anchor = "end";
             }
 
         }
@@ -57,10 +57,10 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             return chart.text({
                 x : x + (title.dx || 0),
                 y : y + (title.dy || 0),
-                'text-anchor' : anchor,
-                'font-family' : chart.theme("fontFamily"),
-                'font-size' : chart.theme("titleFontSize"),
-                'fill' : chart.theme("titleFontColor")
+                "text-anchor" : anchor,
+                "font-family" : chart.theme("fontFamily"),
+                "font-size" : chart.theme("titleFontSize"),
+                "fill" : chart.theme("titleFontColor")
             }, title.text).attr(title.attr);
         }
     }
