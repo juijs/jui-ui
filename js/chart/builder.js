@@ -149,10 +149,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					}
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
-						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self);
-
-						var dist = grid[k][keyIndex].dist || 0;
+						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
+						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
+                            dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기
 						if (k == 'y') {
@@ -185,12 +184,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					delete draws[i].x;
 					delete draws[i].y;
 
-					var Obj = jui.include("chart." + type + "." + draws[i].type);
-
-					var drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
+					var Obj = jui.include("chart." + type + "." + draws[i].type),
+                        drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
 
 					if (_scales.x || _scales.x1) {
-						
 						if (!_.typeCheck("function", draws[i].x)) {
                             draws[i].x = (typeof drawObject.x1 !== 'undefined') ? _scales.x1[drawObject.x1 || 0] : _scales.x[drawObject.x || 0];
 						}
@@ -206,11 +203,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 						}
 					}
 
-
                     draws[i].index = i;
-                    draws[i].obj = new Obj(draws[i]);
-
-                    drawBrushAfter(self, type, draws[i].obj.render(self));
+                    drawBrushAfter(self, type, new Obj(draws[i]).render(self));
 				}
 			}
 		}

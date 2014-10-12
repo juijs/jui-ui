@@ -63,16 +63,20 @@
             },
             series : {
                 l: {
-                    type: "low"
+                    type: "low",
+                    text: "최저"
                 },
                 h: {
-                    type: "high"
+                    type: "high",
+                    text: "최고"
                 },
                 o: {
-                    type: "open"
+                    type: "open",
+                    text: "시작"
                 },
                 c: {
-                    type: "close"
+                    type: "close",
+                    text: "종료"
                 }
             },
             brush : [{
@@ -81,7 +85,9 @@
             widget : [{
                 type : "scroll"
             }, {
-                type : "tooltip"
+                type : "tooltip",
+                position : "bottom",
+                target : [ "l", "h", "o", "c" ]
             }]
         });
     })

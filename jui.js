@@ -10063,10 +10063,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					}
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
-						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"))
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self);
-
-						var dist = grid[k][keyIndex].dist || 0;
+						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
+						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
+                            dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기
 						if (k == 'y') {
@@ -10099,12 +10098,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					delete draws[i].x;
 					delete draws[i].y;
 
-					var Obj = jui.include("chart." + type + "." + draws[i].type);
-
-					var drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
+					var Obj = jui.include("chart." + type + "." + draws[i].type),
+                        drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
 
 					if (_scales.x || _scales.x1) {
-						
 						if (!_.typeCheck("function", draws[i].x)) {
                             draws[i].x = (typeof drawObject.x1 !== 'undefined') ? _scales.x1[drawObject.x1 || 0] : _scales.x[drawObject.x || 0];
 						}
@@ -10120,11 +10117,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 						}
 					}
 
-
                     draws[i].index = i;
-                    draws[i].obj = new Obj(draws[i]);
-
-                    drawBrushAfter(self, type, draws[i].obj.render(self));
+                    drawBrushAfter(self, type, new Obj(draws[i]).render(self));
 				}
 			}
 		}
@@ -14321,12 +14315,40 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
-        var padding = 7, textY = 14;
+        var padding = 7, anchor = 7, textY = 14;
         var position = (widget.position) ? widget.position : "top";
 
         function printTooltip(chart, obj) {
-            var t = chart.series(obj.target);
-            text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+            if(obj.target) {
+                var t = chart.series(obj.target);
+
+                text.attr({
+                    "text-anchor": "middle",
+                    y: textY + anchor
+                });
+                text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+            } else {
+                var list = [];
+
+                for(var i = 0; i < widget.target.length; i++) {
+                    var key = widget.target[i],
+                        t = chart.series(key),
+                        x = padding,
+                        y = (textY * i) + (padding * 2);
+
+                    // 위젯 포지션에 따른 별도 처리
+                    if(widget.position == "bottom") {
+                        y = y + anchor;
+                    }
+
+                    list.push("<tspan x='" + x + "' y='" + y + "'>" +
+                        ((t.text) ? t.text : key) + ": " + obj.data[key] +
+                    "</tspan>");
+                }
+
+                text.attr({ "text-anchor": "inherit" });
+                text.html(list.join(""));
+            }
         }
 
         this.drawBefore = function(chart) {
@@ -14344,7 +14366,6 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     "font-family": chart.theme("fontFamily"),
                     "font-size": chart.theme("tooltipFontSize"),
                     "fill": chart.theme("tooltipFontColor"),
-                    "text-anchor": "middle",
                     y: textY
                 });
             });
@@ -14353,7 +14374,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.draw = function(chart) {
             var self = this,
                 isActive = false,
-                w, h, a = 7;
+                w, h;
 
             chart.on("mouseover", function(obj, e) {
                 var brush = (widget.brush) ? widget.brush : 0;
@@ -14368,7 +14389,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 h = bbox.height + padding;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(position, w, h, a) });
+                rect.attr({ points: self.balloonPoints(position, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -14378,19 +14399,18 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 if(!isActive) return;
 
                 var x = e.offsetX - (w / 2),
-                    y = e.offsetY - h - a - (padding / 2);
+                    y = e.offsetY - h - anchor - (padding / 2);
 
                 if(position == "left" || position == "right") {
                     y = e.offsetY - (h / 2) - (padding / 2);
                 }
 
                 if(position == "left") {
-                    x = e.offsetX - w - a;
+                    x = e.offsetX - w - anchor;
                 } else if(position == "right") {
-                    x = e.offsetX + a;
+                    x = e.offsetX + anchor;
                 } else if(position == "bottom") {
-                    y = e.offsetY + h;
-                    text.attr({ y: textY + a });
+                    y = e.offsetY + (anchor * 2);
                 }
 
                 g.translate(x, y);
