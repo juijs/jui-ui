@@ -4,7 +4,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, anchor = 7, textY = 14;
         var position = (widget.position) ? widget.position : "top";
 
-        function printTooltip(chart, obj) {
+        function printTooltip(chart, obj, brushIndex) {
             if(obj.target) {
                 var t = chart.series(obj.target);
 
@@ -16,10 +16,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 text.attr({ "text-anchor": "middle" });
                 text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
             } else {
-                var list = [];
+                var list = [],
+                    brush = chart.brush(brushIndex);
 
-                for(var i = 0; i < widget.target.length; i++) {
-                    var key = widget.target[i],
+                for(var i = 0; i < brush.target.length; i++) {
+                    var key = brush.target[i],
                         t = chart.series(key),
                         x = padding,
                         y = (textY * i) + (padding * 2);
@@ -65,12 +66,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                var brush = (widget.brush) ? widget.brush : 0;
+                var brushIndex = (widget.brush) ? widget.brush : 0;
 
-                if(isActive || ($.inArray(obj.index, brush) == -1 && brush != obj.index)) return;
+                if(isActive || ($.inArray(obj.index, brushIndex) == -1 && brushIndex != obj.index)) return;
 
                 // 툴팁 텍스트 출력
-                printTooltip(chart, obj);
+                printTooltip(chart, obj, brushIndex);
 
                 var bbox = text.element.getBBox();
                 w = bbox.width + (padding * 2);

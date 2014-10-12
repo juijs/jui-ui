@@ -80,14 +80,14 @@
                 }
             },
             brush : [{
-                type : 'candlestick'
+                type : "candlestick",
+                target : [ "l", "h", "o", "c" ]
             }],
             widget : [{
                 type : "scroll"
             }, {
                 type : "tooltip",
-                position : "bottom",
-                target : [ "l", "h", "o", "c" ]
+                position : "bottom"
             }]
         });
     })
