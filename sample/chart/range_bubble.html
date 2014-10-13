@@ -28,7 +28,7 @@
             data.push({ name : getNumber(), name2 : getNumber(), value : time.add(start, time.minutes, i*10)} )
         }
 
-        chart("#chart", {
+        c = chart("#chart", {
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -72,8 +72,11 @@
             	{ type : 'tooltip', position : 'top' },
             	{ type : 'title', text : 'Range Bubble Sample'},
             	{ type : 'legend' }
-            ]
-        }).render();
+            ],
+            style : {
+                //"tooltipBackgroundColor": "red"
+            }
+        });
     })
 </script>
 

@@ -185,7 +185,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					delete draws[i].y;
 
 					var Obj = jui.include("chart." + type + "." + draws[i].type),
-                        drawObject = (type == 'widget') ? self.brush(draws[i].brush) : draws[i];
+                        drawObject = (type == "widget") ? self.brush(i) : draws[i];
 
 					if (_scales.x || _scales.x1) {
 						if (!_.typeCheck("function", draws[i].x)) {
@@ -343,7 +343,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
             // 차트 테마 스타일 설정
             if(opts.style) {
-                _theme = $.extend(_theme, opts.style);
+                this.setTheme(opts.style);
             }
 
             // UI 바인딩 설정
@@ -485,8 +485,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
          *
          * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임
          */
-        this.setTheme = function(theme) {
-            _theme = jui.include("chart.theme." + theme);
+        this.setTheme = function() {
+            if(arguments.length == 1) {
+                var theme = arguments[0];
+
+                if(_.typeCheck("object", theme)) {
+                    _theme = $.extend(_theme, theme);
+                } else {
+                    _theme = jui.include("chart.theme." + theme);
+                }
+            } else if(arguments.length == 2) {
+                _theme[arguments[0]] = arguments[1];
+            }
         }
 
 		/**
@@ -500,10 +510,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 		 * // 부분 속성 얻어오기 
 		 * var fontColor = chart.theme("fontColor");
 		 * 
-		 * // 속성 설정하기 
-		 * chart.theme("fontColor", "red");  // fontColor 를 red 로 설정 
-		 * 
-		 * // 값 비교해서 얻어오기 
+		 * // 값 비교해서 얻어오기
 		 * chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴  
 		 * 
 		 * 
@@ -515,14 +522,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 			if (arguments.length == 0) {
 				return _theme;
 			} else if (arguments.length == 1) {
-				
 				if (_theme[key]) {
 					return _theme[key];
 				}
-			} else if (arguments.length == 2) {
-				_theme[key] = value;
-				
-				return _theme[key];
 			} else if (arguments.length == 3) {
 				return (key) ? _theme[value] : _theme[value2];
 			}
@@ -640,9 +642,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 		 * chart render 함수 재정의 
 		 * 
 		 */
-		this.render = function() {
+		this.render = function(isAll) {
+            var isAll = (isAll === true || _initialize === false) ? true : false;
+
             // SVG 메인 리셋
-            this.svg.reset();
+            this.svg.reset(isAll);
 
 			// chart 영역 계산
 			calculate(this);
@@ -654,12 +658,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             drawBrush(this, "brush");
 
             // 위젯은 한번만 draw
-            if(!_initialize) {
+            if(isAll) {
                 drawBrush(this, "widget");
             }
 
 			// 커스텀 이벤트 발생 및 렌더링
-			this.svg.render();
+			this.svg.render(isAll);
 		}
 
 		/**
@@ -812,7 +816,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 padding : [ "string" ],
                 color : [ "integer", [ "undefined", "array" ] ], // undefined 제거 요망
                 text : [ "object", [ "string", "function" ] ],
-                setTheme : [ "string" ],
+                setTheme : [ [ "object", "string" ], [ "string", "number", "array" ] ],
                 theme : [ [ "string", "boolean" ], "string", "string" ],
                 series : [ [ "undefined", "string" ] ], // undefined 제거 요망
                 grid : [ "string" ],

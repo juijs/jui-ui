@@ -502,36 +502,33 @@ jui.define("util.svg",
             }
         }
 
-        this.clear = function() {
-            var newElement = main.element.cloneNode(false)
+        this.clear = function(isAll) {
+            main.element.innerHTML = "";
 
-            if(main.element.parentNode) {
-                this.root.element.removeChild(main.element);
-            }
-
-            main.element = newElement;
-
-            if(isFirst !== false) {
-                this.root.element.insertBefore(main.element, sub.element);
-            } else { // 최초 렌더링시
-                this.root.element.appendChild(main.element);
+            if(isAll === true) {
+                sub.element.innerHTML = "";
             }
         }
 
-        this.reset = function() {
-            this.clear();
+        this.reset = function(isAll) {
+            this.clear(isAll);
             main.childrens = [];
+
+            if(isAll === true) {
+                sub.childrens = [];
+            }
         }
 
-        this.render = function() {
+        this.render = function(isAll) {
             this.clear();
 
-            if(isFirst === false) {
+            if(isFirst === false || isAll === true) {
                 appendAll(root);
-                isFirst = true;
             } else {
                 appendAll(main);
             }
+
+            isFirst = true;
         }
 
         this.download = function(name) {
