@@ -10363,15 +10363,73 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
             return _padding;
         }
+        
+        this.createGradient = function(obj) {
+            
+            var id = this.createId('gradient');
+            
+            obj.id = id; 
+            if (obj.type == 'linear') {
+                
+               var g =  this.svg.linearGradient(obj);
+            }  else if (obj.type == 'radial') {
+               var g =  this.svg.radialGradient(obj);                
+            }         
 
+           for(var i = 0; i < obj.stop.length; i++) {
+               g.append(this.svg.stop(obj.stop[i]));
+           }
+           
+           this.defs.append(g);
+           
+           return "url(#" + id + ")";
+        }
+        
         this.color = function(i, colors) {
             var color;
 
             if (_.typeCheck("array", colors)) {
                 color = colors[i];
             }
-
-            return color || _theme["colors"][i];
+            
+            color = color || _theme["colors"][i];
+            
+            if (_.typeCheck("object", color)) {
+                
+                if (color.type == 'linear') {
+                    return this.createGradient(color);      
+                } else if (color.type == 'radial') {
+                    return this.createGradient(color);
+                } else if (color.type == 'pattern') {
+                    return this.createPattern(color);
+                }
+            }
+            
+            var list = color.split(",");
+            
+            if (list.length == 1) {
+                return list[0];
+            }
+            
+            var obj = {
+                type : 'linear',
+                stop : []
+            }
+            
+            var dist = 1 / (list.length-1);
+            
+            var start = 0; 
+            for(var i = 0; i < list.length; i++) {
+                obj.stop.push({
+                    offset : start, 
+                    "stop-color" : list[i]
+                })
+                
+                start += dist; 
+            }
+            
+            return this.createGradient(obj);
+            
         }
 
         /**
@@ -10795,7 +10853,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
-        "#7977C2",
+        "#7977C2,#7BBAE7",
         "#7BBAE7",
         "#FFC000",
         "#FF7800",
