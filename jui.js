@@ -10270,7 +10270,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
-            this.emit("load", []);
+            this.emit("load");
 
             // 차트 배경 이벤트
             setChartEvent(this);
@@ -10579,6 +10579,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
             // SVG 메인/서브 렌더링
 			this.svg.render(isAll);
+            this.emit("render");
 		}
 
 		/**
@@ -10690,6 +10691,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 			this.svg.size(width, height);
 			this.render();
 		}
+
+        /**
+         * chart CSV 데이터 설정
+         *
+         * @param csv
+         */
+        this.setCsv = function(csv) {
+            var chartFields = [],
+                csvFields = this.options.csv,
+                csvNumber = this.options.csvNumber;
+
+            for(var key in _series) {
+                chartFields.push(key);
+            }
+
+            if(chartFields.length == 0 && !csvFields) return;
+
+            var fields = _.getCsvFields(chartFields, csvFields),
+                csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
+
+            this.update(_.csvToData(fields, csv, csvNumber));
+        }
+
+        /**
+         * chart CSV 파일 데이터 설정
+         *
+         * @param file
+         */
+        this.setCsvFile = function(file) {
+            var self = this;
+
+            _.fileToCsv(file, function(csv) {
+                self.setCsv(csv);
+            });
+        }
 	}
 
 	UI.setting = function() {
@@ -10718,7 +10754,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
                 // buffer
                 bufferCount : 100,
-                shiftCount : 1
+                shiftCount : 1,
+
+                // csv
+                csv: null,
+                csvNumber: null
 			},
             valid: {
                 area : [ "string" ],
@@ -10743,7 +10783,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 page : [ "integer" ],
                 size : [ "integer", "integer" ],
                 zoom : [ "integer", "integer" ],
-                render : [ "boolean" ]
+                render : [ "boolean" ],
+                setCsv: [ "string" ],
+                setCsvFile: [ "object" ]
             }
 		}
 	}
