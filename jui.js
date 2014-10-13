@@ -9877,7 +9877,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         var self = this;
 
         function setupOptions(defOpts, opts) {
-            var exceptOpts = [ "type", "target", "x", "y", "x1", "y1", "index", "colors" ],
+            var exceptOpts = [ "type", "target", "x", "y", "x1", "y1", "c", "index", "colors" ],
                 defOptKeys = [],
                 optKeys = [];
 
@@ -9898,6 +9898,13 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             // 옵션이 아닌 프로퍼티 제거
             for(var i = 0; i < exceptOpts.length; i++) {
                 delete self.options[exceptOpts[i]];
+            }
+
+            // 브러쉬에서 옵션 프로퍼티 제거
+            for(var key in opts) {
+                if($.inArray(key, exceptOpts) == -1) {
+                    delete opts[key];
+                }
             }
         }
 		
