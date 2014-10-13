@@ -75,7 +75,7 @@ jui.define("chart.brush.bar", [], function() {
             return g;
 		}
 
-        this.drawSetup = function(chart) {
+        this.drawSetup = function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1

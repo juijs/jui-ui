@@ -56,7 +56,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // drawSetup
             if (_.typeCheck("function", this.drawSetup)) {
-                var opts = this.drawSetup(chart),
+                var opts = this.drawSetup(),
                     defOpts = _.typeCheck("object", opts) ? opts : {};
 
                 // Options Check

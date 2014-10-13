@@ -56,7 +56,7 @@ jui.define("chart.brush.bubble", [], function() {
             return this.drawBubble(brush, chart, this.getXY(brush, chart));
         }
 
-        this.drawSetup = function(chart) {
+        this.drawSetup = function() {
             return {
                 min: 5,
                 max: 30
