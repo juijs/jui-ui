@@ -10265,8 +10265,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width : opts.width,
-                height : opts.height,
-                background : this.theme("backgroundColor")
+                height : opts.height
             });
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
@@ -10573,7 +10572,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 drawBrush(this, "widget");
             }
 
-			// 커스텀 이벤트 발생 및 렌더링
+			// SVG 태그 백그라운드 테마 설정
+            this.svg.root.attr({
+                background: this.theme("backgroundColor")
+            });
+
+            // SVG 메인/서브 렌더링
 			this.svg.render(isAll);
 		}
 
