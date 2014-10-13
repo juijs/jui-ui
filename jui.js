@@ -10738,7 +10738,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
                 update : [ "array" ],
                 page : [ "integer" ],
                 size : [ "integer", "integer" ],
-                zoom : [ "integer", "integer" ]
+                zoom : [ "integer", "integer" ],
+                render : [ "boolean" ]
             }
 		}
 	}
