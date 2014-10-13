@@ -662,7 +662,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             }
 
 			// SVG 태그 백그라운드 테마 설정
-            this.svg.root.attr({
+            this.svg.root.css({
                 background: this.theme("backgroundColor")
             });
 
