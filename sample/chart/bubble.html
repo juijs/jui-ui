@@ -41,16 +41,17 @@
             },
             brush : {
                 type : 'bubble',
-                   min : 1,
-                   max : 50,
-                target : [ 'name', 'value']
+                //colors : [ "red", "blue" ],
+                target : [ 'name', 'value'],
+                min : 1,
+                max : 50
             },
             event: {
                 click: function(obj, e) {
                     console.log(obj);
                 }
             }
-        }).render();
+        });
 	})
 </script>
 

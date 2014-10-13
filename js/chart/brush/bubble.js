@@ -18,9 +18,9 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(brush, chart, pos, index) {
-            var r_min = (typeof brush.min != "undefined") ? brush.min : 5,
-                r_max = (typeof brush.min != "undefined") ? brush.max : 30,
-                radius = self.getScaleValue(pos.value, brush.min, brush.max, r_min, r_max);
+            var opts = self.options,
+                series = chart.series(brush.target[index]),
+                radius = self.getScaleValue(pos.value, series.min, series.max, opts.min, opts.max);
 
             return chart.svg.circle({
                 cx: pos.x,
@@ -54,6 +54,13 @@ jui.define("chart.brush.bubble", [], function() {
 
         this.draw = function(chart) {
             return this.drawBubble(brush, chart, this.getXY(brush, chart));
+        }
+
+        this.drawSetup = function(chart) {
+            return {
+                min: 5,
+                max: 30
+            }
         }
 	}
 

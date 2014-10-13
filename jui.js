@@ -9867,19 +9867,45 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
 	return UI;
 });
-jui.define("chart.draw", [ "util.base" ], function(_) {
+jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * 그리기 Base 클래스
 	 * 
 	 * 
 	 */
 	var Draw = function() {
+        var self = this;
+
+        function setupOptions(defOpts, opts) {
+            var exceptOpts = [ "type", "target", "x", "y", "x1", "y1", "index", "colors" ],
+                defOptKeys = [],
+                optKeys = [];
+
+            for(var key in defOpts) { defOptKeys.push(key); }
+            for(var key in opts) { optKeys.push(key); }
+
+            for(var i = 0; i < optKeys.length; i++) {
+                var name = optKeys[i];
+
+                if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
+                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
+                }
+            }
+
+            // 옵션 프로퍼티 설정
+            self.options = $.extend(defOpts, opts);
+
+            // 옵션이 아닌 프로퍼티 제거
+            for(var i = 0; i < exceptOpts.length; i++) {
+                delete self.options[exceptOpts[i]];
+            }
+        }
 		
 		/**
 		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
 		 * 
 		 */
-		this.render = function(chart) {
+		this.render = function(chart, options) {
 
 			/**
 			 * 
@@ -9889,6 +9915,15 @@ jui.define("chart.draw", [ "util.base" ], function(_) {
 			if (!_.typeCheck("function", this.draw)) {
 				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
 			}
+
+            // drawSetup
+            if (_.typeCheck("function", this.drawSetup)) {
+                var opts = this.drawSetup(chart),
+                    defOpts = _.typeCheck("object", opts) ? opts : {};
+
+                // Options Check
+                setupOptions(defOpts, options);
+            }
 			
 			// drawBefore
             if (_.typeCheck("function", this.drawBefore)) {
@@ -10061,7 +10096,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
+						var obj = new Grid(orient, grid[k][keyIndex]).render(self, grid[k][keyIndex]),
                             dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기
@@ -10115,7 +10150,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 					}
 
                     draws[i].index = i;
-                    drawBrushAfter(self, type, new Obj(draws[i]).render(self));
+                    drawBrushAfter(self, type, new Obj(draws[i]).render(self, draws[i]));
 				}
 			}
 		}
@@ -12485,10 +12520,13 @@ jui.define("chart.brush.bar", [], function() {
 	 */
 	var BarBrush = function(brush) {
 		var g, zeroX, series, count, height, half_height, barHeight;
-		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
+		var outerPadding, innerPadding;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
+
+            outerPadding = this.options.outerPadding;
+            innerPadding = this.options.innerPadding;
 
 			zeroX = brush.x(0);
 			count = chart.data().length;
@@ -12539,6 +12577,13 @@ jui.define("chart.brush.bar", [], function() {
 
             return g;
 		}
+
+        this.drawSetup = function(chart) {
+            return {
+                outerPadding: 2,
+                innerPadding: 1
+            }
+        }
 	}
 
 	return BarBrush;
@@ -12564,9 +12609,9 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(brush, chart, pos, index) {
-            var r_min = (typeof brush.min != "undefined") ? brush.min : 5,
-                r_max = (typeof brush.min != "undefined") ? brush.max : 30,
-                radius = self.getScaleValue(pos.value, brush.min, brush.max, r_min, r_max);
+            var opts = self.options,
+                series = chart.series(brush.target[index]),
+                radius = self.getScaleValue(pos.value, series.min, series.max, opts.min, opts.max);
 
             return chart.svg.circle({
                 cx: pos.x,
@@ -12600,6 +12645,13 @@ jui.define("chart.brush.bubble", [], function() {
 
         this.draw = function(chart) {
             return this.drawBubble(brush, chart, this.getXY(brush, chart));
+        }
+
+        this.drawSetup = function(chart) {
+            return {
+                min: 5,
+                max: 30
+            }
         }
 	}
 
@@ -12792,10 +12844,13 @@ jui.define("chart.brush.column", [], function() {
 	 */
 	var ColumnBrush = function(brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
-		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
+		var outerPadding, innerPadding;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
+
+            outerPadding = this.options.outerPadding;
+            innerPadding = this.options.innerPadding;
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -12840,6 +12895,13 @@ jui.define("chart.brush.column", [], function() {
 
             return g;
 		}
+
+        this.drawSetup = function(chart) {
+            return {
+                outerPadding: 2,
+                innerPadding: 1
+            }
+        }
 	}
 
 	return ColumnBrush;

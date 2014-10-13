@@ -15,10 +15,13 @@ jui.define("chart.brush.column", [], function() {
 	 */
 	var ColumnBrush = function(brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
-		var outerPadding = brush.outerPadding || 2, innerPadding = brush.innerPadding || 1;
+		var outerPadding, innerPadding;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
+
+            outerPadding = this.options.outerPadding;
+            innerPadding = this.options.innerPadding;
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -63,6 +66,13 @@ jui.define("chart.brush.column", [], function() {
 
             return g;
 		}
+
+        this.drawSetup = function(chart) {
+            return {
+                outerPadding: 2,
+                innerPadding: 1
+            }
+        }
 	}
 
 	return ColumnBrush;
