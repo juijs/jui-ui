@@ -64,31 +64,40 @@
                 },
                 y : {
                     type : "range",
-                    target : [ "low", "high", "open", "close" ],
+                    target : "high",
                     step : 5,
                     line : true
                 }
             },
             series : {
                 low: {
-                    type: "low"
+                    type: "low",
+                    text: "최저"
                 },
                 high: {
-                    type: "high"
+                    type: "high",
+                    text: "최고"
                 },
                 open: {
-                    type: "open"
+                    type: "open",
+                    text: "시작"
                 },
                 close: {
-                    type: "close"
+                    type: "close",
+                    text: "종료"
+                },
+                date: {
+                    text: "날짜"
                 }
             },
             brush : {
                 type : "candlestick"
             },
-            widget : {
+            widget : [{
                 type : "zoom"
-            }
+            }, {
+                type : "tooltip"
+            }]
         });
 
         $("#builder_btn").change(function(e) {
