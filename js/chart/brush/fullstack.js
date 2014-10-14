@@ -1,8 +1,7 @@
 jui.define("chart.brush.fullstack", [], function() {
 
 	var FullStackBrush = function(brush) {
-		var g, zeroY, count, width, barWidth, gauge;
-		var outerPadding = brush.outerPadding || 15;
+		var g, zeroY, count, width, barWidth;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -11,17 +10,17 @@ jui.define("chart.brush.fullstack", [], function() {
 			count = chart.data().length;
 
 			width = brush.x.rangeBand();
-			barWidth = width - outerPadding * 2;
+			barWidth = width - brush.outerPadding * 2;
 		}
 
 		this.draw = function(chart) {
 			var chart_height = chart.height();
+
 			for (var i = 0; i < count; i++) {
+				var startX = brush.x(i) - barWidth / 2,
+                    sum = 0,
+                    list = [];
 
-				var startX = brush.x(i) - barWidth/2;
-
-				var sum = 0;
-				var list = [];
 				for (var j = 0; j < brush.target.length; j++) {
 					var height = chart.data(i, brush.target[j]);
 
@@ -29,13 +28,12 @@ jui.define("chart.brush.fullstack", [], function() {
 					list.push(height);
 				}
 
-				var startY = 0;
-				var max  = brush.y.max();
-				var current = max; 
+				var startY = 0,
+                    max = brush.y.max(),
+                    current = max;
 				
 				for (var j = list.length - 1; j >= 0; j--) {
-					
-					var height = chart_height - brush.y.rate(list[j] , sum); 
+					var height = chart_height - brush.y.rate(list[j] , sum);
 					
 					var r = chart.svg.rect({
 						x : startX,
@@ -51,9 +49,9 @@ jui.define("chart.brush.fullstack", [], function() {
 					if (brush.text) {
 						var percent = Math.round((list[j]/sum)*max);
 						var text = chart.svg.text({
-							x : startX + barWidth/2,
-							y : startY + height/2 + 8,
-							'text-anchor' : 'middle'
+							x : startX + barWidth / 2,
+							y : startY + height / 2 + 8,
+							"text-anchor" : "middle"
 						}, ((current - percent < 0 ) ? current : percent) + "%");					
 						g.append(text);					
 						current -= percent;
@@ -65,6 +63,12 @@ jui.define("chart.brush.fullstack", [], function() {
 
             return g;
 		}
+
+        this.drawSetup = function() {
+            return {
+                outerPadding: 15
+            }
+        }
 	}
 
 	return FullStackBrush;

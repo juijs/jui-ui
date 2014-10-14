@@ -12,7 +12,7 @@
 <script>
     jui.ready(["chart.builder"], function(chart) {
 
-        var c = chart("#chart", {
+        chart("#chart", {
             width: 400,
             height : 300,
             theme : "jennifer",
@@ -30,13 +30,11 @@
             brush : [{
                 type : 'bargauge',
                 target : "value",
-                size : 18
-                //split : true
-                // title : "title"  생략 가능
+                size : 18,
+                split : true,
+                title : "title"
             }]
         });
-
-        c.render();
 	})
 </script>
 

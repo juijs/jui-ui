@@ -1,4 +1,4 @@
-jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
+jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
 	/**
 	 * 내가 원하는 모양의 gauge 를 만드는 클래스 
@@ -12,6 +12,9 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
  	 * @param {Object} brush
 	 */
 	var FillGaugeBrush = function(brush) {
+        var w, centerX, centerY, outerRadius, clipId;
+        var rect;
+
 		this.drawBefore = function(chart) {
 			var width = chart.width(), height = chart.height();
 			var min = width;
@@ -20,34 +23,25 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 				min = height;
 			}
 
-			this.w = min / 2;
-			this.centerX = width / 2;
-			this.centerY = height / 2;
-			this.outerRadius = this.w;
-
-			this.min = typeof brush.min == 'undefined' ? 0 : parseFloat(brush.min);
-			this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
-
-			this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
-			this.shape = typeof brush.shape == 'undefined' ? 'circle' : brush.shape;
-			
-			this.clipId = chart.createId('fill-gauge');
+			w = min / 2;
+			centerX = width / 2;
+			centerY = height / 2;
+			outerRadius = w;
+            clipId = chart.createId("fill-gauge");
 
 			var clip = chart.svg.clipPath({
-				id : this.clipId
-			})
+				id : clipId
+			});
 
-			this.rect = chart.svg.rect({
+			rect = chart.svg.rect({
 				x : 0,
 				y : 0,
 				width : 0,
 				height : 0
-			})
+			});
 
-			clip.append(this.rect);
-
-			chart.defs.append(clip)
-
+			clip.append(rect);
+			chart.defs.append(clip);
 		}
 
 		this.drawPath = function(chart, group, path) {
@@ -56,82 +50,53 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 				y : 0,
 				fill : "#ececec",
 				d : path
-			}))
+			}));
 
 			group.append(chart.svg.path({
 				x : 0,
 				y : 0,
 				fill : chart.color(0),
 				d : path,
-				"clip-path" : "url(#" + this.clipId + ")"
-			}))
+				"clip-path" : "url(#" + clipId + ")"
+			}));
 		}
 		
-		this.direction = function(chart, direction) {
-			
-			direction = direction || 'vertical';
-
-			var rate = (this.value - this.min) / (this.max - this.min);
-						
-			if (direction == 'vertical') {
-				var height = chart.height() * rate;
-				var width = chart.width();
-				var x = 0; 
-				var y = chart.height() - height;
-
-				
-			} else {		// horizontal 
-				var height = chart.height();
-				var width = chart.width() * rate;
-				var x = 0; 
-				var y = 0;
-			}
-			
-			this.rect.attr({
-				x : x,
-				y : y,
-				width : width,
-				height : height
-			})
-			
-		}
-
 		this.draw = function(chart) {
 
 			var self = this; 
 			var group = chart.svg.group({
-				'class' : 'brush fill gauge',
+				"class" : "brush fill gauge",
 				opacity : 0.8
-			})
+			});
 
-			group.translate(chart.x(), chart.y())
+			group.translate(chart.x(), chart.y());
 			
 			this.direction(chart, brush.direction);
 			
-			if (this.shape == 'circle') {
+			if (brush.shape == "circle") {
 				group.append(chart.svg.circle({
-					cx : this.centerX,
-					cy : this.centerY,
-					r : this.outerRadius,
+					cx : centerX,
+					cy : centerY,
+					r : outerRadius,
 					fill : "#ececec"
-				}))
+				}));
 
 				group.append(chart.svg.circle({
-					cx : this.centerX,
-					cy : this.centerY,
-					r : this.outerRadius,
+					cx : centerX,
+					cy : centerY,
+					r : outerRadius,
 					fill : chart.color(2, brush.colors),
-					"clip-path" : "url(#" + this.clipId + ")"
-				}))
+					"clip-path" : "url(#" + clipId + ")"
+				}));
 
-			} else if (this.shape == 'rect') {
+			} else if (brush.shape == "rect") {
 				group.append(chart.svg.rect({
 					x : 0,
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
 					fill : "#ececec"
-				}))
+				}));
 
 				group.append(chart.svg.rect({
 					x : 0,
@@ -139,28 +104,61 @@ jui.define("chart.brush.fillgauge", [ "util.math" ], function(math) {
 					width : chart.width(),
 					height : chart.height(),
 					fill : chart.color(2, brush.colors),
-					"clip-path" : "url(#" + this.clipId + ")"
-				}))
+					"clip-path" : "url(#" + clipId + ")"
+				}));
 
 			} else {
-
-				if (brush.svg) {
+				if (brush.svg != "") {
 					$.ajax({
 						url : brush.svg,
 						async : false,
 						success : function(xml) {
-							var path = $(xml).find("path").attr('d');
+							var path = $(xml).find("path").attr("d");
 							self.drawPath(chart, group, path);
 						}
-					})
+					});
 				} else {
 					self.drawPath(chart, group, brush.path);					
 				}
-
 			}
 
             return group;
 		}
+
+        this.direction = function(chart, direction) {
+            var rate = (brush.value - brush.min) / (brush.max - brush.min);
+
+            if (direction == "vertical") {
+                var height = chart.height() * rate;
+                var width = chart.width();
+                var x = 0;
+                var y = chart.height() - height;
+            } else {		// horizontal
+                var height = chart.height();
+                var width = chart.width() * rate;
+                var x = 0;
+                var y = 0;
+            }
+
+            rect.attr({
+                x : x,
+                y : y,
+                width : width,
+                height : height
+            });
+        }
+
+        this.drawSetup = function() {
+            return {
+                min: 0,
+                max: 100,
+                value: 0,
+                shape: "circle", // or rect, etc
+                direction: "vertical",
+                svg: "",
+                path: ""
+            }
+        }
 	}
 
 	return FillGaugeBrush;

@@ -23,7 +23,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             for(var key in defOpts) {
                 defOptKeys.push(key);
 
-                if(!options[key]) {
+                if(_.typeCheck("undefined", options[key])) {
                     options[key] = defOpts[key];
                 }
             }
@@ -44,30 +44,29 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 */
 		this.render = function(chart, options) {
 
-			/**
-			 * 
-			 * 그리기 객체는 draw 함수를 항상 정의해야한다. 
-			 * 
-			 */
-			if (!_.typeCheck("function", this.draw)) {
-				throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
-			}
+            if (!_.typeCheck("function", this.draw)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+            }
 
-            // drawSetup
+            // Call drawSetting method
             if (_.typeCheck("function", this.drawSetup)) {
                 var opts = this.drawSetup(),
                     defOpts = _.typeCheck("object", opts) ? opts : {};
 
                 // Options Check
                 setupOptions(options, defOpts);
+            } else {
+                if(_.typeCheck("object", options)) {
+                    throw new Error("JUI_CRITICAL_ERR: 'drawSetup' method must be implemented");
+                }
             }
-			
-			// drawBefore
+
+            // Call drawBefore method
             if (_.typeCheck("function", this.drawBefore)) {
                 this.drawBefore(chart);
-            }			
+            }
 
-			// draw 함수 실행 
+            // Call draw method
 			var obj = this.draw(chart);
 
             if (!_.typeCheck("object", obj)) {

@@ -1,21 +1,18 @@
 jui.define("chart.brush.path", [], function() {
 
 	var PathBrush = function(brush) {
-		this.drawBefore = function(chart) {
-		}
 
 		this.draw = function(chart) {
-
 			var g = chart.svg.group({
 				'class' : 'brush path'
 			});
 			
-			var data = chart.data();
-			var data_count = data.length;
+			var data = chart.data(),
+                data_count = data.length;
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				
 				var color = chart.color(ti, brush.colors);
+
 				var path = chart.svg.path({
 					fill : color,
 					"fill-opacity" : chart.theme("pathOpacity"),
@@ -40,6 +37,10 @@ jui.define("chart.brush.path", [], function() {
 
 			return g;
 		}
+
+        this.drawSetup = function() {
+            return {}
+        }
 	}
 
 	return PathBrush;

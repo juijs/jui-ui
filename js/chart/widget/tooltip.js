@@ -2,7 +2,6 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
-        var position = (widget.position) ? widget.position : "top";
 
         function printTooltip(chart, obj, brushIndex) {
             if(obj.target) {
@@ -66,19 +65,17 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                var brushIndex = (widget.brush) ? widget.brush : 0;
-
-                if(isActive || ($.inArray(obj.index, brushIndex) == -1 && brushIndex != obj.index)) return;
+                if(isActive || ($.inArray(obj.index, widget.brush) == -1 && widget.brush != obj.index)) return;
 
                 // 툴팁 텍스트 출력
-                printTooltip(chart, obj, brushIndex);
+                printTooltip(chart, obj, widget.brush);
 
                 var bbox = text.element.getBBox();
                 w = bbox.width + (padding * 2);
                 h = bbox.height + padding;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(position, w, h, anchor) });
+                rect.attr({ points: self.balloonPoints(widget.position, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -90,15 +87,15 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 var x = e.offsetX - (w / 2),
                     y = e.offsetY - h - anchor - (padding / 2);
 
-                if(position == "left" || position == "right") {
+                if(widget.position == "left" || widget.position == "right") {
                     y = e.offsetY - (h / 2) - (padding / 2);
                 }
 
-                if(position == "left") {
+                if(widget.position == "left") {
                     x = e.offsetX - w - anchor;
-                } else if(position == "right") {
+                } else if(widget.position == "right") {
                     x = e.offsetX + anchor;
-                } else if(position == "bottom") {
+                } else if(widget.position == "bottom") {
                     y = e.offsetY + (anchor * 2);
                 }
 
@@ -113,6 +110,13 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             });
 
             return g;
+        }
+
+        this.drawSetup = function() {
+            return {
+                position: "top", // or bottom, left, right
+                brush: 0
+            }
         }
     }
 

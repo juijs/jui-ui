@@ -45,6 +45,7 @@ module.exports = function(grunt) {
 
                     // chart.theme
                     "js/chart/theme/jennifer.js",
+                    "js/chart/theme/gradient.js", // jennifer gradient style
                     "js/chart/theme/dark.js",
                     "js/chart/theme/seoul.js",
 

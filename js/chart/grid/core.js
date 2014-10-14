@@ -10,7 +10,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 *  
 		 */
 		this.setBlockDomain = function(chart, grid) {
-			if (grid.type == 'radar' || grid.type == 'block') {
+			if (grid.type == "radar" || grid.type == "block") {
 
 				if (grid.target && !grid.domain) {
 					var domain = [];
@@ -47,7 +47,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.setRangeDomain = function(chart, grid) {
-			if ( typeof grid.target == 'string' || typeof grid.target == 'function') {
+			if ( typeof grid.target == "string" || typeof grid.target == "function") {
 				grid.target = [grid.target];
 			}
 
@@ -59,7 +59,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 
-					if ( typeof s == 'function') {
+					if ( typeof s == "function") {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
@@ -122,7 +122,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.setDateDomain = function(chart, grid) {
-			if ( typeof grid.target == 'string' || typeof grid.target == 'function') {
+			if ( typeof grid.target == "string" || typeof grid.target == "function") {
 				grid.target = [grid.target];
 			}
 
@@ -137,10 +137,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					
 					for(var index = 0; index < data.length; index++) {
 						var value = +data[index][s];
-						if (typeof min == 'undefined') min = value;
+						if (typeof min == "undefined") min = value;
 						else if (min > value) min = value;
 						
-						if (typeof max == 'undefined') max = value;
+						if (typeof max == "undefined") max = value;
 						else if (max < value) max = value;						
 					}
 
@@ -174,7 +174,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * scale(0);		// 0 인덱스에 대한 값  (block, radar)
 		 * 
 		 * // grid 속성에 key 가 있을 때  
-		 * grid { key : 'field' }
+		 * grid { key : "field" }
 		 * scale(0)			// field 값으로 scale 설정 (range, date)
 		 * 
 		 */
@@ -254,7 +254,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group({
-				'class' : ['grid', cls].join(" ")
+				"class" : ["grid", cls].join(" ")
 			})
 
 			// render axis
@@ -265,7 +265,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			// hide grid 
 			if (grid.hide) {
-				root.attr({ display : 'none' })
+				root.attr({ display : "none" })
 			}
 
 			return {

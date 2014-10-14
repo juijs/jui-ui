@@ -26,7 +26,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				axis.append(chart.text({
 					x : 0,
 					y : -bar - 4,
-					'text-anchor' : 'middle',
+					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
 				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""))
 
@@ -58,7 +58,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				group.append(chart.text({
 					x : 0,
 					y : bar * 3,
-					'text-anchor' : 'middle',
+					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
 				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""));
 
@@ -91,7 +91,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				axis.append(chart.text({
 					x : -bar,
 					y : -bar,
-					'text-anchor' : 'end',
+					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
 				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
 
@@ -125,7 +125,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				axis.append(chart.text({
 					x : bar + 4,
 					y : -bar,
-					'text-anchor' : 'start',
+					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
 				}, format ? format(ticks[i]) : ticks[i]))
 
@@ -139,7 +139,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			
 			var max = chart.height();
 
-			if (orient == 'top' || orient == 'bottom') {
+			if (orient == "top" || orient == "bottom") {
 				max = chart.width();
 			}
 
@@ -152,7 +152,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
 			}
 
-			if ( typeof grid.format == 'string') {
+			if ( typeof grid.format == "string") {
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
@@ -172,7 +172,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.draw = function(chart) {
-			return this.drawGrid(chart, orient, 'date', grid);
+			return this.drawGrid(chart, orient, "date", grid);
 		}
 	}
 

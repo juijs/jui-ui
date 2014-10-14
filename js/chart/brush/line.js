@@ -48,6 +48,12 @@ jui.define("chart.brush.line", [], function() {
         this.draw = function(chart) {
             return this.drawLine(brush, chart, this.getXY(brush, chart));
         }
+
+        this.drawSetup = function() {
+            return {
+                symbol: "normal" // normal, curve, step
+            }
+        }
 	}
 
 	return LineBrush;

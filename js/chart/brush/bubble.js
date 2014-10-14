@@ -4,8 +4,8 @@ jui.define("chart.brush.bubble", [], function() {
 	 * 
 	 * <code>
 	 * {
-	 * 	type : 'bubble',
-	 *  target : 'field1',  // 생략하면 모든 series 를 target 으로 설정
+	 * 	type : "bubble",
+	 *  target : "field1",  // 생략하면 모든 series 를 target 으로 설정
 	 *  min : 5,	// 최소 bubble 사이즈  
 	 *  max : 30,	// 최대 bubble 사이즈 
 	 *  colors : []	// custom color 
@@ -34,7 +34,7 @@ jui.define("chart.brush.bubble", [], function() {
 
         this.drawBubble = function(brush, chart, points) {
             var g = chart.svg.group({
-                'clip-path' : 'url(#' + chart.clipId + ')'
+                "clip-path" : "url(#" + chart.clipId + ")"
             }).translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {

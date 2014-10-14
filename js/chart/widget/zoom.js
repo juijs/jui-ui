@@ -118,6 +118,10 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 setDragEvent(chart, thumb, bg);
             });
         }
+
+        this.drawSetup = function() {
+            return {}
+        }
     }
 
     return ZoomWidget;

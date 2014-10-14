@@ -2,7 +2,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(brush) {
 		var g, series, count, height, barWidth;
-		var outerPadding = brush.outerPadding || 15;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -11,22 +10,20 @@ jui.define("chart.brush.stackbar", [], function() {
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
-			barWidth = height - outerPadding * 2;
+			barWidth = height - brush.outerPadding * 2;
 		}
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				
 				var group = chart.svg.group();
 				
-				var startY = brush.y(i) - barWidth/2;
-				var startX = brush.x(0);
-				var value = 0;
+				var startY = brush.y(i) - barWidth/ 2,
+                    startX = brush.x(0),
+                    value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
-					var xValue = chart.data(i, brush.target[j]) + value;
-					 
-					var endX = brush.x(xValue);
+					var xValue = chart.data(i, brush.target[j]) + value,
+                        endX = brush.x(xValue);
 
 					var r = chart.svg.rect({
 						x : (startX < endX) ? startX : endX,
@@ -48,6 +45,12 @@ jui.define("chart.brush.stackbar", [], function() {
 
             return g;
 		}
+
+        this.drawSetup = function() {
+            return {
+                outerPadding: 15
+            }
+        }
 	}
 
 	return StackBarBrush;

@@ -21,12 +21,8 @@
                 value : 50,
                 min : 0,
                 max : 100
-                // title : "title"  생략 가능
-
             }
         });
-
-        c.render();
 
         setInterval(function() {
             c.brush(0).value = Math.round(Math.random() * 100) % 100

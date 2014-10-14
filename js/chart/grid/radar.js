@@ -15,8 +15,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : chart.theme('gridAxisBorderColor'),
-				"stroke-width" : chart.theme('gridBorderWidth')
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridBorderWidth")
 			}))
 		}
 
@@ -43,8 +43,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			var path = chart.svg.path({
 
 				"fill" : "none",
-				stroke : chart.theme('gridAxisBorderColor'),
-				"stroke-width" : chart.theme('gridBorderWidth')
+				stroke : chart.theme("gridAxisBorderColor"),
+				"stroke-width" : chart.theme("gridBorderWidth")
 			});
 
 			for (var i = 0; i < points.length; i++) {
@@ -103,7 +103,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 		this.draw = function(chart) {
 			var width = chart.width(), height = chart.height();
-			grid.line = ( typeof grid.line == 'undefined') ? true : grid.line;
+			grid.line = ( typeof grid.line == "undefined") ? true : grid.line;
 
 			var min = width;
 
@@ -125,7 +125,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			var h = Math.abs(startY) / step;
 
 			var g = chart.svg.group({
-				'class' : 'grid radar'
+				"class" : "grid radar"
 			});
 
 			var root = chart.svg.group();
@@ -144,8 +144,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
-					stroke : chart.theme('gridAxisBorderColor'),
-					"stroke-width" : chart.theme('gridBorderWidth')
+					stroke : chart.theme("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
 				}))
 
 				position[i] = {
@@ -157,7 +157,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 				var ty = y2;
 				var tx = x2;
-				var talign = 'middle';
+				var talign = "middle";
 
 				if (y2 > centerY) {
 					ty = y2 + 20;
@@ -177,7 +177,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					root.append(chart.text({
 						x : tx,
 						y : ty,
-						'text-anchor' : talign,
+						"text-anchor" : talign,
 						fill : chart.theme("gridFontColor")
 					}, grid.domain[i]))
 				}
@@ -208,7 +208,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					startY += h;
 					continue;
 				}
-				if (grid.shape == 'circle') {
+				if (grid.shape == "circle") {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
@@ -228,7 +228,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			
 			// hide
 			if (grid.hide) {
-				root.attr({ display : 'none' })
+				root.attr({ display : "none" })
 			}			
 
 			return {

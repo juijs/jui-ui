@@ -153,7 +153,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self, grid[k][keyIndex]),
+						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
                             dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기

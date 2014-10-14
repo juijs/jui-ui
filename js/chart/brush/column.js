@@ -4,8 +4,8 @@ jui.define("chart.brush.column", [], function() {
 	 * Column Brush 
 	 * 
 	 * {
-	 * 	type : 'column',
-	 *  target : ['field'],
+	 * 	type : "column",
+	 *  target : ["field"],
 	 *  outerPadding : 2,
 	 *  innerPadding : 1, 	
 	 * 

@@ -4,10 +4,10 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 	 * 
 	 * <code>
 	 * {
-	 * 	type : 'bargauge',
-	 *  target : 'field1',  // 생략하면 모든 series 를 target 으로 설정
+	 * 	type : "bargauge",
+	 *  target : "field1",  // 생략하면 모든 series 를 target 으로 설정
 	 *  cut : 5,	// gauge 사이의 거리  
-	 *  align : 'left'	// gauge 정렬 방식 
+	 *  align : "left"	// gauge 정렬 방식 
 	 *  
 	 * } 
 	 * </code>
@@ -15,65 +15,49 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
  	 * @param {Object} brush
 	 */
 	var BarGaugeBrush = function(brush) {
-
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
-
-			this.cut = brush.cut || 5; 
-			this.align = brush.align || 'left';
-
-		}
+        var y = 0, x = 0;
 
 		this.draw = function(chart) {
-			var group = chart.svg.group({
-				'class' : 'brush bar gauge'
-			});
 
-			group.translate(chart.x(), chart.y());
-			
-			var len = chart.data().length; 
-			
-			var unit = brush.size || 20;
-			
+			var group = chart.svg.group({
+				"class" : "brush bar gauge"
+			}).translate(chart.x(), chart.y());
+
 			if (brush.split) {
 				var max = chart.width();	
 			} else {
 				var max = chart.width();
 			}
-			
-			
-			var y = 0; 
-			var x = 0; 
+
 			for(var i = 0, len = chart.data().length; i < len; i++) {
                 var data = chart.data(i);
                 
                 var g = chart.svg.group({
-                    'class' : 'bar'
+                    "class" : "bar"
                 });
                 
                 g.append(chart.text({
                     x : x,
-                    y : y + unit / 2 + this.cut,
+                    y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
                     fill : chart.color(i, brush.colors)
                 }, data[brush.title] || data.title || ""))
                 
                 g.append(chart.svg.rect({
-                    x : x + this.cut,
+                    x : x + brush.cut,
                     y : y,
                     width: max,
-                    height : unit,
+                    height : brush.size,
                     fill : "#ececec"
-                }))
+                }));
                 
-                var value = (data.value)  * max / 100;
-                var ex = (100 - data.value)  * max / 100;
+                var value = (data.value)  * max / 100,
+                    ex = (100 - data.value)  * max / 100,
+                    startX = x + brush.cut;
                 
-                var startX = x + this.cut; 
-                
-                if (this.align == 'center') {
+                if (brush.align == "center") {
                 	startX += (max/2 - value/2);
-                } else if (this.align == 'right') {
+                } else if (brush.align == "right") {
                 	startX += max - value; 
                 }
                 
@@ -81,45 +65,52 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     x : startX,
                     y : y,
                     width: value,
-                    height : unit,
+                    height : brush.size,
                     fill : chart.color(i, brush.colors)
-                }))
-                
-                
+                }));
+
                 if (brush.split) {
-                	var textX = x + value + this.cut*2 + ex;
-                	var textAlign = "start";
-                	var textColor = chart.color(i, brush.colors);
+                	var textX = x + value + brush.cut * 2 + ex,
+                        textAlign = "start",
+                        textColor = chart.color(i, brush.colors);
                 } else {
+                	var textX = x + brush.cut * 2,
+                        textAlign = "start",
+                        textColor = "white";
                 	
-                	var textX = x + this.cut * 2;
-                	var textAlign = "start";
-                	var textColor = "white";                	
-                	
-                	if (this.align == 'center') {
-                		textX = x + this.cut + max / 2;
+                	if (this.align == "center") {
+                		textX = x + brush.cut + max / 2;
                 		textAlign = "middle";
-                	} else if (this.align == 'right') {
+                	} else if (brush.align == "right") {
                 		textX = x + max;
                 		textAlign = "end";                		
                 	}
-
                 }
                 
                 g.append(chart.text({
                     x : textX,
-                    y : y + unit/2 + this.cut,
+                    y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : textAlign,
                     fill : textColor
                 }, brush.format ? brush.format(data.value) : data.value + "%"))
                 
                 group.append(g);
                 
-                y += unit + this.cut;
+                y += brush.size + brush.cut;
 			}
 
             return group;
 		}
+
+        this.drawSetup = function() {
+            return {
+                cut: 5,
+                size: 20,
+                split: false,
+                align: "left",
+                title: ""
+            }
+        }
 	}
 
 	return BarGaugeBrush;

@@ -33,6 +33,7 @@ jui.define("chart.theme.seoul", [], function() {
 
 		// brush styles
 		gaugeBackgroundColor : "#ececec",
+        gaugeArrowColor : "black",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
 		donutBorderColor : "white",

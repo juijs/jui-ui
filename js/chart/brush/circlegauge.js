@@ -4,7 +4,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 	 * Circle Gauge Brush 객체  
 	 * 
 	 * {
-	 * 	type : 'circlegauge',
+	 * 	type : "circlegauge",
 	 *  min : 0,
 	 *  max : 100,
 	 *  value : 30 
@@ -13,6 +13,8 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
  	 * @param {Object} brush
 	 */
 	var CircleGaugeBrush = function(brush) {
+        var w, centerX, centerY, outerRadius;
+
 		this.drawBefore = function(chart) {
             var width = chart.width(), height = chart.height();
             var min = width;
@@ -21,47 +23,45 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 min = height;
             }
 
-
-            this.w = min / 2;
-            this.centerX = width / 2;
-            this.centerY = height / 2;
-            this.outerRadius = this.w;
-
-            this.min = typeof brush.min == 'undefined'  ? 0 : parseFloat(brush.min);
-            this.max = typeof brush.max == 'undefined' ? 100 : parseFloat(brush.max);
-
-            this.value = typeof brush.value == 'undefined' ? 0 : brush.value;
-
+            w = min / 2;
+            centerX = width / 2;
+            centerY = height / 2;
+            outerRadius = w;
 		}
 
 		this.draw = function(chart) {
+            var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
 			var group = chart.svg.group({
-				'class' : 'brush circle gauge'
-			})
-
-			group.translate(chart.x(), chart.y());
+				"class" : "brush circle gauge"
+			}).translate(chart.x(), chart.y());
 
             group.append(chart.svg.circle({
-                cx : this.centerX,
-                cy : this.centerY,
-                r : this.outerRadius,
+                cx : centerX,
+                cy : centerY,
+                r : outerRadius,
                 fill : "#ececec",
                 stroke : chart.color(0, brush.colors),
                 "stroke-width" : 2 
             }));
             
-            var rate = (this.value - this.min) / (this.max - this.min);
-            
             group.append(chart.svg.circle({
-                cx : this.centerX,
-                cy : this.centerY,
-                r : this.outerRadius * rate,
+                cx : centerX,
+                cy : centerY,
+                r : outerRadius * rate,
                 fill : chart.color(0, brush.colors)
             }));
 
             return group;
 		}
+
+        this.drawSetup = function() {
+            return {
+                min: 0,
+                max: 100,
+                value: 0
+            };
+        }
 	}
 
 	return CircleGaugeBrush;

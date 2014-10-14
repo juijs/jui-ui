@@ -24,7 +24,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
-                if (domain == '') {
+                if (domain == "") {
                     continue;
                 }
 
@@ -42,7 +42,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : -20,
-					'text-anchor' : 'middle'
+					"text-anchor" : "middle"
 				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
 
 				g.append(axis);
@@ -79,7 +79,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
                 var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
-                if (domain == '') {
+                if (domain == "") {
                     continue;
                 }
                 
@@ -97,7 +97,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : 20,
-					'text-anchor' : 'middle',
+					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
 				}, domain))
 
@@ -144,7 +144,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : -this.bar - 4,
 					y : this.half_band,
-					'text-anchor' : 'end'
+					"text-anchor" : "end"
 				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
 
 				g.append(axis);
@@ -188,7 +188,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : this.bar + 4,
 					y : this.half_band,
-					'text-anchor' : 'start'
+					"text-anchor" : "start"
 				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
 
 				g.append(axis);
@@ -214,7 +214,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			var width = chart.width();
 			var height = chart.height();
-			var max = (orient == 'left' || orient == 'right') ? height : width;
+			var max = (orient == "left" || orient == "right") ? height : width;
 	
 			// scale 설정 
 			this.scale = UtilScale.ordinal().domain(grid.domain);
@@ -237,8 +237,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.draw = function(chart) {
-
-			return this.drawGrid(chart, orient, 'block', grid);
+			return this.drawGrid(chart, orient, "block", grid);
 		}
 	}
 

@@ -89,6 +89,10 @@ jui.define("chart.brush.candlestick", [], function() {
 
             return g;
         }
+
+        this.drawSetup = function() {
+            return {};
+        }
     }
 
     return CandleStickBrush;

@@ -6,7 +6,7 @@ jui.define("chart.brush.scatter", [], function() {
             var elem = null,
                 target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
-                w = h = (brush.size) ? brush.size : 5;
+                w = h = brush.size;
 
             var color = chart.color(index, brush.colors),
                 borderColor = chart.theme("scatterBorderColor"),
@@ -87,6 +87,13 @@ jui.define("chart.brush.scatter", [], function() {
 
         this.draw = function(chart) {
             return this.drawScatter(brush, chart, this.getXY(brush, chart));
+        }
+
+        this.drawSetup = function() {
+            return {
+                symbol: "circle", // or triangle, rectangle, cross
+                size: 5
+            }
         }
 	}
 

@@ -1,8 +1,7 @@
 jui.define("chart.brush.equalizer", [], function() {
 
     var EqualizerBrush = function(brush) {
-        var g, zeroY, count, width, barWidth, unit, gap, half_width;
-        var outerPadding = brush.outerPadding || 15, innerPadding = brush.innerPadding || 10;
+        var g, zeroY, count, width, barWidth, half_width;
 
         this.drawBefore = function(chart) {
             g = chart.svg.group().translate(chart.x(), chart.y());
@@ -11,11 +10,8 @@ jui.define("chart.brush.equalizer", [], function() {
             count = chart.data().length;
 
             width = brush.x.rangeBand();
-            half_width = (width - outerPadding * 2) / 2;
-            barWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
-
-            unit = brush.unit || 5;
-            gap = brush.gap || 1;
+            half_width = (width - brush.outerPadding * 2) / 2;
+            barWidth = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
         }
 
         this.draw = function(chart) {
@@ -31,13 +27,13 @@ jui.define("chart.brush.equalizer", [], function() {
 
                     if (startY <= zeroY) {
                         while (eY > startY) {
-                            var unitHeight = (eY - unit < startY ) ? Math.abs(eY - startY) : unit;
+                            var unitHeight = (eY - brush.unit < startY) ? Math.abs(eY - startY) : brush.unit;
                             var r = chart.svg.rect({
                                 x : startX,
                                 y : eY - unitHeight,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / gap), brush.colors)
+                                fill : chart.color(Math.floor(eIndex / brush.gap), brush.colors)
                             });
 
                             eY -= unitHeight + padding;
@@ -47,13 +43,13 @@ jui.define("chart.brush.equalizer", [], function() {
                         }
                     } else {
                         while (eY < startY) {
-                            var unitHeight = (eY + unit > startY ) ? Math.abs(eY - startY) : unit;
+                            var unitHeight = (eY + brush.unit > startY) ? Math.abs(eY - startY) : brush.unit;
                             var r = chart.svg.rect({
                                 x : startX,
                                 y : eY,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / gap), brush.colors)
+                                fill : chart.color(Math.floor(eIndex / brush.gap), brush.colors)
                             });
 
                             eY += unitHeight + padding;
@@ -66,11 +62,20 @@ jui.define("chart.brush.equalizer", [], function() {
                     this.addEvent(brush, chart, barGroup, j, i);
                     g.append(barGroup);
 
-                    startX += barWidth + innerPadding;
+                    startX += barWidth + brush.innerPadding;
                 }
             }
 
             return g;
+        }
+
+        this.drawSetup = function() {
+            return {
+                innerPadding: 10,
+                outerPadding: 15,
+                unit: 5,
+                gap: 5
+            }
         }
     }
 

@@ -5,8 +5,8 @@ jui.define("chart.brush.bar", [], function() {
 	 * 
 	 * <code>
 	 * {
-	 * 	type : 'bar',
-	 *  target : ['field1', 'field2'],  // 생략하면 모든 series 를 target 으로 설정
+	 * 	type : "bar",
+	 *  target : ["field1", "field2"],  // 생략하면 모든 series 를 target 으로 설정
 	 *  outerPadding : 2,	// bar 바깥쪽 padding 
 	 *  innerPadding : 1	// bar 안쪽 padding 
 	 *  

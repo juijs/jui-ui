@@ -1,8 +1,7 @@
-jui.define("chart.theme.dark", [], function() {
-	
+jui.define("chart.theme.gradient", [], function() {
     var themeColors = [
-        "#7977C2",
-        "#7BBAE7",
+        "linear(top) white,0.7 #7977C2",
+        "linear(top) white,0.7 #7BBAE7",
         "#FFC000",
         "#FF7800",
         "#87BB66",
@@ -25,14 +24,14 @@ jui.define("chart.theme.dark", [], function() {
 
     return {
         // common styles
-    	backgroundColor : "#232323",
+    	backgroundColor : "white",
     	fontSize : "11px",
-    	fontColor : "#eeeeee",
+    	fontColor : "#333333",
 		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
-    	gridFontColor : "#ececec",
+    	gridFontColor : "#333333",
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
@@ -44,10 +43,9 @@ jui.define("chart.theme.dark", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
-    	stackGaugeBackgroundColor : "#232323",
-    	pieBorderColor : "#232323",
+    	pieBorderColor : "white",
         pieBorderWidth : 1,
-        donutBorderColor : "#232323",
+        donutBorderColor : "white",
         donutBorderWidth : 1,
     	areaOpacity : 0.5,
         bubbleOpacity : 0.5,
@@ -60,7 +58,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        pathOpacity : 0.2,
+        pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
@@ -70,10 +68,10 @@ jui.define("chart.theme.dark", [], function() {
         titleFontSize : "13px",
         legendFontColor : "#333",
         legendFontSize : "12px",
-        tooltipFontColor : "#ececec",
+        tooltipFontColor : "#333",
         tooltipFontSize : "12px",
-        tooltipBackgroundColor : "black",
-        tooltipBorderColor : "#ececec",
+        tooltipBackgroundColor : "white",
+        tooltipBorderColor : "#aaaaaa",
         tooltipOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
@@ -87,6 +85,5 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
         crossBalloonOpacity : 0.5
-    }	
-
+    }
 });

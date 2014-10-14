@@ -36,7 +36,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : -bar - 4,
-					'text-anchor' : 'middle',
+					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
 
@@ -73,7 +73,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : bar * 3,
-					'text-anchor' : 'middle',
+					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
 
@@ -110,7 +110,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : -bar - 4,
 					y : bar,
-					'text-anchor' : 'end',
+					"text-anchor" : "end",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
 
@@ -148,7 +148,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : bar + 4,
 					y : bar,
-					'text-anchor' : 'start',
+					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
 
@@ -161,7 +161,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 
 			var width = chart.width(), height = chart.height();
 
-			if (orient == 'left' || orient == 'right') {
+			if (orient == "left" || orient == "right") {
 				this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
 			} else {
 				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
@@ -181,7 +181,7 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.draw = function(chart) {
-			return this.drawGrid(chart, orient, 'range', grid);
+			return this.drawGrid(chart, orient, "range", grid);
 		}
 	}
 
