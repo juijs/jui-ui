@@ -5,36 +5,35 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	 * 
 	 */
 	var Draw = function() {
-        var self = this;
 
-        function setupOptions(defOpts, opts) {
-            var exceptOpts = [ "type", "target", "x", "y", "x1", "y1", "c", "index", "colors" ],
+        function setupOptions(options, defOpts) {
+            var exceptOpts = [
+                    "type", "target", "index", "colors", // only brush
+                    "x", "y", "x1", "y1", "c" // grid & brush
+                ],
                 defOptKeys = [],
                 optKeys = [];
 
-            for(var key in defOpts) { defOptKeys.push(key); }
-            for(var key in opts) { optKeys.push(key); }
+            // 사용자가 넘긴 옵션
+            for(var key in options) {
+                optKeys.push(key);
+            }
 
+            // 드로우 객체의 정의된 옵션
+            for(var key in defOpts) {
+                defOptKeys.push(key);
+
+                if(!options[key]) {
+                    options[key] = defOpts[key];
+                }
+            }
+
+            // 정의되지 않은 옵션 사용 유무 체크
             for(var i = 0; i < optKeys.length; i++) {
                 var name = optKeys[i];
 
                 if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
                     throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
-                }
-            }
-
-            // 옵션 프로퍼티 설정
-            self.options = $.extend(defOpts, opts);
-
-            // 옵션이 아닌 프로퍼티 제거
-            for(var i = 0; i < exceptOpts.length; i++) {
-                delete self.options[exceptOpts[i]];
-            }
-
-            // 브러쉬에서 옵션 프로퍼티 제거
-            for(var key in opts) {
-                if($.inArray(key, exceptOpts) == -1) {
-                    delete opts[key];
                 }
             }
         }
@@ -60,7 +59,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                     defOpts = _.typeCheck("object", opts) ? opts : {};
 
                 // Options Check
-                setupOptions(defOpts, options);
+                setupOptions(options, defOpts);
             }
 			
 			// drawBefore

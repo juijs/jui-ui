@@ -9874,36 +9874,35 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	 * 
 	 */
 	var Draw = function() {
-        var self = this;
 
-        function setupOptions(defOpts, opts) {
-            var exceptOpts = [ "type", "target", "x", "y", "x1", "y1", "c", "index", "colors" ],
+        function setupOptions(options, defOpts) {
+            var exceptOpts = [
+                    "type", "target", "index", "colors", // only brush
+                    "x", "y", "x1", "y1", "c" // grid & brush
+                ],
                 defOptKeys = [],
                 optKeys = [];
 
-            for(var key in defOpts) { defOptKeys.push(key); }
-            for(var key in opts) { optKeys.push(key); }
+            // 사용자가 넘긴 옵션
+            for(var key in options) {
+                optKeys.push(key);
+            }
 
+            // 드로우 객체의 정의된 옵션
+            for(var key in defOpts) {
+                defOptKeys.push(key);
+
+                if(!options[key]) {
+                    options[key] = defOpts[key];
+                }
+            }
+
+            // 정의되지 않은 옵션 사용 유무 체크
             for(var i = 0; i < optKeys.length; i++) {
                 var name = optKeys[i];
 
                 if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
                     throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
-                }
-            }
-
-            // 옵션 프로퍼티 설정
-            self.options = $.extend(defOpts, opts);
-
-            // 옵션이 아닌 프로퍼티 제거
-            for(var i = 0; i < exceptOpts.length; i++) {
-                delete self.options[exceptOpts[i]];
-            }
-
-            // 브러쉬에서 옵션 프로퍼티 제거
-            for(var key in opts) {
-                if($.inArray(key, exceptOpts) == -1) {
-                    delete opts[key];
                 }
             }
         }
@@ -9929,7 +9928,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                     defOpts = _.typeCheck("object", opts) ? opts : {};
 
                 // Options Check
-                setupOptions(defOpts, options);
+                setupOptions(options, defOpts);
             }
 			
 			// drawBefore
@@ -12526,14 +12525,14 @@ jui.define("chart.brush.bar", [], function() {
  	 * @param {Object} brush
 	 */
 	var BarBrush = function(brush) {
-		var g, zeroX, series, count, height, half_height, barHeight;
+		var g, zeroX, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
-            outerPadding = this.options.outerPadding;
-            innerPadding = this.options.innerPadding;
+            outerPadding = brush.outerPadding;
+            innerPadding = brush.innerPadding;
 
 			zeroX = brush.x(0);
 			count = chart.data().length;
@@ -12616,9 +12615,8 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(brush, chart, pos, index) {
-            var opts = self.options,
-                series = chart.series(brush.target[index]),
-                radius = self.getScaleValue(pos.value, series.min, series.max, opts.min, opts.max);
+            var series = chart.series(brush.target[index]),
+                radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
             return chart.svg.circle({
                 cx: pos.x,
@@ -12856,8 +12854,8 @@ jui.define("chart.brush.column", [], function() {
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
-            outerPadding = this.options.outerPadding;
-            innerPadding = this.options.innerPadding;
+            outerPadding = brush.outerPadding;
+            innerPadding = brush.innerPadding;
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -12869,7 +12867,7 @@ jui.define("chart.brush.column", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - half_width/2;
+				var startX = brush.x(i) - half_width / 2;
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var startY = brush.y(chart.data(i)[brush.target[j]]),

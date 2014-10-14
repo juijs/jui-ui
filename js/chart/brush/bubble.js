@@ -18,9 +18,8 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(brush, chart, pos, index) {
-            var opts = self.options,
-                series = chart.series(brush.target[index]),
-                radius = self.getScaleValue(pos.value, series.min, series.max, opts.min, opts.max);
+            var series = chart.series(brush.target[index]),
+                radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
             return chart.svg.circle({
                 cx: pos.x,

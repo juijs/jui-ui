@@ -20,8 +20,8 @@ jui.define("chart.brush.column", [], function() {
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
-            outerPadding = this.options.outerPadding;
-            innerPadding = this.options.innerPadding;
+            outerPadding = brush.outerPadding;
+            innerPadding = brush.innerPadding;
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -33,7 +33,7 @@ jui.define("chart.brush.column", [], function() {
 
 		this.draw = function(chart) {
 			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - half_width/2;
+				var startX = brush.x(i) - half_width / 2;
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var startY = brush.y(chart.data(i)[brush.target[j]]),

@@ -16,14 +16,14 @@ jui.define("chart.brush.bar", [], function() {
  	 * @param {Object} brush
 	 */
 	var BarBrush = function(brush) {
-		var g, zeroX, series, count, height, half_height, barHeight;
+		var g, zeroX, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 
 		this.drawBefore = function(chart) {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
-            outerPadding = this.options.outerPadding;
-            innerPadding = this.options.innerPadding;
+            outerPadding = brush.outerPadding;
+            innerPadding = brush.innerPadding;
 
 			zeroX = brush.x(0);
 			count = chart.data().length;
