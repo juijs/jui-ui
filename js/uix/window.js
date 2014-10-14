@@ -187,7 +187,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         function animateVisible(self, style) {
             $(self.root).addClass(style)
                 .css({

@@ -465,7 +465,7 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 barColor : '#d6d6d6',

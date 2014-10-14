@@ -48,6 +48,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			// Event
 			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
+
+                self.ui.emit("click", [ self.data, e ]);
 				self.ui.emit("change", [ self.data, e ]);
 
 				e.preventDefault();
@@ -137,13 +139,21 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		this.setIndex = function(indexList) {
-			ui_list[this.options.type].options.index = indexList;
-			ui_list[this.options.type]._setting("init", null, "index");
+            var btn = ui_list[this.options.type];
+
+			btn.options.index = indexList;
+            btn._setting("init", null, "index");
+
+            this.emit("change", [ btn.data ]);
 		}
 
 		this.setValue = function(valueList) {
-			ui_list[this.options.type].options.value = valueList;
-			ui_list[this.options.type]._setting("init", null, "value");
+            var btn = ui_list[this.options.type];
+
+            btn.options.value = valueList;
+            btn._setting("init", null, "value");
+
+            this.emit("change", [ btn.data ]);
 		}
 		
 		this.getData = function() {
@@ -171,7 +181,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 type: "radio",

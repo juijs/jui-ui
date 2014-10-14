@@ -1461,7 +1461,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setting) ? UI["class"].setting() : {};
+                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),
@@ -3321,6 +3321,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			// Event
 			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
+
+                self.ui.emit("click", [ self.data, e ]);
 				self.ui.emit("change", [ self.data, e ]);
 
 				e.preventDefault();
@@ -3410,13 +3412,21 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		this.setIndex = function(indexList) {
-			ui_list[this.options.type].options.index = indexList;
-			ui_list[this.options.type]._setting("init", null, "index");
+            var btn = ui_list[this.options.type];
+
+			btn.options.index = indexList;
+            btn._setting("init", null, "index");
+
+            this.emit("change", [ btn.data ]);
 		}
 
 		this.setValue = function(valueList) {
-			ui_list[this.options.type].options.value = valueList;
-			ui_list[this.options.type]._setting("init", null, "value");
+            var btn = ui_list[this.options.type];
+
+            btn.options.value = valueList;
+            btn._setting("init", null, "value");
+
+            this.emit("change", [ btn.data ]);
 		}
 		
 		this.getData = function() {
@@ -3444,7 +3454,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 type: "radio",
@@ -3502,7 +3512,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$combo_text = ui_list["text"],
 				$combo_drop = ui_list["drop"],
 				$combo_list = $combo_drop.children("li");
-			
+
 			$combo_list.each(function(i) {
 				var elem = getElement(this),
 					value = $(elem).attr("value"),
@@ -3670,7 +3680,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			});
 			
 			// Select
-			this.addEvent($combo_drop, "click", "li", function(e) {
+			this.addEvent($combo_drop, "click", "li:not(.divider)", function(e) {
 				hideAll();
 
                 var elem = getElement(this),
@@ -3680,8 +3690,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
 				$combo_root.attr("value", value);
-				
+
+                self.emit("click", [ ui_data, e ]);
 				self.emit("change", [ ui_data, e ]);
+
 				e.preventDefault();
 			});
 			
@@ -3761,7 +3773,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 index: 0,
@@ -4089,7 +4101,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 type: "daily",
@@ -4234,43 +4246,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				return result;
 			}
 		}
-		
-		function setEventKeydown(self) {
-			if(!self.options.keydown) return;
-			
-			self.addEvent(window, "keydown", function(e) {
-				if(self.type == "hide") return;
-				var $list = ui_list.menu.find("li");
-				
-				if(e.which == 38) { // up
-					if(index < 1) index = $list.size() - 1;
-					else index--;
-					
-					selectItem(self, function() {
-						index--;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 40) { // down
-					if(index < $list.size() - 1) index++;
-					else index = 0;
-					
-					selectItem(self, function() {
-						index++;
-						selectItem(self);
-					});
-				}
-				
-				if(e.which == 13) { // enter
-					self.addTrigger($list.eq(index), "click");
-					index = -1;
-				}
-				
-				return false;
-			});
-		}
-		
+
 		function selectItem(self, callback) {
 			var $list = ui_list.menu.find("li"),
 				$target = $list.eq(index);
@@ -4297,7 +4273,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		 */
 		
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			var $dd_root = $(this.root),
 				$dd_menu = $dd_root.find("ul"),
@@ -4432,7 +4408,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 close: true,
@@ -4632,7 +4608,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",
@@ -4760,7 +4736,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
         }
     }
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
@@ -4910,7 +4886,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 count: 0,		// 데이터 전체 개수
@@ -5063,9 +5039,13 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                 });
             }
 		}
+
+        this.update = function(newTitle) {
+            title = newTitle;
+        }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",
@@ -5081,6 +5061,9 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
                                 "<div class='anchor'></div><div class='title'><!= title !></div>" +
                             "</div>"
                 }
+            },
+            valid: {
+                update: [ "string" ]
             }
         }
     }
@@ -5554,7 +5537,7 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 barColor : '#d6d6d6',
@@ -5675,7 +5658,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: null,
@@ -6009,7 +5992,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: "",
@@ -7871,7 +7854,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows) {
@@ -8891,7 +8874,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 root: null,
@@ -9109,7 +9092,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         function animateVisible(self, style) {
             $(self.root).addClass(style)
                 .css({
@@ -9907,7 +9890,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows, style) {
@@ -10984,7 +10967,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 	}
 
-	UI.setting = function() {
+	UI.setup = function() {
 		return {
 			options : {
 				width : "100%",		// chart 기본 넓이

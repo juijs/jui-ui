@@ -881,7 +881,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 	}
 
-	UI.setting = function() {
+	UI.setup = function() {
 		return {
 			options : {
 				width : "100%",		// chart 기본 넓이
