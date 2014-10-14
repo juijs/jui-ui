@@ -18,6 +18,7 @@ module.exports = function(grunt) {
                     "js/util/time.js",
                     "js/util/scale.js",
                     "js/util/svg.js",
+                    "js/util/color.js",
 
                     // ui
                     "js/ui/button.js",

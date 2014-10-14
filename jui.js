@@ -3120,6 +3120,157 @@ jui.define("util.svg",
 
     return SVG;
 });
+jui.define("util.color", [], function() {
+
+	/**
+	 * color 객체 
+	 *  
+	 */
+	var self = {
+		
+		regex  : /(linear|radial)\((.*)\)(.*)/i,
+		
+		trim : function (str) {
+			return (str || "").replace(/^\s+|\s+$/g, '');	
+		},
+
+		parse : function(color) {
+			return this.parseGradient(color);
+		},
+		
+		/**
+		 * gradient parser 
+		 * 
+		 * ex)
+		 * 
+		 * linear(left) #fff,#000
+		 * linear(right) #fff,50 yellow,black
+		 * radial(50%,50%,50%,50,50)
+		 *  
+ 		 * @param {Object} color
+		 */
+		parseGradient : function(color) {
+			var matches = color.match(this.regex);
+			
+			if (!matches) return color; 
+			
+			var type = this.trim(matches[1]);
+			var attr = this.parseAttr(type, this.trim(matches[2]));
+			var stops = this.parseStop(this.trim(matches[3]));
+			
+			var obj = { type : type };
+			
+			for(var k in attr) {
+				obj[k] = attr[k];
+			}
+			
+			obj.stops = stops;
+			
+			return obj; 
+			
+		},
+		
+		parseStop : function(stop) {
+			var stop_list = stop.split(",");
+			
+			var stops = [];
+			
+			for(var i = 0, len = stop_list.length; i < len; i++) {
+				var stop = stop_list[i];
+				
+				var arr = stop.split(" ");
+				
+				if (arr.length == 0) continue;
+				
+				if (arr.length == 1) {
+					stops.push({ "stop-color" : arr[0] })
+				} else if (arr.length == 2) {
+					stops.push({ "offset" : arr[0], "stop-color" : arr[1] })
+				} else if (arr.length == 3) {
+					stops.push({ "offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] })
+				}
+			}
+			
+			var start = -1;
+			var end = -1; 
+			for(var i = 0, len = stops.length; i < len; i++) {
+				var stop = stops[i];
+				
+				if (i == 0) {
+					if (!stop.offset) stop.offset = 0; 
+				} else if (i == len - 1) {
+					if (!stop.offset) stop.offset = 1;
+				}
+				
+				if (start == -1 && typeof stop.offset == 'undefined') {
+					start = i;
+				} else if (end == -1 && typeof stop.offset == 'undefined') {
+					end = i; 
+					
+					var count = end - start;
+					
+					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;  
+					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;  
+					 
+					var dist = endOffset - startOffset
+					var value = dist/ count; 
+					
+					var offset = startOffset + value; 
+					for(var index = start + 1; index < end; index++) {
+						stops[index].offset = offset; 
+						
+						offset += value; 
+					} 
+					
+					start = end;
+					end = -1; 
+				}
+			}
+			
+			return stops;
+		},
+		
+		parseAttr : function(type, str) {
+			
+			
+			if (type == 'linear') {
+				switch(str) {
+				case "":
+				case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" }; 
+				case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str }; 
+				case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
+				case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str }; 
+				case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str }; 
+				case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
+				case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str }; 
+				case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
+				default : 
+					var arr = str.split(",");
+					for(var i = 0, len = arr.length; i < len; i++) {
+						if (arr[i].indexOf("%") == -1)
+							arr[i] = parseFloat(arr[i]);
+					}
+					
+					return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };  
+				}				
+			} else {
+				var arr = str.split(",");
+				for(var i = 0, len = arr.length; i < len; i++) {
+					
+					if (arr[i].indexOf("%") == -1)
+						arr[i] = parseFloat(arr[i]);
+				}
+				
+				return { cx : arr[0], cy : arr[1],r : arr[2], fx : arr[3], fy : arr[4] };
+			}
+
+		}
+	
+	}
+
+	return self;
+});
+
 jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
@@ -9950,7 +10101,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($, _, SVGUtil) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" ], function($, _, SVGUtil, ColorUtil) {
 	/**
 	 * Chart Builder 구현
 	 *
@@ -9958,7 +10109,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 	var UI = function() {
         var _initialize = false;
         var _data = [], _page = 1, _start = 0, _end = 0;
-        var _grid = {}, _brush = [], _widget = [], _scales = [];
+        var _grid = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _theme;
 
 
@@ -10038,6 +10189,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             _widget = createBrushData(widget, series_list);
             _series = series;
             _grid = grid;
+            
+            // hash code 삭제 
+            _hash = {};
         }
 
 		/**
@@ -10289,7 +10443,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             } else {
                 _padding = opts.padding;
             }
-
+            
             // 차트 테마 설정
             this.setTheme(opts.theme);
 
@@ -10405,71 +10559,50 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
             return _padding;
         }
         
-        this.createGradient = function(obj) {
+        this.createGradient = function(obj, hashKey) {
+            
+            
+            if (typeof hashKey != 'undefined' && _hash[hashKey]) {
+            	return "url(#" + _hash[hashKey] + ")";
+            }
             
             var id = this.createId('gradient');
-            
+                        
             obj.id = id; 
+            var g;
             if (obj.type == 'linear') {
-                
-               var g =  this.svg.linearGradient(obj);
+               g =  this.svg.linearGradient(obj);
             }  else if (obj.type == 'radial') {
-               var g =  this.svg.radialGradient(obj);                
+               g =  this.svg.radialGradient(obj);                
             }         
 
-           for(var i = 0; i < obj.stop.length; i++) {
-               g.append(this.svg.stop(obj.stop[i]));
+           for(var i = 0; i < obj.stops.length; i++) {
+               g.append(this.svg.stop(obj.stops[i]));
            }
            
            this.defs.append(g);
+            
+            if (typeof hashKey != 'undefined') {
+            	_hash[hashKey] = id;	
+            }            
            
            return "url(#" + id + ")";
         }
         
         this.color = function(i, colors) {
             var color;
-
+            
             if (_.typeCheck("array", colors)) {
                 color = colors[i];
             }
             
             color = color || _theme["colors"][i];
             
-            if (_.typeCheck("object", color)) {
-                
-                if (color.type == 'linear') {
-                    return this.createGradient(color);      
-                } else if (color.type == 'radial') {
-                    return this.createGradient(color);
-                } else if (color.type == 'pattern') {
-                    return this.createPattern(color);
-                }
+            if (_hash[color]) {
+            	return "url(#" + _hash[color] + ")";
             }
             
-            var list = color.split(",");
-            
-            if (list.length == 1) {
-                return list[0];
-            }
-            
-            var obj = {
-                type : 'linear',
-                stop : []
-            }
-            
-            var dist = 1 / (list.length-1);
-            
-            var start = 0; 
-            for(var i = 0; i < list.length; i++) {
-                obj.stop.push({
-                    offset : start, 
-                    "stop-color" : list[i]
-                })
-                
-                start += dist; 
-            }
-            
-            return this.createGradient(obj);
+            return this.getColor(color);
             
         }
 
@@ -10532,12 +10665,36 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 				return _theme;
 			} else if (arguments.length == 1) {
 				if (_theme[key]) {
-					return _theme[key];
+					
+					if (key.indexOf("Color") > -1 && _theme[key]) {
+						return this.getColor(_theme[key]); 						
+					} else {
+						return _theme[key];	
+					}
 				}
 			} else if (arguments.length == 3) {
-				return (key) ? _theme[value] : _theme[value2];
+				var val = (key) ? value : value2;
+				if (val.indexOf("Color") > -1 && _theme[val]) {
+					return this.getColor(_theme[val]);					
+				} else {
+					return _theme[val];	
+				}
+					
 			}
 		}		
+		
+		this.getColor = function(color) {
+			
+            if (_.typeCheck("object", color)) {
+                return this.createGradient(color);      
+            }			
+			
+			var parsedColor = ColorUtil.parse(color);
+			
+			if (parsedColor == color) return color;
+			
+			return this.createGradient(parsedColor, color);			
+		}
 
         /**
          * series 옵션 리턴
@@ -10659,7 +10816,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 			// chart 영역 계산
 			calculate(this);
-						
+			
 			// chart 관련된 요소 draw
             drawBefore(this);
             drawDefs(this);
@@ -10894,8 +11051,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg" ], function($,
 
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
-        "#7977C2,#7BBAE7",
-        "#7BBAE7",
+        "linear(top) white,0.7 #7977C2",
+        "linear(top) white,0.7 #7BBAE7",
         "#FFC000",
         "#FF7800",
         "#87BB66",
