@@ -1839,7 +1839,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows) {

@@ -263,7 +263,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 close: true,

@@ -318,7 +318,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: "",

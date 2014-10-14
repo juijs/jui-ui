@@ -128,7 +128,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 count: 0,		// 데이터 전체 개수

@@ -496,7 +496,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setting) ? UI["class"].setting() : {};
+                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),

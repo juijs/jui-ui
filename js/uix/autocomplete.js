@@ -99,7 +99,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: null,

@@ -736,7 +736,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows, style) {

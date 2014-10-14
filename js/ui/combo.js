@@ -301,7 +301,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 index: 0,

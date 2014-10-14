@@ -1461,7 +1461,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setting) ? UI["class"].setting() : {};
+                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),
@@ -1746,7 +1746,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 type: "radio",
@@ -2065,7 +2065,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 index: 0,
@@ -2393,7 +2393,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 type: "daily",
@@ -2700,7 +2700,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 close: true,
@@ -2900,7 +2900,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",
@@ -3028,7 +3028,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
         }
     }
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
@@ -3178,7 +3178,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 count: 0,		// 데이터 전체 개수
@@ -3337,7 +3337,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",
@@ -3829,7 +3829,7 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 barColor : '#d6d6d6',
@@ -3950,7 +3950,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: null,
@@ -4284,7 +4284,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 target: "",
@@ -6146,7 +6146,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows) {
@@ -7166,7 +7166,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 root: null,
@@ -7384,7 +7384,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         function animateVisible(self, style) {
             $(self.root).addClass(style)
                 .css({
@@ -8182,7 +8182,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         var MAX = 2500, DELAY = 70;
 
         function animateUpdate(self, rows, style) {

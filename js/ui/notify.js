@@ -112,7 +112,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
         }
     }
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right

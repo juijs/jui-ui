@@ -176,7 +176,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",

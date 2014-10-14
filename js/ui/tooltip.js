@@ -141,7 +141,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
         }
 	}
 
-    UI.setting = function() {
+    UI.setup = function() {
         return {
             options: {
                 color: "black",
