@@ -319,8 +319,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(pos.left + self.padding("left") > e.x) return;
                 if(pos.left + self.padding("left") + self.width() < e.x) return;
-                if(pos.top + self.padding("top") > e.y) return;
-                if(pos.top + self.padding("top") + self.height() < e.y) return;
+                if(e.offsetY - self.padding("top") < 0) return;
+                if(e.offsetY - self.padding("top") > self.height()) return;
 
                 return true;
             }
