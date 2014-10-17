@@ -326,6 +326,45 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function createGradient(self, obj, hashKey) {
+            if (typeof hashKey != 'undefined' && _hash[hashKey]) {
+                return "url(#" + _hash[hashKey] + ")";
+            }
+
+            var id = self.createId('gradient');
+
+            obj.id = id;
+            var g;
+            if (obj.type == 'linear') {
+                g =  self.svg.linearGradient(obj);
+            }  else if (obj.type == 'radial') {
+                g =  self.svg.radialGradient(obj);
+            }
+
+            for(var i = 0; i < obj.stops.length; i++) {
+                g.append(self.svg.stop(obj.stops[i]));
+            }
+
+            this.defs.append(g);
+
+            if (typeof hashKey != 'undefined') {
+                _hash[hashKey] = id;
+            }
+
+            return "url(#" + id + ")";
+        }
+
+        function getColor(self, color) {
+            if (_.typeCheck("object", color)) {
+                return createGradient(self, color);
+            }
+
+            var parsedColor = ColorUtil.parse(color);
+            if (parsedColor == color) return color;
+
+            return createGradient(self, parsedColor, color);
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -456,36 +495,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return _padding;
         }
         
-        this.createGradient = function(obj, hashKey) {
-            
-            
-            if (typeof hashKey != 'undefined' && _hash[hashKey]) {
-            	return "url(#" + _hash[hashKey] + ")";
-            }
-            
-            var id = this.createId('gradient');
-                        
-            obj.id = id; 
-            var g;
-            if (obj.type == 'linear') {
-               g =  this.svg.linearGradient(obj);
-            }  else if (obj.type == 'radial') {
-               g =  this.svg.radialGradient(obj);                
-            }         
-
-           for(var i = 0; i < obj.stops.length; i++) {
-               g.append(this.svg.stop(obj.stops[i]));
-           }
-           
-           this.defs.append(g);
-            
-            if (typeof hashKey != 'undefined') {
-            	_hash[hashKey] = id;	
-            }            
-           
-           return "url(#" + id + ")";
-        }
-        
         this.color = function(i, colors) {
             var color;
             
@@ -499,7 +508,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             	return "url(#" + _hash[color] + ")";
             }
             
-            return this.getColor(color);
+            return getColor(this, color);
             
         }
 
@@ -562,9 +571,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 				return _theme;
 			} else if (arguments.length == 1) {
 				if (_theme[key]) {
-					
 					if (key.indexOf("Color") > -1 && _theme[key]) {
-						return this.getColor(_theme[key]); 						
+						return getColor(this, _theme[key]);
 					} else {
 						return _theme[key];	
 					}
@@ -572,25 +580,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 			} else if (arguments.length == 3) {
 				var val = (key) ? value : value2;
 				if (val.indexOf("Color") > -1 && _theme[val]) {
-					return this.getColor(_theme[val]);					
+					return getColor(this, _theme[val]);
 				} else {
 					return _theme[val];	
 				}
 					
 			}
-		}		
-		
-		this.getColor = function(color) {
-			
-            if (_.typeCheck("object", color)) {
-                return this.createGradient(color);      
-            }			
-			
-			var parsedColor = ColorUtil.parse(color);
-			
-			if (parsedColor == color) return color;
-			
-			return this.createGradient(parsedColor, color);			
 		}
 
         /**
