@@ -1,6 +1,7 @@
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(widget) {
+        var self = this;
         var count, tick;
 
         function setDragEvent(chart, thumb, bg) {
@@ -11,14 +12,17 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
+                var offset = self.offset(chart, e);
+
                 isMove = true;
-                mouseStart = e.offsetX;
+                mouseStart = offset.x;
             });
 
             chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                thumbWidth = e.offsetX - mouseStart;
+                var offset = self.offset(chart, e);
+                thumbWidth = offset.x - mouseStart;
 
                 if(thumbWidth > 0) {
                     thumb.attr({

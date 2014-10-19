@@ -1,10 +1,11 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
+        var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
 
         function printTooltip(chart, obj, brushIndex) {
-            if(obj.target) {
+            if(obj.target && widget.all === false) {
                 var t = chart.series(obj.target);
 
                 // 위젯 포지션에 따른 별도 처리
@@ -84,19 +85,20 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var x = e.offsetX - (w / 2),
-                    y = e.offsetY - h - anchor - (padding / 2);
+                var offset = self.offset(chart, e);
+                var x = offset.x - (w / 2),
+                    y = offset.y - h - anchor - (padding / 2);
 
                 if(widget.position == "left" || widget.position == "right") {
-                    y = e.offsetY - (h / 2) - (padding / 2);
+                    y = offset.y - (h / 2) - (padding / 2);
                 }
 
                 if(widget.position == "left") {
-                    x = e.offsetX - w - anchor;
+                    x = offset.x - w - anchor;
                 } else if(widget.position == "right") {
-                    x = e.offsetX + anchor;
+                    x = offset.x + anchor;
                 } else if(widget.position == "bottom") {
-                    y = e.offsetY + (anchor * 2);
+                    y = offset.y + (anchor * 2);
                 }
 
                 g.translate(x, y);
@@ -115,6 +117,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.drawSetup = function() {
             return {
                 position: "top", // or bottom, left, right
+                all: false,
                 brush: 0
             }
         }

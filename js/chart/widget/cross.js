@@ -85,26 +85,27 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             chart.on("bg.mousemove", function(e) {
                 var left = chart.x() - 2,
-                    top = chart.y() - 2;
+                    top = chart.y() - 2,
+                    offset = self.offset(chart, e);
 
                 xline.attr({
-                    y1: e.offsetY - top,
-                    y2: e.offsetY - top
+                    y1: offset.y - top,
+                    y2: offset.y - top
                 });
 
                 yline.attr({
-                    x1: e.offsetX - left,
-                    x2: e.offsetX - left
+                    x1: offset.x - left,
+                    x2: offset.x - left
                 });
 
                 if(yTooltip) {
-                    yTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
-                    yTooltip.get(1).html(getTooltipData(widget.y.invert(e.offsetY - chart.y())));
+                    yTooltip.translate(-(tw + ta), offset.y - top - (th / 2));
+                    yTooltip.get(1).html(getTooltipData(widget.y.invert(offset.y - chart.y())));
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
-                    xTooltip.get(1).html(getTooltipData(widget.x.invert(e.offsetX - chart.x())));
+                    xTooltip.translate(offset.x - left - (tw / 2), chart.height() + ta);
+                    xTooltip.get(1).html(getTooltipData(widget.x.invert(offset.x - chart.x())));
                 }
             });
 

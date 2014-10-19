@@ -315,12 +315,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             function checkPosition(e) {
-                var pos = $(self.root).offset();
+                var pos = $(self.root).offset(),
+                    offsetX = e.offsetX || e.layerX - pos.left,
+                    offsetY = e.offsetY || e.layerY - pos.top;
 
-                if(pos.left + self.padding("left") > e.x) return;
-                if(pos.left + self.padding("left") + self.width() < e.x) return;
-                if(e.offsetY - self.padding("top") < 0) return;
-                if(e.offsetY - self.padding("top") > self.height()) return;
+                if(offsetX - self.padding("left") < 0) return;
+                if(offsetX - self.padding("left") > self.width()) return;
+                if(offsetY - self.padding("top") < 0) return;
+                if(offsetY - self.padding("top") > self.height()) return;
 
                 return true;
             }

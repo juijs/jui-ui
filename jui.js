@@ -10400,12 +10400,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             function checkPosition(e) {
-                var pos = $(self.root).offset();
+                var pos = $(self.root).offset(),
+                    offsetX = e.offsetX || e.layerX - pos.left,
+                    offsetY = e.offsetY || e.layerY - pos.top;
 
-                if(pos.left + self.padding("left") > e.x) return;
-                if(pos.left + self.padding("left") + self.width() < e.x) return;
-                if(e.offsetY - self.padding("top") < 0) return;
-                if(e.offsetY - self.padding("top") > self.height()) return;
+                if(offsetX - self.padding("left") < 0) return;
+                if(offsetX - self.padding("left") > self.width()) return;
+                if(offsetY - self.padding("top") < 0) return;
+                if(offsetY - self.padding("top") > self.height()) return;
 
                 return true;
             }
@@ -14706,17 +14708,35 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return points.join(" ");
         }
+
+        this.offset = function(chart, e) {
+            var x = e.offsetX,
+                y = e.offsetY;
+
+            if(!x && !y) {
+                var pos = $(chart.root).offset();
+
+                x = e.layerX - pos.left;
+                y = e.layerY - pos.top;
+            }
+
+            return {
+                x: x,
+                y: y
+            }
+        }
 	}
 
 	return CoreWidget;
 }, "chart.draw"); 
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(widget) {
+        var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
 
         function printTooltip(chart, obj, brushIndex) {
-            if(obj.target) {
+            if(obj.target && widget.all === false) {
                 var t = chart.series(obj.target);
 
                 // 위젯 포지션에 따른 별도 처리
@@ -14796,19 +14816,20 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var x = e.offsetX - (w / 2),
-                    y = e.offsetY - h - anchor - (padding / 2);
+                var offset = self.offset(chart, e);
+                var x = offset.x - (w / 2),
+                    y = offset.y - h - anchor - (padding / 2);
 
                 if(widget.position == "left" || widget.position == "right") {
-                    y = e.offsetY - (h / 2) - (padding / 2);
+                    y = offset.y - (h / 2) - (padding / 2);
                 }
 
                 if(widget.position == "left") {
-                    x = e.offsetX - w - anchor;
+                    x = offset.x - w - anchor;
                 } else if(widget.position == "right") {
-                    x = e.offsetX + anchor;
+                    x = offset.x + anchor;
                 } else if(widget.position == "bottom") {
-                    y = e.offsetY + (anchor * 2);
+                    y = offset.y + (anchor * 2);
                 }
 
                 g.translate(x, y);
@@ -14827,6 +14848,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         this.drawSetup = function() {
             return {
                 position: "top", // or bottom, left, right
+                all: false,
                 brush: 0
             }
         }
@@ -15060,6 +15082,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
     var ScrollWidget = function(widget) {
+        var self = this;
         var thumbWidth = 0,
             thumbLeft = 0,
             bufferCount = 0,
@@ -15076,15 +15099,18 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             thumb.on("mousedown", function(e) {
                 if(isMove) return;
 
+                var offset = self.offset(chart, e);
+
                 isMove = true;
-                mouseStart = e.offsetX;
+                mouseStart = offset.x;
                 thumbStart = thumbLeft;
             });
 
             chart.addEvent("body", "mousemove", function(e) {
                 if(!isMove) return;
 
-                var gap = thumbStart + e.offsetX - mouseStart;
+                var offset = self.offset(chart, e),
+                    gap = thumbStart + offset.x - mouseStart;
 
                 if(gap < 0) {
                     gap = 0;
@@ -15160,6 +15186,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(widget) {
+        var self = this;
         var count, tick;
 
         function setDragEvent(chart, thumb, bg) {
@@ -15170,14 +15197,17 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
+                var offset = self.offset(chart, e);
+
                 isMove = true;
-                mouseStart = e.offsetX;
+                mouseStart = offset.x;
             });
 
             chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                thumbWidth = e.offsetX - mouseStart;
+                var offset = self.offset(chart, e);
+                thumbWidth = offset.x - mouseStart;
 
                 if(thumbWidth > 0) {
                     thumb.attr({
@@ -15372,26 +15402,27 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             chart.on("bg.mousemove", function(e) {
                 var left = chart.x() - 2,
-                    top = chart.y() - 2;
+                    top = chart.y() - 2,
+                    offset = self.offset(chart, e);
 
                 xline.attr({
-                    y1: e.offsetY - top,
-                    y2: e.offsetY - top
+                    y1: offset.y - top,
+                    y2: offset.y - top
                 });
 
                 yline.attr({
-                    x1: e.offsetX - left,
-                    x2: e.offsetX - left
+                    x1: offset.x - left,
+                    x2: offset.x - left
                 });
 
                 if(yTooltip) {
-                    yTooltip.translate(-(tw + ta), e.offsetY - top - (th / 2));
-                    yTooltip.get(1).html(getTooltipData(widget.y.invert(e.offsetY - chart.y())));
+                    yTooltip.translate(-(tw + ta), offset.y - top - (th / 2));
+                    yTooltip.get(1).html(getTooltipData(widget.y.invert(offset.y - chart.y())));
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(e.offsetX - left - (tw / 2), chart.height() + ta);
-                    xTooltip.get(1).html(getTooltipData(widget.x.invert(e.offsetX - chart.x())));
+                    xTooltip.translate(offset.x - left - (tw / 2), chart.height() + ta);
+                    xTooltip.get(1).html(getTooltipData(widget.x.invert(offset.x - chart.x())));
                 }
             });
 

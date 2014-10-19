@@ -1,6 +1,7 @@
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
     var ScrollWidget = function(widget) {
+        var self = this;
         var thumbWidth = 0,
             thumbLeft = 0,
             bufferCount = 0,
@@ -17,15 +18,18 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             thumb.on("mousedown", function(e) {
                 if(isMove) return;
 
+                var offset = self.offset(chart, e);
+
                 isMove = true;
-                mouseStart = e.offsetX;
+                mouseStart = offset.x;
                 thumbStart = thumbLeft;
             });
 
             chart.addEvent("body", "mousemove", function(e) {
                 if(!isMove) return;
 
-                var gap = thumbStart + e.offsetX - mouseStart;
+                var offset = self.offset(chart, e),
+                    gap = thumbStart + offset.x - mouseStart;
 
                 if(gap < 0) {
                     gap = 0;
