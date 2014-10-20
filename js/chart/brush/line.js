@@ -2,7 +2,7 @@ jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
 
-        this.createLine = function(brush, chart, pos, index) {
+        this.createLine = function(chart, brush, pos, index) {
             var x = pos.x,
                 y = pos.y;
 
@@ -32,11 +32,11 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawLine = function(brush, chart, path) {
+        this.drawLine = function(chart, brush, path) {
             var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(brush, chart, path[k], k);
+                var p = this.createLine(chart, brush, path[k], k);
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -46,7 +46,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getXY());
+            return this.drawLine(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {

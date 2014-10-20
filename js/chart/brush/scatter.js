@@ -2,7 +2,7 @@ jui.define("chart.brush.scatter", [], function() {
 
 	var ScatterBrush = function(brush) {
 
-        function createScatter(brush, chart, pos, index) {
+        function createScatter(chart, brush, pos, index) {
             var elem = null,
                 target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
@@ -70,12 +70,12 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
-        this.drawScatter = function(brush, chart, points) {
+        this.drawScatter = function(chart, brush, points) {
             var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    var p = createScatter(chart, brush, { x: points[i].x[j], y: points[i].y[j] }, i);
                     this.addEvent(p, i, j);
 
                     g.append(p);
@@ -86,7 +86,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawScatter(brush, chart, this.getXY());
+            return this.drawScatter(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {

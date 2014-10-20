@@ -2,12 +2,12 @@ jui.define("chart.brush.area", [], function() {
 
     var AreaBrush = function(brush) {
 
-        this.drawArea = function(brush, chart, path) {
+        this.drawArea = function(chart, brush, path) {
             var g = chart.svg.group().translate(chart.x(), chart.y()),
                 maxY = chart.height();
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(brush, chart, path[k], k),
+                var p = this.createLine(chart, brush, path[k], k),
                     xList = path[k].x;
 
                 p.LineTo(xList[xList.length - 1], maxY);
@@ -26,7 +26,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getXY());
+            return this.drawArea(chart, brush, this.getXY());
         }
     }
 

@@ -6123,7 +6123,7 @@ jui.define("chart.brush.bubble", [], function() {
 	var BubbleBrush = function(brush) {
         var self = this;
 
-        function createBubble(brush, chart, pos, index) {
+        function createBubble(chart, brush, pos, index) {
             var series = chart.series(brush.target[index]),
                 radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
@@ -6138,14 +6138,14 @@ jui.define("chart.brush.bubble", [], function() {
             });
         }
 
-        this.drawBubble = function(brush, chart, points) {
+        this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group({
                 "clip-path" : "url(#" + chart.clipId + ")"
             }).translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var b = createBubble(brush, chart, {
+                    var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
@@ -6158,7 +6158,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawBubble(brush, chart, this.getXY());
+            return this.drawBubble(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -6761,7 +6761,7 @@ jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function(brush) {
 
-        this.createLine = function(brush, chart, pos, index) {
+        this.createLine = function(chart, brush, pos, index) {
             var x = pos.x,
                 y = pos.y;
 
@@ -6791,11 +6791,11 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawLine = function(brush, chart, path) {
+        this.drawLine = function(chart, brush, path) {
             var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(brush, chart, path[k], k);
+                var p = this.createLine(chart, brush, path[k], k);
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -6805,7 +6805,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getXY());
+            return this.drawLine(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -6961,7 +6961,7 @@ jui.define("chart.brush.scatter", [], function() {
 
 	var ScatterBrush = function(brush) {
 
-        function createScatter(brush, chart, pos, index) {
+        function createScatter(chart, brush, pos, index) {
             var elem = null,
                 target = chart.series(brush.target[index]),
                 symbol = (!target.symbol) ? brush.symbol : target.symbol,
@@ -7029,12 +7029,12 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
-        this.drawScatter = function(brush, chart, points) {
+        this.drawScatter = function(chart, brush, points) {
             var g = chart.svg.group().translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
+                    var p = createScatter(chart, brush, { x: points[i].x[j], y: points[i].y[j] }, i);
                     this.addEvent(p, i, j);
 
                     g.append(p);
@@ -7045,7 +7045,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawScatter(brush, chart, this.getXY());
+            return this.drawScatter(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -7532,12 +7532,12 @@ jui.define("chart.brush.area", [], function() {
 
     var AreaBrush = function(brush) {
 
-        this.drawArea = function(brush, chart, path) {
+        this.drawArea = function(chart, brush, path) {
             var g = chart.svg.group().translate(chart.x(), chart.y()),
                 maxY = chart.height();
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(brush, chart, path[k], k),
+                var p = this.createLine(chart, brush, path[k], k),
                     xList = path[k].x;
 
                 p.LineTo(xList[xList.length - 1], maxY);
@@ -7556,7 +7556,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getXY());
+            return this.drawArea(chart, brush, this.getXY());
         }
     }
 
@@ -7568,7 +7568,7 @@ jui.define("chart.brush.stackline", [], function() {
 	var StackLineBrush = function(brush) {
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getStackXY());
+            return this.drawLine(chart, brush, this.getStackXY());
         }
 	}
 
@@ -7579,7 +7579,7 @@ jui.define("chart.brush.stackarea", [], function() {
 	var StackAreaBrush = function(brush) {
 
 		this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getStackXY());
+            return this.drawArea(chart, brush, this.getStackXY());
 		}
 	}
 
@@ -7591,7 +7591,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 	var StackScatterBrush = function(brush) {
 
         this.draw = function(chart) {
-            return this.drawScatter(brush, chart, this.getStackXY());
+            return this.drawScatter(chart, brush, this.getStackXY());
         }
 	}
 

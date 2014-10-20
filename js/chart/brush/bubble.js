@@ -17,7 +17,7 @@ jui.define("chart.brush.bubble", [], function() {
 	var BubbleBrush = function(brush) {
         var self = this;
 
-        function createBubble(brush, chart, pos, index) {
+        function createBubble(chart, brush, pos, index) {
             var series = chart.series(brush.target[index]),
                 radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
@@ -32,14 +32,14 @@ jui.define("chart.brush.bubble", [], function() {
             });
         }
 
-        this.drawBubble = function(brush, chart, points) {
+        this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group({
                 "clip-path" : "url(#" + chart.clipId + ")"
             }).translate(chart.x(), chart.y());
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var b = createBubble(brush, chart, {
+                    var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
@@ -52,7 +52,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawBubble(brush, chart, this.getXY());
+            return this.drawBubble(chart, brush, this.getXY());
         }
 
         this.drawSetup = function() {
