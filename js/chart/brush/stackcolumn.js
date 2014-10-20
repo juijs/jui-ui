@@ -1,9 +1,9 @@
 jui.define("chart.brush.stackcolumn", [], function() {
 
-	var ColumnStackBrush = function(brush) {
+	var ColumnStackBrush = function(chart, brush) {
 		var g, zeroY, count, width, barWidth;
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
 			zeroY = brush.y(0);
@@ -13,7 +13,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			barWidth = width - brush.outerPadding * 2;
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			for (var i = 0; i < count; i++) {
 				var group = chart.svg.group();
 				

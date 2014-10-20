@@ -1,6 +1,5 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
-    var TooltipWidget = function(widget) {
-        var self = this;
+    var TooltipWidget = function(chart, widget) {
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
 
@@ -40,7 +39,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             }
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
@@ -60,7 +59,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             });
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             var self = this,
                 isActive = false,
                 w, h;

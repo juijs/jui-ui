@@ -15,28 +15,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 	 * 
  	 * @param {Object} brush
 	 */
-	var DonutBrush = function(brush) {
+	var DonutBrush = function(chart, brush) {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
-
-		this.drawBefore = function(chart) {
-			var width = chart.width(),
-                height = chart.height(),
-                min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			// center
-			w = min / 2;
-			centerX = width / 2;
-			centerY = height / 2;
-			startY = -w;
-			startX = 0;
-			outerRadius = Math.abs(startY);
-			innerRadius = outerRadius - brush.size;
-			
-		}
 
 		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    
@@ -118,7 +98,27 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			return g;
 		}
 
-		this.draw = function(chart) {
+        this.drawBefore = function() {
+            var width = chart.width(),
+                height = chart.height(),
+                min = width;
+
+            if (height < min) {
+                min = height;
+            }
+
+            // center
+            w = min / 2;
+            centerX = width / 2;
+            centerY = height / 2;
+            startY = -w;
+            startX = 0;
+            outerRadius = Math.abs(startY);
+            innerRadius = outerRadius - brush.size;
+
+        }
+
+		this.draw = function() {
 			var s = chart.series(brush.target[0]);
 			var group = chart.svg.group({
 				"class" : "brush donut"

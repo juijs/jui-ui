@@ -1,7 +1,6 @@
 jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
 
-	var DateGrid = function(orient, grid) {
-		var self = this;
+	var DateGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -134,7 +133,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			grid = this.setDateDomain(chart, grid);
 			
 			var max = chart.height();
@@ -171,7 +170,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			return this.drawGrid(chart, orient, "date", grid);
 		}
 	}

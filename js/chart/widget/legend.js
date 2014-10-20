@@ -14,7 +14,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          * 
          */
     
-    var LegendWidget = function(widget) {
+    var LegendWidget = function(chart, widget) {
         
         /**
          * brush 에서 생성되는 legend 아이콘 리턴 
@@ -22,7 +22,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          * @param {object} chart
          * @param {object} brush
          */
-		this.getLegendIcon = function(chart, brush) {
+		this.getLegendIcon = function(brush) {
 			var arr = [],
                 data = brush.target;
 			
@@ -77,7 +77,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 		}        
         
 
-        this.draw = function(chart) {
+        this.draw = function() {
             var group = chart.svg.group({
                 "class" : "widget legend"
             });
@@ -89,7 +89,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             for(var i = 0; i < widget.brush.length; i++) {
                 var index = widget.brush[i],
                     brush = chart.brush(index);
-                var arr = this.getLegendIcon(chart, brush);
+                var arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);

@@ -1,6 +1,6 @@
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
-    var ZoomWidget = function(widget) {
+    var ZoomWidget = function(chart, widget) {
         var self = this;
         var count, tick;
 
@@ -66,7 +66,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             }
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             var opts = chart.options,
                 len = opts.data.length;
 
@@ -74,7 +74,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             tick = chart.width() / count;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             var cw = chart.width(),
                 ch = chart.height(),
                 r = 12;

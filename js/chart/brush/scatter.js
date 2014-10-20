@@ -1,6 +1,6 @@
 jui.define("chart.brush.scatter", [], function() {
 
-	var ScatterBrush = function(brush) {
+	var ScatterBrush = function(chart, brush) {
 
         function createScatter(chart, brush, pos, index) {
             var elem = null,
@@ -85,7 +85,7 @@ jui.define("chart.brush.scatter", [], function() {
             return g;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             return this.drawScatter(chart, brush, this.getXY());
         }
 

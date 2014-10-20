@@ -6,8 +6,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 	 * @param {Object} orient
 	 * @param {Object} grid
 	 */
-	var RangeGrid = function(orient, grid) {
-		var self = this;
+	var RangeGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -160,7 +159,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			grid = this.setRangeDomain(chart, grid);
 
 			var width = chart.width(), height = chart.height();
@@ -184,7 +183,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			return this.drawGrid(chart, orient, "range", grid);
 		}
 	}

@@ -6,7 +6,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 	 * @param {Object} orient		// grid 방향 
 	 * @param {Object} grid
 	 */
-	var BlockGrid = function(orient, grid) {
+	var BlockGrid = function(orient, chart, grid) {
 
 		/**
 		 * top 그리기 
@@ -208,7 +208,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			grid.type = grid.type || "block";
 			grid = this.setBlockDomain(chart, grid);
 
@@ -236,7 +236,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			 
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
 		}
 	}

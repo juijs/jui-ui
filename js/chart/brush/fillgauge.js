@@ -11,59 +11,81 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 	 *  
  	 * @param {Object} brush
 	 */
-	var FillGaugeBrush = function(brush) {
+	var FillGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
 
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
-			var min = width;
+        this.direction = function(chart, direction) {
+            var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
-			if (height < min) {
-				min = height;
-			}
+            if (direction == "vertical") {
+                var height = chart.height() * rate;
+                var width = chart.width();
+                var x = 0;
+                var y = chart.height() - height;
+            } else {		// horizontal
+                var height = chart.height();
+                var width = chart.width() * rate;
+                var x = 0;
+                var y = 0;
+            }
 
-			w = min / 2;
-			centerX = width / 2;
-			centerY = height / 2;
-			outerRadius = w;
+            rect.attr({
+                x : x,
+                y : y,
+                width : width,
+                height : height
+            });
+        }
+
+        this.drawPath = function(chart, group, path) {
+            group.append(chart.svg.path({
+                x : 0,
+                y : 0,
+                fill : "#ececec",
+                d : path
+            }));
+
+            group.append(chart.svg.path({
+                x : 0,
+                y : 0,
+                fill : chart.color(0),
+                d : path,
+                "clip-path" : "url(#" + clipId + ")"
+            }));
+        }
+
+        this.drawBefore = function() {
+            var width = chart.width(), height = chart.height();
+            var min = width;
+
+            if (height < min) {
+                min = height;
+            }
+
+            w = min / 2;
+            centerX = width / 2;
+            centerY = height / 2;
+            outerRadius = w;
             clipId = chart.createId("fill-gauge");
 
-			var clip = chart.svg.clipPath({
-				id : clipId
-			});
+            var clip = chart.svg.clipPath({
+                id : clipId
+            });
 
-			rect = chart.svg.rect({
-				x : 0,
-				y : 0,
-				width : 0,
-				height : 0
-			});
+            rect = chart.svg.rect({
+                x : 0,
+                y : 0,
+                width : 0,
+                height : 0
+            });
 
-			clip.append(rect);
-			chart.defs.append(clip);
-		}
-
-		this.drawPath = function(chart, group, path) {
-			group.append(chart.svg.path({
-				x : 0,
-				y : 0,
-				fill : "#ececec",
-				d : path
-			}));
-
-			group.append(chart.svg.path({
-				x : 0,
-				y : 0,
-				fill : chart.color(0),
-				d : path,
-				"clip-path" : "url(#" + clipId + ")"
-			}));
-		}
+            clip.append(rect);
+            chart.defs.append(clip);
+        }
 		
-		this.draw = function(chart) {
-
-			var self = this; 
+		this.draw = function() {
+			var self = this;
 			var group = chart.svg.group({
 				"class" : "brush fill gauge",
 				opacity : 0.8
@@ -124,29 +146,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
             return group;
 		}
-
-        this.direction = function(chart, direction) {
-            var rate = (brush.value - brush.min) / (brush.max - brush.min);
-
-            if (direction == "vertical") {
-                var height = chart.height() * rate;
-                var width = chart.width();
-                var x = 0;
-                var y = chart.height() - height;
-            } else {		// horizontal
-                var height = chart.height();
-                var width = chart.width() * rate;
-                var x = 0;
-                var y = 0;
-            }
-
-            rect.attr({
-                x : x,
-                y : y,
-                width : width,
-                height : height
-            });
-        }
 
         this.drawSetup = function() {
             return {

@@ -1,8 +1,8 @@
 jui.define("chart.brush.path", [], function() {
 
-	var PathBrush = function(brush) {
+	var PathBrush = function(chart, brush) {
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			var g = chart.svg.group({
 				'class' : 'brush path'
 			});

@@ -1,22 +1,7 @@
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
-	var GaugeBrush = function(brush) {
+	var GaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius, innerRadius;
-
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
-			var min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			w = min / 2;
-			centerX = width / 2;
-			centerY = height / 2;
-			outerRadius = w;
-			innerRadius = outerRadius - brush.size;
-		}
 
 		this.drawText = function(chart, startAngle, endAngle, min, max, value) {
 			var g = chart.svg.group({
@@ -50,7 +35,22 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			return g;
 		}
 
-		this.draw = function(chart) {
+        this.drawBefore = function() {
+            var width = chart.width(), height = chart.height();
+            var min = width;
+
+            if (height < min) {
+                min = height;
+            }
+
+            w = min / 2;
+            centerX = width / 2;
+            centerY = height / 2;
+            outerRadius = w;
+            innerRadius = outerRadius - brush.size;
+        }
+
+		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
 			}).translate(chart.x(), chart.y());

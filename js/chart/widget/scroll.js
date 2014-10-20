@@ -1,6 +1,6 @@
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
-    var ScrollWidget = function(widget) {
+    var ScrollWidget = function(chart, widget) {
         var self = this;
         var thumbWidth = 0,
             thumbLeft = 0,
@@ -61,7 +61,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             });
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             var opts = chart.options;
 
 			dataLength =  opts.data.length; 
@@ -73,7 +73,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             thumbWidth = chart.width() * (bufferCount / dataLength) + 2;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             return chart.svg.group({}, function() {
                 chart.svg.rect({
                     width: chart.width(),

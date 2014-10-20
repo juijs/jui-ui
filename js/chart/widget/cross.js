@@ -1,6 +1,6 @@
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
-    var CrossWidget = function(widget) {
+    var CrossWidget = function(chart, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
         var g, xline, yline, xTooltip, yTooltip;
@@ -10,7 +10,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             return widget.format(data);
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
@@ -74,7 +74,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             }).translate(chart.x(), chart.y());
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             chart.on("bg.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });

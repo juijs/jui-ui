@@ -14,11 +14,10 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 	 * 
  	 * @param {Object} brush
 	 */
-	var BarGaugeBrush = function(brush) {
+	var BarGaugeBrush = function(chart, brush) {
         var y = 0, x = 0;
 
-		this.draw = function(chart) {
-
+		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
 			}).translate(chart.x(), chart.y());

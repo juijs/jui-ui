@@ -1,6 +1,6 @@
 jui.define("chart.brush.candlestick", [], function() {
 
-    var CandleStickBrush = function(brush) {
+    var CandleStickBrush = function(chart, brush) {
         var g, count, width = 0, barWidth = 0, barPadding = 0;
 
         function getTargets(chart) {
@@ -14,7 +14,7 @@ jui.define("chart.brush.candlestick", [], function() {
             return target;
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             g = chart.svg.group().translate(chart.x(), chart.y());
 
             count = chart.data().length;
@@ -23,7 +23,7 @@ jui.define("chart.brush.candlestick", [], function() {
             barPadding = barWidth / 2;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             var targets = getTargets(chart);
 
             for (var i = 0; i < count; i++) {

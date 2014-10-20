@@ -1,6 +1,6 @@
 jui.define("chart.brush.ohlc", [], function() {
 
-    var OHLCBrush = function(brush) {
+    var OHLCBrush = function(chart, brush) {
         var g, count;
 
         function getTargets(chart) {
@@ -14,12 +14,12 @@ jui.define("chart.brush.ohlc", [], function() {
             return target;
         }
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             g = chart.svg.group().translate(chart.x(), chart.y());
             count = chart.data().length;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             var targets = getTargets(chart);
 
             for (var i = 0; i < count; i++) {

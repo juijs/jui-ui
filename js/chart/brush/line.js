@@ -1,6 +1,6 @@
 jui.define("chart.brush.line", [], function() {
 
-	var LineBrush = function(brush) {
+	var LineBrush = function(chart, brush) {
 
         this.createLine = function(chart, brush, pos, index) {
             var x = pos.x,
@@ -45,7 +45,7 @@ jui.define("chart.brush.line", [], function() {
             return g;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             return this.drawLine(chart, brush, this.getXY());
         }
 

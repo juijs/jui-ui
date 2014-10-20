@@ -1,9 +1,9 @@
 jui.define("chart.brush.stackbar", [], function() {
 
-	var StackBarBrush = function(brush) {
+	var StackBarBrush = function(chart, brush) {
 		var g, series, count, height, barWidth;
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
 
 			series = chart.series();
@@ -13,7 +13,7 @@ jui.define("chart.brush.stackbar", [], function() {
 			barWidth = height - brush.outerPadding * 2;
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			for (var i = 0; i < count; i++) {
 				var group = chart.svg.group();
 				

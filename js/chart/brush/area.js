@@ -1,6 +1,6 @@
 jui.define("chart.brush.area", [], function() {
 
-    var AreaBrush = function(brush) {
+    var AreaBrush = function(chart, brush) {
 
         this.drawArea = function(chart, brush, path) {
             var g = chart.svg.group().translate(chart.x(), chart.y()),
@@ -25,7 +25,7 @@ jui.define("chart.brush.area", [], function() {
             return g;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             return this.drawArea(chart, brush, this.getXY());
         }
     }

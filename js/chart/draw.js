@@ -42,9 +42,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
 		 * 
 		 */
-		this.render = function() {
-            var options = this.brush || this.widget || this.grid;
-
+		this.render = function(options) {
             if (!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
@@ -64,11 +62,11 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawBefore method
             if (_.typeCheck("function", this.drawBefore)) {
-                this.drawBefore(this.chart);
+                this.drawBefore();
             }
 
             // Call draw method
-			var obj = this.draw(this.chart);
+			var obj = this.draw();
 
             if (!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");

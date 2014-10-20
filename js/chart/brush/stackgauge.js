@@ -1,9 +1,9 @@
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
-	var StackGaugeBrush = function(brush) {
+	var StackGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
 
-		this.drawBefore = function(chart) {
+		this.drawBefore = function() {
 			var width = chart.width(), height = chart.height();
 			var min = width;
 
@@ -17,7 +17,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 			outerRadius = w;
 		}
 
-		this.draw = function(chart) {
+		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
 			}).translate(chart.area("x"), chart.area("y"))

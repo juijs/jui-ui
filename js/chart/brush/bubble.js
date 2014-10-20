@@ -14,7 +14,7 @@ jui.define("chart.brush.bubble", [], function() {
 	 * 
  	 * @param {Object} brush
 	 */
-	var BubbleBrush = function(brush) {
+	var BubbleBrush = function(chart, brush) {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
@@ -51,7 +51,7 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
         }
 

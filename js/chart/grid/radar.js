@@ -1,6 +1,6 @@
 jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
-	var RadarGrid = function(orient, grid) {
+	var RadarGrid = function(orient, chart, grid) {
 		var position = [];
 		var self = this;
 		var format;
@@ -21,9 +21,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		}
 
 		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
-
 			var g = chart.svg.group();
-
 			var points = [];
 
 			points.push([centerX + x, centerY + y]);
@@ -65,43 +63,42 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			root.append(g);
 		}
 
+        function scale(obj) {
 
-		this.drawBefore = function(chart) {
+            var max = grid.max;
+            var domain = grid.domain;
+            var that = self;
+
+            return function(index, value) {
+                var rate = value / max;
+
+                var height = Math.abs(obj.y1) - Math.abs(obj.y2);
+                var pos = height * rate;
+                var unit = 2 * Math.PI / domain.length;
+
+                var cx = obj.x1;
+                var cy = obj.y1;
+                var y = -pos;
+                var x = 0;
+
+                var o = math.rotate(x, y, unit * index);
+                x = o.x;
+                y = o.y;
+
+                return {
+                    x : cx + x,
+                    y : cy + y
+                }
+            }
+        }
+
+		this.drawBefore = function() {
 			grid = this.setBlockDomain(chart, grid);
 
 			format = grid.format;
 		}
-		function scale(obj) {
 
-			var max = grid.max;
-			var domain = grid.domain;
-			var that = self;
-
-			return function(index, value) {
-				var rate = value / max;
-
-				var height = Math.abs(obj.y1) - Math.abs(obj.y2);
-				var pos = height * rate;
-				var unit = 2 * Math.PI / domain.length;
-
-				var cx = obj.x1;
-				var cy = obj.y1;
-				var y = -pos;
-				var x = 0;
-
-				var o = math.rotate(x, y, unit * index);
-				x = o.x;
-				y = o.y;
-
-				return {
-					x : cx + x,
-					y : cy + y
-				}
-			}
-		}
-
-
-		this.draw = function(chart) {
+		this.draw = function() {
 			var width = chart.width(), height = chart.height();
 			grid.line = ( typeof grid.line == "undefined") ? true : grid.line;
 

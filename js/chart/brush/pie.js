@@ -1,22 +1,7 @@
 jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
-	var PieBrush = function(brush) {
+	var PieBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
-
-		this.drawBefore = function(chart) {
-			var width = chart.width(), height = chart.height();
-			var min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			// center
-			w = min / 2;
-			centerX = width / 2;
-			centerY = height / 2;
-			outerRadius = w;
-		}
 
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
 			var g = chart.svg.group({
@@ -49,7 +34,22 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 			return g;
 		}
 
-		this.draw = function(chart) {
+        this.drawBefore = function() {
+            var width = chart.width(), height = chart.height();
+            var min = width;
+
+            if (height < min) {
+                min = height;
+            }
+
+            // center
+            w = min / 2;
+            centerX = width / 2;
+            centerY = height / 2;
+            outerRadius = w;
+        }
+
+		this.draw = function() {
 			var s = chart.series(brush.target[0]);
 			var group = chart.svg.group({
 				"class" : "brush donut"

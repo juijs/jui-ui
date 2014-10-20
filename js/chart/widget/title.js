@@ -16,10 +16,10 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
          * 
          */     
 
-    var TitleWidget = function(widget) {
+    var TitleWidget = function(chart, widget) {
         var x = 0, y = 0, anchor = "middle";
 
-        this.drawBefore = function(chart) {
+        this.drawBefore = function() {
             if (widget.position == "bottom") {
                 y = chart.y2() + chart.padding("bottom") - 20;
             } else if (widget.position == "top") {
@@ -38,7 +38,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             }
         }
 
-        this.draw = function(chart) {
+        this.draw = function() {
             if (widget.text == "") {
                 return; 
             }
