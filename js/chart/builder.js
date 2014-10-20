@@ -153,7 +153,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
+
+                        // 브러쉬&위젯 기본 프로퍼티 정의
+                        Grid.prototype.chart = self;
+                        //Grid.prototype.grid = grid[k][keyIndex];
+
+						var obj = new Grid(orient, grid[k][keyIndex]).render(),
                             dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기
@@ -207,7 +212,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 					}
 
                     draws[i].index = i;
-                    drawBrushAfter(self, type, new Obj(draws[i]).render(self, draws[i]));
+
+                    // 브러쉬&위젯 기본 프로퍼티 정의
+                    Obj.prototype.chart = self;
+                    Obj.prototype[type] = draws[i];
+
+                    drawBrushAfter(self, type, new Obj(draws[i]).render());
 				}
 			}
 		}

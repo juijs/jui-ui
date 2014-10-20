@@ -12,7 +12,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
 
                 isMove = true;
                 mouseStart = offset.x;
@@ -21,7 +21,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
                 thumbWidth = offset.x - mouseStart;
 
                 if(thumbWidth > 0) {

@@ -43,7 +43,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(brush, chart, b, i, j);
+                    this.addEvent(b, i, j);
                     g.append(b);
                 }
             }
@@ -52,7 +52,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawBubble(brush, chart, this.getXY(brush, chart));
+            return this.drawBubble(brush, chart, this.getXY());
         }
 
         this.drawSetup = function() {

@@ -43,7 +43,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 
-                    this.addEvent(brush, chart, r, j, i);
+                    this.addEvent(r, j, i);
 					g.append(r);
 
 					if (brush.text) {

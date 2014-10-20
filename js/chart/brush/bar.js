@@ -63,7 +63,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.addEvent(brush, chart, r, j, i);
+                    this.addEvent(r, j, i);
                     group.append(r);
 
 					startY += barHeight + innerPadding;

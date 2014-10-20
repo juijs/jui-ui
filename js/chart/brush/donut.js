@@ -147,7 +147,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("donutBorderWidth")
 				});
 
-                this.addEvent(brush, chart, g, 0, i);
+                this.addEvent(g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;

@@ -33,7 +33,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(r, i, j);
 					group.append(r);					
 					
 					startX = endX;

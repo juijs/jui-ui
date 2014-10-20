@@ -37,7 +37,7 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(brush, chart, path[k], k);
-                this.addEvent(brush, chart, p, k, null);
+                this.addEvent(p, k, null);
 
                 g.append(p);
             }
@@ -46,7 +46,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getXY(brush, chart));
+            return this.drawLine(brush, chart, this.getXY());
         }
 
         this.drawSetup = function() {

@@ -26,7 +26,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getXY(brush, chart));
+            return this.drawArea(brush, chart, this.getXY());
         }
     }
 

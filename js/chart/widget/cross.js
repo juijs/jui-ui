@@ -86,7 +86,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             chart.on("bg.mousemove", function(e) {
                 var left = chart.x() - 2,
                     top = chart.y() - 2,
-                    offset = self.offset(chart, e);
+                    offset = self.offset(e);
 
                 xline.attr({
                     y1: offset.y - top,

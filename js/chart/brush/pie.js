@@ -73,7 +73,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(brush, chart, g, 0, i);
+                this.addEvent(g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;

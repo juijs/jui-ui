@@ -85,7 +85,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
                 var x = offset.x - (w / 2),
                     y = offset.y - h - anchor - (padding / 2);
 

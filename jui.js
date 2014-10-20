@@ -10045,7 +10045,8 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
 		 * 
 		 */
-		this.render = function(chart, options) {
+		this.render = function() {
+            var options = this.brush || this.widget || this.grid;
 
             if (!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
@@ -10066,11 +10067,11 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawBefore method
             if (_.typeCheck("function", this.drawBefore)) {
-                this.drawBefore(chart);
+                this.drawBefore(this.chart);
             }
 
             // Call draw method
-			var obj = this.draw(chart);
+			var obj = this.draw(this.chart);
 
             if (!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
@@ -10238,7 +10239,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
 					for(var keyIndex = 0, len = grid[k].length; keyIndex < len; keyIndex++) {
 						var Grid = jui.include("chart.grid." + (grid[k][keyIndex].type || "block"));
-						var obj = new Grid(orient, grid[k][keyIndex]).render(self),
+
+                        // 브러쉬&위젯 기본 프로퍼티 정의
+                        Grid.prototype.chart = self;
+                        //Grid.prototype.grid = grid[k][keyIndex];
+
+						var obj = new Grid(orient, grid[k][keyIndex]).render(),
                             dist = grid[k][keyIndex].dist || 0;
 
 						// grid 별 dist 로 위치선정하기
@@ -10292,7 +10298,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 					}
 
                     draws[i].index = i;
-                    drawBrushAfter(self, type, new Obj(draws[i]).render(self, draws[i]));
+
+                    // 브러쉬&위젯 기본 프로퍼티 정의
+                    Obj.prototype.chart = self;
+                    Obj.prototype[type] = draws[i];
+
+                    drawBrushAfter(self, type, new Obj(draws[i]).render());
 				}
 			}
 		}
@@ -12617,17 +12628,17 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @param chart
          * @returns {Array}
          */
-        this.getXY = function(brush, chart) {
+        this.getXY = function() {
             var xy = [];
 
-            for (var i = 0, len = chart.data().length; i < len; i++) {
-                var startX = brush.x(i),
-                    data = chart.data(i);
+            for (var i = 0, len = this.chart.data().length; i < len; i++) {
+                var startX = this.brush.x(i),
+                    data = this.chart.data(i);
 
-                for (var j = 0; j < brush.target.length; j++) {
-                    var key = brush.target[j],
+                for (var j = 0; j < this.brush.target.length; j++) {
+                    var key = this.brush.target[j],
                         value = data[key],
-                        series = chart.series(key);
+                        series = this.chart.series(key);
 
                     if (!xy[j]) {
                         xy[j] = {
@@ -12640,7 +12651,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                     }
 
                     xy[j].x.push(startX);
-                    xy[j].y.push(brush.y(value));
+                    xy[j].y.push(this.brush.y(value));
                     xy[j].value.push(value);
                     xy[j].min.push((value == series.min) ? true : false);
                     xy[j].max.push((value == series.max) ? true : false);
@@ -12659,22 +12670,22 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @returns {Array}
          */
 
-        this.getStackXY = function(brush, chart) {
-            var xy = this.getXY(brush, chart);
+        this.getStackXY = function() {
+            var xy = this.getXY();
 
-            for (var i = 0, len = chart.data().length; i < len; i++) {
-                var data = chart.data(i),
+            for (var i = 0, len = this.chart.data().length; i < len; i++) {
+                var data = this.chart.data(i),
                     valueSum = 0;
 
-                for (var j = 0; j < brush.target.length; j++) {
-                    var key = brush.target[j],
+                for (var j = 0; j < this.brush.target.length; j++) {
+                    var key = this.brush.target[j],
                         value = data[key];
 
                     if(j > 0) {
-                        valueSum += data[brush.target[j - 1]];
+                        valueSum += data[this.brush.target[j - 1]];
                     }
 
-                    xy[j].y[i] = brush.y(value + valueSum);
+                    xy[j].y[i] = this.brush.y(value + valueSum);
                 }
             }
 
@@ -12690,44 +12701,45 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(brush, chart, elem, targetIndex, dataIndex) {
+        this.addEvent = function(elem, targetIndex, dataIndex) {
+            var self = this;
             var obj = {
-                index: brush.index,
-                target: brush.target[targetIndex],
-                data: chart.data(dataIndex)
+                index: self.brush.index,
+                target: self.brush.target[targetIndex],
+                data: self.chart.data(dataIndex)
             };
 
             elem.on("click", function(e) {
-                chart.emit("click", [ obj, e ]);
+                self.chart.emit("click", [ obj, e ]);
             });
 
             elem.on("dblclick", function(e) {
-                chart.emit("dblclick", [ obj, e ]);
+                self.chart.emit("dblclick", [ obj, e ]);
             });
 
             elem.on("contextmenu", function(e) {
-                chart.emit("rclick", [ obj, e ]);
+                self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
             elem.on("mouseover", function(e) {
-                chart.emit("mouseover", [ obj, e ]);
+                self.chart.emit("mouseover", [ obj, e ]);
             });
 
             elem.on("mouseout", function(e) {
-                chart.emit("mouseout", [ obj, e ]);
+                self.chart.emit("mouseout", [ obj, e ]);
             });
 
             elem.on("mousemove", function(e) {
-                chart.emit("mousemove", [ obj, e ]);
+                self.chart.emit("mousemove", [ obj, e ]);
             });
 
             elem.on("mousedown", function(e) {
-                chart.emit("mousedown", [ obj, e ]);
+                self.chart.emit("mousedown", [ obj, e ]);
             });
 
             elem.on("mouseup", function(e) {
-                chart.emit("mouseup", [ obj, e ]);
+                self.chart.emit("mouseup", [ obj, e ]);
             });
         }
 	}
@@ -12799,7 +12811,7 @@ jui.define("chart.brush.bar", [], function() {
 						});
 					}
 
-                    this.addEvent(brush, chart, r, j, i);
+                    this.addEvent(r, j, i);
                     group.append(r);
 
 					startY += barHeight + innerPadding;
@@ -12867,7 +12879,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(brush, chart, b, i, j);
+                    this.addEvent(b, i, j);
                     g.append(b);
                 }
             }
@@ -12876,7 +12888,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawBubble(brush, chart, this.getXY(brush, chart));
+            return this.drawBubble(brush, chart, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -12972,7 +12984,7 @@ jui.define("chart.brush.candlestick", [], function() {
                     });
                 }
 
-                this.addEvent(brush, chart, r, null, i);
+                this.addEvent(r, null, i);
 
                 g.append(l);
                 g.append(r);
@@ -13049,7 +13061,7 @@ jui.define("chart.brush.ohlc", [], function() {
                     "stroke-width": 1
                 });
 
-                this.addEvent(brush, chart, lowHigh, null, i);
+                this.addEvent(lowHigh, null, i);
 
                 g.append(lowHigh);
                 g.append(close);
@@ -13126,7 +13138,7 @@ jui.define("chart.brush.column", [], function() {
 						});
 					}
 
-                    this.addEvent(brush, chart, r, j, i);
+                    this.addEvent(r, j, i);
                     g.append(r);
 
 					startX += columnWidth + innerPadding;
@@ -13296,7 +13308,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("donutBorderWidth")
 				});
 
-                this.addEvent(brush, chart, g, 0, i);
+                this.addEvent(g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -13376,7 +13388,7 @@ jui.define("chart.brush.equalizer", [], function() {
                         }
                     }
 
-                    this.addEvent(brush, chart, barGroup, j, i);
+                    this.addEvent(barGroup, j, i);
                     g.append(barGroup);
 
                     startX += barWidth + brush.innerPadding;
@@ -13444,7 +13456,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 
-                    this.addEvent(brush, chart, r, j, i);
+                    this.addEvent(r, j, i);
 					g.append(r);
 
 					if (brush.text) {
@@ -13514,7 +13526,7 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(brush, chart, path[k], k);
-                this.addEvent(brush, chart, p, k, null);
+                this.addEvent(p, k, null);
 
                 g.append(p);
             }
@@ -13523,7 +13535,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getXY(brush, chart));
+            return this.drawLine(brush, chart, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -13658,7 +13670,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(brush, chart, g, 0, i);
+                this.addEvent(g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -13753,7 +13765,7 @@ jui.define("chart.brush.scatter", [], function() {
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var p = createScatter(brush, chart, { x: points[i].x[j], y: points[i].y[j] }, i);
-                    this.addEvent(brush, chart, p, i, j);
+                    this.addEvent(p, i, j);
 
                     g.append(p);
                 }
@@ -13763,7 +13775,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawScatter(brush, chart, this.getXY(brush, chart));
+            return this.drawScatter(brush, chart, this.getXY());
         }
 
         this.drawSetup = function() {
@@ -13811,7 +13823,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(r, i, j);
 					group.append(r);					
 					
 					startX = endX;
@@ -13870,7 +13882,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 					
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(r, i, j);
 					group.append(r);					
 					
 					startY = endY;
@@ -14274,7 +14286,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getXY(brush, chart));
+            return this.drawArea(brush, chart, this.getXY());
         }
     }
 
@@ -14286,7 +14298,7 @@ jui.define("chart.brush.stackline", [], function() {
 	var StackLineBrush = function(brush) {
 
         this.draw = function(chart) {
-            return this.drawLine(brush, chart, this.getStackXY(brush, chart));
+            return this.drawLine(brush, chart, this.getStackXY());
         }
 	}
 
@@ -14297,7 +14309,7 @@ jui.define("chart.brush.stackarea", [], function() {
 	var StackAreaBrush = function(brush) {
 
 		this.draw = function(chart) {
-            return this.drawArea(brush, chart, this.getStackXY(brush, chart));
+            return this.drawArea(brush, chart, this.getStackXY());
 		}
 	}
 
@@ -14309,7 +14321,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 	var StackScatterBrush = function(brush) {
 
         this.draw = function(chart) {
-            return this.drawScatter(brush, chart, this.getStackXY(brush, chart));
+            return this.drawScatter(brush, chart, this.getStackXY());
         }
 	}
 
@@ -14709,12 +14721,12 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             return points.join(" ");
         }
 
-        this.offset = function(chart, e) {
+        this.offset = function(e) {
             var x = e.offsetX,
                 y = e.offsetY;
 
             if(!x && !y) {
-                var pos = $(chart.root).offset();
+                var pos = $(this.chart.root).offset();
 
                 x = e.layerX - pos.left;
                 y = e.layerY - pos.top;
@@ -14816,7 +14828,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
                 var x = offset.x - (w / 2),
                     y = offset.y - h - anchor - (padding / 2);
 
@@ -15099,7 +15111,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             thumb.on("mousedown", function(e) {
                 if(isMove) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
 
                 isMove = true;
                 mouseStart = offset.x;
@@ -15109,7 +15121,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             chart.addEvent("body", "mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(chart, e),
+                var offset = self.offset(e),
                     gap = thumbStart + offset.x - mouseStart;
 
                 if(gap < 0) {
@@ -15197,7 +15209,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
 
                 isMove = true;
                 mouseStart = offset.x;
@@ -15206,7 +15218,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(chart, e);
+                var offset = self.offset(e);
                 thumbWidth = offset.x - mouseStart;
 
                 if(thumbWidth > 0) {
@@ -15403,7 +15415,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             chart.on("bg.mousemove", function(e) {
                 var left = chart.x() - 2,
                     top = chart.y() - 2,
-                    offset = self.offset(chart, e);
+                    offset = self.offset(e);
 
                 xline.attr({
                     y1: offset.y - top,

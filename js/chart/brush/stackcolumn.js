@@ -34,7 +34,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						fill : chart.color(j, brush.colors)
 					});
 					
-                    this.addEvent(brush, chart, r, i, j);
+                    this.addEvent(r, i, j);
 					group.append(r);					
 					
 					startY = endY;
