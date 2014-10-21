@@ -143,8 +143,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 				}
 			}
 
-            this.addEvent(group, null, null);
-
             return group;
 		}
 

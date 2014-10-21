@@ -147,7 +147,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
             // startAngle, endAngle 에 따른 Text 위치를 선정해야함
             g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);                
+            group.append(g);
 
             return group;
 		}

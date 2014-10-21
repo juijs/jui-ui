@@ -14320,8 +14320,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 				}
 			}
 
-            this.addEvent(group, null, null);
-
             return group;
 		}
 
@@ -14560,7 +14558,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
             // startAngle, endAngle 에 따른 Text 위치를 선정해야함
             g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);                
+            group.append(g);
 
             return group;
 		}
@@ -14662,8 +14660,6 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             // startAngle, endAngle 에 따른 Text 위치를 선정해야함
             g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
             group.append(g);
-
-            this.addEvent(group, null, null);
 
             return group;
 		}
