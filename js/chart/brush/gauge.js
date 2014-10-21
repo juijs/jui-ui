@@ -3,7 +3,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 	var GaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius, innerRadius;
 
-		this.drawText = function(chart, startAngle, endAngle, min, max, value) {
+        function createText(startAngle, endAngle, min, max, value) {
 			var g = chart.svg.group({
 				"class" : "gauge text"
 			}).translate(centerX, centerY);
@@ -59,7 +59,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			return g;
 		}
 
-		this.drawArrow = function(chart, startAngle, endAngle) {
+        function createArrow(startAngle, endAngle) {
 			var g = chart.svg.group({
 				"class" : "gauge block"
 			}).translate(centerX, centerY);
@@ -118,7 +118,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 		this.draw = function() {
 			var group = chart.svg.group({
-				"class" : "brush donut"
+				"class" : "brush gauge"
 			}).translate(chart.x(), chart.y())
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
@@ -128,25 +128,25 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 brush.endAngle = 359.99999;
 			}
 			
-			var g = this.drawDonut(chart, centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
 				fill : chart.theme("gaugeBackgroundColor")
 			});
 
 			group.append(g);
 
-			g = this.drawDonut(chart, centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
 				fill : chart.color(0, brush.colors)
 			});
 
 			group.append(g);
 
             if (brush.arrow) {
-                g = this.drawArrow(chart, brush.startAngle, currentAngle);
+                g = createArrow(brush.startAngle, currentAngle);
                 group.append(g);
             }
 
             // startAngle, endAngle 에 따른 Text 위치를 선정해야함
-            g = this.drawText(chart, brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
+            g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
             group.append(g);                
 
             return group;

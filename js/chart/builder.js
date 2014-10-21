@@ -217,7 +217,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     Obj.prototype.chart = self;
                     Obj.prototype[type] = draws[i];
 
-                    drawBrushAfter(self, type, new Obj(self, draws[i]).render(draws[i]));
+                    drawBrushAfter(self, type, new Obj(self, draws[i]).render());
 				}
 			}
 		}

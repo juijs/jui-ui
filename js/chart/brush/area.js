@@ -1,21 +1,21 @@
 jui.define("chart.brush.area", [], function() {
 
-    var AreaBrush = function(chart, brush) {
+    var AreaBrush = function() {
 
-        this.drawArea = function(chart, brush, path) {
-            var g = chart.svg.group().translate(chart.x(), chart.y()),
-                maxY = chart.height();
+        this.drawArea = function(path) {
+            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y()),
+                maxY = this.chart.height();
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(chart, brush, path[k], k),
+                var p = this.createLine(path[k], k),
                     xList = path[k].x;
 
                 p.LineTo(xList[xList.length - 1], maxY);
                 p.LineTo(xList[0], maxY);
                 p.ClosePath();
                 p.attr({
-                    fill: chart.color(k, brush.colors),
-                    "fill-opacity": chart.theme("areaOpacity"),
+                    fill: this.chart.color(k, this.brush.colors),
+                    "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 });
 
@@ -26,7 +26,7 @@ jui.define("chart.brush.area", [], function() {
         }
 
         this.draw = function() {
-            return this.drawArea(chart, brush, this.getXY());
+            return this.drawArea(this.getXY());
         }
     }
 
