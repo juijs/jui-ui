@@ -2920,10 +2920,18 @@ jui.define("util.svg",
         }
 
         this.clear = function(isAll) {
-            main.element.innerHTML = "";
+            main.each(function() {
+                if(this.element.parentNode) {
+                    main.element.removeChild(this.element);
+                }
+            });
 
             if(isAll === true) {
-                sub.element.innerHTML = "";
+                sub.each(function() {
+                    if(this.element.parentNode) {
+                        sub.element.removeChild(this.element);
+                    }
+                });
             }
         }
 
