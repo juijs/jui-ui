@@ -2803,12 +2803,62 @@ jui.define("util.svg",
             }
 
             var a = document.createElement('a');
-            a.download = (name) ? name + ".png" : "svg.png";
-            a.href = _.svgToBase64(rootElem.innerHTML);
+            a.download = (name) ? name + ".svg" : "svg.svg";
+            a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
 
             document.body.appendChild(a);
             a.click();
             a.parentNode.removeChild(a);
+        }
+        
+        this.downloadImage = function(name, type) {
+            type = type || "image/png";
+            var self = this; 
+            var img = new Image();
+            var size = this.size();
+            var uri = this.toDataURL()
+                            .replace('width="100%"', 'width="' + size.width + '"')
+                            .replace('height="100%"', 'height="' + size.height + '"');
+            img.onload = function(){
+              var canvas = document.createElement("canvas");
+              canvas.width = img.width;
+              canvas.height = img.height;
+              
+              var context = canvas.getContext('2d');
+              context.drawImage(img, 0, 0);
+              
+              var png = canvas.toDataURL(type);
+              
+              if(_.typeCheck("string", name)) {
+                  name = name.split(".")[0];
+              }              
+              
+              var a = document.createElement('a');
+              a.download = (name) ? name + ".png" : "svg.png";
+              a.href = png;
+  
+              document.body.appendChild(a);
+              a.click();
+              a.parentNode.removeChild(a);
+            }
+
+            img.src = uri;   
+      
+        }
+        
+        this.toXml = function() {
+          
+          var text = rootElem.innerHTML;
+          
+          return [
+            '<?xml version="1.0" encoding="utf-8"?>',
+            '<!DOCTYPE svg>',
+            text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
+          ].join("\n");
+        }
+        
+        this.toDataURL = function() {
+           return "data:image/svg+xml;utf8," + this.toXml();
         }
 
         this.autoRender = function(elem, isAuto) {
@@ -2826,7 +2876,7 @@ jui.define("util.svg",
 
         	root.element.appendChild(el.element);
         	var rect = el.element.getBoundingClientRect();
-        	el.remove();
+        	$(el.element).remove();
         	
         	return { width : rect.width, height : rect.height }; 
         }
