@@ -19,6 +19,8 @@ jui.define("chart.brush.area", [], function() {
                     "stroke-width": 0
                 });
 
+                this.addEvent(p, null, null);
+
                 g.prepend(p);
             }
 

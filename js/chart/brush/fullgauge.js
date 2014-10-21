@@ -78,6 +78,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
             group.append(g);
 
+            this.addEvent(group, null, null);
+
             return group;
 		}
 

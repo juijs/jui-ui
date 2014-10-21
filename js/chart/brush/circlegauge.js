@@ -52,6 +52,8 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 fill : chart.color(0, brush.colors)
             }));
 
+            this.addEvent(group, null, null);
+
             return group;
 		}
 

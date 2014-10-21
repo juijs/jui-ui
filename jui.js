@@ -14080,7 +14080,8 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     "text-anchor" : textAlign,
                     fill : textColor
                 }, brush.format ? brush.format(data.value) : data.value + "%"))
-                
+
+                this.addEvent(g, null, i);
                 group.append(g);
                 
                 y += brush.size + brush.cut;
@@ -14157,6 +14158,8 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 fill : chart.color(0, brush.colors)
             }));
 
+            this.addEvent(group, null, null);
+
             return group;
 		}
 
@@ -14189,7 +14192,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
 
-        this.direction = function(chart, direction) {
+        function setDirection(direction) {
             var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
             if (direction == "vertical") {
@@ -14212,7 +14215,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             });
         }
 
-        this.drawPath = function(chart, group, path) {
+        function createPath(group, path) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
@@ -14259,7 +14262,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 		
 		this.draw = function() {
-			var self = this;
 			var group = chart.svg.group({
 				"class" : "brush fill gauge",
 				opacity : 0.8
@@ -14267,7 +14269,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
 			group.translate(chart.x(), chart.y());
 			
-			this.direction(chart, brush.direction);
+			setDirection(brush.direction);
 			
 			if (brush.shape == "circle") {
 				group.append(chart.svg.circle({
@@ -14310,13 +14312,15 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 						async : false,
 						success : function(xml) {
 							var path = $(xml).find("path").attr("d");
-							self.drawPath(chart, group, path);
+							createPath(group, path);
 						}
 					});
 				} else {
-					self.drawPath(chart, group, brush.path);					
+					createPath(group, brush.path);
 				}
 			}
+
+            this.addEvent(group, null, null);
 
             return group;
 		}
@@ -14357,6 +14361,8 @@ jui.define("chart.brush.area", [], function() {
                     "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 });
+
+                this.addEvent(p, null, null);
 
                 g.prepend(p);
             }
@@ -14657,6 +14663,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
             group.append(g);
 
+            this.addEvent(group, null, null);
+
             return group;
 		}
 
@@ -14824,20 +14832,28 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
 
-        function printTooltip(chart, obj, brushIndex) {
+        function printTooltip(obj) {
             if(obj.target && widget.all === false) {
-                var t = chart.series(obj.target);
+                var t = chart.series(obj.target),
+                    k = obj.target;
 
                 // 위젯 포지션에 따른 별도 처리
                 if(widget.position == "bottom") {
                     text.attr({ y: textY + anchor });
                 }
 
+                // 옵션 키가 있을 경우
+                if(widget.key != null) {
+                    text.html(obj.data[widget.key] + ": " + obj.data[k]);
+                } else {
+                    text.html(((t.text) ? t.text : k) + ": " + obj.data[k]);
+                }
+
                 text.attr({ "text-anchor": "middle" });
-                text.html(((t.text) ? t.text : obj.target) + ": " + obj.data[obj.target]);
+
             } else {
                 var list = [],
-                    brush = chart.brush(brushIndex);
+                    brush = chart.brush(obj.index);
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
@@ -14887,9 +14903,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
             chart.on("mouseover", function(obj, e) {
                 if(isActive || ($.inArray(obj.index, widget.brush) == -1 && widget.brush != obj.index)) return;
+                if(!obj.target && obj.data.length == 0) return;
 
                 // 툴팁 텍스트 출력
-                printTooltip(chart, obj, widget.brush);
+                printTooltip(obj);
 
                 var bbox = text.element.getBBox();
                 w = bbox.width + (padding * 2);
@@ -14938,7 +14955,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return {
                 position: "top", // or bottom, left, right
                 all: false,
-                brush: 0
+                brush: [ 0 ],
+                key: null
             }
         }
     }
