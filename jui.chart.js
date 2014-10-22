@@ -4421,7 +4421,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     var UI = function() {
-        var dataList;
+        var dataList = [];
 
         function runGrid(self) {
             var domain = getDomain(self);
@@ -4445,8 +4445,8 @@ jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.buil
         }
 
         function getDomain(self) {
-            var start = new Date(),
-                end = time.add(start, time.minutes, 5);
+            var end = new Date(),
+                start = time.add(end, time.minutes, -5);
 
             return [ start, end ];
         }
@@ -4484,7 +4484,13 @@ jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.buil
         }
 
         this.append = function(data) {
-            dataList = dataList.concat(data);
+            var newData = data;
+
+            if(!_.typeCheck("array", data)) {
+                newData = [ data ];
+            }
+
+            dataList = dataList.concat(newData);
         }
 
         this.render = function(isAll) {
