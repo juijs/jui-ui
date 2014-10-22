@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="title"><!= obj.target !>: <!= obj.data[obj.target] !></div>
+    </div>
+</script>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        function getNumber() {
+            return Math.round(Math.random() * 1000  % 1000);
+        }
+        
+        var data = [];
+        for(var i = 0; i < 30000; i++) {
+            data.push({ name : getNumber(), value : getNumber(), test : getNumber()} )
+        }        
+
+         chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : data,
+            grid : {
+                x : {
+                    type : 'range',
+                    target : [ "name", "value", "test" ],
+                    step : 10,
+                    key : "name"
+                },
+                y : {
+                    type : 'range',
+                    target : [ "name", "value", "test" ],
+                    step : 10
+                }
+            },
+            series : {
+                name : { text : "이름",symbol : "rectangle" },
+                name2 : { text : "값",symbol : "cross" },
+                test : { text : "테스트값",symbol : "triangle" }
+            },
+            brush : [
+              //{ type : 'scatterpath', target : "name", size : 10 },
+              { type : 'scatterpath', target : "name2", size : 10, colors : ['black'] },
+              //{ type : 'scatterpath', target : "test", size : 10, colors : ['red'] }
+            ],
+            tpl: {
+                tooltip: $("#tpl_tooltip").html()
+            }
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

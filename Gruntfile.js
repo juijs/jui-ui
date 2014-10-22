@@ -57,6 +57,7 @@ module.exports = function(grunt) {
                     "js/chart/grid/date.js",
                     "js/chart/grid/radar.js",
                     "js/chart/grid/range.js",
+                    "js/chart/grid/rule.js",
 
                     // chart.brush
                     "js/chart/brush/core.js",
@@ -72,6 +73,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/path.js",
                     "js/chart/brush/pie.js",
                     "js/chart/brush/scatter.js",
+                    "js/chart/brush/scatterpath.js",
                     "js/chart/brush/stackbar.js",
                     "js/chart/brush/stackcolumn.js",
                     "js/chart/brush/bargauge.js",

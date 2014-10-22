@@ -1,4 +1,4 @@
-jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
+jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	/**
 	 *
@@ -8,11 +8,17 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x2 : chart.width()
-				}));
-			}
+		  
+      var width = chart.width();
+      var height = chart.height();      
+      var half_width = width/2;
+      var half_height = height/2;     
+      
+      g.append(this.axisLine(chart, {
+        y1 : this.center ? half_height : 0,
+        y2 : this.center ? half_height : 0,
+        x2 : chart.width()
+      }));		  
 
 			var min = this.scale.min();
 			var ticks = this.ticks;
@@ -20,35 +26,41 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 			var bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
+				var isZero = (ticks[i] == 0);
 
-				var axis = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				var axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.height() : -bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				  y1 : (this.center) ? -bar : 0,
+					y2 : bar,
+					stroke : chart.theme("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+        if (!isZero ||  (isZero && !this.hideZero)) {
+  				axis.append(chart.text({
+  					x : 0,
+  					y : bar + bar + 4,
+  					"text-anchor" : "middle",
+  					fill : chart.theme("gridFontColor")
+  				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+  			}
 
 				g.append(axis);
 			}
 		}
 
 		this.bottom = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x2 : chart.width()
-				}));
-			}
+      var width = chart.width();
+      var height = chart.height();      
+      var half_width = width/2;
+      var half_height = height/2;     
+		  
+			g.append(this.axisLine(chart, {
+        y1 : this.center ? -half_height : 0,
+        y2 : this.center ? -half_height : 0,
+				x2 : chart.width()
+			}));
 
 			var min = this.scale.min();
 			var ticks = this.ticks;
@@ -57,36 +69,42 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
+				var isZero = (ticks[i] == 0);
 
-				var axis = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0)
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+				  y1 : (this.center) ? -bar : 0,
+					y2 : (this.center) ? bar : -bar,
+					stroke : chart.theme("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
-
-				axis.append(chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+				
+        if (!isZero ||  (isZero && !this.hideZero)) {
+  				axis.append(chart.text({
+  					x : 0,
+  					y : -bar * 2,
+  					"text-anchor" : "middle",
+  					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+  				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+  			}
 
 				g.append(axis);
 			}
 		}
 
 		this.left = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y2 : chart.height()
-				}));
+      var width = chart.width();
+      var height = chart.height();		  
+		  var half_width = width/2;
+		  var half_height = height/2;
 
-			}
+		  
+			g.append(this.axisLine(chart, {
+			  x1 : this.center ? half_width : 0,
+			  x2 : this.center ? half_width : 0,
+				y2 : height
+			}));
 
 			var min = this.scale.min();
 			var ticks = this.ticks;
@@ -94,24 +112,24 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 			var bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
+				var isZero = (ticks[i] == 0);
 
-				var axis = chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				})
+				var axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.width() : -bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
+				  x1 : (this.center) ? -bar : 0,
+					x2 : bar,
+					stroke : chart.theme("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")					
 				}));
-
-				axis.append(chart.text({
-					x : -bar - 4,
-					y : bar,
-					"text-anchor" : "end",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				
+        if (!isZero ||  (isZero && !this.hideZero)) {
+          axis.append(chart.text({
+              x : bar/2 + 4,
+              y : bar-2,
+              fill : chart.theme("gridFontColor")
+          }, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+        }
 
 				g.append(axis);
 
@@ -119,12 +137,17 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.right = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y2 : chart.height()
-				}));
-			}
-
+      var width = chart.width();
+      var height = chart.height();      
+      var half_width = width/2;
+      var half_height = height/2;		  
+		  
+		  
+			g.append(this.axisLine(chart, {
+        x1 : this.center ? -half_width : 0,
+        x2 : this.center ? -half_width : 0,			  
+				y2 : chart.height()
+			}));
 
 			var min = this.scale.min();
 			var ticks = this.ticks;
@@ -132,26 +155,29 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 			var bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
+				var isZero = (ticks[i] == 0);
 
-				var axis = chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				})
+
+        var axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i])
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.width() : bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+          x1 : (this.center) ? -bar : 0,
+          x2 : (this.center) ? bar : -bar,
+					stroke : chart.theme("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
-					x : bar + 4,
-					y : bar,
-					"text-anchor" : "start",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+        if (!isZero ||  (isZero && !this.hideZero)) {
+  				axis.append(chart.text({
+  					x : -bar - 4,
+  					y : bar-2,
+  					"text-anchor" : "end",
+  					fill : chart.theme("gridFontColor")
+  				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+  			}
 
 				g.append(axis);
+				
 			}
 		}
 
@@ -170,6 +196,8 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 			this.nice = grid.nice || false;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
+			this.hideZero = grid.hideZero || false; 
+			this.center = grid.center || false;
 
 			this.values = [];
 
@@ -180,9 +208,9 @@ jui.define("chart.grid.ruler", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "range", grid);
+			return this.drawGrid(chart, orient, "rule", grid);
 		}
 	}
 
 	return RuleGrid;
-}, "chart.grid.rule");
+}, "chart.grid.core");
