@@ -11,28 +11,22 @@
 
 <script>
     function getNumber() {
-        return Math.floor((Math.random() * 5) % 5);
+        return Math.floor((Math.random() * 5) + 1);
     }
 
     jui.ready([ "chart.realtime", "util.time" ], function(chart, time) {
         var start = new Date();
-        var end = time.add(start, time.minutes, 5);
+        var end = time.add(start, time.minutes, 1);
 
         var data = [];
         for(var i = 0; i < 5 * 60; i++) {
-            var num = 5;
-
-            if(i > 200) num = 3
-            else if(i > 100) num = 4;
-
-            data.push({ name : 3, name2 : num, value : time.add(start, time.seconds, i) });
+            data.push({ name : 3, name2 : Math.sin(i / 15), value : time.add(start, time.seconds, i + 1) });
         }
-
-        console.log(data);
 
         c = chart("#chart", {
             width: 800,
             height : 400,
+            bufferCount : 5 * 60,
             theme : "jennifer",
             data : data,
             series : {
