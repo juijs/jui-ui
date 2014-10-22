@@ -10,17 +10,19 @@
 <div id="chart"></div>
 
 <script>
-    function getNumber() {
-        return Math.floor((Math.random() * 5) + 1);
-    }
-
     jui.ready([ "chart.realtime", "util.time" ], function(chart, time) {
-        var start = new Date();
-        var end = time.add(start, time.minutes, 1);
+        var index = 0;
 
-        var data = [];
-        for(var i = 0; i < 5 * 60; i++) {
-            data.push({ name : 3, name2 : Math.sin(i / 15), value : time.add(start, time.seconds, i + 1) });
+        window.getData = function(min) {
+            var start = new Date();
+
+            var data = [];
+            for(var i = 0; i < min * 60; i++) {
+                data.push({ name : 3, name2 : Math.sin(index / 15), value : time.add(start, time.seconds, i + 1) });
+                index++;
+            }
+
+            return data;
         }
 
         c = chart("#chart", {
@@ -28,7 +30,7 @@
             height : 400,
             bufferCount : 5 * 60,
             theme : "jennifer",
-            data : data,
+            //data : data,
             series : {
                 name : {
                     text : "이름"
@@ -52,16 +54,8 @@
                 //"tooltipBackgroundColor": "red"
             }
         });
-        
-        window.render = function() {
-            var start = new Date();
-            var end = time.add(start, time.minutes, 5);
 
-            c.chart.options.grid.x.domain = [ start, end ];
-            c.chart.render();
-        }
-
-        //setInterval(window.render, 2000);
+        c.update(getData(1));
     });
     
 
