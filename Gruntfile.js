@@ -44,6 +44,7 @@ module.exports = function(grunt) {
                     // chart (core)
                     "js/chart/draw.js",
                     "js/chart/builder.js",
+                    "js/chart/realtime.js",
 
                     // chart.theme
                     "js/chart/theme/jennifer.js",
@@ -116,6 +117,7 @@ module.exports = function(grunt) {
                     // chart (core)
                     "js/chart/draw.js",
                     "js/chart/builder.js",
+                    "js/chart/realtime.js",
 
                     // chart.theme
                     "js/chart/theme/jennifer.js",

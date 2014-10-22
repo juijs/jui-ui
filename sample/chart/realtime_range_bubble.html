@@ -18,7 +18,8 @@
         return Math.round(Math.random() * 30  % 20);
     }
 
-    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+    jui.ready([ "chart.realtime", "util.time" ], function(chart, time) {
+        console.log(chart);
 
         var start = new Date();
         var end = time.add(start, time.minutes, 5);
@@ -33,24 +34,6 @@
             height : 400,
             theme : "jennifer",
             data : data,
-            grid : {
-
-                x : {
-                    type : "date",  // default type is block
-                    domain : [ start, end ],
-                    step : [time.minutes, 1],
-                    format : "hh:mm",
-                    key: "value",
-                    line : true,
-                    realtime : true
-                },
-                y : {
-                    type : 'range',
-                    target : ["name"],
-                    step : 10,
-                    line : true
-                }
-            },
             series : {
                 name : {
                     text : "이름"
@@ -79,16 +62,16 @@
             }
         });
         
-    window.render = function() {
-      var start = new Date();
-      var end = time.add(start, time.minutes, 5);
-      c.options.grid.x.domain = [start, end];
-      c.render();
-    }        
-    
-    setInterval(window.render, 2000);
-        
-    })
+        window.render = function() {
+            var start = new Date();
+            var end = time.add(start, time.minutes, 5);
+
+            c.chart.options.grid.x.domain = [ start, end ];
+            c.chart.render();
+        }
+
+        setInterval(window.render, 2000);
+    });
     
 
 </script>

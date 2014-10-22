@@ -1465,10 +1465,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),
-                    defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
+                    defOpts = {};
 
-                // Options Check
-                checkedOptions(defOpts, options);
+                // Check Options
+                if(_.typeCheck("object", setting.options)) {
+                    defOpts = setting.options;
+                    checkedOptions(defOpts, options);
+                }
 
                 // Options Setting
                 var opts = $.extend(true, defOpts, options);
@@ -11145,6 +11148,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 	return UI;
 }, "core");
 
+jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
+
+    var UI = function() {
+        this.init = function() {
+            var start = new Date(),
+                end = time.add(start, time.minutes, 5);
+
+            this.chart = builder(this.selector, $.extend({
+                grid : {
+                    x : {
+                        type : "date",
+                        domain : [ start, end ],
+                        step : [ time.minutes, 1 ],
+                        format : "hh:mm",
+                        key: "value",
+                        line : true,
+                        realtime : true
+                    },
+                    y : {
+                        type : "range",
+                        target : [ "name" ],
+                        step : 10,
+                        line : true
+                    }
+                }
+            }, this.options));
+        }
+
+        this.render = function(isAll) {
+            this.chart.render(!isAll ? false : true);
+        }
+    }
+
+    return UI;
+}, "core");
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
         "#7977C2",
