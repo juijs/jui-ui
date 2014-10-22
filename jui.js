@@ -11151,15 +11151,44 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     var UI = function() {
-        this.init = function() {
+        var dataList;
+
+        function runGrid(self) {
+            var domain = getDomain(self);
+
+            if(dataList != null) {
+                for(var i = 0; i < dataList.length; i++) {
+                    if (dataList[i].value.getTime() <= domain[0].getTime()) {
+                        dataList.splice(i, 1);
+                    } else {
+                        break;
+                    }
+                }
+
+                self.chart.options.grid.x.domain = domain;
+                self.chart.update(dataList);
+            } else {
+                self.chart.render();
+            }
+
+            console.log(dataList.length);
+        }
+
+        function getDomain(self) {
             var start = new Date(),
                 end = time.add(start, time.minutes, 5);
+
+            return [ start, end ];
+        }
+
+        this.init = function() {
+            var self = this;
 
             this.chart = builder(this.selector, $.extend({
                 grid : {
                     x : {
                         type : "date",
-                        domain : [ start, end ],
+                        domain : getDomain(this),
                         step : [ time.minutes, 1 ],
                         format : "hh:mm",
                         key: "value",
@@ -11174,6 +11203,18 @@ jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.buil
                     }
                 }
             }, this.options));
+
+            setInterval(function() {
+                runGrid(self);
+            }, 1000)
+        }
+
+        this.update = function(data) {
+            dataList = data;
+        }
+
+        this.append = function(data) {
+            dataList = dataList.concat(data);
         }
 
         this.render = function(isAll) {
