@@ -10,27 +10,28 @@
 <div id="chart"></div>
 
 <script>
-    function getDate() {
-        return Math.round((Math.random()*100) % 30)
-    }
-
     function getNumber() {
-        return Math.round(Math.random() * 30  % 20);
+        return Math.floor((Math.random() * 5) % 5);
     }
 
     jui.ready([ "chart.realtime", "util.time" ], function(chart, time) {
-        console.log(chart);
-
         var start = new Date();
         var end = time.add(start, time.minutes, 5);
 
         var data = [];
-        for(var i = 0; i < 30; i++) {
-            data.push({ name : getNumber(), name2 : getNumber(), value : time.add(start, time.minutes, i*10)} )
+        for(var i = 0; i < 5 * 60; i++) {
+            var num = 5;
+
+            if(i > 200) num = 3
+            else if(i > 100) num = 4;
+
+            data.push({ name : 3, name2 : num, value : time.add(start, time.seconds, i) });
         }
 
+        console.log(data);
+
         c = chart("#chart", {
-            width: 400,
+            width: 800,
             height : 400,
             theme : "jennifer",
             data : data,
@@ -46,14 +47,10 @@
                 }
             },
             brush : {
-                type : 'bubble',
-                //smooth : true,
-                min : 1,
-                max : 50,
-                target : ["name", "name2"]
+                type : 'line',
+                target : [ "name", "name2" ]
             },
             widget : [
-            	{ type : 'tooltip', position : 'top' },
             	{ type : 'title', text : 'Range Bubble Sample'},
             	{ type : 'legend' }
             ],
@@ -70,7 +67,7 @@
             c.chart.render();
         }
 
-        setInterval(window.render, 2000);
+        //setInterval(window.render, 2000);
     });
     
 

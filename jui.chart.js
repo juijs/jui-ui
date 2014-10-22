@@ -4438,7 +4438,7 @@ jui.defineUI("chart.realtime", [ "jquery", "util.base", "util.time", "chart.buil
                     },
                     y : {
                         type : "range",
-                        target : [ "name" ],
+                        target : [ "name", "name2" ],
                         step : 10,
                         line : true
                     }
