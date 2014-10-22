@@ -15,7 +15,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
 
-        this.direction = function(chart, direction) {
+        function setDirection(direction) {
             var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
             if (direction == "vertical") {
@@ -38,7 +38,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             });
         }
 
-        this.drawPath = function(chart, group, path) {
+        function createPath(group, path) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
@@ -85,7 +85,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 		
 		this.draw = function() {
-			var self = this;
 			var group = chart.svg.group({
 				"class" : "brush fill gauge",
 				opacity : 0.8
@@ -93,7 +92,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
 			group.translate(chart.x(), chart.y());
 			
-			this.direction(chart, brush.direction);
+			setDirection(brush.direction);
 			
 			if (brush.shape == "circle") {
 				group.append(chart.svg.circle({
@@ -136,11 +135,11 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 						async : false,
 						success : function(xml) {
 							var path = $(xml).find("path").attr("d");
-							self.drawPath(chart, group, path);
+							createPath(group, path);
 						}
 					});
 				} else {
-					self.drawPath(chart, group, brush.path);					
+					createPath(group, brush.path);
 				}
 			}
 

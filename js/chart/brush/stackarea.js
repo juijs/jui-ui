@@ -1,9 +1,8 @@
 jui.define("chart.brush.stackarea", [], function() {
 
-	var StackAreaBrush = function(chart, brush) {
-
+	var StackAreaBrush = function() {
 		this.draw = function() {
-            return this.drawArea(chart, brush, this.getStackXY());
+            return this.drawArea(this.getStackXY());
 		}
 	}
 

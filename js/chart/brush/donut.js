@@ -15,20 +15,20 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 	 * 
  	 * @param {Object} brush
 	 */
-	var DonutBrush = function(chart, brush) {
+	var DonutBrush = function() {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
-		this.drawDonut = function(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
+		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    
 		    hasCircle = hasCircle || false; 
 		    
 		    var dist = Math.abs(outerRadius - innerRadius);
 		    
-			var g = chart.svg.group({
+			var g = this.chart.svg.group({
 				"class" : "donut"
 			});
 
-			var path = chart.svg.path(attr);
+			var path = this.chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
 			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
@@ -76,7 +76,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
     
                 centerCircleLine = math.rotate(cX, cY, math.radian(endAngle));
     
-                var circle = chart.svg.circle({
+                var circle = this.chart.svg.circle({
                     cx : centerCircleLine.x,
                     cy : centerCircleLine.y,
                     r : dist/2,
@@ -85,7 +85,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
                 
                 g.append(circle);
     
-                var circle2 = chart.svg.circle({
+                var circle2 = this.chart.svg.circle({
                     cx : centerCircleLine.x,
                     cy : centerCircleLine.y,
                     r : 3,
@@ -99,8 +99,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(),
-                height = chart.height(),
+            var width = this.chart.width(),
+                height = this.chart.height(),
                 min = width;
 
             if (height < min) {
@@ -114,17 +114,17 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
             startY = -w;
             startX = 0;
             outerRadius = Math.abs(startY);
-            innerRadius = outerRadius - brush.size;
+            innerRadius = outerRadius - this.brush.size;
 
         }
 
 		this.draw = function() {
-			var s = chart.series(brush.target[0]);
-			var group = chart.svg.group({
+			var s = this.chart.series(this.brush.target[0]);
+			var group = this.chart.svg.group({
 				"class" : "brush donut"
-			})
+			});
 
-			group.translate(chart.x(), chart.y())
+			group.translate(this.chart.x(), this.chart.y())
 
 			var all = 360;
 			var startAngle = 0;
@@ -141,10 +141,10 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				var data = s.data[i];
 				var endAngle = all * (data / max);
 
-				var g = this.drawDonut(chart, centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
-					fill : chart.color(i, brush.colors),
-					stroke : chart.theme("donutBorderColor"),
-					"stroke-width" : chart.theme("donutBorderWidth")
+				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+					fill : this.chart.color(i, this.brush.colors),
+					stroke : this.chart.theme("donutBorderColor"),
+					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
 
                 this.addEvent(g, 0, i);

@@ -1,18 +1,18 @@
 jui.define("chart.brush.line", [], function() {
 
-	var LineBrush = function(chart, brush) {
+	var LineBrush = function() {
 
-        this.createLine = function(chart, brush, pos, index) {
+        this.createLine = function(pos, index) {
             var x = pos.x,
                 y = pos.y;
 
-            var p = chart.svg.path({
-                stroke : chart.color(index, brush.colors),
-                "stroke-width" : chart.theme("lineBorderWidth"),
+            var p = this.chart.svg.path({
+                stroke : this.chart.color(index, this.brush.colors),
+                "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent"
             }).MoveTo(x[0], y[0]);
 
-            if(brush.symbol == "curve") {
+            if(this.brush.symbol == "curve") {
                 var px = this.curvePoints(x),
                     py = this.curvePoints(y);
 
@@ -21,7 +21,7 @@ jui.define("chart.brush.line", [], function() {
                 }
             } else {
                 for (var i = 0; i < x.length - 1; i++) {
-                    if(brush.symbol == "step") {
+                    if(this.brush.symbol == "step") {
                         p.LineTo(x[i], y[i + 1]);
                     }
 
@@ -32,11 +32,11 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawLine = function(chart, brush, path) {
-            var g = chart.svg.group().translate(chart.x(), chart.y());
+        this.drawLine = function(path) {
+            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
 
             for (var k = 0; k < path.length; k++) {
-                var p = this.createLine(chart, brush, path[k], k);
+                var p = this.createLine(path[k], k);
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -46,7 +46,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.draw = function() {
-            return this.drawLine(chart, brush, this.getXY());
+            return this.drawLine(this.getXY());
         }
 
         this.drawSetup = function() {

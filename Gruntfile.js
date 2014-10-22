@@ -18,8 +18,9 @@ module.exports = function(grunt) {
                     "js/util/math.js",
                     "js/util/time.js",
                     "js/util/scale.js",
-                    "js/util/svg.js",
                     "js/util/color.js",
+                    "js/util/svg.js",
+                    "js/util/svg3d.js",
 
                     // ui
                     "js/ui/button.js",
@@ -106,9 +107,9 @@ module.exports = function(grunt) {
                     "js/util/math.js",
                     "js/util/time.js",
                     "js/util/scale.js",
-                    "js/util/svg.js",
                     "js/util/color.js",
-
+                    "js/util/svg.js",
+                    "js/util/svg3d.js",
 
                     // chart (core)
                     "js/chart/draw.js",

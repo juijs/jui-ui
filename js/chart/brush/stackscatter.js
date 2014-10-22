@@ -1,9 +1,9 @@
 jui.define("chart.brush.stackscatter", [], function() {
 
-	var StackScatterBrush = function(chart, brush) {
+	var StackScatterBrush = function() {
 
         this.draw = function() {
-            return this.drawScatter(chart, brush, this.getStackXY());
+            return this.drawScatter(this.getStackXY());
         }
 	}
 

@@ -503,10 +503,18 @@ jui.define("util.svg",
         }
 
         this.clear = function(isAll) {
-            main.element.innerHTML = "";
+            main.each(function() {
+                if(this.element.parentNode) {
+                    main.element.removeChild(this.element);
+                }
+            });
 
             if(isAll === true) {
-                sub.element.innerHTML = "";
+                sub.each(function() {
+                    if(this.element.parentNode) {
+                        sub.element.removeChild(this.element);
+                    }
+                });
             }
         }
 
@@ -849,54 +857,6 @@ jui.define("util.svg",
 
         this.feTurbulence = function(attr) {
             return createChild(new Element(), "feTurbulence", attr);
-        }
-
-        /**
-         * 엘리먼트 생성 메소드 (3D)
-         *
-         */
-
-        this.rect3d = function(attr) {
-            var self = this;
-
-            var radian = math.radian(attr.degree),
-                x1 = 0, y1 = 0,
-                w1 = attr.width, h1 = attr.height;
-
-            var x2 = (Math.cos(radian) * attr.depth) + x1,
-                y2 = (Math.sin(radian) * attr.depth) + y1;
-
-            var w2 = attr.width + x2,
-                h2 = attr.height + y2;
-
-            var g = this.group({
-                width: w2,
-                height: h2
-            }, function() {
-                delete attr.width, attr.height, attr.degree, attr.depth;
-
-                self.path(attr)
-                    .MoveTo(x2, x1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .LineTo(x1, y2);
-
-                self.path(attr)
-                    .MoveTo(x1, y2)
-                    .LineTo(x1, h2)
-                    .LineTo(w1, h2)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-
-                self.path(attr)
-                    .MoveTo(w1, h2)
-                    .LineTo(w2, h1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-            });
-
-            return g;
         }
 
         init();

@@ -1,9 +1,9 @@
 jui.define("chart.brush.stackline", [], function() {
 
-	var StackLineBrush = function(chart, brush) {
+	var StackLineBrush = function() {
 
         this.draw = function() {
-            return this.drawLine(chart, brush, this.getStackXY());
+            return this.drawLine(this.getStackXY());
         }
 	}
 

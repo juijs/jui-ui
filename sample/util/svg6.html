@@ -12,7 +12,8 @@
 <script src="../../js/base.js"></script>
 <script src="../../js/util/math.js"></script>
 <script src="../../js/util/svg.js"></script>
-<script src="../../js/chart/theme/white.js"></script>
+<script src="../../js/util/svg3d.js"></script>
+<script src="../../js/chart/theme/jennifer.js"></script>
 
 <script>
 
@@ -22,7 +23,7 @@
         return (width + dis) * i;
     }
 
-    jui.ready([ "util", "util.svg", "chart.theme.white" ], function(_, SVGUtil, theme) {
+    jui.ready([ "util", "util.svg3d", "chart.theme.jennifer" ], function(_, SVGUtil, theme) {
         var svg = new SVGUtil($("#svg").get(0), { width: 1000, height: 1000 });
 
         svg.rect3d({
