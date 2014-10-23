@@ -2118,13 +2118,16 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			function func(x) {
 				var index = -1;
 				var target;
+				
+
+				
 				for (var i = 0, len = _domain.length; i < len; i++) {
 
 					if (i == len - 1) {
-							if (x == _domain[i]) {
-								index = i;
-								break;
-							}
+              if (x == _domain[i]) {
+                index = i;
+                break;
+              }
 					} else {
 						if (_domain[i] < _domain[i + 1]) {
 							if (x >= _domain[i] && x < _domain[i + 1]) {
@@ -2198,11 +2201,11 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 						return _range[_range.length - 1];
 					} else {
 
-						var min = Math.min(_domain[index], _domain[index+1]);
-						var max = Math.max(_domain[index], _domain[index+1]);
+						var min = _domain[index];
+						var max = _domain[index+1];
 
-						var minR = Math.min(_range[index], _range[index + 1]); 
-						var maxR = Math.max(_range[index], _range[index + 1]);
+						var minR = _range[index]; 
+						var maxR = _range[index + 1];
 
 						var pos = (x - min) / (max - min);
 
@@ -6016,7 +6019,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
-
 		}
 
 		this.draw = function() {

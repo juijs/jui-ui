@@ -180,7 +180,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
-
 		}
 
 		this.draw = function() {
