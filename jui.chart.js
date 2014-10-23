@@ -8884,8 +8884,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
         function runningChart(self) {
             var domain = self.chart.options.grid.x.domain;
 
-            domain[0] = time.add(domain[0], time.seconds, self.options.xstep);
-            domain[1] = time.add(domain[1], time.seconds, self.options.xstep);
+            domain[0] = time.add(domain[0], time.seconds, self.options.interval);
+            domain[1] = time.add(domain[1], time.seconds, self.options.interval);
 
             self.chart.update(dataList);
         }
