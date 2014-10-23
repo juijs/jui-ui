@@ -2113,6 +2113,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [0, 1];
 			var _range = [0, 1];
 			var _isRound = false;
+			var _isClamp = false; 
 
 			function func(x) {
 				var index = -1;
@@ -2120,17 +2121,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				for (var i = 0, len = _domain.length; i < len; i++) {
 
 					if (i == len - 1) {
-						if (_domain[i - 1] < _domain[i]) {
-							if (x > _domain[i]) {
+							if (x == _domain[i]) {
 								index = i;
 								break;
 							}
-						} else if (_domain[i - 1] >= _domain[i]) {
-							if (x <= _domain[i]) {
-								index = i;
-								break;
-							}
-						}
 					} else {
 						if (_domain[i] < _domain[i + 1]) {
 							if (x >= _domain[i] && x < _domain[i + 1]) {
@@ -2162,17 +2156,53 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					}
 				} else {
 
+          // 최대 최소 체크
 					if (_domain.length - 1 == index) {
 						return _range[index];
-					} else if (index == -1) {
+					} else if (index == -1) {    // 값의 범위를 넘어갔을 때 
+					  
+					  var max = func.max();
+					  var min = func.min();
+					  
+					  if (max < x) {
+					    
+              if (_isClamp) return max;					    
+					    
+					    var last = _domain[_domain.length -1];
+					    var last2 = _domain[_domain.length -2];
+					    
+					    var rlast = _range[_range.length -1];
+					    var rlast2 = _range[_range.length -2];
+					    
+					    var distLast = Math.abs(last - last2);
+					    var distRLast = Math.abs(rlast - rlast2);
+					    
+					    return rlast + Math.abs(x - max) * distRLast / distLast; 
+					    
+					  } else if (min > x) {
+					    
+					    if (_isClamp) return min;
+					    
+              var first = _domain[0];
+              var first2 = _domain[1];
+              
+              var rfirst = _range[0];
+              var rfirst2 = _range[1];
+              
+              var distFirst = Math.abs(first - first2);
+              var distRFirst = Math.abs(rfirst - rfirst2);
+              
+              return rfirst - Math.abs(x - min) * distRFirst / distFirst;					    
+					  }
+					  
 						return _range[_range.length - 1];
 					} else {
 
-						var min = _domain[index];
-						var max = _domain[index + 1];
+						var min = Math.min(_domain[index], _domain[index+1]);
+						var max = Math.max(_domain[index], _domain[index+1]);
 
-						var minR = _range[index]
-						var maxR = _range[index + 1];
+						var minR = Math.min(_range[index], _range[index + 1]); 
+						var maxR = Math.max(_range[index], _range[index + 1]);
 
 						var pos = (x - min) / (max - min);
 
@@ -2196,6 +2226,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			func.rate = function(value, max) {
 				return func(func.max() * (value / max));
+			}
+			
+			func.clamp = function(isClamp) {
+			  _isClamp = isClamp || false; 
 			}
 
 			func.domain = function(values) {
