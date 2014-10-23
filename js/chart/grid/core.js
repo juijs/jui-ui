@@ -210,6 +210,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				return old_scale.invert.apply(old_scale, arguments);
 			}
 			
+			new_scale.clamp = function() {
+				return old_scale.clamp.apply(old_scale, arguments);
+			}
+			
 			new_scale.key = key;
 			
 			return new_scale;
