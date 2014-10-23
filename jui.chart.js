@@ -8882,16 +8882,12 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
         var dataList = [];
 
         function runningChart(self) {
-            if(dataList != null) {
-                var domain = self.chart.options.grid.x.domain;
+            var domain = self.chart.options.grid.x.domain;
 
-                domain[0] = time.add(domain[0], time.seconds, self.options.xstep);
-                domain[1] = time.add(domain[1], time.seconds, self.options.xstep);
+            domain[0] = time.add(domain[0], time.seconds, self.options.xstep);
+            domain[1] = time.add(domain[1], time.seconds, self.options.xstep);
 
-                self.chart.update(dataList);
-            } else {
-                self.chart.render();
-            }
+            self.chart.update(dataList);
         }
 
         function initDomain(self) {
@@ -8953,7 +8949,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             if(dataList.length > 0) return;
 
             dataList = data;
-            runningChart(this);
+            this.chart.render();
         }
 
         this.append = function(data) {
