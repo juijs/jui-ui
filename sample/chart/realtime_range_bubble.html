@@ -10,7 +10,7 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chart.realtime", "util.time" ], function(chart, time) {
+    jui.ready([ "chartx.realtime", "util.time" ], function(chart, time) {
         var index = 0;
 
         window.getData = function(min) {
@@ -28,7 +28,6 @@
         c = chart("#chart", {
             width: 800,
             height : 400,
-            bufferCount : 5 * 60,
             theme : "jennifer",
             //data : data,
             series : {
@@ -42,17 +41,19 @@
                     text : "날짜"
                 }
             },
-            brush : {
-                type : 'line',
+            brush : [{
+                type : "line",
                 target : [ "name", "name2" ]
-            },
+            }],
             widget : [
-            	{ type : 'title', text : 'Range Bubble Sample'},
-            	{ type : 'legend' }
+                { type : "title", text : 'Range Bubble Sample'},
+                { type : "legend" }
             ],
             style : {
                 //"tooltipBackgroundColor": "red"
-            }
+            },
+            period : 10,
+            key : "value"
         });
 
         //c.update(getData(5));

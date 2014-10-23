@@ -44,7 +44,6 @@ module.exports = function(grunt) {
                     // chart (core)
                     "js/chart/draw.js",
                     "js/chart/builder.js",
-                    "js/chart/realtime.js",
 
                     // chart.theme
                     "js/chart/theme/jennifer.js",
@@ -95,7 +94,10 @@ module.exports = function(grunt) {
                     "js/chart/widget/legend.js",
                     "js/chart/widget/scroll.js",
                     "js/chart/widget/zoom.js",
-                    "js/chart/widget/cross.js"
+                    "js/chart/widget/cross.js",
+
+                    // chart wrapper
+                    "js/chartx/realtime.js"
                 ],
                 dest : "jui.js"
             },
@@ -117,7 +119,6 @@ module.exports = function(grunt) {
                     // chart (core)
                     "js/chart/draw.js",
                     "js/chart/builder.js",
-                    "js/chart/realtime.js",
 
                     // chart.theme
                     "js/chart/theme/jennifer.js",
@@ -166,7 +167,10 @@ module.exports = function(grunt) {
                     "js/chart/widget/legend.js",
                     "js/chart/widget/scroll.js",
                     "js/chart/widget/zoom.js",
-                    "js/chart/widget/cross.js"
+                    "js/chart/widget/cross.js",
+
+                    // chart wrapper
+                    "js/chartx/realtime.js"
                 ],
                 dest : "jui.chart.js"
             }            
