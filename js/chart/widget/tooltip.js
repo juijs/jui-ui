@@ -13,11 +13,14 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     text.attr({ y: textY + anchor });
                 }
 
+                // 툴팁 값 설정
+                var value = (obj.data[k]) ? ": " + obj.data[k] : "";
+
                 // 옵션 키가 있을 경우
                 if(widget.key != null) {
-                    text.html(obj.data[widget.key] + ": " + obj.data[k]);
+                    text.html(obj.data[widget.key] + value);
                 } else {
-                    text.html(((t.text) ? t.text : k) + ": " + obj.data[k]);
+                    text.html(((t.text) ? t.text : k) + value);
                 }
 
                 text.attr({ "text-anchor": "middle" });

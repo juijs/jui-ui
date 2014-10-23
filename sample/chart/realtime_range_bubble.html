@@ -10,26 +10,26 @@
 <div id="chart"></div>
 
 <script>
-    jui.ready([ "chartx.realtime", "util.time" ], function(chart, time) {
+    jui.ready([ "chartx.realtime", "util.base", "util.time" ], function(chart, _, time) {
         var index = 0;
 
         window.getData = function(min) {
-            var start = new Date();
+            var start = time.add(new Date(), time.minutes, -5);
 
             var data = [];
             for(var i = 0; i < min * 60; i++) {
-                data.push({ name : 3, name2 : Math.sin(index / 15), value : time.add(start, time.seconds, -(i - 1)) });
+                data.push({ name : 3, name2 : Math.sin(index / 15) + 1, value : time.add(start, time.seconds, i + 1) });
                 index++;
             }
 
-            return data.reverse();
+            return data;
         }
 
         c = chart("#chart", {
             width: 800,
             height : 400,
             theme : "jennifer",
-            //data : data,
+            data : getData(5),
             series : {
                 name : {
                     text : "이름"
@@ -46,23 +46,35 @@
                 target : [ "name", "name2" ]
             }],
             widget : [
-                { type : "title", text : 'Range Bubble Sample'},
-                { type : "legend" }
+                {
+                    type : "title", text : 'Range Bubble Sample'
+                }, {
+                    type : "legend"
+                }, {
+                    type : "cross",
+                    format : function(d) {
+                        if(_.typeCheck("date", d)) {
+                            return _.dateFormat(d, "hh:mm:ss");
+                        } else {
+                            return Math.round(d);
+                        }
+                    }
+                }, {
+                    type : "tooltip"
+                }
+
             ],
             style : {
                 //"tooltipBackgroundColor": "red"
             },
-            period : 5,
             key : "value"
         });
 
-        c.update(getData(5));
-
         setInterval(function() {
             c.append({
-                name : 2,
-                name2 : Math.sin(index / 15),
-                value : time.add(new Date(), time.seconds, -1)
+                name : 2.5,
+                name2 : Math.sin(index / 15) + 1,
+                value : new Date()
             });
 
             index++;

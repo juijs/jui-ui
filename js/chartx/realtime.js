@@ -4,11 +4,17 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
         var dataList = [];
 
         function runningChart(self) {
-            var domain = self.chart.options.grid.x.domain;
+            var domain = initDomain(self);
 
-            domain[0] = time.add(domain[0], time.seconds, self.options.interval);
-            domain[1] = time.add(domain[1], time.seconds, self.options.interval);
+            for(var i = 0; i < dataList.length; i++) {
+                if (dataList[i].value.getTime() <= domain[0].getTime()) {
+                    dataList.splice(i, 1);
+                } else {
+                    break;
+                }
+            }
 
+            self.chart.options.grid.x.domain = domain;
             self.chart.update(dataList);
         }
 
@@ -59,19 +65,15 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             }, getOptions(this)));
 
             // 초기값 세팅
-            this.update(opts.data);
+            if(opts.data.length > 0) {
+                this.append(opts.data);
+                this.chart.render();
+            }
 
             // 리얼타임 차트 실행
             setInterval(function() {
                 runningChart(self);
             }, opts.interval * 1000)
-        }
-
-        this.update = function(data) {
-            if(dataList.length > 0) return;
-
-            dataList = data;
-            this.chart.render();
         }
 
         this.append = function(data) {
