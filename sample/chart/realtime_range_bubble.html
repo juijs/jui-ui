@@ -18,11 +18,11 @@
 
             var data = [];
             for(var i = 0; i < min * 60; i++) {
-                data.push({ name : 3, name2 : Math.sin(index / 15), value : time.add(start, time.seconds, i + 1) });
+                data.push({ name : 3, name2 : Math.sin(index / 15), value : time.add(start, time.seconds, -(i - 1)) });
                 index++;
             }
 
-            return data;
+            return data.reverse();
         }
 
         c = chart("#chart", {
@@ -55,7 +55,17 @@
             }
         });
 
-        c.update(getData(1));
+        //c.update(getData(5));
+
+        setInterval(function() {
+            c.append({
+                name : 2,
+                name2 : Math.sin(index / 15),
+                value : time.add(new Date(), time.seconds, -1)
+            });
+
+            index++;
+        }, 1000);
     });
     
 
