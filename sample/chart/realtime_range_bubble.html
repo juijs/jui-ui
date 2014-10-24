@@ -25,11 +25,23 @@
             return data;
         }
 
+        window.runData = function() {
+            setInterval(function() {
+                c.append({
+                    name : 2.5,
+                    name2 : Math.sin(index / 15) + 1,
+                    value : new Date()
+                });
+
+                index++;
+            }, 1000);
+        }
+
         c = chart("#chart", {
             width: 800,
             height : 400,
             theme : "jennifer",
-            data : getData(5),
+            //data : getData(5),
             series : {
                 name : {
                     text : "이름"
@@ -70,15 +82,7 @@
             key : "value"
         });
 
-        setInterval(function() {
-            c.append({
-                name : 2.5,
-                name2 : Math.sin(index / 15) + 1,
-                value : new Date()
-            });
-
-            index++;
-        }, 1000);
+        //c.update(getData(5));
     });
     
 

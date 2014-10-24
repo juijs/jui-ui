@@ -8978,14 +8978,20 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
             // 초기값 세팅
             if(opts.data.length > 0) {
-                this.append(opts.data);
-                this.chart.render();
+                this.update(opts.data);
             }
 
             // 리얼타임 차트 실행
             setInterval(function() {
                 runningChart(self);
-            }, opts.interval * 1000)
+            }, opts.interval * 1000);
+        }
+
+        this.update = function(data) {
+            if(dataList.length > 0) return;
+
+            dataList = data;
+            this.chart.render();
         }
 
         this.append = function(data) {
