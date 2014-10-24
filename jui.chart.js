@@ -8919,7 +8919,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var domain = initDomain(self);
 
             for(var i = 0; i < dataList.length; i++) {
-                if (dataList[i][self.options.key].getTime() <= domain[0].getTime()) {
+                if (dataList[i][self.options.grid.key].getTime() <= domain[0].getTime()) {
                     dataList.splice(i, 1);
                 } else {
                     break;
@@ -8939,7 +8939,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "interval", "period", "format", "key", "xstep", "ystep", "xline", "yline" ];
+                excepts = [ "grid", "interval", "period" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -8955,23 +8955,23 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
-            this.chart = builder(this.selector, $.extend({
+            this.chart = builder(this.selector, $.extend(true, {
                 bufferCount : opts.period * 60,
                 grid : {
                     x : {
                         type : "date",
                         domain : initDomain(this),
-                        step : [ time.minutes, opts.xstep ],
+                        step : [ time.minutes, opts.grid.xstep ],
                         realtime : true,
-                        format : opts.format,
-                        key : opts.key,
-                        line : opts.xline
+                        format : opts.grid.format,
+                        key : opts.grid.key,
+                        line : opts.grid.xline
                     },
                     y : {
                         type : "range",
-                        target : target,
-                        step : opts.ystep,
-                        line : opts.yline
+                        target : (opts.grid.target != null) ? opts.grid.target : target,
+                        step : opts.grid.ystep,
+                        line : opts.grid.yline
                     }
                 }
             }, getOptions(this)));
@@ -9025,21 +9025,26 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
                 // chart
                 theme : "jennifer",	// 기본 테마 jennifer
+                data : [],
                 style : {},
                 series : {},
                 brush : null,
                 widget : null,
-                data : [],
+
+                // grid (custom)
+                grid : {
+                    target : null,
+                    format : "hh:mm",
+                    key : "time",
+                    xstep : 1, // x축 분 간격
+                    ystep : 10,
+                    xline : true,
+                    yline : true
+                },
 
                 // realtime
                 interval : 1, // 초
-                period : 5, // 분
-                format : "hh:mm",
-                key : "time",
-                xstep : 1, // x축 분 간격
-                ystep : 10,
-                xline : true,
-                yline : true
+                period : 5 // 분
             }
         }
     }
