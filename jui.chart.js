@@ -8919,7 +8919,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var domain = initDomain(self);
 
             for(var i = 0; i < dataList.length; i++) {
-                if (dataList[i].value.getTime() <= domain[0].getTime()) {
+                if (dataList[i][self.options.key].getTime() <= domain[0].getTime()) {
                     dataList.splice(i, 1);
                 } else {
                     break;
@@ -9035,7 +9035,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 interval : 1, // 초
                 period : 5, // 분
                 format : "hh:mm",
-                key : "date",
+                key : "time",
                 xstep : 1, // x축 분 간격
                 ystep : 10,
                 xline : true,
