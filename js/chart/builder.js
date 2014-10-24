@@ -670,20 +670,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
         }
 
         /**
-         * widget 옵션 리턴
-         *
-         * @param {string} key
-         *
-         */
-        this.widget = function (key) {
-            if (_widget[key]) {
-                return _widget[key];
-            }
-
-            return _widget;
-        }
-
-        /**
          * data 옵션 리턴
          *
          * @param {integer} index
