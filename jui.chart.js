@@ -8913,7 +8913,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     var UI = function() {
-        var dataList = [];
+        var interval = null,
+            dataList = [];
 
         function runningChart(self) {
             var domain = initDomain(self);
@@ -8951,8 +8952,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
         }
 
         this.init = function() {
-            var self = this,
-                opts = this.options,
+            var opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
             this.chart = builder(this.selector, $.extend(true, {
@@ -8981,17 +8981,18 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 this.update(opts.data);
             }
 
-            // 리얼타임 차트 실행
-            setInterval(function() {
-                runningChart(self);
-            }, opts.interval * 1000);
+            // 그리드 러닝
+            this.start();
         }
 
         this.update = function(data) {
-            if(dataList.length > 0) return;
-
             dataList = data;
-            this.chart.render();
+            this.chart.update(dataList);
+        }
+
+        this.clear = function() {
+            dataList = [];
+            this.chart.update([]);
         }
 
         this.append = function(data) {
@@ -9004,8 +9005,20 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             dataList = dataList.concat(newData);
         }
 
-        this.render = function(isAll) {
-            this.chart.render(!isAll ? false : true);
+        this.start = function() {
+            if(interval != null) return;
+
+            var self = this;
+            interval = setInterval(function () {
+                runningChart(self);
+            }, this.interval * 1000);
+        }
+
+        this.stop = function() {
+            if(interval == null) return;
+
+            clearInterval(interval);
+            interval = null;
         }
     }
 
