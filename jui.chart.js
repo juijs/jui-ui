@@ -8995,6 +8995,11 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             this.chart.update([]);
         }
 
+        this.reset = function() {
+            this.clear();
+            this.stop();
+        }
+
         this.append = function(data) {
             var newData = data;
 
