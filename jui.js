@@ -16021,6 +16021,10 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
+            valid: {
+                update: [ "array" ],
+                append: [ [ "array", "object" ] ]
+            },
             options: {
                 width : "100%",		// chart 기본 넓이
                 height : "100%",		// chart 기본 높이
