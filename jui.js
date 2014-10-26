@@ -1465,10 +1465,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),
-                    defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
+                    defOpts = {};
 
-                // Options Check
-                checkedOptions(defOpts, options);
+                // Check Options
+                if(_.typeCheck("object", setting.options)) {
+                    defOpts = setting.options;
+                    checkedOptions(defOpts, options);
+                }
 
                 // Options Setting
                 var opts = $.extend(true, defOpts, options);
@@ -5535,7 +5538,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
-				table: $(this.root),
+				table: $(this.root).css({ "position": "relative" }),
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};

@@ -500,10 +500,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             $root.each(function(index) {
                 var mainObj = new UI["class"](),
-                    defOpts = _.typeCheck("object", setting.options) ? setting.options : {};
+                    defOpts = {};
 
-                // Options Check
-                checkedOptions(defOpts, options);
+                // Check Options
+                if(_.typeCheck("object", setting.options)) {
+                    defOpts = setting.options;
+                    checkedOptions(defOpts, options);
+                }
 
                 // Options Setting
                 var opts = $.extend(true, defOpts, options);
