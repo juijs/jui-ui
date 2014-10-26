@@ -7395,7 +7395,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
 			// UIHandler, 추후 코어에서 처리
 			$obj = {
-				table: $(this.root),
+				table: $(this.root).css({ "position": "relative" }),
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};
