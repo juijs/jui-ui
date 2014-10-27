@@ -4815,7 +4815,7 @@ jui.define("chart.theme.pastel", [], function() {
 		candlestickInvertBorderColor : "#ff4848",
 		candlestickInvertBackgroundColor : "#ff4848",
         ohlcBorderColor : "#14be9d",
-        ohlcInvertBorderColor : "ff4848",
+        ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
 		pathOpacity : 0.5,
