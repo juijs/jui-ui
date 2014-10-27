@@ -4242,7 +4242,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             function updateXTable() {
                 self.update(uiObj.listData());
             }
-
         }
 
         /**
@@ -4389,7 +4388,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
          */
         this.size = function (width, height) {
             this.svg.size(width, height);
-            this.render();
+            this.render(true);
         }
 
         /**
@@ -4537,9 +4536,8 @@ jui.define("chart.theme.jennifer", [], function() {
 
         // brush styles
     	gaugeBackgroundColor : "#ececec",
-        gaugeArrowColor : "black",
-        gaugeFontFamily : "Verdana",
-        gaugeFontColor : "black",
+        gaugeArrowColor : "#666666",
+        gaugeFontColor : "#666666",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
         donutBorderColor : "white",
@@ -4559,6 +4557,7 @@ jui.define("chart.theme.jennifer", [], function() {
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
+        scatterHoverColor : "white",
 
         // widget styles
         titleFontColor : "#333",
@@ -4629,7 +4628,6 @@ jui.define("chart.theme.gradient", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
-        gaugeFontFamily : "Verdana",
         gaugeFontColor : "black",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
@@ -4650,6 +4648,7 @@ jui.define("chart.theme.gradient", [], function() {
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
+        scatterHoverColor : "white",
 
         // widget styles
         titleFontColor : "#333",
@@ -4676,54 +4675,50 @@ jui.define("chart.theme.gradient", [], function() {
     }
 });
 jui.define("chart.theme.dark", [], function() {
-	
+
     var themeColors = [
-        "#7977C2",
-        "#7BBAE7",
-        "#FFC000",
-        "#FF7800",
-        "#87BB66",
-        "#1DA8A0",
-        "#929292",
-        "#555D69",
-        "#0298D5",
-        "#FA5559",
-        "#F5A397",
-        "#06D9B6",
-        "#C6A9D9",
-        "#6E6AFC",
-        "#E3E766",
-        "#C57BC3",
-        "#DF328B",
-        "#96D7EB",
-        "#839CB5",
-        "#9228E4"
+        "#12f2e8",
+        "#26f67c",
+        "#e9f819",
+        "#b78bf9",
+        "#f94590",
+        "#8bccf9",
+        "#9228e4",
+
+        "#06d9b6",
+        "#fc6d65",
+        "#f199ff",
+        "#c8f21d",
+        "#16a6e5",
+
+        "#00ba60",
+        "#91f2a1",
+        "#fc9765",
+        "#f21d4f"
     ];
 
     return {
         // common styles
-    	backgroundColor : "#232323",
-    	fontSize : "11px",
-    	fontColor : "#eeeeee",
+    	backgroundColor : "#222222",
+    	fontSize : "12px",
+    	fontColor : "#c5c5c5",
 		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
-    	gridFontColor : "#ececec",
-    	gridActiveFontColor : "#ff7800",
+    	gridFontColor : "#868686",
+    	gridActiveFontColor : "#ff762d",
     	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#ebebeb",
+    	gridBorderColor : "#ff762d",
+		gridAxisBorderColor : "#464646",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",
     	gridActiveBorderWidth: 1,
 
         // brush styles
-    	gaugeBackgroundColor : "#ececec",
-        gaugeArrowColor : "black",
-        gaugeFontFamily : "Verdana",
-        gaugeFontColor : "black",
-    	stackGaugeBackgroundColor : "#232323",
+    	gaugeBackgroundColor : "#3e3e3e",
+        gaugeArrowColor : "#a6a6a6",
+        gaugeFontColor : "#c5c5c5",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         donutBorderColor : "#232323",
@@ -4731,57 +4726,59 @@ jui.define("chart.theme.dark", [], function() {
     	areaOpacity : 0.5,
         bubbleOpacity : 0.5,
         bubbleBorderWidth : 1,
-        candlestickBorderColor : "black",
-        candlestickBackgroundColor : "white",
-        candlestickInvertBorderColor : "red",
-        candlestickInvertBackgroundColor : "red",
-        ohlcBorderColor : "black",
-        ohlcInvertBorderColor : "red",
+        candlestickBorderColor : "#14be9d",
+        candlestickBackgroundColor : "#14be9d",
+        candlestickInvertBorderColor : "#ff4848",
+        candlestickInvertBackgroundColor : "#ff4848",
+        ohlcBorderColor : "#14be9d",
+        ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
         pathOpacity : 0.2,
         pathBorderWidth : 1,
-        scatterBorderColor : "white",
+        scatterBorderColor : "none",
         scatterBorderWidth : 1,
+        scatterHoverColor : "#222222",
 
         // widget styles
-        titleFontColor : "#333",
-        titleFontSize : "13px",
-        legendFontColor : "#333",
-        legendFontSize : "12px",
-        tooltipFontColor : "#ececec",
+        titleFontColor : "#ffffff",
+        titleFontSize : "14px",
+        legendFontColor : "#ffffff",
+        legendFontSize : "11px",
+        tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
-        tooltipBackgroundColor : "black",
-        tooltipBorderColor : "#ececec",
-        tooltipOpacity : 0.7,
-        scrollBackgroundColor : "#dcdcdc",
-        scrollThumbBackgroundColor : "#b2b2b2",
-        scrollThumbBorderColor : "#9f9fa4",
+        tooltipBackgroundColor : "white",
+        tooltipBorderColor : "white",
+        tooltipOpacity : 1,
+        scrollBackgroundColor : "#3e3e3e",
+        scrollThumbBackgroundColor : "#666666",
+        scrollThumbBorderColor : "#686868",
         zoomBackgroundColor : "red",
         zoomFocusColor : "gray",
         crossBorderColor : "#a9a9a9",
         crossBorderWidth : 1,
         crossBorderOpacity : 0.8,
         crossBalloonFontSize : "11px",
-        crossBalloonFontColor : "white",
-        crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.5
+        crossBalloonFontColor : "#333",
+        crossBalloonBackgroundColor : "white",
+        crossBalloonOpacity : 1
     }	
-
 });
-jui.define("chart.theme.seoul", [], function() {
+jui.define("chart.theme.pastel", [], function() {
 	var themeColors = [
-		"#FBB13C",		// 은행노란색
-		"#6E413C",		// 고궁갈색
-		"#E0CDA2",		// 삼베연미색
-		"#5884C5",		// 서울하늘색
-		"#912F30",		// 단청빨간색
-		"#E57F28",		// 꽃담황토색
-		"#E5E5E5",		// 한강은백색
-		"#A1A097",		// 돌담회색
-		"#446256",		// 남산초록색
-		"#494949"		// 기와진회색
-		
+		"#73e9d2",
+		"#fef92c",
+		"#ff9248",
+		"#b7eef6",
+		"#08c4e0",
+		"#ffb9ce",
+		"#ffd4ba",
+		"#14be9d",
+		"#ebebeb",
+		"#666666",
+		"#cdbfe3",
+		"#bee982",
+		"#c22269"
 	];
 
 	return {
@@ -4789,66 +4786,66 @@ jui.define("chart.theme.seoul", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "arial,Tahoma,verdana",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
 		colors : themeColors,
 
 		// grid styles
 		gridFontColor : "#333333",
 		gridActiveFontColor : "#ff7800",
 		gridBorderWidth : 1,
-		gridBorderColor : "#ececec",
-		gridAxisBorderColor : "#ebebeb",
+		gridBorderColor : "#eeeeee",
+		gridAxisBorderColor : "#f5f5f5",
 		gridAxisBorderWidth : 1,
 		gridActiveBorderColor : "#ff7800",
 		gridActiveBorderWidth : 1,
 
 		// brush styles
-		gaugeBackgroundColor : "#ececec",
-        gaugeArrowColor : "black",
-		gaugeFontFamily : "Verdana",
-		gaugeFontColor : "black",
+		gaugeBackgroundColor : "#f5f5f5",
+        gaugeArrowColor : "gray",
+		gaugeFontColor : "#666666",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
 		donutBorderColor : "white",
-		donutBorderWidth : 1,
-		areaOpacity : 0.5,
+		donutBorderWidth : 3,
+		areaOpacity : 0.4,
 		bubbleOpacity : 0.5,
 		bubbleBorderWidth : 1,
-		candlestickBorderColor : "black",
-		candlestickBackgroundColor : "white",
-		candlestickInvertBorderColor : "red",
-		candlestickInvertBackgroundColor : "red",
-        ohlcBorderColor : "black",
-        ohlcInvertBorderColor : "red",
+		candlestickBorderColor : "#14be9d",
+		candlestickBackgroundColor : "#14be9d",
+		candlestickInvertBorderColor : "#ff4848",
+		candlestickInvertBackgroundColor : "#ff4848",
+        ohlcBorderColor : "#14be9d",
+        ohlcInvertBorderColor : "ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
-		pathOpacity : 0.2,
+		pathOpacity : 0.5,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
 		scatterBorderWidth : 1,
+		scatterHoverColor : "white",
 
         // widget styles
         titleFontColor : "#333",
-        titleFontSize : "13px",
+        titleFontSize : "18px",
         legendFontColor : "#333",
-        legendFontSize : "12px",
-        tooltipFontColor : "#333",
+        legendFontSize : "11px",
+        tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
-        tooltipBackgroundColor : "white",
-        tooltipBorderColor : "#aaaaaa",
+        tooltipBackgroundColor : "black",
+        tooltipBorderColor : "black",
         tooltipOpacity : 0.7,
-        scrollBackgroundColor : "#dcdcdc",
-        scrollThumbBackgroundColor : "#b2b2b2",
-        scrollThumbBorderColor : "#9f9fa4",
-        zoomBackgroundColor : "red",
-        zoomFocusColor : "gray",
-        crossBorderColor : "#a9a9a9",
-        crossBorderWidth : 1,
-        crossBorderOpacity : 0.8,
-        crossBalloonFontSize : "11px",
-        crossBalloonFontColor : "white",
-        crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.5
+		scrollBackgroundColor :	"#f5f5f5",
+		scrollThumbBackgroundColor : "#b2b2b2",
+		scrollThumbBorderColor : "#9f9fa4",
+		zoomBackgroundColor : "red",
+		zoomFocusColor : "gray",
+		crossBorderColor : "#a9a9a9",
+		crossBorderWidth : 1,
+		crossBorderOpacity : 0.8,
+		crossBalloonFontSize : "11px",
+		crossBalloonFontColor :	"white",
+		crossBalloonBackgroundColor : "black",
+		crossBalloonOpacity : 0.7
 	}
 }); 
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
@@ -7152,6 +7149,8 @@ jui.define("chart.brush.scatter", [], function() {
 	var ScatterBrush = function() {
 
         this.createScatter = function(pos, index) {
+            var self = this;
+
             var elem = null,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
@@ -7172,21 +7171,8 @@ jui.define("chart.brush.scatter", [], function() {
                             .point(w, h)
                             .point(w / 2, 0);
                     } else {
-                        var l1 = self.chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h }),
-                            l2 = self.chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
-
-                        l1.hover(over, out);
-                        l2.hover(over, out);
-
-                        function over() {
-                            l1.attr({ "stroke-width": 3 });
-                            l2.attr({ "stroke-width": 3 });
-                        }
-
-                        function out() {
-                            l1.attr({ "stroke-width": 2 });
-                            l2.attr({ "stroke-width": 2 });
-                        }
+                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
+                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
                 }).translate(pos.x - (w / 2), pos.y - (h / 2));
             } else {
@@ -7207,16 +7193,26 @@ jui.define("chart.brush.scatter", [], function() {
                 }
             }
 
-            elem.attr({
-                fill: color,
-                stroke: borderColor,
-                "stroke-width": borderWidth
-            })
-            .hover(function() {
-                elem.attr({ stroke: color });
-            }, function() {
-                elem.attr({ stroke: borderColor });
-            });
+            if(symbol != "cross") {
+                elem.attr({
+                    fill: color,
+                    stroke: borderColor,
+                    "stroke-width": borderWidth
+                })
+                .hover(function () {
+                    elem.attr({
+                        fill: self.chart.theme("scatterHoverColor"),
+                        stroke: color,
+                        "stroke-width": borderWidth * 2
+                    });
+                }, function () {
+                    elem.attr({
+                        fill: color,
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
+                    });
+                });
+            }
 
             return elem;
         }
@@ -7804,10 +7800,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				x : 0,
 				y : (brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
-				"font-family" : chart.theme("gaugeFontFamily"),
+				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
-				"fill" : chart.theme("gaugeFontColor")
+				"fill" : chart.color(0, brush.colors)
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -7815,7 +7811,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("gaugeFontFamily"),
+                    "font-family" : chart.theme("fontFamily"),
 					"font-size" : "1.5em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")
@@ -7836,7 +7832,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : chart.theme("gaugeFontFamily"),
+                "font-family" : chart.theme("fontFamily"),
 				"fill" : chart.theme("gaugeFontColor")
             }, min + ""));
 
@@ -7848,7 +7844,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : chart.theme("gaugeFontFamily"),
+                "font-family" : chart.theme("fontFamily"),
 				"fill" : chart.theme("gaugeFontColor")
             }, max + ""));
 
@@ -7983,10 +7979,10 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 10,
 					"text-anchor" : "middle",
-					"font-family" : chart.theme("gaugeFontFamily"),
+					"font-family" : chart.theme("fontFamily"),
 					"font-size" : "3.5em",
 					"font-weight" : 1000,
-					"fill" : chart.theme("gaugeFontColor")
+					"fill" : chart.color(0, brush.colors)
 				}, value + ""));
 			}
 			
@@ -7995,7 +7991,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 40,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("gaugeFontFamily"),
+                    "font-family" : chart.theme("fontFamily"),
 					"font-size" : "2em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")

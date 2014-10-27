@@ -49,7 +49,7 @@ module.exports = function(grunt) {
                     "js/chart/theme/jennifer.js",
                     "js/chart/theme/gradient.js", // jennifer gradient style
                     "js/chart/theme/dark.js",
-                    "js/chart/theme/seoul.js",
+                    "js/chart/theme/pastel.js",
 
                     // chart.grid
                     "js/chart/grid/core.js",
@@ -124,7 +124,7 @@ module.exports = function(grunt) {
                     "js/chart/theme/jennifer.js",
                     "js/chart/theme/gradient.js", // jennifer gradient style
                     "js/chart/theme/dark.js",
-                    "js/chart/theme/seoul.js",
+                    "js/chart/theme/pastel.js",
 
                     // chart.grid
                     "js/chart/grid/core.js",

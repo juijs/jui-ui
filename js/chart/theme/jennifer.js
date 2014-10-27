@@ -42,9 +42,8 @@ jui.define("chart.theme.jennifer", [], function() {
 
         // brush styles
     	gaugeBackgroundColor : "#ececec",
-        gaugeArrowColor : "black",
-        gaugeFontFamily : "Verdana",
-        gaugeFontColor : "black",
+        gaugeArrowColor : "#666666",
+        gaugeFontColor : "#666666",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
         donutBorderColor : "white",
@@ -64,6 +63,7 @@ jui.define("chart.theme.jennifer", [], function() {
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
+        scatterHoverColor : "white",
 
         // widget styles
         titleFontColor : "#333",

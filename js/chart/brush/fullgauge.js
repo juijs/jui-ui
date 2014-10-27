@@ -15,10 +15,10 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 10,
 					"text-anchor" : "middle",
-					"font-family" : chart.theme("gaugeFontFamily"),
+					"font-family" : chart.theme("fontFamily"),
 					"font-size" : "3.5em",
 					"font-weight" : 1000,
-					"fill" : chart.theme("gaugeFontColor")
+					"fill" : chart.color(0, brush.colors)
 				}, value + ""));
 			}
 			
@@ -27,7 +27,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 40,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("gaugeFontFamily"),
+                    "font-family" : chart.theme("fontFamily"),
 					"font-size" : "2em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")

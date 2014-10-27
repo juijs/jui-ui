@@ -3,6 +3,8 @@ jui.define("chart.brush.scatter", [], function() {
 	var ScatterBrush = function() {
 
         this.createScatter = function(pos, index) {
+            var self = this;
+
             var elem = null,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
@@ -23,21 +25,8 @@ jui.define("chart.brush.scatter", [], function() {
                             .point(w, h)
                             .point(w / 2, 0);
                     } else {
-                        var l1 = self.chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: 0, x2: w, y2: h }),
-                            l2 = self.chart.svg.line({ stroke: color, "stroke-width": 2, x1: 0, y1: w, x2: h, y2: 0 });
-
-                        l1.hover(over, out);
-                        l2.hover(over, out);
-
-                        function over() {
-                            l1.attr({ "stroke-width": 3 });
-                            l2.attr({ "stroke-width": 3 });
-                        }
-
-                        function out() {
-                            l1.attr({ "stroke-width": 2 });
-                            l2.attr({ "stroke-width": 2 });
-                        }
+                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
+                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
                     }
                 }).translate(pos.x - (w / 2), pos.y - (h / 2));
             } else {
@@ -58,16 +47,26 @@ jui.define("chart.brush.scatter", [], function() {
                 }
             }
 
-            elem.attr({
-                fill: color,
-                stroke: borderColor,
-                "stroke-width": borderWidth
-            })
-            .hover(function() {
-                elem.attr({ stroke: color });
-            }, function() {
-                elem.attr({ stroke: borderColor });
-            });
+            if(symbol != "cross") {
+                elem.attr({
+                    fill: color,
+                    stroke: borderColor,
+                    "stroke-width": borderWidth
+                })
+                .hover(function () {
+                    elem.attr({
+                        fill: self.chart.theme("scatterHoverColor"),
+                        stroke: color,
+                        "stroke-width": borderWidth * 2
+                    });
+                }, function () {
+                    elem.attr({
+                        fill: color,
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
+                    });
+                });
+            }
 
             return elem;
         }

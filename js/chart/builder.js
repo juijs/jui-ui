@@ -733,7 +733,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             function updateXTable() {
                 self.update(uiObj.listData());
             }
-
         }
 
         /**
@@ -880,7 +879,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
          */
         this.size = function (width, height) {
             this.svg.size(width, height);
-            this.render();
+            this.render(true);
         }
 
         /**
