@@ -35,6 +35,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveFontColor : "#ff7800",
     	gridBorderWidth : 1,
     	gridBorderColor : "#ececec",
+        gridBorderDashArray : "none",
 		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",

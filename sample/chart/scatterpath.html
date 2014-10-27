@@ -17,48 +17,67 @@
 </script>
 
 <script>
-    jui.ready([ "chart.builder" ], function(chart) {
+    jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
+        var start = new Date();
+        var end = time.add(start, time.hours, 5);
 
         function getNumber() {
-            return Math.round(Math.random() * 1000  % 1000);
+            return Math.floor(Math.random() * 1000) + 1;
+        }
+
+        function getTime() {
+            return Math.floor(Math.random() * 5 * 60 * 60) + 1;
         }
         
         var data = [];
         for(var i = 0; i < 30000; i++) {
-            data.push({ name : getNumber(), value : getNumber(), test : getNumber()} )
+            data.push({
+                date: time.add(start, time.seconds, getTime()),
+                name: getNumber(),
+                value : getNumber(),
+                test : getNumber()
+            });
         }        
 
          chart("#chart", {
             width: 400,
             height : 400,
-            theme : "jennifer",
+            theme : "dark",
             data : data,
             grid : {
                 x : {
-                    type : 'range',
-                    target : [ "name", "value", "test" ],
-                    step : 10,
-                    key : "name"
+                    type : "date",  // default type is block
+                    domain : [ start, end ],
+                    step : [ time.hours, 1 ],
+                    format : "hh:mm:ss",
+                    key: "date",
+                    line : true
                 },
                 y : {
                     type : 'range',
                     target : [ "name", "value", "test" ],
-                    step : 10
+                    step : 10,
+                    line : true
                 }
             },
             series : {
-                name : { text : "이름",symbol : "rectangle" },
-                name2 : { text : "값",symbol : "cross" },
-                test : { text : "테스트값",symbol : "triangle" }
+                name : { text : "이름", symbol : "rectangle" },
+                value : { text : "값", symbol : "circle" },
+                test : { text : "테스트값", symbol : "triangle" }
             },
-            brush : [
-              { type : 'scatterpath', target : "name", size : 10 },
-              { type : 'scatterpath', target : "name2", size : 3, colors : ['black'] },
-              { type : 'scatterpath', target : "test", size : 10, colors : ['red'] }
-            ],
-            tpl: {
-                tooltip: $("#tpl_tooltip").html()
-            }
+            brush : [{
+                type : 'scatterpath',
+                target : "name",
+                colors : [ theme.colors[0] ]
+            }, {
+                type : 'scatterpath',
+                target : "value",
+                colors : [ theme.colors[1] ]
+            }, {
+                type : 'scatterpath',
+                target : "test",
+                colors : [ theme.colors[2] ]
+            }]
         }).render();
 	})
 </script>
