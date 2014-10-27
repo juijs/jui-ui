@@ -4538,6 +4538,8 @@ jui.define("chart.theme.jennifer", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+        gaugeFontFamily : "Verdana",
+        gaugeFontColor : "black",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
         donutBorderColor : "white",
@@ -4627,6 +4629,8 @@ jui.define("chart.theme.gradient", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+        gaugeFontFamily : "Verdana",
+        gaugeFontColor : "black",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
         donutBorderColor : "white",
@@ -4717,6 +4721,8 @@ jui.define("chart.theme.dark", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+        gaugeFontFamily : "Verdana",
+        gaugeFontColor : "black",
     	stackGaugeBackgroundColor : "#232323",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
@@ -4799,6 +4805,8 @@ jui.define("chart.theme.seoul", [], function() {
 		// brush styles
 		gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+		gaugeFontFamily : "Verdana",
+		gaugeFontColor : "black",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
 		donutBorderColor : "white",
@@ -7408,7 +7416,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y,
                     width: max,
                     height : brush.size,
-                    fill : "#ececec"
+                    fill : chart.theme("gaugeBackgroundColor")
                 }));
                 
                 var value = (data.value)  * max / 100,
@@ -7519,9 +7527,9 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cx : centerX,
                 cy : centerY,
                 r : outerRadius,
-                fill : "#ececec",
+                fill : chart.theme("gaugeBackgroundColor"),
                 stroke : chart.color(0, brush.colors),
-                "stroke-width" : 2 
+                "stroke-width" : 2
             }));
             
             group.append(chart.svg.circle({
@@ -7592,7 +7600,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
-                fill : "#ececec",
+                fill : chart.theme("gaugeBackgroundColor"),
                 d : path
             }));
 
@@ -7649,14 +7657,14 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					cx : centerX,
 					cy : centerY,
 					r : outerRadius,
-					fill : "#ececec"
+					fill : chart.theme("gaugeBackgroundColor")
 				}));
 
 				group.append(chart.svg.circle({
 					cx : centerX,
 					cy : centerY,
 					r : outerRadius,
-					fill : chart.color(2, brush.colors),
+					fill : chart.color(0, brush.colors),
 					"clip-path" : "url(#" + clipId + ")"
 				}));
 
@@ -7666,7 +7674,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
-					fill : "#ececec"
+					fill : chart.theme("gaugeBackgroundColor")
 				}));
 
 				group.append(chart.svg.rect({
@@ -7674,7 +7682,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
-					fill : chart.color(2, brush.colors),
+					fill : chart.color(0, brush.colors),
 					"clip-path" : "url(#" + clipId + ")"
 				}));
 
@@ -7796,9 +7804,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				x : 0,
 				y : (brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
-				"font-family" : chart.theme("fontFamily"),
+				"font-family" : chart.theme("gaugeFontFamily"),
 				"font-size" : "3em",
-				"font-weight" : 1000
+				"font-weight" : 1000,
+				"fill" : chart.theme("gaugeFontColor")
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -7806,9 +7815,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
+                    "font-family" : chart.theme("gaugeFontFamily"),
 					"font-size" : "1.5em",
-					"font-weight" : 500
+					"font-weight" : 500,
+					"fill" : chart.theme("gaugeFontColor")
 				}, brush.unitText))
 			}
 
@@ -7826,7 +7836,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : "Verdana"
+                "font-family" : chart.theme("gaugeFontFamily"),
+				"fill" : chart.theme("gaugeFontColor")
             }, min + ""));
 
 			// max
@@ -7837,7 +7848,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : "Verdana"
+                "font-family" : chart.theme("gaugeFontFamily"),
+				"fill" : chart.theme("gaugeFontColor")
             }, max + ""));
 
 			return g;
@@ -7971,9 +7983,10 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 10,
 					"text-anchor" : "middle",
-					"font-family" : chart.theme("fontFamily"),
+					"font-family" : chart.theme("gaugeFontFamily"),
 					"font-size" : "3.5em",
-					"font-weight" : 1000
+					"font-weight" : 1000,
+					"fill" : chart.theme("gaugeFontColor")
 				}, value + ""));
 			}
 			
@@ -7982,9 +7995,10 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					x : 0,
 					y : 40,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
+                    "font-family" : chart.theme("gaugeFontFamily"),
 					"font-size" : "2em",
-					"font-weight" : 500
+					"font-weight" : 500,
+					"fill" : chart.theme("gaugeFontColor")
 				}, brush.unitText));
 			}
 

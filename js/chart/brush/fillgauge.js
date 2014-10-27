@@ -42,7 +42,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
-                fill : "#ececec",
+                fill : chart.theme("gaugeBackgroundColor"),
                 d : path
             }));
 
@@ -99,14 +99,14 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					cx : centerX,
 					cy : centerY,
 					r : outerRadius,
-					fill : "#ececec"
+					fill : chart.theme("gaugeBackgroundColor")
 				}));
 
 				group.append(chart.svg.circle({
 					cx : centerX,
 					cy : centerY,
 					r : outerRadius,
-					fill : chart.color(2, brush.colors),
+					fill : chart.color(0, brush.colors),
 					"clip-path" : "url(#" + clipId + ")"
 				}));
 
@@ -116,7 +116,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
-					fill : "#ececec"
+					fill : chart.theme("gaugeBackgroundColor")
 				}));
 
 				group.append(chart.svg.rect({
@@ -124,7 +124,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 					y : 0,
 					width : chart.width(),
 					height : chart.height(),
-					fill : chart.color(2, brush.colors),
+					fill : chart.color(0, brush.colors),
 					"clip-path" : "url(#" + clipId + ")"
 				}));
 

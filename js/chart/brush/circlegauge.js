@@ -40,9 +40,9 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cx : centerX,
                 cy : centerY,
                 r : outerRadius,
-                fill : "#ececec",
+                fill : chart.theme("gaugeBackgroundColor"),
                 stroke : chart.color(0, brush.colors),
-                "stroke-width" : 2 
+                "stroke-width" : 2
             }));
             
             group.append(chart.svg.circle({

@@ -12,9 +12,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				x : 0,
 				y : (brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
-				"font-family" : chart.theme("fontFamily"),
+				"font-family" : chart.theme("gaugeFontFamily"),
 				"font-size" : "3em",
-				"font-weight" : 1000
+				"font-weight" : 1000,
+				"fill" : chart.theme("gaugeFontColor")
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -22,9 +23,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
+                    "font-family" : chart.theme("gaugeFontFamily"),
 					"font-size" : "1.5em",
-					"font-weight" : 500
+					"font-weight" : 500,
+					"fill" : chart.theme("gaugeFontColor")
 				}, brush.unitText))
 			}
 
@@ -42,7 +44,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : "Verdana"
+                "font-family" : chart.theme("gaugeFontFamily"),
+				"fill" : chart.theme("gaugeFontColor")
             }, min + ""));
 
 			// max
@@ -53,7 +56,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : "Verdana"
+                "font-family" : chart.theme("gaugeFontFamily"),
+				"fill" : chart.theme("gaugeFontColor")
             }, max + ""));
 
 			return g;

@@ -47,7 +47,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y,
                     width: max,
                     height : brush.size,
-                    fill : "#ececec"
+                    fill : chart.theme("gaugeBackgroundColor")
                 }));
                 
                 var value = (data.value)  * max / 100,

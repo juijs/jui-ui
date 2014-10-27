@@ -44,6 +44,8 @@ jui.define("chart.theme.dark", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+        gaugeFontFamily : "Verdana",
+        gaugeFontColor : "black",
     	stackGaugeBackgroundColor : "#232323",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,

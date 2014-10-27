@@ -43,6 +43,8 @@ jui.define("chart.theme.gradient", [], function() {
         // brush styles
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "black",
+        gaugeFontFamily : "Verdana",
+        gaugeFontColor : "black",
     	pieBorderColor : "white",
         pieBorderWidth : 1,
         donutBorderColor : "white",
