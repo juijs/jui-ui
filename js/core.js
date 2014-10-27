@@ -581,7 +581,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             // UIManager에 데이터 입력
             UIManager.add(new UICoreSet(UI.type, list, selector, options));
 
-            return (list.length == 1) ? list[0] : list;
+            // 객체가 없을 경우에는 null을 반환 (기존에는 빈 배열을 반환)
+            if(list.length == 0) {
+                return null;
+            } else if(list.length == 1) {
+                return list[0];
+            }
+
+            return list;
         }
     }
 	
