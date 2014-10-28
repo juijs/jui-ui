@@ -26,10 +26,10 @@ jui.define("chart.theme.pastel", [], function() {
 		// grid styles
 		gridFontColor : "#333333",
 		gridActiveFontColor : "#ff7800",
+		gridBorderColor : "#bfbfbf",
 		gridBorderWidth : 1,
-		gridBorderColor : "#eeeeee",
-		gridBorderDashArray : "none",
-		gridAxisBorderColor : "#f5f5f5",
+		gridBorderDashArray : "1, 3",
+		gridAxisBorderColor : "#bfbfbf",
 		gridAxisBorderWidth : 1,
 		gridActiveBorderColor : "#ff7800",
 		gridActiveBorderWidth : 1,

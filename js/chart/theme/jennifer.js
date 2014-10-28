@@ -33,8 +33,8 @@ jui.define("chart.theme.jennifer", [], function() {
         // grid styles
     	gridFontColor : "#333333",
     	gridActiveFontColor : "#ff7800",
+        gridBorderColor : "#ebebeb",
     	gridBorderWidth : 1,
-    	gridBorderColor : "#ececec",
         gridBorderDashArray : "none",
 		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,

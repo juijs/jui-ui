@@ -32,9 +32,9 @@ jui.define("chart.theme.dark", [], function() {
         // grid styles
     	gridFontColor : "#868686",
     	gridActiveFontColor : "#ff762d",
-    	gridBorderWidth : 1,
-    	gridBorderColor : "#ff762d",
-        gridBorderDashArray : "1, 5",
+        gridBorderColor : "#464646",
+        gridBorderWidth : 1,
+        gridBorderDashArray : "none",
 		gridAxisBorderColor : "#464646",
 		gridAxisBorderWidth : 1,
     	gridActiveBorderColor : "#ff7800",

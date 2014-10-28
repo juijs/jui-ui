@@ -32,8 +32,8 @@ jui.define("chart.theme.gradient", [], function() {
         // grid styles
         gridFontColor : "#666",
         gridActiveFontColor : "#ff7800",
-        gridBorderWidth : 1,
         gridBorderColor : "#efefef",
+        gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridAxisBorderColor : "#efefef",
         gridAxisBorderWidth : 1,

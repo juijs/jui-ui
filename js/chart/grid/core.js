@@ -245,7 +245,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,				
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : chart.theme("gridBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : chart.theme("gridBorderDashArray"),
 				"stroke-opacity" : 1
