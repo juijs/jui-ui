@@ -535,20 +535,23 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
         }
 
         this.color = function(i, colors) {
-            var color;
+            var color, c;
 
+            // 테마 또는 브러쉬 옵션일 때 처리
             if (_.typeCheck("array", colors)) {
-                color = colors[i];
+                c = colors;
+            } else {
+                c = _theme["colors"];
             }
 
-            color = color || _theme["colors"][i];
+            // 인덱스가 없다면 마지막 컬러를 반환
+            color = (i > c.length - 1) ? c[c.length - 1] : c[i];
 
             if (_hash[color]) {
                 return "url(#" + _hash[color] + ")";
             }
 
             return getColor(this, color);
-
         }
 
         /**
