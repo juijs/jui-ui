@@ -3,15 +3,14 @@ jui.define("chart.brush.scatterpath", [], function() {
 	var ScatterPathBrush = function() {
 
         this.drawScatter = function(points) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var width = height = this.brush.size;
 
+            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
             var path = this.chart.svg.path({
                 fill : this.chart.color(0, this.brush.colors),
-                stroke : this.chart.theme("scatterBorderColor"),
+                stroke : this.chart.color(0, this.brush.colors),
                 "stroke-width" : this.chart.theme("scatterBorderWidth")
             });
-
-            var width = height = this.brush.size;  
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.series(this.brush.target[i]),
