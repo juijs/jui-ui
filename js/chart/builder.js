@@ -293,56 +293,79 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
         }
 
         function setChartEvent(self) {
-            var elem = self.svg.root, isMouseOver = false;
+            var elem = self.svg.root,
+                isMouseOver = false;
 
             elem.on("click", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.click", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.click", [ e ]);
+                } else {
+                    self.emit("chart.click", [ e ]);
+                }
             });
 
             elem.on("dblclick", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.dblclick", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.dblclick", [ e ]);
+                } else {
+                    self.emit("chart.dblclick", [ e ]);
+                }
             });
 
             elem.on("contextmenu", function(e) {
-                if (!checkPosition(e))
-                    return;
+                if (!checkPosition(e)) {
+                    self.emit("bg.rclick", [ e ]);
+                } else {
+                    self.emit("chart.rclick", [ e ]);
+                }
 
-                self.emit("bg.rclick", [e]);
                 e.preventDefault();
             });
 
             elem.on("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
-                        self.emit("bg.mouseout", [e]);
+                        self.emit("chart.mouseout", [ e ]);
                         isMouseOver = false;
                     }
 
-                    return;
-                }
-
-                if (isMouseOver) {
-                    self.emit("bg.mousemove", [e]);
+                    self.emit("bg.mousemove", [ e ]);
                 } else {
-                    self.emit("bg.mouseover", [e]);
-                    isMouseOver = true;
+                    if (isMouseOver) {
+                        self.emit("chart.mousemove", [ e ]);
+                    } else {
+                        self.emit("chart.mouseover", [ e ]);
+                        isMouseOver = true;
+                    }
                 }
             });
 
             elem.on("mousedown", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.mousedown", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.mousedown", [ e ]);
+                } else {
+                    self.emit("chart.mousedown", [ e ]);
+                }
             });
 
             elem.on("mouseup", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.mouseup", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseup", [ e ]);
+                } else {
+                    self.emit("chart.mouseup", [ e ]);
+                }
+            });
+
+            elem.on("mouseover", function(e) {
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseover", [ e ]);
+                }
+            });
+
+            elem.on("mouseout", function(e) {
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseout", [ e ]);
+                }
             });
 
             // 드래그 이벤트 막기
@@ -351,15 +374,22 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             });
 
             function checkPosition(e) {
-                var pos = $(self.root).offset(), offsetX = e.offsetX || e.layerX - pos.left, offsetY = e.offsetY || e.layerY - pos.top;
+                var pos = $(self.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
 
-                if (offsetX - self.padding("left") < 0)
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - self.padding("left");
+                e.chartY = offsetY - self.padding("top");
+
+                if (e.chartX < 0)
                     return;
-                if (offsetX - self.padding("left") > self.width())
+                if (e.chartX > self.width())
                     return;
-                if (offsetY - self.padding("top") < 0)
+                if (e.chartY < 0)
                     return;
-                if (offsetY - self.padding("top") > self.height())
+                if (e.chartY > self.height())
                     return;
 
                 return true;

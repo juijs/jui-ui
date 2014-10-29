@@ -1,6 +1,17 @@
 jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
+        function setMouseEvent(self, e) {
+            var pos = $(self.chart.root).offset(),
+                offsetX = e.pageX - pos.left,
+                offsetY = e.pageY - pos.top;
+
+            e.bgX = offsetX;
+            e.bgY = offsetY;
+            e.chartX = offsetX - self.chart.padding("left");
+            e.chartY = offsetY - self.chart.padding("top");
+        }
+
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -175,35 +186,43 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             };
 
             elem.on("click", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("click", [ obj, e ]);
             });
 
             elem.on("dblclick", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("dblclick", [ obj, e ]);
             });
 
             elem.on("contextmenu", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
             elem.on("mouseover", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseover", [ obj, e ]);
             });
 
             elem.on("mouseout", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseout", [ obj, e ]);
             });
 
             elem.on("mousemove", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mousemove", [ obj, e ]);
             });
 
             elem.on("mousedown", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mousedown", [ obj, e ]);
             });
 
             elem.on("mouseup", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseup", [ obj, e ]);
             });
         }

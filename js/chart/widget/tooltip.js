@@ -2,6 +2,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(chart, widget) {
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
+        var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
 
         function printTooltip(obj) {
             if(obj.target && widget.all === false) {
@@ -26,8 +27,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 text.attr({ "text-anchor": "middle" });
 
             } else {
-                var list = [],
-                    brush = chart.brush(obj.index);
+                var brush = chart.brush(obj.index);
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
@@ -40,13 +40,20 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    list.push("<tspan x='" + x + "' y='" + y + "'>" +
-                        ((t.text) ? t.text : key) + ": " + obj.data[key] +
-                    "</tspan>");
+                    var content = ((t.text) ? t.text : key) + ": " + obj.data[key];
+
+                    if(!tspan[i]) {
+                        var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                        text.element.appendChild(elem);
+                        tspan[i] = elem;
+                    }
+
+                    tspan[i].setAttribute("x", x);
+                    tspan[i].setAttribute("y", y);
+                    tspan[i].textContent = content;
                 }
 
                 text.attr({ "text-anchor": "inherit" });
-                text.html(list.join(""));
             }
         }
 
@@ -96,20 +103,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var offset = self.offset(e);
-                var x = offset.x - (w / 2),
-                    y = offset.y - h - anchor - (padding / 2);
+                var x = e.bgX - (w / 2),
+                    y = e.bgY - h - anchor - (padding / 2);
 
                 if(widget.position == "left" || widget.position == "right") {
-                    y = offset.y - (h / 2) - (padding / 2);
+                    y = e.bgY - (h / 2) - (padding / 2);
                 }
 
                 if(widget.position == "left") {
-                    x = offset.x - w - anchor;
+                    x = e.bgX - w - anchor;
                 } else if(widget.position == "right") {
-                    x = offset.x + anchor;
+                    x = e.bgX + anchor;
                 } else if(widget.position == "bottom") {
-                    y = offset.y + (anchor * 2);
+                    y = e.bgY + (anchor * 2);
                 }
 
                 g.translate(x, y);

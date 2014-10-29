@@ -40,23 +40,6 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return points.join(" ");
         }
-
-        this.offset = function(e) {
-            var x = e.offsetX,
-                y = e.offsetY;
-
-            if(!x && !y) {
-                var pos = $(this.chart.root).offset();
-
-                x = e.layerX - pos.left;
-                y = e.layerY - pos.top;
-            }
-
-            return {
-                x: x,
-                y: y
-            }
-        }
 	}
 
 	return CoreWidget;

@@ -1,7 +1,6 @@
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(chart, widget) {
-        var self = this;
         var count, tick;
 
         function setDragEvent(chart, thumb, bg) {
@@ -9,20 +8,17 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            chart.on("bg.mousedown", function(e) {
+            chart.on("chart.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
-                var offset = self.offset(e);
-
                 isMove = true;
-                mouseStart = offset.x;
+                mouseStart = e.bgX;
             });
 
-            chart.on("bg.mousemove", function(e) {
+            chart.on("chart.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(e);
-                thumbWidth = offset.x - mouseStart;
+                thumbWidth = e.bgX - mouseStart;
 
                 if(thumbWidth > 0) {
                     thumb.attr({
@@ -39,8 +35,12 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             });
 
-            chart.addEvent(chart.root, "mouseup", function(e) {
-                if(!isMove || thumbWidth == 0) return;
+            chart.on("chart.mouseup", function(e) {
+                isMove = false;
+            });
+
+            chart.addEvent("body", "mouseup", function(e) {
+                if(thumbWidth == 0) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
                 var start = Math.floor(x / tick),

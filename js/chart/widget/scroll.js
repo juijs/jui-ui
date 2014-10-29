@@ -15,21 +15,18 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 mouseStart = 0,
                 thumbStart = 0;
 
-            thumb.on("mousedown", function(e) {
-                if(isMove) return;
-
-                var offset = self.offset(e);
+            chart.on("bg.mousedown", function(e) {
+                if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
-                mouseStart = offset.x;
+                mouseStart = e.bgX;
                 thumbStart = thumbLeft;
             });
 
-            chart.addEvent("body", "mousemove", function(e) {
+            chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(e),
-                    gap = thumbStart + offset.x - mouseStart;
+                var gap = thumbStart + e.bgX - mouseStart;
 
                 if(gap < 0) {
                     gap = 0;
@@ -52,7 +49,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                	chart.zoom(start, start + bufferCount);
             });
 
-            chart.addEvent("body", "mouseup", function(e) {
+            chart.on("bg.mouseup", function(e) {
                 if(!isMove) return;
 
                 isMove = false;
@@ -86,6 +83,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                     height: 5,
                     fill: chart.theme("scrollThumbBackgroundColor"),
                     stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
                     "stroke-width": 1
                 }).translate(thumbLeft, 1);
 

@@ -75,37 +75,36 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            chart.on("bg.mouseover", function(e) {
+            chart.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
 
-            chart.on("bg.mouseout", function(e) {
+            chart.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            chart.on("bg.mousemove", function(e) {
-                var left = chart.x() - 2,
-                    top = chart.y() - 2,
-                    offset = self.offset(e);
+            chart.on("chart.mousemove", function(e) {
+                var left = e.chartX + 2,
+                    top = e.chartY + 2;
 
                 xline.attr({
-                    y1: offset.y - top,
-                    y2: offset.y - top
+                    y1: top,
+                    y2: top
                 });
 
                 yline.attr({
-                    x1: offset.x - left,
-                    x2: offset.x - left
+                    x1: left,
+                    x2: left
                 });
 
                 if(yTooltip) {
-                    yTooltip.translate(-(tw + ta), offset.y - top - (th / 2));
-                    yTooltip.get(1).html(getTooltipData(self.widget.y.invert(offset.y - chart.y())));
+                    yTooltip.translate(-(tw + ta), top - (th / 2));
+                    yTooltip.get(1).html(getTooltipData(self.widget.y.invert(top)));
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(offset.x - left - (tw / 2), chart.height() + ta);
-                    xTooltip.get(1).html(getTooltipData(self.widget.x.invert(offset.x - chart.x())));
+                    xTooltip.translate(left - (tw / 2), chart.height() + ta);
+                    xTooltip.get(1).html(getTooltipData(self.widget.x.invert(left)));
                 }
             });
 

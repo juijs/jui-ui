@@ -3800,56 +3800,79 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
         }
 
         function setChartEvent(self) {
-            var elem = self.svg.root, isMouseOver = false;
+            var elem = self.svg.root,
+                isMouseOver = false;
 
             elem.on("click", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.click", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.click", [ e ]);
+                } else {
+                    self.emit("chart.click", [ e ]);
+                }
             });
 
             elem.on("dblclick", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.dblclick", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.dblclick", [ e ]);
+                } else {
+                    self.emit("chart.dblclick", [ e ]);
+                }
             });
 
             elem.on("contextmenu", function(e) {
-                if (!checkPosition(e))
-                    return;
+                if (!checkPosition(e)) {
+                    self.emit("bg.rclick", [ e ]);
+                } else {
+                    self.emit("chart.rclick", [ e ]);
+                }
 
-                self.emit("bg.rclick", [e]);
                 e.preventDefault();
             });
 
             elem.on("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
-                        self.emit("bg.mouseout", [e]);
+                        self.emit("chart.mouseout", [ e ]);
                         isMouseOver = false;
                     }
 
-                    return;
-                }
-
-                if (isMouseOver) {
-                    self.emit("bg.mousemove", [e]);
+                    self.emit("bg.mousemove", [ e ]);
                 } else {
-                    self.emit("bg.mouseover", [e]);
-                    isMouseOver = true;
+                    if (isMouseOver) {
+                        self.emit("chart.mousemove", [ e ]);
+                    } else {
+                        self.emit("chart.mouseover", [ e ]);
+                        isMouseOver = true;
+                    }
                 }
             });
 
             elem.on("mousedown", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.mousedown", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.mousedown", [ e ]);
+                } else {
+                    self.emit("chart.mousedown", [ e ]);
+                }
             });
 
             elem.on("mouseup", function(e) {
-                if (!checkPosition(e))
-                    return;
-                self.emit("bg.mouseup", [e]);
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseup", [ e ]);
+                } else {
+                    self.emit("chart.mouseup", [ e ]);
+                }
+            });
+
+            elem.on("mouseover", function(e) {
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseover", [ e ]);
+                }
+            });
+
+            elem.on("mouseout", function(e) {
+                if (!checkPosition(e)) {
+                    self.emit("bg.mouseout", [ e ]);
+                }
             });
 
             // 드래그 이벤트 막기
@@ -3858,15 +3881,22 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             });
 
             function checkPosition(e) {
-                var pos = $(self.root).offset(), offsetX = e.offsetX || e.layerX - pos.left, offsetY = e.offsetY || e.layerY - pos.top;
+                var pos = $(self.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
 
-                if (offsetX - self.padding("left") < 0)
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - self.padding("left");
+                e.chartY = offsetY - self.padding("top");
+
+                if (e.chartX < 0)
                     return;
-                if (offsetX - self.padding("left") > self.width())
+                if (e.chartX > self.width())
                     return;
-                if (offsetY - self.padding("top") < 0)
+                if (e.chartY < 0)
                     return;
-                if (offsetY - self.padding("top") > self.height())
+                if (e.chartY > self.height())
                     return;
 
                 return true;
@@ -5998,6 +6028,17 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
+        function setMouseEvent(self, e) {
+            var pos = $(self.chart.root).offset(),
+                offsetX = e.pageX - pos.left,
+                offsetY = e.pageY - pos.top;
+
+            e.bgX = offsetX;
+            e.bgY = offsetY;
+            e.chartX = offsetX - self.chart.padding("left");
+            e.chartY = offsetY - self.chart.padding("top");
+        }
+
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -6172,35 +6213,43 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             };
 
             elem.on("click", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("click", [ obj, e ]);
             });
 
             elem.on("dblclick", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("dblclick", [ obj, e ]);
             });
 
             elem.on("contextmenu", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
             elem.on("mouseover", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseover", [ obj, e ]);
             });
 
             elem.on("mouseout", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseout", [ obj, e ]);
             });
 
             elem.on("mousemove", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mousemove", [ obj, e ]);
             });
 
             elem.on("mousedown", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mousedown", [ obj, e ]);
             });
 
             elem.on("mouseup", function(e) {
+                setMouseEvent(self, e);
                 self.chart.emit("mouseup", [ obj, e ]);
             });
         }
@@ -8190,23 +8239,6 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return points.join(" ");
         }
-
-        this.offset = function(e) {
-            var x = e.offsetX,
-                y = e.offsetY;
-
-            if(!x && !y) {
-                var pos = $(this.chart.root).offset();
-
-                x = e.layerX - pos.left;
-                y = e.layerY - pos.top;
-            }
-
-            return {
-                x: x,
-                y: y
-            }
-        }
 	}
 
 	return CoreWidget;
@@ -8215,6 +8247,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(chart, widget) {
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
+        var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
 
         function printTooltip(obj) {
             if(obj.target && widget.all === false) {
@@ -8239,8 +8272,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 text.attr({ "text-anchor": "middle" });
 
             } else {
-                var list = [],
-                    brush = chart.brush(obj.index);
+                var brush = chart.brush(obj.index);
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
@@ -8253,13 +8285,20 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    list.push("<tspan x='" + x + "' y='" + y + "'>" +
-                        ((t.text) ? t.text : key) + ": " + obj.data[key] +
-                    "</tspan>");
+                    var content = ((t.text) ? t.text : key) + ": " + obj.data[key];
+
+                    if(!tspan[i]) {
+                        var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                        text.element.appendChild(elem);
+                        tspan[i] = elem;
+                    }
+
+                    tspan[i].setAttribute("x", x);
+                    tspan[i].setAttribute("y", y);
+                    tspan[i].textContent = content;
                 }
 
                 text.attr({ "text-anchor": "inherit" });
-                text.html(list.join(""));
             }
         }
 
@@ -8309,20 +8348,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             chart.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var offset = self.offset(e);
-                var x = offset.x - (w / 2),
-                    y = offset.y - h - anchor - (padding / 2);
+                var x = e.bgX - (w / 2),
+                    y = e.bgY - h - anchor - (padding / 2);
 
                 if(widget.position == "left" || widget.position == "right") {
-                    y = offset.y - (h / 2) - (padding / 2);
+                    y = e.bgY - (h / 2) - (padding / 2);
                 }
 
                 if(widget.position == "left") {
-                    x = offset.x - w - anchor;
+                    x = e.bgX - w - anchor;
                 } else if(widget.position == "right") {
-                    x = offset.x + anchor;
+                    x = e.bgX + anchor;
                 } else if(widget.position == "bottom") {
-                    y = offset.y + (anchor * 2);
+                    y = e.bgY + (anchor * 2);
                 }
 
                 g.translate(x, y);
@@ -8590,21 +8628,18 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 mouseStart = 0,
                 thumbStart = 0;
 
-            thumb.on("mousedown", function(e) {
-                if(isMove) return;
-
-                var offset = self.offset(e);
+            chart.on("bg.mousedown", function(e) {
+                if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
-                mouseStart = offset.x;
+                mouseStart = e.bgX;
                 thumbStart = thumbLeft;
             });
 
-            chart.addEvent("body", "mousemove", function(e) {
+            chart.on("bg.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(e),
-                    gap = thumbStart + offset.x - mouseStart;
+                var gap = thumbStart + e.bgX - mouseStart;
 
                 if(gap < 0) {
                     gap = 0;
@@ -8627,7 +8662,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                	chart.zoom(start, start + bufferCount);
             });
 
-            chart.addEvent("body", "mouseup", function(e) {
+            chart.on("bg.mouseup", function(e) {
                 if(!isMove) return;
 
                 isMove = false;
@@ -8661,6 +8696,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                     height: 5,
                     fill: chart.theme("scrollThumbBackgroundColor"),
                     stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
                     "stroke-width": 1
                 }).translate(thumbLeft, 1);
 
@@ -8680,7 +8716,6 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(chart, widget) {
-        var self = this;
         var count, tick;
 
         function setDragEvent(chart, thumb, bg) {
@@ -8688,20 +8723,17 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            chart.on("bg.mousedown", function(e) {
+            chart.on("chart.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
-                var offset = self.offset(e);
-
                 isMove = true;
-                mouseStart = offset.x;
+                mouseStart = e.bgX;
             });
 
-            chart.on("bg.mousemove", function(e) {
+            chart.on("chart.mousemove", function(e) {
                 if(!isMove) return;
 
-                var offset = self.offset(e);
-                thumbWidth = offset.x - mouseStart;
+                thumbWidth = e.bgX - mouseStart;
 
                 if(thumbWidth > 0) {
                     thumb.attr({
@@ -8718,8 +8750,12 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             });
 
-            chart.addEvent(chart.root, "mouseup", function(e) {
-                if(!isMove || thumbWidth == 0) return;
+            chart.on("chart.mouseup", function(e) {
+                isMove = false;
+            });
+
+            chart.addEvent("body", "mouseup", function(e) {
+                if(thumbWidth == 0) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
                 var start = Math.floor(x / tick),
@@ -8886,37 +8922,36 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            chart.on("bg.mouseover", function(e) {
+            chart.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
 
-            chart.on("bg.mouseout", function(e) {
+            chart.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            chart.on("bg.mousemove", function(e) {
-                var left = chart.x() - 2,
-                    top = chart.y() - 2,
-                    offset = self.offset(e);
+            chart.on("chart.mousemove", function(e) {
+                var left = e.chartX + 2,
+                    top = e.chartY + 2;
 
                 xline.attr({
-                    y1: offset.y - top,
-                    y2: offset.y - top
+                    y1: top,
+                    y2: top
                 });
 
                 yline.attr({
-                    x1: offset.x - left,
-                    x2: offset.x - left
+                    x1: left,
+                    x2: left
                 });
 
                 if(yTooltip) {
-                    yTooltip.translate(-(tw + ta), offset.y - top - (th / 2));
-                    yTooltip.get(1).html(getTooltipData(self.widget.y.invert(offset.y - chart.y())));
+                    yTooltip.translate(-(tw + ta), top - (th / 2));
+                    yTooltip.get(1).html(getTooltipData(self.widget.y.invert(top)));
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(offset.x - left - (tw / 2), chart.height() + ta);
-                    xTooltip.get(1).html(getTooltipData(self.widget.x.invert(offset.x - chart.x())));
+                    xTooltip.translate(left - (tw / 2), chart.height() + ta);
+                    xTooltip.get(1).html(getTooltipData(self.widget.x.invert(left)));
                 }
             });
 
