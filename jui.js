@@ -2640,6 +2640,38 @@ jui.define("util.svg.element", [], function() {
 
             return this;
         }
+
+        /**
+         * 그 외 메소드
+         *
+         */
+        this.size = function() {
+            var size = { width: 0, height: 0 },
+                rect = this.element.getBoundingClientRect();
+
+            if(!rect || (rect.width == 0 && rect.height == 0)) {
+                var height_list = [ "height", "paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth" ],
+                    width_list = [ "width", "paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth" ];
+
+                var computedStyle = window.getComputedStyle(this.element);
+
+                for (var i = 0; i < height_list.length; i++) {
+                    size.height += parseFloat(computedStyle[height_list[i]]);
+                }
+
+                for (var i = 0; i < width_list.length; i++) {
+                    size.width += parseFloat(computedStyle[width_list[i]]);
+                }
+            } else {
+                size.width = rect.width;
+                size.height = rect.height;
+            }
+
+            if(isNaN(size.width)) size.width = 0;
+            if(isNaN(size.height)) size.height = 0;
+
+            return size;
+        }
     }
 
     return Element;
@@ -2936,29 +2968,6 @@ jui.define("util.svg",
         }
 
         /**
-         * getBoundingClientRect() 로 크기를 구할 수 없을 때 사용
-         *
-         * ex) 파폭 버그로   width, height 모두 0이 되므로 아래 함수를 사용해야함
-         */
-        function caculateSize() {
-            var height_list = [ 'height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth' ],
-                width_list = [ 'width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth' ];
-
-            var computedStyle = window.getComputedStyle(root.element),
-                size = { width : 0, height : 0 };
-
-            for(var i = 0; i < height_list.length;i++) {
-                size.height += parseFloat(computedStyle[height_list[i]]);
-            }
-
-            for(var i = 0; i < width_list.length;i++) {
-                size.width += parseFloat(computedStyle[width_list[i]]);
-            }
-
-            return size;
-        }
-
-        /**
          * 일반 메소드
          *
          */
@@ -2972,17 +2981,7 @@ jui.define("util.svg",
                     root.attr({ width: w, height: h });
                 }
             } else {
-                var rect = root.element.getBoundingClientRect();
-
-                // if firefox 
-                if (rect.width == 0 && rect.height == 0) {
-                    rect = caculateSize();
-                }
-
-                return {
-                    width: rect.width,
-                    height: rect.height
-                }
+                return root.size();
             }
         }
 
@@ -3073,18 +3072,17 @@ jui.define("util.svg",
         }
         
         this.toXml = function() {
-          
-          var text = rootElem.innerHTML;
-          
-          return [
-            '<?xml version="1.0" encoding="utf-8"?>',
-            '<!DOCTYPE svg>',
-            text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
-          ].join("\n");
+            var text = rootElem.innerHTML;
+
+            return [
+                '<?xml version="1.0" encoding="utf-8"?>',
+                '<!DOCTYPE svg>',
+                text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
+            ].join("\n");
         }
         
         this.toDataURL = function() {
-           return "data:image/svg+xml;utf8," + this.toXml();
+            return "data:image/svg+xml;utf8," + this.toXml();
         }
 
         this.autoRender = function(elem, isAuto) {
@@ -15323,9 +15321,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
 
-                var bbox = text.element.getBBox();
-                w = bbox.width + (padding * 2);
-                h = bbox.height + padding;
+                var size = text.size();
+                w = size.width + (padding * 2);
+                h = size.height + padding;
 
                 text.attr({ x: w / 2 });
                 rect.attr({ points: self.balloonPoints(widget.position, w, h, anchor) });

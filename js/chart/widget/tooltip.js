@@ -89,9 +89,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
 
-                var bbox = text.element.getBBox();
-                w = bbox.width + (padding * 2);
-                h = bbox.height + padding;
+                var size = text.size();
+                w = size.width + (padding * 2);
+                h = size.height + padding;
 
                 text.attr({ x: w / 2 });
                 rect.attr({ points: self.balloonPoints(widget.position, w, h, anchor) });
