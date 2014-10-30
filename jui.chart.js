@@ -8259,14 +8259,22 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var value = (obj.data[k]) ? ": " + obj.data[k] : "";
+                var content = (obj.data[k]) ? ": " + obj.data[k] : "";
 
                 // 옵션 키가 있을 경우
                 if(widget.key != null) {
-                    text.html(obj.data[widget.key] + value);
+                    content = obj.data[widget.key] + content;
                 } else {
-                    text.html(((t.text) ? t.text : k) + value);
+                    content = ((t.text) ? t.text : k) + content;
                 }
+
+                if(!tspan[0]) {
+                    var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                    text.element.appendChild(elem);
+                    tspan[0] = elem;
+                }
+
+                tspan[0].textContent = content;
 
                 text.attr({ "text-anchor": "middle" });
 
