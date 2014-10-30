@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>chart addon for editor (ex: summernote)</title>
+    
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet"> 
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script> 
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Create a simple CodeMirror instance -->
+    <link rel="stylesheet" href="/manual/lib/codemirror-4.5/lib/codemirror.css">
+    <link rel="stylesheet" href="/manual/lib/codemirror-4.5/theme/twilight.css">
+    <link rel="stylesheet" href="/manual/lib/codemirror-4.5/theme/eclipse.css">
+    <link rel="stylesheet" href="/manual/lib/codemirror-4.5/theme/neo.css">
+    <script src="/manual/lib/codemirror-4.5/lib/codemirror.js"></script>
+    <script src="/manual/lib/codemirror-4.5/mode/javascript/javascript.js"></script>    
+    
+    <link href="/summernote/dist/summernote.css" rel="stylesheet" />
+    <script src="/summernote/dist/summernote.js"></script>
+    
+    <style type="text/css">
+
+    .CodeMirror {
+        /*font-size: 10pt;*/
+        font-family : "Helvetica", "Trebuchet MS", Dotum, Verdana, AppleGothic, sans-serif;
+        max-height: 100%;
+        height:100%;
+    }
+    .CodeMirror-scroll {
+        overflow:auto;
+    }        
+    </style>    
+    
+</head>
+<body>
+
+
+<div id="summernote"> </div>
+
+
+<script>
+var editor;
+
+function resetChart() {
+    var charts = jui.getAll();
+
+    for(var i = 0; i < charts.length; i++) {
+        if(charts[i].type == "chart.builder") {
+            var obj = jui.remove(i);
+            obj.destroy();
+        }
+    }
+}
+
+    $(function() {
+      $.summernote.plugins = {
+        "chart" : {
+            
+            label : 'chart', 
+            
+            icon : 'fa fa-area-chart',
+            
+            list : [
+                { type : 'area' },
+                { type : 'bar' },
+                { type : 'column' },
+                { type : 'line' }
+            ],
+
+            dropdown : function() {
+                
+                var $dropdown = $("<ul class='dropdown-menu' />").css({
+                    width: 240,
+                    padding: 5
+                })
+                
+                for(var i = 0; i < this.list.length; i++) {
+                    var type = this.list[i].type;
+                    var $img = $("<img />").attr({
+                         'src' : '/manual/doc/chart/img/' + type + ".svg",
+                         'data-value' : type   
+                    }).css({
+                        width : 86,
+                        'max-width' : '100%',
+                        height : 68,
+                        padding: 2,
+                        border : '1px solid #dddddd'
+                    })
+                    
+                    var $text = $("<p />").html(type);
+                    
+                    var $li = $("<li />").addClass('btn btn-default').css({
+                        border : 0
+                    }).attr({
+                        'data-event' : 'chart',
+                        'data-value' : type
+                    }).append($img).append($text);
+                    
+                    $dropdown.append($li)
+                }
+                
+                return $dropdown.wrap("<div />").parent().html();
+            },
+            
+            createPopup : function(type, saveCallback) {
+                var self = this; 
+                $.ajax({
+                    url : "/manual/doc/chart/json/" + type + ".js",
+                    dataType : 'text',
+                    success : function (data) {
+                        
+                        data = data.replace(").render();", "");
+                        data = data.replace("var chart = jui.include(\"chart.builder\");", "");
+                        data = data.replace("chart(\"#chart-content\", ", "");
+                        data = data.replace("chart(\"#chart\", ", "");
+                        
+                        
+                        var $chart = $("#chart-modal").attr({
+                         'data-value': type,
+                         'data-code' : data   
+                        });
+                        
+                        $chart.find(".modal-title").html(type);
+                        
+                        $chart.find(".save-btn").click(function() {
+                            
+                            var size = currentChart.svg.size();
+                            var svg = $("#chart-content").html();
+                            
+                            svg = svg.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
+                            
+                            var uri = "data:image/svg+xml;utf8," +
+                                     '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg>'
+                                      + encodeURIComponent(svg);
+                            
+                            var img = $("<img />").css(size).attr('src', uri)[0];
+                            
+                            saveCallback(img);
+                            
+                            $chart.modal('hide');
+                        })
+                        
+                        $chart.modal('show')
+                        
+                        $chart.on("show.bs.modal", function() {
+                            $("#chart-content").empty();
+                        })
+                        
+                        $chart.on("shown.bs.modal", function() {
+                            editor.setValue($(this).attr('data-code'));
+                        })
+                        
+                        $chart.on("hidden.bs.modal", function() {
+                            $chart.find(".save-btn").off();
+                        })
+                        
+                        
+                    },
+                    error : function(data, error) {
+                        console.log(error);
+                    }
+                })  
+            },
+            
+            createChart : function (e, editor, layout) {
+                var type = $(e.target).data('value');  
+                
+                // popup 
+                this.createPopup(type, function(dom) {
+                    
+                    // when save
+                    var $editable = layout.editable();
+                    $editable.trigger('focus');
+                    
+                    editor.insertDom($editable, dom);                    
+
+                });
+                
+            },
+            
+            event : function(e, editor, layout) {
+                
+                /*
+                var value = $(e.target).data('value');
+                var $editable = layout.editable();
+                $editable.trigger('focus');
+                editor.insertDom($editable, dom);
+                */                     
+                this.createChart(e, editor, layout);                
+                
+ 
+            }
+        }
+      }
+        
+      $('#summernote').summernote({
+        height: 500,
+        tabsize: 2,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['chart', ['chart']]
+          ]
+      });
+      
+        editor = CodeMirror.fromTextArea($("#chart-code-text")[0], {
+            mode: "javascript",
+            lineNumbers: true,
+            styleActiveLine: true,
+            matchBrackets: true,
+            theme : 'neo'
+        });
+
+        editor.on('change', function(cm, change) {
+            try {
+
+                $.globalEval("var chartOptions = " + cm.getValue() + ";");
+            } catch(e) {
+                console.log(e);
+            }
+
+            console.log(chartOptions, change);
+
+            resetChart();
+            $("#chart-content").empty();
+            window.currentChart = chart("#chart-content", chartOptions);
+
+        })
+      
+      
+    });
+    
+    
+    
+    jui.ready(function() {
+        window.chart = jui.include("chart.builder");
+    })
+
+</script>
+
+
+<div class="modal fade" id="chart-modal">
+  <div class="modal-dialog" style="width:1024px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body" style='position:relative;height:450px;'>
+            <div class='chart_data' style='position:absolute;left:0px;top:0px;bottom:10px;width:450px;overflow-y:auto;'>
+                <div id="chart-code">
+                    <textarea id="chart-code-text">test</textarea>
+                </div>                
+            </div>        
+            <div class='splitter' style="width:5px;position:absolute;background-color:#ddd;left:450px;top:0px;bottom:0px;"></div>
+            <div class='chart_view' style="overflow:hidden;position:absolute;left:455px;top:0px;bottom:0px;right:10px;background-color:white;z-index:10;">
+                    <div id="chart-content" style="position: absolute;left:10px;right:10px;top:10px;bottom:10px;"></div>                
+            </div>                         
+        
+      </div>
+      <div class="modal-footer" style="margin-top:0px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save-btn">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
+</div>
+
+</body>
+</html>

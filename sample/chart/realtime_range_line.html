@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chartx.realtime", "util.base", "util.time" ], function(chart, _, time) {
+        var index = 0;
+
+        window.getData = function(min) {
+            var start = time.add(new Date(), time.minutes, -5);
+
+            var data = [];
+            for(var i = 0; i < min * 60; i++) {
+                data.push({ name : 3, name2 : Math.sin(index / 15) + 1, value : time.add(start, time.seconds, i + 1) });
+                index++;
+            }
+
+            return data;
+        }
+
+        window.runData = function() {
+            setInterval(function() {
+                c.append({
+                    name : 2.5,
+                    name2 : Math.sin(index / 15) + 1,
+                    value : new Date()
+                });
+
+                index++;
+            }, 1000);
+        }
+
+        c = chart("#chart", {
+            width: 800,
+            height : 400,
+            theme : "jennifer",
+            //data : getData(5),
+            series : {
+                name : {
+                    text : "이름"
+                },
+                name2 : {
+                    text : "이름2"
+                },
+                value : {
+                    text : "날짜"
+                }
+            },
+            grid : {
+                key : "value"
+            },
+            brush : [{
+                type : "line",
+                target : [ "name", "name2" ]
+            }],
+            widget : [
+                {
+                    type : "title", text : 'Range Bubble Sample'
+                }, {
+                    type : "legend"
+                }, {
+                    type : "cross",
+                    format : function(d) {
+                        if(_.typeCheck("date", d)) {
+                            return _.dateFormat(d, "hh:mm:ss");
+                        } else {
+                            return Math.round(d);
+                        }
+                    }
+                }, {
+                    type : "tooltip"
+                }
+
+            ],
+            style : {
+                //"tooltipBackgroundColor": "red"
+            }
+        });
+
+        //c.update(getData(5));
+    });
+    
+
+</script>
+
+
+</body>
+</html>

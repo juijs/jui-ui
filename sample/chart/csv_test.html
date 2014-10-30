@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <link rel="stylesheet" href="../../lib/animate.min.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div class="row" style="margin-bottom: 7px;">
+    <div class="col col-12">
+        <input type="file" id="builder_btn">
+    </div>
+</div>
+
+<div class="row">
+    <div id="chart"></div>
+</div>
+
+<script>
+    var builder = null;
+    var years = {}, months = {};
+
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        builder = chart("#chart", {
+            width: 1000,
+            height : 500,
+            theme : "jennifer",
+            bufferCount: 1000,
+            csv : [ "date", "open", "high", "low", "close" ],
+            csvNumber : [ 1, 2, 3, 4 ],
+            event : {
+                render : function() {
+                    years = {};
+                    months = {};
+                }
+            },
+            grid : {
+                x : {
+                    type : "block",  // default type is block
+                    target : "date",
+                    format: function(d) {
+                        var count = builder.data().length,
+                            arr = d.split("-");
+
+                        var year = arr[0],
+                            month = arr[1];
+
+                        if(count > 365) {
+                            if(years[year]) return "";
+
+                            years[year] = true;
+                            return year;
+                        } else {
+                            if(months[month]) return "";
+
+                            months[month] = true;
+                            return year + "-" + month;
+                        }
+                    }
+                },
+                y : {
+                    type : "range",
+                    target : "high",
+                    step : 5,
+                    line : true
+                }
+            },
+            series : {
+                low: {
+                    type: "low",
+                    text: "최저"
+                },
+                high: {
+                    type: "high",
+                    text: "최고"
+                },
+                open: {
+                    type: "open",
+                    text: "시작"
+                },
+                close: {
+                    type: "close",
+                    text: "종료"
+                },
+                date: {
+                    text: "날짜"
+                }
+            },
+            brush : {
+                type : "candlestick"
+            },
+            widget : [{
+                type : "zoom"
+            }, {
+                type : "tooltip"
+            }, {
+                type : "title",
+                text : "Yahoo Stock Chart"
+            }]
+        });
+
+        $("#builder_btn").change(function(e) {
+            builder.setCsvFile(e.target.files[0]);
+        });
+	});
+</script>
+
+<style>
+    .row {
+        width: 1000px;
+    }
+</style>
+
+</body>
+</html>

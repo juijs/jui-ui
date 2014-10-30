@@ -1,0 +1,65 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../lib/animate.min.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/svg.js"></script>
+
+<script>
+var r1 = null;
+
+jui.ready([ "util.svg" ], function(SVGUtil) {
+    svg = new SVGUtil($("#svg").get(0), { width: 300, height: 300 });
+    svg2 = new SVGUtil($("#svg2").get(0), { width: 300, height: 300 });
+    //svg3 = new SVGUtil($("#svg3").get(0), { width: 300, height: 300 });
+    //svg4 = new SVGUtil($("#svg4").get(0), { width: 300, height: 300 });
+
+    //------------------------------
+
+    svg.polygon({
+        style: "stroke: #006600; stroke-width: 2;",
+        fill: "#33cc33"
+    }, function() {
+
+    }).point(10, 2)
+    .point(60, 2)
+    .point(35, 52);
+
+    svg.render();
+
+    svg2.polygon({
+        style: "stroke: #006600; stroke-width: 2;",
+        fill: "reds"
+    }).point(15, 15);
+
+    svg2.render();
+});
+</script>
+</head>
+<body class="jui">
+    <h3>SVG 1</h3>
+    <div id="svg"></div>
+    <a id="svgImage">Download</a>
+    <br/>
+
+    <h3>SVG 2</h3>
+    <div id="svg2"></div>
+    <br/>
+
+    <h3>SVG 3</h3>
+    <div id="svg3"></div>
+    <br/>
+
+    <h3>SVG 4</h3>
+    <div id="svg4"></div>
+    <br/>
+</body>
+</html>

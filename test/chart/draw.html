@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Chart.Draw</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/chart/draw.js"></script>
+
+<script>
+
+jui.define("chart.draw.sample", [], function() {
+    var Sample = function() {
+        var html = "";
+
+        this.drawBefore = function() {
+            html = "draw";
+        }
+
+        this.draw = function() {
+            $("#draw").html(html);
+            return {};
+        }
+    }
+
+    return Sample;
+}, "chart.draw");
+
+jui.ready([ "util.base", "chart.draw.sample" ], function(_, Sample) {
+    QUnit.testStart(function() {
+
+    });
+
+    QUnit.test( "인터페이스 메소드 테스트", function(assert) {
+        var obj = new Sample();
+        obj.render();
+
+        assert.ok($("#draw").html() == "draw", "렌더링 마크업 확인");
+    });
+
+    QUnit.testDone(function() {
+        $("#draw").remove();
+    });
+});
+</script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<div id="draw"></div>
+</body>
+</html>

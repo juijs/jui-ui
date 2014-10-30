@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="container" style="margin-left: 50px; max-height: 300px; overflow: auto;">
+    <div id="chart" style="margin-left: 0px;"></div>
+</div>
+
+<script>
+
+    function getDate() {
+        return Math.round((Math.random()*1000) % 300)
+    }
+
+    function getNumber() {
+        return Math.round(Math.random() * 1000  % 500);
+    }
+
+    jui.ready([ "chart.builder", "util.time", "util.base" ], function(chart, time, _) {
+        var start = new Date();
+        var end = time.add(start, time.hours, 5);
+
+        var data = [];
+        for(var i = 0; i < 30; i++) {
+            data.push({ name : getNumber(), name2 : getNumber(), value : time.add(start, time.minutes, i*10)} )
+        }
+
+        c = chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : data,
+            grid : {
+
+                x : {
+                    type : "date",  // default type is block
+                    domain : [ start, end ],
+                    step : [ time.hours, 1 ],
+                    format : "hh:mm",
+                    key: "value",
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    target : [ "name", "name2" ],
+                    step : 10
+                }
+            },
+            brush : [{
+                type : 'scatter',
+                size : 10,
+                target : [ "name", "name2" ]
+            }],
+            widget : [
+                { type : 'title', text : 'Cross Widget Sample' },
+                {
+                    type : 'cross',
+                    format : function(d) {
+                        if(_.typeCheck("date", d)) {
+                            return _.dateFormat(d, "hh:mm");
+                        } else {
+                            return Math.round(d);
+                        }
+                    }
+                },
+                { type : 'tooltip' }
+            ],
+            style : {
+                scatterBorderWidth: 2,
+                crossBalloonBackgroundColor: "red"
+            }
+        });
+    })
+</script>
+
+
+</body>
+</html>

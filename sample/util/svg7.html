@@ -1,0 +1,92 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>
+
+<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../lib/animate.min.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/svg.js"></script>
+<script src="../../js/chart/theme/white.js"></script>
+
+<script>
+    jui.ready([ "util", "util.svg", "util.math" ], function(_, SVGUtil, math) {
+        var svg = new SVGUtil($("#svg").get(0), { width: 1000, height: 1000 });
+
+        var width = 200;
+        var height = 200;
+        var depth = 50;
+        var degree = -120;
+        var angle = 0
+
+        $(window).on("keydown", function(e) {
+            if(e.which == 39) {
+                if(angle < 0) {
+                    angle += 1;
+                }
+            } else if(e.which == 37) {
+                if(angle > -60) {
+                    angle -= 1;
+                }
+            }
+
+            svg.reset();
+            drawRect3d(angle);
+        });
+
+
+        function drawRect3d(angle, x, y) {
+            var x1 = Math.cos(math.radian(degree + angle)) * depth;
+            var y1 = Math.sin(math.radian(degree + angle)) * depth;
+            var x2 = width - Math.abs(x1);
+            var y2 = x2 * Math.tan(math.radian(angle));
+            var x3 = Math.cos(math.radian(degree + angle)) * depth + x2;
+            var y3 = Math.sin(math.radian(degree + angle)) * depth + y2;
+
+            svg.polygon({
+                "stroke": "black",
+                "stroke-width": 1,
+                "fill": "transparent"
+            })
+            .point(Math.abs(x1), 0)
+            .point(x1 + Math.abs(x1), Math.abs(y1))
+            .point(x3 + Math.abs(x3), Math.abs(y3))
+            .point(x2 + Math.abs(x3), Math.abs(y2));
+
+            svg.polyline({
+                "stroke": "black",
+                "stroke-width": 1,
+                "fill": "transparent"
+            })
+            .point(x1 + Math.abs(x1), Math.abs(y1))
+            .point(x1 + Math.abs(x1), Math.abs(y1) + height)
+            .point(x3 + Math.abs(x3), Math.abs(y3) + height)
+            .point(x2 + Math.abs(x3), Math.abs(y2) + height)
+            .point(x2 + Math.abs(x3), Math.abs(y2))
+
+            svg.line({
+                "stroke": "black",
+                "stroke-width": 1,
+                "fill": "transparent",
+                x1: x3 + Math.abs(x3),
+                y1: Math.abs(y3),
+                x2: x3 + Math.abs(x3),
+                y2: Math.abs(y3) + height
+            });
+
+            svg.render();
+        }
+
+        drawRect3d(angle);
+    });
+</script>
+</head>
+<body class="jui">
+    <div id="svg"></div>
+</body>
+</html>

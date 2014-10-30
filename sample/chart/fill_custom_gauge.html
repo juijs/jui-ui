@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<span id="chart"></span>
+<span id="chart2"></span>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        var c = chart("#chart", {
+            width: 150,
+            height : 330,
+            padding : 'empty',
+            theme : "jennifer",
+            brush : {
+                type : 'fillgauge',
+                shape : 'custom', // default circle
+                direction : 'horizontal',
+                value : 50,
+                min : 0,
+                max : 100,
+                svg : "resource/woman.svg"
+
+            }
+        });
+
+        c.render();
+
+        var c1 = chart("#chart2", {
+            width: 150,
+            height : 330,
+            padding : 'empty',
+            theme : "jennifer",
+            brush : {
+                type : 'fillgauge',
+                shape : 'custom', // default circle
+                value : 70,
+                min : 0,
+                max : 100,
+                svg : "resource/man.svg"
+
+            }
+        });
+
+        c1.render();
+	}) 
+</script>
+
+
+</body>
+</html>

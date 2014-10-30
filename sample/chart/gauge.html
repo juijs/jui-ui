@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            brush : {
+                type : 'gauge',
+                value : 200,
+                min : 10,
+                max : 700,
+                startAngle : -90,
+                endAngle : 180,
+                arrow : true,
+                unitText : "feeds"
+            }
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "name": "jui",
-  "version": "1.1.0",
-  "description": "HTML5 Based JENNIFER UI Library (CSS, JavaScript)",
+  "version": "1.2.0",
+  "description": "HTML5 Based JENNIFER UI Library (CSS, Components, Charts)",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -44,6 +44,10 @@
     {
       "name": "Jayden",
       "email": "jayden@jennifersoft.com"
+    },
+    {
+      "name": "Yoha",
+      "email": "yoha@jennifersoft.com"
     }
   ],
   "jam": {

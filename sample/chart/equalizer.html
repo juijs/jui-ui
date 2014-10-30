@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { name : 2, value : 15 },
+                { name : -32, value : 6 },
+                { name : 8, value : 10 },
+                { name : 18, value : 5 },
+            ],
+            grid : {
+
+                x : {
+
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    target : ['name', 'value'],
+                    step : 10,
+                    line : true
+                }
+            },
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            },
+            brush : {
+                type : 'equalizer',
+                target : ['name'],
+                innerPadding : 1,
+                outerPadding : 3
+            },
+            event: {
+                rclick: function(obj, e) {
+                    console.log(obj);
+                }
+            },
+            widget: {
+                type : "tooltip"
+            }
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

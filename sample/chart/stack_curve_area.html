@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { name : 2, value : 6, test : 7 },
+                { name : 5, value : 6, test : 2 },
+                { name : 8, value : 4, test : 5 },
+                { name : 10, value : 5, test : 12 }
+            ],
+            grid : {
+                x : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    full: true,
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    target : function(data) {
+                        return data.name + data.value + data.test + 10;
+                    },
+                    step : 10
+                }
+            },
+
+            // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
+            series : {
+                name : { text : "ì´ë¦„" },
+                value : { text : "ê°’" },
+                test : { text : "ê°’" }
+            },
+            brush : [{
+                type : 'stackarea',
+                symbol: "curve"
+            }, {
+                type : "stackline",
+                symbol: "curve"
+            }, {
+                type : "stackscatter",
+                symbol : "circle",
+                size: 8
+            }]
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

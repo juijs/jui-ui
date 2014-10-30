@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        var c = chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            brush : {
+                type : 'circlegauge',
+                value : 50,
+                min : 0,
+                max : 100
+            },
+            widget : {
+                type : "tooltip"
+            }
+        });
+
+        setInterval(function() {
+            c.brush(0).value = Math.round(Math.random() * 100) % 100
+            c.render();
+        }, 1000)
+	})
+</script>
+
+
+</body>
+</html>

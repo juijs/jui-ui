@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="title"><!= obj.target !>: <!= obj.data[obj.target] !></div>
+    </div>
+</script>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+         chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { name : 2, value : 15, test : 20 },
+                { name : 15, value : 6, test : 20 },
+                { name : 8, value : 10, test : 20 },
+                { name : 18, value : 5, test : 20 }
+            ],
+            grid : {
+                x : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    target : [ "name", "value", "test" ],
+                    step : 10
+                }
+            },
+            series : {
+                name : { text : "이름",symbol : "rectangle" },
+                value : { text : "값",symbol : "cross" },
+                test : { text : "테스트값",symbol : "triangle" }
+            },
+            brush : [{
+                type : 'scatter',
+                size : 10
+            }],
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                },
+                mouseover: function(obj, e) {
+                    var $tooltip = $(this.tpl.tooltip(obj));
+
+                    $(this.root).append($tooltip);
+
+                    $tooltip.css({
+                        left: e.pageX - $tooltip.width() / 2,
+                        top: e.pageY - $tooltip.height() - 15
+                    });
+                },
+                mouseout: function(obj, e) {
+                    $(this.root).find(".tooltip").remove();
+                }
+            },
+            tpl: {
+                tooltip: $("#tpl_tooltip").html()
+            }
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

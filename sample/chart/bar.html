@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "gradient",
+            data : [
+                { name : 2, value : 15 },
+                { name : -15, value : -35 },
+                { name : 8, value : 10 },
+                { name : 18, value : 5 }
+            ],
+            grid : {
+                y : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                x : {
+                    type : 'range',
+                    target : ["name", "value"],
+                    step : 10
+                }
+            },
+            widget : [
+            	{ type : 'title', text : 'Bar Sample' },
+            	{ type : 'legend' }
+            ],
+            brush : {
+                type : 'bar',
+                target : ['name', 'value']
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

@@ -4,11 +4,11 @@
 
 ## Documentation
 
-http://seogi1004.github.io/jui/
+http://jui.easylogic.co.kr
 
 ## Maintainers
 
-Created by Alvin and Yoha.
+Created by Alvin and Jayden, Yoha
 
 ## License
 

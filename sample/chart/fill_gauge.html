@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            grid : {
+                y : {
+                   type : 'range',
+                   domain : [0, 100],
+                   step : 10,
+                   dist : -150
+                }
+            },
+            brush : {
+                type : 'fillgauge',
+                value : 70,
+                min : 0,
+                max : 100
+
+            }
+        });
+	});
+</script>
+
+
+</body>
+</html>

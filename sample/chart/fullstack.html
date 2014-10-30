@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { name : 2, value : 15, test : 20 },
+                { name : 15, value : 6, test : 20 },
+                { name : 8, value : 10, test : 20 },
+                { name : 18, value : 5, test : 20 }
+            ],
+            grid : {
+
+                x : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    domain : [0, 100],
+                    format : function(value) { return value + "%" ;},
+                    line : true
+
+                }
+            },
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" },
+                test : { text : "테스트값" }
+            },
+            brush : {
+                type : 'fullstack',
+                target : ['name', 'value', 'test']
+            },
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                }
+            }
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

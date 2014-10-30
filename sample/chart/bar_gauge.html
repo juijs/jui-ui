@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready(["chart.builder"], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 300,
+            theme : "jennifer",
+            padding : {
+                top : 0
+            },
+            data : [
+                { title : "OPTION 1", value : 75 },
+                { title : "OPTION 2", value : 68 },
+                { title : "OPTION 3", value : 60 },
+                { title : "OPTION 4", value : 70 },
+                { title : "OPTION 5", value : 20 },
+                { title : "OPTION 6", value : 20 },
+            ],
+            brush : [{
+                type : 'bargauge',
+                target : "value",
+                size : 18,
+                split : true,
+                title : "title"
+            }],
+            widget : {
+                type : "tooltip"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { key : 'yellow', 	name : 46, 	value : 15 },
+                { key : 'red',		name : 25, 	value : 6 },
+                { key : 'black',	name : 18, 	value : 10 },
+                { key : 'blue',		name : 10, 	value : 5 },
+            ],
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            },
+            brush : [{
+                type : 'donut',
+                target : 'name',
+                size: 50
+            }],
+            widget : [{
+                type : "tooltip",
+                key : "key"
+            }, {
+                type : "legend",
+                key : "key"
+            }]
+        }).render();
+	})
+</script>
+
+
+</body>
+</html>

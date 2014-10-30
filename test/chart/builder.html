@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Chart.Builder</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/svg.js"></script>
+<script src="../../js/util/color.js"></script>
+<script src="../../js/chart/builder.js"></script>
+<script src="../../js/chart/theme/jennifer.js"></script>
+
+<script>
+jui.ready([ "util.base", "chart.builder" ], function(_, chart) {
+    var c = null;
+
+    QUnit.testStart(function() {
+        c = chart("#chart", {
+            width: 400,
+            height : 400,
+            data : [
+                { name : 2, value : 15 },
+                { name : -15, value : 6 },
+                { name : 8, value : 10 },
+                { name : 18, value : 5 },
+            ],
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            }
+        });
+    });
+
+    QUnit.test( "차트 기본 테스트", function(assert) {
+        assert.ok($(c.root).find("svg").size() == 1, "SVG 태그 생성 확인");
+    });
+    
+    QUnit.testDone(function() {
+    });
+});
+</script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<div id="chart"></div>
+</body>
+</html>

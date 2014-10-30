@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+         c = chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            data : [
+                { name : 2, value : 15, test : 20 },
+                { name : 15, value : 6, test : 20 },
+                { name : 8, value : 10, test : 20 },
+                { name : 18, value : 5, test : 20 }
+            ],
+            grid : {
+                x : {
+                    domain : [ "봄", "여름", "가을", "겨울" ],
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    target : [ "name", "value", "test" ],
+                    step : 10
+                }
+            },
+            series : {
+                name : { text : "이름", symbol : "rectangle" },
+                value : { text : "값", symbol : "cross" },
+                test : { text : "테스트값", symbol : "triangle" }
+            },
+            brush : [{
+                type : 'scatter',
+                size : 10,
+                //symbol: "rectangle"
+            }],
+            widget : [
+                { type: "tooltip", brush: 0 },
+                { type: "title", text : "Title", align : 'left', attr : { 'font-size' : '20pt' } },
+                { type : 'legend' }
+            ],
+            event : {
+                mouseover : function(obj, e) {
+                    console.log("on");
+                }
+            }
+        });
+
+        c.on("click", function(obj, e) {
+            console.log(1);
+        });
+
+        c.on("click", function(obj, e) {
+            console.log(2);
+        });
+
+        c.render();
+	})
+</script>
+
+
+</body>
+</html>
