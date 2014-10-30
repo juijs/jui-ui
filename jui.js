@@ -10606,6 +10606,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             // 드래그 이벤트 막기
             $(self.root).on("selectstart", function(e) {
                 e.preventDefault();
+                return false;
             });
 
             function checkPosition(e) {
@@ -15601,7 +15602,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
     var ScrollWidget = function(chart, widget) {
-        var self = this;
         var thumbWidth = 0,
             thumbLeft = 0,
             bufferCount = 0,
@@ -15623,7 +15623,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 thumbStart = thumbLeft;
             });
 
-            chart.on("bg.mousemove", function(e) {
+            chart.on("bg.mousemove", mousemove);
+            chart.on("bg.mouseup", mouseup);
+            chart.on("chart.mousemove", mousemove);
+            chart.on("chart.mouseup", mouseup);
+
+            function mousemove(e) {
                 if(!isMove) return;
 
                 var gap = thumbStart + e.bgX - mouseStart;
@@ -15641,21 +15646,21 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
                 var startgap = gap * rate,
                     start = startgap == 0 ? 0 : Math.floor(startgap / piece);
-                
+
                 if (gap + thumbWidth == chart.width()) {
-                	start += 1;
+                    start += 1;
                 }
 
-               	chart.zoom(start, start + bufferCount);
-            });
+                chart.zoom(start, start + bufferCount);
+            }
 
-            chart.on("bg.mouseup", function(e) {
+            function mouseup(e) {
                 if(!isMove) return;
 
                 isMove = false;
                 mouseStart = 0;
                 thumbStart = 0;
-            });
+            }
         }
 
         this.drawBefore = function() {

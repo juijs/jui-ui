@@ -371,6 +371,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             // 드래그 이벤트 막기
             $(self.root).on("selectstart", function(e) {
                 e.preventDefault();
+                return false;
             });
 
             function checkPosition(e) {
