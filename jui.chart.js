@@ -8248,6 +8248,16 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         var padding = 7, anchor = 7, textY = 14;
         var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
 
+        function setMessage(index, message) {
+            if(!tspan[index]) {
+                var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                text.element.appendChild(elem);
+                tspan[index] = elem;
+            }
+
+            tspan[index].textContent = message;
+        }
+
         function printTooltip(obj) {
             if(obj.target && widget.all === false) {
                 var t = chart.series(obj.target),
@@ -8259,25 +8269,18 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var content = (obj.data[k]) ? ": " + obj.data[k] : "";
+                var message = (obj.data[k]) ? ": " + obj.data[k] : "";
 
                 // 옵션 키가 있을 경우
                 if(widget.key != null) {
-                    content = obj.data[widget.key] + content;
+                    message = obj.data[widget.key] + message;
                 } else {
-                    content = ((t.text) ? t.text : k) + content;
+                    message = ((t.text) ? t.text : k) + message;
                 }
 
-                if(!tspan[0]) {
-                    var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-                    text.element.appendChild(elem);
-                    tspan[0] = elem;
-                }
-
-                tspan[0].textContent = content;
+                setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
-
             } else {
                 var brush = chart.brush(obj.index);
 
@@ -8292,17 +8295,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    var content = ((t.text) ? t.text : key) + ": " + obj.data[key];
-
-                    if(!tspan[i]) {
-                        var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-                        text.element.appendChild(elem);
-                        tspan[i] = elem;
-                    }
+                    var message = ((t.text) ? t.text : key) + ": " + obj.data[key];
+                    setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
                     tspan[i].setAttribute("y", y);
-                    tspan[i].textContent = content;
                 }
 
                 text.attr({ "text-anchor": "inherit" });
