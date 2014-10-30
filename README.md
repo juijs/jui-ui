@@ -4,7 +4,7 @@
 
 ## Documentation
 
-http://jui.easylogic.co.kr
+http://seogi1004.github.io/jui
 
 ## Maintainers
 
