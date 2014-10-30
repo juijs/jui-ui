@@ -1,6 +1,6 @@
 ## Introduction 
 
-![IMAGE](http://seogi1004.github.io/jui/res/img3/jui_info_3.jpg)
+![IMAGE](http://seogi1004.github.io/jui/res/img/jui_info_4.jpg)
 
 ## Documentation
 
