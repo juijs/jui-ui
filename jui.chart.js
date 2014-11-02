@@ -8887,10 +8887,16 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
         var g, xline, yline, xTooltip, yTooltip;
+        var tspan = [];
 
-        function getTooltipData(data) {
-            if(!_.typeCheck("function", widget.format)) return;
-            return widget.format(data);
+        function printTooltip(index, text, message) {
+            if(!tspan[index]) {
+                var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                text.element.appendChild(elem);
+                tspan[index] = elem;
+            }
+
+            tspan[index].textContent = widget.format(message);
         }
 
         this.drawBefore = function() {
@@ -8980,14 +8986,17 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     x2: left
                 });
 
-                if(yTooltip) {
-                    yTooltip.translate(-(tw + ta), top - (th / 2));
-                    yTooltip.get(1).html(getTooltipData(self.widget.y.invert(top)));
-                }
+                // 포맷 옵션이 없을 경우, 처리하지 않음
+                if(_.typeCheck("function", widget.format)) {
+                    if (yTooltip) {
+                        yTooltip.translate(-(tw + ta), top - (th / 2));
+                        printTooltip(0, yTooltip.get(1), self.widget.y.invert(top));
+                    }
 
-                if(xTooltip) {
-                    xTooltip.translate(left - (tw / 2), chart.height() + ta);
-                    xTooltip.get(1).html(getTooltipData(self.widget.x.invert(left)));
+                    if (xTooltip) {
+                        xTooltip.translate(left - (tw / 2), chart.height() + ta);
+                        printTooltip(1, xTooltip.get(1), self.widget.x.invert(left));
+                    }
                 }
             });
 
