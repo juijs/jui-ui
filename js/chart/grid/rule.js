@@ -201,6 +201,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				unit: 0,
 
 				// common options
+				line: false,
 				format: null,
 
 				// rule options

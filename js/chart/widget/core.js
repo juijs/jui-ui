@@ -1,6 +1,6 @@
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
-	var CoreWidget = function() {
 
+	var CoreWidget = function() {
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
 

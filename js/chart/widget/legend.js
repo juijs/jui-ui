@@ -1,19 +1,5 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
-    
-        /**
-         * legend 그리기 
-         * 
-         * {
-         *  position : "top",         // left, right, bottom, 기본값 top
-         *  align : "center",   // left, right, center,  기본값은 center
-         *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-         *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-         * } 
-         * 
-         * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
-         * 
-         */
-    
+
     var LegendWidget = function(chart, widget) {
         
         /**

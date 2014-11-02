@@ -8257,8 +8257,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 }, "chart.brush.donut");
 
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
-	var CoreWidget = function() {
 
+	var CoreWidget = function() {
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
 
@@ -8454,22 +8454,6 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 }, "chart.widget.core");
 jui.define("chart.widget.title", [ "util.base" ], function(_) {
 
-        /**
-         * title 그리기 
-         * 
-         * title 객체 옵션 
-         * 
-         * {
-         *  text : "Title",     // 실제 표시될 title 문자열 
-         *  align : "center"    // left, right, center 를 지정 , default center 
-         *  top : true,         // chart 에서 title 위치 , 기본값 true
-         *  bottom : true       // chart 에서 title 위치 , 기본값 false 
-         *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-         *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-         * }
-         * 
-         */     
-
     var TitleWidget = function(chart, widget) {
         var x = 0, y = 0, anchor = "middle";
 
@@ -8521,21 +8505,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
     return TitleWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
-    
-        /**
-         * legend 그리기 
-         * 
-         * {
-         *  position : "top",         // left, right, bottom, 기본값 top
-         *  align : "center",   // left, right, center,  기본값은 center
-         *  dx : 0,             // 차트가 그려진 위치에서 dx 만금 x 좌표 이동 
-         *  dy : 0              // 차트가 그려진 위치에서 dy 만금 y 좌표 이동 
-         * } 
-         * 
-         * brush 객체에 있는 getLegendIcon() 을 통해서 영역에 맞게 legend 를 그림 
-         * 
-         */
-    
+
     var LegendWidget = function(chart, widget) {
         
         /**
