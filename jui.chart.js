@@ -3437,7 +3437,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         function setupOptions(options, defOpts) {
             var exceptOpts = [
                     "type", "target", "index", "colors", // only brush
-                    "x", "y", "x1", "y1", "c" // grid & brush
+                    "x", "y", "x1", "y1", "c", "dist" // only grid
                 ],
                 defOptKeys = [],
                 optKeys = [];
@@ -3476,12 +3476,12 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             }
 
             // Call drawSetting method (Only brush and widget)
-            if (_.typeCheck("function", this.drawSetup) && !this.grid) {
+            if (_.typeCheck("function", this.drawSetup)) {
                 var tmpOpts = this.drawSetup(),
                     opts = _.typeCheck("object", tmpOpts) ? tmpOpts : {};
 
                 // Options Check
-                setupOptions(this.brush || this.widget, opts);
+                setupOptions(this.grid || this.brush || this.widget, opts);
             }
 
             // Call drawBefore method (All)
@@ -3666,7 +3666,8 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                         Grid.prototype.chart = self;
                         Grid.prototype.grid = grid[k][keyIndex];
 
-                        var obj = new Grid(orient, self, grid[k][keyIndex]).render(), dist = grid[k][keyIndex].dist || 0;
+                        var obj = new Grid(orient, self, grid[k][keyIndex]).render(),
+                            dist = grid[k][keyIndex].dist || 0;
 
                         // grid 별 dist 로 위치선정하기
                         if (k == 'y') {
@@ -4894,7 +4895,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 */
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == "radar" || grid.type == "block") {
-
 				if (grid.target && !grid.domain) {
 					var domain = [];
 					var data = chart.data();
@@ -4909,15 +4909,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
                         var step = 1;
                     }
 					
-					
 					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
 						domain.push(data[i][grid.target]);
 					}
 
 					grid.domain = domain;
-					grid.step = grid.step || 10;
-					grid.max = grid.max || 100;
 				}
+
+				// 최대값 기본 설정
+				grid.max = grid.max || 10;
 			}
 			
 			return grid; 			
@@ -4935,10 +4935,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
-				
-				var max = grid.max || 0;
-				var min = grid.min || 0;
+				var max = grid.max,
+					min = grid.min;
 				var data = chart.data();
+
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 
@@ -4967,11 +4967,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				
 				grid.max = max;
 				grid.min = min;
-				grid.step = grid.step || 10;
 
-				var unit = grid.unit || Math.ceil((max - min) / grid.step);
-				
-				var start = 0;
+				var unit = grid.unit || Math.ceil((max - min) / grid.step),
+					start = 0;
+
 				while (start < max) {
 					start += unit;
 				}
@@ -4991,8 +4990,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
 					
 				}
-
-
 			}
 			
 			return grid; 
@@ -5010,10 +5007,9 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
-				
+				var min = grid.min || undefined,
+					max = grid.max || undefined;
 				var data = chart.data();
-				var min = undefined;
-				var max = undefined;
 				
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -5026,19 +5022,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						if (typeof max == "undefined") max = value;
 						else if (max < value) max = value;						
 					}
-
-
 				}
 				
 				grid.max = max;
 				grid.min = min;
-				
 				grid.domain = [grid.min, grid.max];
 				
 				if (grid.reverse) {
 					grid.domain.reverse();
 				}				
-				
 			}
 			
 			return grid; 
@@ -5161,7 +5153,19 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				scale : this.scale
 			};
 		}
-		
+
+		this.drawSetup = function() {
+			return {
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0
+			}
+		}
 	}
 
 	return CoreGrid;
@@ -5189,7 +5193,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
                 if (domain == "") {
@@ -5198,7 +5201,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
@@ -5211,7 +5214,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
 
 				g.append(axis);
 			}
@@ -5219,7 +5222,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.full) {
 				var axis = chart.svg.group({
 					"transform" : "translate(" + chart.width() + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? full_height : this.bar
@@ -5227,7 +5230,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				g.append(axis);
 			}
-
 		}
 		
 		/**
@@ -5239,12 +5241,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
-				}))
+				}));
 			}
-			
-			
-			for (var i = 0, len = this.points.length; i < len; i++) {
 
+			for (var i = 0, len = this.points.length; i < len; i++) {
                 var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
                 if (domain == "") {
@@ -5253,7 +5253,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
                 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
-				})
+				});
 				
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
@@ -5267,7 +5267,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y : 20,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain))
+				}, domain));
 
 				g.append(axis);
 			}
@@ -5282,9 +5282,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				g.append(axis);
-
 			}
-
 		}
 		
 		/**
@@ -5329,7 +5327,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				g.append(axis);
 			}
-
 		}
 
 		/**
@@ -5344,7 +5341,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
 				})
@@ -5357,7 +5353,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
 
 				g.append(axis);
 			}
@@ -5365,7 +5361,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.full) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + chart.height() + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : this.bar
@@ -5393,19 +5389,38 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			} else {
 				this.scale.rangePoints(range);
 			}
-			
 
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
-			this.reverse = grid.reverse || false;
-			 
+			this.reverse = grid.reverse;
 		}
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// block options
+				full: false
+			}
 		}
 	}
 
@@ -5430,7 +5445,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? chart.height() : -bar
@@ -5448,7 +5463,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.bottom = function(chart, g) {
-
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
@@ -5462,7 +5476,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var group = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				group.append(this.line(chart, {
 					y2 : (grid.line) ? -chart.height() : bar
@@ -5480,7 +5494,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.left = function(chart, g) {
-
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					y2 : chart.height()
@@ -5495,7 +5508,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? chart.width() : -bar
@@ -5513,14 +5526,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.right = function(chart, g) {
-			
 			if (!grid.line) {
-			g.append(this.axisLine(chart, {
-				y2 : chart.height()
-			}));
-				
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
 			}
-
 
 			var ticks = this.ticks;
 			var values = this.values;
@@ -5581,11 +5591,31 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
-
 		}
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "date", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// range options
+				realtime: false
+			}
 		}
 	}
 
@@ -5596,7 +5626,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, chart, grid) {
 		var position = [];
-		var self = this;
 		var format;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
@@ -5633,7 +5662,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 
 			var path = chart.svg.path({
-
 				"fill" : "none",
 				stroke : chart.theme("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
@@ -5652,16 +5680,13 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			path.LineTo(points[0][0], points[0][1]);
 			//path.ClosePath();
 
-			g.append(path)
-
+			g.append(path);
 			root.append(g);
 		}
 
         function scale(obj) {
-
             var max = grid.max;
             var domain = grid.domain;
-            var that = self;
 
             return function(index, value) {
                 var rate = value / max;
@@ -5694,8 +5719,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 		this.draw = function() {
 			var width = chart.width(), height = chart.height();
-			grid.line = ( typeof grid.line == "undefined") ? true : grid.line;
-
 			var min = width;
 
 			if (height < min) {
@@ -5786,7 +5809,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					scale : scale(position[0])
 				};
 			}
-				
 
 			// area split line
 			startY = -w;
@@ -5799,6 +5821,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					startY += h;
 					continue;
 				}
+
 				if (grid.shape == "circle") {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
@@ -5826,6 +5849,28 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				root : root, 
 				scale : scale(position[0])
 			};
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: true,
+				format: null,
+
+				hideText: false,
+				extra: false,
+				shape: "radial" // or circle
+			}
 		}
 	}
 
@@ -5859,7 +5904,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? chart.height() : -bar,
@@ -5948,7 +5993,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
-					
 				}
 
 				g.append(axis);
@@ -5974,7 +6018,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + values[i] + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : bar,
@@ -6004,8 +6048,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
 			}
 
-			this.step = grid.step || 10;
-			this.nice = grid.nice || false;
+			this.step = grid.step;
+			this.nice = grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
 
@@ -6018,6 +6062,28 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "range", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// range options
+				hideText: false,
+				nice: false
+			}
 		}
 	}
 

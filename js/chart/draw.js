@@ -9,7 +9,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         function setupOptions(options, defOpts) {
             var exceptOpts = [
                     "type", "target", "index", "colors", // only brush
-                    "x", "y", "x1", "y1", "c" // grid & brush
+                    "x", "y", "x1", "y1", "c", "dist" // only grid
                 ],
                 defOptKeys = [],
                 optKeys = [];
@@ -48,12 +48,12 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             }
 
             // Call drawSetting method (Only brush and widget)
-            if (_.typeCheck("function", this.drawSetup) && !this.grid) {
+            if (_.typeCheck("function", this.drawSetup)) {
                 var tmpOpts = this.drawSetup(),
                     opts = _.typeCheck("object", tmpOpts) ? tmpOpts : {};
 
                 // Options Check
-                setupOptions(this.brush || this.widget, opts);
+                setupOptions(this.grid || this.brush || this.widget, opts);
             }
 
             // Call drawBefore method (All)

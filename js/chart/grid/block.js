@@ -21,7 +21,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
                 if (domain == "") {
@@ -30,7 +29,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
@@ -43,7 +42,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
 
 				g.append(axis);
 			}
@@ -51,7 +50,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.full) {
 				var axis = chart.svg.group({
 					"transform" : "translate(" + chart.width() + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? full_height : this.bar
@@ -59,7 +58,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				g.append(axis);
 			}
-
 		}
 		
 		/**
@@ -71,12 +69,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
-				}))
+				}));
 			}
-			
-			
-			for (var i = 0, len = this.points.length; i < len; i++) {
 
+			for (var i = 0, len = this.points.length; i < len; i++) {
                 var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
 
                 if (domain == "") {
@@ -85,7 +81,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
                 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + this.points[i] + ", 0)"
-				})
+				});
 				
 				axis.append(this.line(chart, {
 					x1 : -this.half_band,
@@ -99,7 +95,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y : 20,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain))
+				}, domain));
 
 				g.append(axis);
 			}
@@ -114,9 +110,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				g.append(axis);
-
 			}
-
 		}
 		
 		/**
@@ -161,7 +155,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				g.append(axis);
 			}
-
 		}
 
 		/**
@@ -176,7 +169,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
 				})
@@ -189,7 +181,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
 
 				g.append(axis);
 			}
@@ -197,7 +189,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			if (!grid.full) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + chart.height() + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : this.bar
@@ -225,19 +217,38 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			} else {
 				this.scale.rangePoints(range);
 			}
-			
 
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;
-			this.reverse = grid.reverse || false;
-			 
+			this.reverse = grid.reverse;
 		}
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// block options
+				full: false
+			}
 		}
 	}
 

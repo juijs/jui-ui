@@ -161,7 +161,8 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                         Grid.prototype.chart = self;
                         Grid.prototype.grid = grid[k][keyIndex];
 
-                        var obj = new Grid(orient, self, grid[k][keyIndex]).render(), dist = grid[k][keyIndex].dist || 0;
+                        var obj = new Grid(orient, self, grid[k][keyIndex]).render(),
+                            dist = grid[k][keyIndex].dist || 0;
 
                         // grid 별 dist 로 위치선정하기
                         if (k == 'y') {

@@ -11,7 +11,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 */
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == "radar" || grid.type == "block") {
-
 				if (grid.target && !grid.domain) {
 					var domain = [];
 					var data = chart.data();
@@ -26,15 +25,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
                         var step = 1;
                     }
 					
-					
 					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
 						domain.push(data[i][grid.target]);
 					}
 
 					grid.domain = domain;
-					grid.step = grid.step || 10;
-					grid.max = grid.max || 100;
 				}
+
+				// 최대값 기본 설정
+				grid.max = grid.max || 10;
 			}
 			
 			return grid; 			
@@ -52,10 +51,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
-				
-				var max = grid.max || 0;
-				var min = grid.min || 0;
+				var max = grid.max,
+					min = grid.min;
 				var data = chart.data();
+
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 
@@ -84,11 +83,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				
 				grid.max = max;
 				grid.min = min;
-				grid.step = grid.step || 10;
 
-				var unit = grid.unit || Math.ceil((max - min) / grid.step);
-				
-				var start = 0;
+				var unit = grid.unit || Math.ceil((max - min) / grid.step),
+					start = 0;
+
 				while (start < max) {
 					start += unit;
 				}
@@ -108,8 +106,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
 					
 				}
-
-
 			}
 			
 			return grid; 
@@ -127,10 +123,9 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length) {
-				
+				var min = grid.min || undefined,
+					max = grid.max || undefined;
 				var data = chart.data();
-				var min = undefined;
-				var max = undefined;
 				
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -143,19 +138,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						if (typeof max == "undefined") max = value;
 						else if (max < value) max = value;						
 					}
-
-
 				}
 				
 				grid.max = max;
 				grid.min = min;
-				
 				grid.domain = [grid.min, grid.max];
 				
 				if (grid.reverse) {
 					grid.domain.reverse();
 				}				
-				
 			}
 			
 			return grid; 
@@ -278,7 +269,19 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				scale : this.scale
 			};
 		}
-		
+
+		this.drawSetup = function() {
+			return {
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0
+			}
+		}
 	}
 
 	return CoreGrid;

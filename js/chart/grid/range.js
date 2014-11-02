@@ -25,7 +25,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? chart.height() : -bar,
@@ -114,7 +114,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
-					
 				}
 
 				g.append(axis);
@@ -140,7 +139,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + values[i] + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : bar,
@@ -170,8 +169,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
 			}
 
-			this.step = grid.step || 10;
-			this.nice = grid.nice || false;
+			this.step = grid.step;
+			this.nice = grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
 
@@ -184,6 +183,28 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "range", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// range options
+				hideText: false,
+				nice: false
+			}
 		}
 	}
 

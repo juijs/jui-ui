@@ -2,7 +2,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, chart, grid) {
 		var position = [];
-		var self = this;
 		var format;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
@@ -39,7 +38,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 
 			var path = chart.svg.path({
-
 				"fill" : "none",
 				stroke : chart.theme("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
@@ -58,16 +56,13 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			path.LineTo(points[0][0], points[0][1]);
 			//path.ClosePath();
 
-			g.append(path)
-
+			g.append(path);
 			root.append(g);
 		}
 
         function scale(obj) {
-
             var max = grid.max;
             var domain = grid.domain;
-            var that = self;
 
             return function(index, value) {
                 var rate = value / max;
@@ -100,8 +95,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 		this.draw = function() {
 			var width = chart.width(), height = chart.height();
-			grid.line = ( typeof grid.line == "undefined") ? true : grid.line;
-
 			var min = width;
 
 			if (height < min) {
@@ -192,7 +185,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					scale : scale(position[0])
 				};
 			}
-				
 
 			// area split line
 			startY = -w;
@@ -205,6 +197,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					startY += h;
 					continue;
 				}
+
 				if (grid.shape == "circle") {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
@@ -232,6 +225,28 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				root : root, 
 				scale : scale(position[0])
 			};
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: true,
+				format: null,
+
+				hideText: false,
+				extra: false,
+				shape: "radial" // or circle
+			}
 		}
 	}
 

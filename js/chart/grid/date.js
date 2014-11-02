@@ -16,7 +16,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? chart.height() : -bar
@@ -34,7 +34,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.bottom = function(chart, g) {
-
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					x2 : chart.width()
@@ -48,7 +47,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var group = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				group.append(this.line(chart, {
 					y2 : (grid.line) ? -chart.height() : bar
@@ -66,7 +65,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.left = function(chart, g) {
-
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
 					y2 : chart.height()
@@ -81,7 +79,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? chart.width() : -bar
@@ -99,14 +97,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.right = function(chart, g) {
-			
 			if (!grid.line) {
-			g.append(this.axisLine(chart, {
-				y2 : chart.height()
-			}));
-				
+				g.append(this.axisLine(chart, {
+					y2 : chart.height()
+				}));
 			}
-
 
 			var ticks = this.ticks;
 			var values = this.values;
@@ -167,11 +162,31 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
-
 		}
 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "date", grid);
+		}
+
+		this.drawSetup = function() {
+			return {
+				// core options
+				domain: null,
+				step: 10,
+				min: 0,
+				max: 0,
+				reverse: false,
+				key: null,
+				hide: false,
+				unit: 0,
+
+				// common options
+				line: false,
+				format: null,
+
+				// range options
+				realtime: false
+			}
 		}
 	}
 
