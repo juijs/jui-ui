@@ -7458,7 +7458,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
                     fill : chart.color(i, brush.colors)
-                }, data[brush.title] || data.title || ""))
+                }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({
                     x : x + brush.cut,
@@ -7526,7 +7526,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 size: 20,
                 split: false,
                 align: "left",
-                title: ""
+                title: "title"
             }
         }
 	}
@@ -7700,55 +7700,57 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 			group.translate(chart.x(), chart.y());
 			
 			setDirection(brush.direction);
-			
-			if (brush.shape == "circle") {
-				group.append(chart.svg.circle({
-					cx : centerX,
-					cy : centerY,
-					r : outerRadius,
-					fill : chart.theme("gaugeBackgroundColor")
-				}));
 
-				group.append(chart.svg.circle({
-					cx : centerX,
-					cy : centerY,
-					r : outerRadius,
-					fill : chart.color(0, brush.colors),
-					"clip-path" : "url(#" + clipId + ")"
-				}));
+            if (brush.svg != "" || brush.path != "") {
+                if (brush.svg != "") {
+                    $.ajax({
+                        url : brush.svg,
+                        async : false,
+                        success : function(xml) {
+                            var path = $(xml).find("path").attr("d");
+                            createPath(group, path);
+                        }
+                    });
+                } else {
+                    createPath(group, brush.path);
+                }
+            } else {
+                if (brush.shape == "circle") {
+                    group.append(chart.svg.circle({
+                        cx : centerX,
+                        cy : centerY,
+                        r : outerRadius,
+                        fill : chart.theme("gaugeBackgroundColor")
+                    }));
 
-			} else if (brush.shape == "rect") {
-				group.append(chart.svg.rect({
-					x : 0,
-					y : 0,
-					width : chart.width(),
-					height : chart.height(),
-					fill : chart.theme("gaugeBackgroundColor")
-				}));
+                    group.append(chart.svg.circle({
+                        cx : centerX,
+                        cy : centerY,
+                        r : outerRadius,
+                        fill : chart.color(0, brush.colors),
+                        "clip-path" : "url(#" + clipId + ")"
+                    }));
 
-				group.append(chart.svg.rect({
-					x : 0,
-					y : 0,
-					width : chart.width(),
-					height : chart.height(),
-					fill : chart.color(0, brush.colors),
-					"clip-path" : "url(#" + clipId + ")"
-				}));
+                } else if (brush.shape == "rectangle") {
+                    group.append(chart.svg.rect({
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height(),
+                        fill : chart.theme("gaugeBackgroundColor")
+                    }));
 
-			} else {
-				if (brush.svg != "") {
-					$.ajax({
-						url : brush.svg,
-						async : false,
-						success : function(xml) {
-							var path = $(xml).find("path").attr("d");
-							createPath(group, path);
-						}
-					});
-				} else {
-					createPath(group, brush.path);
-				}
-			}
+                    group.append(chart.svg.rect({
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height(),
+                        fill : chart.color(0, brush.colors),
+                        "clip-path" : "url(#" + clipId + ")"
+                    }));
+
+                }
+            }
 
             return group;
 		}
@@ -7758,7 +7760,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                 min: 0,
                 max: 100,
                 value: 0,
-                shape: "circle", // or rect, etc
+                shape: "circle", // or rectangle
                 direction: "vertical",
                 svg: "",
                 path: ""
@@ -8002,7 +8004,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 min: 0,
                 max: 100,
                 value: 0,
-                rate: 100,
                 size: 60,
                 startAngle: 0,
                 endAngle: 360,
@@ -8105,7 +8106,6 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 min: 0,
                 max: 100,
                 value: 0,
-                rate: 100,
                 size: 60,
                 startAngle: 0,
                 endAngle: 300,
@@ -8172,7 +8172,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					fill : chart.color(i, brush.colors),
 					"font-size" : "12px",
 					"font-weight" : "bold"
-				}, chart.data(i)[brush.title != ""] || chart.data(i).title || ""))
+				}, chart.data(i)[brush.title] || ""))
 				
 				outerRadius -= brush.size;
 			}
@@ -8188,7 +8188,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
                 size: 24,
                 startAngle: -180,
                 endAngle: 360,
-                title: ""
+                title: "title"
             }
         }
 	}

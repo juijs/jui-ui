@@ -40,7 +40,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
                     fill : chart.color(i, brush.colors)
-                }, data[brush.title] || data.title || ""))
+                }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({
                     x : x + brush.cut,
@@ -108,7 +108,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                 size: 20,
                 split: false,
                 align: "left",
-                title: ""
+                title: "title"
             }
         }
 	}

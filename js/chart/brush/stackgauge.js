@@ -52,7 +52,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					fill : chart.color(i, brush.colors),
 					"font-size" : "12px",
 					"font-weight" : "bold"
-				}, chart.data(i)[brush.title != ""] || chart.data(i).title || ""))
+				}, chart.data(i)[brush.title] || ""))
 				
 				outerRadius -= brush.size;
 			}
@@ -68,7 +68,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
                 size: 24,
                 startAngle: -180,
                 endAngle: 360,
-                title: ""
+                title: "title"
             }
         }
 	}

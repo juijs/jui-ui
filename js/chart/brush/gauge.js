@@ -161,7 +161,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 min: 0,
                 max: 100,
                 value: 0,
-                rate: 100,
                 size: 60,
                 startAngle: 0,
                 endAngle: 360,
