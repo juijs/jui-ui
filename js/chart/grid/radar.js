@@ -5,9 +5,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		var format;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
-			var r = Math.abs(y);
-			var cx = centerX;
-			var cy = centerY;
+			var r = Math.abs(y),
+				cx = centerX,
+				cy = centerY;
 
 			root.append(chart.svg.circle({
 				cx : cx,
@@ -16,7 +16,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				"fill-opacity" : 0,
 				stroke : chart.theme("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
-			}))
+			}));
 		}
 
 		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
@@ -25,8 +25,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			points.push([centerX + x, centerY + y]);
 
-			var startX = x;
-			var startY = y;
+			var startX = x,
+				startY = y;
 
 			for (var i = 0; i < count; i++) {
 				var obj = math.rotate(startX, startY, unit);
@@ -67,16 +67,17 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             return function(index, value) {
                 var rate = value / max;
 
-                var height = Math.abs(obj.y1) - Math.abs(obj.y2);
-                var pos = height * rate;
-                var unit = 2 * Math.PI / domain.length;
+				var height = Math.abs(obj.y1) - Math.abs(obj.y2),
+					pos = height * rate,
+					unit = 2 * Math.PI / domain.length;
 
-                var cx = obj.x1;
-                var cy = obj.y1;
-                var y = -pos;
-                var x = 0;
+				var cx = obj.x1,
+					cy = obj.y1,
+					y = -pos,
+					x = 0;
 
                 var o = math.rotate(x, y, unit * index);
+
                 x = o.x;
                 y = o.y;
 
@@ -102,17 +103,16 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 
 			// center
-			var w = min / 2;
-			var centerX = chart.x() + width / 2;
-			var centerY = chart.y() + height / 2;
+			var w = min / 2,
+				centerX = chart.x() + width / 2,
+				centerY = chart.y() + height / 2;
 
-			var startY = -w;
-			var startX = 0;
-			var count = grid.domain.length;
-			var step = grid.step;
-			var unit = 2 * Math.PI / count;
-
-			var h = Math.abs(startY) / step;
+			var startY = -w,
+				startX = 0,
+				count = grid.domain.length,
+				step = grid.step,
+				unit = 2 * Math.PI / count,
+				h = Math.abs(startY) / step;
 
 			var g = chart.svg.group({
 				"class" : "grid radar"
@@ -124,10 +124,10 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			// domain line
 			position = [];
-			for (var i = 0; i < count; i++) {
 
-				var x2 = centerX + startX;
-				var y2 = centerY + startY;
+			for (var i = 0; i < count; i++) {
+				var x2 = centerX + startX,
+					y2 = centerY + startY;
 
 				root.append(chart.svg.line({
 					x1 : centerX,
@@ -145,9 +145,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y2 : y2
 				};
 
-				var ty = y2;
-				var tx = x2;
-				var talign = "middle";
+				var ty = y2,
+					tx = x2,
+					talign = "middle";
 
 				if (y2 > centerY) {
 					ty = y2 + 20;
@@ -188,8 +188,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			// area split line
 			startY = -w;
-			var stepBase = 0;
-			var stepValue = grid.max / grid.step;
+			var stepBase = 0,
+				stepValue = grid.max / grid.step;
 
 			for (var i = 0; i < step; i++) {
 
@@ -233,7 +233,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				domain: null,
 				step: 10,
 				min: 0,
-				max: 0,
+				max: 100,
 				reverse: false,
 				key: null,
 				hide: false,

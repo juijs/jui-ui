@@ -9,9 +9,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -40,9 +40,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var group = chart.svg.group({
@@ -72,9 +72,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -103,9 +103,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -156,7 +156,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			// step = [this.time.days, 1];
 			this.bar = 6;
-
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {

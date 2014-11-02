@@ -15,10 +15,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
@@ -51,18 +51,17 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? -chart.height() : bar,
@@ -89,10 +88,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
@@ -128,11 +127,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);

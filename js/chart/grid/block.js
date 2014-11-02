@@ -236,7 +236,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				domain: null,
 				step: 10,
 				min: 0,
-				max: 0,
+				max: 10, // @deprecated
 				reverse: false,
 				key: null,
 				hide: false,

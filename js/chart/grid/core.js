@@ -12,17 +12,17 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == "radar" || grid.type == "block") {
 				if (grid.target && !grid.domain) {
-					var domain = [];
-					var data = chart.data();
+					var domain = [],
+						data = chart.data();
 					
                     if (grid.reverse) {
-                        var start = data.length - 1; 
-                        var end = 0;
-                        var step = -1; 
+                        var start = data.length - 1,
+							end = 0,
+							step = -1;
                     } else {
-                        var start = 0;
-                        var end = data.length -1;
-                        var step = 1;
+                        var start = 0,
+							end = data.length - 1,
+							step = 1;
                     }
 					
 					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
@@ -31,9 +31,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 					grid.domain = domain;
 				}
-
-				// 최대값 기본 설정
-				grid.max = grid.max || 10;
 			}
 			
 			return grid; 			

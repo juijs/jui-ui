@@ -8,8 +8,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
-			var height = chart.height();
-			var half_height = height/2;
+			var height = chart.height(),
+				half_height = height/2;
 
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? half_height : 0,
@@ -17,9 +17,9 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				x2 : chart.width()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
@@ -47,8 +47,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.bottom = function(chart, g) {
-			var height = chart.height();
-			var half_height = height/2;
+			var height = chart.height(),
+				half_height = height/2;
 		  
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? -half_height : 0,
@@ -56,13 +56,13 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				x2 : chart.width()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
-				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0)
+				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
@@ -85,19 +85,19 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.left = function(chart, g) {
-			var width = chart.width();
-			var height = chart.height();
-			var half_width = width/2;
+			var width = chart.width(),
+				height = chart.height(),
+				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
-			  x1 : this.center ? half_width : 0,
-			  x2 : this.center ? half_width : 0,
+				x1 : this.center ? half_width : 0,
+				x2 : this.center ? half_width : 0,
 				y2 : height
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
@@ -123,8 +123,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.right = function(chart, g) {
-			var width = chart.width();
-			var half_width = width/2;
+			var width = chart.width(),
+				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
 				x1 : this.center ? -half_width : 0,
@@ -132,9 +132,9 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				y2 : chart.height()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);

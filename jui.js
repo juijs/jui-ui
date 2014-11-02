@@ -11626,17 +11626,17 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.setBlockDomain = function(chart, grid) {
 			if (grid.type == "radar" || grid.type == "block") {
 				if (grid.target && !grid.domain) {
-					var domain = [];
-					var data = chart.data();
+					var domain = [],
+						data = chart.data();
 					
                     if (grid.reverse) {
-                        var start = data.length - 1; 
-                        var end = 0;
-                        var step = -1; 
+                        var start = data.length - 1,
+							end = 0,
+							step = -1;
                     } else {
-                        var start = 0;
-                        var end = data.length -1;
-                        var step = 1;
+                        var start = 0,
+							end = data.length - 1,
+							step = 1;
                     }
 					
 					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
@@ -11645,9 +11645,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 					grid.domain = domain;
 				}
-
-				// 최대값 기본 설정
-				grid.max = grid.max || 10;
 			}
 			
 			return grid; 			
@@ -12138,7 +12135,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				domain: null,
 				step: 10,
 				min: 0,
-				max: 0,
+				max: 10, // @deprecated
 				reverse: false,
 				key: null,
 				hide: false,
@@ -12168,9 +12165,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -12199,9 +12196,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var group = chart.svg.group({
@@ -12231,9 +12228,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -12262,9 +12259,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 			}
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
 				var axis = chart.svg.group({
@@ -12315,7 +12312,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 			// step = [this.time.days, 1];
 			this.bar = 6;
-
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
@@ -12359,9 +12355,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		var format;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
-			var r = Math.abs(y);
-			var cx = centerX;
-			var cy = centerY;
+			var r = Math.abs(y),
+				cx = centerX,
+				cy = centerY;
 
 			root.append(chart.svg.circle({
 				cx : cx,
@@ -12370,7 +12366,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				"fill-opacity" : 0,
 				stroke : chart.theme("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
-			}))
+			}));
 		}
 
 		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
@@ -12379,8 +12375,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			points.push([centerX + x, centerY + y]);
 
-			var startX = x;
-			var startY = y;
+			var startX = x,
+				startY = y;
 
 			for (var i = 0; i < count; i++) {
 				var obj = math.rotate(startX, startY, unit);
@@ -12421,16 +12417,17 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             return function(index, value) {
                 var rate = value / max;
 
-                var height = Math.abs(obj.y1) - Math.abs(obj.y2);
-                var pos = height * rate;
-                var unit = 2 * Math.PI / domain.length;
+				var height = Math.abs(obj.y1) - Math.abs(obj.y2),
+					pos = height * rate,
+					unit = 2 * Math.PI / domain.length;
 
-                var cx = obj.x1;
-                var cy = obj.y1;
-                var y = -pos;
-                var x = 0;
+				var cx = obj.x1,
+					cy = obj.y1,
+					y = -pos,
+					x = 0;
 
                 var o = math.rotate(x, y, unit * index);
+
                 x = o.x;
                 y = o.y;
 
@@ -12456,17 +12453,16 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 
 			// center
-			var w = min / 2;
-			var centerX = chart.x() + width / 2;
-			var centerY = chart.y() + height / 2;
+			var w = min / 2,
+				centerX = chart.x() + width / 2,
+				centerY = chart.y() + height / 2;
 
-			var startY = -w;
-			var startX = 0;
-			var count = grid.domain.length;
-			var step = grid.step;
-			var unit = 2 * Math.PI / count;
-
-			var h = Math.abs(startY) / step;
+			var startY = -w,
+				startX = 0,
+				count = grid.domain.length,
+				step = grid.step,
+				unit = 2 * Math.PI / count,
+				h = Math.abs(startY) / step;
 
 			var g = chart.svg.group({
 				"class" : "grid radar"
@@ -12478,10 +12474,10 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			// domain line
 			position = [];
-			for (var i = 0; i < count; i++) {
 
-				var x2 = centerX + startX;
-				var y2 = centerY + startY;
+			for (var i = 0; i < count; i++) {
+				var x2 = centerX + startX,
+					y2 = centerY + startY;
 
 				root.append(chart.svg.line({
 					x1 : centerX,
@@ -12499,9 +12495,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y2 : y2
 				};
 
-				var ty = y2;
-				var tx = x2;
-				var talign = "middle";
+				var ty = y2,
+					tx = x2,
+					talign = "middle";
 
 				if (y2 > centerY) {
 					ty = y2 + 20;
@@ -12542,8 +12538,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			// area split line
 			startY = -w;
-			var stepBase = 0;
-			var stepValue = grid.max / grid.step;
+			var stepBase = 0,
+				stepValue = grid.max / grid.step;
 
 			for (var i = 0; i < step; i++) {
 
@@ -12587,7 +12583,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				domain: null,
 				step: 10,
 				min: 0,
-				max: 0,
+				max: 100,
 				reverse: false,
 				key: null,
 				hide: false,
@@ -12624,10 +12620,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
@@ -12660,18 +12656,17 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? -chart.height() : bar,
@@ -12698,10 +12693,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			}
 
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
@@ -12737,11 +12732,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 			}
 
-
-			var min = this.scale.min();
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var min = this.scale.min(),
+				ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
@@ -12830,8 +12824,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
-			var height = chart.height();
-			var half_height = height/2;
+			var height = chart.height(),
+				half_height = height/2;
 
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? half_height : 0,
@@ -12839,9 +12833,9 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				x2 : chart.width()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
@@ -12869,8 +12863,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.bottom = function(chart, g) {
-			var height = chart.height();
-			var half_height = height/2;
+			var height = chart.height(),
+				half_height = height/2;
 		  
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? -half_height : 0,
@@ -12878,13 +12872,13 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				x2 : chart.width()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
-				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0)
+				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
@@ -12907,19 +12901,19 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.left = function(chart, g) {
-			var width = chart.width();
-			var height = chart.height();
-			var half_width = width/2;
+			var width = chart.width(),
+				height = chart.height(),
+				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
-			  x1 : this.center ? half_width : 0,
-			  x2 : this.center ? half_width : 0,
+				x1 : this.center ? half_width : 0,
+				x2 : this.center ? half_width : 0,
 				y2 : height
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
@@ -12945,8 +12939,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.right = function(chart, g) {
-			var width = chart.width();
-			var half_width = width/2;
+			var width = chart.width(),
+				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
 				x1 : this.center ? -half_width : 0,
@@ -12954,9 +12948,9 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				y2 : chart.height()
 			}));
 
-			var ticks = this.ticks;
-			var values = this.values;
-			var bar = this.bar;
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
 				var isZero = (ticks[i] == 0);
