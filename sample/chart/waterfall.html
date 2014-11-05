@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.chart.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder", "chart.theme.jennifer" ], function(chart, theme) {
+
+        chart("#chart", {
+            theme: "gradient",
+            width: 800,
+            height : 400,
+            data : [
+                { name : "Start", value : 90 },
+                { name : "a", value : 105 },
+                { name : "b", value : 126 },
+                { name : "c", value : 89 },
+                { name : "d", value : 6 },
+                { name : "e", value : -30 },
+                { name : "f", value : 16 },
+                { name : "g", value : 107 },
+                { name : "end", value : 168 }
+            ],
+            grid : {
+                x : {
+                    target: "name"
+                },
+                y : {
+                    type : "range",
+                    step : 10,
+                    target : "value"
+                }
+            },
+            brush : {
+                type : "waterfall",
+                target : "value",
+                end : true,
+                line : true,
+                outerPadding : 10
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

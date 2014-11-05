@@ -86,6 +86,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/gauge.js", // extends donut
                     "js/chart/brush/fullgauge.js", // extends donut
                     "js/chart/brush/stackgauge.js", // extends donut
+                    "js/chart/brush/waterfall.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",
@@ -159,6 +160,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/gauge.js", // extends donut
                     "js/chart/brush/fullgauge.js", // extends donut
                     "js/chart/brush/stackgauge.js", // extends donut
+                    "js/chart/brush/waterfall.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",
