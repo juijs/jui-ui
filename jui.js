@@ -14039,7 +14039,11 @@ jui.define("chart.brush.line", [], function() {
             } else {
                 for (var i = 0; i < x.length - 1; i++) {
                     if(this.brush.symbol == "step") {
-                        p.LineTo(x[i], y[i + 1]);
+                        if(i == 0) {
+                            p.MoveTo(x[i], y[i + 1]);
+                        } else {
+                            p.LineTo(x[i], y[i + 1]);
+                        }
                     }
 
                     p.LineTo(x[i + 1], y[i + 1]);
