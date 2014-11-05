@@ -58,6 +58,11 @@ jui.define("chart.theme.pastel", [], function() {
 		scatterBorderColor : "white",
 		scatterBorderWidth : 1,
 		scatterHoverColor : "white",
+		waterfallBackgroundColor : "#73e9d2", // 4
+		waterfallInvertBackgroundColor : "#ffb9ce", // 3
+		waterfallEdgeBackgroundColor : "#08c4e0", // 1
+		waterfallBorderColor : "#a9a9a9",
+		waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",

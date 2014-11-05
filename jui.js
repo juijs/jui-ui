@@ -10476,21 +10476,11 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             delete draw.c;
 
             if (_scales.x || _scales.x1) {
-
-                if (!_scales.x && _scales.x1) {
-                    _scales.x = _scales.x1;
-                }
-
                 if (!_.typeCheck("function", draw.x)) {
                     draw.x = ( typeof drawObj.x1 !== 'undefined') ? _scales.x1[drawObj.x1 || 0] : _scales.x[drawObj.x || 0];
                 }
             }
             if (_scales.y || _scales.y1) {
-
-                if (!_scales.y && _scales.y1) {
-                    _scales.y = _scales.y1;
-                }
-
                 if (!_.typeCheck("function", draw.y)) {
                     draw.y = ( typeof drawObj.y1 !== 'undefined') ? _scales.y1[drawObj.y1 || 0] : _scales.y[drawObj.y || 0];
                 }

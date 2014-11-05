@@ -64,6 +64,11 @@ jui.define("chart.theme.gradient", [], function() {
         scatterBorderColor : "white",
         scatterBorderWidth : 2,
         scatterHoverColor : "white",
+        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66", // 4
+        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800", // 3
+        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7", // 1
+        waterfallBorderColor : "#a9a9a9",
+        waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",

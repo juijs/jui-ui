@@ -65,6 +65,11 @@ jui.define("chart.theme.jennifer", [], function() {
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
         scatterHoverColor : "white",
+        waterfallBackgroundColor : "#87BB66", // 4
+        waterfallInvertBackgroundColor : "#FF7800", // 3
+        waterfallEdgeBackgroundColor : "#7BBAE7", // 1
+        waterfallBorderColor : "#a9a9a9",
+        waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
