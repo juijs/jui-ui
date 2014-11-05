@@ -8480,7 +8480,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
             if (widget.align == "center") {
                 x = chart.x() + chart.width()/2;
                 anchor = "middle";
-            } else if (widget.align == "left") {
+            } else if (widget.align == "start") {
                 x = chart.x();
                 anchor = "start";
             } else {
@@ -8507,7 +8507,7 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
         this.drawSetup = function() {
             return {
                 position: "top", // or bottom
-                align: "center", // or left, right
+                align: "center", // or start, end
                 text: "",
                 dx: 0,
                 dy: 0
@@ -8650,7 +8650,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: [ 0 ],
                 position: "bottom",
-                align: "center", // or left, right
+                align: "center", // or start, end
                 key: null
             }
         }
