@@ -1260,28 +1260,35 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UICore = function() {
         var vo = null;
 
-        this.emit = function(type, args, unique) {
-            var result = null,
-                unique = (!unique) ? false : true;
+        /**
+         * 커스텀 이벤트 발생시키는 메소드
+         *
+         * @param type 발생시킬 이벤트
+         * @param args 이벤트 핸들러에 넘기는 값
+         * @param _unique 내부적으로 사용하며, on 이벤트인지 bind 이벤트인지 구분
+         * @param _result 내부적으로 사용하며, 리턴 값은 커스텀 이벤트의 핸들러 값
+         * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
+         */
+        this.emit = function(type, args, _unique, _result) {
+            var unique = (!_unique) ? false : true;
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
                 if(e.type == type.toLowerCase() && e.unique === unique) {
                     if(typeof(args) == "object" && args.length != undefined) {
-                        result = e.callback.apply(this, args);
+                        _result = e.callback.apply(this, args);
                     } else {
-                        result = e.callback.call(this, args);
+                        _result = e.callback.call(this, args);
                     }
                 }
             }
 
-            // unique emitting!!
             if(unique === false) {
-                return this.emit(type, args, true);
+                return this.emit(type, args, true, _result);
             }
 
-            return result;
+            return _result;
         }
 
         this.on = function(type, callback) {

@@ -30,7 +30,19 @@ jui.ready(function(ui, uix, _) {
         fields: [ "min", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
         csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
-        resize: true
+        resize: true,
+        data: table_data,
+        editRow: true,
+        event: {
+            editend: function(data) {
+                for(var key in data) {
+                    if(key == "min" && isNaN(data[key])) {
+                        alert("숫자만 입력할 수 있습니다.");
+                        return false;
+                    }
+                }
+            }
+        }
     });
 
     $("#table_btn").change(function(e) {
