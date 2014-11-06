@@ -143,23 +143,18 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                color: "black",
-                position: "top",
-                width: 150,
-                align: "left",
-                delay: 0,
-                showType: "mouseover",
-                hideType: "mouseout",
-                title: "",
-                tpl: {
-                    message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
-                                "<div class='anchor'></div><div class='title'><!= title !></div>" +
-                            "</div>"
-                }
-            },
-            valid: {
-                update: [ "string" ]
+            color: "black",
+            position: "top",
+            width: 150,
+            align: "left",
+            delay: 0,
+            showType: "mouseover",
+            hideType: "mouseout",
+            title: "",
+            tpl: {
+                message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                "</div>"
             }
         }
     }

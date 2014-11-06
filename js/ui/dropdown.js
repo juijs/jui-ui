@@ -265,21 +265,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                close: true,
-                keydown: false,
-                left: 0,
-                top: 0,
-                width: 0,
-                height: 0,
-                nodes: []
-            },
-            valid: {
-                update: [ "array" ],
-                show: [ "number", "number" ],
-                move: [ "number", "number" ],
-                wheel: [ "integer", "function" ]
-            }
+			close: true,
+			keydown: false,
+			left: 0,
+			top: 0,
+			width: 0,
+			height: 0,
+			nodes: []
         }
     }
 	

@@ -178,13 +178,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                color: "black",
-                opacity: 0.4,
-                target: "body",
-                index: 0,
-                autoHide: true // 자신을 클릭했을 경우, hide
-            }
+			color: "black",
+			opacity: 0.4,
+			target: "body",
+			index: 0,
+			autoHide: true // 자신을 클릭했을 경우, hide
         }
     }
 	

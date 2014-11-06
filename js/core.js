@@ -496,15 +496,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
-                var mainObj = new UI["class"](),
-                    defOpts = {};
+                var mainObj = new UI["class"]();
 
                 // Check Options
-                if(_.typeCheck("object", setting.options)) {
-                    defOpts = setting.options;
+                if(_.typeCheck("object", defOpts)) {
                     checkedOptions(defOpts, options);
                 }
 
@@ -548,30 +546,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     }
                 }
 
-                var uiObj = new mainObj.init(),
-                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
-                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
+                var uiObj = new mainObj.init();
 
                 // Event Setting
                 if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
-                    }
-                }
-
-                // Type-Valid Check
-                for(var key in validFunc) {
-                    if(_.typeCheck("array", validFunc[key])) {
-                        uiObj.addValid(key, validFunc[key]);
-                    }
-                }
-
-                // Call-Animate Functions
-                if(opts.animate === true) {
-                    for(var key in animateFunc) {
-                        if(_.typeCheck("object", animateFunc[key])) {
-                            uiObj.callDelay(key, animateFunc[key]);
-                        }
                     }
                 }
 

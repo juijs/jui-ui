@@ -130,15 +130,9 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                count: 0,		// 데이터 전체 개수
-                pageCount: 10,	// 한페이지당 데이터 개수
-                screenCount: 5	// 페이지 개수
-            },
-            valid: {
-                reload: [ "integer", "null" ],
-                page: [ "integer", "null" ]
-            }
+			count: 0,		// 데이터 전체 개수
+			pageCount: 10,	// 한페이지당 데이터 개수
+			screenCount: 5	// 페이지 개수
         }
     }
 	

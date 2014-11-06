@@ -303,18 +303,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                index: 0,
-                value: "",
-                width: 0,
-                height: 100,
-                keydown: false,
-                position: "bottom"
-            },
-            valid: {
-                setIndex: [ "integer" ],
-                setValue: [ [ "integer", "string", "boolean" ] ]
-            }
+			index: 0,
+			value: "",
+			width: 0,
+			height: 100,
+			keydown: false,
+			position: "bottom"
         }
     }
 	

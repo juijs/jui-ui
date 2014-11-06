@@ -309,41 +309,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                type: "daily",
-                titleFormat: "yyyy.MM",
-                format: "yyyy-MM-dd",
-                date: new Date(),
-                animate: false
-            },
-            valid: {
-                page: [ "integer", "integer" ],
-                select: [ [ "date", "string", "integer" ] , "integer", "integer" ],
-                addTime: [ "integer" ],
-                getFormat: [ "string" ]
-            },
-            animate: {
-                page: {
-                    after: function() {
-                        var self = this;
-
-                        $body.find("tr").each(function(i) {
-                            var ms = (i + 1) * 200;
-
-                            $(this).addClass("fadeIn")
-                                .css({
-                                    "animation-duration":  ms + "ms"
-                                });
-
-                            (function(elem) {
-                                self.addEvent(this, 'AnimationEnd', function() {
-                                    $(elem).removeClass("fadeIn");
-                                });
-                            })(this);
-                        });
-                    }
-                }
-            }
+            type: "daily",
+            titleFormat: "yyyy.MM",
+            format: "yyyy-MM-dd",
+            date: new Date(),
+            animate: false // @Deprecated
         };
     }
 

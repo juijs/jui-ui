@@ -320,20 +320,10 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     UI.setup = function() {
         return {
-            options: {
-                target: "",
-                index: 0,
-                drag: false,
-                nodes: []
-            },
-            valid: {
-                update: [ "array" ],
-                insert: [ "integer", "object" ],
-                append: [ "object" ],
-                prepend: [ "object" ],
-                remove: [ "integer" ],
-                show: [ "integer" ]
-            }
+			target: "",
+			index: 0,
+			drag: false,
+			nodes: []
         }
     }
 	

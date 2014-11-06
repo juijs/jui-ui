@@ -183,15 +183,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                type: "radio",
-                index: 0,
-                value: ""
-            },
-            valid: {
-                setIndex: [ [ "integer", "array" ] ],
-                setValue: [ [ "integer", "string", "array", "boolean" ] ]
-            }
+			type: "radio",
+			index: 0,
+			value: ""
         }
     }
 	

@@ -1461,15 +1461,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
-                var mainObj = new UI["class"](),
-                    defOpts = {};
+                var mainObj = new UI["class"]();
 
                 // Check Options
-                if(_.typeCheck("object", setting.options)) {
-                    defOpts = setting.options;
+                if(_.typeCheck("object", defOpts)) {
                     checkedOptions(defOpts, options);
                 }
 
@@ -1513,30 +1511,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     }
                 }
 
-                var uiObj = new mainObj.init(),
-                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
-                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
+                var uiObj = new mainObj.init();
 
                 // Event Setting
                 if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
-                    }
-                }
-
-                // Type-Valid Check
-                for(var key in validFunc) {
-                    if(_.typeCheck("array", validFunc[key])) {
-                        uiObj.addValid(key, validFunc[key]);
-                    }
-                }
-
-                // Call-Animate Functions
-                if(opts.animate === true) {
-                    for(var key in animateFunc) {
-                        if(_.typeCheck("object", animateFunc[key])) {
-                            uiObj.callDelay(key, animateFunc[key]);
-                        }
                     }
                 }
 
@@ -3611,15 +3591,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                type: "radio",
-                index: 0,
-                value: ""
-            },
-            valid: {
-                setIndex: [ [ "integer", "array" ] ],
-                setValue: [ [ "integer", "string", "array", "boolean" ] ]
-            }
+			type: "radio",
+			index: 0,
+			value: ""
         }
     }
 	
@@ -3930,18 +3904,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                index: 0,
-                value: "",
-                width: 0,
-                height: 100,
-                keydown: false,
-                position: "bottom"
-            },
-            valid: {
-                setIndex: [ "integer" ],
-                setValue: [ [ "integer", "string", "boolean" ] ]
-            }
+			index: 0,
+			value: "",
+			width: 0,
+			height: 100,
+			keydown: false,
+			position: "bottom"
         }
     }
 	
@@ -4258,41 +4226,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                type: "daily",
-                titleFormat: "yyyy.MM",
-                format: "yyyy-MM-dd",
-                date: new Date(),
-                animate: false
-            },
-            valid: {
-                page: [ "integer", "integer" ],
-                select: [ [ "date", "string", "integer" ] , "integer", "integer" ],
-                addTime: [ "integer" ],
-                getFormat: [ "string" ]
-            },
-            animate: {
-                page: {
-                    after: function() {
-                        var self = this;
-
-                        $body.find("tr").each(function(i) {
-                            var ms = (i + 1) * 200;
-
-                            $(this).addClass("fadeIn")
-                                .css({
-                                    "animation-duration":  ms + "ms"
-                                });
-
-                            (function(elem) {
-                                self.addEvent(this, 'AnimationEnd', function() {
-                                    $(elem).removeClass("fadeIn");
-                                });
-                            })(this);
-                        });
-                    }
-                }
-            }
+            type: "daily",
+            titleFormat: "yyyy.MM",
+            format: "yyyy-MM-dd",
+            date: new Date(),
+            animate: false // @Deprecated
         };
     }
 
@@ -4565,21 +4503,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                close: true,
-                keydown: false,
-                left: 0,
-                top: 0,
-                width: 0,
-                height: 0,
-                nodes: []
-            },
-            valid: {
-                update: [ "array" ],
-                show: [ "number", "number" ],
-                move: [ "number", "number" ],
-                wheel: [ "integer", "function" ]
-            }
+			close: true,
+			keydown: false,
+			left: 0,
+			top: 0,
+			width: 0,
+			height: 0,
+			nodes: []
         }
     }
 	
@@ -4765,13 +4695,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                color: "black",
-                opacity: 0.4,
-                target: "body",
-                index: 0,
-                autoHide: true // 자신을 클릭했을 경우, hide
-            }
+			color: "black",
+			opacity: 0.4,
+			target: "body",
+			index: 0,
+			autoHide: true // 자신을 클릭했을 경우, hide
         }
     }
 	
@@ -4893,19 +4821,14 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-                distance: 5, // 알림끼리의 간격
-                timeout: 3000, // 0이면 사라지지 않음
-                showDuration: 500,
-                hideDuration: 500,
-                showEasing: "swing",
-                hideEasing: "linear"
-            },
-            valid: {
-                add: [ "object", "integer" ]
-            }
+            position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
+            padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
+            distance: 5, // 알림끼리의 간격
+            timeout: 3000, // 0이면 사라지지 않음
+            showDuration: 500,
+            hideDuration: 500,
+            showEasing: "swing",
+            hideEasing: "linear"
         };
     }
 
@@ -5043,15 +4966,9 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                count: 0,		// 데이터 전체 개수
-                pageCount: 10,	// 한페이지당 데이터 개수
-                screenCount: 5	// 페이지 개수
-            },
-            valid: {
-                reload: [ "integer", "null" ],
-                page: [ "integer", "null" ]
-            }
+			count: 0,		// 데이터 전체 개수
+			pageCount: 10,	// 한페이지당 데이터 개수
+			screenCount: 5	// 페이지 개수
         }
     }
 	
@@ -5202,23 +5119,18 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                color: "black",
-                position: "top",
-                width: 150,
-                align: "left",
-                delay: 0,
-                showType: "mouseover",
-                hideType: "mouseout",
-                title: "",
-                tpl: {
-                    message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
-                                "<div class='anchor'></div><div class='title'><!= title !></div>" +
-                            "</div>"
-                }
-            },
-            valid: {
-                update: [ "string" ]
+            color: "black",
+            position: "top",
+            width: 150,
+            align: "left",
+            delay: 0,
+            showType: "mouseover",
+            hideType: "mouseout",
+            title: "",
+            tpl: {
+                message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                "</div>"
             }
         }
     }
@@ -5694,17 +5606,15 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                barColor : '#d6d6d6',
-                barSize : 3,
-                width	: null,
-                height	: null,
-                top		: { el : null, size : null, min : 50, max : 200, resize : true },
-                left	: { el : null, size : null, min : 50, max : 200, resize : true },
-                right	: { el : null, size : null, min : 50, max : 200, resize : true },
-                bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
-                center	: { el : null }
-            }
+			barColor : '#d6d6d6',
+			barSize : 3,
+			width	: null,
+			height	: null,
+			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+			center	: { el : null }
         }
     }
 	
@@ -5815,13 +5725,8 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
     UI.setup = function() {
         return {
-            options: {
-                target: null,
-                words: []
-            },
-            valid: {
-                update: [ "array" ]
-            }
+			target: null,
+			words: []
         }
     }
 	
@@ -6149,20 +6054,10 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     UI.setup = function() {
         return {
-            options: {
-                target: "",
-                index: 0,
-                drag: false,
-                nodes: []
-            },
-            valid: {
-                update: [ "array" ],
-                insert: [ "integer", "object" ],
-                append: [ "object" ],
-                prepend: [ "object" ],
-                remove: [ "integer" ],
-                show: [ "integer" ]
-            }
+			target: "",
+			index: 0,
+			drag: false,
+			nodes: []
         }
     }
 	
@@ -8010,128 +7905,28 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 	}
 
     UI.setup = function() {
-        var MAX = 2500, DELAY = 70;
-
-        function animateUpdate(self, rows) {
-            var ms = MAX - 1;
-
-            for(var i = 0; i < rows.length; i++) {
-                ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
-
-                $(rows[i].element).addClass("fadeInLeft")
-                    .css({
-                        "animation-duration":  ms + "ms"
-                    });
-
-                (function(index) {
-                    self.addEvent(rows[index].element, 'AnimationEnd', function() {
-                        $(rows[index].element).removeClass("fadeInLeft");
-                    });
-                })(i);
-            }
-        }
-
         return {
-            options: {
-                fields: null,
-                csv: null,
-                csvNames: null,
-                csvNumber: null,
-                data: [],
-                rows: null, // @Deprecated
-                colshow: false,
-                scroll: false,
-                scrollHeight: 200,
-                width: 0,
-                expand: false,
-                expandEvent: true,
-                editCell: false,
-                editRow: false,
-                editEvent: true,
-                resize: false,
-                sort: false,
-                sortIndex: null,
-                sortOrder: "asc",
-                sortEvent: true,
-                animate: false
-            },
-            valid: {
-                update: [ [ "integer", "string", "array" ], "object" ],
-                updateTree: [ "array" ],
-                append: [ [ "integer", "string", "object", "array" ], [ "object", "array" ] ],
-                insert: [ [ "integer", "string" ], [ "object", "array" ] ],
-                select: [ [ "integer", "string" ] ],
-                check: [ [ "integer", "string" ] ],
-                uncheck: [ [ "integer", "string" ] ],
-                remove: [ [ "integer", "string" ] ],
-                move: [ [ "integer", "string" ], [ "integer", "string" ] ],
-                sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ] ],
-                scroll: [ "integer" ],
-                open: [ [ "integer", "string" ] ],
-                fold: [ [ "integer", "string" ] ],
-                get: [ [ "integer", "string" ] ],
-                getAll: [ [ "integer", "string" ] ],
-                getColumn: [ [ "integer", "string" ] ],
-                showColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-                hideColumn: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-                initColumns: [ "array" ],
-                showColumnMenu: [ [ "integer", "undefined" ] ],
-                toggleColumnMenu: [ [ "integer", "undefined" ] ],
-                showExpand: [ [ "integer", "string" ], [ "object", "undefined" ], [ "object", "undefined" ] ],
-                hideExpand: [ [ "object", "undefined" ] ],
-                showEditRow: [ [ "integer", "string" ], [ "object", "undefined" ] ],
-                setCsv: [ "string", "string" ],
-                setCsvFile: [ [ "string", "object" ], "object" ],
-                getCsv: [ [ "boolean", "undefined" ] ],
-                getCsvBase64: [ [ "boolean", "undefined" ] ],
-                downloadCsv: [ [ "string", "undefined" ], [ "boolean", "undefined" ] ]
-            },
-            animate: {
-                update: {
-                    after: function() {
-                        if(arguments.length == 1) {
-                            if(!_.browser.webkit && !_.browser.mozilla) return;
-                            animateUpdate(this, this.listAll());
-                        }
-                    }
-                },
-                updateTree: {
-                    after: function() {
-                        if(!_.browser.webkit && !_.browser.mozilla) return;
-                        animateUpdate(this, this.listAll());
-                    }
-                },
-                remove: {
-                    before: function(index) {
-                        var row = this.get(index);
-
-                        $(row.element).addClass("fadeOutDown")
-                            .css({
-                                "animation-duration":  "350ms",
-                                "animation-timing-function": "ease-out"
-                            });
-                    },
-                    delay: 200
-                },
-                reset: {
-                    before: function() {
-                        var rows = this.listAll(),
-                            m = 2000,
-                            d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
-
-                        for(var i = 0; i < rows.length; i++) {
-                            m -= d;
-
-                            $(rows[i].element).addClass("fadeOutRight")
-                                .css({
-                                    "animation-duration":  ((m > 0) ? m : 50) + "ms",
-                                    "animation-fill-mode": "both"
-                                });
-                        }
-                    },
-                    delay: 1000
-                }
-            }
+            fields: null,
+            csv: null,
+            csvNames: null,
+            csvNumber: null,
+            data: [],
+            rows: null, // @Deprecated
+            colshow: false,
+            scroll: false,
+            scrollHeight: 200,
+            width: 0,
+            expand: false,
+            expandEvent: true,
+            editCell: false,
+            editRow: false,
+            editEvent: true,
+            resize: false,
+            sort: false,
+            sortIndex: null,
+            sortOrder: "asc",
+            sortEvent: true,
+            animate: false // @Deprecated
         }
     }
 	
@@ -9031,28 +8826,11 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
     UI.setup = function() {
         return {
-            options: {
-                root: null,
-                rootHide: false,
-                rootFold: false,
-                drag: false,
-                dragChild: true
-            },
-            valid: {
-                update: [ [ "string", "object" ], "array" ],
-                append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
-                insert: [ "string", [ "object", "array" ] ],
-                select: [ "string" ],
-                remove: [ "string" ],
-                move: [ "string", "string" ],
-                open: [ [ "string", "null" ], [ "object", "undefined" ] ],
-                fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
-                openAll: [ "string" ],
-                foldAll: [ "string" ],
-                listParents: [ "string" ],
-                get: [ "string" ],
-                getAll: [ "string" ]
-            }
+            root: null,
+            rootHide: false,
+            rootFold: false,
+            drag: false,
+            dragChild: true
         }
     }
 	
@@ -9248,60 +9026,18 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 	}
 
     UI.setup = function() {
-        function animateVisible(self, style) {
-            $(self.root).addClass(style)
-                .css({
-                    "animation-duration": "500ms",
-                    "animation-fill-mode": "both"
-                });
-
-            self.addEvent(self.root, 'AnimationEnd', function() {
-                $(self.root).removeClass(style);
-            });
-        }
-
         return {
-            options: {
-                width: 400,
-                height: 300,
-                left: "auto",
-                top: "auto",
-                right: "auto",
-                bottom: "auto",
-                modal: false,
-                move: true,
-                resize: true,
-                modalIndex: 0,
-                animate: false
-            },
-            valid: {
-                show: [ "number", "number" ],
-                move: [ "number", "number" ],
-                update: [ "string" ],
-                setTitle: [ "string" ],
-                setSize: [ "integer", "integer" ]
-            },
-            animate: {
-                show: {
-                    after: function() {
-                        animateVisible(this, "fadeInDown");
-                    }
-                },
-                hide: {
-                    before: function() {
-                        animateVisible(this, "fadeOutUp");
-                    },
-                    after: function() {
-                        $(this.root).removeClass("fadeOutUp");
-                    },
-                    delay: 500
-                },
-                move: {
-                    after: function() {
-                        animateVisible(this, "shake");
-                    }
-                }
-            }
+			width: 400,
+			height: 300,
+			left: "auto",
+			top: "auto",
+			right: "auto",
+			bottom: "auto",
+			modal: false,
+			move: true,
+			resize: true,
+			modalIndex: 0,
+			animate: false // @Deprecated
         }
     }
 	
@@ -10046,111 +9782,30 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 	}
 
     UI.setup = function() {
-        var MAX = 2500, DELAY = 70;
-
-        function animateUpdate(self, rows, style) {
-            var ms = MAX - 1;
-
-            for(var i = 0; i < rows.length; i++) {
-                ms = (ms < MAX) ? (i + 1) * DELAY : MAX;
-
-                $(rows[i].element).addClass(style)
-                    .css({
-                        "animation-duration":  ms + "ms"
-                    });
-
-                (function(index) {
-                    self.addEvent(rows[index].element, 'AnimationEnd', function() {
-                        $(rows[index].element).removeClass(style);
-                    });
-                })(i);
-            }
-        }
-
         return {
-            options: {
-                fields: null,
-                csv: null,
-                csvNames: null,
-                csvNumber: null,
-                csvCount: 10000,
-                data: [],
-                rows: null, // @Deprecated
-                colshow: false,
-                expand: false,
-                expandEvent: true,
-                resize: false,
-                scrollHeight: 200,
-                scrollWidth: 0,
-                width: 0,
-                buffer: "scroll",
-                bufferCount: 100,
-                sort: false,
-                sortLoading: false,
-                sortCache: false,
-                sortIndex: null,
-                sortOrder: "asc",
-                sortEvent: true,
-                animate: false
-            },
-            valid: {
-                select: [ [ "integer", "string" ] ],
-                update: [ "array" ],
-                page: [ "integer" ],
-                sort: [ [ "integer", "string" ], [ "string", "undefined" ], [ "object", "undefined" ], [ "boolean", "undefined" ] ],
-                filter: [ "function" ],
-                height: [ "integer" ],
-                getColumn: [ [ "integer", "string" ] ],
-                getData: [ [ "integer", "string" ] ],
-                showColumn: [ [ "integer", "string" ] ],
-                hideColumn: [ [ "integer", "string" ] ],
-                initColumns: [ "array" ],
-                showColumnMenu: [ [ "integer", "undefined" ] ],
-                toggleColumnMenu: [ [ "integer", "undefined" ] ],
-                showExpand: [ [ "integer", "string" ], "object" ],
-                hideExpand: [ [ "integer", "string" ] ],
-                showLoading: [ "integer" ],
-                setCsv: [ "string" ],
-                setCsvFile: [ "object" ],
-                downloadCsv: [ [ "string", "undefined" ] ],
-                rowFunc: [ "string", [ "integer", "string" ], "function" ]
-            },
-            animate: {
-                update: {
-                    after: function() {
-                        if(!_.browser.webkit && !_.browser.mozilla) return;
-                        animateUpdate(this, this.list(), "fadeInLeft");
-                    }
-                },
-                page: {
-                    after: function() {
-                        animateUpdate(this, this.list(), (p_type == "next") ? "fadeInLeft" : "fadeInRight");
-                    }
-                },
-                reset: {
-                    before: function() {
-                        var rows = this.list(),
-                            m = 2000,
-                            d = ((m / rows.length) < 50) ? 50 : (m / rows.length);
-
-                        for(var i = 0; i < rows.length; i++) {
-                            m -= d;
-
-                            $(rows[i].element).addClass("fadeOutRight")
-                                .css({
-                                    "animation-duration":  ((m > 0) ? m : 50) + "ms",
-                                    "animation-fill-mode": "both"
-                                });
-                        }
-                    },
-                    delay: 1000
-                },
-                filter: {
-                    after: function() {
-                        animateUpdate(this, this.list(), "flipInX");
-                    }
-                }
-            }
+			fields: null,
+			csv: null,
+			csvNames: null,
+			csvNumber: null,
+			csvCount: 10000,
+			data: [],
+			rows: null, // @Deprecated
+			colshow: false,
+			expand: false,
+			expandEvent: true,
+			resize: false,
+			scrollHeight: 200,
+			scrollWidth: 0,
+			width: 0,
+			buffer: "scroll",
+			bufferCount: 100,
+			sort: false,
+			sortLoading: false,
+			sortCache: false,
+			sortIndex: null,
+			sortOrder: "asc",
+			sortEvent: true,
+			animate: false // @Deprecated
         }
     }
 
@@ -11200,63 +10855,34 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
 
     UI.setup = function() {
         return {
-            options: {
-                width: "100%", // chart 기본 넓이
-                height: "100%", // chart 기본 높이
+            width: "100%", // chart 기본 넓이
+            height: "100%", // chart 기본 높이
 
-                // style
-                padding: {
-                    left: 50,
-                    right: 50,
-                    bottom: 50,
-                    top: 50
-                },
-
-                // chart
-                theme: "jennifer", // 기본 테마 jennifer
-                style: {},
-                series: {},
-                grid: {},
-                brush: null,
-                widget: null,
-                data: [],
-                bind: null,
-
-                // buffer
-                bufferCount: 100,
-                shiftCount: 1,
-
-                // csv
-                csv: null,
-                csvNumber: null
+            // style
+            padding: {
+                left: 50,
+                right: 50,
+                bottom: 50,
+                top: 50
             },
-            valid: {
-                area: [ "string" ],
-                width: [ "integer" ],
-                height: [ "integer" ],
-                x: [ "integer" ],
-                y: [ "integer" ],
-                x2: [ "integer" ],
-                y2: [ "integer" ],
-                padding: [ "string" ],
-                color: [ "integer", [ "undefined", "array" ] ], // undefined 제거 요망
-                text: [ "object", [ "string", "function" ] ],
-                setTheme: [ ["object", "string" ], [ "string", "number", "array" ] ],
-                theme: [ [ "string", "boolean" ], "string", "string" ],
-                series: [ [ "undefined", "string" ] ], // undefined 제거 요망
-                grid: [ "string" ],
-                brush: [ "integer" ],
-                data: [ [ "null", "integer" ], "string" ], // null 제거 요망
-                createId: [ "string" ],
-                bindUI: [ "object" ],
-                update: [ "array" ],
-                page: [ "integer" ],
-                size: [ "integer", "integer" ],
-                zoom: [ "integer", "integer" ],
-                render: [ "boolean" ],
-                setCsv: [ "string" ],
-                setCsvFile: [ "object" ]
-            }
+
+            // chart
+            theme: "jennifer", // 기본 테마 jennifer
+            style: {},
+            series: {},
+            grid: {},
+            brush: null,
+            widget: null,
+            data: [],
+            bind: null,
+
+            // buffer
+            bufferCount: 100,
+            shiftCount: 1,
+
+            // csv
+            csv: null,
+            csvNumber: null
         }
     }
 
@@ -16259,45 +15885,39 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            valid: {
-                update: [ "array" ],
-                append: [ [ "array", "object" ] ]
+            width : "100%",		// chart 기본 넓이
+            height : "100%",		// chart 기본 높이
+
+            // style
+            padding : {
+                left : 50 ,
+                right : 50,
+                bottom : 50,
+                top : 50
             },
-            options: {
-                width : "100%",		// chart 기본 넓이
-                height : "100%",		// chart 기본 높이
 
-                // style
-                padding : {
-                    left : 50 ,
-                    right : 50,
-                    bottom : 50,
-                    top : 50
-                },
+            // chart
+            theme : "jennifer",	// 기본 테마 jennifer
+            data : [],
+            style : {},
+            series : {},
+            brush : null,
+            widget : null,
 
-                // chart
-                theme : "jennifer",	// 기본 테마 jennifer
-                data : [],
-                style : {},
-                series : {},
-                brush : null,
-                widget : null,
+            // grid (custom)
+            grid : {
+                target : null,
+                format : "hh:mm",
+                key : "time",
+                xstep : 1, // x축 분 간격
+                ystep : 10,
+                xline : true,
+                yline : true
+            },
 
-                // grid (custom)
-                grid : {
-                    target : null,
-                    format : "hh:mm",
-                    key : "time",
-                    xstep : 1, // x축 분 간격
-                    ystep : 10,
-                    xline : true,
-                    yline : true
-                },
-
-                // realtime
-                interval : 1, // 초
-                period : 5 // 분
-            }
+            // realtime
+            interval : 1, // 초
+            period : 5 // 분
         }
     }
 

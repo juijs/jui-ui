@@ -467,17 +467,15 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            options: {
-                barColor : '#d6d6d6',
-                barSize : 3,
-                width	: null,
-                height	: null,
-                top		: { el : null, size : null, min : 50, max : 200, resize : true },
-                left	: { el : null, size : null, min : 50, max : 200, resize : true },
-                right	: { el : null, size : null, min : 50, max : 200, resize : true },
-                bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
-                center	: { el : null }
-            }
+			barColor : '#d6d6d6',
+			barSize : 3,
+			width	: null,
+			height	: null,
+			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+			center	: { el : null }
         }
     }
 	

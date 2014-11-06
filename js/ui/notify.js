@@ -114,19 +114,14 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            options: {
-                position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-                padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-                distance: 5, // 알림끼리의 간격
-                timeout: 3000, // 0이면 사라지지 않음
-                showDuration: 500,
-                hideDuration: 500,
-                showEasing: "swing",
-                hideEasing: "linear"
-            },
-            valid: {
-                add: [ "object", "integer" ]
-            }
+            position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
+            padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
+            distance: 5, // 알림끼리의 간격
+            timeout: 3000, // 0이면 사라지지 않음
+            showDuration: 500,
+            hideDuration: 500,
+            showEasing: "swing",
+            hideEasing: "linear"
         };
     }
 

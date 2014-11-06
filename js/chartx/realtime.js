@@ -117,45 +117,39 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            valid: {
-                update: [ "array" ],
-                append: [ [ "array", "object" ] ]
+            width : "100%",		// chart 기본 넓이
+            height : "100%",		// chart 기본 높이
+
+            // style
+            padding : {
+                left : 50 ,
+                right : 50,
+                bottom : 50,
+                top : 50
             },
-            options: {
-                width : "100%",		// chart 기본 넓이
-                height : "100%",		// chart 기본 높이
 
-                // style
-                padding : {
-                    left : 50 ,
-                    right : 50,
-                    bottom : 50,
-                    top : 50
-                },
+            // chart
+            theme : "jennifer",	// 기본 테마 jennifer
+            data : [],
+            style : {},
+            series : {},
+            brush : null,
+            widget : null,
 
-                // chart
-                theme : "jennifer",	// 기본 테마 jennifer
-                data : [],
-                style : {},
-                series : {},
-                brush : null,
-                widget : null,
+            // grid (custom)
+            grid : {
+                target : null,
+                format : "hh:mm",
+                key : "time",
+                xstep : 1, // x축 분 간격
+                ystep : 10,
+                xline : true,
+                yline : true
+            },
 
-                // grid (custom)
-                grid : {
-                    target : null,
-                    format : "hh:mm",
-                    key : "time",
-                    xstep : 1, // x축 분 간격
-                    ystep : 10,
-                    xline : true,
-                    yline : true
-                },
-
-                // realtime
-                interval : 1, // 초
-                period : 5 // 분
-            }
+            // realtime
+            interval : 1, // 초
+            period : 5 // 분
         }
     }
 

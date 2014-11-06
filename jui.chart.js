@@ -1461,15 +1461,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
-                var mainObj = new UI["class"](),
-                    defOpts = {};
+                var mainObj = new UI["class"]();
 
                 // Check Options
-                if(_.typeCheck("object", setting.options)) {
-                    defOpts = setting.options;
+                if(_.typeCheck("object", defOpts)) {
                     checkedOptions(defOpts, options);
                 }
 
@@ -1513,30 +1511,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     }
                 }
 
-                var uiObj = new mainObj.init(),
-                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
-                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
+                var uiObj = new mainObj.init();
 
                 // Event Setting
                 if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
-                    }
-                }
-
-                // Type-Valid Check
-                for(var key in validFunc) {
-                    if(_.typeCheck("array", validFunc[key])) {
-                        uiObj.addValid(key, validFunc[key]);
-                    }
-                }
-
-                // Call-Animate Functions
-                if(opts.animate === true) {
-                    for(var key in animateFunc) {
-                        if(_.typeCheck("object", animateFunc[key])) {
-                            uiObj.callDelay(key, animateFunc[key]);
-                        }
                     }
                 }
 
@@ -4470,63 +4450,34 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
 
     UI.setup = function() {
         return {
-            options: {
-                width: "100%", // chart 기본 넓이
-                height: "100%", // chart 기본 높이
+            width: "100%", // chart 기본 넓이
+            height: "100%", // chart 기본 높이
 
-                // style
-                padding: {
-                    left: 50,
-                    right: 50,
-                    bottom: 50,
-                    top: 50
-                },
-
-                // chart
-                theme: "jennifer", // 기본 테마 jennifer
-                style: {},
-                series: {},
-                grid: {},
-                brush: null,
-                widget: null,
-                data: [],
-                bind: null,
-
-                // buffer
-                bufferCount: 100,
-                shiftCount: 1,
-
-                // csv
-                csv: null,
-                csvNumber: null
+            // style
+            padding: {
+                left: 50,
+                right: 50,
+                bottom: 50,
+                top: 50
             },
-            valid: {
-                area: [ "string" ],
-                width: [ "integer" ],
-                height: [ "integer" ],
-                x: [ "integer" ],
-                y: [ "integer" ],
-                x2: [ "integer" ],
-                y2: [ "integer" ],
-                padding: [ "string" ],
-                color: [ "integer", [ "undefined", "array" ] ], // undefined 제거 요망
-                text: [ "object", [ "string", "function" ] ],
-                setTheme: [ ["object", "string" ], [ "string", "number", "array" ] ],
-                theme: [ [ "string", "boolean" ], "string", "string" ],
-                series: [ [ "undefined", "string" ] ], // undefined 제거 요망
-                grid: [ "string" ],
-                brush: [ "integer" ],
-                data: [ [ "null", "integer" ], "string" ], // null 제거 요망
-                createId: [ "string" ],
-                bindUI: [ "object" ],
-                update: [ "array" ],
-                page: [ "integer" ],
-                size: [ "integer", "integer" ],
-                zoom: [ "integer", "integer" ],
-                render: [ "boolean" ],
-                setCsv: [ "string" ],
-                setCsvFile: [ "object" ]
-            }
+
+            // chart
+            theme: "jennifer", // 기본 테마 jennifer
+            style: {},
+            series: {},
+            grid: {},
+            brush: null,
+            widget: null,
+            data: [],
+            bind: null,
+
+            // buffer
+            bufferCount: 100,
+            shiftCount: 1,
+
+            // csv
+            csv: null,
+            csvNumber: null
         }
     }
 
@@ -9269,45 +9220,39 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            valid: {
-                update: [ "array" ],
-                append: [ [ "array", "object" ] ]
+            width : "100%",		// chart 기본 넓이
+            height : "100%",		// chart 기본 높이
+
+            // style
+            padding : {
+                left : 50 ,
+                right : 50,
+                bottom : 50,
+                top : 50
             },
-            options: {
-                width : "100%",		// chart 기본 넓이
-                height : "100%",		// chart 기본 높이
 
-                // style
-                padding : {
-                    left : 50 ,
-                    right : 50,
-                    bottom : 50,
-                    top : 50
-                },
+            // chart
+            theme : "jennifer",	// 기본 테마 jennifer
+            data : [],
+            style : {},
+            series : {},
+            brush : null,
+            widget : null,
 
-                // chart
-                theme : "jennifer",	// 기본 테마 jennifer
-                data : [],
-                style : {},
-                series : {},
-                brush : null,
-                widget : null,
+            // grid (custom)
+            grid : {
+                target : null,
+                format : "hh:mm",
+                key : "time",
+                xstep : 1, // x축 분 간격
+                ystep : 10,
+                xline : true,
+                yline : true
+            },
 
-                // grid (custom)
-                grid : {
-                    target : null,
-                    format : "hh:mm",
-                    key : "time",
-                    xstep : 1, // x축 분 간격
-                    ystep : 10,
-                    xline : true,
-                    yline : true
-                },
-
-                // realtime
-                interval : 1, // 초
-                period : 5 // 분
-            }
+            // realtime
+            interval : 1, // 초
+            period : 5 // 분
         }
     }
 

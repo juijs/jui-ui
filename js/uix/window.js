@@ -188,60 +188,18 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 	}
 
     UI.setup = function() {
-        function animateVisible(self, style) {
-            $(self.root).addClass(style)
-                .css({
-                    "animation-duration": "500ms",
-                    "animation-fill-mode": "both"
-                });
-
-            self.addEvent(self.root, 'AnimationEnd', function() {
-                $(self.root).removeClass(style);
-            });
-        }
-
         return {
-            options: {
-                width: 400,
-                height: 300,
-                left: "auto",
-                top: "auto",
-                right: "auto",
-                bottom: "auto",
-                modal: false,
-                move: true,
-                resize: true,
-                modalIndex: 0,
-                animate: false
-            },
-            valid: {
-                show: [ "number", "number" ],
-                move: [ "number", "number" ],
-                update: [ "string" ],
-                setTitle: [ "string" ],
-                setSize: [ "integer", "integer" ]
-            },
-            animate: {
-                show: {
-                    after: function() {
-                        animateVisible(this, "fadeInDown");
-                    }
-                },
-                hide: {
-                    before: function() {
-                        animateVisible(this, "fadeOutUp");
-                    },
-                    after: function() {
-                        $(this.root).removeClass("fadeOutUp");
-                    },
-                    delay: 500
-                },
-                move: {
-                    after: function() {
-                        animateVisible(this, "shake");
-                    }
-                }
-            }
+			width: 400,
+			height: 300,
+			left: "auto",
+			top: "auto",
+			right: "auto",
+			bottom: "auto",
+			modal: false,
+			move: true,
+			resize: true,
+			modalIndex: 0,
+			animate: false // @Deprecated
         }
     }
 	

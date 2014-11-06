@@ -892,28 +892,11 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
     UI.setup = function() {
         return {
-            options: {
-                root: null,
-                rootHide: false,
-                rootFold: false,
-                drag: false,
-                dragChild: true
-            },
-            valid: {
-                update: [ [ "string", "object" ], "array" ],
-                append: [ [ "string", "object", "array" ], [ "object", "array" ] ],
-                insert: [ "string", [ "object", "array" ] ],
-                select: [ "string" ],
-                remove: [ "string" ],
-                move: [ "string", "string" ],
-                open: [ [ "string", "null" ], [ "object", "undefined" ] ],
-                fold: [ [ "string", "null" ], [ "object", "undefined" ] ],
-                openAll: [ "string" ],
-                foldAll: [ "string" ],
-                listParents: [ "string" ],
-                get: [ "string" ],
-                getAll: [ "string" ]
-            }
+            root: null,
+            rootHide: false,
+            rootFold: false,
+            drag: false,
+            dragChild: true
         }
     }
 	
