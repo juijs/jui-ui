@@ -1,7 +1,7 @@
 {
   "name": "jui",
-  "version": "1.2.0",
-  "description": "HTML5 Based JENNIFER UI Library (CSS, Components, Charts)",
+  "version": "1.2.1",
+  "description": "JENNIFER UI is all free. a simple, fast, many: JUI is all-in-one desktop UI framework. Bootstrap support, Independent style & script components, SVG-based chart components.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,10 +10,19 @@
     "url": "https://github.com/seogi1004/jui.git"
   },
   "keywords": [
-    "jui",
-    "html5",
-    "jennifersoft",
-    "jennifer"
+    "HTML5",
+    "CSS",
+    "JS",
+    "JavaScript",
+    "SVG",
+    "chart",
+    "framework",
+    "bootstrap",
+    "front-end",
+    "frontend",
+    "web development",
+    "free",
+    "MIT"
   ],
   "author": "seogi1004",
   "license": "MIT",

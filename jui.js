@@ -10948,6 +10948,7 @@ jui.define("chart.theme.jennifer", [], function() {
         donutBorderColor : "white",
         donutBorderWidth : 1,
     	areaOpacity : 0.5,
+        areaSplitBackgroundColor : "#929292",
         bubbleOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "black",
@@ -10958,6 +10959,7 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineSplitBackgroundColor : "#929292",
         pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
@@ -11044,6 +11046,7 @@ jui.define("chart.theme.gradient", [], function() {
         donutBorderColor : "white",
         donutBorderWidth : 1,
         areaOpacity : 0.4,
+        areaSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
         bubbleOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "#14be9d",
@@ -11054,6 +11057,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
         pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
@@ -11099,13 +11103,11 @@ jui.define("chart.theme.dark", [], function() {
         "#f94590",
         "#8bccf9",
         "#9228e4",
-
         "#06d9b6",
         "#fc6d65",
         "#f199ff",
         "#c8f21d",
         "#16a6e5",
-
         "#00ba60",
         "#91f2a1",
         "#fc9765",
@@ -11140,6 +11142,7 @@ jui.define("chart.theme.dark", [], function() {
         donutBorderColor : "#232323",
         donutBorderWidth : 1,
     	areaOpacity : 0.5,
+        areaSplitBackgroundColor : "#ebebeb",
         bubbleOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "#14be9d",
@@ -11150,6 +11153,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineSplitBackgroundColor : "#ebebeb",
         pathOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "none",
@@ -11230,6 +11234,7 @@ jui.define("chart.theme.pastel", [], function() {
 		donutBorderColor : "white",
 		donutBorderWidth : 3,
 		areaOpacity : 0.4,
+		areaSplitBackgroundColor : "#ebebeb",
 		bubbleOpacity : 0.5,
 		bubbleBorderWidth : 1,
 		candlestickBorderColor : "#14be9d",
@@ -11240,6 +11245,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
+		lineSplitBackgroundColor : "#ebebeb",
 		pathOpacity : 0.5,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
@@ -15019,6 +15025,140 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	return WaterFallBrush;
 }, "chart.brush.core");
+
+jui.define("chart.brush.splitline", [], function() {
+
+	var SplitLineBrush = function() {
+
+        this.createLine = function(pos, index) {
+            var opts = {
+                stroke: this.chart.color(index, this.brush.colors),
+                "stroke-width": this.chart.theme("lineBorderWidth"),
+                fill: "transparent"
+            };
+
+            var split = this.brush.split,
+                symbol = this.brush.symbol;
+
+            var x = pos.x,
+                y = pos.y,
+                px, py; // curve에서 사용함
+
+            var g = this.chart.svg.group(),
+                p = this.chart.svg.path(opts).MoveTo(x[0], y[0]);
+
+            if(symbol == "curve") {
+                px = this.curvePoints(x);
+                py = this.curvePoints(y);
+            }
+
+            for (var i = 0; i < x.length - 1; i++) {
+                if(i == split) {
+                    g.append(p);
+
+                    opts["stroke"] = this.chart.theme("lineSplitBackgroundColor");
+                    p = this.chart.svg.path(opts).MoveTo(x[split], y[split]);
+                }
+
+                if(symbol == "step") {
+                    var sx = x[i] + ((x[i + 1] - x[i]) / 2);
+
+                    p.LineTo(sx, y[i]);
+                    p.LineTo(sx, y[i + 1]);
+                }
+
+                if(symbol != "curve") {
+                    p.LineTo(x[i + 1], y[i + 1]);
+                } else {
+                    p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
+                }
+            }
+
+            g.append(p);
+
+            return g;
+        }
+
+        this.drawLine = function(path) {
+            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+
+            for (var k = 0; k < path.length; k++) {
+                var p = this.createLine(path[k], k);
+                this.addEvent(p, k, null);
+
+                g.append(p);
+            }
+
+            return g;
+        }
+
+        this.draw = function() {
+            return this.drawLine(this.getXY());
+        }
+
+        this.drawSetup = function() {
+            return {
+                symbol: "normal", // normal, curve, step
+                split: null
+            }
+        }
+	}
+
+	return SplitLineBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.splitarea", [], function() {
+
+    var SplitAreaBrush = function() {
+
+        this.drawArea = function(path) {
+            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y()),
+                maxY = this.chart.height(),
+                split = this.brush.split,
+                splitColor = this.chart.theme("areaSplitBackgroundColor");
+
+            for (var k = 0; k < path.length; k++) {
+                var opts = {
+                    fill: this.chart.color(k, this.brush.colors),
+                    "fill-opacity": this.chart.theme("areaOpacity"),
+                    "stroke-width": 0
+                };
+
+                var line = this.createLine(path[k], k),
+                    xList = path[k].x;
+
+                line.each(function(i, p) {
+                    if(i == 0) {
+                        split = (split != null) ? split : xList.length - 1;
+
+                        p.LineTo(xList[split], maxY);
+                        p.LineTo(xList[0], maxY);
+                        p.attr(opts);
+                    } else {
+                        opts["fill"] = splitColor;
+
+                        p.LineTo(xList[xList.length - 1], maxY);
+                        p.LineTo(xList[split], maxY);
+                        p.attr(opts);
+                    }
+
+                    p.ClosePath();
+                });
+
+                this.addEvent(line, null, null);
+
+                g.prepend(line);
+            }
+
+            return g;
+        }
+
+        this.draw = function() {
+            return this.drawArea(this.getXY());
+        }
+    }
+
+    return SplitAreaBrush;
+}, "chart.brush.splitline");
 
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
