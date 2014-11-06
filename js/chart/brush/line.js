@@ -32,6 +32,8 @@ jui.define("chart.brush.line", [], function() {
                 }
             }
 
+            p.concate()
+
             return p;
         }
 

@@ -46,6 +46,8 @@ jui.define("chart.brush.splitline", [], function() {
                 }
             }
 
+            p.concate();
+
             g.append(p);
 
             return g;
