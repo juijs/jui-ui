@@ -131,7 +131,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: [ 0 ],
                 position: "bottom",
-                align: "center", // or left, right
+                align: "center", // or start, end
                 key: null
             }
         }

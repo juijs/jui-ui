@@ -1260,35 +1260,28 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UICore = function() {
         var vo = null;
 
-        /**
-         * 커스텀 이벤트 발생시키는 메소드
-         *
-         * @param type 발생시킬 이벤트
-         * @param args 이벤트 핸들러에 넘기는 값
-         * @param _unique 내부적으로 사용하며, on 이벤트인지 bind 이벤트인지 구분
-         * @param _result 내부적으로 사용하며, 리턴 값은 커스텀 이벤트의 핸들러 값
-         * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
-         */
-        this.emit = function(type, args, _unique, _result) {
-            var unique = (!_unique) ? false : true;
+        this.emit = function(type, args, unique) {
+            var result = null,
+                unique = (!unique) ? false : true;
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
                 if(e.type == type.toLowerCase() && e.unique === unique) {
                     if(typeof(args) == "object" && args.length != undefined) {
-                        _result = e.callback.apply(this, args);
+                        result = e.callback.apply(this, args);
                     } else {
-                        _result = e.callback.call(this, args);
+                        result = e.callback.call(this, args);
                     }
                 }
             }
 
+            // unique emitting!!
             if(unique === false) {
-                return this.emit(type, args, true, _result);
+                return this.emit(type, args, true);
             }
 
-            return _result;
+            return result;
         }
 
         this.on = function(type, callback) {
@@ -1468,13 +1461,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         return function(selector, options) {
             var $root = $(selector);
             var list = [],
-                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+                setting = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
 
             $root.each(function(index) {
-                var mainObj = new UI["class"]();
+                var mainObj = new UI["class"](),
+                    defOpts = {};
 
                 // Check Options
-                if(_.typeCheck("object", defOpts)) {
+                if(_.typeCheck("object", setting.options)) {
+                    defOpts = setting.options;
                     checkedOptions(defOpts, options);
                 }
 
@@ -1518,12 +1513,30 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     }
                 }
 
-                var uiObj = new mainObj.init();
+                var uiObj = new mainObj.init(),
+                    validFunc = _.typeCheck("object", setting.valid) ? setting.valid : {},
+                    animateFunc = _.typeCheck("object", setting.animate) ? setting.animate : {};
 
                 // Event Setting
                 if(_.typeCheck("object", uiObj.options.event)) {
                     for(var key in uiObj.options.event) {
                         uiObj.on(key, uiObj.options.event[key]);
+                    }
+                }
+
+                // Type-Valid Check
+                for(var key in validFunc) {
+                    if(_.typeCheck("array", validFunc[key])) {
+                        uiObj.addValid(key, validFunc[key]);
+                    }
+                }
+
+                // Call-Animate Functions
+                if(opts.animate === true) {
+                    for(var key in animateFunc) {
+                        if(_.typeCheck("object", animateFunc[key])) {
+                            uiObj.callDelay(key, animateFunc[key]);
+                        }
                     }
                 }
 
@@ -4457,34 +4470,63 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
 
     UI.setup = function() {
         return {
-            width: "100%", // chart 기본 넓이
-            height: "100%", // chart 기본 높이
+            options: {
+                width: "100%", // chart 기본 넓이
+                height: "100%", // chart 기본 높이
 
-            // style
-            padding: {
-                left: 50,
-                right: 50,
-                bottom: 50,
-                top: 50
+                // style
+                padding: {
+                    left: 50,
+                    right: 50,
+                    bottom: 50,
+                    top: 50
+                },
+
+                // chart
+                theme: "jennifer", // 기본 테마 jennifer
+                style: {},
+                series: {},
+                grid: {},
+                brush: null,
+                widget: null,
+                data: [],
+                bind: null,
+
+                // buffer
+                bufferCount: 100,
+                shiftCount: 1,
+
+                // csv
+                csv: null,
+                csvNumber: null
             },
-
-            // chart
-            theme: "jennifer", // 기본 테마 jennifer
-            style: {},
-            series: {},
-            grid: {},
-            brush: null,
-            widget: null,
-            data: [],
-            bind: null,
-
-            // buffer
-            bufferCount: 100,
-            shiftCount: 1,
-
-            // csv
-            csv: null,
-            csvNumber: null
+            valid: {
+                area: [ "string" ],
+                width: [ "integer" ],
+                height: [ "integer" ],
+                x: [ "integer" ],
+                y: [ "integer" ],
+                x2: [ "integer" ],
+                y2: [ "integer" ],
+                padding: [ "string" ],
+                color: [ "integer", [ "undefined", "array" ] ], // undefined 제거 요망
+                text: [ "object", [ "string", "function" ] ],
+                setTheme: [ ["object", "string" ], [ "string", "number", "array" ] ],
+                theme: [ [ "string", "boolean" ], "string", "string" ],
+                series: [ [ "undefined", "string" ] ], // undefined 제거 요망
+                grid: [ "string" ],
+                brush: [ "integer" ],
+                data: [ [ "null", "integer" ], "string" ], // null 제거 요망
+                createId: [ "string" ],
+                bindUI: [ "object" ],
+                update: [ "array" ],
+                page: [ "integer" ],
+                size: [ "integer", "integer" ],
+                zoom: [ "integer", "integer" ],
+                render: [ "boolean" ],
+                setCsv: [ "string" ],
+                setCsvFile: [ "object" ]
+            }
         }
     }
 
@@ -4558,11 +4600,6 @@ jui.define("chart.theme.jennifer", [], function() {
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
         scatterHoverColor : "white",
-        waterfallBackgroundColor : "#87BB66", // 4
-        waterfallInvertBackgroundColor : "#FF7800", // 3
-        waterfallEdgeBackgroundColor : "#7BBAE7", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -4654,11 +4691,6 @@ jui.define("chart.theme.gradient", [], function() {
         scatterBorderColor : "white",
         scatterBorderWidth : 2,
         scatterHoverColor : "white",
-        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66", // 4
-        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800", // 3
-        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -4750,11 +4782,6 @@ jui.define("chart.theme.dark", [], function() {
         scatterBorderColor : "none",
         scatterBorderWidth : 1,
         scatterHoverColor : "#222222",
-        waterfallBackgroundColor : "#26f67c", //
-        waterfallInvertBackgroundColor : "#f94590", // 3
-        waterfallEdgeBackgroundColor : "#8bccf9", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#ffffff",
@@ -4840,11 +4867,6 @@ jui.define("chart.theme.pastel", [], function() {
 		scatterBorderColor : "white",
 		scatterBorderWidth : 1,
 		scatterHoverColor : "white",
-		waterfallBackgroundColor : "#73e9d2", // 4
-		waterfallInvertBackgroundColor : "#ffb9ce", // 3
-		waterfallEdgeBackgroundColor : "#08c4e0", // 1
-		waterfallBorderColor : "#a9a9a9",
-		waterfallBorderDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -8244,114 +8266,6 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 	return StackGaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.brush.waterfall", [], function() {
-
-	var WaterFallBrush = function(chart, brush) {
-		var g, zeroY, count, width, columnWidth, half_width;
-		var outerPadding;
-
-		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
-
-            outerPadding = brush.outerPadding;
-			zeroY = brush.y(0);
-			count = chart.data().length;
-
-			width = brush.x.rangeBand();
-			half_width = (width - outerPadding * 2);
-			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1)) / brush.target.length;
-		}
-
-		this.draw = function() {
-			var target = brush.target[0],
-				stroke = chart.theme("waterfallBorderColor");
-
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - half_width / 2,
-					startY = brush.y(chart.data(i)[target]),
-					r = null, l = null;
-
-				if(i == 0 || (i == count - 1 && brush.end)) {
-					var color = chart.theme("waterfallEdgeBackgroundColor");
-
-					if (startY <= zeroY) {
-						r = chart.svg.rect({
-							x: startX,
-							y: startY,
-							width: columnWidth,
-							height: Math.abs(zeroY - startY),
-							fill: color
-						});
-					} else {
-						r = chart.svg.rect({
-							x: startX,
-							y: zeroY,
-							width: columnWidth,
-							height: Math.abs(zeroY - startY),
-							fill: color
-						});
-					}
-				} else {
-					var preValue = chart.data(i - 1)[target],
-						nowValue = chart.data(i)[target],
-						preStartY = brush.y(preValue),
-						nowStartY = brush.y(nowValue),
-						h = preStartY - nowStartY;
-
-					if(h > 0) {
-						r = chart.svg.rect({
-							x: startX,
-							y: preStartY - h,
-							width: columnWidth,
-							height: Math.abs(h),
-							fill: chart.theme("waterfallBackgroundColor")
-						});
-					} else {
-						r = chart.svg.rect({
-							x: startX,
-							y: preStartY,
-							width: columnWidth,
-							height: Math.abs(h),
-							fill: chart.theme("waterfallInvertBackgroundColor")
-						});
-					}
-
-					if(brush.line) {
-						l = chart.svg.line({
-							x1: startX - outerPadding * 2,
-							y1: nowStartY + h,
-							x2: startX,
-							y2: nowStartY + h,
-							stroke: stroke,
-							"stroke-width": 1,
-							"stroke-dasharray": chart.theme("waterfallBorderDashArray")
-						});
-
-						g.append(l);
-					}
-				}
-
-				this.addEvent(r, 0, i);
-				g.append(r);
-
-				startX += columnWidth;
-			}
-
-            return g;
-		}
-
-        this.drawSetup = function() {
-            return {
-				line: true,
-				end: false,
-                outerPadding: 5
-            }
-        }
-	}
-
-	return WaterFallBrush;
-}, "chart.brush.core");
-
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
 	var CoreWidget = function() {
@@ -9227,39 +9141,45 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            width : "100%",		// chart 기본 넓이
-            height : "100%",		// chart 기본 높이
-
-            // style
-            padding : {
-                left : 50 ,
-                right : 50,
-                bottom : 50,
-                top : 50
+            valid: {
+                update: [ "array" ],
+                append: [ [ "array", "object" ] ]
             },
+            options: {
+                width : "100%",		// chart 기본 넓이
+                height : "100%",		// chart 기본 높이
 
-            // chart
-            theme : "jennifer",	// 기본 테마 jennifer
-            data : [],
-            style : {},
-            series : {},
-            brush : null,
-            widget : null,
+                // style
+                padding : {
+                    left : 50 ,
+                    right : 50,
+                    bottom : 50,
+                    top : 50
+                },
 
-            // grid (custom)
-            grid : {
-                target : null,
-                format : "hh:mm",
-                key : "time",
-                xstep : 1, // x축 분 간격
-                ystep : 10,
-                xline : true,
-                yline : true
-            },
+                // chart
+                theme : "jennifer",	// 기본 테마 jennifer
+                data : [],
+                style : {},
+                series : {},
+                brush : null,
+                widget : null,
 
-            // realtime
-            interval : 1, // 초
-            period : 5 // 분
+                // grid (custom)
+                grid : {
+                    target : null,
+                    format : "hh:mm",
+                    key : "time",
+                    xstep : 1, // x축 분 간격
+                    ystep : 10,
+                    xline : true,
+                    yline : true
+                },
+
+                // realtime
+                interval : 1, // 초
+                period : 5 // 분
+            }
         }
     }
 

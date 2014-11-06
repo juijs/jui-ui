@@ -26,7 +26,8 @@
 
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    line : true
+                    line : true,
+                    full : true
                 },
                 y : {
                     type : 'range',
@@ -39,7 +40,8 @@
                 value : { text : "값" }
             },
             brush : [
-                  { type : 'line', symbol: "step" }
+                  { type : 'line', symbol: "step" },
+                { type : "scatter", size: 10 }
             ]
         }).render();
 	})
