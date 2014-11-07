@@ -281,12 +281,12 @@ jui.define("util.svg.element.path", [], function() { // path
         var orders = [];
 
         function applyOrders(self) {
+            if(orders.length == 0) return;
             self.attr({ d: orders.join(" ") });
         }
 
         this.moveTo = function(x, y, type) {
             orders.push( (type || "m") + x + "," + y );
-
             return this;
         }
         this.MoveTo = function(x, y) {
@@ -295,7 +295,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.lineTo = function(x, y, type) {
             orders.push( (type || "l") + x + "," + y );
-
             return this;
         }
         this.LineTo = function(x, y) {
@@ -304,7 +303,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.hLineTo = function(x, type) {
             orders.push( (type || "h") + x );
-
             return this;
         }
         this.HLineTo = function(x) {
@@ -313,7 +311,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.vLineTo = function(y, type) {
             orders.push( (type || "v") + y );
-
             return this;
         }
         this.VLineTo = function(y) {
@@ -373,7 +370,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.join = function() {
             applyOrders(this);
-            return this;
         }
         
         /**
@@ -405,14 +401,17 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         var orders = [];
 
         function applyOrders(self) {
+            if(orders.length == 0) return;
             self.attr({ points: orders.join(" ") });
         }
 
         this.point = function(x, y) {
             orders.push(x + "," + y);
-            applyOrders(this);
-
             return this;
+        }
+
+        this.join = function() {
+            applyOrders(this);
         }
     }
 
@@ -482,12 +481,18 @@ jui.define("util.svg",
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
 
-                if(child && child.parent == target) {
-                    target.element.appendChild(child.element);
-                }
+                if(child) {
+                    if (child.parent == target) {
+                        target.element.appendChild(child.element);
+                    }
 
-                if(child && child.childrens.length > 0) {
-                    appendAll(child);
+                    if (child.join) { // PathElement & PolyElement auto join
+                        child.join();
+                    }
+
+                    if (child.childrens.length > 0) {
+                        appendAll(child);
+                    }
                 }
             }
         }

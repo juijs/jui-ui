@@ -51,9 +51,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			// 패스 종료
 			path.ClosePath();
 
-			// 패스 그리기
-			path.join();
-
 			g.append(path);
 
             if (hasCircle) {
@@ -103,7 +100,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
             startX = 0;
             outerRadius = Math.abs(startY);
             innerRadius = outerRadius - this.brush.size;
-
         }
 
 		this.draw = function() {

@@ -2732,12 +2732,12 @@ jui.define("util.svg.element.path", [], function() { // path
         var orders = [];
 
         function applyOrders(self) {
+            if(orders.length == 0) return;
             self.attr({ d: orders.join(" ") });
         }
 
         this.moveTo = function(x, y, type) {
             orders.push( (type || "m") + x + "," + y );
-
             return this;
         }
         this.MoveTo = function(x, y) {
@@ -2746,7 +2746,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.lineTo = function(x, y, type) {
             orders.push( (type || "l") + x + "," + y );
-
             return this;
         }
         this.LineTo = function(x, y) {
@@ -2755,7 +2754,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.hLineTo = function(x, type) {
             orders.push( (type || "h") + x );
-
             return this;
         }
         this.HLineTo = function(x) {
@@ -2764,7 +2762,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.vLineTo = function(y, type) {
             orders.push( (type || "v") + y );
-
             return this;
         }
         this.VLineTo = function(y) {
@@ -2824,7 +2821,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.join = function() {
             applyOrders(this);
-            return this;
         }
         
         /**
@@ -2856,14 +2852,17 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         var orders = [];
 
         function applyOrders(self) {
+            if(orders.length == 0) return;
             self.attr({ points: orders.join(" ") });
         }
 
         this.point = function(x, y) {
             orders.push(x + "," + y);
-            applyOrders(this);
-
             return this;
+        }
+
+        this.join = function() {
+            applyOrders(this);
         }
     }
 
@@ -2933,12 +2932,18 @@ jui.define("util.svg",
             for(var i = 0; i < target.childrens.length; i++) {
                 var child = target.childrens[i];
 
-                if(child && child.parent == target) {
-                    target.element.appendChild(child.element);
-                }
+                if(child) {
+                    if (child.parent == target) {
+                        target.element.appendChild(child.element);
+                    }
 
-                if(child && child.childrens.length > 0) {
-                    appendAll(child);
+                    if (child.join) { // PathElement & PolyElement auto join
+                        child.join();
+                    }
+
+                    if (child.childrens.length > 0) {
+                        appendAll(child);
+                    }
                 }
             }
         }
@@ -6723,9 +6728,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			// 패스 종료
 			path.ClosePath();
 
-			// 패스 그리기
-			path.join();
-
 			g.append(path);
 
             if (hasCircle) {
@@ -6775,7 +6777,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
             startX = 0;
             outerRadius = Math.abs(startY);
             innerRadius = outerRadius - this.brush.size;
-
         }
 
 		this.draw = function() {
@@ -7029,9 +7030,7 @@ jui.define("chart.brush.line", [], function() {
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                p.join();
                 this.addEvent(p, k, null);
-
                 g.append(p);
             }
 
@@ -7086,7 +7085,6 @@ jui.define("chart.brush.path", [], function() {
 				}
 	
 				path.ClosePath();
-				path.join();
 			}
 
 			return g;
@@ -7126,7 +7124,6 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 			path.LineTo(0, 0);
 			path.ClosePath();
-			path.join();
 
 			g.append(path);
 
@@ -7747,9 +7744,7 @@ jui.define("chart.brush.area", [], function() {
                     "stroke-width": 0
                 });
 
-                p.join();
                 this.addEvent(p, null, null);
-
                 g.prepend(p);
             }
 
@@ -7879,7 +7874,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			path.LineTo(5, 0);
 			path.LineTo(-5, 0);
 			path.ClosePath();
-			path.join();
 
 			// start angle
 			path.rotate(startAngle);
@@ -8318,10 +8312,6 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                p.each(function(i) {
-                   this.join();
-                });
-
                 this.addEvent(p, k, null);
                 g.append(p);
             }
@@ -8379,7 +8369,6 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                     }
 
                     p.ClosePath();
-                    p.join();
                 });
 
                 this.addEvent(line, null, null);

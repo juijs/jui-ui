@@ -34,7 +34,6 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                     }
 
                     p.ClosePath();
-                    p.join();
                 });
 
                 this.addEvent(line, null, null);

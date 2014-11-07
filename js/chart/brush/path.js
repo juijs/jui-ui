@@ -33,7 +33,6 @@ jui.define("chart.brush.path", [], function() {
 				}
 	
 				path.ClosePath();
-				path.join();
 			}
 
 			return g;
