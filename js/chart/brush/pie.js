@@ -28,6 +28,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 			path.LineTo(0, 0);
 			path.ClosePath();
+			path.join();
 
 			g.append(path);
 

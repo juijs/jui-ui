@@ -1,20 +1,5 @@
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
-	/**
-	 * Donut Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "donut",
-	 *  target : "field1",
-	 *  size : 50,				// donut 안쪽과 바깥쪽 사이 거리   
-	 *  outerRadius : 200		// donut 의 반지름 
-	 *  colors : []				// custom color
-	 *  
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
+
 	var DonutBrush = function() {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
@@ -65,6 +50,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			
 			// 패스 종료
 			path.ClosePath();
+
+			// 패스 그리기
+			path.join();
 
 			g.append(path);
 

@@ -286,7 +286,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.moveTo = function(x, y, type) {
             orders.push( (type || "m") + x + "," + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -296,7 +295,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.lineTo = function(x, y, type) {
             orders.push( (type || "l") + x + "," + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -306,7 +304,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.hLineTo = function(x, type) {
             orders.push( (type || "h") + x );
-            //applyOrders(this);
 
             return this;
         }
@@ -316,7 +313,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.vLineTo = function(y, type) {
             orders.push( (type || "v") + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -326,8 +322,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.curveTo = function(x1, y1, x2, y2, x, y, type) {
             orders.push( (type || "c") + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.CurveTo = function(x1, y1, x2, y2, x, y) {
@@ -336,8 +330,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.sCurveTo = function(x2, y2, x, y, type) {
             orders.push( (type || "s") + x2 + "," + y2 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.SCurveTo = function(x2, y2, x, y) {
@@ -346,8 +338,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.qCurveTo = function(x1, y1, x, y, type) {
             orders.push( (type || "q") + x1 + "," + y1 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.QCurveTo = function(x1, y1, x, y) {
@@ -356,8 +346,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.tCurveTo = function(x1, y1, x, y, type) {
             orders.push( (type || "t") + x1 + "," + y1 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.TCurveTo = function(x1, y1, x, y) {
@@ -369,8 +357,6 @@ jui.define("util.svg.element.path", [], function() { // path
             sweep_flag = (sweep_flag) ? 1 : 0;
 
             orders.push( (type || "a") + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.Arc = function(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y) {
@@ -379,15 +365,13 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.closePath = function(type) {
             orders.push( (type || "z") );
-            //applyOrders(this);
-
             return this;
         }
         this.ClosePath = function() {
             return this.closePath("Z");
         }
 
-        this.concate = function() {
+        this.join = function() {
             applyOrders(this);
             return this;
         }

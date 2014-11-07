@@ -1,20 +1,5 @@
 jui.define("chart.brush.bar", [], function() {
 
-	/**
-	 * Bar Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "bar",
-	 *  target : ["field1", "field2"],  // 생략하면 모든 series 를 target 으로 설정
-	 *  outerPadding : 2,	// bar 바깥쪽 padding 
-	 *  innerPadding : 1	// bar 안쪽 padding 
-	 *  
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
 	var BarBrush = function(chart, brush) {
 		var g, zeroX, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;

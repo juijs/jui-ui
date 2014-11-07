@@ -1,4 +1,4 @@
-jui.define("chart.brush.splitline", [], function() {
+jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
 	var SplitLineBrush = function() {
 
@@ -10,7 +10,7 @@ jui.define("chart.brush.splitline", [], function() {
             };
 
             var split = this.brush.split,
-                symbol = this.brush.symbol;
+                symbol = this.brush.symbol
 
             var x = pos.x,
                 y = pos.y,
@@ -29,7 +29,7 @@ jui.define("chart.brush.splitline", [], function() {
                     g.append(p);
 
                     opts["stroke"] = this.chart.theme("lineSplitBackgroundColor");
-                    p = this.chart.svg.path(opts).MoveTo(x[split], y[split]);
+                    p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
                 }
 
                 if(symbol == "step") {
@@ -56,9 +56,12 @@ jui.define("chart.brush.splitline", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
-                p.concate();
-                this.addEvent(p, k, null);
 
+                p.each(function(i) {
+                   this.join();
+                });
+
+                this.addEvent(p, k, null);
                 g.append(p);
             }
 

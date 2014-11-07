@@ -6,7 +6,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		function createText(startAngle, endAngle, min, max, value) {
 			var g = chart.svg.group({
 				"class" : "gauge text"
-			})
+			});
 
 			g.translate(centerX, centerY);
 

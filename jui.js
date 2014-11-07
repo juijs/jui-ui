@@ -2737,7 +2737,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.moveTo = function(x, y, type) {
             orders.push( (type || "m") + x + "," + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -2747,7 +2746,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.lineTo = function(x, y, type) {
             orders.push( (type || "l") + x + "," + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -2757,7 +2755,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.hLineTo = function(x, type) {
             orders.push( (type || "h") + x );
-            //applyOrders(this);
 
             return this;
         }
@@ -2767,7 +2764,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.vLineTo = function(y, type) {
             orders.push( (type || "v") + y );
-            //applyOrders(this);
 
             return this;
         }
@@ -2777,8 +2773,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.curveTo = function(x1, y1, x2, y2, x, y, type) {
             orders.push( (type || "c") + x1 + "," + y1 + " " + x2 + "," + y2 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.CurveTo = function(x1, y1, x2, y2, x, y) {
@@ -2787,8 +2781,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.sCurveTo = function(x2, y2, x, y, type) {
             orders.push( (type || "s") + x2 + "," + y2 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.SCurveTo = function(x2, y2, x, y) {
@@ -2797,8 +2789,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.qCurveTo = function(x1, y1, x, y, type) {
             orders.push( (type || "q") + x1 + "," + y1 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.QCurveTo = function(x1, y1, x, y) {
@@ -2807,8 +2797,6 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.tCurveTo = function(x1, y1, x, y, type) {
             orders.push( (type || "t") + x1 + "," + y1 + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.TCurveTo = function(x1, y1, x, y) {
@@ -2820,8 +2808,6 @@ jui.define("util.svg.element.path", [], function() { // path
             sweep_flag = (sweep_flag) ? 1 : 0;
 
             orders.push( (type || "a") + rx + "," + ry + " " + x_axis_rotation + " " + large_arc_flag + "," + sweep_flag + " " + x + "," + y );
-            //applyOrders(this);
-
             return this;
         }
         this.Arc = function(rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y) {
@@ -2830,15 +2816,13 @@ jui.define("util.svg.element.path", [], function() { // path
 
         this.closePath = function(type) {
             orders.push( (type || "z") );
-            //applyOrders(this);
-
             return this;
         }
         this.ClosePath = function() {
             return this.closePath("Z");
         }
 
-        this.concate = function() {
+        this.join = function() {
             applyOrders(this);
             return this;
         }
@@ -12940,21 +12924,6 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.brush.bar", [], function() {
 
-	/**
-	 * Bar Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "bar",
-	 *  target : ["field1", "field2"],  // 생략하면 모든 series 를 target 으로 설정
-	 *  outerPadding : 2,	// bar 바깥쪽 padding 
-	 *  innerPadding : 1	// bar 안쪽 padding 
-	 *  
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
 	var BarBrush = function(chart, brush) {
 		var g, zeroX, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
@@ -13027,21 +12996,7 @@ jui.define("chart.brush.bar", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.bubble", [], function() {
-	/**
-	 * Bubble Gauge Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "bubble",
-	 *  target : "field1",  // 생략하면 모든 series 를 target 으로 설정
-	 *  min : 5,	// 최소 bubble 사이즈  
-	 *  max : 30,	// 최대 bubble 사이즈 
-	 *  colors : []	// custom color 
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
+
 	var BubbleBrush = function(chart, brush) {
         var self = this;
 
@@ -13273,19 +13228,6 @@ jui.define("chart.brush.ohlc", [], function() {
 
 jui.define("chart.brush.column", [], function() {
 
-	/**
-	 * Column Brush 
-	 * 
-	 * {
-	 * 	type : "column",
-	 *  target : ["field"],
-	 *  outerPadding : 2,
-	 *  innerPadding : 1, 	
-	 * 
-	 * } 
-	 * 
- 	 * @param {Object} brush
-	 */
 	var ColumnBrush = function(chart, brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
@@ -13352,22 +13294,7 @@ jui.define("chart.brush.column", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
-	/**
-	 * Donut Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "donut",
-	 *  target : "field1",
-	 *  size : 50,				// donut 안쪽과 바깥쪽 사이 거리   
-	 *  outerRadius : 200		// donut 의 반지름 
-	 *  colors : []				// custom color
-	 *  
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
+
 	var DonutBrush = function() {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
@@ -13418,6 +13345,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			
 			// 패스 종료
 			path.ClosePath();
+
+			// 패스 그리기
+			path.join();
 
 			g.append(path);
 
@@ -13713,7 +13643,6 @@ jui.define("chart.brush.line", [], function() {
                 }
             }
 
-
             return p;
         }
 
@@ -13723,7 +13652,7 @@ jui.define("chart.brush.line", [], function() {
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                p.concate()
+                p.join();
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -13780,15 +13709,11 @@ jui.define("chart.brush.path", [], function() {
 				}
 	
 				path.ClosePath();
-				path.concate()
+				path.join();
 			}
 
 			return g;
 		}
-
-        this.drawSetup = function() {
-            return {}
-        }
 	}
 
 	return PathBrush;
@@ -13824,6 +13749,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 			path.LineTo(0, 0);
 			path.ClosePath();
+			path.join();
 
 			g.append(path);
 
@@ -14011,9 +13937,8 @@ jui.define("chart.brush.scatterpath", [], function() {
                 }
             }
 
-            path.concate();
-
-            g.append(path);            
+            path.join();
+            g.append(path);
 
             return g;
         }
@@ -14150,21 +14075,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
-	/**
-	 * Bar Gauge Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "bargauge",
-	 *  target : "field1",  // 생략하면 모든 series 를 target 으로 설정
-	 *  cut : 5,	// gauge 사이의 거리  
-	 *  align : "left"	// gauge 정렬 방식 
-	 *  
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
+
 	var BarGaugeBrush = function(chart, brush) {
         var y = 0, x = 0;
 
@@ -14269,18 +14180,6 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
-	/**
-	 * Circle Gauge Brush 객체  
-	 * 
-	 * {
-	 * 	type : "circlegauge",
-	 *  min : 0,
-	 *  max : 100,
-	 *  value : 30 
-	 * }
-	 * 
- 	 * @param {Object} brush
-	 */
 	var CircleGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
 
@@ -14340,17 +14239,6 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
-	/**
-	 * 내가 원하는 모양의 gauge 를 만드는 클래스 
-	 * 
-	 * svg 로드 가능 
-	 * 
-	 * circle, rect 기본 지원 
-	 * 
-	 * use image 사용 가능 ? 
-	 *  
- 	 * @param {Object} brush
-	 */
 	var FillGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
@@ -14525,8 +14413,9 @@ jui.define("chart.brush.area", [], function() {
                     "stroke-width": 0
                 });
 
+                p.join();
                 this.addEvent(p, null, null);
-                p.concate();
+
                 g.prepend(p);
             }
 
@@ -14544,7 +14433,6 @@ jui.define("chart.brush.area", [], function() {
 jui.define("chart.brush.stackline", [], function() {
 
 	var StackLineBrush = function() {
-
         this.draw = function() {
             return this.drawLine(this.getStackXY());
         }
@@ -14566,7 +14454,6 @@ jui.define("chart.brush.stackarea", [], function() {
 jui.define("chart.brush.stackscatter", [], function() {
 
 	var StackScatterBrush = function() {
-
         this.draw = function() {
             return this.drawScatter(this.getStackXY());
         }
@@ -14658,6 +14545,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			path.LineTo(5, 0);
 			path.LineTo(-5, 0);
 			path.ClosePath();
+			path.join();
 
 			// start angle
 			path.rotate(startAngle);
@@ -14757,7 +14645,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		function createText(startAngle, endAngle, min, max, value) {
 			var g = chart.svg.group({
 				"class" : "gauge text"
-			})
+			});
 
 			g.translate(centerX, centerY);
 
@@ -15037,7 +14925,7 @@ jui.define("chart.brush.waterfall", [], function() {
 	return WaterFallBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.splitline", [], function() {
+jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
 	var SplitLineBrush = function() {
 
@@ -15049,7 +14937,7 @@ jui.define("chart.brush.splitline", [], function() {
             };
 
             var split = this.brush.split,
-                symbol = this.brush.symbol;
+                symbol = this.brush.symbol
 
             var x = pos.x,
                 y = pos.y,
@@ -15068,7 +14956,7 @@ jui.define("chart.brush.splitline", [], function() {
                     g.append(p);
 
                     opts["stroke"] = this.chart.theme("lineSplitBackgroundColor");
-                    p = this.chart.svg.path(opts).MoveTo(x[split], y[split]);
+                    p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
                 }
 
                 if(symbol == "step") {
@@ -15095,9 +14983,12 @@ jui.define("chart.brush.splitline", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
-                p.concate();
-                this.addEvent(p, k, null);
 
+                p.each(function(i) {
+                   this.join();
+                });
+
+                this.addEvent(p, k, null);
                 g.append(p);
             }
 
@@ -15118,7 +15009,7 @@ jui.define("chart.brush.splitline", [], function() {
 
 	return SplitLineBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.splitarea", [], function() {
+jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
     var SplitAreaBrush = function() {
 
@@ -15154,12 +15045,10 @@ jui.define("chart.brush.splitarea", [], function() {
                     }
 
                     p.ClosePath();
+                    p.join();
                 });
 
-                line.concate();
-
                 this.addEvent(line, null, null);
-
                 g.prepend(line);
             }
 

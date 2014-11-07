@@ -1,17 +1,5 @@
 jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
-	/**
-	 * Circle Gauge Brush 객체  
-	 * 
-	 * {
-	 * 	type : "circlegauge",
-	 *  min : 0,
-	 *  max : 100,
-	 *  value : 30 
-	 * }
-	 * 
- 	 * @param {Object} brush
-	 */
 	var CircleGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
 

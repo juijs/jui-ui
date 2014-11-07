@@ -21,9 +21,8 @@ jui.define("chart.brush.scatterpath", [], function() {
                 }
             }
 
-            path.concate();
-
-            g.append(path);            
+            path.join();
+            g.append(path);
 
             return g;
         }

@@ -1,16 +1,5 @@
 jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
-	/**
-	 * 내가 원하는 모양의 gauge 를 만드는 클래스 
-	 * 
-	 * svg 로드 가능 
-	 * 
-	 * circle, rect 기본 지원 
-	 * 
-	 * use image 사용 가능 ? 
-	 *  
- 	 * @param {Object} brush
-	 */
 	var FillGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius, clipId;
         var rect;

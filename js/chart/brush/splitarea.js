@@ -1,4 +1,4 @@
-jui.define("chart.brush.splitarea", [], function() {
+jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
     var SplitAreaBrush = function() {
 
@@ -34,12 +34,10 @@ jui.define("chart.brush.splitarea", [], function() {
                     }
 
                     p.ClosePath();
+                    p.join();
                 });
 
-                line.concate();
-
                 this.addEvent(line, null, null);
-
                 g.prepend(line);
             }
 

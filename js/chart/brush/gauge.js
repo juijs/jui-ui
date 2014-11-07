@@ -82,6 +82,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			path.LineTo(5, 0);
 			path.LineTo(-5, 0);
 			path.ClosePath();
+			path.join();
 
 			// start angle
 			path.rotate(startAngle);

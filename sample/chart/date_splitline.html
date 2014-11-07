@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.chart.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+        var today = getTodayData();
+
+        function getTodayData() {
+            var start = new Date(2014, 10, 7),
+                    end = time.add(start, time.hours, 23);
+
+            var data = [],
+                    value = 240;
+
+            for(var i = 0; i < 60 * 23; i++) {
+                if(value < 60 * 8) {
+                    value += 1;
+                }
+
+                data.push({ time: time.add(start, time.minutes, i), value: value })
+            }
+
+            return {
+                start: start,
+                end: end,
+                data: data
+            };
+        }
+
+        chart("#chart", {
+            width: 800,
+            height: 400,
+            data : today.data,
+            bufferCount : today.data.length,
+            grid : {
+                x : {
+                    type : "date",
+                    domain : [ today.start, today.end ],
+                    step : [ time.hours, 1 ],
+                    format : "HH",
+                    key: "time"
+                },
+                y : {
+                    type : "range",
+                    step : 10,
+                    target : function(d) {
+                        return 600;
+                    }
+                }
+            },
+            brush : {
+                type : "splitline",
+                split : 500
+            },
+            widget : {
+                type : "title",
+                text : "Line Sample"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

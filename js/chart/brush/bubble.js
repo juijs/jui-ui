@@ -1,19 +1,5 @@
 jui.define("chart.brush.bubble", [], function() {
-	/**
-	 * Bubble Gauge Brush 객체 
-	 * 
-	 * <code>
-	 * {
-	 * 	type : "bubble",
-	 *  target : "field1",  // 생략하면 모든 series 를 target 으로 설정
-	 *  min : 5,	// 최소 bubble 사이즈  
-	 *  max : 30,	// 최대 bubble 사이즈 
-	 *  colors : []	// custom color 
-	 * } 
-	 * </code>
-	 * 
- 	 * @param {Object} brush
-	 */
+
 	var BubbleBrush = function(chart, brush) {
         var self = this;
 

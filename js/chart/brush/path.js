@@ -33,15 +33,11 @@ jui.define("chart.brush.path", [], function() {
 				}
 	
 				path.ClosePath();
-				path.concate()
+				path.join();
 			}
 
 			return g;
 		}
-
-        this.drawSetup = function() {
-            return {}
-        }
 	}
 
 	return PathBrush;
