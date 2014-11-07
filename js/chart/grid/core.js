@@ -221,7 +221,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : this.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridAxisBorderWidth"),
 				"stroke-opacity" : 1
 			}, attr));
@@ -237,12 +237,21 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,				
-				stroke : chart.theme("gridBorderColor"),
+				stroke : this.color("gridBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : chart.theme("gridBorderDashArray"),
 				"stroke-opacity" : 1
 			}, attr));
-		}		
+		}
+
+		this.color  = function(theme) {
+
+			if (arguments.length == 3) {
+				return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme.apply(this.chart, arguments);
+			}
+
+			return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme(theme);
+		}
 
 		/**
 		 * grid 그리기  
@@ -280,7 +289,9 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				reverse: false,
 				key: null,
 				hide: false,
-				unit: 0
+				unit: 0,
+				color : null,
+				title : null
 			}
 		}
 	}

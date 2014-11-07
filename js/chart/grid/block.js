@@ -93,8 +93,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : 20,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
+					"text-anchor" : "middle"
 				}, domain));
 
 				g.append(axis);
@@ -245,6 +244,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// block options
 				full: false

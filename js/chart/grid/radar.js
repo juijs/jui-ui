@@ -3,6 +3,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 	var RadarGrid = function(orient, chart, grid) {
 		var position = [];
 		var format;
+		var self = this;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -14,7 +15,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : self.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
 			}));
 		}
@@ -39,7 +40,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			var path = chart.svg.path({
 				"fill" : "none",
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : self.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
 			});
 
@@ -134,7 +135,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
 				}))
 
@@ -242,6 +243,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				// common options
 				line: true,
 				format: null,
+				color : null,
 
 				hideText: false,
 				extra: false,

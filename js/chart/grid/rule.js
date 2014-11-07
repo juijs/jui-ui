@@ -29,7 +29,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
 					y2 : bar,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 
@@ -67,7 +67,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
 					y2 : (this.center) ? bar : -bar,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 				
@@ -106,7 +106,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				axis.append(this.line(chart, {
 					x1 : (this.center) ? -bar : 0,
 					x2 : bar,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")					
 				}));
 				
@@ -143,7 +143,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				axis.append(this.line(chart, {
 					x1 : (this.center) ? -bar : 0,
 					x2 : (this.center) ? bar : -bar,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
 				}));
 
@@ -203,6 +203,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// rule options
 				hideZero: false,

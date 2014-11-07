@@ -448,7 +448,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             return createGradient(self, parsedColor, color);
         }
 
-
         this.init = function() {
             var opts = this.options;
 

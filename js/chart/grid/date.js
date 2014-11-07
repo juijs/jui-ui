@@ -86,8 +86,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 
 				axis.append(chart.text({
-					x : -bar,
-					y : -bar,
+					x : -bar-2,
+					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
 				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
@@ -182,6 +182,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// range options
 				realtime: false

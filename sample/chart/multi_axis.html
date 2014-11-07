@@ -17,7 +17,7 @@
             width: 800,
             height : 400,
             theme : "jennifer",
-            padding : {right : 120 },
+            padding : {left : 100, right : 150 },
             data : [
             { month : 'Jan', rainfall : 49.9, sealevel : 1016, temperature  : 7.0}, 
 			{ month : 'Feb', rainfall : 71.5, sealevel : 1016, temperature  : 6.9 }, 
@@ -36,8 +36,8 @@
                 x : { target : "month", line : true },
                 y : { type : 'range', domain: [0, 300], step : 6, format : function(value) { return value + " mm"} },
                 y1 : [
-                	{ type : 'range', domain : [1008, 1020], step : 6, dist : 50, format : function(value) { return value + " mb"} },
-                	{ type : 'range', domain : [5, 35], step : 6, format : function(value) { return value + " ℃" } }
+                	{ type : 'range', domain : [1008, 1020], step : 6, dist : 60, format : function(value) { return value + " mb"},color : "#434348" },
+                	{ type : 'range', domain : [5, 35], step : 6, format : function(value) { return value + " ℃" },color: '#90ed7d' }
                 ]
             },
             series : {
@@ -45,10 +45,16 @@
                 value : { text : "값" }
             },
             brush : [
-            	{ type : 'column', target : 'rainfall', colors : ['#7cb5ec'], outerPadding : 15 },
+            	{ type : 'column', target : 'rainfall', colors : ['#7cb5ec'], outerPadding : 5 },
             	{ type : 'line', target : 'sealevel', y1 : 0, colors : ["#434348"], symbol : 'curve' },
             	{ type : 'line', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'curve' },
             	{ type : 'scatter', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'triangle', size : 8 },
+            ],
+            widget : [
+                { type : "title", text : "Rainfall", align: "start", position: "center", dx : -70 },
+                { type : "title", text : "Temperature", align: "end", position: "center", dx : 80 },
+                { type : "title", text : "Sea-Level Pressure", align: "end", position: "center", dx : 180 },
+
             ]
         }).render();
 	})

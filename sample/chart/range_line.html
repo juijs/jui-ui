@@ -34,18 +34,20 @@
 				data : data,
 				grid : {
 					
-					x : { 
+					y : {
 						type : "date",  // default type is block 
 						domain : [ start, end ],
 						step : [time.hours, 1],
 						format : "hh:mm",
-					    key: "value"
+					    key: "value",
+						color : "red",
+						dist : 10
 					},
-					y : { 
+					x : {
 						type : 'range', 
 						target : ["name"], 
 						step : 10,
-						line : true 
+						line : true
 					}
 				},
 				series : {

@@ -3934,7 +3934,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             return createGradient(self, parsedColor, color);
         }
 
-
         this.init = function() {
             var opts = this.options;
 
@@ -5093,7 +5092,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : this.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridAxisBorderWidth"),
 				"stroke-opacity" : 1
 			}, attr));
@@ -5109,12 +5108,21 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,				
-				stroke : chart.theme("gridBorderColor"),
+				stroke : this.color("gridBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : chart.theme("gridBorderDashArray"),
 				"stroke-opacity" : 1
 			}, attr));
-		}		
+		}
+
+		this.color  = function(theme) {
+
+			if (arguments.length == 3) {
+				return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme.apply(this.chart, arguments);
+			}
+
+			return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme(theme);
+		}
 
 		/**
 		 * grid 그리기  
@@ -5152,7 +5160,9 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				reverse: false,
 				key: null,
 				hide: false,
-				unit: 0
+				unit: 0,
+				color : null,
+				title : null
 			}
 		}
 	}
@@ -5254,8 +5264,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				axis.append(chart.text({
 					x : 0,
 					y : 20,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
+					"text-anchor" : "middle"
 				}, domain));
 
 				g.append(axis);
@@ -5406,6 +5415,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// block options
 				full: false
@@ -5504,8 +5514,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				}));
 
 				axis.append(chart.text({
-					x : -bar,
-					y : -bar,
+					x : -bar-2,
+					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
 				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
@@ -5600,6 +5610,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// range options
 				realtime: false
@@ -5615,6 +5626,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 	var RadarGrid = function(orient, chart, grid) {
 		var position = [];
 		var format;
+		var self = this;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -5626,7 +5638,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : self.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
 			}));
 		}
@@ -5651,7 +5663,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			var path = chart.svg.path({
 				"fill" : "none",
-				stroke : chart.theme("gridAxisBorderColor"),
+				stroke : self.color("gridAxisBorderColor"),
 				"stroke-width" : chart.theme("gridBorderWidth")
 			});
 
@@ -5746,7 +5758,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
-					stroke : chart.theme("gridAxisBorderColor"),
+					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
 				}))
 
@@ -5854,6 +5866,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				// common options
 				line: true,
 				format: null,
+				color : null,
 
 				hideText: false,
 				extra: false,
@@ -5896,7 +5909,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? chart.height() : -bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
@@ -5932,7 +5945,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				axis.append(this.line(chart, {
 					y2 : (grid.line) ? -chart.height() : bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
@@ -5969,7 +5982,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? chart.width() : -bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 
@@ -6008,7 +6021,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : bar,
-					stroke : chart.theme(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
@@ -6065,6 +6078,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				// common options
 				line: false,
 				format: null,
+				color : null,
 
 				// range options
 				hideText: false,
@@ -8586,7 +8600,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     return TooltipWidget;
 }, "chart.widget.core");
-jui.define("chart.widget.title", [ "util.base" ], function(_) {
+jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math) {
 
     var TitleWidget = function(chart, widget) {
         var x = 0, y = 0, anchor = "middle";
@@ -8596,6 +8610,8 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
                 y = chart.y2() + chart.padding("bottom") - 20;
             } else if (widget.position == "top") {
                 y = 20;
+            } else {
+                y = chart.y() + chart.height() / 2
             }
 
             if (widget.align == "center") {
@@ -8615,7 +8631,12 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
                 return; 
             }
 
-            return chart.text({
+            var obj = chart.svg.getTextRect(widget.text);
+
+            var half_text_width = obj.width/2;
+            var half_text_height = obj.height/2;
+
+            var text =  chart.text({
                 x : x + widget.dx,
                 y : y + widget.dy,
                 "text-anchor" : anchor,
@@ -8623,6 +8644,17 @@ jui.define("chart.widget.title", [ "util.base" ], function(_) {
                 "font-size" : chart.theme("titleFontSize"),
                 "fill" : chart.theme("titleFontColor")
             }, widget.text);
+
+            if (widget.position == "center") {
+                if (widget.align == 'start') {
+                    text.rotate(-90, x + widget.dx + half_text_width, y + widget.dy + half_text_height)
+                } else if (widget.align == 'end') {
+                    text.rotate(90, x + widget.dx - half_text_width, y + widget.dy + half_text_height)
+                }
+
+            }
+
+            return text;
         }
 
         this.drawSetup = function() {
