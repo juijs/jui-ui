@@ -7090,7 +7090,6 @@ jui.define("chart.brush.line", [], function() {
                 }
             }
 
-            p.concate()
 
             return p;
         }
@@ -7100,6 +7099,8 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
+
+                p.concate()
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -7155,7 +7156,8 @@ jui.define("chart.brush.path", [], function() {
 					}
 				}
 	
-				path.ClosePath();				
+				path.ClosePath();
+				path.concate()
 			}
 
 			return g;
@@ -7857,7 +7859,7 @@ jui.define("chart.brush.area", [], function() {
                 });
 
                 this.addEvent(p, null, null);
-
+                p.concate();
                 g.prepend(p);
             }
 
@@ -8416,8 +8418,6 @@ jui.define("chart.brush.splitline", [], function() {
                 }
             }
 
-            p.concate();
-
             g.append(p);
 
             return g;
@@ -8428,6 +8428,7 @@ jui.define("chart.brush.splitline", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
+                p.concate();
                 this.addEvent(p, k, null);
 
                 g.append(p);
@@ -8486,8 +8487,9 @@ jui.define("chart.brush.splitarea", [], function() {
                     }
 
                     p.ClosePath();
-                    p.concate();
                 });
+
+                line.concate();
 
                 this.addEvent(line, null, null);
 

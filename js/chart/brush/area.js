@@ -20,7 +20,7 @@ jui.define("chart.brush.area", [], function() {
                 });
 
                 this.addEvent(p, null, null);
-
+                p.concate();
                 g.prepend(p);
             }
 

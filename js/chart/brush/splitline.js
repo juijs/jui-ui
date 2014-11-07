@@ -46,8 +46,6 @@ jui.define("chart.brush.splitline", [], function() {
                 }
             }
 
-            p.concate();
-
             g.append(p);
 
             return g;
@@ -58,6 +56,7 @@ jui.define("chart.brush.splitline", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
+                p.concate();
                 this.addEvent(p, k, null);
 
                 g.append(p);

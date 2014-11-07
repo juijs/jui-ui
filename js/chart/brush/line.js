@@ -32,7 +32,6 @@ jui.define("chart.brush.line", [], function() {
                 }
             }
 
-            p.concate()
 
             return p;
         }
@@ -42,6 +41,8 @@ jui.define("chart.brush.line", [], function() {
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
+
+                p.concate()
                 this.addEvent(p, k, null);
 
                 g.append(p);
