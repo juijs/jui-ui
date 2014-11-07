@@ -30,6 +30,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					}
 
 					grid.domain = domain;
+
+					if (grid.reverse) {
+						grid.domain.reverse();
+					}
 				}
 			}
 			
