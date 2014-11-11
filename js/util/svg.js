@@ -568,7 +568,7 @@ jui.define("util.svg",
         
         this.downloadImage = function(name, type) {
             type = type || "image/png";
-            var self = this; 
+
             var img = new Image();
             var size = this.size();
             var uri = this.toDataURL()
@@ -602,14 +602,14 @@ jui.define("util.svg",
         }
 
         this.exportCanvas = function(canvas) {
-            var type = "image/png";
-            var self = this;
-            var img = new Image();
-            var size = this.size();
+            var img = new Image(),
+                size = this.size();
+
             var uri = this.toDataURL()
                 .replace('width="100%"', 'width="' + size.width + '"')
                 .replace('height="100%"', 'height="' + size.height + '"');
-            img.onload = function(){
+
+            img.onload = function() {
                 canvas.width = img.width;
                 canvas.height = img.height;
 
@@ -618,7 +618,6 @@ jui.define("util.svg",
             }
 
             img.src = uri;
-
         }
         
         this.toXml = function() {
