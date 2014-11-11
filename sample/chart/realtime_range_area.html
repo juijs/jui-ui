@@ -8,8 +8,10 @@
 <body>
 
 <div id="chart"></div>
+<div><canvas id="chartCanvas"></canvas></div>
 
 <script>
+    var canvas = document.getElementById('chartCanvas');
     jui.ready([ "chartx.realtime", "util.base", "util.time" ], function(chart, _, time) {
         var index = 0;
 
@@ -32,9 +34,9 @@
                     name2 : Math.sin(index / 15) + 1.5,
                     value : new Date()
                 });
-
+                c.chart.svg.exportCanvas(canvas)
                 index++;
-            }, 1000);
+            }, 10);
         }
 
         c = chart("#chart", {
@@ -88,6 +90,7 @@
         });
 
         c.update(getData(5));
+        c.chart.svg.exportCanvas(canvas)
         runData();
     });
     

@@ -3051,6 +3051,26 @@ jui.define("util.svg",
             img.src = uri;   
       
         }
+
+        this.exportCanvas = function(canvas) {
+            var type = "image/png";
+            var self = this;
+            var img = new Image();
+            var size = this.size();
+            var uri = this.toDataURL()
+                .replace('width="100%"', 'width="' + size.width + '"')
+                .replace('height="100%"', 'height="' + size.height + '"');
+            img.onload = function(){
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                var context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
+            }
+
+            img.src = uri;
+
+        }
         
         this.toXml = function() {
             var text = rootElem.innerHTML;

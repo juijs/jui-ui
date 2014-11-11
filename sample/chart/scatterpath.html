@@ -8,7 +8,8 @@
 </head>
 <body class="jui">
 
-<div id="chart"></div>
+<div id="chart" style="display: none"></div>
+<div><canvas id="chartCanvas"></canvas></div>
 <script id="tpl_tooltip" type="text/template">
     <div class="tooltip tooltip-top tooltip-black">
         <div class="anchor"></div>
@@ -22,7 +23,7 @@
         var end = time.add(start, time.hours, 5);
 
         function getNumber() {
-            return Math.floor(Math.random() * 1000) + 1;
+            return Math.floor(Math.random() * 2000) + 1;
         }
 
         function getTime() {
@@ -37,12 +38,29 @@
                 value : getNumber(),
                 test : getNumber()
             });
-        }        
+        }
 
-         chart("#chart", {
-            width: 400,
-            height : 400,
+        function changeData(data) {
+            data = data.slice(3000);
+
+            for(var i = 0; i < 3000; i++) {
+                data.push({
+                    date: time.add(start, time.seconds, getTime()),
+                    name: getNumber(),
+                    value : getNumber(),
+                    test : getNumber()
+                });
+            }
+
+            return data;
+        }
+
+
+         var c = chart("#chart", {
+            width: 800,
+            height : 800,
             theme : "jennifer",
+             bufferCount : 10000,
             data : data,
             grid : {
                 x : {
@@ -67,18 +85,26 @@
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name",
+                target : "name", size : 3,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",
+                target : "value",size : 3,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",
+                target : "test",size : 3,
                 colors : [ theme.colors[2] ]
             }]
-        }).render();
+        });
+
+        setInterval(function() {
+            c.update(data = changeData(data));
+            c.render();
+            c.svg.exportCanvas($("#chartCanvas")[0]);
+        }, 1000);
+
+
 	})
 </script>
 
