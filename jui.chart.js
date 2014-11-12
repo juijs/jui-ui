@@ -4426,7 +4426,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
          * @param {integer} width
          * @param {integer} height
          */
-        this.size = function(width, height) {
+        this.setSize = function(width, height) {
             this.svg.size(width, height);
             this.render(true);
         }
