@@ -1,6 +1,6 @@
 jui.define("chart.brush.rangebar", [], function() {
 
-	var BarBrush = function(chart, brush) {
+	var RangeBarBrush = function(chart, brush) {
 		var g, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 
@@ -54,5 +54,5 @@ jui.define("chart.brush.rangebar", [], function() {
         }
 	}
 
-	return BarBrush;
+	return RangeBarBrush;
 }, "chart.brush.core");

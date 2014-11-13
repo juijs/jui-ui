@@ -8449,7 +8449,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
 jui.define("chart.brush.rangecolumn", [], function() {
 
-	var ColumnBrush = function(chart, brush) {
+	var RangeColumnBrush = function(chart, brush) {
 		var g, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 
@@ -8500,12 +8500,12 @@ jui.define("chart.brush.rangecolumn", [], function() {
         }
 	}
 
-	return ColumnBrush;
+	return RangeColumnBrush;
 }, "chart.brush.core");
 
 jui.define("chart.brush.rangebar", [], function() {
 
-	var BarBrush = function(chart, brush) {
+	var RangeBarBrush = function(chart, brush) {
 		var g, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 
@@ -8559,7 +8559,7 @@ jui.define("chart.brush.rangebar", [], function() {
         }
 	}
 
-	return BarBrush;
+	return RangeBarBrush;
 }, "chart.brush.core");
 
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
