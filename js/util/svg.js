@@ -623,9 +623,10 @@ jui.define("util.svg",
         this.toXml = function() {
             var text = rootElem.innerHTML;
 
+            text = text.replace('xmlns="http://www.w3.org/2000/svg"', '');
+
             return [
                 '<?xml version="1.0" encoding="utf-8"?>',
-                '<!DOCTYPE svg>',
                 text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
             ].join("\n");
         }
@@ -633,28 +634,16 @@ jui.define("util.svg",
         this.toDataURL = function(type, callback) {
             type = type || "image/svg+xml";
 
-            if (type == 'image/svg+xml') {
-                return "data:image/svg+xml;utf8," + this.toXml();
-            } else if (type == 'image/png') {
-                var img = new Image();
-                var size = this.size();
-                var uri = ("data:image/svg+xml;utf8," + this.toXml())
-                    .replace('width="100%"', 'width="' + size.width + '"')
-                    .replace('height="100%"', 'height="' + size.height + '"');
-                img.onload = function(){
-                    var canvas = document.createElement("canvas");
-                    canvas.width = img.width;
-                    canvas.height = img.height;
+            var xml = this.toXml();
 
-                    var context = canvas.getContext('2d');
-                    context.drawImage(img, 0, 0);
+            if (_.browser.mozilla || _.browser.msie) {
+                xml = encodeURIComponent(xml);
+            }
 
-                    var png = canvas.toDataURL(type);
-
-                    callback(png);
-                }
-
-                img.src = uri;
+            if (_.browser.msie) {
+                return "data:image/svg+xml," + xml;
+            } else {
+                return "data:image/svg+xml;utf8," + xml;
             }
 
         }

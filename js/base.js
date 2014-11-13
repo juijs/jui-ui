@@ -375,8 +375,8 @@
 			
 		//-- Properties
 		browser: {
-			webkit: (window.webkitURL) ? true : false,
-			mozilla: (window.mozInnerScreenX) ? true : false,
+			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
+			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
