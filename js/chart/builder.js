@@ -55,7 +55,15 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
 
                 for (var key in row) {
                     var obj = series[key] || {};
-                    var value = +row[key];
+
+                    var value = row[key];
+
+                    var range;
+                    if (value instanceof Array) {
+                        range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
+                    } else {
+                        range = { max : +value, min : +value }
+                    }
 
                     series[key] = obj;
 
@@ -64,12 +72,12 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                     obj.max = typeof obj.max == 'undefined' ? 0 : obj.max;
                     obj.data[i] = value;
 
-                    if (value < obj.min) {
-                        obj.min = value;
+                    if (range.min < obj.min) {
+                        obj.min = range.max;
                     }
 
-                    if (value > obj.max) {
-                        obj.max = value;
+                    if (range.max > obj.max) {
+                        obj.max = range.max;
                     }
                 }
             }
