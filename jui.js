@@ -3081,8 +3081,33 @@ jui.define("util.svg",
             ].join("\n");
         }
         
-        this.toDataURL = function() {
-            return "data:image/svg+xml;utf8," + this.toXml();
+        this.toDataURL = function(type, callback) {
+            type = type || "image/svg+xml";
+
+            if (type == 'image/svg+xml') {
+                return "data:image/svg+xml;utf8," + this.toXml();
+            } else if (type == 'image/png') {
+                var img = new Image();
+                var size = this.size();
+                var uri = ("data:image/svg+xml;utf8," + this.toXml())
+                    .replace('width="100%"', 'width="' + size.width + '"')
+                    .replace('height="100%"', 'height="' + size.height + '"');
+                img.onload = function(){
+                    var canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    var context = canvas.getContext('2d');
+                    context.drawImage(img, 0, 0);
+
+                    var png = canvas.toDataURL(type);
+
+                    callback(png);
+                }
+
+                img.src = uri;
+            }
+
         }
 
         this.autoRender = function(elem, isAuto) {
@@ -11346,7 +11371,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.target = [grid.target];
 			}
 
-			if (grid.target && grid.target.length) {
+			if (grid.target && grid.target.length && !grid.domain) {
 				var max = grid.max,
 					min = grid.min;
 				var data = chart.data();

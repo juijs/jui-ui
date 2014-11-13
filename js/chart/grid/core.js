@@ -51,7 +51,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.target = [grid.target];
 			}
 
-			if (grid.target && grid.target.length) {
+			if (grid.target && grid.target.length && !grid.domain) {
 				var max = grid.max,
 					min = grid.min;
 				var data = chart.data();
