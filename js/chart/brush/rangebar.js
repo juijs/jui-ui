@@ -1,7 +1,7 @@
-jui.define("chart.brush.bar", [], function() {
+jui.define("chart.brush.rangebar", [], function() {
 
 	var BarBrush = function(chart, brush) {
-		var g, zeroX, count, height, half_height, barHeight;
+		var g, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 
 		this.drawBefore = function() {
@@ -9,8 +9,6 @@ jui.define("chart.brush.bar", [], function() {
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
-
-			zeroX = brush.x(0);
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
@@ -24,28 +22,17 @@ jui.define("chart.brush.bar", [], function() {
 					startY = brush.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startX = brush.x(chart.data(i, brush.target[j])),
-                        r = null;
+					var data = chart.data(i, brush.target[j]),
+						startX = brush.x(data[1]),
+						zeroX = brush.x(data[0]);
 
-					if (startX >= zeroX) {
-						r = chart.svg.rect({
-							x : zeroX,
-							y : startY,
-							height : barHeight,
-							width : Math.abs(zeroX - startX),
-							fill : chart.color(j, brush.colors)
-						});
-					} else {
-						var w = Math.abs(zeroX - startX);
-
-						r = chart.svg.rect({
-							y : startY,
-							x : zeroX - w,
-							height : barHeight,
-							width : w,
-							fill : chart.color(j, brush.colors)
-						});
-					}
+					var r = chart.svg.rect({
+						x : zeroX,
+						y : startY,
+						height : barHeight,
+						width : Math.abs(zeroX - startX),
+						fill : chart.color(j, brush.colors)
+					});
 
                     this.addEvent(r, j, i);
                     group.append(r);

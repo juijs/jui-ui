@@ -1,7 +1,7 @@
-jui.define("chart.brush.column", [], function() {
+jui.define("chart.brush.rangecolumn", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
-		var g, zeroY, count, width, columnWidth, half_width;
+		var g, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 
 		this.drawBefore = function() {
@@ -9,8 +9,6 @@ jui.define("chart.brush.column", [], function() {
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
-
-			zeroY = brush.y(0);
 			count = chart.data().length;
 
 			width = brush.x.rangeBand();
@@ -23,26 +21,17 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.data(i)[brush.target[j]]),
-                        r = null;
+					var data = chart.data(i)[ brush.target[j]],
+						startY = brush.y(data[1]),
+						zeroY = brush.y(data[0]);
 
-					if (startY <= zeroY) {
-						r = chart.svg.rect({
-							x : startX,
-							y : startY,
-							width : columnWidth,
-							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors)
-						});
-					} else {
-						r = chart.svg.rect({
-							x : startX,
-							y : zeroY,
-							width : columnWidth,
-							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors)
-						});
-					}
+					var r = chart.svg.rect({
+						x : startX,
+						y : startY,
+						width : columnWidth,
+						height : Math.abs(zeroY - startY),
+						fill : chart.color(j, brush.colors)
+					});
 
                     this.addEvent(r, j, i);
                     g.append(r);

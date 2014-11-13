@@ -89,6 +89,8 @@ module.exports = function(grunt) {
                     "js/chart/brush/waterfall.js",
                     "js/chart/brush/splitline.js",
                     "js/chart/brush/splitarea.js",
+                    "js/chart/brush/rangecolumn.js",
+                    "js/chart/brush/rangebar.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",
@@ -165,6 +167,8 @@ module.exports = function(grunt) {
                     "js/chart/brush/waterfall.js",
                     "js/chart/brush/splitline.js",
                     "js/chart/brush/splitarea.js",
+                    "js/chart/brush/rangecolumn.js",
+                    "js/chart/brush/rangebar.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",

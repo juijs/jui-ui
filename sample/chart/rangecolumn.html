@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "pastel",
+            data : [
+                { name : [-20, 10], value : [-15, 10] },
+                { name : [10, 20], value : [6, 10] },
+                { name : [30, 40], value : [50, 90] },
+                { name : [18, 55], value : [90, 97] }
+            ],
+            grid : {
+                x1 : {
+                    //type : "block",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    domain : [-50, 100],
+                    step : 10,
+                    line : true
+                }
+            },
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            },
+            brush : {
+                type : 'rangecolumn',
+                target : ['name', 'value']
+            },
+            widget : {
+                type : "tooltip"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>
