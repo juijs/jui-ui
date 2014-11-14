@@ -10974,6 +10974,12 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        barBorderColor : "none",
+        barBorderWidth : 0,
+        barBorderOpacity : 0,
+        columnBorderColor : "none",
+        columnBorderWidth : 0,
+        columnBorderOpacity : 0,
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11002,8 +11008,8 @@ jui.define("chart.theme.jennifer", [], function() {
         waterfallBackgroundColor : "#87BB66", // 4
         waterfallInvertBackgroundColor : "#FF7800", // 3
         waterfallEdgeBackgroundColor : "#7BBAE7", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
+        waterfallLineColor : "#a9a9a9",
+        waterfallLineDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -11072,6 +11078,12 @@ jui.define("chart.theme.gradient", [], function() {
         gridActiveBorderWidth: 1,
 
         // brush styles
+        barBorderColor : "none",
+        barBorderWidth : 0,
+        barBorderOpacity : 0,
+        columnBorderColor : "none",
+        columnBorderWidth : 0,
+        columnBorderOpacity : 0,
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11100,8 +11112,8 @@ jui.define("chart.theme.gradient", [], function() {
         waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66", // 4
         waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800", // 3
         waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
+        waterfallLineColor : "#a9a9a9",
+        waterfallLineDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -11168,6 +11180,12 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        barBorderColor : "none",
+        barBorderWidth : 0,
+        barBorderOpacity : 0,
+        columnBorderColor : "none",
+        columnBorderWidth : 0,
+        columnBorderOpacity : 0,
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",
@@ -11196,8 +11214,8 @@ jui.define("chart.theme.dark", [], function() {
         waterfallBackgroundColor : "#26f67c", //
         waterfallInvertBackgroundColor : "#f94590", // 3
         waterfallEdgeBackgroundColor : "#8bccf9", // 1
-        waterfallBorderColor : "#a9a9a9",
-        waterfallBorderDashArray : "0.9",
+        waterfallLineColor : "#a9a9a9",
+        waterfallLineDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#ffffff",
@@ -11260,6 +11278,12 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveBorderWidth : 1,
 
 		// brush styles
+		barBorderColor : "none",
+		barBorderWidth : 0,
+		barBorderOpacity : 0,
+		columnBorderColor : "none",
+		columnBorderWidth : 0,
+		columnBorderOpacity : 0,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
@@ -11288,8 +11312,8 @@ jui.define("chart.theme.pastel", [], function() {
 		waterfallBackgroundColor : "#73e9d2", // 4
 		waterfallInvertBackgroundColor : "#ffb9ce", // 3
 		waterfallEdgeBackgroundColor : "#08c4e0", // 1
-		waterfallBorderColor : "#a9a9a9",
-		waterfallBorderDashArray : "0.9",
+		waterfallLineColor : "#a9a9a9",
+		waterfallLineDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",
@@ -12992,6 +13016,7 @@ jui.define("chart.brush.bar", [], function() {
 	var BarBrush = function(chart, brush) {
 		var g, zeroX, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -13005,6 +13030,10 @@ jui.define("chart.brush.bar", [], function() {
 			height = brush.y.rangeBand();
 			half_height = height - (outerPadding * 2);
 			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("barBorderColor");
+			borderWidth = chart.theme("barBorderWidth");
+			borderOpacity = chart.theme("barBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -13022,7 +13051,10 @@ jui.define("chart.brush.bar", [], function() {
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
-							fill : chart.color(j, brush.colors)
+							fill : chart.color(j, brush.colors),
+							stroke : borderColor,
+							"stroke-width" : borderWidth,
+							"stroke-opacity" : borderOpacity
 						});
 					} else {
 						var w = Math.abs(zeroX - startX);
@@ -13032,7 +13064,10 @@ jui.define("chart.brush.bar", [], function() {
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
-							fill : chart.color(j, brush.colors)
+							fill : chart.color(j, brush.colors),
+							stroke : borderColor,
+							"stroke-width" : borderWidth,
+							"stroke-opacity" : borderOpacity
 						});
 					}
 
@@ -13295,6 +13330,7 @@ jui.define("chart.brush.column", [], function() {
 	var ColumnBrush = function(chart, brush) {
 		var g, zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -13308,6 +13344,10 @@ jui.define("chart.brush.column", [], function() {
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("columnBorderColor");
+			borderWidth = chart.theme("columnBorderWidth");
+			borderOpacity = chart.theme("columnBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -13324,7 +13364,10 @@ jui.define("chart.brush.column", [], function() {
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors)
+							fill : chart.color(j, brush.colors),
+							stroke : borderColor,
+							"stroke-width" : borderWidth,
+							"stroke-opacity" : borderOpacity
 						});
 					} else {
 						r = chart.svg.rect({
@@ -13332,7 +13375,10 @@ jui.define("chart.brush.column", [], function() {
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors)
+							fill : chart.color(j, brush.colors),
+							stroke : borderColor,
+							"stroke-width" : borderWidth,
+							"stroke-opacity" : borderOpacity
 						});
 					}
 
@@ -14016,6 +14062,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, brush) {
 		var g, series, count, height, barWidth;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -14025,6 +14072,10 @@ jui.define("chart.brush.stackbar", [], function() {
 
 			height = brush.y.rangeBand();
 			barWidth = height - brush.outerPadding * 2;
+
+			borderColor = chart.theme("barBorderColor");
+			borderWidth = chart.theme("barBorderWidth");
+			borderOpacity = chart.theme("barBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -14044,7 +14095,10 @@ jui.define("chart.brush.stackbar", [], function() {
 						y : startY,
 						width : Math.abs(startX - endX),
 						height : barWidth,
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, i, j);
@@ -14074,6 +14128,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 	var ColumnStackBrush = function(chart, brush) {
 		var g, zeroY, count, width, barWidth;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -14083,6 +14138,10 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 			width = brush.x.rangeBand();
 			barWidth = width - brush.outerPadding * 2;
+
+			borderColor = chart.theme("columnBorderColor");
+			borderWidth = chart.theme("columnBorderWidth");
+			borderOpacity = chart.theme("columnBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -14103,7 +14162,10 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						y : (startY > endY) ? endY : startY,
 						width : barWidth,
 						height : Math.abs(startY - endY),
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 					
                     this.addEvent(r, i, j);
@@ -14889,7 +14951,7 @@ jui.define("chart.brush.waterfall", [], function() {
 
 		this.draw = function() {
 			var target = brush.target[0],
-				stroke = chart.theme("waterfallBorderColor");
+				stroke = chart.theme("waterfallLineColor");
 
 			for (var i = 0; i < count; i++) {
 				var startX = brush.x(i) - half_width / 2,
@@ -14949,7 +15011,7 @@ jui.define("chart.brush.waterfall", [], function() {
 							y2: nowStartY + h,
 							stroke: stroke,
 							"stroke-width": 1,
-							"stroke-dasharray": chart.theme("waterfallBorderDashArray")
+							"stroke-dasharray": chart.theme("waterfallLineDashArray")
 						});
 
 						g.append(l);
@@ -15115,6 +15177,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 	var RangeColumnBrush = function(chart, brush) {
 		var g, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -15126,6 +15189,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("columnBorderColor");
+			borderWidth = chart.theme("columnBorderWidth");
+			borderOpacity = chart.theme("columnBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -15142,7 +15209,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						y : startY,
 						width : columnWidth,
 						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, j, i);
@@ -15171,6 +15241,7 @@ jui.define("chart.brush.rangebar", [], function() {
 	var RangeBarBrush = function(chart, brush) {
 		var g, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -15182,6 +15253,10 @@ jui.define("chart.brush.rangebar", [], function() {
 			height = brush.y.rangeBand();
 			half_height = height - (outerPadding * 2);
 			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("barBorderColor");
+			borderWidth = chart.theme("barBorderWidth");
+			borderOpacity = chart.theme("barBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -15199,7 +15274,10 @@ jui.define("chart.brush.rangebar", [], function() {
 						y : startY,
 						height : barHeight,
 						width : Math.abs(zeroX - startX),
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, j, i);

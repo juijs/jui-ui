@@ -3,6 +3,7 @@ jui.define("chart.brush.rangebar", [], function() {
 	var RangeBarBrush = function(chart, brush) {
 		var g, count, height, half_height, barHeight;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -14,6 +15,10 @@ jui.define("chart.brush.rangebar", [], function() {
 			height = brush.y.rangeBand();
 			half_height = height - (outerPadding * 2);
 			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("barBorderColor");
+			borderWidth = chart.theme("barBorderWidth");
+			borderOpacity = chart.theme("barBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -31,7 +36,10 @@ jui.define("chart.brush.rangebar", [], function() {
 						y : startY,
 						height : barHeight,
 						width : Math.abs(zeroX - startX),
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, j, i);

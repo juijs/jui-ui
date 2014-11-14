@@ -35,6 +35,12 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveBorderWidth : 1,
 
 		// brush styles
+		barBorderColor : "none",
+		barBorderWidth : 0,
+		barBorderOpacity : 0,
+		columnBorderColor : "none",
+		columnBorderWidth : 0,
+		columnBorderOpacity : 0,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
@@ -63,8 +69,8 @@ jui.define("chart.theme.pastel", [], function() {
 		waterfallBackgroundColor : "#73e9d2", // 4
 		waterfallInvertBackgroundColor : "#ffb9ce", // 3
 		waterfallEdgeBackgroundColor : "#08c4e0", // 1
-		waterfallBorderColor : "#a9a9a9",
-		waterfallBorderDashArray : "0.9",
+		waterfallLineColor : "#a9a9a9",
+		waterfallLineDashArray : "0.9",
 
         // widget styles
         titleFontColor : "#333",

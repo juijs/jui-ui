@@ -18,7 +18,7 @@ jui.define("chart.brush.waterfall", [], function() {
 
 		this.draw = function() {
 			var target = brush.target[0],
-				stroke = chart.theme("waterfallBorderColor");
+				stroke = chart.theme("waterfallLineColor");
 
 			for (var i = 0; i < count; i++) {
 				var startX = brush.x(i) - half_width / 2,
@@ -78,7 +78,7 @@ jui.define("chart.brush.waterfall", [], function() {
 							y2: nowStartY + h,
 							stroke: stroke,
 							"stroke-width": 1,
-							"stroke-dasharray": chart.theme("waterfallBorderDashArray")
+							"stroke-dasharray": chart.theme("waterfallLineDashArray")
 						});
 
 						g.append(l);

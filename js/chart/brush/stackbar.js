@@ -2,6 +2,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, brush) {
 		var g, series, count, height, barWidth;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -11,6 +12,10 @@ jui.define("chart.brush.stackbar", [], function() {
 
 			height = brush.y.rangeBand();
 			barWidth = height - brush.outerPadding * 2;
+
+			borderColor = chart.theme("barBorderColor");
+			borderWidth = chart.theme("barBorderWidth");
+			borderOpacity = chart.theme("barBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -30,7 +35,10 @@ jui.define("chart.brush.stackbar", [], function() {
 						y : startY,
 						width : Math.abs(startX - endX),
 						height : barWidth,
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, i, j);

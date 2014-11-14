@@ -3,6 +3,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 	var RangeColumnBrush = function(chart, brush) {
 		var g, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
+		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
 			g = chart.svg.group().translate(chart.x(), chart.y());
@@ -14,6 +15,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
+
+			borderColor = chart.theme("columnBorderColor");
+			borderWidth = chart.theme("columnBorderWidth");
+			borderOpacity = chart.theme("columnBorderOpacity");
 		}
 
 		this.draw = function() {
@@ -30,7 +35,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						y : startY,
 						width : columnWidth,
 						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush.colors),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity
 					});
 
                     this.addEvent(r, j, i);
