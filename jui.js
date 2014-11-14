@@ -9997,7 +9997,7 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                     obj.data[i] = value;
 
                     if (range.min < obj.min) {
-                        obj.min = range.max;
+                        obj.min = range.min;
                     }
 
                     if (range.max > obj.max) {
