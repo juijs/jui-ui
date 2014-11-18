@@ -10380,6 +10380,14 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             return createGradient(self, parsedColor, color);
         }
 
+        function setThemeStyle() {
+            if (arguments.length == 1) {
+                _theme = $.extend(_theme, arguments[0]);
+            } else if (arguments.length == 2) {
+                _theme[arguments[0]] = arguments[1];
+            }
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -10396,11 +10404,11 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             }
 
             // 차트 테마 설정
-            this.setTheme(opts.theme);
+            setThemeStyle(jui.include("chart.theme." + opts.theme));
 
             // 차트 테마 스타일 설정
             if (opts.style) {
-                this.setTheme(opts.style);
+                setThemeStyle(opts.style);
             }
 
             // UI 바인딩 설정
@@ -10541,25 +10549,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             }, attr), textOrCallback);
 
             return el;
-        }
-
-        /**
-         * chart 의 theme 설정
-         *
-         * @param {string} theme   chart.theme.xxx 의 클래스를 읽어들임
-         */
-        this.setTheme = function() {
-            if (arguments.length == 1) {
-                var theme = arguments[0];
-
-                if (_.typeCheck("object", theme)) {
-                    _theme = $.extend(_theme, theme);
-                } else {
-                    _theme = jui.include("chart.theme." + theme);
-                }
-            } else if (arguments.length == 2) {
-                _theme[arguments[0]] = arguments[1];
-            }
         }
 
         /**
@@ -10845,6 +10834,20 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             _data = dataList.slice(_start, _end);
 
             this.render();
+        }
+
+        /**
+         * 테마 변경 후 차트 렌더링
+         *
+         * @param themeName
+         */
+        this.setTheme = function(theme) {
+            var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
+
+            if(newTheme != null) {
+                setThemeStyle(newTheme);
+                this.render();
+            }
         }
 
         /**
