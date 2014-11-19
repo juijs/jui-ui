@@ -6,6 +6,7 @@ jui.define("chart.brush.scatter", [], function() {
             var self = this;
 
             var elem = null,
+                display = this.brush.display,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
@@ -68,6 +69,11 @@ jui.define("chart.brush.scatter", [], function() {
                 });
             }
 
+            // display 옵션이 max 또는 min일 때, 나머지 엘리먼트는 숨기기
+            if(display == "max" && !pos.max || display == "min" && !pos.min) {
+                elem.attr({ visibility: "hidden" });
+            }
+
             return elem;
         }
 
@@ -76,7 +82,12 @@ jui.define("chart.brush.scatter", [], function() {
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var p = this.createScatter({ x: points[i].x[j], y: points[i].y[j] }, i);
+                    var p = this.createScatter({
+                        x: points[i].x[j],
+                        y: points[i].y[j],
+                        max: points[i].max[j],
+                        min: points[i].min[j]
+                    }, i);
                     this.addEvent(p, i, j);
 
                     g.append(p);
@@ -93,7 +104,8 @@ jui.define("chart.brush.scatter", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "circle", // or triangle, rectangle, cross
-                size: 7
+                size: 7,
+                display: null // max, min
             }
         }
 	}

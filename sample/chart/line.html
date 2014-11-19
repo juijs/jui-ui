@@ -41,7 +41,11 @@
                 value : { text : "test" }
             },
             brush : [
-                { type : 'area' , target : [ 'name' ] }
+                { type : 'line' , target : [ 'name' ] },
+                { type : 'scatter' , target : [ 'name' ], display : "max" }
+            ],
+            widget : [
+                { type : "tooltip", brush : 1 }
             ]
         }).render();
 	})
