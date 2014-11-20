@@ -1533,137 +1533,140 @@
 .jui .icon-calendar:before {
   content: "\e609";
 }
-.jui .icon-chart:before {
+.jui .icon-caution:before {
   content: "\e60a";
 }
-.jui .icon-check:before {
+.jui .icon-chart:before {
   content: "\e60b";
 }
-.jui .icon-chevron-left:before {
+.jui .icon-check:before {
   content: "\e60c";
 }
-.jui .icon-chevron-right:before {
+.jui .icon-chevron-left:before {
   content: "\e60d";
 }
-.jui .icon-close:before {
+.jui .icon-chevron-right:before {
   content: "\e60e";
 }
-.jui .icon-dashboardlist:before {
+.jui .icon-close:before {
   content: "\e60f";
 }
-.jui .icon-document:before {
+.jui .icon-dashboardlist:before {
   content: "\e610";
 }
-.jui .icon-download:before {
+.jui .icon-document:before {
   content: "\e611";
 }
-.jui .icon-edit:before {
+.jui .icon-download:before {
   content: "\e612";
 }
-.jui .icon-exit:before {
+.jui .icon-edit:before {
   content: "\e613";
 }
-.jui .icon-gear:before {
+.jui .icon-exit:before {
   content: "\e614";
 }
-.jui .icon-help:before {
+.jui .icon-gear:before {
   content: "\e615";
 }
-.jui .icon-hide:before {
+.jui .icon-help:before {
   content: "\e616";
 }
-.jui .icon-home:before {
+.jui .icon-hide:before {
   content: "\e617";
 }
-.jui .icon-html:before {
+.jui .icon-home:before {
   content: "\e618";
 }
-.jui .icon-image:before {
+.jui .icon-html:before {
   content: "\e619";
 }
-.jui .icon-italic:before {
+.jui .icon-image:before {
   content: "\e61a";
 }
-.jui .icon-left:before {
+.jui .icon-italic:before {
   content: "\e61b";
 }
-.jui .icon-link:before {
+.jui .icon-left:before {
   content: "\e61c";
 }
-.jui .icon-loading:before {
+.jui .icon-link:before {
   content: "\e61d";
 }
-.jui .icon-more:before {
+.jui .icon-loading:before {
   content: "\e61e";
 }
-.jui .icon-new-window:before {
+.jui .icon-more:before {
   content: "\e61f";
 }
-.jui .icon-orderedlist:before {
+.jui .icon-new-window:before {
   content: "\e620";
 }
-.jui .icon-pause:before {
+.jui .icon-orderedlist:before {
   content: "\e621";
 }
-.jui .icon-play:before {
+.jui .icon-pause:before {
   content: "\e622";
 }
-.jui .icon-plus:before {
+.jui .icon-play:before {
   content: "\e623";
 }
-.jui .icon-preview:before {
+.jui .icon-plus:before {
   content: "\e624";
 }
-.jui .icon-printer:before {
+.jui .icon-preview:before {
   content: "\e625";
 }
-.jui .icon-realtime:before {
+.jui .icon-printer:before {
   content: "\e626";
 }
-.jui .icon-refresh:before {
+.jui .icon-realtime:before {
   content: "\e627";
 }
-.jui .icon-refresh2:before {
+.jui .icon-refresh:before {
   content: "\e628";
 }
-.jui .icon-resize:before {
+.jui .icon-refresh2:before {
   content: "\e629";
 }
-.jui .icon-return:before {
+.jui .icon-resize:before {
   content: "\e62a";
 }
-.jui .icon-right:before {
+.jui .icon-return:before {
   content: "\e62b";
 }
-.jui .icon-save:before {
+.jui .icon-right:before {
   content: "\e62c";
 }
-.jui .icon-search:before {
+.jui .icon-save:before {
   content: "\e62d";
 }
-.jui .icon-stop:before {
+.jui .icon-search:before {
   content: "\e62e";
 }
-.jui .icon-table:before {
+.jui .icon-stop:before {
   content: "\e62f";
 }
-.jui .icon-text:before {
+.jui .icon-table:before {
   content: "\e630";
 }
-.jui .icon-textcolor:before {
+.jui .icon-text:before {
   content: "\e631";
 }
-.jui .icon-trashcan:before {
+.jui .icon-textcolor:before {
   content: "\e632";
 }
-.jui .icon-underline:before {
+.jui .icon-trashcan:before {
   content: "\e633";
 }
-.jui .icon-unorderedlist:before {
+.jui .icon-underline:before {
   content: "\e634";
 }
-.jui .icon-upload:before {
+.jui .icon-unorderedlist:before {
   content: "\e635";
+}
+.jui .icon-upload:before {
+  content: "\e636";
 }
 .jui .icon-spin {
   -webkit-animation: spin 2s infinite linear;
@@ -5637,6 +5640,122 @@
 }
 .jui .tooltip-gray.tooltip-right > .anchor {
   border-right-color: #ededed;
+}
+.jui .popover {
+  position: relative;
+  width: 268px;
+  font-size: 12px;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
+  color: #333;
+  background-color: #ffffff;
+  border-color: #cacaca;
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  box-shadow: 0 2px 6px rgba(0,0,0,.075);
+}
+.jui .popover.popover > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .popover.popover > .anchor,
+.jui .popover.popover-top > .anchor {
+  border-top-color: #cacaca;
+}
+.jui .popover.popover > .anchor:after,
+.jui .popover.popover-top > .anchor:after {
+  border-top-color: #ffffff;
+}
+.jui .popover.popover-bottom > .anchor {
+  border-bottom-color: #cacaca;
+}
+.jui .popover.popover-bottom > .anchor:after {
+  border-bottom-color: #ffffff;
+}
+.jui .popover > .head {
+  padding: 7px 15px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  font-weight: bold;
+}
+.jui .popover > .body {
+  padding: 15px;
+}
+.jui .popover > .body > .icon {
+  float: left;
+  font-size: 16px;
+}
+.jui .popover > .body > .icon + .msg {
+  margin-left: 24px;
+}
+.jui .popover > .anchor,
+.jui .popover > .anchor:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.jui .popover > .anchor {
+  border-width: 9px;
+}
+.jui .popover > .anchor:after {
+  content: "";
+  border-width: 8px;
+}
+.jui .popover-top > .anchor {
+  bottom: -9px;
+  left: 50%;
+  margin-left: -9px;
+  border-bottom-width: 0;
+}
+.jui .popover-top > .anchor:after {
+  bottom: 1px;
+  margin-left: -8px;
+  content: " ";
+  border-bottom-width: 0;
+}
+.jui .popover-bottom > .anchor {
+  top: -9px;
+  left: 50%;
+  margin-left: -9px;
+  border-top-width: 0;
+}
+.jui .popover-bottom > .anchor:after {
+  top: 1px;
+  margin-left: -8px;
+  content: " ";
+  border-top-width: 0;
+}
+.jui .popover-white {
+  color: #333;
+  background-color: #ffffff;
+  border-color: #cacaca;
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  box-shadow: 0 2px 6px rgba(0,0,0,.075);
+}
+.jui .popover-white.popover > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .popover-white.popover > .anchor,
+.jui .popover-white.popover-top > .anchor {
+  border-top-color: #cacaca;
+}
+.jui .popover-white.popover > .anchor:after,
+.jui .popover-white.popover-top > .anchor:after {
+  border-top-color: #ffffff;
+}
+.jui .popover-white.popover-bottom > .anchor {
+  border-bottom-color: #cacaca;
+}
+.jui .popover-white.popover-bottom > .anchor:after {
+  border-bottom-color: #ffffff;
 }
 .jui ul.tree {
   position: relative;

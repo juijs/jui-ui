@@ -1,0 +1,116 @@
+.jui {
+	.popover {
+	  position: relative;
+	  width: 268px;
+	  font-size: 12px;
+	  border-width: 1px;
+	  border-style: solid;
+	  .border-radius(5px);
+	  .opacity(95);
+	  .popover-white;
+	}
+	
+	.popover > .head {
+	  padding: 7px 15px;
+	  border-bottom-width: 1px;
+	  border-bottom-style: solid;
+	  font-weight: bold;
+	}
+
+  	.popover > .body {
+	  padding: 15px;
+
+	  > .icon {
+		float: left;
+		font-size: 16px;
+	  }
+
+	  > .icon + .msg {
+		margin-left: 24px;
+	  }
+	}
+	
+	.popover > .anchor,
+	.popover > .anchor:after {
+	  position: absolute;
+	  display: block;
+	  width: 0;
+	  height: 0;
+	  border-color: transparent;
+	  border-style: solid;
+	}
+
+	.popover > .anchor {
+	  border-width: 9px;
+	}
+
+	.popover > .anchor:after {
+	  content: "";
+	  border-width: 8px;
+	}
+
+
+  	// popover Positions
+	// --------------------------------------------------
+	
+	.popover-top > .anchor {
+	  bottom: -9px;
+	  left: 50%;
+	  margin-left: -9px;
+	  border-bottom-width: 0;
+	}
+	.popover-top > .anchor:after {
+	  bottom: 1px;
+	  margin-left: -8px;
+	  content: " ";
+	  border-bottom-width: 0;
+	}
+
+	.popover-bottom > .anchor {
+	  top: -9px;
+	  left: 50%;
+	  margin-left: -9px;
+	  border-top-width: 0;
+	}
+	.popover-bottom > .anchor:after {
+	  top: 1px;
+	  margin-left: -8px;
+	  content: " ";
+	  border-top-width: 0;
+	}
+
+	// popover Colors
+	// --------------------------------------------------
+	
+	.popover-white {
+		@popover-bgcolor: #fff;
+	  	@popover-bordercolor: #cacaca;
+
+		color: #333;
+		background-color: @popover-bgcolor;
+	  	border-color: @popover-bordercolor;
+		.box-shadow(~"0 2px 6px rgba(0,0,0,.075)");
+		
+		&.popover > .head {
+		  border-bottom-color: #ebebeb;
+		}
+
+	  	// default & top
+		&.popover > .anchor,
+		&.popover-top > .anchor {
+		  border-top-color: @popover-bordercolor;
+		}
+		&.popover > .anchor:after,
+		&.popover-top > .anchor:after {
+		  border-top-color: @popover-bgcolor;
+		}
+
+	  	// bottom
+		&.popover-bottom > .anchor {
+		  border-bottom-color: @popover-bordercolor;
+		}
+		&.popover-bottom > .anchor:after {
+		  border-bottom-color: @popover-bgcolor;
+		}
+	}
+}
