@@ -1,4 +1,7 @@
 .jui {
+  	@anchor-size: 8px;
+  	@anchor-inner-size: 7px;
+
 	.popover {
 	  position: absolute;
 	  font-size: 12px;
@@ -40,10 +43,10 @@
 	  pointer-events: none;
 	}
 	.popover:after {
-	  border-width: 9px;
+	  border-width: @anchor-inner-size;
 	}
 	.popover:before {
-	  border-width: 10px;
+	  border-width: @anchor-size;
 	}
 
   	// popover Positions
@@ -63,10 +66,10 @@
 
   	// anchor top & bottom
 	.popover-top:after, .popover-bottom:after {
-	  margin-left: -9px;
+	  margin-left: -@anchor-inner-size;
 	}
 	.popover-top:before, .popover-bottom:before {
-	  margin-left: -10px;
+	  margin-left: -@anchor-size;
 	}
 
 	// anchor left
@@ -83,77 +86,77 @@
 
   	// anchor left & right
 	.popover-left:after, .popover-right:after {
-	  margin-top: -9px;
+	  margin-top: -@anchor-inner-size;
 	}
 	.popover-left:before, .popover-right:before {
-	  margin-top: -10px;
+	  margin-top: -@anchor-size;
 	}
 
 	// popover Colors
 	// --------------------------------------------------
 	
 	.popover-white {
-	  @bgcolor: #fff;
-	  @bordercolor: #cacaca;
+	  @bg-color: #fff;
+	  @border-color: #cacaca;
 
 	  color: #333;
-	  background-color: @bgcolor;
-	  border-color: @bordercolor;
+	  background-color: @bg-color;
+	  border-color: @border-color;
 
 	  &.popover > .head {
 		border-bottom-color: #ebebeb;
 	  }
 
-	  .popover-anchor(@bgcolor, @bordercolor);
+	  .popover-anchor(@bg-color, @border-color);
 	}
 
 	.popover-black {
-	  @bgcolor: #1d1d1d;
-	  @bordercolor: #1d1d1d;
+	  @bg-color: #1d1d1d;
+	  @border-color: #1d1d1d;
 
 	  color: #fff;
-	  background-color: @bgcolor;
-	  border-color: @bordercolor;
+	  background-color: @bg-color;
+	  border-color: @border-color;
 
 	  &.popover > .head {
 		border-bottom-color: #5a5a5a;
 	  }
 
-	  .popover-anchor(@bgcolor, @bordercolor);
+	  .popover-anchor(@bg-color, @border-color);
 	}
 
   	// 앵커 색상 믹스인
-  	.popover-anchor(@bgcolor, @bordercolor) {
+  	.popover-anchor(@bg-color, @border-color) {
 	  // anchor top
 	  &.popover-top:after {
-		border-top-color: @bgcolor;
+		border-top-color: @bg-color;
 	  }
 	  &.popover-top:before {
-		border-top-color: @bordercolor;
+		border-top-color: @border-color;
 	  }
 
 	  // anchor bottom
 	  &.popover-bottom:after {
-		border-bottom-color: @bgcolor;
+		border-bottom-color: @bg-color;
 	  }
 	  &.popover-bottom:before {
-		border-bottom-color: @bordercolor;
+		border-bottom-color: @border-color;
 	  }
 
 	  // anchor left
 	  &.popover-left:after {
-		border-left-color: @bgcolor;
+		border-left-color: @bg-color;
 	  }
 	  &.popover-left:before {
-		border-left-color: @bordercolor;
+		border-left-color: @border-color;
 	  }
 
 	  // anchor right
 	  &.popover-right:after {
-		border-right-color: @bgcolor;
+		border-right-color: @bg-color;
 	  }
 	  &.popover-right:before {
-		border-right-color: @bordercolor;
+		border-right-color: @border-color;
 	  }
 	}
 }

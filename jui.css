@@ -5711,10 +5711,10 @@
   pointer-events: none;
 }
 .jui .popover:after {
-  border-width: 9px;
+  border-width: 7px;
 }
 .jui .popover:before {
-  border-width: 10px;
+  border-width: 8px;
 }
 .jui .popover-top:after,
 .jui .popover-top:before {
@@ -5728,11 +5728,11 @@
 }
 .jui .popover-top:after,
 .jui .popover-bottom:after {
-  margin-left: -9px;
+  margin-left: -7px;
 }
 .jui .popover-top:before,
 .jui .popover-bottom:before {
-  margin-left: -10px;
+  margin-left: -8px;
 }
 .jui .popover-left:after,
 .jui .popover-left:before {
@@ -5746,11 +5746,11 @@
 }
 .jui .popover-left:after,
 .jui .popover-right:after {
-  margin-top: -9px;
+  margin-top: -7px;
 }
 .jui .popover-left:before,
 .jui .popover-right:before {
-  margin-top: -10px;
+  margin-top: -8px;
 }
 .jui .popover-white {
   color: #333;
