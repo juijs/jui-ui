@@ -13,13 +13,13 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self, title) {
+		function createTooltip(self, msg) {
             // 메시지 템플릿 적용
-			$tooltip = $(self.tpl.message({
+			$tooltip = $(self.tpl.item({
                 timestamp: self.timestamp,
                 position: self.options.position,
                 color: self.options.color,
-                title: title
+                message: msg
             }));
 			
 			// 스타일 옵션
@@ -152,8 +152,8 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             hideType: "mouseout",
             title: "",
             tpl: {
-                message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
-                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                "<div class='anchor'></div><div class='message'><!= message !></div>" +
                 "</div>"
             }
         }

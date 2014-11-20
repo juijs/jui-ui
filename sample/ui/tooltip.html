@@ -24,7 +24,7 @@ jui.ready(function(ui, uix, _) {
 	// 7-1. 툴팁 Top
 	tooltip_1 = ui.tooltip(".tooltip_1", {
         tpl: {
-            message: $("#tpl_message").html()
+            alarm: $("#tpl_message").html()
         }
     });
 	
@@ -61,9 +61,12 @@ jui.ready(function(ui, uix, _) {
 	
 	// 7-4. 툴팁 Right
 	tooltip_4 = ui.tooltip(".tooltip_4", {
-		position: "right",
+		position: "top",
 		width: 300,
-		align: "center"
+		align: "left",
+		tpl: {
+			alarm: $("#tpl_popover").html()
+		}
 	});
 });
 
@@ -73,7 +76,7 @@ jui.ready(function(ui, uix, _) {
 
 <script id="tpl_message" type="text/template">
     <div class="tooltip tooltip-top">
-        <div class="title" style="font-size: 15px;"><!= title !></div>
+        <div class="message" style="font-size: 15px;"><!= message !></div>
     </div>
 </script>
 
@@ -131,11 +134,15 @@ jui.ready(function(ui, uix, _) {
 		툴팁의 위치를 우측으로 설정할 수 있으며 <strong>max-width</strong> 값을 300px로 정합니다. 만약에 툴팁이 길어지면 자동으로 줄바꿈을 합니다.<br/>
 		그리고 툴팁은 가운데 정렬됩니다. (<span class="tooltip_4" title="Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right">Over</span>)
 		
-<pre><code class="language-javascript">tooltip_4 = ui.tooltip(".tooltip_4", {
-	position: "right",
-	width: 300,
-	align: "center"
-});</code></pre>
+		<script id="tpl_popover" type="text/template">
+			<div class="popover popover-<!= position !> popover-<!= color !>">
+				<div class="head">Subject</div>
+				<div class="body">
+					<div class="icon"><i class="icon-caution"></i></div>
+					<div class="message"><!= message !></div>
+				</div>
+			</div>
+		</script>
 	</p>
 </section>
 

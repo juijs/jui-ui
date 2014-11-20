@@ -5524,7 +5524,7 @@
   visibility: visible;
   opacity: 0.9;
 }
-.jui .tooltip > .title {
+.jui .tooltip > .message {
   color: #fff;
   background-color: #000000;
 }
@@ -5543,7 +5543,7 @@
 .jui .tooltip.tooltip-right > .anchor {
   border-right-color: #000000;
 }
-.jui .tooltip > .title {
+.jui .tooltip > .message {
   padding: 3px 8px;
   text-decoration: none;
   word-break: break-all;
@@ -5600,7 +5600,7 @@
 .jui .tooltip-black {
   opacity: 0.9;
 }
-.jui .tooltip-black > .title {
+.jui .tooltip-black > .message {
   color: #fff;
   background-color: #000000;
 }
@@ -5622,7 +5622,7 @@
 .jui .tooltip-gray {
   opacity: 0.9;
 }
-.jui .tooltip-gray > .title {
+.jui .tooltip-gray > .message {
   color: #000;
   background-color: #ededed;
 }
@@ -5698,7 +5698,7 @@
   float: left;
   font-size: 16px;
 }
-.jui .popover > .body > .icon + .msg {
+.jui .popover > .body > .icon + .message {
   margin-left: 24px;
 }
 .jui .popover:after,
@@ -7112,7 +7112,7 @@
   height: 27px;
 }
 .jui .notify > .icon + .title,
-.jui .notify > .icon + .title + .msg {
+.jui .notify > .icon + .title + .message {
   margin-left: 30px;
   padding-left: 6px;
 }
@@ -7132,7 +7132,7 @@
 .jui .notify > .title {
   color: #4d4d4d;
 }
-.jui .notify > .msg {
+.jui .notify > .message {
   color: #666;
 }
 .jui .notify-white {
@@ -7145,7 +7145,7 @@
 .jui .notify-white > .title {
   color: #4d4d4d;
 }
-.jui .notify-white > .msg {
+.jui .notify-white > .message {
   color: #666;
 }
 .jui .notify-blue {

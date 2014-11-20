@@ -7364,6 +7364,7 @@ jui.define("chart.brush.scatter", [], function() {
                 });
             }
 
+            // display 옵션이 max 또는 min일 때, 나머지 엘리먼트는 숨기기
             if(display == "max" && !pos.max || display == "min" && !pos.min) {
                 elem.attr({ visibility: "hidden" });
             }

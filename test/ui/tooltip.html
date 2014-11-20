@@ -19,7 +19,7 @@ jui.ready([ "ui.tooltip" ], function(tooltip) {
     t1_msg = $("#t1").attr("title");
     t1 = tooltip("#t1", {
         tpl: {
-            message: $("#tpl_message").html()
+            item: $("#tpl_message").html()
         }
     });
 
@@ -50,7 +50,7 @@ jui.ready([ "ui.tooltip" ], function(tooltip) {
 <span id="t1" title="Tooltip 1">Over</span>
 
 <script id="tpl_message" type="text/template">
-    <div id="TOOLTIP_<!= timestamp !>"><!= title !></div>
+    <div id="TOOLTIP_<!= timestamp !>"><!= message !></div>
 </script>
 
 </body>

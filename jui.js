@@ -4795,7 +4795,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             	opts = this.options,
             	delay = (!isNaN(timeout)) ? timeout : opts.timeout;
             	
-            var $alarm = $(this.tpl.alarm(data)).css({ "margin-bottom": opts.distance });
+            var $alarm = $(this.tpl.item(data)).css({ "margin-bottom": opts.distance });
             
             // 포지션 예외 처리
             if(opts.position == "top" || opts.position == "bottom") {
@@ -5023,13 +5023,13 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 		 * Private Methods
 		 * 
 		 */
-		function createTooltip(self, title) {
+		function createTooltip(self, msg) {
             // 메시지 템플릿 적용
-			$tooltip = $(self.tpl.message({
+			$tooltip = $(self.tpl.item({
                 timestamp: self.timestamp,
                 position: self.options.position,
                 color: self.options.color,
-                title: title
+                message: msg
             }));
 			
 			// 스타일 옵션
@@ -5162,8 +5162,8 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             hideType: "mouseout",
             title: "",
             tpl: {
-                message: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
-                "<div class='anchor'></div><div class='title'><!= title !></div>" +
+                item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                "<div class='anchor'></div><div class='message'><!= message !></div>" +
                 "</div>"
             }
         }
@@ -13988,6 +13988,7 @@ jui.define("chart.brush.scatter", [], function() {
                 });
             }
 
+            // display 옵션이 max 또는 min일 때, 나머지 엘리먼트는 숨기기
             if(display == "max" && !pos.max || display == "min" && !pos.min) {
                 elem.attr({ visibility: "hidden" });
             }

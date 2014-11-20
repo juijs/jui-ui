@@ -54,7 +54,7 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             	opts = this.options,
             	delay = (!isNaN(timeout)) ? timeout : opts.timeout;
             	
-            var $alarm = $(this.tpl.alarm(data)).css({ "margin-bottom": opts.distance });
+            var $alarm = $(this.tpl.item(data)).css({ "margin-bottom": opts.distance });
             
             // 포지션 예외 처리
             if(opts.position == "top" || opts.position == "bottom") {
