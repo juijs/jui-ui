@@ -507,9 +507,7 @@ jui.define("util.svg",
                 var w = arguments[0],
                     h = arguments[1];
 
-                if(_.typeCheck("integer", w) && _.typeCheck("integer", h)) {
-                    root.attr({ width: w, height: h });
-                }
+                root.attr({ width: w, height: h });
             } else {
                 return root.size();
             }

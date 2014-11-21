@@ -41,7 +41,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, i, j);
+                    this.addEvent(r, j, i);
 					group.append(r);					
 					
 					startX = endX;

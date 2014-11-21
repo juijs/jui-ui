@@ -12,8 +12,7 @@
 <script>
     jui.ready([ "chart.builder" ], function(chart) {
 
-         chart("#chart", {
-            width: 400,
+         c = chart("#chart", {
             height : 400,
             theme : "jennifer",
             data : [
@@ -23,14 +22,12 @@
                 { name : 18, value : 5, test : 20 }
             ],
             grid : {
-
-                x1 : {
+                x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
                 },
                 y : {
                     type : 'range',
-                    reverse : true, 
                     target : function(data) {
                         return data.name + data.value + data.test;
                     },
@@ -44,10 +41,17 @@
             },
             brush : {
                 type : 'stackcolumn',
-                x1 : 0,
                 target : ['name', 'value', 'test']
+            },
+            widget : [{
+                type : "tooltip"
+            }],
+            event : {
+                click : function(obj, e) {
+                    console.log(obj);
+                }
             }
-        }).render();
+        });
 	})
 </script>
 

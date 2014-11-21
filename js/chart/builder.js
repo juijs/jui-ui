@@ -1,4 +1,28 @@
-jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"], function($, _, SVGUtil, ColorUtil) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" ], function($, _, SVGUtil, ColorUtil) {
+
+    /**
+     * Common Logic
+     *
+     */
+    var win_width = 0;
+
+    _.resize(function() {
+        if(win_width == $(window).width()) return;
+
+        var call_list = jui.get("chart.builder");
+        for(var i = 0; i < call_list.length; i++) {
+            var ui_list = call_list[i].list;
+
+            for(var j = 0; j < ui_list.length; j++) {
+                if(ui_list[j].options.width == "100%") {
+                    ui_list[j].resize();
+                }
+            }
+        }
+
+        win_width = $(window).width();
+    }, 300);
+
     /**
      * Chart Builder 구현
      *
@@ -912,6 +936,28 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             this.render();
         }
 
+        this.resize = function() {
+            var opts = this.options;
+
+            this.svg.size(opts.width, opts.height);
+            this.render(true);
+        }
+
+        /**
+         * chart 사이즈 조정
+         *
+         * @param {integer} width
+         * @param {integer} height
+         */
+        this.setSize = function(width, height) {
+            this.setOption({
+                width: width,
+                height: height
+            });
+
+            this.resize();
+        }
+
         /**
          * 테마 변경 후 차트 렌더링
          *
@@ -924,17 +970,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                 setThemeStyle(newTheme);
                 this.render();
             }
-        }
-
-        /**
-         * chart 사이즈 조정
-         *
-         * @param {integer} width
-         * @param {integer} height
-         */
-        this.setSize = function(width, height) {
-            this.svg.size(width, height);
-            this.render(true);
         }
 
         /**

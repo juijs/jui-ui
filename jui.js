@@ -2958,9 +2958,7 @@ jui.define("util.svg",
                 var w = arguments[0],
                     h = arguments[1];
 
-                if(_.typeCheck("integer", w) && _.typeCheck("integer", h)) {
-                    root.attr({ width: w, height: h });
-                }
+                root.attr({ width: w, height: h });
             } else {
                 return root.size();
             }
@@ -9922,7 +9920,31 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"], function($, _, SVGUtil, ColorUtil) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" ], function($, _, SVGUtil, ColorUtil) {
+
+    /**
+     * Common Logic
+     *
+     */
+    var win_width = 0;
+
+    _.resize(function() {
+        if(win_width == $(window).width()) return;
+
+        var call_list = jui.get("chart.builder");
+        for(var i = 0; i < call_list.length; i++) {
+            var ui_list = call_list[i].list;
+
+            for(var j = 0; j < ui_list.length; j++) {
+                if(ui_list[j].options.width == "100%") {
+                    ui_list[j].resize();
+                }
+            }
+        }
+
+        win_width = $(window).width();
+    }, 300);
+
     /**
      * Chart Builder 구현
      *
@@ -10836,6 +10858,28 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
             this.render();
         }
 
+        this.resize = function() {
+            var opts = this.options;
+
+            this.svg.size(opts.width, opts.height);
+            this.render(true);
+        }
+
+        /**
+         * chart 사이즈 조정
+         *
+         * @param {integer} width
+         * @param {integer} height
+         */
+        this.setSize = function(width, height) {
+            this.setOption({
+                width: width,
+                height: height
+            });
+
+            this.resize();
+        }
+
         /**
          * 테마 변경 후 차트 렌더링
          *
@@ -10848,17 +10892,6 @@ jui.defineUI("chart.builder", ["jquery", "util.base", "util.svg", "util.color"],
                 setThemeStyle(newTheme);
                 this.render();
             }
-        }
-
-        /**
-         * chart 사이즈 조정
-         *
-         * @param {integer} width
-         * @param {integer} height
-         */
-        this.setSize = function(width, height) {
-            this.svg.size(width, height);
-            this.render(true);
         }
 
         /**
@@ -12964,8 +12997,9 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.addEvent = function(elem, targetIndex, dataIndex) {
             var self = this;
             var obj = {
-                index: self.brush.index,
-                target: self.brush.target[targetIndex],
+                brush: self.brush,
+                dataIndex: dataIndex,
+                dataKey: self.brush.target[targetIndex],
                 data: self.chart.data(dataIndex)
             };
 
@@ -14116,7 +14150,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, i, j);
+                    this.addEvent(r, j, i);
 					group.append(r);					
 					
 					startX = endX;
@@ -14183,7 +14217,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 					
-                    this.addEvent(r, i, j);
+                    this.addEvent(r, j, i);
 					group.append(r);					
 					
 					startY = endY;
@@ -15381,9 +15415,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         function printTooltip(obj) {
-            if(obj.target && widget.all === false) {
-                var t = chart.series(obj.target),
-                    k = obj.target;
+            if(obj.dataKey && widget.all === false) {
+                var t = chart.series(obj.dataKey),
+                    k = obj.dataKey;
 
                 // 위젯 포지션에 따른 별도 처리
                 if(widget.position == "bottom") {
@@ -15404,7 +15438,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 text.attr({ "text-anchor": "middle" });
             } else {
-                var brush = chart.brush(obj.index);
+                var brush = chart.brush(obj.brush.index);
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
@@ -15454,8 +15488,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                if(isActive || ($.inArray(obj.index, widget.brush) == -1 && widget.brush != obj.index)) return;
-                if(!obj.target && obj.data.length == 0) return;
+                if(isActive || ($.inArray(obj.brush.index, widget.brush) == -1 && widget.brush != obj.brush.index)) return;
+                if(!obj.dataKey && obj.data.length == 0) return;
 
                 // 툴팁 텍스트 출력
                 printTooltip(obj);

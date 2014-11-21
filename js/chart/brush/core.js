@@ -180,8 +180,9 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.addEvent = function(elem, targetIndex, dataIndex) {
             var self = this;
             var obj = {
-                index: self.brush.index,
-                target: self.brush.target[targetIndex],
+                brush: self.brush,
+                dataIndex: dataIndex,
+                dataKey: self.brush.target[targetIndex],
                 data: self.chart.data(dataIndex)
             };
 

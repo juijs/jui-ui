@@ -42,7 +42,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 					
-                    this.addEvent(r, i, j);
+                    this.addEvent(r, j, i);
 					group.append(r);					
 					
 					startY = endY;

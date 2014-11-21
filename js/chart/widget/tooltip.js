@@ -15,9 +15,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         function printTooltip(obj) {
-            if(obj.target && widget.all === false) {
-                var t = chart.series(obj.target),
-                    k = obj.target;
+            if(obj.dataKey && widget.all === false) {
+                var t = chart.series(obj.dataKey),
+                    k = obj.dataKey;
 
                 // 위젯 포지션에 따른 별도 처리
                 if(widget.position == "bottom") {
@@ -38,7 +38,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 text.attr({ "text-anchor": "middle" });
             } else {
-                var brush = chart.brush(obj.index);
+                var brush = chart.brush(obj.brush.index);
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
@@ -88,8 +88,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                if(isActive || ($.inArray(obj.index, widget.brush) == -1 && widget.brush != obj.index)) return;
-                if(!obj.target && obj.data.length == 0) return;
+                if(isActive || ($.inArray(obj.brush.index, widget.brush) == -1 && widget.brush != obj.brush.index)) return;
+                if(!obj.dataKey && obj.data.length == 0) return;
 
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
