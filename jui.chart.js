@@ -4453,26 +4453,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             this.render();
         }
 
-        this.resize = function() {
-            var opts = this.options;
-
-            this.svg.size(opts.width, opts.height);
-            this.render(true);
-        }
-
         /**
          * chart 사이즈 조정
          *
          * @param {integer} width
          * @param {integer} height
          */
-        this.setSize = function(width, height) {
-            this.setOption({
-                width: width,
-                height: height
-            });
+        this.resize = function(width, height) {
+            if(arguments.length == 2) {
+                this.setOption({
+                    width: width,
+                    height: height
+                });
+            }
 
-            this.resize();
+            this.svg.size(this.options.width, this.options.height);
+            this.render(true);
         }
 
         /**
