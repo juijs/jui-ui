@@ -5694,11 +5694,11 @@
 .jui .popover > .body {
   padding: 15px;
 }
-.jui .popover > .body > .icon {
+.jui .popover > .body > .image {
   float: left;
   font-size: 16px;
 }
-.jui .popover > .body > .icon + .message {
+.jui .popover > .body > .image + .message {
   margin-left: 24px;
 }
 .jui .popover:after,
@@ -5751,6 +5751,18 @@
 .jui .popover-left:before,
 .jui .popover-right:before {
   margin-top: -8px;
+}
+.jui .popover-top {
+  margin-top: -8px;
+}
+.jui .popover-bottom {
+  margin-top: 8px;
+}
+.jui .popover-left {
+  margin-left: -8px;
+}
+.jui .popover-right {
+  margin-left: 8px;
 }
 .jui .popover-white {
   color: #333;
@@ -7106,13 +7118,13 @@
   -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 }
-.jui .notify > .icon {
+.jui .notify > .image {
   float: left;
   width: 27px;
   height: 27px;
 }
-.jui .notify > .icon + .title,
-.jui .notify > .icon + .title + .message {
+.jui .notify > .image + .title,
+.jui .notify > .image + .title + .message {
   margin-left: 30px;
   padding-left: 6px;
 }

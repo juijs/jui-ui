@@ -24,12 +24,12 @@
   	.popover > .body {
 	  padding: 15px;
 
-	  > .icon {
+	  > .image {
 		float: left;
 		font-size: 16px;
 	  }
 
-	  > .icon + .message {
+	  > .image + .message {
 		margin-left: 24px;
 	  }
 	}
@@ -49,22 +49,20 @@
 	  border-width: @anchor-size;
 	}
 
+
   	// popover Positions
 	// --------------------------------------------------
 
-  	// anchor top
 	.popover-top:after, .popover-top:before {
 	  top: 100%;
 	  left: 50%;
 	}
 
-  	// anchor bottom
 	.popover-bottom:after, .popover-bottom:before {
 	  bottom: 100%;
 	  left: 50%;
 	}
 
-  	// anchor top & bottom
 	.popover-top:after, .popover-bottom:after {
 	  margin-left: -@anchor-inner-size;
 	}
@@ -72,25 +70,39 @@
 	  margin-left: -@anchor-size;
 	}
 
-	// anchor left
 	.popover-left:after, .popover-left:before {
 	  left: 100%;
 	  top: 50%;
 	}
 
-	// anchor right
 	.popover-right:after, .popover-right:before {
 	  right: 100%;
 	  top: 50%;
 	}
 
-  	// anchor left & right
 	.popover-left:after, .popover-right:after {
 	  margin-top: -@anchor-inner-size;
 	}
 	.popover-left:before, .popover-right:before {
 	  margin-top: -@anchor-size;
 	}
+
+
+	// popover Margins
+	// --------------------------------------------------
+  	.popover-top {
+	  margin-top: -@anchor-size;
+	}
+  	.popover-bottom {
+	  margin-top: @anchor-size;
+	}
+  	.popover-left {
+	  margin-left: -@anchor-size;
+	}
+  	.popover-right {
+	  margin-left: @anchor-size;
+	}
+
 
 	// popover Colors
 	// --------------------------------------------------
@@ -125,9 +137,8 @@
 	  .popover-anchor(@bg-color, @border-color);
 	}
 
-  	// 앵커 색상 믹스인
+  	// Anchor color mixin
   	.popover-anchor(@bg-color, @border-color) {
-	  // anchor top
 	  &.popover-top:after {
 		border-top-color: @bg-color;
 	  }
@@ -135,7 +146,6 @@
 		border-top-color: @border-color;
 	  }
 
-	  // anchor bottom
 	  &.popover-bottom:after {
 		border-bottom-color: @bg-color;
 	  }
@@ -143,7 +153,6 @@
 		border-bottom-color: @border-color;
 	  }
 
-	  // anchor left
 	  &.popover-left:after {
 		border-left-color: @bg-color;
 	  }
@@ -151,7 +160,6 @@
 		border-left-color: @border-color;
 	  }
 
-	  // anchor right
 	  &.popover-right:after {
 		border-right-color: @bg-color;
 	  }
