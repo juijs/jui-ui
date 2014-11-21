@@ -40,6 +40,35 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return points.join(" ");
         }
+
+        this.eachBrush = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+            var list = this.getBrush();
+
+            for(var i = 0; i < list.length; i++) {
+                callback.prototype = this;
+                new callback(i, this.chart.brush(i));
+            }
+        }
+
+        this.getBrush = function() {
+            var brush = this.widget.brush,
+                list = [ 0 ];
+
+            if(_.typeCheck("array", brush)) {
+                list = brush;
+            } else if(_.typeCheck("integer", brush)) {
+                list = [ brush ];
+            }
+
+            return list;
+        }
+
+        this.existBrush = function(index) {
+            var list = this.getBrush();
+
+            return ($.inArray(index, list) == -1) ? false : true;
+        }
 	}
 
 	return CoreWidget;

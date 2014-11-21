@@ -224,11 +224,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if (draws != null) {
                 for (var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart." + type + "." + draws[i].type),
-                        drawObj = (type == "widget") ? self.brush(i) : draws[i];
+                    var Obj = jui.include("chart." + type + "." + draws[i].type);
 
                     // 그리드 축 설정
-                    setGridAxis(draws[i], drawObj);
+                    setGridAxis(draws[i]);
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
@@ -253,11 +252,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param self
          */
-        function setGridAxisWidget(self) {
+        function setGridAxisWidget() {
             var draws = _widget_objects;
 
             for (var i = 0; i < draws.length; i++) {
-                setGridAxis(draws[i].widget, self.brush(i));
+                setGridAxis(draws[i].widget);
             }
         }
 
@@ -267,7 +266,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param draw
          * @param drawObj
          */
-        function setGridAxis(draw, drawObj) {
+        function setGridAxis(draw) {
             delete draw.x;
             delete draw.y;
             delete draw.c;
@@ -279,7 +278,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
                 if (!_.typeCheck("function", draw.x)) {
-                    draw.x = ( typeof drawObj.x1 !== 'undefined') ? _scales.x1[drawObj.x1 || 0] : _scales.x[drawObj.x || 0];
+                    draw.x = ( typeof draw.x1 !== 'undefined') ? _scales.x1[draw.x1 || 0] : _scales.x[draw.x || 0];
                 }
             }
             if (_scales.y || _scales.y1) {
@@ -289,12 +288,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
                 if (!_.typeCheck("function", draw.y)) {
-                    draw.y = ( typeof drawObj.y1 !== 'undefined') ? _scales.y1[drawObj.y1 || 0] : _scales.y[drawObj.y || 0];
+                    draw.y = ( typeof draw.y1 !== 'undefined') ? _scales.y1[draw.y1 || 0] : _scales.y[draw.y || 0];
                 }
             }
             if (_scales.c) {
                 if (!_.typeCheck("function", draw.c)) {
-                    draw.c = _scales.c[drawObj.c || 0];
+                    draw.c = _scales.c[draw.c || 0];
                 }
             }
         }
@@ -823,7 +822,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if (isAll) {
                 drawBrush(this, "widget");
             } else {
-                setGridAxisWidget(this);
+                setGridAxisWidget();
             }
 
             // SVG 태그 백그라운드 테마 설정

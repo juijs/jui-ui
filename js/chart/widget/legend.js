@@ -1,6 +1,7 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     var LegendWidget = function(chart, widget) {
+        var columns = {};
         
         /**
          * brush 에서 생성되는 legend 아이콘 리턴 
@@ -12,16 +13,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			var arr = [],
                 data = brush.target;
 			
-			if (widget.key != null) {
+			if (widget.dataKey != null) {
 				data = chart.data();
 			}
 			
 			var count = data.length;
 			
 			for(var i = 0; i < count; i++) {
-				
-				if (widget.key != null) {
-					var text = chart.series(widget.key).text || data[i][widget.key];
+				if (widget.dataKey != null) {
+					var text = chart.series(widget.dataKey).text || data[i][widget.dataKey];
 				} else {
 					var target = brush.target[i],
                         text = chart.series(target).text || target;
@@ -50,8 +50,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
-				}, text)) 
-				
+				}, text));
+
 				arr.push({
 					icon : group,
 					width : width + 4 + rect.width + 10,
@@ -71,10 +71,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             var x = 0, y = 0,
                 total_width = 0, total_height = 0,
                 max_width = 0, max_height = 0;
-            
-            for(var i = 0; i < widget.brush.length; i++) {
-                var index = widget.brush[i],
-                    brush = chart.brush(index);
+
+            this.eachBrush(function(index, brush) {
                 var arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
@@ -84,20 +82,20 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     if (widget.position == "bottom" || widget.position == "top") {
                         x += arr[k].width;
                         total_width += arr[k].width;
-                        
+
                         if (max_height < arr[k].height) {
                             max_height = arr[k].height;
                         }
                     } else {
                         y += arr[k].height;
                         total_height += arr[k].height;
-                        
+
                         if (max_width < arr[k].width) {
                             max_width = arr[k].width;
                         }
                     }
-                }                   
-            }
+                }
+            });
             
             // legend 위치  선정
             if (widget.position == "bottom" || widget.position == "top") {
@@ -129,10 +127,10 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return {
-                brush: [ 0 ],
+                brush: null,
                 position: "bottom",
                 align: "center", // or start, end
-                key: null
+                dataKey: null
             }
         }
     }

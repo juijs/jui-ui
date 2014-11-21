@@ -28,8 +28,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 var message = (obj.data[k]) ? ": " + obj.data[k] : "";
 
                 // 옵션 키가 있을 경우
-                if(widget.key != null) {
-                    message = obj.data[widget.key] + message;
+                if(widget.dataKey != null) {
+                    message = obj.data[widget.dataKey] + message;
                 } else {
                     message = ((t.text) ? t.text : k) + message;
                 }
@@ -88,7 +88,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                if(isActive || ($.inArray(obj.brush.index, widget.brush) == -1 && widget.brush != obj.brush.index)) return;
+                if(isActive || !self.existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && obj.data.length == 0) return;
 
                 // 툴팁 텍스트 출력
@@ -138,10 +138,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         this.drawSetup = function() {
             return {
+                brush: null,
                 position: "top", // or bottom, left, right
                 all: false,
-                brush: [ 0 ],
-                key: null
+                dataKey: null
             }
         }
     }

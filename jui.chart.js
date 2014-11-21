@@ -3741,11 +3741,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if (draws != null) {
                 for (var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart." + type + "." + draws[i].type),
-                        drawObj = (type == "widget") ? self.brush(i) : draws[i];
+                    var Obj = jui.include("chart." + type + "." + draws[i].type);
 
                     // 그리드 축 설정
-                    setGridAxis(draws[i], drawObj);
+                    setGridAxis(draws[i]);
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
@@ -3770,11 +3769,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param self
          */
-        function setGridAxisWidget(self) {
+        function setGridAxisWidget() {
             var draws = _widget_objects;
 
             for (var i = 0; i < draws.length; i++) {
-                setGridAxis(draws[i].widget, self.brush(i));
+                setGridAxis(draws[i].widget);
             }
         }
 
@@ -3784,7 +3783,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param draw
          * @param drawObj
          */
-        function setGridAxis(draw, drawObj) {
+        function setGridAxis(draw) {
             delete draw.x;
             delete draw.y;
             delete draw.c;
@@ -3796,7 +3795,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
                 if (!_.typeCheck("function", draw.x)) {
-                    draw.x = ( typeof drawObj.x1 !== 'undefined') ? _scales.x1[drawObj.x1 || 0] : _scales.x[drawObj.x || 0];
+                    draw.x = ( typeof draw.x1 !== 'undefined') ? _scales.x1[draw.x1 || 0] : _scales.x[draw.x || 0];
                 }
             }
             if (_scales.y || _scales.y1) {
@@ -3806,12 +3805,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
                 if (!_.typeCheck("function", draw.y)) {
-                    draw.y = ( typeof drawObj.y1 !== 'undefined') ? _scales.y1[drawObj.y1 || 0] : _scales.y[drawObj.y || 0];
+                    draw.y = ( typeof draw.y1 !== 'undefined') ? _scales.y1[draw.y1 || 0] : _scales.y[draw.y || 0];
                 }
             }
             if (_scales.c) {
                 if (!_.typeCheck("function", draw.c)) {
-                    draw.c = _scales.c[drawObj.c || 0];
+                    draw.c = _scales.c[draw.c || 0];
                 }
             }
         }
@@ -4340,7 +4339,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if (isAll) {
                 drawBrush(this, "widget");
             } else {
-                setGridAxisWidget(this);
+                setGridAxisWidget();
             }
 
             // SVG 태그 백그라운드 테마 설정
@@ -8724,6 +8723,35 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return points.join(" ");
         }
+
+        this.eachBrush = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+            var list = this.getBrush();
+
+            for(var i = 0; i < list.length; i++) {
+                callback.prototype = this;
+                new callback(i, this.chart.brush(i));
+            }
+        }
+
+        this.getBrush = function() {
+            var brush = this.widget.brush,
+                list = [ 0 ];
+
+            if(_.typeCheck("array", brush)) {
+                list = brush;
+            } else if(_.typeCheck("integer", brush)) {
+                list = [ brush ];
+            }
+
+            return list;
+        }
+
+        this.existBrush = function(index) {
+            var list = this.getBrush();
+
+            return ($.inArray(index, list) == -1) ? false : true;
+        }
 	}
 
 	return CoreWidget;
@@ -8758,8 +8786,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 var message = (obj.data[k]) ? ": " + obj.data[k] : "";
 
                 // 옵션 키가 있을 경우
-                if(widget.key != null) {
-                    message = obj.data[widget.key] + message;
+                if(widget.dataKey != null) {
+                    message = obj.data[widget.dataKey] + message;
                 } else {
                     message = ((t.text) ? t.text : k) + message;
                 }
@@ -8818,7 +8846,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             chart.on("mouseover", function(obj, e) {
-                if(isActive || ($.inArray(obj.brush.index, widget.brush) == -1 && widget.brush != obj.brush.index)) return;
+                if(isActive || !self.existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && obj.data.length == 0) return;
 
                 // 툴팁 텍스트 출력
@@ -8868,10 +8896,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         this.drawSetup = function() {
             return {
+                brush: null,
                 position: "top", // or bottom, left, right
                 all: false,
-                brush: [ 0 ],
-                key: null
+                dataKey: null
             }
         }
     }
@@ -8951,6 +8979,7 @@ jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math)
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     var LegendWidget = function(chart, widget) {
+        var columns = {};
         
         /**
          * brush 에서 생성되는 legend 아이콘 리턴 
@@ -8962,16 +8991,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			var arr = [],
                 data = brush.target;
 			
-			if (widget.key != null) {
+			if (widget.dataKey != null) {
 				data = chart.data();
 			}
 			
 			var count = data.length;
 			
 			for(var i = 0; i < count; i++) {
-				
-				if (widget.key != null) {
-					var text = chart.series(widget.key).text || data[i][widget.key];
+				if (widget.dataKey != null) {
+					var text = chart.series(widget.dataKey).text || data[i][widget.dataKey];
 				} else {
 					var target = brush.target[i],
                         text = chart.series(target).text || target;
@@ -9000,8 +9028,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
-				}, text)) 
-				
+				}, text));
+
 				arr.push({
 					icon : group,
 					width : width + 4 + rect.width + 10,
@@ -9021,10 +9049,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             var x = 0, y = 0,
                 total_width = 0, total_height = 0,
                 max_width = 0, max_height = 0;
-            
-            for(var i = 0; i < widget.brush.length; i++) {
-                var index = widget.brush[i],
-                    brush = chart.brush(index);
+
+            this.eachBrush(function(index, brush) {
                 var arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
@@ -9034,20 +9060,20 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     if (widget.position == "bottom" || widget.position == "top") {
                         x += arr[k].width;
                         total_width += arr[k].width;
-                        
+
                         if (max_height < arr[k].height) {
                             max_height = arr[k].height;
                         }
                     } else {
                         y += arr[k].height;
                         total_height += arr[k].height;
-                        
+
                         if (max_width < arr[k].width) {
                             max_width = arr[k].width;
                         }
                     }
-                }                   
-            }
+                }
+            });
             
             // legend 위치  선정
             if (widget.position == "bottom" || widget.position == "top") {
@@ -9079,10 +9105,10 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return {
-                brush: [ 0 ],
+                brush: null,
                 position: "bottom",
                 align: "center", // or start, end
-                key: null
+                dataKey: null
             }
         }
     }
