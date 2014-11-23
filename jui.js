@@ -13491,12 +13491,10 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			g.append(path);
 
             if (hasCircle) {
-                var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle));
-                
-                var cX = centerCircle.x;
-                var cY = centerCircle.y;
-    
-                centerCircleLine = math.rotate(cX, cY, math.radian(endAngle));
+                var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle)),
+					cX = centerCircle.x,
+					cY = centerCircle.y,
+					centerCircleLine = math.rotate(cX, cY, math.radian(endAngle));
     
                 var circle = this.chart.svg.circle({
                     cx : centerCircleLine.x,
