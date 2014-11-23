@@ -26,15 +26,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 // 툴팁 값 설정
                 var message = (obj.data[k]) ? ": " + obj.data[k] : "";
-
-                // 옵션 키가 있을 경우
-                if(widget.dataKey != null) {
-                    message = obj.data[widget.dataKey] + message;
-                } else {
-                    message = ((t.text) ? t.text : k) + message;
-                }
-
-                setMessage(0, message);
+                setMessage(0, ((t.text) ? t.text : k) + message);
 
                 text.attr({ "text-anchor": "middle" });
             } else {
@@ -140,8 +132,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return {
                 brush: null,
                 position: "top", // or bottom, left, right
-                all: false,
-                dataKey: null
+                all: false
             }
         }
     }

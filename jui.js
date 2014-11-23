@@ -13540,27 +13540,26 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var s = this.chart.series(this.brush.target[0]);
 			var group = this.chart.svg.group({
 				"class" : "brush donut"
 			});
 
 			group.translate(this.chart.x(), this.chart.y())
 
-			var all = 360;
-			var startAngle = 0;
+			var target = this.brush.target,
+				data = this.chart.data(0);
 
-			var max = 0;
-			for (var i = 0; i < s.data.length; i++) {
-				max += s.data[i];
+			var all = 360,
+				startAngle = 0,
+				max = 0;
+
+			for (var i = 0; i < target.length; i++) {
+				max += data[target[i]];
 			}
 
-			for (var i = 0; i < s.data.length; i++) {
-				
-				//if (i != 1) continue;
-				
-				var data = s.data[i];
-				var endAngle = all * (data / max);
+			for (var i = 0; i < target.length; i++) {
+				var value = data[target[i]],
+					endAngle = all * (value / max);
 
 				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
 					fill : this.chart.color(i, this.brush.colors),
@@ -13568,7 +13567,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
 
-                this.addEvent(g, 0, i);
+                this.addEvent(g, i, 0);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -13891,7 +13890,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
+            var width = chart.width(),
+				height = chart.height();
             var min = width;
 
             if (height < min) {
@@ -13906,22 +13906,22 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var s = chart.series(brush.target[0]);
 			var group = chart.svg.group({
 				"class" : "brush donut"
 			}).translate(chart.x(), chart.y())
 
-			var all = 360,
-                startAngle = 0;
+			var target = brush.target,
+				all = 360,
+                startAngle = 0,
+				max = 0;
 
-			var max = 0;
-			for (var i = 0; i < s.data.length; i++) {
-				max += s.data[i];
+			for (var i = 0; i < target.length; i++) {
+				max += chart.data(0)[target[i]];
 			}
 
-			for (var i = 0; i < s.data.length; i++) {
-				var data = s.data[i],
-                    endAngle = all * (data / max);
+			for (var i = 0; i < target.length; i++) {
+				var value = chart.data(0)[target[i]],
+                    endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
 					fill : chart.color(i, brush.colors),
@@ -13929,7 +13929,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(g, 0, i);
+                this.addEvent(g, i, 0);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -15450,15 +15450,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 // 툴팁 값 설정
                 var message = (obj.data[k]) ? ": " + obj.data[k] : "";
-
-                // 옵션 키가 있을 경우
-                if(widget.dataKey != null) {
-                    message = obj.data[widget.dataKey] + message;
-                } else {
-                    message = ((t.text) ? t.text : k) + message;
-                }
-
-                setMessage(0, message);
+                setMessage(0, ((t.text) ? t.text : k) + message);
 
                 text.attr({ "text-anchor": "middle" });
             } else {
@@ -15564,8 +15556,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return {
                 brush: null,
                 position: "top", // or bottom, left, right
-                all: false,
-                dataKey: null
+                all: false
             }
         }
     }
@@ -15655,21 +15646,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          */
 		this.getLegendIcon = function(brush) {
 			var arr = [],
-                data = brush.target;
-			
-			if (widget.dataKey != null) {
-				data = chart.data();
-			}
-			
-			var count = data.length;
+                data = brush.target,
+                count = data.length;
 			
 			for(var i = 0; i < count; i++) {
-				if (widget.dataKey != null) {
-					var text = chart.series(widget.dataKey).text || data[i][widget.dataKey];
-				} else {
-					var target = brush.target[i],
-                        text = chart.series(target).text || target;
-				}
+                var target = brush.target[i],
+                    text = chart.series(target).text || target;
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),
@@ -15773,8 +15755,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: null,
                 position: "bottom",
-                align: "center", // or start, end
-                dataKey: null
+                align: "center" // or start, end
             }
         }
     }

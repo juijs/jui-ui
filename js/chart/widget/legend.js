@@ -11,21 +11,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          */
 		this.getLegendIcon = function(brush) {
 			var arr = [],
-                data = brush.target;
-			
-			if (widget.dataKey != null) {
-				data = chart.data();
-			}
-			
-			var count = data.length;
+                data = brush.target,
+                count = data.length;
 			
 			for(var i = 0; i < count; i++) {
-				if (widget.dataKey != null) {
-					var text = chart.series(widget.dataKey).text || data[i][widget.dataKey];
-				} else {
-					var target = brush.target[i],
-                        text = chart.series(target).text || target;
-				}
+                var target = brush.target[i],
+                    text = chart.series(target).text || target;
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),
@@ -129,8 +120,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: null,
                 position: "bottom",
-                align: "center", // or start, end
-                dataKey: null
+                align: "center" // or start, end
             }
         }
     }

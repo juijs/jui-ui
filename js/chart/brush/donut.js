@@ -103,27 +103,26 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var s = this.chart.series(this.brush.target[0]);
 			var group = this.chart.svg.group({
 				"class" : "brush donut"
 			});
 
 			group.translate(this.chart.x(), this.chart.y())
 
-			var all = 360;
-			var startAngle = 0;
+			var target = this.brush.target,
+				data = this.chart.data(0);
 
-			var max = 0;
-			for (var i = 0; i < s.data.length; i++) {
-				max += s.data[i];
+			var all = 360,
+				startAngle = 0,
+				max = 0;
+
+			for (var i = 0; i < target.length; i++) {
+				max += data[target[i]];
 			}
 
-			for (var i = 0; i < s.data.length; i++) {
-				
-				//if (i != 1) continue;
-				
-				var data = s.data[i];
-				var endAngle = all * (data / max);
+			for (var i = 0; i < target.length; i++) {
+				var value = data[target[i]],
+					endAngle = all * (value / max);
 
 				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
 					fill : this.chart.color(i, this.brush.colors),
@@ -131,7 +130,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
 
-                this.addEvent(g, 0, i);
+                this.addEvent(g, i, 0);
 				group.append(g);
 
 				startAngle += endAngle;

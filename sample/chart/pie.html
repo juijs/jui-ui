@@ -17,25 +17,21 @@
             height : 400,
             theme : "jennifer",
             data : [
-                { key : 'yellow', 	name : 46, 	value : 15 },
-                { key : 'red',		name : 25, 	value : 6 },
-                { key : 'black',	name : 18, 	value : 10 },
-                { key : 'blue',		name : 10, 	value : 5 },
+                { yellow : 46, red : 15, black : 18, blue : 10 }
             ],
             series : {
-                name : { text : "이름" },
-                value : { text : "값" }
+                yellow : { text : "노랑" },
+                red : { text : "빨강" },
+                black : { text : "검정" },
+                blue : { text : "파랑" }
             },
             brush : [{
-                type : 'pie',
-                target : 'name'
+                type : "pie"
             }],
             widget : [{
-                type : "legend",
-                dataKey : "key"
+                type : "legend"
             }, {
-                type : "tooltip",
-                dataKey : "key"
+                type : "tooltip"
             }]
         });
 	})

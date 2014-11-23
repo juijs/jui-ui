@@ -35,7 +35,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
+            var width = chart.width(),
+				height = chart.height();
             var min = width;
 
             if (height < min) {
@@ -50,22 +51,22 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var s = chart.series(brush.target[0]);
 			var group = chart.svg.group({
 				"class" : "brush donut"
 			}).translate(chart.x(), chart.y())
 
-			var all = 360,
-                startAngle = 0;
+			var target = brush.target,
+				all = 360,
+                startAngle = 0,
+				max = 0;
 
-			var max = 0;
-			for (var i = 0; i < s.data.length; i++) {
-				max += s.data[i];
+			for (var i = 0; i < target.length; i++) {
+				max += chart.data(0)[target[i]];
 			}
 
-			for (var i = 0; i < s.data.length; i++) {
-				var data = s.data[i],
-                    endAngle = all * (data / max);
+			for (var i = 0; i < target.length; i++) {
+				var value = chart.data(0)[target[i]],
+                    endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
 					fill : chart.color(i, brush.colors),
@@ -73,7 +74,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(g, 0, i);
+                this.addEvent(g, i, 0);
 				group.append(g);
 
 				startAngle += endAngle;
