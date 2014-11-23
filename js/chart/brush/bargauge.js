@@ -1,4 +1,4 @@
-jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
+jui.define("chart.brush.bargauge", [], function() {
 
 	var BarGaugeBrush = function(chart, brush) {
         var y = 0, x = 0;
@@ -25,7 +25,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     x : x,
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
-                    fill : chart.color(i, brush.colors)
+                    fill : chart.color(i, brush)
                 }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({
@@ -51,13 +51,13 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y,
                     width: value,
                     height : brush.size,
-                    fill : chart.color(i, brush.colors)
+                    fill : chart.color(i, brush)
                 }));
 
                 if (brush.split) {
                 	var textX = x + value + brush.cut * 2 + ex,
                         textAlign = "start",
-                        textColor = chart.color(i, brush.colors);
+                        textColor = chart.color(i, brush);
                 } else {
                 	var textX = x + brush.cut * 2,
                         textAlign = "start",

@@ -40,7 +40,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						y : startY,
 						width : barWidth,
 						height : height,
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush)
 					});
 
                     this.addEvent(r, j, i);

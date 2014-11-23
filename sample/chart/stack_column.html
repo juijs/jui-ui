@@ -35,9 +35,9 @@
                 }
             },
             series : {
-                name : { text : "이름" },
-                value : { text : "값" },
-                test : { text : "테스트값" }
+                name : { text : "이름", color : "red" },
+                value : { text : "값", color : "blue" },
+                test : { text : "테스트값", color : "yellow" }
             },
             brush : {
                 type : 'stackcolumn',
@@ -46,7 +46,8 @@
             widget : [{
                 type : "tooltip"
             }, {
-                type : "legend"
+                type : "legend",
+                filter : true
             }],
             event : {
                 click : function(obj, e) {

@@ -182,8 +182,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             var obj = {
                 brush: self.brush,
                 dataIndex: dataIndex,
-                dataKey: self.brush.target[targetIndex],
-                data: self.chart.data(dataIndex)
+                dataKey: (targetIndex != null) ? self.brush.target[targetIndex] : null,
+                data: (dataIndex != null) ? self.chart.data(dataIndex) : null
             };
 
             elem.on("click", function(e) {

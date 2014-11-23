@@ -35,7 +35,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						y : startY,
 						width : Math.abs(startX - endX),
 						height : barWidth,
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity

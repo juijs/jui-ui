@@ -36,7 +36,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						y : (startY > endY) ? endY : startY,
 						width : barWidth,
 						height : Math.abs(startY - endY),
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity

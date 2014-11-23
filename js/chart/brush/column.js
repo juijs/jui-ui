@@ -37,7 +37,7 @@ jui.define("chart.brush.column", [], function() {
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -48,7 +48,7 @@ jui.define("chart.brush.column", [], function() {
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity

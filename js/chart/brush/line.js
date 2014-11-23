@@ -7,7 +7,7 @@ jui.define("chart.brush.line", [], function() {
                 y = pos.y;
 
             var p = this.chart.svg.path({
-                stroke : this.chart.color(index, this.brush.colors),
+                stroke : this.chart.color(index, this.brush),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent"
             }).MoveTo(x[0], y[0]);

@@ -18,7 +18,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					"font-family" : chart.theme("fontFamily"),
 					"font-size" : "3.5em",
 					"font-weight" : 1000,
-					"fill" : chart.color(0, brush.colors)
+					"fill" : chart.color(0, brush)
 				}, value + ""));
 			}
 			
@@ -71,7 +71,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush.colors)
+				fill : chart.color(0, brush)
 			});
 
 			group.append(g);

@@ -9992,26 +9992,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
                 brush = _.deepClone(self.options.brush),
-                widget = _.deepClone(self.options.widget),
-                series_list = [];
+                widget = _.deepClone(self.options.widget);
 
             // series 데이타 구성
             for (var i = 0, len = _data.length; i < len; i++) {
                 var row = _data[i];
 
                 for (var key in row) {
-                    var obj = series[key] || {};
+                    var obj = series[key] || {},
+                        value = row[key],
+                        range = null;
 
-                    var value = row[key];
-
-                    var range;
                     if (value instanceof Array) {
                         range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
                     } else {
                         range = { max : +value, min : +value }
                     }
-
-                    series[key] = obj;
 
                     obj.data = obj.data || [];
                     obj.min = typeof obj.min == 'undefined' ? 0 : obj.min;
@@ -10025,16 +10021,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     if (range.max > obj.max) {
                         obj.max = range.max;
                     }
+
+                    // 시리즈 데이터 설정
+                    series[key] = obj;
                 }
             }
 
-            // series_list
-            for (var key in series) {
-                series_list.push(key);
-            }
-
-            _brush = createBrushData(brush, series_list);
-            _widget = createBrushData(widget, series_list);
+            _brush = brush;
+            _widget = widget;
             _series = series;
             _grid = grid;
 
@@ -10194,7 +10188,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             delete draw.c;
 
             if (_scales.x || _scales.x1) {
-
                 if (!_scales.x && _scales.x1) {
                     _scales.x = _scales.x1;
                 }
@@ -10204,7 +10197,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             }
             if (_scales.y || _scales.y1) {
-
                 if (!_scales.y && _scales.y1) {
                     _scales.y = _scales.y1;
                 }
@@ -10218,42 +10210,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     draw.c = _scales.c[draw.c || 0];
                 }
             }
-        }
-
-        /**
-         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
-         * Widget도 같이 사용한다.
-         *
-         * @param draws
-         * @param series_list
-         * @returns {*}
-         */
-        function createBrushData(draws, series_list) {
-            var result = null;
-
-            if (draws != null) {
-                if (typeof draws == 'string') {
-                    result = [{
-                        type: draws
-                    }];
-                } else if (typeof draws == 'object' && !draws.length) {
-                    result = [draws];
-                } else {
-                    result = draws;
-                }
-
-                for (var i = 0, len = result.length; i < len; i++) {
-                    var b = result[i];
-
-                    if (!b.target) {
-                        b.target = series_list;
-                    } else if (typeof b.target == 'string') {
-                        b.target = [b.target];
-                    }
-                }
-            }
-
-            return result;
         }
 
         function setChartEvent(self) {
@@ -10409,6 +10365,37 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function getBrushOption(brush, series) {
+            var result = null,
+                series_list = [];
+
+            if (_.typeCheck("string", brush)) {
+                result = [{
+                    type: brush
+                }];
+            } else if (!_.typeCheck("array", brush)) {
+                result = [ brush ];
+            } else {
+                result = brush;
+            }
+
+            for (var key in series) {
+                series_list.push(key);
+            }
+
+            for (var i = 0; i < result.length; i++) {
+                var b = result[i];
+
+                if (b.target == null) {
+                    b.target = series_list;
+                } else if (_.typeCheck("string", b.target)) {
+                    b.target = [ b.target ];
+                }
+            }
+
+            return result;
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -10422,6 +10409,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 };
             } else {
                 _padding = opts.padding;
+            }
+
+            // 차트 브러쉬/위젯 기본값 설정
+            if(opts.brush != null) {
+                opts.brush = getBrushOption(opts.brush, opts.series);
+            }
+            if(opts.widget != null) {
+                opts.widget = getBrushOption(opts.widget, opts.series);
             }
 
             // 차트 테마 설정
@@ -10536,18 +10531,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return _padding;
         }
 
-        this.color = function(i, colors) {
-            var color, c;
+        this.color = function(i, brush) {
+            var color;
 
-            // 테마 또는 브러쉬 옵션일 때 처리
-            if (_.typeCheck("array", colors)) {
-                c = colors;
+            // 테마 & 브러쉬 옵션 컬러 설정
+            if (_.typeCheck("array", brush.colors)) {
+                color = brush.colors[i];
             } else {
-                c = _theme["colors"];
+                var c = _theme["colors"];
+                color = (i > c.length - 1) ? c[c.length - 1] : c[i];
             }
 
-            // 인덱스가 없다면 마지막 컬러를 반환
-            color = (i > c.length - 1) ? c[c.length - 1] : c[i];
+            // 시리즈 컬러 설정
+            if(_.typeCheck("array", brush.target)) {
+                var series = _series[brush.target[i]];
+
+                if(series && series.color) {
+                    color = series.color;
+                }
+            }
 
             if (_hash[color]) {
                 return "url(#" + _hash[color] + ")";
@@ -10873,6 +10875,43 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             this.svg.size(this.options.width, this.options.height);
             this.render(true);
+        }
+
+        /**
+         * 브러쉬를 추가한 후 차트 렌더링
+         *
+         * @param brush
+         * @param isNotAll
+         */
+        this.addBrush = function(brush, isNotAll) {
+            this.options.brush.push(brush);
+            this.render(isNotAll ? false : true);
+        }
+
+        /**
+         * 브러쉬를 삭제한 후 차트 렌더링
+         *
+         * @param index
+         * @param isNotAll
+         */
+        this.removeBrush = function(index, isNotAll) {
+            this.options.brush.splice(index, 1);
+            this.render(isNotAll ? false : true);
+        }
+
+        /**
+         * 해당 인덱스의 브러쉬를 업데이트한 후 렌더링
+         *
+         * @param index
+         * @param brush
+         * @param isNotAll
+         */
+        this.updateBrush = function(index, brush, isNotAll) {
+            for(var key in  brush) {
+                this.options.brush[index][key] = brush[key];
+            }
+
+            this.render(isNotAll ? false : true);
         }
 
         /**
@@ -11619,10 +11658,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.color  = function(theme) {
 
 			if (arguments.length == 3) {
-				return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme.apply(this.chart, arguments);
+				return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme.apply(this.chart, arguments);
 			}
 
-			return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme(theme);
+			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
 		}
 
 		/**
@@ -12994,8 +13033,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             var obj = {
                 brush: self.brush,
                 dataIndex: dataIndex,
-                dataKey: self.brush.target[targetIndex],
-                data: self.chart.data(dataIndex)
+                dataKey: (targetIndex != null) ? self.brush.target[targetIndex] : null,
+                data: (dataIndex != null) ? self.chart.data(dataIndex) : null
             };
 
             elem.on("click", function(e) {
@@ -13083,7 +13122,7 @@ jui.define("chart.brush.bar", [], function() {
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -13096,7 +13135,7 @@ jui.define("chart.brush.bar", [], function() {
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -13139,9 +13178,9 @@ jui.define("chart.brush.bubble", [], function() {
                 cx: pos.x,
                 cy: pos.y,
                 r: radius,
-                "fill": chart.color(index, brush.colors),
+                "fill": chart.color(index, brush),
                 "fill-opacity": chart.theme("bubbleOpacity"),
-                "stroke": chart.color(index, brush.colors),
+                "stroke": chart.color(index, brush),
                 "stroke-width": chart.theme("bubbleBorderWidth")
             });
         }
@@ -13396,7 +13435,7 @@ jui.define("chart.brush.column", [], function() {
 							y : startY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -13407,7 +13446,7 @@ jui.define("chart.brush.column", [], function() {
 							y : zeroY,
 							width : columnWidth,
 							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -13560,7 +13599,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					endAngle = all * (value / max);
 
 				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
-					fill : this.chart.color(i, this.brush.colors),
+					fill : this.chart.color(i, this.brush),
 					stroke : this.chart.theme("donutBorderColor"),
 					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
@@ -13619,7 +13658,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY - unitHeight,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush.colors)
+                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
                             });
 
                             eY -= unitHeight + padding;
@@ -13635,7 +13674,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush.colors)
+                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
                             });
 
                             eY += unitHeight + padding;
@@ -13710,7 +13749,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						y : startY,
 						width : barWidth,
 						height : height,
-						fill : chart.color(j, brush.colors)
+						fill : chart.color(j, brush)
 					});
 
                     this.addEvent(r, j, i);
@@ -13753,7 +13792,7 @@ jui.define("chart.brush.line", [], function() {
                 y = pos.y;
 
             var p = this.chart.svg.path({
-                stroke : this.chart.color(index, this.brush.colors),
+                stroke : this.chart.color(index, this.brush),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent"
             }).MoveTo(x[0], y[0]);
@@ -13820,7 +13859,7 @@ jui.define("chart.brush.path", [], function() {
                 data_count = data.length;
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				var color = chart.color(ti, brush.colors);
+				var color = chart.color(ti, brush);
 
 				var path = chart.svg.path({
 					fill : color,
@@ -13922,7 +13961,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
                     endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
-					fill : chart.color(i, brush.colors),
+					fill : chart.color(i, brush),
 					stroke : chart.theme("pieBorderColor"),
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
@@ -13957,7 +13996,7 @@ jui.define("chart.brush.scatter", [], function() {
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.chart.color(index, this.brush.colors),
+            var color = this.chart.color(index, this.brush),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -14067,8 +14106,8 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
             var path = this.chart.svg.path({
-                fill : this.chart.color(0, this.brush.colors),
-                stroke : this.chart.color(0, this.brush.colors),
+                fill : this.chart.color(0, this.brush),
+                stroke : this.chart.color(0, this.brush),
                 "stroke-width" : this.chart.theme("scatterBorderWidth")
             });
 
@@ -14137,7 +14176,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						y : startY,
 						width : Math.abs(startX - endX),
 						height : barWidth,
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -14204,7 +14243,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 						y : (startY > endY) ? endY : startY,
 						width : barWidth,
 						height : Math.abs(startY - endY),
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -14233,7 +14272,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	return ColumnStackBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
+jui.define("chart.brush.bargauge", [], function() {
 
 	var BarGaugeBrush = function(chart, brush) {
         var y = 0, x = 0;
@@ -14260,7 +14299,7 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     x : x,
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
-                    fill : chart.color(i, brush.colors)
+                    fill : chart.color(i, brush)
                 }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({
@@ -14286,13 +14325,13 @@ jui.define("chart.brush.bargauge", [ "util.math" ], function(math) {
                     y : y,
                     width: value,
                     height : brush.size,
-                    fill : chart.color(i, brush.colors)
+                    fill : chart.color(i, brush)
                 }));
 
                 if (brush.split) {
                 	var textX = x + value + brush.cut * 2 + ex,
                         textAlign = "start",
-                        textColor = chart.color(i, brush.colors);
+                        textColor = chart.color(i, brush);
                 } else {
                 	var textX = x + brush.cut * 2,
                         textAlign = "start",
@@ -14368,7 +14407,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cy : centerY,
                 r : outerRadius,
                 fill : chart.theme("gaugeBackgroundColor"),
-                stroke : chart.color(0, brush.colors),
+                stroke : chart.color(0, brush),
                 "stroke-width" : 2
             }));
             
@@ -14376,7 +14415,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 cx : centerX,
                 cy : centerY,
                 r : outerRadius * rate,
-                fill : chart.color(0, brush.colors)
+                fill : chart.color(0, brush)
             }));
 
             this.addEvent(group, null, null);
@@ -14436,7 +14475,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
-                fill : chart.color(0),
+                fill : chart.color(0, brush),
                 d : path,
                 "clip-path" : "url(#" + clipId + ")"
             }));
@@ -14507,7 +14546,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                         cx : centerX,
                         cy : centerY,
                         r : outerRadius,
-                        fill : chart.color(0, brush.colors),
+                        fill : chart.color(0, brush),
                         "clip-path" : "url(#" + clipId + ")"
                     }));
 
@@ -14525,7 +14564,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                         y : 0,
                         width : chart.width(),
                         height : chart.height(),
-                        fill : chart.color(0, brush.colors),
+                        fill : chart.color(0, brush),
                         "clip-path" : "url(#" + clipId + ")"
                     }));
 
@@ -14567,7 +14606,7 @@ jui.define("chart.brush.area", [], function() {
                 p.LineTo(xList[0], maxY);
                 p.ClosePath();
                 p.attr({
-                    fill: this.chart.color(k, this.brush.colors),
+                    fill: this.chart.color(k, this.brush),
                     "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 });
@@ -14635,7 +14674,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
-				"fill" : chart.color(0, brush.colors)
+				"fill" : chart.color(0, brush)
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -14759,7 +14798,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush.colors)
+				fill : chart.color(0, brush)
 			});
 
 			group.append(g);
@@ -14813,7 +14852,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					"font-family" : chart.theme("fontFamily"),
 					"font-size" : "3.5em",
 					"font-weight" : 1000,
-					"fill" : chart.color(0, brush.colors)
+					"fill" : chart.color(0, brush)
 				}, value + ""));
 			}
 			
@@ -14866,7 +14905,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush.colors)
+				fill : chart.color(0, brush)
 			});
 
 			group.append(g);
@@ -14937,7 +14976,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				
 				// 채워진 공간 그리기 
 				g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle,{
-					fill : chart.color(i, brush.colors)
+					fill : chart.color(i, brush)
 				}, true);
 	
 				group.append(g);
@@ -14946,7 +14985,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				group.append(chart.text({
 					x : centerX + 2,
 					y : centerY + Math.abs(outerRadius) - 5,
-					fill : chart.color(i, brush.colors),
+					fill : chart.color(i, brush),
 					"font-size" : "12px",
 					"font-weight" : "bold"
 				}, chart.data(i)[brush.title] || ""))
@@ -15087,7 +15126,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
         this.createLine = function(pos, index) {
             var opts = {
-                stroke: this.chart.color(index, this.brush.colors),
+                stroke: this.chart.color(index, this.brush),
                 "stroke-width": this.chart.theme("lineBorderWidth"),
                 fill: "transparent"
             };
@@ -15173,7 +15212,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
             for (var k = 0; k < path.length; k++) {
                 var opts = {
-                    fill: this.chart.color(k, this.brush.colors),
+                    fill: this.chart.color(k, this.brush),
                     "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 };
@@ -15251,7 +15290,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						y : startY,
 						width : columnWidth,
 						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -15316,7 +15355,7 @@ jui.define("chart.brush.rangebar", [], function() {
 						y : startY,
 						height : barHeight,
 						width : Math.abs(zeroX - startX),
-						fill : chart.color(j, brush.colors),
+						fill : chart.color(j, brush),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -15635,7 +15674,27 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     var LegendWidget = function(chart, widget) {
         var columns = {};
-        
+
+        function setLegendStatus(brush) {
+            if(!widget.filter) return;
+
+            for(var i = 0; i < brush.target.length; i++) {
+                columns[brush.target[i]] = true;
+            }
+        }
+
+        function changeTargetOption(brush) {
+            var target = [];
+
+            for(var key in columns) {
+                if(columns[key]) {
+                    target.push(key);
+                }
+            }
+
+            chart.updateBrush(brush.index, { target: target }, true);
+        }
+
         /**
          * brush 에서 생성되는 legend 아이콘 리턴 
          * 
@@ -15664,7 +15723,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					y : 0, 
 					width: width, 
 					height : height,
-					fill : chart.color(i, brush.colors)
+					fill : chart.color(i, brush)
 				}));
 				
  				group.append(chart.text({
@@ -15681,12 +15740,31 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					width : width + 4 + rect.width + 10,
 					height : height + 4
 				});
+
+                if(widget.filter) {
+                    (function(key, element) {
+                        element.attr({
+                            cursor: "pointer"
+                        });
+
+                        element.on("click", function(e) {
+                            if(columns[key]) {
+                                element.attr({ opacity: 0.7 });
+                                columns[key] = false;
+                            } else {
+                                element.attr({ opacity: 1 });
+                                columns[key] = true;
+                            }
+
+                            changeTargetOption(brush);
+                        });
+                    })(target, group);
+                }
 			}
 			
 			return arr;
 		}        
         
-
         this.draw = function() {
             var group = chart.svg.group({
                 "class" : "widget legend"
@@ -15719,6 +15797,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }
+
+                setLegendStatus(brush);
             });
             
             // legend 위치  선정
@@ -15753,7 +15833,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: null,
                 position: "bottom",
-                align: "center" // or start, end
+                align: "center", // or start, end
+                filter: false
             }
         }
     }

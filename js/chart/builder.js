@@ -70,26 +70,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
                 brush = _.deepClone(self.options.brush),
-                widget = _.deepClone(self.options.widget),
-                series_list = [];
+                widget = _.deepClone(self.options.widget);
 
             // series 데이타 구성
             for (var i = 0, len = _data.length; i < len; i++) {
                 var row = _data[i];
 
                 for (var key in row) {
-                    var obj = series[key] || {};
+                    var obj = series[key] || {},
+                        value = row[key],
+                        range = null;
 
-                    var value = row[key];
-
-                    var range;
                     if (value instanceof Array) {
                         range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
                     } else {
                         range = { max : +value, min : +value }
                     }
-
-                    series[key] = obj;
 
                     obj.data = obj.data || [];
                     obj.min = typeof obj.min == 'undefined' ? 0 : obj.min;
@@ -103,16 +99,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     if (range.max > obj.max) {
                         obj.max = range.max;
                     }
+
+                    // 시리즈 데이터 설정
+                    series[key] = obj;
                 }
             }
 
-            // series_list
-            for (var key in series) {
-                series_list.push(key);
-            }
-
-            _brush = createBrushData(brush, series_list);
-            _widget = createBrushData(widget, series_list);
+            _brush = brush;
+            _widget = widget;
             _series = series;
             _grid = grid;
 
@@ -272,7 +266,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             delete draw.c;
 
             if (_scales.x || _scales.x1) {
-
                 if (!_scales.x && _scales.x1) {
                     _scales.x = _scales.x1;
                 }
@@ -282,7 +275,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             }
             if (_scales.y || _scales.y1) {
-
                 if (!_scales.y && _scales.y1) {
                     _scales.y = _scales.y1;
                 }
@@ -296,42 +288,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     draw.c = _scales.c[draw.c || 0];
                 }
             }
-        }
-
-        /**
-         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
-         * Widget도 같이 사용한다.
-         *
-         * @param draws
-         * @param series_list
-         * @returns {*}
-         */
-        function createBrushData(draws, series_list) {
-            var result = null;
-
-            if (draws != null) {
-                if (typeof draws == 'string') {
-                    result = [{
-                        type: draws
-                    }];
-                } else if (typeof draws == 'object' && !draws.length) {
-                    result = [draws];
-                } else {
-                    result = draws;
-                }
-
-                for (var i = 0, len = result.length; i < len; i++) {
-                    var b = result[i];
-
-                    if (!b.target) {
-                        b.target = series_list;
-                    } else if (typeof b.target == 'string') {
-                        b.target = [b.target];
-                    }
-                }
-            }
-
-            return result;
         }
 
         function setChartEvent(self) {
@@ -487,6 +443,37 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function getBrushOption(brush, series) {
+            var result = null,
+                series_list = [];
+
+            if (_.typeCheck("string", brush)) {
+                result = [{
+                    type: brush
+                }];
+            } else if (!_.typeCheck("array", brush)) {
+                result = [ brush ];
+            } else {
+                result = brush;
+            }
+
+            for (var key in series) {
+                series_list.push(key);
+            }
+
+            for (var i = 0; i < result.length; i++) {
+                var b = result[i];
+
+                if (b.target == null) {
+                    b.target = series_list;
+                } else if (_.typeCheck("string", b.target)) {
+                    b.target = [ b.target ];
+                }
+            }
+
+            return result;
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -500,6 +487,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 };
             } else {
                 _padding = opts.padding;
+            }
+
+            // 차트 브러쉬/위젯 기본값 설정
+            if(opts.brush != null) {
+                opts.brush = getBrushOption(opts.brush, opts.series);
+            }
+            if(opts.widget != null) {
+                opts.widget = getBrushOption(opts.widget, opts.series);
             }
 
             // 차트 테마 설정
@@ -614,18 +609,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return _padding;
         }
 
-        this.color = function(i, colors) {
-            var color, c;
+        this.color = function(i, brush) {
+            var color;
 
-            // 테마 또는 브러쉬 옵션일 때 처리
-            if (_.typeCheck("array", colors)) {
-                c = colors;
+            // 테마 & 브러쉬 옵션 컬러 설정
+            if (_.typeCheck("array", brush.colors)) {
+                color = brush.colors[i];
             } else {
-                c = _theme["colors"];
+                var c = _theme["colors"];
+                color = (i > c.length - 1) ? c[c.length - 1] : c[i];
             }
 
-            // 인덱스가 없다면 마지막 컬러를 반환
-            color = (i > c.length - 1) ? c[c.length - 1] : c[i];
+            // 시리즈 컬러 설정
+            if(_.typeCheck("array", brush.target)) {
+                var series = _series[brush.target[i]];
+
+                if(series && series.color) {
+                    color = series.color;
+                }
+            }
 
             if (_hash[color]) {
                 return "url(#" + _hash[color] + ")";
@@ -951,6 +953,43 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             this.svg.size(this.options.width, this.options.height);
             this.render(true);
+        }
+
+        /**
+         * 브러쉬를 추가한 후 차트 렌더링
+         *
+         * @param brush
+         * @param isNotAll
+         */
+        this.addBrush = function(brush, isNotAll) {
+            this.options.brush.push(brush);
+            this.render(isNotAll ? false : true);
+        }
+
+        /**
+         * 브러쉬를 삭제한 후 차트 렌더링
+         *
+         * @param index
+         * @param isNotAll
+         */
+        this.removeBrush = function(index, isNotAll) {
+            this.options.brush.splice(index, 1);
+            this.render(isNotAll ? false : true);
+        }
+
+        /**
+         * 해당 인덱스의 브러쉬를 업데이트한 후 렌더링
+         *
+         * @param index
+         * @param brush
+         * @param isNotAll
+         */
+        this.updateBrush = function(index, brush, isNotAll) {
+            for(var key in  brush) {
+                this.options.brush[index][key] = brush[key];
+            }
+
+            this.render(isNotAll ? false : true);
         }
 
         /**

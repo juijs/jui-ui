@@ -247,10 +247,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.color  = function(theme) {
 
 			if (arguments.length == 3) {
-				return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme.apply(this.chart, arguments);
+				return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme.apply(this.chart, arguments);
 			}
 
-			return (this.grid.color) ? this.chart.color(0, [this.grid.color]) : this.chart.theme(theme);
+			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
 		}
 
 		/**

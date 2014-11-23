@@ -41,14 +41,15 @@
                 ]
             },
             series : {
-                name : { text : "이름" },
-                value : { text : "값" }
+                rainfall : { color : "#7cb5ec" },
+                sealevel : { color : "#434348" },
+                temperature : { color : "#90ed7d" }
             },
             brush : [
-            	{ type : 'column', target : 'rainfall', colors : ['#7cb5ec'], outerPadding : 5 },
-            	{ type : 'line', target : 'sealevel', y1 : 0, colors : ["#434348"], symbol : 'curve' },
-            	{ type : 'line', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'curve' },
-            	{ type : 'scatter', target : 'temperature', y1 : 1, colors: ['#90ed7d'], symbol : 'triangle', size : 8 },
+            	{ type : 'column', target : 'rainfall', outerPadding : 5 },
+            	{ type : 'line', target : 'sealevel', y1 : 0, symbol : 'curve' },
+            	{ type : 'line', target : 'temperature', y1 : 1, symbol : 'curve' },
+            	{ type : 'scatter', target : 'temperature', y1 : 1, symbol : 'triangle', size : 8 },
             ],
             widget : [
                 { type : "title", text : "Rainfall", align: "start", position: "center", dx : -70 },

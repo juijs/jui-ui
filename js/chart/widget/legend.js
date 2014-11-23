@@ -2,7 +2,27 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     var LegendWidget = function(chart, widget) {
         var columns = {};
-        
+
+        function setLegendStatus(brush) {
+            if(!widget.filter) return;
+
+            for(var i = 0; i < brush.target.length; i++) {
+                columns[brush.target[i]] = true;
+            }
+        }
+
+        function changeTargetOption(brush) {
+            var target = [];
+
+            for(var key in columns) {
+                if(columns[key]) {
+                    target.push(key);
+                }
+            }
+
+            chart.updateBrush(brush.index, { target: target }, true);
+        }
+
         /**
          * brush 에서 생성되는 legend 아이콘 리턴 
          * 
@@ -31,7 +51,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					y : 0, 
 					width: width, 
 					height : height,
-					fill : chart.color(i, brush.colors)
+					fill : chart.color(i, brush)
 				}));
 				
  				group.append(chart.text({
@@ -48,12 +68,31 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 					width : width + 4 + rect.width + 10,
 					height : height + 4
 				});
+
+                if(widget.filter) {
+                    (function(key, element) {
+                        element.attr({
+                            cursor: "pointer"
+                        });
+
+                        element.on("click", function(e) {
+                            if(columns[key]) {
+                                element.attr({ opacity: 0.7 });
+                                columns[key] = false;
+                            } else {
+                                element.attr({ opacity: 1 });
+                                columns[key] = true;
+                            }
+
+                            changeTargetOption(brush);
+                        });
+                    })(target, group);
+                }
 			}
 			
 			return arr;
 		}        
         
-
         this.draw = function() {
             var group = chart.svg.group({
                 "class" : "widget legend"
@@ -86,6 +125,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }
+
+                setLegendStatus(brush);
             });
             
             // legend 위치  선정
@@ -120,7 +161,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return {
                 brush: null,
                 position: "bottom",
-                align: "center" // or start, end
+                align: "center", // or start, end
+                filter: false
             }
         }
     }

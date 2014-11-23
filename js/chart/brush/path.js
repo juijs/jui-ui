@@ -11,7 +11,7 @@ jui.define("chart.brush.path", [], function() {
                 data_count = data.length;
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				var color = chart.color(ti, brush.colors);
+				var color = chart.color(ti, brush);
 
 				var path = chart.svg.path({
 					fill : color,

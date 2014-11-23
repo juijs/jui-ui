@@ -38,7 +38,7 @@ jui.define("chart.brush.bar", [], function() {
 							y : startY,
 							height : barHeight,
 							width : Math.abs(zeroX - startX),
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
@@ -51,7 +51,7 @@ jui.define("chart.brush.bar", [], function() {
 							x : zeroX - w,
 							height : barHeight,
 							width : w,
-							fill : chart.color(j, brush.colors),
+							fill : chart.color(j, brush),
 							stroke : borderColor,
 							"stroke-width" : borderWidth,
 							"stroke-opacity" : borderOpacity
