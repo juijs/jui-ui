@@ -36,13 +36,9 @@
                 }
 
             },
-            series : {
-                name : { text : "test" },
-                value : { text : "test" }
-            },
             brush : [
-                { type : 'line' , target : [ 'name' ] },
-                { type : 'scatter' , target : [ 'name' ], display : "max" }
+                { type : 'line' },
+                { type : 'scatter', display : "max" }
             ],
             widget : [
                 { type : "tooltip", brush : 1 }

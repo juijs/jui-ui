@@ -9992,7 +9992,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
                 brush = _.deepClone(self.options.brush),
-                widget = _.deepClone(self.options.widget);
+                widget = _.deepClone(self.options.widget),
+                series_list = [];
 
             // series 데이타 구성
             for (var i = 0, len = _data.length; i < len; i++) {
@@ -10027,8 +10028,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             }
 
-            _brush = brush;
-            _widget = widget;
+            // series_list
+            for (var key in series) {
+                series_list.push(key);
+            }
+
+            _brush = createBrushData(brush, series_list);
+            _widget = createBrushData(widget, series_list);
             _series = series;
             _grid = grid;
 
@@ -10174,6 +10180,30 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             for (var i = 0; i < draws.length; i++) {
                 setGridAxis(draws[i].widget);
             }
+        }
+
+        /**
+         * Brush 옵션을 가공하여, 실제 사용되는 객체를 만든다.
+         * Widget도 같이 사용한다.
+         *
+         * @param draws
+         * @param series_list
+         * @returns {*}
+         */
+        function createBrushData(brush, series_list) {
+            if(_.typeCheck("array", brush)) {
+                for (var i = 0; i < brush.length; i++) {
+                    var b = brush[i];
+
+                    if (!b.target) {
+                        b.target = series_list;
+                    } else if (typeof b.target == 'string') {
+                        b.target = [b.target];
+                    }
+                }
+            }
+
+            return brush;
         }
 
         /**
@@ -10365,7 +10395,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
-        function getBrushOption(brush, series) {
+        function getBrushOption(brush) {
+            if(brush == null) return;
+
             var result = null,
                 series_list = [];
 
@@ -10377,20 +10409,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 result = [ brush ];
             } else {
                 result = brush;
-            }
-
-            for (var key in series) {
-                series_list.push(key);
-            }
-
-            for (var i = 0; i < result.length; i++) {
-                var b = result[i];
-
-                if (b.target == null) {
-                    b.target = series_list;
-                } else if (_.typeCheck("string", b.target)) {
-                    b.target = [ b.target ];
-                }
             }
 
             return result;
@@ -10412,12 +10430,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // 차트 브러쉬/위젯 기본값 설정
-            if(opts.brush != null) {
-                opts.brush = getBrushOption(opts.brush, opts.series);
-            }
-            if(opts.widget != null) {
-                opts.widget = getBrushOption(opts.widget, opts.series);
-            }
+            opts.brush = getBrushOption(opts.brush);
+            opts.widget = getBrushOption(opts.widget);
 
             // 차트 테마 설정
             setThemeStyle(jui.include("chart.theme." + opts.theme));
