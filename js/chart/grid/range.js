@@ -38,7 +38,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -75,7 +75,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+				}, grid.format(ticks[i])))
 
 				g.append(axis);
 			}
@@ -114,7 +114,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -153,7 +153,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -191,6 +191,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -204,10 +208,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
 
 				// range options
 				hideText: false,

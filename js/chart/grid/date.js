@@ -28,7 +28,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""))
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -60,7 +60,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(group);
 			}
@@ -93,7 +93,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -125,7 +125,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar,
 					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
-				}, format ? format(ticks[i]) : ticks[i]))
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -172,6 +172,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -185,10 +189,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
+
 				// range options
 				realtime: false
 			}

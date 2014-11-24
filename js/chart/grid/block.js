@@ -22,7 +22,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-               var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+				var domain = grid.format(this.domain[i]);
 
                 if (domain == "") {
                     continue;
@@ -43,7 +43,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -75,7 +75,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0, len = this.points.length; i < len; i++) {
-                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+				var domain = grid.format(this.domain[i]);
 
                 if (domain == "") {
                     continue;
@@ -128,10 +128,9 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? full_width : -this.bar
@@ -141,7 +140,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, grid.format(this.domain[i])));
 
 				g.append(axis);
 			}
@@ -174,7 +173,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : this.bar
@@ -184,7 +183,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
+				}, grid.format(this.domain[i])));
 
 				g.append(axis);
 			}
@@ -199,7 +198,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				g.append(axis);
-
 			}
 		}
 
@@ -235,6 +233,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -248,10 +250,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start: 0,		// 시작 위치
 				size : 0,		// 전체 사이즈
+				format: callback,
 
 				// block options
 				full: false

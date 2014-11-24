@@ -769,6 +769,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
+         * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
+         *
+         * @param value
+         */
+        this.format = function(value) {
+            var callback = this.options.format;
+
+            if(_.typeCheck("function", callback)) {
+                return callback(value) + "";
+            }
+
+            return value + "";
+        }
+
+        /**
          * chart 내에서 사용될 유일한 키 생성
          *
          * @param {string} key
@@ -1078,6 +1093,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             widget: null,
             data: [],
             bind: null,
+            format: null,
 
             // buffer
             bufferCount: 100,

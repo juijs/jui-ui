@@ -10689,6 +10689,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
+         * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
+         *
+         * @param value
+         */
+        this.format = function(value) {
+            var callback = this.options.format;
+
+            if(_.typeCheck("function", callback)) {
+                return callback(value) + "";
+            }
+
+            return value + "";
+        }
+
+        /**
          * chart 내에서 사용될 유일한 키 생성
          *
          * @param {string} key
@@ -10998,6 +11013,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             widget: null,
             data: [],
             bind: null,
+            format: null,
 
             // buffer
             bufferCount: 100,
@@ -11789,7 +11805,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-               var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+				var domain = grid.format(this.domain[i]);
 
                 if (domain == "") {
                     continue;
@@ -11810,7 +11826,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -11842,7 +11858,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0, len = this.points.length; i < len; i++) {
-                var domain = (grid.format) ? grid.format(this.domain[i]) : this.domain[i];
+				var domain = grid.format(this.domain[i]);
 
                 if (domain == "") {
                     continue;
@@ -11895,10 +11911,9 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? full_width : -this.bar
@@ -11908,7 +11923,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]))
+				}, grid.format(this.domain[i])));
 
 				g.append(axis);
 			}
@@ -11941,7 +11956,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
-				})
+				});
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? -chart.width() : this.bar
@@ -11951,7 +11966,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, (grid.format) ? grid.format(this.domain[i]) : this.domain[i]));
+				}, grid.format(this.domain[i])));
 
 				g.append(axis);
 			}
@@ -11966,7 +11981,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				g.append(axis);
-
 			}
 		}
 
@@ -12002,6 +12016,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -12015,10 +12033,10 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start: 0,		// 시작 위치
 				size : 0,		// 전체 사이즈
+				format: callback,
 
 				// block options
 				full: false
@@ -12059,7 +12077,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""))
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -12091,7 +12109,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(group);
 			}
@@ -12124,7 +12142,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
-				}, grid.format ? grid.format(ticks[i]) : ticks[i]));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -12156,7 +12174,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar,
 					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
-				}, format ? format(ticks[i]) : ticks[i]))
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -12203,6 +12221,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -12216,10 +12238,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
+
 				// range options
 				realtime: false
 			}
@@ -12232,9 +12255,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, chart, grid) {
-		var position = [];
-		var format;
-		var self = this;
+		var self = this,
+			position = [];
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -12322,8 +12344,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 		this.drawBefore = function() {
 			grid = this.setBlockDomain(chart, grid);
-
-			format = grid.format;
 		}
 
 		this.draw = function() {
@@ -12473,8 +12493,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 				// common options
 				line: true,
-				format: null,
 				color : null,
+				format: null,
 
 				hideText: false,
 				extra: false,
@@ -12526,7 +12546,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -12563,7 +12583,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+				}, grid.format(ticks[i])))
 
 				g.append(axis);
 			}
@@ -12602,7 +12622,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -12641,7 +12661,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+				}, grid.format(ticks[i])));
 
 				g.append(axis);
 			}
@@ -12679,6 +12699,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -12692,10 +12716,10 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
 
 				// range options
 				hideText: false,
@@ -12749,7 +12773,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
 						fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -12788,7 +12812,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : -bar * 2,
 						"text-anchor" : "middle",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -12827,7 +12851,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 					  x : bar/2 + 4,
 					  y : bar-2,
 					  fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -12866,7 +12890,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar-2,
 						"text-anchor" : "end",
 						fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -12905,6 +12929,10 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -12918,10 +12946,10 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
 
 				// rule options
 				hideZero: false,
@@ -15564,7 +15592,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
                 var t = chart.series(obj.dataKey),
-                    k = obj.dataKey;
+                    k = obj.dataKey,
+                    d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
                 if(widget.position == "bottom") {
@@ -15572,8 +15601,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = (obj.data[k]) ? ": " + obj.data[k] : "";
-                setMessage(0, ((t.text) ? t.text : k) + message);
+                var message = widget.format((t.text) ? t.text : k, d);
+                setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
             } else {
@@ -15583,14 +15612,15 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     var key = brush.target[i],
                         t = chart.series(key),
                         x = padding,
-                        y = (textY * i) + (padding * 2);
+                        y = (textY * i) + (padding * 2),
+                        d = (obj.data != null) ? obj.data[key] : null;
 
                     // 위젯 포지션에 따른 별도 처리
                     if(widget.position == "bottom") {
                         y = y + anchor;
                     }
 
-                    var message = ((t.text) ? t.text : key) + ": " + obj.data[key];
+                    var message = widget.format((t.text) ? t.text : key, d);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -15628,7 +15658,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
             chart.on("mouseover", function(obj, e) {
                 if(isActive || !self.existBrush(obj.brush.index)) return;
-                if(!obj.dataKey && obj.data.length == 0) return;
+                if(!obj.dataKey && !obj.data) return;
 
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
@@ -15676,10 +15706,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
+            var callback = function(key, value) {
+                if(!value) {
+                    return key;
+                }
+
+                return key + ": " + chart.format(value);
+            }
+
             return {
                 brush: null,
                 position: "top", // or bottom, left, right
-                all: false
+                all: false,
+                format: callback
             }
         }
     }
@@ -16287,7 +16326,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return {
-                format: null
+                format: chart.format
             }
         }
     }

@@ -122,7 +122,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return {
-                format: null
+                format: chart.format
             }
         }
     }

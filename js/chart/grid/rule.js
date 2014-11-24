@@ -40,7 +40,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
 						fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -79,7 +79,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : -bar * 2,
 						"text-anchor" : "middle",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""))
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -118,7 +118,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 					  x : bar/2 + 4,
 					  y : bar-2,
 					  fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -157,7 +157,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar-2,
 						"text-anchor" : "end",
 						fill : chart.theme("gridFontColor")
-					}, (grid.format) ? grid.format(ticks[i]) : ticks[i] + ""));
+					}, grid.format(ticks[i])));
 				}
 
 				g.append(axis);
@@ -196,6 +196,10 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
+			var callback = function(value) {
+				return chart.format(value);
+			}
+
 			return {
 				// core options
 				domain: null,
@@ -209,10 +213,10 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 				// common options
 				line: false,
-				format: null,
 				color : null,
 				start : null,
 				size : null,
+				format: callback,
 
 				// rule options
 				hideZero: false,

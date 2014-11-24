@@ -17,7 +17,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
                 var t = chart.series(obj.dataKey),
-                    k = obj.dataKey;
+                    k = obj.dataKey,
+                    d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
                 if(widget.position == "bottom") {
@@ -25,8 +26,8 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = (obj.data[k]) ? ": " + obj.data[k] : "";
-                setMessage(0, ((t.text) ? t.text : k) + message);
+                var message = widget.format((t.text) ? t.text : k, d);
+                setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
             } else {
@@ -36,14 +37,15 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     var key = brush.target[i],
                         t = chart.series(key),
                         x = padding,
-                        y = (textY * i) + (padding * 2);
+                        y = (textY * i) + (padding * 2),
+                        d = (obj.data != null) ? obj.data[key] : null;
 
                     // 위젯 포지션에 따른 별도 처리
                     if(widget.position == "bottom") {
                         y = y + anchor;
                     }
 
-                    var message = ((t.text) ? t.text : key) + ": " + obj.data[key];
+                    var message = widget.format((t.text) ? t.text : key, d);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -81,7 +83,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
             chart.on("mouseover", function(obj, e) {
                 if(isActive || !self.existBrush(obj.brush.index)) return;
-                if(!obj.dataKey && obj.data.length == 0) return;
+                if(!obj.dataKey && !obj.data) return;
 
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
@@ -129,10 +131,19 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
+            var callback = function(key, value) {
+                if(!value) {
+                    return key;
+                }
+
+                return key + ": " + chart.format(value);
+            }
+
             return {
                 brush: null,
                 position: "top", // or bottom, left, right
-                all: false
+                all: false,
+                format: callback
             }
         }
     }

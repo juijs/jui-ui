@@ -1,9 +1,8 @@
 jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	var RadarGrid = function(orient, chart, grid) {
-		var position = [];
-		var format;
-		var self = this;
+		var self = this,
+			position = [];
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -91,8 +90,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 		this.drawBefore = function() {
 			grid = this.setBlockDomain(chart, grid);
-
-			format = grid.format;
 		}
 
 		this.draw = function() {
@@ -242,8 +239,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 				// common options
 				line: true,
-				format: null,
 				color : null,
+				format: null,
 
 				hideText: false,
 				extra: false,

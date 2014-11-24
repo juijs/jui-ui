@@ -41,8 +41,11 @@
                 { type : 'scatter', display : "max" }
             ],
             widget : [
-                { type : "tooltip", brush : 1 }
-            ]
+                //{ type : "tooltip", brush : 1 }
+            ],
+            format : function(val) {
+                return "$" + val;
+            }
         });
 	})
 </script>
