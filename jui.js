@@ -948,19 +948,17 @@
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
-                (logUrl) ? logUrl :this.logUrl,
-	    		"JUIM",
-	    		"width=800, height=600, toolbar=no, menubar=no, resizable=yes"
-	    	);
-	    	
-	    	jui.debugAll(function(log, str) {
-	    		jui_mng.log(log, str);
-	    	});
-	    	
-	    	return jui_mng;
-		},
+				logUrl || "tool/debug.html",
+				"JUIM",
+				"width=1024, height=768, toolbar=no, menubar=no, resizable=yes"
+			);
 
-		logUrl: "jui.mng.html"
+			jui.debugAll(function (log, str) {
+				jui_mng.log(log, str);
+			});
+
+			return jui_mng;
+		}
 	};
 })(window, jQuery || $);
 jui.define("core", [ "jquery", "util.base" ], function($, _) {

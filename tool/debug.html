@@ -1,0 +1,320 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<link rel="stylesheet" href="../jui.min.css" />
+
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/jquery.binder.js"></script>
+<script src="../jui.min.js"></script>
+
+<script>
+
+var ui_bind, ui_tab, ui_table_log, ui_table_info;
+var p_jui = (opener) ? opener.jui : null;
+var log_expand = {};
+var template = null;
+
+// Init..
+jui.ready(function(ui, uix, _) {
+	if(p_jui == null) alert("Execution path is invalid.");
+	
+	// UI Setting
+	ui_tab = uix.tab("#mng_tab", {
+		target: "#mng_tab_cont",
+		event: {
+			change: function(data) {
+				if(data.index == 1) {
+					ui_table_info = uix.table("#mng_info_table", {
+						expand: "auto",
+						resize: true,
+						rows: p_jui.getAll()
+					});
+				}
+			}
+		}
+	});
+
+	ui_table_log = uix.table("#mng_log_table", {
+		expand: true,
+		resize: true,
+		event: {
+			row: function(data) {
+				$("#mng_log_table_expand").html(
+					_.template($("#tpl_expand").html(), { args: log_expand[data.index] })
+				);
+
+				this.showExpend(data.index);
+			}
+		},
+		scroll: true,
+		scrollHeight: 400
+	});
+
+	// VO Setting & Template Setting
+	ui_bind = $(".jui").jbinder();
+	template = _.template;
+
+	setTimeout(function() {
+		juiSetTotalCount();
+		juiSetTypeCount();
+
+		ui_tab.show(0);
+	}, 1000);
+});
+
+// Functions
+function juiSetTotalCount() {
+	var o_cnt = 0, e_cnt = 0, c_cnt = 0;
+
+	for(var i = 0; i < p_jui.size(); i++) {
+		var ui_list = p_jui.get(i).list;
+		o_cnt += ui_list.length;
+
+		for(var j = 0; j < ui_list.length; j++) {
+			var ui = ui_list[j];
+
+			e_cnt += ui.listen.size();
+			c_cnt += ui.event.length;
+		}
+	}
+
+	ui_bind.s_total(0, p_jui.size());
+	ui_bind.s_total(1, o_cnt);
+	ui_bind.s_total(2, e_cnt);
+	ui_bind.s_total(3, c_cnt);
+}
+
+function juiSetTypeCount() {
+	var types = p_jui.getClassAll(),
+	    counts = {};
+
+	for(var i = 0; i < types.length; i++) {
+		var uiList = p_jui.get(types[i]);
+
+		counts[types[i].type] = {
+			caller: uiList.length,
+			obj: 0
+		}
+
+		for(var j = 0; j < uiList.length; j++) {
+			counts[types[i]].obj += uiList[j].list.length;
+		}
+	}
+
+	$("#mng_sum_table_type").html(
+		template($("#tpl_sum_type").html(), { counts: counts })
+	);
+}
+
+function juiSetUiInfo() {
+	$("#mng_sum_table_type").html(
+		template($("#tpl_sum_type").html(), { counts: counts })
+	);
+}
+
+function log(log, args) {
+	var no = ui_table_log.uit.getRowCount();
+	ui_table_log.append($.extend({ no: (!no) ? 0 : no }, log));
+
+	// 로그가 15개가 되면 스크롤 적용
+	if(no == 15) ui_table_log.scroll();
+	if(no >= 15) {
+		var objDiv = $(ui_table_log.root).find("tbody").get(0);
+		objDiv.scrollTop = objDiv.scrollHeight;
+	}
+
+	// 로그 기록 저장
+	log_expand[no] = args;
+}
+</script>
+<style>
+body {
+	font-family: "Century Gothic", "Trebuchet MS", Dotum, Verdana, AppleGothic, Sans-serif; 
+	font-size: 12px;
+}
+
+h3 {
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+.row { 
+	margin: 20px 0; 
+}
+
+.sum_title {
+	padding-top: 18px; 
+	font-weight: bold;
+	text-align: right;
+	padding-right: 10px;
+}
+</style>
+</head>
+<body class="jui">
+	<ul id="mng_tab" class="tab tab-top">
+		<li>
+			<a href="#summary">Summary</a>
+		</li>
+		<li><a href="#info">Information</a></li>
+		<li class="active"><a href="#log">Log</a></li>
+	</ul>
+
+	<div id="mng_tab_cont" class="tab-contents">
+		<div id="summary">
+			<div class="row">
+				<div class="col col-1 sum_title">
+					Total Count
+				</div>
+				<div class="col col-11">
+					<table class="table table-classic">
+						<thead>
+							<tr>
+								<th>UI Caller</th>
+								<th>UI Object</th>
+								<th>DOM Event</th>
+								<th>Custom Event</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td data-bind="s_total:0">0</td>
+								<td data-bind="s_total:1">0</td>
+								<td data-bind="s_total:2">0</td>
+								<td data-bind="s_total:3">0</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col col-1 sum_title">
+					UI-Type Count
+				</div>
+				<div id="mng_sum_table_type" class="col col-11">
+				</div>
+			</div>
+		</div>
+		<div id="info" style="margin: 15px;">
+			<table id="mng_info_table" class="table table-classic table-stripeless">
+				<thead>
+					<tr>
+						<th style="width: 40px;">Index</th>
+						<th style="width: 200px;">Selector</th>
+						<th style="width: 100px;">Type</th>
+						<th>Options</th>
+						<th style="width: 75px;">Obj Cnt</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<script data-jui="#mng_info_table" data-tpl="expand" type="text/template">
+				<!= (typeof(options) == "object") ? JSON.stringify(options) : "{}" !>
+			</script>
+			<script data-jui="#mng_info_table" data-tpl="row" type="text/template">
+				<tr style="cursor: pointer;">
+					<td><!= row.index !></td>
+					<td><!= selector !></td>
+					<td><!= type !></td>
+					<td>
+						<! if(typeof(options) == "object") { 
+							delete options.tpl;
+						!>
+						<!= JSON.stringify(options) !>
+						<! } else { !>{}<! } !>
+					</td>
+					<td><!= list.length !></td>
+				</tr>
+			</script>
+		</div>
+		<div id="log" style="margin: 15px;">
+			<div class="navbar navbar-flat-white" style="overflow: hidden; margin-bottom: 5px;">
+				<div class="inline-right">
+					<a href="javascript:ui_table_log.reset()" class="btn btn-gray btn-small"><i class="icon-trashcan"></i></a>
+				</div>
+			</div>
+
+			<table id="mng_log_table" class="table table-classic table-stripeless">
+				<thead>
+					<tr>
+						<th style="width: 30px;">No</th>
+						<th>UI Type</th>
+						<th>UI Caller Index</th>
+						<th>UI Object Index</th>
+						<th>Method Name</th>
+						<th>Call Time</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<script data-jui="#mng_log_table" data-tpl="expand" type="text/template">
+				<div id="mng_log_table_expand"></div>
+			</script>
+			<script data-jui="#mng_log_table" data-tpl="row" type="text/template">
+				<tr style="cursor: pointer;">
+					<td><!= no !></td>
+					<td><!= type !></td>
+					<td><!= c_index !></td>
+					<td><!= u_index !></td>
+					<td><!= name !></td>
+					<td><!= time !>ms</td>
+				</tr>
+			</script>
+		</div>
+	</div>
+
+	<script id="tpl_expand" type="text/template">
+		<h3>Arguments (<!= args.length !>)</h3>
+
+		<table class="table table-simple table-small">
+			<thead>
+				<tr>
+					<! for(var i = 0; i < args.length; i++) { !>
+					<th><!= i !></th>
+					<! } !>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<! for(var i = 0; i < args.length; i++) { !>
+					<td>
+						<! if(typeof(args[i]) == "object" && typeof(args[i].length) == "number") { !>
+						Array(<!= args[i].length !>)
+						<! } else if(typeof(args[i]) == "object") { !>
+						<!= JSON.stringify(args[i]) !>
+						<! } else { !>
+						<!= args[i] !>
+						<! } !>
+					</td>
+					<! } !>
+				</tr>
+			</tbody>
+		</table>
+	</script>
+
+	<script id="tpl_sum_type" type="text/template">
+		<table class="table table-classic">
+			<thead>
+				<tr>
+					<! for(var key in counts) { !>
+					<th><!= key !></th>
+					<! } !>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<! for(var key in counts) { !>
+					<td>
+						<!= counts[key].caller !>, <!= counts[key].obj !>
+					</td>
+					<! } !>
+				</tr>
+			</tbody>
+		</table>
+	</script>
+</body>
+</html>

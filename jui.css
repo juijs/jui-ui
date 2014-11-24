@@ -1503,6 +1503,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.jui .icon-stoppage:before {
+  content: "\e637";
+}
+.jui .icon-checkmark:before {
+  content: "\e638";
+}
 .jui .icon-add-dir:before {
   content: "\e600";
 }
