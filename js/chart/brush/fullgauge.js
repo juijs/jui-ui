@@ -55,7 +55,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.x(), chart.y());
+			});
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
                 currentAngle = (brush.endAngle) * rate;

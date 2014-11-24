@@ -20,7 +20,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.area("x"), chart.area("y"))
+			});
 			
 			for(var i = 0, len = chart.data().length; i < len; i++) {
 				var rate = (chart.data(i)[brush.target] - brush.min) / (brush.max - brush.min),

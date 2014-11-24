@@ -78,7 +78,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawScatter = function(points) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {

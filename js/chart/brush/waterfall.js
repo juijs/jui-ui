@@ -5,7 +5,7 @@ jui.define("chart.brush.waterfall", [], function() {
 		var outerPadding;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
 			zeroY = brush.y(0);

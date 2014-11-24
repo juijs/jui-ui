@@ -23,12 +23,14 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				for (var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, chart.data(i, brush.target[ti]));
+					var obj = brush.c(i, chart.data(i, brush.target[ti])),
+						x = obj.x - chart.x(),
+						y = obj.y - chart.y();
 	
 					if (i == 0) {
-						path.MoveTo(obj.x, obj.y);
+						path.MoveTo(x, y);
 					} else {
-						path.LineTo(obj.x, obj.y);
+						path.LineTo(x, y);
 					}
 				}
 	

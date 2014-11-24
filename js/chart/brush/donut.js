@@ -105,8 +105,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-			group.translate(this.chart.x(), this.chart.y())
-
 			var target = this.brush.target,
 				data = this.chart.data(0);
 

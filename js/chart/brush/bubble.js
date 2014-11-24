@@ -21,7 +21,7 @@ jui.define("chart.brush.bubble", [], function() {
         this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group({
                 "clip-path" : "url(#" + chart.clipId + ")"
-            }).translate(chart.x(), chart.y());
+            });
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {

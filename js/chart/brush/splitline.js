@@ -52,7 +52,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawLine = function(path) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);

@@ -5,7 +5,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawScatter = function(points) {
             var width = height = this.brush.size;
 
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
             var path = this.chart.svg.path({
                 fill : this.chart.color(0, this.brush),
                 stroke : this.chart.color(0, this.brush),

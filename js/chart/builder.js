@@ -541,72 +541,28 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _initialize = true;
         }
 
-
         /**
-         * 계산된 차트 영역에 대한 값 리턴
+         * 차트 영역 데이터 반환
          *
-         * <code>
-         * ex)
-         * chart.area('x');
-         * chart.area('width');
-         * </code>
-         *
-         * @param {string} key
+         * @returns {*}
          */
-        this.area = function(key) {
-            if (typeof _area[key] !== "undefined") {
-                return _area[key];
-            }
-
-            return _area;
+        this.width = function() {
+            return _area.width;
         }
-
-        this.height = function(value) {
-            if (arguments.length == 0) {
-                return this.area('height');
-            }
-
-            _area.height = value;
+        this.height = function() {
+            return _area.height;
         }
-
-        this.width = function(value) {
-            if (arguments.length == 0) {
-                return this.area('width');
-            }
-
-            _area.width = value;
+        this.x = function() {
+            return _area.x;
         }
-
-        this.x = function(value) {
-            if (arguments.length == 0) {
-                return this.area('x');
-            }
-
-            _area.x = value;
+        this.y = function() {
+            return _area.y;
         }
-
-        this.y = function(value) {
-            if (arguments.length == 0) {
-                return this.area('y');
-            }
-
-            _area.y = value;
+        this.x2 = function() {
+            return _area.x2;
         }
-
-        this.x2 = function(value) {
-            if (arguments.length == 0) {
-                return this.area('x2');
-            }
-
-            _area.x2 = value;
-        }
-
-        this.y2 = function(value) {
-            if (arguments.length == 0) {
-                return this.area('y2');
-            }
-
-            _area.y2 = value;
+        this.y2 = function() {
+            return _area.y2;
         }
 
         /**

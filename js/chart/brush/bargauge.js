@@ -6,7 +6,7 @@ jui.define("chart.brush.bargauge", [], function() {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
-			}).translate(chart.x(), chart.y());
+			});
 
 			if (brush.split) {
 				var max = chart.width();	

@@ -15,7 +15,7 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.drawBefore = function() {
-            g = chart.svg.group().translate(chart.x(), chart.y());
+            g = chart.svg.group();
             count = chart.data().length;
         }
 

@@ -4,7 +4,7 @@ jui.define("chart.brush.equalizer", [], function() {
         var g, zeroY, count, width, barWidth, half_width;
 
         this.drawBefore = function() {
-            g = chart.svg.group().translate(chart.x(), chart.y());
+            g = chart.svg.group();
 
             zeroY = brush.y(0);
             count = chart.data().length;

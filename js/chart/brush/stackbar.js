@@ -5,7 +5,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
 			series = chart.series();
 			count = chart.data().length;

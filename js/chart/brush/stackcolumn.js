@@ -5,7 +5,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
 			zeroY = brush.y(0);
 			count = chart.data().length;

@@ -6,7 +6,7 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;

@@ -22,7 +22,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
 			var group = chart.svg.group({
 				"class" : "brush circle gauge"
-			}).translate(chart.x(), chart.y());
+			});
 
             group.append(chart.svg.circle({
                 cx : centerX,

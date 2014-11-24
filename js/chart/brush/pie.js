@@ -53,7 +53,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.x(), chart.y())
+			});
 
 			var target = brush.target,
 				all = 360,

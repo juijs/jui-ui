@@ -79,8 +79,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 				opacity : 0.8
 			});
 
-			group.translate(chart.x(), chart.y());
-			
 			setDirection(brush.direction);
 
             if (brush.svg != "" || brush.path != "") {

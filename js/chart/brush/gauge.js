@@ -123,7 +123,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush gauge"
-			}).translate(chart.x(), chart.y())
+			});
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
                 currentAngle = (brush.endAngle) * rate;

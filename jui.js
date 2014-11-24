@@ -9909,6 +9909,10 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             if (!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
+            } else {
+                if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
+                    obj.translate(this.chart.x(), this.chart.y());
+                }
             }
 
             return obj;
@@ -10461,72 +10465,28 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _initialize = true;
         }
 
-
         /**
-         * 계산된 차트 영역에 대한 값 리턴
+         * 차트 영역 데이터 반환
          *
-         * <code>
-         * ex)
-         * chart.area('x');
-         * chart.area('width');
-         * </code>
-         *
-         * @param {string} key
+         * @returns {*}
          */
-        this.area = function(key) {
-            if (typeof _area[key] !== "undefined") {
-                return _area[key];
-            }
-
-            return _area;
+        this.width = function() {
+            return _area.width;
         }
-
-        this.height = function(value) {
-            if (arguments.length == 0) {
-                return this.area('height');
-            }
-
-            _area.height = value;
+        this.height = function() {
+            return _area.height;
         }
-
-        this.width = function(value) {
-            if (arguments.length == 0) {
-                return this.area('width');
-            }
-
-            _area.width = value;
+        this.x = function() {
+            return _area.x;
         }
-
-        this.x = function(value) {
-            if (arguments.length == 0) {
-                return this.area('x');
-            }
-
-            _area.x = value;
+        this.y = function() {
+            return _area.y;
         }
-
-        this.y = function(value) {
-            if (arguments.length == 0) {
-                return this.area('y');
-            }
-
-            _area.y = value;
+        this.x2 = function() {
+            return _area.x2;
         }
-
-        this.x2 = function(value) {
-            if (arguments.length == 0) {
-                return this.area('x2');
-            }
-
-            _area.x2 = value;
-        }
-
-        this.y2 = function(value) {
-            if (arguments.length == 0) {
-                return this.area('y2');
-            }
-
-            _area.y2 = value;
+        this.y2 = function() {
+            return _area.y2;
         }
 
         /**
@@ -13204,7 +13164,7 @@ jui.define("chart.brush.bar", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
@@ -13302,7 +13262,7 @@ jui.define("chart.brush.bubble", [], function() {
         this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group({
                 "clip-path" : "url(#" + chart.clipId + ")"
-            }).translate(chart.x(), chart.y());
+            });
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
@@ -13349,7 +13309,7 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.drawBefore = function() {
-            g = chart.svg.group().translate(chart.x(), chart.y());
+            g = chart.svg.group();
 
             count = chart.data().length;
             width = brush.x.rangeBand();
@@ -13449,7 +13409,7 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.drawBefore = function() {
-            g = chart.svg.group().translate(chart.x(), chart.y());
+            g = chart.svg.group();
             count = chart.data().length;
         }
 
@@ -13518,7 +13478,7 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
@@ -13695,8 +13655,6 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-			group.translate(this.chart.x(), this.chart.y())
-
 			var target = this.brush.target,
 				data = this.chart.data(0);
 
@@ -13743,7 +13701,7 @@ jui.define("chart.brush.equalizer", [], function() {
         var g, zeroY, count, width, barWidth, half_width;
 
         this.drawBefore = function() {
-            g = chart.svg.group().translate(chart.x(), chart.y());
+            g = chart.svg.group();
 
             zeroY = brush.y(0);
             count = chart.data().length;
@@ -13827,7 +13785,7 @@ jui.define("chart.brush.fullstack", [], function() {
 		var g, zeroY, count, width, barWidth;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -13935,7 +13893,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
@@ -13985,12 +13943,14 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				for (var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, chart.data(i, brush.target[ti]));
+					var obj = brush.c(i, chart.data(i, brush.target[ti])),
+						x = obj.x - chart.x(),
+						y = obj.y - chart.y();
 	
 					if (i == 0) {
-						path.MoveTo(obj.x, obj.y);
+						path.MoveTo(x, y);
 					} else {
-						path.LineTo(obj.x, obj.y);
+						path.LineTo(x, y);
 					}
 				}
 	
@@ -14059,7 +14019,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.x(), chart.y())
+			});
 
 			var target = brush.target,
 				all = 360,
@@ -14177,7 +14137,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawScatter = function(points) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
@@ -14218,7 +14178,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawScatter = function(points) {
             var width = height = this.brush.size;
 
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
             var path = this.chart.svg.path({
                 fill : this.chart.color(0, this.brush),
                 stroke : this.chart.color(0, this.brush),
@@ -14260,7 +14220,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
 			series = chart.series();
 			count = chart.data().length;
@@ -14326,7 +14286,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
 			zeroY = brush.y(0);
 			count = chart.data().length;
@@ -14394,7 +14354,7 @@ jui.define("chart.brush.bargauge", [], function() {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
-			}).translate(chart.x(), chart.y());
+			});
 
 			if (brush.split) {
 				var max = chart.width();	
@@ -14514,7 +14474,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 
 			var group = chart.svg.group({
 				"class" : "brush circle gauge"
-			}).translate(chart.x(), chart.y());
+			});
 
             group.append(chart.svg.circle({
                 cx : centerX,
@@ -14630,8 +14590,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 				opacity : 0.8
 			});
 
-			group.translate(chart.x(), chart.y());
-			
 			setDirection(brush.direction);
 
             if (brush.svg != "" || brush.path != "") {
@@ -14709,7 +14667,7 @@ jui.define("chart.brush.area", [], function() {
     var AreaBrush = function() {
 
         this.drawArea = function(path) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y()),
+            var g = this.chart.svg.group(),
                 maxY = this.chart.height();
 
             for (var k = 0; k < path.length; k++) {
@@ -14896,7 +14854,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush gauge"
-			}).translate(chart.x(), chart.y())
+			});
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
                 currentAngle = (brush.endAngle) * rate;
@@ -15003,7 +14961,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.x(), chart.y());
+			});
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
                 currentAngle = (brush.endAngle) * rate;
@@ -15070,7 +15028,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		this.draw = function() {
 			var group = chart.svg.group({
 				"class" : "brush donut"
-			}).translate(chart.area("x"), chart.area("y"))
+			});
 			
 			for(var i = 0, len = chart.data().length; i < len; i++) {
 				var rate = (chart.data(i)[brush.target] - brush.min) / (brush.max - brush.min),
@@ -15133,7 +15091,7 @@ jui.define("chart.brush.waterfall", [], function() {
 		var outerPadding;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
 			zeroY = brush.y(0);
@@ -15288,7 +15246,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawLine = function(path) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y());
+            var g = this.chart.svg.group();
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
@@ -15319,7 +15277,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
     var SplitAreaBrush = function() {
 
         this.drawArea = function(path) {
-            var g = this.chart.svg.group().translate(this.chart.x(), this.chart.y()),
+            var g = this.chart.svg.group(),
                 maxY = this.chart.height(),
                 split = this.brush.split,
                 splitColor = this.chart.theme("areaSplitBackgroundColor");
@@ -15375,7 +15333,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
@@ -15439,7 +15397,7 @@ jui.define("chart.brush.rangebar", [], function() {
 		var borderColor, borderWidth, borderOpacity;
 
 		this.drawBefore = function() {
-			g = chart.svg.group().translate(chart.x(), chart.y());
+			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
