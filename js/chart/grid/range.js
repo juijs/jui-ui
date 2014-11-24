@@ -11,7 +11,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.top = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x2 : this.size
 				}));
 			}
 
@@ -47,7 +47,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.bottom = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x1 : this.start,
+					x2 : this.end
 				}));
 			}
 
@@ -83,7 +84,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.left = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}));
 
 			}
@@ -123,7 +125,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}));
 			}
 
@@ -159,14 +162,18 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.drawBefore = function() {
 			grid = this.setRangeDomain(chart, grid);
 
-			var width = chart.width(), height = chart.height();
+			var obj = this.getGridSize(chart, orient, grid);
+			this.scale = UtilScale.linear().domain(grid.domain);
 
 			if (orient == "left" || orient == "right") {
-				this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
+				this.scale.range([obj.end, obj.start]);
 			} else {
-				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
+				this.scale.range([obj.start, obj.end]);
 			}
 
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
 			this.step = grid.step;
 			this.nice = grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
@@ -199,6 +206,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				line: false,
 				format: null,
 				color : null,
+				start : null,
+				size : null,
 
 				// range options
 				hideText: false,

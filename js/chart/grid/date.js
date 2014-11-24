@@ -5,7 +5,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.top = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x1 : this.start,
+					x2 : this.end
 				}));
 			}
 
@@ -36,7 +37,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.bottom = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x1 : this.start,
+					x2 : this.end
 				}));
 			}
 
@@ -67,7 +69,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.left = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}));
 
 			}
@@ -99,7 +102,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}));
 			}
 
@@ -130,14 +134,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 		this.drawBefore = function() {
 			grid = this.setDateDomain(chart, grid);
-			
-			var max = chart.height();
 
-			if (orient == "top" || orient == "bottom") {
-				max = chart.width();
-			}
 
-			var range = [0, max];
+			var obj = this.getGridSize(chart, orient, grid);
+
+			var range = [obj.start, obj.end];
 			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
 
 			if (grid.realtime) {
@@ -155,6 +156,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 			}
 
 			// step = [this.time.days, 1];
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
 			this.bar = 6;
 			this.values = [];
 
@@ -183,7 +187,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				line: false,
 				format: null,
 				color : null,
-
+				start : null,
+				size : null,
 				// range options
 				realtime: false
 			}

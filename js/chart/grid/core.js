@@ -280,6 +280,48 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			};
 		}
 
+		/**
+		 * grid 의 실제 위치와 size 를 구함
+		 *
+		 * @param chart
+		 * @param orient
+		 * @param grid
+		 * @returns {{start: number, size: *}}
+		 */
+		this.getGridSize = function(chart, orient, grid) {
+			var width = chart.width();
+			var height = chart.height();
+			var max = (orient == "left" || orient == "right") ? height : width;
+
+			var start = 0;
+			if (grid.start) {
+				if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
+					start = max * parseFloat(grid.start.replace("%", ""))/100
+				} else {
+					start = grid.start
+				}
+			}
+
+			var size = max ;
+			if (grid.size) {
+				if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
+					size = max * parseFloat(grid.size.replace("%", ""))/100
+				} else {
+					size = grid.size
+				}
+			}
+
+			if (start == 'center') {
+				start = max / 2 - size / 2;
+			}
+
+			return {
+				start  : start,
+				size : size,
+				end : start + size
+			}
+		}
+
 		this.drawSetup = function() {
 			return {
 				domain: null,
@@ -291,7 +333,9 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				hide: false,
 				unit: 0,
 				color : null,
-				title : null
+				title : null,
+				start : null,
+				size : null
 			}
 		}
 	}

@@ -291,9 +291,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param drawObj
          */
         function setGridAxis(draw) {
-            delete draw.x;
-            delete draw.y;
-            delete draw.c;
+            //delete draw.x;
+            //delete draw.y;
+            //delete draw.c;
 
             if (_scales.x || _scales.x1) {
                 if (!_scales.x && _scales.x1) {

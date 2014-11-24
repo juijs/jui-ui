@@ -1,5 +1,14 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        watch : {
+            scripts : {
+                files : ['js/**'],
+                tasks : ['js'],
+                options : {
+                    spawn : false
+                }
+            }
+        },
         qunit: {
             options: {
                 timeout: 10000
@@ -219,6 +228,8 @@ module.exports = function(grunt) {
     });
 
     require("load-grunt-tasks")(grunt);
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask("js", [ "concat", "uglify" ]);
     grunt.registerTask("css", [ "less", "cssmin" ]);

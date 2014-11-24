@@ -14,7 +14,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? half_height : 0,
 				y2 : this.center ? half_height : 0,
-				x2 : chart.width()
+				x1 : this.start,
+				x2 : this.end
 			}));
 
 			var ticks = this.ticks,
@@ -53,7 +54,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			g.append(this.axisLine(chart, {
 				y1 : this.center ? -half_height : 0,
 				y2 : this.center ? -half_height : 0,
-				x2 : chart.width()
+				x1 : this.start,
+				x2 : this.end
 			}));
 
 			var ticks = this.ticks,
@@ -92,7 +94,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			g.append(this.axisLine(chart, {
 				x1 : this.center ? half_width : 0,
 				x2 : this.center ? half_width : 0,
-				y2 : height
+				y1 : this.start ,
+				y2 : this.end
 			}));
 
 			var ticks = this.ticks,
@@ -129,7 +132,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			g.append(this.axisLine(chart, {
 				x1 : this.center ? -half_width : 0,
 				x2 : this.center ? -half_width : 0,
-				y2 : chart.height()
+				y1 : this.start ,
+				y2 : this.end
 			}));
 
 			var ticks = this.ticks,
@@ -163,14 +167,17 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		this.drawBefore = function() {
 			grid = this.setRangeDomain(chart, grid);
 
-			var width = chart.width(), height = chart.height();
+			var obj = this.getGridSize(chart, orient, grid);
+			this.scale = UtilScale.linear().domain(grid.domain);
 
 			if (orient == "left" || orient == "right") {
-				this.scale = UtilScale.linear().domain(grid.domain).range([height, 0]);
+				this.scale.range([obj.end, obj.start]);
 			} else {
-				this.scale = UtilScale.linear().domain(grid.domain).range([0, width]);
+				this.scale.range([obj.start, obj.end]);
 			}
-
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
 			this.step = grid.step;
 			this.nice = grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
@@ -204,6 +211,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				line: false,
 				format: null,
 				color : null,
+				start : null,
+				size : null,
 
 				// rule options
 				hideZero: false,

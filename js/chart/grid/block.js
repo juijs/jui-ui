@@ -16,7 +16,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x1 : this.start,
+					x2 : this.end
 				}))
 			}
 
@@ -49,7 +50,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.full) {
 				var axis = chart.svg.group({
-					"transform" : "translate(" + chart.width() + ", 0)"
+					"transform" : "translate(" + this.end + ", 0)"
 				});
 
 				axis.append(this.line(chart, {
@@ -68,7 +69,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					x2 : chart.width()
+					x1 : this.start,
+					x2 : this.end
 				}));
 			}
 
@@ -101,7 +103,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.full) {
 				var axis = chart.svg.group({
-					"transform" : "translate(" + chart.width() + ", 0)"
+					"transform" : "translate(" + this.end + ", 0)"
 				})
 
 				axis.append(this.line(chart, {
@@ -120,7 +122,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}))
 			}
 
@@ -145,7 +148,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.full) {
 				var axis = chart.svg.group({
-					"transform" : "translate(0, " + chart.height() + ")"
+					"transform" : "translate(0, " + this.end + ")"
 				})
 
 				axis.append(this.line(chart, {
@@ -163,7 +166,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
-					y2 : chart.height()
+					y1 : this.start,
+					y2 : this.end
 				}))
 			}
 
@@ -187,7 +191,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 			if (!grid.full) {
 				var axis = chart.svg.group({
-					"transform" : "translate(0, " + chart.height() + ")"
+					"transform" : "translate(0, " + this.end + ")"
 				});
 
 				axis.append(this.line(chart, {
@@ -203,13 +207,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			grid.type = grid.type || "block";
 			grid = this.setBlockDomain(chart, grid);
 
-			var width = chart.width();
-			var height = chart.height();
-			var max = (orient == "left" || orient == "right") ? height : width;
-	
-			// scale 설정 
+			var obj = this.getGridSize(chart, orient, grid);
+
+			// scale 설정
 			this.scale = UtilScale.ordinal().domain(grid.domain);
-			var range = [0, max];
+			var range = [obj.start, obj.end];
 
 			if (grid.full) {
 				this.scale.rangeBands(range);
@@ -217,6 +219,9 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				this.scale.rangePoints(range);
 			}
 
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
 			this.band = this.scale.rangeBand();
@@ -245,6 +250,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				line: false,
 				format: null,
 				color : null,
+				start: 0,		// 시작 위치
+				size : 0,		// 전체 사이즈
 
 				// block options
 				full: false
