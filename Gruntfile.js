@@ -12,7 +12,7 @@ module.exports = function(grunt) {
                 files: [ "less/**" ],
                 tasks: [ "css" ],
                 options: {
-                    spawn: true
+                    spawn : false
                 }
             }
         },
