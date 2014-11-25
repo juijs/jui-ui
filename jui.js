@@ -2860,6 +2860,11 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         }
 
         this.join = function() {
+            if(orders.length > 0) { // Firefox 처리
+                var start = orders[0];
+                orders.push(start);
+            }
+
             applyOrders(this);
         }
     }
@@ -15495,6 +15500,9 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 points.push([ 0 - anchor, (h / 2) ].join(","));
                 points.push([ 0, (h / 2) - (anchor / 2) ].join(","));
             }
+
+            // Firefox 처리 (시작점과 끝점 연결)
+            points.push([ 0, 0 ].join(","));
 
             return points.join(" ");
         }

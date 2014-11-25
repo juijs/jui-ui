@@ -411,6 +411,11 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         }
 
         this.join = function() {
+            if(orders.length > 0) { // Firefox 처리
+                var start = orders[0];
+                orders.push(start);
+            }
+
             applyOrders(this);
         }
     }
