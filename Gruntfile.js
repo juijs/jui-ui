@@ -7,6 +7,13 @@ module.exports = function(grunt) {
                 options : {
                     spawn : false
                 }
+            },
+            styles: {
+                files: [ "less/**" ],
+                tasks: [ "css" ],
+                options: {
+                    spawn: true
+                }
             }
         },
         qunit: {
