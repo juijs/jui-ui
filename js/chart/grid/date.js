@@ -200,31 +200,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
-				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start : null,
-				size : null,
-				format: callback,
-
-				// range options
+			return $.extend(this.parent.drawSetup(), {
+				// date options
 				realtime: false
-			}
+			});
 		}
 	}
 

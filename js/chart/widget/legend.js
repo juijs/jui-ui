@@ -158,12 +158,11 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return {
-                brush: null,
-                position: "bottom",
-                align: "center", // or start, end
-                filter: false
-            }
+            return $.extend(this.parent.drawSetup(), {
+                position : "bottom",
+                align : "center", // or start, end
+                filter : false
+            });
         }
     }
 

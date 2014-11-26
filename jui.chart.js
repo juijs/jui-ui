@@ -3763,7 +3763,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         _widget_objects[i] = new Obj(self, draws[i]);
                         var elem = _widget_objects[i].render();
 
-                        self.svg.autoRender(elem, false);
+                        self.svg.autoRender(elem, _widget_objects[i].isRender());
                     } else {
                         new Obj(self, draws[i]).render();
                     }
@@ -5326,7 +5326,24 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 
 		this.drawSetup = function() {
+			var self = this;
+
+			var callback = function(value) {
+				return self.chart.format(value);
+			}
+
 			return {
+				// base
+				type: "black",
+				target: null,
+				x: null,
+				y: null,
+				x1: null,
+				y1: null,
+				c: null,
+				dist: null,
+
+				// core
 				domain: null,
 				step: 10,
 				min: 0,
@@ -5335,10 +5352,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				key: null,
 				hide: false,
 				unit: 0,
-				color : null,
-				title : null,
-				start : null,
-				size : null
+				color: null,
+				title: null,
+				start: null,
+				size: null,
+				line: false,
+				format: callback
 			}
 		}
 	}
@@ -5593,31 +5612,15 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
+			return $.extend(this.parent.drawSetup(), {
 				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 10, // @deprecated
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start: 0,		// 시작 위치
-				size : 0,		// 전체 사이즈
-				format: callback,
+				max: 10,
+				start: 0,
+				size: 0,
 
 				// block options
 				full: false
-			}
+			});
 		}
 	}
 
@@ -5826,31 +5829,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
-				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start : null,
-				size : null,
-				format: callback,
-
-				// range options
+			return $.extend(this.parent.drawSetup(), {
+				// date options
 				realtime: false
-			}
+			});
 		}
 	}
 
@@ -6085,26 +6067,18 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		}
 
 		this.drawSetup = function() {
-			return {
+			return $.extend(this.parent.drawSetup(), {
 				// core options
-				domain: null,
-				step: 10,
-				min: 0,
 				max: 100,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
 
 				// common options
 				line: true,
-				color : null,
-				format: null,
 
+				// radar options
 				hideText: false,
 				extra: false,
 				shape: "radial" // or circle
-			}
+			});
 		}
 	}
 
@@ -6332,32 +6306,11 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
-				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start : null,
-				size : null,
-				format: callback,
-
+			return $.extend(this.parent.drawSetup(), {
 				// range options
 				hideText: false,
 				nice: false
-			}
+			});
 		}
 	}
 
@@ -8934,6 +8887,17 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return ($.inArray(index, list) == -1) ? false : true;
         }
+
+        this.isRender = function() {
+            return (this.widget.render === true) ? true : false;
+        }
+
+        this.drawSetup = function() {
+            return {
+                brush: null,
+                render: false
+            }
+        }
 	}
 
 	return CoreWidget;
@@ -9079,12 +9043,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 return key + ": " + chart.format(value);
             }
 
-            return {
-                brush: null,
+            return $.extend(this.parent.drawSetup(), {
                 position: "top", // or bottom, left, right
                 all: false,
                 format: callback
-            }
+            });
         }
     }
 
@@ -9148,13 +9111,13 @@ jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math)
         }
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(), {
                 position: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,
                 dy: 0
-            }
+            });
         }
     }
 
@@ -9320,12 +9283,11 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return {
-                brush: null,
-                position: "bottom",
-                align: "center", // or start, end
-                filter: false
-            }
+            return $.extend(this.parent.drawSetup(), {
+                position : "bottom",
+                align : "center", // or start, end
+                filter : false
+            });
         }
     }
 
@@ -9431,7 +9393,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawSetup = function() {
-            return {}
+            return this.parent.drawSetup();
         }
     }
 
@@ -9561,7 +9523,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return {}
+            return this.parent.drawSetup();
         }
     }
 
@@ -9690,9 +9652,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return {
-                format: chart.format
+            var callback = function(value) {
+                return chart.format(value);
             }
+
+            return $.extend(this.parent.drawSetup(), {
+                format: callback
+            });
         }
     }
 

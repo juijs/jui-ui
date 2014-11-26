@@ -56,13 +56,13 @@ jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math)
         }
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(), {
                 position: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,
                 dy: 0
-            }
+            });
         }
     }
 

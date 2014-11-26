@@ -226,26 +226,18 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		}
 
 		this.drawSetup = function() {
-			return {
+			return $.extend(this.parent.drawSetup(), {
 				// core options
-				domain: null,
-				step: 10,
-				min: 0,
 				max: 100,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
 
 				// common options
 				line: true,
-				color : null,
-				format: null,
 
+				// radar options
 				hideText: false,
 				extra: false,
 				shape: "radial" // or circle
-			}
+			});
 		}
 	}
 

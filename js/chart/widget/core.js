@@ -72,6 +72,17 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
             return ($.inArray(index, list) == -1) ? false : true;
         }
+
+        this.isRender = function() {
+            return (this.widget.render === true) ? true : false;
+        }
+
+        this.drawSetup = function() {
+            return {
+                brush: null,
+                render: false
+            }
+        }
 	}
 
 	return CoreWidget;

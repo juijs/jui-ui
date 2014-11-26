@@ -121,9 +121,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return {
-                format: chart.format
+            var callback = function(value) {
+                return chart.format(value);
             }
+
+            return $.extend(this.parent.drawSetup(), {
+                format: callback
+            });
         }
     }
 

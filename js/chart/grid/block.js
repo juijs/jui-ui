@@ -246,31 +246,15 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
+			return $.extend(this.parent.drawSetup(), {
 				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 10, // @deprecated
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start: 0,		// 시작 위치
-				size : 0,		// 전체 사이즈
-				format: callback,
+				max: 10,
+				start: 0,
+				size: 0,
 
 				// block options
 				full: false
-			}
+			});
 		}
 	}
 

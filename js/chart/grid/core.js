@@ -323,7 +323,24 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 
 		this.drawSetup = function() {
+			var self = this;
+
+			var callback = function(value) {
+				return self.chart.format(value);
+			}
+
 			return {
+				// base
+				type: "black",
+				target: null,
+				x: null,
+				y: null,
+				x1: null,
+				y1: null,
+				c: null,
+				dist: null,
+
+				// core
 				domain: null,
 				step: 10,
 				min: 0,
@@ -332,10 +349,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				key: null,
 				hide: false,
 				unit: 0,
-				color : null,
-				title : null,
-				start : null,
-				size : null
+				color: null,
+				title: null,
+				start: null,
+				size: null,
+				line: false,
+				format: callback
 			}
 		}
 	}

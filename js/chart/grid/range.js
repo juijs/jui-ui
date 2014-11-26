@@ -219,32 +219,11 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			var callback = function(value) {
-				return chart.format(value);
-			}
-
-			return {
-				// core options
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-
-				// common options
-				line: false,
-				color : null,
-				start : null,
-				size : null,
-				format: callback,
-
+			return $.extend(this.parent.drawSetup(), {
 				// range options
 				hideText: false,
 				nice: false
-			}
+			});
 		}
 	}
 

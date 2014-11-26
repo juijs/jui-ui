@@ -239,7 +239,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         _widget_objects[i] = new Obj(self, draws[i]);
                         var elem = _widget_objects[i].render();
 
-                        self.svg.autoRender(elem, false);
+                        self.svg.autoRender(elem, _widget_objects[i].isRender());
                     } else {
                         new Obj(self, draws[i]).render();
                     }

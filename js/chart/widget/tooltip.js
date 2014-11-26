@@ -139,12 +139,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 return key + ": " + chart.format(value);
             }
 
-            return {
-                brush: null,
+            return $.extend(this.parent.drawSetup(), {
                 position: "top", // or bottom, left, right
                 all: false,
                 format: callback
-            }
+            });
         }
     }
 
