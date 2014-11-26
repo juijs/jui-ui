@@ -23,6 +23,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 
 				var axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
@@ -40,7 +45,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
 						fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -63,6 +68,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
@@ -79,7 +89,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : -bar * 2,
 						"text-anchor" : "middle",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -103,6 +113,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
 
@@ -118,7 +133,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 					  x : bar/2 + 4,
 					  y : bar-2,
 					  fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -141,6 +156,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
 
@@ -157,7 +177,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar-2,
 						"text-anchor" : "end",
 						fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
