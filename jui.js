@@ -11901,6 +11901,13 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+				var domain = grid.format(this.domain[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
 				});
@@ -11913,7 +11920,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, grid.format(this.domain[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -11944,6 +11951,12 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+				var domain = grid.format(this.domain[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
 				});
@@ -11956,7 +11969,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, grid.format(this.domain[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12054,6 +12067,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var axis = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
@@ -12067,7 +12087,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12086,6 +12106,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var group = chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
@@ -12099,7 +12126,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(group);
 			}
@@ -12119,6 +12146,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
 				});
@@ -12132,7 +12166,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12151,6 +12185,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
 				})
@@ -12164,7 +12205,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y : -bar,
 					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12519,6 +12560,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -12536,7 +12584,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12556,6 +12604,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -12573,7 +12628,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])))
+				}, domain))
 
 				g.append(axis);
 			}
@@ -12594,6 +12649,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -12612,7 +12674,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -12634,6 +12696,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -12651,7 +12720,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -12746,6 +12815,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 
 				var axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
@@ -12763,7 +12837,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
 						fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -12786,6 +12860,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
@@ -12802,7 +12881,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : -bar * 2,
 						"text-anchor" : "middle",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -12826,6 +12905,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
 
@@ -12841,7 +12925,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 					  x : bar/2 + 4,
 					  y : bar-2,
 					  fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -12864,6 +12948,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
 				var isZero = (ticks[i] == 0);
 				var axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
 
@@ -12880,7 +12969,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 						y : bar-2,
 						"text-anchor" : "end",
 						fill : chart.theme("gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);

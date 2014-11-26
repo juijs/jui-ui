@@ -128,6 +128,13 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+				var domain = grid.format(this.domain[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
 				});
@@ -140,7 +147,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, grid.format(this.domain[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -171,6 +178,12 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
+				var domain = grid.format(this.domain[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
 				});
@@ -183,7 +196,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, grid.format(this.domain[i])));
+				}, domain));
 
 				g.append(axis);
 			}

@@ -21,6 +21,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -38,7 +45,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
@@ -58,6 +65,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -75,7 +89,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])))
+				}, domain))
 
 				g.append(axis);
 			}
@@ -96,6 +110,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -114,7 +135,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, grid.format(ticks[i])));
+					}, domain));
 				}
 
 				g.append(axis);
@@ -136,6 +157,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
+
+				var domain = grid.format(ticks[i]);
+
+				if (domain == "") {
+					continue;
+				}
+
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
 				var axis = chart.svg.group({
@@ -153,7 +181,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, grid.format(ticks[i])));
+				}, domain));
 
 				g.append(axis);
 			}
