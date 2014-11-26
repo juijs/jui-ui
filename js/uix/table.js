@@ -1530,6 +1530,17 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			return this.uit.getRow();
 		}
 
+        this.listData = function() {
+            var rows = this.list(),
+                data = [];
+
+            for(var i = 0; i < rows.length; i++) {
+                data.push(rows[i].data);
+            }
+
+            return data;
+        }
+
 		this.listAll = function() {
 			return this.uit.getRowAll();
 		}

@@ -29,7 +29,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var UI = function() {
 		var $modal = null, $clone = null;
-		var uiId = null, uiObj = null, uiTarget = null;
+		var uiObj = null, uiTarget = null;
 		var x = 0, y = 0, z_index = 5000;
 		
 		
@@ -52,27 +52,30 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		function getModalInfo(self) {
-			var x = "auto", y = "auto", w = 0, h = 0;
-			
-			var target = self.options.target, 
+			var target = self.options.target,
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
 				tPos = (target == "body") ? null : "relative",
                 sLeft = $(target).scrollLeft();
 			
-			x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft();
-			y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
+			var x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft(),
+				y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
 
-            w = (sLeft > 0) ? $(target).outerWidth() + sLeft : "100%";
-			h = $(target).outerHeight();
-			h = (h > 0) ? h : $(hTarget).outerHeight();
-			
+			var w = (sLeft > 0) ? $(target).outerWidth() + sLeft : "100%",
+				h = $(target).outerHeight();
+
 			// inner modal일 경우
 			if(tPos != null) {
 				var sh = $(hTarget)[0].scrollHeight;
 				
 				h = (sh > h) ? sh : h;
 				y = y + $(hTarget).scrollTop();
+
+			// global modal일 경우
+			} else {
+				var sh = $(window).outerHeight();
+
+				h = (h > sh) ? h : sh;
 			}
 			
 			return {
@@ -120,17 +123,26 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
-			this.type = "hide"; // 기본 타입 설정
+
+			// 대상의 기본 상태는 숨기기
+			if(!this.options.clone) {
+				$(this.root).hide();
+			}
+
+			// 타입 프로퍼티 설정
+			this.type = "hide";
 		}
 		
 		this.hide = function() {
+			var opts = this.options;
+
 			// 모달 대상 객체가 숨겨진 상태가 아닐 경우..
-			if(uiObj.display != "none") {
+			if(opts.clone) {
 				$clone.remove();
 				$clone = null;
 			}
 			
-			$(this.options.target).css("position", uiTarget.position);
+			$(opts.target).css("position", uiTarget.position);
 			$(this.root).css(uiObj);
 			
 			if($modal) {
@@ -142,10 +154,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		this.show = function() {
-			var info = getModalInfo(this);
-			
+			var opts = this.options,
+				info = getModalInfo(this);
+
 			// 모달 대상 객체가 숨겨진 상태가 아닐 경우..
-			if(uiObj.display != "none") {
+			if(opts.clone) {
 				$clone = $(this.root).clone();
 				$clone.insertAfter($(this.root));
 			}
@@ -153,9 +166,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
             // 위치 재조정
             this.resize();
 
-			$(this.options.target).css("position", info.tPos);
+			$(opts.target).css("position", info.tPos);
 			$(this.root).show();
-			
+
 			createModal(this, info.w, info.h);
 			this.type = "show";
 		}
@@ -182,6 +195,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			opacity: 0.4,
 			target: "body",
 			index: 0,
+			clone: false,
 			autoHide: true // 자신을 클릭했을 경우, hide
         }
     }
