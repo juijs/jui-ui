@@ -10,7 +10,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             };
 
             var split = this.brush.split,
-                symbol = this.brush.symbol
+                symbol = this.brush.symbol;
 
             var x = pos.x,
                 y = pos.y,
@@ -26,9 +26,14 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
             for (var i = 0; i < x.length - 1; i++) {
                 if(i == split) {
+                    var color = this.chart.theme("lineSplitBorderColor"),
+                        opacity = this.chart.theme("lineSplitBorderOpacity");
+
                     g.append(p);
 
-                    opts["stroke"] = this.chart.theme("lineSplitBackgroundColor");
+                    opts["stroke"] = (color != null) ? color : this.chart.color(index, this.brush);
+                    opts["stroke-opacity"] = opacity;
+
                     p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
                 }
 

@@ -11087,7 +11087,8 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineSplitBackgroundColor : "#929292",
+        lineSplitBorderColor : null,
+        lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
@@ -11191,7 +11192,8 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
+        lineSplitBorderColor : null,
+        lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
@@ -11293,7 +11295,8 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineSplitBackgroundColor : "#ebebeb",
+        lineSplitBorderColor : null,
+        lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "none",
@@ -11391,7 +11394,8 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
-		lineSplitBackgroundColor : "#ebebeb",
+		lineSplitBorderColor : null,
+		lineSplitBorderOpacity : 0.5,
 		pathOpacity : 0.5,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
@@ -15323,7 +15327,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             };
 
             var split = this.brush.split,
-                symbol = this.brush.symbol
+                symbol = this.brush.symbol;
 
             var x = pos.x,
                 y = pos.y,
@@ -15339,9 +15343,14 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
             for (var i = 0; i < x.length - 1; i++) {
                 if(i == split) {
+                    var color = this.chart.theme("lineSplitBorderColor"),
+                        opacity = this.chart.theme("lineSplitBorderOpacity");
+
                     g.append(p);
 
-                    opts["stroke"] = this.chart.theme("lineSplitBackgroundColor");
+                    opts["stroke"] = (color != null) ? color : this.chart.color(index, this.brush);
+                    opts["stroke-opacity"] = opacity;
+
                     p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
                 }
 
