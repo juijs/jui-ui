@@ -48,6 +48,7 @@ jui.define("chart.theme.jennifer", [], function() {
         columnBorderColor : "none",
         columnBorderWidth : 0,
         columnBorderOpacity : 0,
+        columnActiveBackgroundColor : "#06d9b6",
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",

@@ -4,6 +4,23 @@ jui.define("chart.brush.column", [], function() {
 		var g, zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
+		var columns = [];
+
+		function setActiveEvent(elem) {
+			if(brush.activeEvent == null) return;
+
+			elem.on(brush.activeEvent, function(e) {
+				for(var i = 0; i < columns.length; i++) {
+					columns[i].element.attr({ fill: columns[i].color });
+				}
+
+				g.each(function(i, child) {
+					if(e.toElement == child.element) {
+						child.attr({ fill: chart.theme("columnActiveBackgroundColor") });
+					}
+				});
+			});
+		}
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
@@ -34,27 +51,33 @@ jui.define("chart.brush.column", [], function() {
 					if (startY <= zeroY) {
 						r = chart.svg.rect({
 							x : startX,
-							y : startY,
-							width : columnWidth,
-							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush),
-							stroke : borderColor,
-							"stroke-width" : borderWidth,
-							"stroke-opacity" : borderOpacity
+							y : startY
 						});
 					} else {
 						r = chart.svg.rect({
 							x : startX,
-							y : zeroY,
-							width : columnWidth,
-							height : Math.abs(zeroY - startY),
-							fill : chart.color(j, brush),
-							stroke : borderColor,
-							"stroke-width" : borderWidth,
-							"stroke-opacity" : borderOpacity
+							y : zeroY
 						});
 					}
 
+					r.attr({
+						width : columnWidth,
+						height : Math.abs(zeroY - startY),
+						fill : chart.color(j, brush),
+						stroke : borderColor,
+						"stroke-width" : borderWidth,
+						"stroke-opacity" : borderOpacity,
+						"cursor" : (brush.activeEvent != null) ? "pointer" : "normal"
+					})
+
+					// 컬럼 상태 설정
+					columns.push({
+						element: r,
+						color: chart.color(j, brush)
+					});
+
+					// 컬럼 관련 이벤트 설정
+					setActiveEvent(r);
                     this.addEvent(r, j, i);
                     g.append(r);
 
@@ -68,7 +91,9 @@ jui.define("chart.brush.column", [], function() {
         this.drawSetup = function() {
             return {
                 outerPadding: 2,
-                innerPadding: 1
+                innerPadding: 1,
+				activeEvent: null, // or click, mouseover, ...
+				activeTooltip: false
             }
         }
 	}

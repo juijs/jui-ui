@@ -624,21 +624,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if (arguments.length == 0) {
                 return _theme;
             } else if (arguments.length == 1) {
-                if (_theme[key]) {
-                    if (key.indexOf("Color") > -1 && _theme[key]) {
-                        return getColor(this, _theme[key]);
-                    } else {
-                        return _theme[key];
-                    }
-                }
-            } else if (arguments.length == 3) {
-                var val = (key) ? value : value2;
-                if (val.indexOf("Color") > -1 && _theme[val]) {
-                    return getColor(this, _theme[val]);
-                } else {
-                    return _theme[val];
+                if (key.indexOf("Color") > -1) {
+                    return getColor(this, _theme[key]);
                 }
 
+                return _theme[key];
+            } else if (arguments.length == 3) {
+                var val = (key) ? value : value2;
+
+                if (val.indexOf("Color") > -1) {
+                    return getColor(this, _theme[val]);
+                }
+
+                return _theme[val];
             }
         }
 
