@@ -11,7 +11,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			resize = {},
 			info = {},
 			ui_modal = null;
-		
+
 		
 		/**
 		 * Private Methods
@@ -34,8 +34,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			var $win_root = $(this.root),
 				$win_head = $(this.root).children(".head"),
 				$win_body = $(this.root).children(".body"),
-				$win_foot = $(this.root).children(".foot"),
-				$body = $("body");
+				$win_foot = $(this.root).children(".foot");
 				
 			// 옵션 예외 처리
 			if(opts.modal) {
@@ -47,8 +46,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			info = { $root: $win_root, $head: $win_head, $body: $win_body, $foot: $win_foot };
 			
 			// 기본 스타일 & Modal 스타일 & Body로 강제 이동
-			$body.children(this.selector).remove();
-			$win_root.css($.extend({ position: "absolute" }, opts)).appendTo($body);
+			$win_root.css($.extend({ position: "absolute" }, opts)).appendTo($("body"));
 			
 			// 윈도우 이동
 			if(opts.move) {
@@ -126,14 +124,14 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			
 			// 바디 리사이징
 			setBodyResize();
-			
+
 			// Init
 			setTimeout(function() {
 				$win_root.hide();
 				
 				if(opts.modal) {
 					var modalOpts = (opts.modalIndex > 0) ? { index: opts.modalIndex } : {};
-					ui_modal = modal(self.selector, $.extend({ autoHide: false }, modalOpts));
+					ui_modal = modal(self.root, $.extend({ autoHide: false }, modalOpts));
 				}
 			}, 10);
 		}

@@ -6917,7 +6917,8 @@ jui.define("chart.brush.column", [], function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1,
-				activeEvent: null // or click, mouseover, ...
+				activeEvent: null, // or click, mouseover, ...
+				activeTooltip: false
             }
         }
 	}
