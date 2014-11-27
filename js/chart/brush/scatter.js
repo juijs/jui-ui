@@ -1,8 +1,7 @@
 jui.define("chart.brush.scatter", [], function() {
 
-	var ScatterBrush = function() {
-
-        this.createScatter = function(pos, index) {
+    var ScatterBrush = function() {
+        this.createScatter = function(pos, index, group) {
             var self = this;
 
             var elem = null,
@@ -54,24 +53,35 @@ jui.define("chart.brush.scatter", [], function() {
                     stroke: borderColor,
                     "stroke-width": borderWidth
                 })
-                .hover(function () {
-                    elem.attr({
-                        fill: self.chart.theme("scatterHoverColor"),
-                        stroke: color,
-                        "stroke-width": borderWidth * 2
+                    .hover(function () {
+                        elem.attr({
+                            fill: self.chart.theme("scatterHoverColor"),
+                            stroke: color,
+                            "stroke-width": borderWidth * 2
+                        });
+                    }, function () {
+                        elem.attr({
+                            fill: color,
+                            stroke: borderColor,
+                            "stroke-width": borderWidth
+                        });
                     });
-                }, function () {
-                    elem.attr({
-                        fill: color,
-                        stroke: borderColor,
-                        "stroke-width": borderWidth
-                    });
-                });
             }
 
-            // display 옵션이 max 또는 min일 때, 나머지 엘리먼트는 숨기기
+
+            // 최소/최대 값인 스카터만 보이기
             if(display == "max" && !pos.max || display == "min" && !pos.min) {
                 elem.attr({ visibility: "hidden" });
+            }
+
+            // 최소/최대 값인 스카터의 값만 보이기
+            if(display == "max" && pos.max || display == "min" && pos.min) {
+                group.append(this.chart.text({
+                    x : pos.x,
+                    y : pos.y - 7,
+                    "text-anchor" : "middle",
+                    "font-weight" : 600
+                }, this.chart.format(pos.value)));
             }
 
             return elem;
@@ -86,10 +96,11 @@ jui.define("chart.brush.scatter", [], function() {
                         x: points[i].x[j],
                         y: points[i].y[j],
                         max: points[i].max[j],
-                        min: points[i].min[j]
-                    }, i);
-                    this.addEvent(p, i, j);
+                        min: points[i].min[j],
+                        value: points[i].value[j]
+                    }, i, g);
 
+                    this.addEvent(p, i, j);
                     g.append(p);
                 }
             }
@@ -105,10 +116,10 @@ jui.define("chart.brush.scatter", [], function() {
             return {
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7,
-                display: null // max, min
+                display: null // or max, min
             }
         }
-	}
+    }
 
-	return ScatterBrush;
+    return ScatterBrush;
 }, "chart.brush.core");
