@@ -45,6 +45,7 @@ jui.define("chart.theme.dark", [], function() {
         columnBorderColor : "none",
         columnBorderWidth : 0,
         columnBorderOpacity : 0,
+        columnActiveBackgroundColor : "#06d9b6",
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",

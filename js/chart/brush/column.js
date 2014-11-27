@@ -1,12 +1,13 @@
 jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
-		var g, zeroY, count, width, columnWidth, half_width;
+		var g, tooltip;
+		var zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
 		var columns = [];
 
-		function setActiveEvent(elem) {
+		function setActiveEvent(elem, x, y, value) {
 			if(brush.activeEvent == null) return;
 
 			elem.on(brush.activeEvent, function(e) {
@@ -17,6 +18,14 @@ jui.define("chart.brush.column", [], function() {
 				g.each(function(i, child) {
 					if(e.toElement == child.element) {
 						child.attr({ fill: chart.theme("columnActiveBackgroundColor") });
+
+						tooltip.attr({
+							x: x,
+							y: y,
+							visibility: "visible"
+						});
+
+						tooltip.element.textContent = chart.format(value);
 					}
 				});
 			});
@@ -24,6 +33,11 @@ jui.define("chart.brush.column", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			tooltip = chart.text({
+				"text-anchor" : "middle",
+				"font-weight" : 600,
+				"visibility" : "hidden"
+			});
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
@@ -38,6 +52,8 @@ jui.define("chart.brush.column", [], function() {
 			borderColor = chart.theme("columnBorderColor");
 			borderWidth = chart.theme("columnBorderWidth");
 			borderOpacity = chart.theme("columnBorderOpacity");
+
+			g.append(tooltip);
 		}
 
 		this.draw = function() {
@@ -45,19 +61,27 @@ jui.define("chart.brush.column", [], function() {
 				var startX = brush.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startY = brush.y(chart.data(i)[brush.target[j]]),
+					var value = chart.data(i)[brush.target[j]],
+						startY = brush.y(value),
                         r = null;
+
+					var tooltipX = startX + (columnWidth / 2),
+						tooltipY = startY;
 
 					if (startY <= zeroY) {
 						r = chart.svg.rect({
 							x : startX,
 							y : startY
 						});
+
+						tooltipY -= 5;
 					} else {
 						r = chart.svg.rect({
 							x : startX,
 							y : zeroY
 						});
+
+						tooltipY += 10;
 					}
 
 					r.attr({
@@ -77,7 +101,9 @@ jui.define("chart.brush.column", [], function() {
 					});
 
 					// 컬럼 관련 이벤트 설정
-					setActiveEvent(r);
+					setActiveEvent(r, tooltipX, tooltipY, value);
+
+					// 브러쉬 이벤트 및 그룹 추가
                     this.addEvent(r, j, i);
                     g.append(r);
 
