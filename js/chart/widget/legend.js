@@ -20,7 +20,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 }
             }
 
-            chart.updateBrush(brush.index, { target: target }, true);
+            chart.updateBrush(brush.index, { target: target });
         }
 
         /**

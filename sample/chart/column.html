@@ -13,7 +13,7 @@
 <script>
     jui.ready([ "chart.builder" ], function(chart) {
 
-        chart("#chart", {
+        c = chart("#chart", {
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -49,8 +49,7 @@
             widget : {
                 type : "tooltip",
                 position : "right",
-                brush : 0,
-                render : true
+                brush : 0
             }
         });
 	})

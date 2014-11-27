@@ -9982,11 +9982,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
      *
      */
     var UI = function() {
-        var _initialize = false;
         var _data = [], _page = 1, _start = 0, _end = 0;
         var _grid = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _theme;
-        var _widget_objects = [];
 
 
         /**
@@ -10190,27 +10188,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리
                     if (type == "widget") {
-                        _widget_objects[i] = new Obj(self, draws[i]);
-                        var elem = _widget_objects[i].render();
+                        var draw = new Obj(self, draws[i]),
+                            elem = draw.render();
 
-                        self.svg.autoRender(elem, _widget_objects[i].isRender());
+                        if(!draw.isRender()) {
+                            self.svg.autoRender(elem, false);
+                        }
                     } else {
                         new Obj(self, draws[i]).render();
                     }
                 }
-            }
-        }
-
-        /**
-         * autoRender가 false일 경우, 위젯의 그리드 프로퍼티 갱신
-         *
-         * @param self
-         */
-        function setGridAxisWidget() {
-            var draws = _widget_objects;
-
-            for (var i = 0; i < draws.length; i++) {
-                setGridAxis(draws[i].widget);
             }
         }
 
@@ -10245,10 +10232,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param drawObj
          */
         function setGridAxis(draw) {
-            //delete draw.x;
-            //delete draw.y;
-            //delete draw.c;
-
             if (_scales.x || _scales.x1) {
                 if (!_scales.x && _scales.x1) {
                     _scales.x = _scales.x1;
@@ -10430,8 +10413,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function getBrushOption(brush) {
             if(brush == null) return;
 
-            var result = null,
-                series_list = [];
+            var result = null;
 
             if (_.typeCheck("string", brush)) {
                 result = [{
@@ -10490,9 +10472,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             // 차트 배경 이벤트
             setChartEvent(this);
-
-            // 차트 초기화 설정
-            _initialize = true;
         }
 
         /**
@@ -10744,11 +10723,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * chart render 함수 재정의
          *
          */
-        this.render = function(isAll) {
-            var isAll = (isAll === true || _initialize === false) ? true : false;
-
+        this.render = function() {
             // SVG 메인 리셋
-            this.svg.reset(isAll);
+            this.svg.reset();
 
             // chart 영역 계산
             calculate(this);
@@ -10758,13 +10735,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             drawDefs(this);
             drawGrid(this);
             drawBrush(this, "brush");
-
-            // 위젯은 한번만 draw
-            if (isAll) {
-                drawBrush(this, "widget");
-            } else {
-                setGridAxisWidget();
-            }
+            drawBrush(this, "widget");
 
             // SVG 태그 백그라운드 테마 설정
             this.svg.root.css({
@@ -10772,7 +10743,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // SVG 메인/서브 렌더링
-            this.svg.render(isAll);
+            this.svg.render();
             this.emit("render");
         }
 
@@ -10900,9 +10871,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isNotAll
          */
-        this.addBrush = function(brush, isNotAll) {
+        this.addBrush = function(brush) {
             this.options.brush.push(brush);
-            this.render(isNotAll ? false : true);
+            this.render();
         }
 
         /**
@@ -10911,9 +10882,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param index
          * @param isNotAll
          */
-        this.removeBrush = function(index, isNotAll) {
+        this.removeBrush = function(index) {
             this.options.brush.splice(index, 1);
-            this.render(isNotAll ? false : true);
+            this.render();
         }
 
         /**
@@ -10923,12 +10894,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isNotAll
          */
-        this.updateBrush = function(index, brush, isNotAll) {
+        this.updateBrush = function(index, brush) {
             for(var key in  brush) {
                 this.options.brush[index][key] = brush[key];
             }
 
-            this.render(isNotAll ? false : true);
+            this.render();
         }
 
         /**
@@ -11763,17 +11734,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			return {
-				// base
-				type: "black",
-				target: null,
-				x: null,
-				y: null,
-				x1: null,
-				y1: null,
-				c: null,
-				dist: null,
-
-				// core
 				domain: null,
 				step: 10,
 				min: 0,
@@ -15848,7 +15808,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 }
             }
 
-            chart.updateBrush(brush.index, { target: target }, true);
+            chart.updateBrush(brush.index, { target: target });
         }
 
         /**

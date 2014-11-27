@@ -330,17 +330,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			return {
-				// base
-				type: "black",
-				target: null,
-				x: null,
-				y: null,
-				x1: null,
-				y1: null,
-				c: null,
-				dist: null,
-
-				// core
 				domain: null,
 				step: 10,
 				min: 0,
