@@ -437,12 +437,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function getColor(self, color) {
-            if (_.typeCheck("object", color)) {
+            if(_.typeCheck("undefined", color)) {
+                return "none";
+            }
+
+            if(_.typeCheck("object", color)) {
                 return createGradient(self, color);
             }
 
             var parsedColor = ColorUtil.parse(color);
-            if (parsedColor == color)
+            if(parsedColor == color)
                 return color;
 
             return createGradient(self, parsedColor, color);
