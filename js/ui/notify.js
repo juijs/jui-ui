@@ -6,7 +6,8 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
      *
      */
     var UI = function() {
-    	var $container = null;
+    	var $container = null,
+            paddingPos = null;
     	
         /**
          * Public Methods
@@ -14,25 +15,25 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
          */
 
         this.init = function() {
-            var self = this,
-            	opts = this.options;
+            var opts = this.options;
             
-            var padding = (typeof(opts.padding) == "object") ? DEF_PADDING : opts.padding,
-        		paddingObj = {
-	    			"top":    		{ top: padding, bottom: null, left: padding, right: padding },
-	    			"top-right":    { top: padding, bottom: null, left: null, right: padding },
-	    			"top-left":     { top: padding, bottom: null, left: padding, right: null },
-	    			"bottom":  		{ top: null, bottom: padding, left: padding, right: padding },
-	    			"bottom-right": { top: null, bottom: padding, left: null, right: padding },
-	    			"bottom-left":  { top: null, bottom: padding, left: padding, right: padding }
-	        	},
-	        	paddingPos = paddingObj[opts.position];
+            var padding = (typeof(opts.padding) == "object") ? DEF_PADDING : opts.padding;
+        	var paddingObj = {
+                "top":    		{ top: padding, bottom: null, left: padding, right: padding },
+                "top-right":    { top: padding, bottom: null, left: null, right: padding },
+                "top-left":     { top: padding, bottom: null, left: padding, right: null },
+                "bottom":  		{ top: null, bottom: padding, left: padding, right: padding },
+                "bottom-right": { top: null, bottom: padding, left: null, right: padding },
+                "bottom-left":  { top: null, bottom: padding, left: padding, right: padding }
+            };
+
+            paddingPos = paddingObj[opts.position];
             
             // 패딩 값이 수치가 아니라 객체일 경우
             if(typeof(opts.padding) == "object") {
             	paddingPos = $.extend(paddingPos, opts.padding);
             }
-            
+
             // 알림 메시지 대상 스타일 설정
             if(this.selector != "body") {
             	$(this.selector).css("position", "relative");
@@ -52,10 +53,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
         this.add = function(data, timeout) {
             var self = this, 
             	opts = this.options,
-            	delay = (!isNaN(timeout)) ? timeout : opts.timeout;
-            	
+            	delay = (!isNaN(timeout)) ? timeout : opts.timeout,
+                scrollTop = $(this.root).scrollTop();
+
             var $alarm = $(this.tpl.item(data)).css({ "margin-bottom": opts.distance });
-            
+
             // 포지션 예외 처리
             if(opts.position == "top" || opts.position == "bottom") {
             	$alarm.outerWidth(
@@ -65,8 +67,10 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
             // 추가
             if(isTop()) {
+                $container.css("top", scrollTop + paddingPos.top);
             	$container.prepend($alarm);
             } else {
+                $container.css("bottom", -(scrollTop - paddingPos.bottom));
             	$container.append($alarm);
             }
 
