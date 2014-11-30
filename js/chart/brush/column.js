@@ -7,7 +7,7 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEvent(elem, x, y, value, isTop) {
+		function setActiveEvent(self, elem, x, y, value, isTop) {
 			if(brush.active == null) return;
 
 			elem.on(brush.active, function(e) {
@@ -18,34 +18,10 @@ jui.define("chart.brush.column", [], function() {
 				g.each(function(i, child) {
 					if(e.target == child.element) {
 						child.attr({ fill: tooltipColor });
-						showTooltip(activeTooltip, x, y, value, isTop);
+						self.showTooltip(activeTooltip, x, y, value, isTop);
 					}
 				});
 			});
-		}
-
-		function createTooltip(fill) {
-			return chart.svg.group({ "visibility" : "hidden" }, function() {
-				chart.text({
-					"text-anchor" : "middle",
-					"font-weight" : 600
-				});
-
-				chart.svg.circle({
-					r: 5,
-					fill: fill,
-					stroke: circleColor,
-					"stroke-width": 1
-				});
-			});
-		}
-
-		function showTooltip(tooltip, x, y, value, isTop) {
-			var text = tooltip.get(0);
-			tooltip.attr({ visibility: "visible" }).translate(x, y);
-
-			text.element.textContent = chart.format(value);
-			text.attr({ y: (isTop) ? -7 : 16 });
 		}
 
 		this.drawBefore = function() {
@@ -117,7 +93,7 @@ jui.define("chart.brush.column", [], function() {
 					});
 
 					// 컬럼 관련 이벤트 설정
-					setActiveEvent(r, tooltipX, tooltipY, value, isTop);
+					setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
 
 					// 브러쉬 이벤트 및 그룹 추가
                     this.addEvent(r, j, i);
@@ -127,15 +103,15 @@ jui.define("chart.brush.column", [], function() {
 
 					// Max & Min 툴팁 추가
 					if(display == "max" && points[j].max[i] || display == "min" && points[j].min[i]) {
-						var tooltip = createTooltip(chart.color(j, brush));
+						var tooltip = this.createTooltip(chart.color(j, brush), circleColor);
 
-						showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
+						this.showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
 						g.append(tooltip);
 					}
 				}
 			}
 
-			activeTooltip = createTooltip(tooltipColor);
+			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 			g.append(activeTooltip);
 
             return g;

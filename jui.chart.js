@@ -4632,6 +4632,7 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.5,
@@ -4739,6 +4740,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.5,
@@ -4844,6 +4846,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
         pathOpacity : 0.2,
@@ -4945,6 +4948,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
+		lineCircleBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
 		pathOpacity : 0.5,
@@ -6516,6 +6520,32 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 self.chart.emit("mouseup", [ obj, e ]);
             });
         }
+
+        this.createTooltip = function(fill, stroke) {
+            var chart = this.chart;
+
+            return this.chart.svg.group({ "visibility" : "hidden" }, function() {
+                chart.text({
+                    "text-anchor" : "middle",
+                    "font-weight" : 600
+                });
+
+                chart.svg.circle({
+                    r: 5,
+                    fill: fill,
+                    stroke: stroke,
+                    "stroke-width": 1
+                });
+            });
+        }
+
+        this.showTooltip = function(tooltip, x, y, value, isTop) {
+            var text = tooltip.get(0);
+            tooltip.attr({ visibility: "visible" }).translate(x, y);
+
+            text.element.textContent = this.chart.format(value);
+            text.attr({ y: (isTop) ? -7 : 16 });
+        }
 	}
 
 	return CoreBrush;
@@ -6843,7 +6873,7 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEvent(elem, x, y, value, isTop) {
+		function setActiveEvent(self, elem, x, y, value, isTop) {
 			if(brush.active == null) return;
 
 			elem.on(brush.active, function(e) {
@@ -6854,34 +6884,10 @@ jui.define("chart.brush.column", [], function() {
 				g.each(function(i, child) {
 					if(e.target == child.element) {
 						child.attr({ fill: tooltipColor });
-						showTooltip(activeTooltip, x, y, value, isTop);
+						self.showTooltip(activeTooltip, x, y, value, isTop);
 					}
 				});
 			});
-		}
-
-		function createTooltip(fill) {
-			return chart.svg.group({ "visibility" : "hidden" }, function() {
-				chart.text({
-					"text-anchor" : "middle",
-					"font-weight" : 600
-				});
-
-				chart.svg.circle({
-					r: 5,
-					fill: fill,
-					stroke: circleColor,
-					"stroke-width": 1
-				});
-			});
-		}
-
-		function showTooltip(tooltip, x, y, value, isTop) {
-			var text = tooltip.get(0);
-			tooltip.attr({ visibility: "visible" }).translate(x, y);
-
-			text.element.textContent = chart.format(value);
-			text.attr({ y: (isTop) ? -7 : 16 });
 		}
 
 		this.drawBefore = function() {
@@ -6953,7 +6959,7 @@ jui.define("chart.brush.column", [], function() {
 					});
 
 					// 컬럼 관련 이벤트 설정
-					setActiveEvent(r, tooltipX, tooltipY, value, isTop);
+					setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
 
 					// 브러쉬 이벤트 및 그룹 추가
                     this.addEvent(r, j, i);
@@ -6963,15 +6969,15 @@ jui.define("chart.brush.column", [], function() {
 
 					// Max & Min 툴팁 추가
 					if(display == "max" && points[j].max[i] || display == "min" && points[j].min[i]) {
-						var tooltip = createTooltip(chart.color(j, brush));
+						var tooltip = this.createTooltip(chart.color(j, brush), circleColor);
 
-						showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
+						this.showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
 						g.append(tooltip);
 					}
 				}
 			}
 
-			activeTooltip = createTooltip(tooltipColor);
+			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 			g.append(activeTooltip);
 
             return g;
@@ -7334,6 +7340,21 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
+        this.drawTooltip = function(g, pos, index) {
+            var display = this.brush.display,
+                circleColor = this.chart.theme("lineCircleBorderColor");
+
+            for (var i = 0; i < pos.x.length; i++) {
+                if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
+                    var tooltip = this.createTooltip(this.chart.color(index, this.brush), circleColor),
+                        isTop = (display == "max" && pos.max[i]) ? true : false;
+
+                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], isTop);
+                    g.append(tooltip);
+                }
+            }
+        }
+
         this.drawLine = function(path) {
             var g = this.chart.svg.group();
 
@@ -7342,6 +7363,11 @@ jui.define("chart.brush.line", [], function() {
 
                 this.addEvent(p, k, null);
                 g.append(p);
+
+                // Max & Min 툴팁 추가
+                if(this.brush.display != null) {
+                    this.drawTooltip(g, path[k], k);
+                }
             }
 
             return g;
@@ -7353,7 +7379,8 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawSetup = function() {
             return {
-                symbol: "normal" // normal, curve, step
+                symbol: "normal", // normal, curve, step
+                display: null
             }
         }
 	}
@@ -7502,11 +7529,10 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 jui.define("chart.brush.scatter", [], function() {
 
     var ScatterBrush = function() {
-        this.createScatter = function(pos, index, group) {
+        this.createScatter = function(pos, index) {
             var self = this;
 
             var elem = null,
-                display = this.brush.display,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
@@ -7569,22 +7595,6 @@ jui.define("chart.brush.scatter", [], function() {
                     });
             }
 
-
-            // 최소/최대 값인 스카터만 보이기
-            if(display == "max" && !pos.max || display == "min" && !pos.min) {
-                elem.attr({ visibility: "hidden" });
-            }
-
-            // 최소/최대 값인 스카터의 값만 보이기
-            if(display == "max" && pos.max || display == "min" && pos.min) {
-                group.append(this.chart.text({
-                    x : pos.x,
-                    y : pos.y - 7,
-                    "text-anchor" : "middle",
-                    "font-weight" : 600
-                }, this.chart.format(pos.value)));
-            }
-
             return elem;
         }
 
@@ -7599,7 +7609,7 @@ jui.define("chart.brush.scatter", [], function() {
                         max: points[i].max[j],
                         min: points[i].min[j],
                         value: points[i].value[j]
-                    }, i, g);
+                    }, i);
 
                     this.addEvent(p, i, j);
                     g.append(p);
@@ -7616,8 +7626,7 @@ jui.define("chart.brush.scatter", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "circle", // or triangle, rectangle, cross
-                size: 7,
-                display: null // or max, min
+                size: 7
             }
         }
     }

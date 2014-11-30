@@ -35,6 +35,21 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
+        this.drawTooltip = function(g, pos, index) {
+            var display = this.brush.display,
+                circleColor = this.chart.theme("lineCircleBorderColor");
+
+            for (var i = 0; i < pos.x.length; i++) {
+                if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
+                    var tooltip = this.createTooltip(this.chart.color(index, this.brush), circleColor),
+                        isTop = (display == "max" && pos.max[i]) ? true : false;
+
+                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], isTop);
+                    g.append(tooltip);
+                }
+            }
+        }
+
         this.drawLine = function(path) {
             var g = this.chart.svg.group();
 
@@ -43,6 +58,11 @@ jui.define("chart.brush.line", [], function() {
 
                 this.addEvent(p, k, null);
                 g.append(p);
+
+                // Max & Min 툴팁 추가
+                if(this.brush.display != null) {
+                    this.drawTooltip(g, path[k], k);
+                }
             }
 
             return g;
@@ -54,7 +74,8 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawSetup = function() {
             return {
-                symbol: "normal" // normal, curve, step
+                symbol: "normal", // normal, curve, step
+                display: null
             }
         }
 	}

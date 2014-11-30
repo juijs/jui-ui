@@ -227,6 +227,32 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 self.chart.emit("mouseup", [ obj, e ]);
             });
         }
+
+        this.createTooltip = function(fill, stroke) {
+            var chart = this.chart;
+
+            return this.chart.svg.group({ "visibility" : "hidden" }, function() {
+                chart.text({
+                    "text-anchor" : "middle",
+                    "font-weight" : 600
+                });
+
+                chart.svg.circle({
+                    r: 5,
+                    fill: fill,
+                    stroke: stroke,
+                    "stroke-width": 1
+                });
+            });
+        }
+
+        this.showTooltip = function(tooltip, x, y, value, isTop) {
+            var text = tooltip.get(0);
+            tooltip.attr({ visibility: "visible" }).translate(x, y);
+
+            text.element.textContent = this.chart.format(value);
+            text.attr({ y: (isTop) ? -7 : 16 });
+        }
 	}
 
 	return CoreBrush;

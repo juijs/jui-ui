@@ -1,11 +1,10 @@
 jui.define("chart.brush.scatter", [], function() {
 
     var ScatterBrush = function() {
-        this.createScatter = function(pos, index, group) {
+        this.createScatter = function(pos, index) {
             var self = this;
 
             var elem = null,
-                display = this.brush.display,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
@@ -68,22 +67,6 @@ jui.define("chart.brush.scatter", [], function() {
                     });
             }
 
-
-            // 최소/최대 값인 스카터만 보이기
-            if(display == "max" && !pos.max || display == "min" && !pos.min) {
-                elem.attr({ visibility: "hidden" });
-            }
-
-            // 최소/최대 값인 스카터의 값만 보이기
-            if(display == "max" && pos.max || display == "min" && pos.min) {
-                group.append(this.chart.text({
-                    x : pos.x,
-                    y : pos.y - 7,
-                    "text-anchor" : "middle",
-                    "font-weight" : 600
-                }, this.chart.format(pos.value)));
-            }
-
             return elem;
         }
 
@@ -98,7 +81,7 @@ jui.define("chart.brush.scatter", [], function() {
                         max: points[i].max[j],
                         min: points[i].min[j],
                         value: points[i].value[j]
-                    }, i, g);
+                    }, i);
 
                     this.addEvent(p, i, j);
                     g.append(p);
@@ -115,8 +98,7 @@ jui.define("chart.brush.scatter", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "circle", // or triangle, rectangle, cross
-                size: 7,
-                display: null // or max, min
+                size: 7
             }
         }
     }
