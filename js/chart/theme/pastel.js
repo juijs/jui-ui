@@ -98,6 +98,8 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonOpacity : 0.7
+		crossBalloonOpacity : 0.7,
+		pinBorderColor : "#FF7800",
+		pinBorderWidth : 0.7
 	}
 }); 

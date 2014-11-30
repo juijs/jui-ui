@@ -15,7 +15,7 @@
         chart("#chart", {
             width: 400,
             height : 400,
-            theme : "jennifer",
+            theme : "gradient",
             data : [
                 { name : 2, value : 15 },
                 { name : -15, value : 6 },
@@ -47,8 +47,12 @@
                     split: 2,
                     symbol : "normal"
                 }
-            ]
-        }).render();
+            ],
+            widget : {
+                type : "pin",
+                split : 2
+            }
+        });
 	})
 </script>
 

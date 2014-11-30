@@ -4779,7 +4779,9 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.8
+        crossBalloonOpacity : 0.8,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -4886,7 +4888,9 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonOpacity : 1
+        crossBalloonOpacity : 1,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7
     }	
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -4989,7 +4993,9 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonOpacity : 0.7
+		crossBalloonOpacity : 0.7,
+		pinBorderColor : "#FF7800",
+		pinBorderWidth : 0.7
 	}
 }); 
 jui.define("chart.grid.core", [ "util.base" ], function(_) {
@@ -9773,7 +9779,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 jui.define("chart.widget.pin", [ "jquery" ], function($) {
     var PinWidget = function(chart, widget) {
         var g;
-        var w = h = 6;
+        var size = 6;
 
         this.draw = function() {
             if(widget.split == null) return;
@@ -9786,19 +9792,19 @@ jui.define("chart.widget.pin", [ "jquery" ], function($) {
                 self.chart.svg.polygon({
                     fill: color
                 })
-                .point(w, 0)
-                .point(w / 2, h)
+                .point(size, 0)
+                .point(size / 2, size)
                 .point(0, 0);
 
                 self.chart.svg.line({
                     stroke: color,
                     "stroke-width": width,
-                    x1: w / 2,
+                    x1: size / 2,
                     y1: 0,
-                    x2: w / 2,
+                    x2: size / 2,
                     y2: self.chart.height()
                 });
-            }).translate(this.chart.x() + widget.x(widget.split) - (w / 2), this.chart.y());
+            }).translate(this.chart.x() + widget.x(widget.split) - (size / 2), this.chart.y());
 
             return g;
         }

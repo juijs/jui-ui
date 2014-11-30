@@ -104,6 +104,8 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.8
+        crossBalloonOpacity : 0.8,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7
     }
 });
