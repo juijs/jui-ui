@@ -8,7 +8,7 @@ jui.define("chart.brush.line", [], function() {
 
             elem.on(self.brush.active, function(e) {
                 for(var i = 0; i < columns.length; i++) {
-                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineActiveBorderOpacity");
+                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
                     columns[i].element.attr({ opacity: opacity });
                     if(columns[i].tooltip != null) {

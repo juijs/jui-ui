@@ -4632,7 +4632,7 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineActiveBorderOpacity : 0.3,
+        lineDisableBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -4741,7 +4741,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineActiveBorderOpacity : 0.3,
+        lineDisableBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -4848,7 +4848,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineActiveBorderOpacity : 0.3,
+        lineDisableBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -4951,7 +4951,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
-		lineActiveBorderOpacity : 0.3,
+		lineDisableBorderOpacity : 0.3,
 		lineCircleBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
@@ -7317,7 +7317,7 @@ jui.define("chart.brush.line", [], function() {
 
             elem.on(self.brush.active, function(e) {
                 for(var i = 0; i < columns.length; i++) {
-                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineActiveBorderOpacity");
+                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
                     columns[i].element.attr({ opacity: opacity });
                     if(columns[i].tooltip != null) {

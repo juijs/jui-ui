@@ -69,7 +69,7 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
-        lineActiveBorderOpacity : 0.3,
+        lineDisableBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
