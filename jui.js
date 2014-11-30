@@ -11064,6 +11064,7 @@ jui.define("chart.theme.jennifer", [], function() {
         ohlcInvertBorderColor : "red",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineActiveBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -11172,6 +11173,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineActiveBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -11278,6 +11280,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineActiveBorderOpacity : 0.3,
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
@@ -11380,6 +11383,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
+		lineActiveBorderOpacity : 0.3,
 		lineCircleBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
@@ -13969,6 +13973,22 @@ jui.define("chart.brush.fullstack", [], function() {
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
+        var columns = [];
+
+        function setActiveEvent(self, elem) {
+            if(self.brush.active == null) return;
+
+            elem.on(self.brush.active, function(e) {
+                for(var i = 0; i < columns.length; i++) {
+                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineActiveBorderOpacity");
+
+                    columns[i].element.attr({ opacity: opacity });
+                    if(columns[i].tooltip != null) {
+                        columns[i].tooltip.attr({ opacity: opacity });
+                    }
+                }
+            });
+        }
 
         this.createLine = function(pos, index) {
             var x = pos.x,
@@ -13977,7 +13997,8 @@ jui.define("chart.brush.line", [], function() {
             var p = this.chart.svg.path({
                 stroke : this.chart.color(index, this.brush),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
-                fill : "transparent"
+                fill : "transparent",
+                "cursor" : (this.brush.active != null) ? "pointer" : "normal"
             }).MoveTo(x[0], y[0]);
 
             if(this.brush.symbol == "curve") {
@@ -14014,6 +14035,9 @@ jui.define("chart.brush.line", [], function() {
 
                     this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], isTop);
                     g.append(tooltip);
+
+                    // 컬럼 상태 설정 (툴팁)
+                    columns[index].tooltip = tooltip;
                 }
             }
         }
@@ -14026,6 +14050,17 @@ jui.define("chart.brush.line", [], function() {
 
                 this.addEvent(p, k, null);
                 g.append(p);
+
+                // 컬럼 상태 설정
+                columns[k] = {
+                    element: p,
+                    tooltip: null
+                };
+
+                // 액티브 라인 추가
+                if(this.brush.active != null) {
+                    setActiveEvent(this, p);
+                }
 
                 // Max & Min 툴팁 추가
                 if(this.brush.display != null) {
@@ -14043,6 +14078,7 @@ jui.define("chart.brush.line", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "normal", // normal, curve, step
+                active: null, // or click, mouseover, ...
                 display: null
             }
         }
