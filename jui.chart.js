@@ -4152,7 +4152,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if (arguments.length == 0) {
                 return _theme;
             } else if (arguments.length == 1) {
-                if (key.indexOf("Color") > -1) {
+                if (key.indexOf("Color") > -1 && _theme[key] != null) {
                     return getColor(this, _theme[key]);
                 }
 
@@ -4160,7 +4160,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             } else if (arguments.length == 3) {
                 var val = (key) ? value : value2;
 
-                if (val.indexOf("Color") > -1) {
+                if (val.indexOf("Color") > -1 && _theme[val] != null) {
                     return getColor(this, _theme[val]);
                 }
 
@@ -4668,7 +4668,9 @@ jui.define("chart.theme.jennifer", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.5
+        crossBalloonOpacity : 0.5,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -6878,9 +6880,9 @@ jui.define("chart.brush.column", [], function() {
 		var columns = [];
 
 		function setActiveEvent(self, elem, x, y, value, isTop) {
-			if(brush.active == null) return;
+			if(brush.activeEvent == null) return;
 
-			elem.on(brush.active, function(e) {
+			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
 				}
@@ -6953,7 +6955,7 @@ jui.define("chart.brush.column", [], function() {
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity,
-						"cursor" : (brush.active != null) ? "pointer" : "normal"
+						"cursor" : (brush.activeEvent != null) ? "pointer" : "normal"
 					});
 
 					// 컬럼 상태 설정
@@ -6991,7 +6993,7 @@ jui.define("chart.brush.column", [], function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1,
-				active: null, // or click, mouseover, ...
+				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
             }
         }
@@ -7313,9 +7315,9 @@ jui.define("chart.brush.line", [], function() {
         var columns = [];
 
         function setActiveEvent(self, elem) {
-            if(self.brush.active == null) return;
+            if(self.brush.activeEvent == null) return;
 
-            elem.on(self.brush.active, function(e) {
+            elem.on(self.brush.activeEvent, function(e) {
                 for(var i = 0; i < columns.length; i++) {
                     var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
@@ -7335,7 +7337,7 @@ jui.define("chart.brush.line", [], function() {
                 stroke : this.chart.color(index, this.brush),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent",
-                "cursor" : (this.brush.active != null) ? "pointer" : "normal"
+                "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             }).MoveTo(x[0], y[0]);
 
             if(this.brush.symbol == "curve") {
@@ -7395,7 +7397,7 @@ jui.define("chart.brush.line", [], function() {
                 };
 
                 // 액티브 라인 추가
-                if(this.brush.active != null) {
+                if(this.brush.activeEvent != null) {
                     setActiveEvent(this, p);
                 }
 
@@ -7415,8 +7417,8 @@ jui.define("chart.brush.line", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "normal", // normal, curve, step
-                active: null, // or click, mouseover, ...
-                display: null
+                display: null,
+                activeEvent: null // or click, mouseover, ...
             }
         }
 	}
@@ -8681,7 +8683,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
                     g.append(p);
 
-                    opts["stroke"] = (color != null) ? color : this.chart.color(index, this.brush);
+                    opts["stroke"] = (color != null) ? color : opts["stroke"];
                     opts["stroke-opacity"] = opacity;
 
                     p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
@@ -9767,6 +9769,48 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     }
 
     return CrossWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.pin", [ "jquery" ], function($) {
+    var PinWidget = function(chart, widget) {
+        var g;
+        var w = h = 6;
+
+        this.draw = function() {
+            if(widget.split == null) return;
+
+            var self = this,
+                color = this.chart.theme("pinBorderColor"),
+                width = this.chart.theme("pinBorderWidth");
+
+            g = chart.svg.group({}, function() {
+                self.chart.svg.polygon({
+                    fill: color
+                })
+                .point(w, 0)
+                .point(w / 2, h)
+                .point(0, 0);
+
+                self.chart.svg.line({
+                    stroke: color,
+                    "stroke-width": width,
+                    x1: w / 2,
+                    y1: 0,
+                    x2: w / 2,
+                    y2: self.chart.height()
+                });
+            }).translate(this.chart.x() + widget.x(widget.split) - (w / 2), this.chart.y());
+
+            return g;
+        }
+
+        this.drawSetup = function() {
+            return $.extend(this.parent.drawSetup(), {
+                split: null
+            });
+        }
+    }
+
+    return PinWidget;
 }, "chart.widget.core");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 

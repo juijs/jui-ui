@@ -628,7 +628,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if (arguments.length == 0) {
                 return _theme;
             } else if (arguments.length == 1) {
-                if (key.indexOf("Color") > -1) {
+                if (key.indexOf("Color") > -1 && _theme[key] != null) {
                     return getColor(this, _theme[key]);
                 }
 
@@ -636,7 +636,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             } else if (arguments.length == 3) {
                 var val = (key) ? value : value2;
 
-                if (val.indexOf("Color") > -1) {
+                if (val.indexOf("Color") > -1 && _theme[val] != null) {
                     return getColor(this, _theme[val]);
                 }
 

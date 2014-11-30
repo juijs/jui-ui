@@ -116,6 +116,7 @@ module.exports = function(grunt) {
                     "js/chart/widget/scroll.js",
                     "js/chart/widget/zoom.js",
                     "js/chart/widget/cross.js",
+                    "js/chart/widget/pin.js",
 
                     // chart wrapper
                     "js/chartx/realtime.js"
@@ -194,6 +195,7 @@ module.exports = function(grunt) {
                     "js/chart/widget/scroll.js",
                     "js/chart/widget/zoom.js",
                     "js/chart/widget/cross.js",
+                    "js/chart/widget/pin.js",
 
                     // chart wrapper
                     "js/chartx/realtime.js"

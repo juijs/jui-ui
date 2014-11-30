@@ -26,7 +26,8 @@
 
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    line : true
+                    line : true,
+                    full : true
                 },
                 y :
                 {
@@ -54,6 +55,12 @@
                     split: 1,
                     symbol : "curve"
 
+                }
+            ],
+            widget : [
+                {
+                    type : 'pin',
+                    split : 1
                 }
             ]
         }).render();

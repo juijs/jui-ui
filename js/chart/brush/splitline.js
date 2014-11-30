@@ -31,7 +31,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
                     g.append(p);
 
-                    opts["stroke"] = (color != null) ? color : this.chart.color(index, this.brush);
+                    opts["stroke"] = (color != null) ? color : opts["stroke"];
                     opts["stroke-opacity"] = opacity;
 
                     p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);

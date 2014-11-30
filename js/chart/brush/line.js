@@ -4,9 +4,9 @@ jui.define("chart.brush.line", [], function() {
         var columns = [];
 
         function setActiveEvent(self, elem) {
-            if(self.brush.active == null) return;
+            if(self.brush.activeEvent == null) return;
 
-            elem.on(self.brush.active, function(e) {
+            elem.on(self.brush.activeEvent, function(e) {
                 for(var i = 0; i < columns.length; i++) {
                     var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
@@ -26,7 +26,7 @@ jui.define("chart.brush.line", [], function() {
                 stroke : this.chart.color(index, this.brush),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent",
-                "cursor" : (this.brush.active != null) ? "pointer" : "normal"
+                "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             }).MoveTo(x[0], y[0]);
 
             if(this.brush.symbol == "curve") {
@@ -86,7 +86,7 @@ jui.define("chart.brush.line", [], function() {
                 };
 
                 // 액티브 라인 추가
-                if(this.brush.active != null) {
+                if(this.brush.activeEvent != null) {
                     setActiveEvent(this, p);
                 }
 
@@ -106,8 +106,8 @@ jui.define("chart.brush.line", [], function() {
         this.drawSetup = function() {
             return {
                 symbol: "normal", // normal, curve, step
-                active: null, // or click, mouseover, ...
-                display: null
+                display: null,
+                activeEvent: null // or click, mouseover, ...
             }
         }
 	}

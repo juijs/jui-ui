@@ -105,6 +105,8 @@ jui.define("chart.theme.jennifer", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.5
+        crossBalloonOpacity : 0.5,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7
     }
 });

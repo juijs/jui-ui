@@ -8,9 +8,9 @@ jui.define("chart.brush.column", [], function() {
 		var columns = [];
 
 		function setActiveEvent(self, elem, x, y, value, isTop) {
-			if(brush.active == null) return;
+			if(brush.activeEvent == null) return;
 
-			elem.on(brush.active, function(e) {
+			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
 				}
@@ -83,7 +83,7 @@ jui.define("chart.brush.column", [], function() {
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity,
-						"cursor" : (brush.active != null) ? "pointer" : "normal"
+						"cursor" : (brush.activeEvent != null) ? "pointer" : "normal"
 					});
 
 					// 컬럼 상태 설정
@@ -121,7 +121,7 @@ jui.define("chart.brush.column", [], function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1,
-				active: null, // or click, mouseover, ...
+				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
             }
         }
