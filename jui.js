@@ -10453,13 +10453,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             opts.brush = getBrushOption(opts.brush);
             opts.widget = getBrushOption(opts.widget);
 
-            // 차트 테마 설정
-            setThemeStyle(jui.include("chart.theme." + opts.theme));
-
-            // 차트 테마 스타일 설정
-            if (opts.style) {
-                setThemeStyle(opts.style);
-            }
+            // 차트 테마 설정 (+옵션 스타일)
+            setThemeStyle($.extend(jui.include("chart.theme." + opts.theme), opts.style));
 
             // UI 바인딩 설정
             if (opts.bind) {
@@ -10522,11 +10517,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var color;
 
             // 테마 & 브러쉬 옵션 컬러 설정
-            if (_.typeCheck("array", brush.colors)) {
+            if(_.typeCheck("array", brush.colors)) {
                 color = brush.colors[i];
+
+                if(_.typeCheck("integer", color)) {
+                    color = nextColor(color);
+                }
             } else {
-                var c = _theme["colors"];
-                color = (i > c.length - 1) ? c[c.length - 1] : c[i];
+                color = nextColor();
             }
 
             // 시리즈 컬러 설정
@@ -10535,11 +10533,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(series && series.color) {
                     color = series.color;
+
+                    if(_.typeCheck("integer", color)) {
+                        color = nextColor(color);
+                    }
                 }
             }
 
-            if (_hash[color]) {
+            if(_hash[color]) {
                 return "url(#" + _hash[color] + ")";
+            }
+
+            function nextColor(newIndex) {
+                var c = _theme["colors"],
+                    index = newIndex || i;
+
+                return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
             return getColor(this, color);
@@ -10552,7 +10561,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {string|function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
-            var el = this.svg.text(_.extend({
+            var el = this.svg.text($.extend({
                 "font-family": this.theme("fontFamily"),
                 "font-size": this.theme("fontSize"),
                 "fill": this.theme("fontColor")
@@ -10727,9 +10736,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * chart render 함수 재정의
          *
          */
-        this.render = function() {
+        this.render = function(isAll) {
             // SVG 메인 리셋
-            this.svg.reset();
+            this.svg.reset(isAll);
 
             // chart 영역 계산
             calculate(this);
@@ -10747,7 +10756,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // SVG 메인/서브 렌더링
-            this.svg.render();
+            this.svg.render(isAll);
             this.emit("render");
         }
 
@@ -10915,8 +10924,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
-                setThemeStyle(newTheme);
-                this.render();
+                setThemeStyle($.extend(newTheme, this.options.style));
+                this.render(true);
             }
         }
 

@@ -16,7 +16,7 @@
         c = chart("#chart", {
             width: 400,
             height : 400,
-            theme : "jennifer",
+            theme : "dark",
             data : [
                 { name : 2, value : 15 },
                 { name : -15, value : 6 },
@@ -46,13 +46,17 @@
                 x1 : 0,
                 target : ['name', 'value'],
                 activeEvent : "click",
-                display : "max"
+                display : "max",
+                colors : [ 3, 4 ]
             },
-            widget : {
+            widget : [{
                 type : "tooltip",
                 position : "top",
                 brush : 0
-            }
+            }, {
+                type : "title",
+                text : "testetst"
+            }]
         });
 	})
 </script>
