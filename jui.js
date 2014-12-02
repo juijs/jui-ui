@@ -13557,9 +13557,16 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEvent(self, elem, x, y, value, isTop) {
-			if(brush.activeEvent == null) return;
+		function setActiveEffect(self, elem, x, y, value, isTop) {
+			for(var i = 0; i < columns.length; i++) {
+				columns[i].element.attr({ fill: columns[i].color });
+			}
 
+			elem.attr({ fill: tooltipColor });
+			self.showTooltip(activeTooltip, x, y, value, isTop);
+		}
+
+		function setActiveEvent(self, elem, x, y, value, isTop) {
 			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
@@ -13595,6 +13602,7 @@ jui.define("chart.brush.column", [], function() {
 
 			// 엘리먼트 생성
 			g = chart.svg.group();
+			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 		}
 
 		this.draw = function() {
@@ -13607,43 +13615,52 @@ jui.define("chart.brush.column", [], function() {
 					var value = chart.data(i)[brush.target[j]],
 						startY = brush.y(value),
 						isTop = true,
-                        r = null;
+						r = null;
 
 					var tooltipX = startX + (columnWidth / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
 						r = chart.svg.rect({
-							x : startX,
-							y : startY
+							x: startX,
+							y: startY
 						});
 					} else {
 						r = chart.svg.rect({
-							x : startX,
-							y : zeroY
+							x: startX,
+							y: zeroY
 						});
 
 						isTop = false;
 					}
 
 					r.attr({
-						width : columnWidth,
-						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush),
-						stroke : borderColor,
-						"stroke-width" : borderWidth,
-						"stroke-opacity" : borderOpacity,
-						"cursor" : (brush.activeEvent != null) ? "pointer" : "normal"
+						width: columnWidth,
+						height: Math.abs(zeroY - startY),
+						fill: chart.color(j, brush),
+						stroke: borderColor,
+						"stroke-width": borderWidth,
+						"stroke-opacity": borderOpacity,
+						"cursor": (brush.activeEvent != null) ? "pointer" : "normal"
 					});
 
 					// 컬럼 상태 설정
 					columns.push({
+						index: i,
+						target: brush.target[j],
 						element: r,
 						color: chart.color(j, brush)
 					});
 
 					// 컬럼 관련 이벤트 설정
-					setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+					if (brush.activeEvent != null) {
+						setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+					}
+
+					// 액티브 엘리먼트 설정
+					if (brush.active == i) {
+						setActiveEffect(this, r, tooltipX, tooltipY, value, isTop);
+					}
 
 					// 브러쉬 이벤트 및 그룹 추가
                     this.addEvent(r, j, i);
@@ -13661,7 +13678,6 @@ jui.define("chart.brush.column", [], function() {
 				}
 			}
 
-			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 			g.append(activeTooltip);
 
             return g;
@@ -13671,6 +13687,7 @@ jui.define("chart.brush.column", [], function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1,
+				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
             }
@@ -13992,18 +14009,20 @@ jui.define("chart.brush.line", [], function() {
 	var LineBrush = function() {
         var columns = [];
 
-        function setActiveEvent(self, elem) {
-            if(self.brush.activeEvent == null) return;
+        function setActiveEffect(self, elem) {
+            for(var i = 0; i < columns.length; i++) {
+                var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
-            elem.on(self.brush.activeEvent, function(e) {
-                for(var i = 0; i < columns.length; i++) {
-                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
-
-                    columns[i].element.attr({ opacity: opacity });
-                    if(columns[i].tooltip != null) {
-                        columns[i].tooltip.attr({ opacity: opacity });
-                    }
+                columns[i].element.attr({ opacity: opacity });
+                if(columns[i].tooltip != null) {
+                    columns[i].tooltip.attr({ opacity: opacity });
                 }
+            }
+        }
+
+        function setActiveEvent(self, elem) {
+            elem.on(self.brush.activeEvent, function(e) {
+                setActiveEffect(self, elem);
             });
         }
 
@@ -14060,9 +14079,10 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var g = this.chart.svg.group();
+            var brush = this.brush,
+                g = this.chart.svg.group();
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
                 this.addEvent(p, k, null);
@@ -14074,14 +14094,21 @@ jui.define("chart.brush.line", [], function() {
                     tooltip: null
                 };
 
-                // 액티브 라인 추가
-                if(this.brush.activeEvent != null) {
-                    setActiveEvent(this, p);
+                // Max & Min 툴팁 추가
+                if(brush.display != null) {
+                    this.drawTooltip(g, path[k], k);
                 }
 
-                // Max & Min 툴팁 추가
-                if(this.brush.display != null) {
-                    this.drawTooltip(g, path[k], k);
+                // 액티브 라인 추가
+                if(brush.activeEvent != null) {
+                    setActiveEvent(this, p);
+                }
+            }
+
+            for(var k = 0; k < path.length; k++) {
+                // 액티브 라인 설정
+                if(brush.active == brush.target[k]) {
+                    setActiveEffect(this, p);
                 }
             }
 
@@ -14096,6 +14123,7 @@ jui.define("chart.brush.line", [], function() {
             return {
                 symbol: "normal", // normal, curve, step
                 display: null,
+                active: null,
                 activeEvent: null // or click, mouseover, ...
             }
         }

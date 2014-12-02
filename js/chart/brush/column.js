@@ -7,9 +7,16 @@ jui.define("chart.brush.column", [], function() {
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEvent(self, elem, x, y, value, isTop) {
-			if(brush.activeEvent == null) return;
+		function setActiveEffect(self, elem, x, y, value, isTop) {
+			for(var i = 0; i < columns.length; i++) {
+				columns[i].element.attr({ fill: columns[i].color });
+			}
 
+			elem.attr({ fill: tooltipColor });
+			self.showTooltip(activeTooltip, x, y, value, isTop);
+		}
+
+		function setActiveEvent(self, elem, x, y, value, isTop) {
 			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
@@ -45,6 +52,7 @@ jui.define("chart.brush.column", [], function() {
 
 			// 엘리먼트 생성
 			g = chart.svg.group();
+			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 		}
 
 		this.draw = function() {
@@ -57,43 +65,52 @@ jui.define("chart.brush.column", [], function() {
 					var value = chart.data(i)[brush.target[j]],
 						startY = brush.y(value),
 						isTop = true,
-                        r = null;
+						r = null;
 
 					var tooltipX = startX + (columnWidth / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
 						r = chart.svg.rect({
-							x : startX,
-							y : startY
+							x: startX,
+							y: startY
 						});
 					} else {
 						r = chart.svg.rect({
-							x : startX,
-							y : zeroY
+							x: startX,
+							y: zeroY
 						});
 
 						isTop = false;
 					}
 
 					r.attr({
-						width : columnWidth,
-						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush),
-						stroke : borderColor,
-						"stroke-width" : borderWidth,
-						"stroke-opacity" : borderOpacity,
-						"cursor" : (brush.activeEvent != null) ? "pointer" : "normal"
+						width: columnWidth,
+						height: Math.abs(zeroY - startY),
+						fill: chart.color(j, brush),
+						stroke: borderColor,
+						"stroke-width": borderWidth,
+						"stroke-opacity": borderOpacity,
+						"cursor": (brush.activeEvent != null) ? "pointer" : "normal"
 					});
 
 					// 컬럼 상태 설정
 					columns.push({
+						index: i,
+						target: brush.target[j],
 						element: r,
 						color: chart.color(j, brush)
 					});
 
 					// 컬럼 관련 이벤트 설정
-					setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+					if (brush.activeEvent != null) {
+						setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+					}
+
+					// 액티브 엘리먼트 설정
+					if (brush.active == i) {
+						setActiveEffect(this, r, tooltipX, tooltipY, value, isTop);
+					}
 
 					// 브러쉬 이벤트 및 그룹 추가
                     this.addEvent(r, j, i);
@@ -111,7 +128,6 @@ jui.define("chart.brush.column", [], function() {
 				}
 			}
 
-			activeTooltip = this.createTooltip(tooltipColor, circleColor);
 			g.append(activeTooltip);
 
             return g;
@@ -121,6 +137,7 @@ jui.define("chart.brush.column", [], function() {
             return {
                 outerPadding: 2,
                 innerPadding: 1,
+				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
             }

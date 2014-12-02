@@ -3,18 +3,20 @@ jui.define("chart.brush.line", [], function() {
 	var LineBrush = function() {
         var columns = [];
 
-        function setActiveEvent(self, elem) {
-            if(self.brush.activeEvent == null) return;
+        function setActiveEffect(self, elem) {
+            for(var i = 0; i < columns.length; i++) {
+                var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
-            elem.on(self.brush.activeEvent, function(e) {
-                for(var i = 0; i < columns.length; i++) {
-                    var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
-
-                    columns[i].element.attr({ opacity: opacity });
-                    if(columns[i].tooltip != null) {
-                        columns[i].tooltip.attr({ opacity: opacity });
-                    }
+                columns[i].element.attr({ opacity: opacity });
+                if(columns[i].tooltip != null) {
+                    columns[i].tooltip.attr({ opacity: opacity });
                 }
+            }
+        }
+
+        function setActiveEvent(self, elem) {
+            elem.on(self.brush.activeEvent, function(e) {
+                setActiveEffect(self, elem);
             });
         }
 
@@ -71,9 +73,10 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var g = this.chart.svg.group();
+            var brush = this.brush,
+                g = this.chart.svg.group();
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
                 this.addEvent(p, k, null);
@@ -85,14 +88,21 @@ jui.define("chart.brush.line", [], function() {
                     tooltip: null
                 };
 
-                // 액티브 라인 추가
-                if(this.brush.activeEvent != null) {
-                    setActiveEvent(this, p);
+                // Max & Min 툴팁 추가
+                if(brush.display != null) {
+                    this.drawTooltip(g, path[k], k);
                 }
 
-                // Max & Min 툴팁 추가
-                if(this.brush.display != null) {
-                    this.drawTooltip(g, path[k], k);
+                // 액티브 라인 추가
+                if(brush.activeEvent != null) {
+                    setActiveEvent(this, p);
+                }
+            }
+
+            for(var k = 0; k < path.length; k++) {
+                // 액티브 라인 설정
+                if(brush.active == brush.target[k]) {
+                    setActiveEffect(this, p);
                 }
             }
 
@@ -107,6 +117,7 @@ jui.define("chart.brush.line", [], function() {
             return {
                 symbol: "normal", // normal, curve, step
                 display: null,
+                active: null,
                 activeEvent: null // or click, mouseover, ...
             }
         }
