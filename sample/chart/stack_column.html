@@ -39,15 +39,18 @@
                 value : { text : "값", color : 3 },
                 test : { text : "테스트값", color : "blue" }
             },
-            brush : {
-                type : 'stackcolumn',
-                target : ['name', 'value', 'test']
-            },
+            brush : [{
+                type : 'stackcolumn'
+            }, {
+                type : 'stackscatter'
+            }],
             widget : [{
                 type : "tooltip"
             }, {
                 type : "legend",
-                filter : true
+                filter : true,
+                brush : [ 0, 1 ],
+                brushSync : true
             }],
             event : {
                 click : function(obj, e) {

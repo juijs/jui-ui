@@ -1,26 +1,33 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     var LegendWidget = function(chart, widget) {
-        var columns = {};
+        var columns = [];
 
         function setLegendStatus(brush) {
             if(!widget.filter) return;
 
+            if(!columns[brush.index]) {
+                columns[brush.index] = {};
+            }
+
             for(var i = 0; i < brush.target.length; i++) {
-                columns[brush.target[i]] = true;
+                columns[brush.index][brush.target[i]] = true;
             }
         }
 
-        function changeTargetOption(brush) {
-            var target = [];
+        function changeTargetOption(brushList) {
+            var target = [],
+                index = brushList[0].index;
 
-            for(var key in columns) {
-                if(columns[key]) {
+            for(var key in columns[index]) {
+                if(columns[index][key]) {
                     target.push(key);
                 }
             }
 
-            chart.updateBrush(brush.index, { target: target });
+            for(var i = 0; i < brushList.length; i++) {
+                chart.updateBrush(brushList[i].index, { target: target });
+            }
         }
 
         /**
@@ -30,7 +37,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          * @param {object} brush
          */
 		this.getLegendIcon = function(brush) {
-			var arr = [],
+            var self = this,
+                arr = [],
                 data = brush.target,
                 count = data.length;
 			
@@ -76,15 +84,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         });
 
                         element.on("click", function(e) {
-                            if(columns[key]) {
+                            if(columns[brush.index][key]) {
                                 element.attr({ opacity: 0.7 });
-                                columns[key] = false;
+                                columns[brush.index][key] = false;
                             } else {
                                 element.attr({ opacity: 1 });
-                                columns[key] = true;
+                                columns[brush.index][key] = true;
                             }
 
-                            changeTargetOption(brush);
+                            changeTargetOption((widget.brushSync) ? self.listBrush() : [ brush ]);
                         });
                     })(target, group);
                 }
@@ -103,6 +111,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 max_width = 0, max_height = 0;
 
             this.eachBrush(function(index, brush) {
+                // brushSync가 true일 경우, 한번만 실행함
+                if(widget.brushSync && index != 0) return;
+
                 var arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
@@ -161,7 +172,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             return $.extend(this.parent.drawSetup(), {
                 position : "bottom",
                 align : "center", // or start, end
-                filter : false
+                filter : false,
+                brushSync : false
             });
         }
     }

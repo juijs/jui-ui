@@ -1,6 +1,18 @@
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
 	var CoreWidget = function() {
+        function getBrushIndex(brush) {
+            var list = [ 0 ];
+
+            if(_.typeCheck("array", brush)) {
+                list = brush;
+            } else if(_.typeCheck("integer", brush)) {
+                list = [ brush ];
+            }
+
+            return list;
+        }
+
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
 
@@ -46,29 +58,31 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
         this.eachBrush = function(callback) {
             if(!_.typeCheck("function", callback)) return;
-            var list = this.getBrush();
+            var list = getBrushIndex(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
                 callback.prototype = this;
-                new callback(i, this.chart.brush(i));
+                new callback(i, this.chart.brush(list[i]));
             }
         }
 
-        this.getBrush = function() {
-            var brush = this.widget.brush,
-                list = [ 0 ];
+        this.listBrush = function() {
+            var list = getBrushIndex(this.widget.brush),
+                result = [];
 
-            if(_.typeCheck("array", brush)) {
-                list = brush;
-            } else if(_.typeCheck("integer", brush)) {
-                list = [ brush ];
+            for(var i = 0; i < list.length; i++) {
+                result[i] = this.chart.brush(list[i]);
             }
 
-            return list;
+            return result;
+        }
+
+        this.getBrush = function(index) {
+            return this.listBrush()[index];
         }
 
         this.existBrush = function(index) {
-            var list = this.getBrush();
+            var list = getBrushIndex(this.widget.brush);
 
             return ($.inArray(index, list) == -1) ? false : true;
         }
