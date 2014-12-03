@@ -3170,12 +3170,15 @@ jui.define("util.svg",
         }
 
         this.text = function(attr, textOrCallback) {
-            if(_.typeCheck("function", textOrCallback)) {
-                return create(new TransElement(), "text", attr, textOrCallback);
+            if(arguments.length == 2) {
+                if (_.typeCheck("function", textOrCallback)) {
+                    return create(new TransElement(), "text", attr, textOrCallback);
+                }
 
+                return create(new TransElement(), "text", attr).text(textOrCallback);
             }
 
-            return create(new TransElement(), "text", attr).text(textOrCallback);
+            return create(new TransElement(), "text", attr);
         }
 
         this.textPath = function(attr, text) {
