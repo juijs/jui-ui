@@ -3170,11 +3170,12 @@ jui.define("util.svg",
         }
 
         this.text = function(attr, textOrCallback) {
-            if(_.typeCheck("string", textOrCallback)) {
-                return create(new TransElement(), "text", attr).text(textOrCallback);
+            if(_.typeCheck("function", textOrCallback)) {
+                return create(new TransElement(), "text", attr, textOrCallback);
+
             }
 
-            return create(new TransElement(), "text", attr, textOrCallback);
+            return create(new TransElement(), "text", attr).text(textOrCallback);
         }
 
         this.textPath = function(attr, text) {
@@ -4247,10 +4248,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var callback = this.options.format;
 
             if(_.typeCheck("function", callback)) {
-                return callback(value) + "";
+                return callback(value);
             }
 
-            return value + "";
+            return value;
         }
 
         /**

@@ -723,10 +723,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var callback = this.options.format;
 
             if(_.typeCheck("function", callback)) {
-                return callback(value) + "";
+                return callback(value);
             }
 
-            return value + "";
+            return value;
         }
 
         /**

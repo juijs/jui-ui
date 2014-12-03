@@ -721,11 +721,12 @@ jui.define("util.svg",
         }
 
         this.text = function(attr, textOrCallback) {
-            if(_.typeCheck("string", textOrCallback)) {
-                return create(new TransElement(), "text", attr).text(textOrCallback);
+            if(_.typeCheck("function", textOrCallback)) {
+                return create(new TransElement(), "text", attr, textOrCallback);
+
             }
 
-            return create(new TransElement(), "text", attr, textOrCallback);
+            return create(new TransElement(), "text", attr).text(textOrCallback);
         }
 
         this.textPath = function(attr, text) {
