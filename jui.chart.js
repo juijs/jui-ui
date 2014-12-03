@@ -5386,7 +5386,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-                if (domain == "") {
+                if (!domain && domain !== 0) {
                     continue;
                 }
 
@@ -5439,7 +5439,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0, len = this.points.length; i < len; i++) {
 				var domain = grid.format(this.domain[i]);
 
-                if (domain == "") {
+				if (!domain && domain !== 0) {
                     continue;
                 }
                 
@@ -5492,10 +5492,9 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-
 
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
@@ -5536,13 +5535,13 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				g.append(this.axisLine(chart, {
 					y1 : this.start,
 					y2 : this.end
-				}))
+				}));
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -5640,10 +5639,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -5679,10 +5677,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -5711,7 +5708,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y1 : this.start,
 					y2 : this.end
 				}));
-
 			}
 
 			var ticks = this.ticks,
@@ -5719,10 +5715,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -5758,16 +5753,15 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
-
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
 				var axis = chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
-				})
+				});
 
 				axis.append(this.line(chart,{
 					x2 : (grid.line) ? -chart.width() : bar
@@ -5788,10 +5782,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.drawBefore = function() {
 			grid = this.setDateDomain(chart, grid);
 
+			var obj = this.getGridSize(chart, orient, grid),
+				range = [obj.start, obj.end];
 
-			var obj = this.getGridSize(chart, orient, grid);
-
-			var range = [obj.start, obj.end];
 			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
 
 			if (grid.realtime) {
@@ -5971,7 +5964,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y2 : y2,
 					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
-				}))
+				}));
 
 				position[i] = {
 					x1 : centerX,
@@ -6011,7 +6004,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 				startX = obj.x;
 				startY = obj.y;
-
 			}
 
 			if (!grid.line) {
@@ -6027,7 +6019,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				stepValue = grid.max / grid.step;
 
 			for (var i = 0; i < step; i++) {
-
 				if (i == 0 && grid.extra) {
 					startY += h;
 					continue;
@@ -6107,7 +6098,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -6151,7 +6142,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -6196,7 +6187,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 
@@ -6240,10 +6231,9 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 

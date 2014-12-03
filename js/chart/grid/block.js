@@ -24,7 +24,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-                if (domain == "") {
+                if (!domain && domain !== 0) {
                     continue;
                 }
 
@@ -77,7 +77,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0, len = this.points.length; i < len; i++) {
 				var domain = grid.format(this.domain[i]);
 
-                if (domain == "") {
+				if (!domain && domain !== 0) {
                     continue;
                 }
                 
@@ -130,10 +130,9 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-
 
 				var axis = chart.svg.group({
 					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
@@ -174,13 +173,13 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				g.append(this.axisLine(chart, {
 					y1 : this.start,
 					y2 : this.end
-				}))
+				}));
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
 				var domain = grid.format(this.domain[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
 

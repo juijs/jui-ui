@@ -25,12 +25,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-				var isZero = (ticks[i] == 0);
 
-				var axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
 
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
@@ -70,11 +70,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-				var isZero = (ticks[i] == 0);
-				var axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
 				axis.append(this.line(chart, {
 				  y1 : (this.center) ? -bar : 0,
@@ -115,11 +116,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-				var isZero = (ticks[i] == 0);
-				var axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
 
 				axis.append(this.line(chart, {
 					x1 : (this.center) ? -bar : 0,
@@ -158,11 +160,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = grid.format(ticks[i]);
 
-				if (domain == "") {
+				if (!domain && domain !== 0) {
 					continue;
 				}
-				var isZero = (ticks[i] == 0);
-				var axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
 
 				axis.append(this.line(chart, {
 					x1 : (this.center) ? -bar : 0,
@@ -195,6 +198,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			} else {
 				this.scale.range([obj.start, obj.end]);
 			}
+
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;

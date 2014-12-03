@@ -134,7 +134,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 					y2 : y2,
 					stroke : this.color("gridAxisBorderColor"),
 					"stroke-width" : chart.theme("gridBorderWidth")
-				}))
+				}));
 
 				position[i] = {
 					x1 : centerX,
@@ -174,7 +174,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 				startX = obj.x;
 				startY = obj.y;
-
 			}
 
 			if (!grid.line) {
@@ -190,7 +189,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				stepValue = grid.max / grid.step;
 
 			for (var i = 0; i < step; i++) {
-
 				if (i == 0 && grid.extra) {
 					startY += h;
 					continue;

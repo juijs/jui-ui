@@ -26,16 +26,20 @@
 
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    line : true,
-                    format : function(value) {
-                        return 1;
-                    }
+                    line : true
                 },
                 y :
                 {
                     type : 'range',
                     target : [ "name", "value" ],
-                    step : 10
+                    step : 10,
+                    format : function(value) {
+                        if(value < 5) {
+                            return value;
+                        }
+
+                        //return value;
+                    }
                 }
 
             },
@@ -44,10 +48,7 @@
             ],
             widget : [
                 //{ type : "tooltip", brush : 1 }
-            ],
-            format : function(val) {
-                return "$" + val;
-            }
+            ]
         });
 	})
 </script>
