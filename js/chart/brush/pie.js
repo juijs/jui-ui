@@ -35,38 +35,50 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(),
-				height = chart.height();
-            var min = width;
 
-            if (height < min) {
-                min = height;
-            }
+			if (!brush.c) {
+				brush.c = function(i) {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
 
-            // center
-            w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
-            outerRadius = w;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+		this.drawUnit = function(index, data, group) {
+
+			var obj = brush.c(index);
+
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			w = min / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w;
 
 			var target = brush.target,
 				all = 360,
-                startAngle = 0,
+				startAngle = 0,
 				max = 0;
 
 			for (var i = 0; i < target.length; i++) {
-				max += chart.data(0)[target[i]];
+				max += data[target[i]];
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = chart.data(0)[target[i]],
-                    endAngle = all * (value / max);
+				var value = data[target[i]],
+					endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
 					fill : chart.color(i, brush),
@@ -74,11 +86,26 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(g, i, 0);
+				this.addEvent(g, i, index);
 				group.append(g);
 
 				startAngle += endAngle;
 			}
+
+		}
+
+		this.draw = function() {
+			var group = chart.svg.group({
+				"class" : "brush donut"
+			});
+
+
+			var data = chart.data();
+
+			for(var i = 0; i < data.length; i++) {
+				this.drawUnit(i, data[i], group);
+			}
+
 
             return group;
 		}

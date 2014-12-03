@@ -6306,6 +6306,492 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 	return RangeGrid;
 }, "chart.grid.core");
 
+jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
+
+	/**
+	 *
+	 * @param {Object} orient
+	 * @param {Object} grid
+	 */
+	var RuleGrid = function(orient, chart, grid) {
+
+		this.top = function(chart, g) {
+			var height = chart.height(),
+				half_height = height/2;
+
+			g.append(this.axisLine(chart, {
+				y1 : this.center ? half_height : 0,
+				y2 : this.center ? half_height : 0,
+				x1 : this.start,
+				x2 : this.end
+			}));
+
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
+
+				axis.append(this.line(chart, {
+				  y1 : (this.center) ? -bar : 0,
+					y2 : bar,
+					stroke : this.color("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+				}));
+
+				if (!isZero || (isZero && !this.hideZero)) {
+					axis.append(chart.text({
+						x : 0,
+						y : bar + bar + 4,
+						"text-anchor" : "middle",
+						fill : chart.theme("gridFontColor")
+					}, domain));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		this.bottom = function(chart, g) {
+			var height = chart.height(),
+				half_height = height/2;
+		  
+			g.append(this.axisLine(chart, {
+				y1 : this.center ? -half_height : 0,
+				y2 : this.center ? -half_height : 0,
+				x1 : this.start,
+				x2 : this.end
+			}));
+
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
+
+				axis.append(this.line(chart, {
+				  y1 : (this.center) ? -bar : 0,
+					y2 : (this.center) ? bar : -bar,
+					stroke : this.color("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+				}));
+				
+				if (!isZero ||  (isZero && !this.hideZero)) {
+					axis.append(chart.text({
+						x : 0,
+						y : -bar * 2,
+						"text-anchor" : "middle",
+						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					}, domain));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		this.left = function(chart, g) {
+			var width = chart.width(),
+				height = chart.height(),
+				half_width = width/2;
+
+			g.append(this.axisLine(chart, {
+				x1 : this.center ? half_width : 0,
+				x2 : this.center ? half_width : 0,
+				y1 : this.start ,
+				y2 : this.end
+			}));
+
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
+
+				axis.append(this.line(chart, {
+					x1 : (this.center) ? -bar : 0,
+					x2 : bar,
+					stroke : this.color("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")					
+				}));
+				
+				if (!isZero ||  (isZero && !this.hideZero)) {
+					axis.append(chart.text({
+					  x : bar/2 + 4,
+					  y : bar-2,
+					  fill : chart.theme("gridFontColor")
+					}, domain));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		this.right = function(chart, g) {
+			var width = chart.width(),
+				half_width = width/2;
+
+			g.append(this.axisLine(chart, {
+				x1 : this.center ? -half_width : 0,
+				x2 : this.center ? -half_width : 0,
+				y1 : this.start ,
+				y2 : this.end
+			}));
+
+			var ticks = this.ticks,
+				values = this.values,
+				bar = this.bar;
+
+			for (var i = 0; i < ticks.length; i++) {
+				var domain = grid.format(ticks[i]);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isZero = (ticks[i] == 0),
+					axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
+
+				axis.append(this.line(chart, {
+					x1 : (this.center) ? -bar : 0,
+					x2 : (this.center) ? bar : -bar,
+					stroke : this.color("gridAxisBorderColor"),
+					"stroke-width" : chart.theme("gridBorderWidth")
+				}));
+
+				if (!isZero ||  (isZero && !this.hideZero)) {
+					axis.append(chart.text({
+						x : -bar - 4,
+						y : bar-2,
+						"text-anchor" : "end",
+						fill : chart.theme("gridFontColor")
+					}, domain));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		this.drawBefore = function() {
+			grid = this.setRangeDomain(chart, grid);
+
+			var obj = this.getGridSize(chart, orient, grid);
+			this.scale = UtilScale.linear().domain(grid.domain);
+
+			if (orient == "left" || orient == "right") {
+				this.scale.range([obj.end, obj.start]);
+			} else {
+				this.scale.range([obj.start, obj.end]);
+			}
+
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
+			this.step = grid.step;
+			this.nice = grid.nice;
+			this.ticks = this.scale.ticks(this.step, this.nice);
+			this.bar = 6;
+			this.hideZero = grid.hideZero;
+			this.center = grid.center;
+			this.values = [];
+
+			for (var i = 0, len = this.ticks.length; i < len; i++) {
+				this.values[i] = this.scale(this.ticks[i]);
+			}
+		}
+
+		this.draw = function() {
+			return this.drawGrid(chart, orient, "rule", grid);
+		}
+
+		this.drawSetup = function() {
+			return $.extend(this.parent.drawSetup(), {
+				// rule options
+				hideZero: false,
+				hideText: false,
+				nice: false,
+				center: false
+			});
+		}
+	}
+
+	return RuleGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.panel", [  ], function() {
+
+    var PanelGrid = function(orient, chart, grid) {
+
+        var start, size ;
+
+
+        function getValue(value, max) {
+            if (typeof value == 'string' && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+
+        function getArrayValue (value, chart) {
+            var start;
+
+            if (typeof value == 'number') {
+                start = [value, value];
+            } else if (typeof value == 'string') {
+
+                if (value.indexOf("%") > -1) {
+                    start = [getValue(value, chart.width()), getValue(value,  chart.height())]
+                } else {
+                    start = [parseFloat(value), parseFloat(value)]
+                }
+
+            } else if (value instanceof Array) {
+
+                for(var i = 0; i < value.length; i++) {
+                    if (i == 0) {
+                        value[i] = getValue(value[i], chart.width());
+                    } else if (i == 1) {
+                        value[i] = getValue(value[i], chart.height());
+                    }
+                }
+
+                start = value;
+            }
+
+            return start;
+        }
+
+        this.drawBefore = function() {
+            start = [0, 0];
+            if (grid.start !== null) {
+                start = getArrayValue(grid.start, chart);
+            }
+
+            size = [chart.width(), chart.height()];
+            if (grid.size != null) {
+                size = getArrayValue(grid.size, chart);
+            }
+
+            console.log(size, start);
+
+        }
+
+        this.scale = function() {
+
+            console.log(start, size);
+
+
+            return function() {
+                return {
+                    x : start[0],
+                    y : start[1],
+                    width : size[0],
+                    height : size[1]
+                }
+            }
+        }
+
+        this.draw = function() {
+
+            return {
+                scale : this.scale(chart)
+            };
+        }
+
+    }
+    
+    return PanelGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.table", [  ], function() {
+
+
+    var TableGrid = function(orient, chart, grid) {
+
+        var start, size, rowUnit, columnUnit, outerPadding ;
+
+        function getValue(value, max) {
+            if (typeof value == 'string' && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+
+        function getArrayValue (value, chart) {
+            var start;
+
+            if (typeof value == 'number') {
+                start = [value, value];
+            } else if (typeof value == 'string') {
+
+                if (value.indexOf("%") > -1) {
+                    start = [getValue(value, chart.width()), getValue(value,  chart.height())]
+                } else {
+                    start = [parseFloat(value), parseFloat(value)]
+                }
+
+            } else if (value instanceof Array) {
+
+                for(var i = 0; i < value.length; i++) {
+                    if (i == 0) {
+                        value[i] = getValue(value[i], chart.width());
+                    } else if (i == 1) {
+                        value[i] = getValue(value[i], chart.height());
+                    }
+                }
+
+                start = value;
+            }
+
+            return start;
+        }
+
+
+
+        this.drawBefore = function() {
+            start = [0, 0];
+            if (grid.start !== null) {
+                start = getArrayValue(grid.start, chart);
+            }
+
+            size = [chart.width(), chart.height()];
+            if (grid.size != null) {
+                size = getArrayValue(grid.size, chart);
+            }
+
+            row = grid.row;
+            column = grid.column;
+
+
+            columnUnit = size[0] / column;
+            rowUnit = size[1] / row;
+
+            outerPadding = grid.outerPadding;
+
+        }
+
+        this.scale = function(chart) {
+            return function(i) {
+
+                var r = Math.floor(i  / column) ;
+                var c = i % column;
+
+                var x = c * columnUnit;
+                var y = r * rowUnit;
+
+                return {
+                    x : x - outerPadding,
+                    y : y - outerPadding,
+                    width : columnUnit - outerPadding*2,
+                    height : rowUnit - outerPadding*2
+                }
+            }
+        }
+
+        this.draw = function() {
+
+            return {
+                scale : this.scale(chart)
+            };
+        }
+
+        this.drawSetup = function() {
+            return $.extend(this.parent.drawSetup(), {
+                row : 1,
+                column : 1,
+                outerPadding : 1
+            });
+        }
+
+    }
+    
+    return TableGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.overlap", [  ], function() {
+
+
+    var OverlapGrid = function(orient, chart, grid) {
+
+        var size, widthUnit, heightUnit, width, height ;
+
+        function getXY ( i ) {
+            var x = width/2  - i * widthUnit;
+            var y = height/2 - i * heightUnit;
+
+            return { x : x , y : y }
+        }
+
+
+
+        this.drawBefore = function() {
+
+            size = grid.size || chart.data().length ||  1;
+
+            widthUnit = (chart.width() / 2) / size;
+            heightUnit = (chart.height() / 2) / size;
+
+            width = chart.width();
+            height = chart.height();
+        }
+
+        this.scale = function(chart) {
+            return function(i) {
+
+                var obj = getXY(size - i);
+
+                return {
+                    x : obj.x,
+                    y : obj.y,
+                    width : Math.abs(width/2 - obj.x)*2,
+                    height : Math.abs(height/2 - obj.y)*2
+                }
+            }
+        }
+
+        this.draw = function() {
+
+            return {
+                scale : this.scale(chart)
+            };
+        }
+
+        this.drawSetup = function() {
+            return $.extend(this.parent.drawSetup(), {
+
+            });
+        }
+
+    }
+    
+    return OverlapGrid;
+}, "chart.grid.core");
+
 jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
@@ -7545,38 +8031,50 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(),
-				height = chart.height();
-            var min = width;
 
-            if (height < min) {
-                min = height;
-            }
+			if (!brush.c) {
+				brush.c = function(i) {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
 
-            // center
-            w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
-            outerRadius = w;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+		this.drawUnit = function(index, data, group) {
+
+			var obj = brush.c(index);
+
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			w = min / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w;
 
 			var target = brush.target,
 				all = 360,
-                startAngle = 0,
+				startAngle = 0,
 				max = 0;
 
 			for (var i = 0; i < target.length; i++) {
-				max += chart.data(0)[target[i]];
+				max += data[target[i]];
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = chart.data(0)[target[i]],
-                    endAngle = all * (value / max);
+				var value = data[target[i]],
+					endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
 					fill : chart.color(i, brush),
@@ -7584,11 +8082,26 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-                this.addEvent(g, i, 0);
+				this.addEvent(g, i, index);
 				group.append(g);
 
 				startAngle += endAngle;
 			}
+
+		}
+
+		this.draw = function() {
+			var group = chart.svg.group({
+				"class" : "brush donut"
+			});
+
+
+			var data = chart.data();
+
+			for(var i = 0; i < data.length; i++) {
+				this.drawUnit(i, data[i], group);
+			}
+
 
             return group;
 		}
