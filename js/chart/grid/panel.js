@@ -1,9 +1,7 @@
 jui.define("chart.grid.panel", [  ], function() {
 
     var PanelGrid = function(orient, chart, grid) {
-
         var start, size ;
-
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -44,6 +42,7 @@ jui.define("chart.grid.panel", [  ], function() {
 
         this.drawBefore = function() {
             start = [0, 0];
+
             if (grid.start !== null) {
                 start = getArrayValue(grid.start, chart);
             }
@@ -52,16 +51,9 @@ jui.define("chart.grid.panel", [  ], function() {
             if (grid.size != null) {
                 size = getArrayValue(grid.size, chart);
             }
-
-            console.log(size, start);
-
         }
 
         this.scale = function() {
-
-            console.log(start, size);
-
-
             return function() {
                 return {
                     x : start[0],
@@ -73,7 +65,6 @@ jui.define("chart.grid.panel", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };

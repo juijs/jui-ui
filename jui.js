@@ -11955,12 +11955,13 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-			var width = chart.width();
-			var height = chart.height();
-			var axis = (orient == "left" || orient == "right") ? chart.y() : chart.x();
-			var max = (orient == "left" || orient == "right") ? height : width;
+			var width = chart.width(),
+				height = chart.height(),
+				axis = (orient == "left" || orient == "right") ? chart.y() : chart.x(),
+				max = (orient == "left" || orient == "right") ? height : width,
+				start = (grid.axis) ? axis : 0,
+				size = max;
 
-			var start = (grid.axis) ? axis : 0;
 			if (grid.start) {
 				if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
 					start = max * parseFloat(grid.start.replace("%", ""))/100
@@ -11969,7 +11970,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 			}
 
-			var size = max ;
 			if (grid.size) {
 				if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
 					size = max * parseFloat(grid.size.replace("%", ""))/100
@@ -11982,8 +11982,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start = max / 2 - size / 2;
 			}
 
-			console.log(grid.type, orient, start, size, width, height);
-
 			return {
 				start  : start,
 				size : size,
@@ -11991,14 +11989,14 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 		}
 
-		this.drawSetup = function() {
+		this.getOptions = function(options) {
 			var self = this;
 
 			var callback = function(value) {
 				return self.chart.format(value);
 			}
 
-			return {
+			return $.extend({
 				domain: null,
 				step: 10,
 				min: 0,
@@ -12014,7 +12012,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				size: null,
 				line: false,
 				format: callback
-			}
+			}, options);
 		}
 	}
 
@@ -12022,17 +12020,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 * Block Grid 
-	 * 
-	 * @param {Object} orient		// grid 방향 
-	 * @param {Object} grid
-	 */
 	var BlockGrid = function(orient, chart, grid) {
 
-		/**
-		 * top 그리기 
-		 */
 		this.top = function(chart, g, scale) {
 			var full_height = chart.height();
 			
@@ -12083,9 +12072,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 		
-		/**
-		 * bottom 그리기
-		 */
 		this.bottom = function(chart, g, scale) {
 			var full_height = chart.height();
 
@@ -12136,9 +12122,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 		
-		/**
-		 * left 그리기 
-		 */
 		this.left = function(chart, g, scale) {
 			var full_width = chart.width();
 
@@ -12186,10 +12169,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
-		/**
-		 * right 그리기 
-		 * 
-		 */
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -12267,7 +12246,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// core options
 				max: 10,
 				start: 0,
@@ -12478,7 +12457,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// date options
 				realtime: false
 			});
@@ -12714,7 +12693,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// core options
 				max: 100,
 
@@ -12734,12 +12713,6 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 * 숫자 범위(range) 그리드 객체 
-	 *  
-	 * @param {Object} orient
-	 * @param {Object} grid
-	 */
 	var RangeGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
@@ -12952,7 +12925,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// range options
 				hideText: false,
 				nice: false
@@ -12965,11 +12938,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 *
-	 * @param {Object} orient
-	 * @param {Object} grid
-	 */
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
@@ -13185,7 +13153,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// rule options
 				hideZero: false,
 				hideText: false,
@@ -13201,9 +13169,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 jui.define("chart.grid.panel", [  ], function() {
 
     var PanelGrid = function(orient, chart, grid) {
-
         var start, size ;
-
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -13244,6 +13210,7 @@ jui.define("chart.grid.panel", [  ], function() {
 
         this.drawBefore = function() {
             start = [0, 0];
+
             if (grid.start !== null) {
                 start = getArrayValue(grid.start, chart);
             }
@@ -13252,16 +13219,9 @@ jui.define("chart.grid.panel", [  ], function() {
             if (grid.size != null) {
                 size = getArrayValue(grid.size, chart);
             }
-
-            console.log(size, start);
-
         }
 
         this.scale = function() {
-
-            console.log(start, size);
-
-
             return function() {
                 return {
                     x : start[0],
@@ -13273,7 +13233,6 @@ jui.define("chart.grid.panel", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };
@@ -13286,9 +13245,7 @@ jui.define("chart.grid.panel", [  ], function() {
 
 jui.define("chart.grid.table", [  ], function() {
 
-
     var TableGrid = function(orient, chart, grid) {
-
         var start, size, rowUnit, columnUnit, outerPadding ;
 
         function getValue(value, max) {
@@ -13313,7 +13270,6 @@ jui.define("chart.grid.table", [  ], function() {
                 }
 
             } else if (value instanceof Array) {
-
                 for(var i = 0; i < value.length; i++) {
                     if (i == 0) {
                         value[i] = getValue(value[i], chart.width());
@@ -13328,10 +13284,9 @@ jui.define("chart.grid.table", [  ], function() {
             return start;
         }
 
-
-
         this.drawBefore = function() {
-            start = [0, 0];
+            start = [ 0, 0 ];
+
             if (grid.start !== null) {
                 start = getArrayValue(grid.start, chart);
             }
@@ -13341,15 +13296,13 @@ jui.define("chart.grid.table", [  ], function() {
                 size = getArrayValue(grid.size, chart);
             }
 
-            row = grid.row;
-            column = grid.column;
-
+            var row = grid.row,
+                column = grid.column;
 
             columnUnit = size[0] / column;
             rowUnit = size[1] / row;
 
             outerPadding = grid.outerPadding;
-
         }
 
         this.scale = function(chart) {
@@ -13371,20 +13324,18 @@ jui.define("chart.grid.table", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 row : 1,
                 column : 1,
                 outerPadding : 1
             });
         }
-
     }
     
     return TableGrid;
@@ -13392,9 +13343,7 @@ jui.define("chart.grid.table", [  ], function() {
 
 jui.define("chart.grid.overlap", [  ], function() {
 
-
     var OverlapGrid = function(orient, chart, grid) {
-
         var size, widthUnit, heightUnit, width, height ;
 
         function getXY ( i ) {
@@ -13404,10 +13353,7 @@ jui.define("chart.grid.overlap", [  ], function() {
             return { x : x , y : y }
         }
 
-
-
         this.drawBefore = function() {
-
             size = grid.size || chart.data().length ||  1;
 
             widthUnit = (chart.width() / 2) / size;
@@ -13419,7 +13365,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
         this.scale = function(chart) {
             return function(i) {
-
                 var obj = getXY(size - i);
 
                 return {
@@ -13432,16 +13377,13 @@ jui.define("chart.grid.overlap", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
-
-            });
+            return this.getOptions();
         }
 
     }
@@ -13707,12 +13649,11 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             text.attr({ y: (isTop) ? -7 : 16 });
         }
 
-        this.drawSetup = function() {
-            return {
-                axis: ""
-            }
+        this.getOptions = function(options) {
+            return $.extend({
+                axis: "default"
+            }, options);
         }
-
 	}
 
 	return CoreBrush;
@@ -13790,7 +13731,7 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1
             });
@@ -13844,7 +13785,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 min: 5,
                 max: 30
             })
@@ -13946,7 +13887,7 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {});
+            return this.getOptions();
         }
     }
 
@@ -14024,7 +13965,7 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {});
+            return this.getOptions();
         }
     }
 
@@ -14167,7 +14108,7 @@ jui.define("chart.brush.column", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1,
 				active: null,
@@ -14318,10 +14259,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			console.log(this.parent);
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 size: 50
-            })
+            });
         }
 	}
 
@@ -14400,7 +14340,7 @@ jui.define("chart.brush.equalizer", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 innerPadding: 10,
                 outerPadding: 15,
                 unit: 5,
@@ -14479,9 +14419,9 @@ jui.define("chart.brush.fullstack", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
-            })
+            });
         }
 	}
 
@@ -14604,7 +14544,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "normal", // normal, curve, step
                 display: null,
                 active: null,
@@ -14774,7 +14714,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {});
+			return this.getOptions();
         }
 	}
 
@@ -14879,7 +14819,7 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7
             });
@@ -14921,7 +14861,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7
             });
@@ -14987,7 +14927,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
             });
         }
@@ -15054,7 +14994,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
             });
         }
@@ -15066,17 +15006,34 @@ jui.define("chart.brush.stackcolumn", [], function() {
 jui.define("chart.brush.bargauge", [], function() {
 
 	var BarGaugeBrush = function(chart, brush) {
-        var y = 0, x = 0;
+
+        this.drawBefore = function() {
+            if (!brush.c) {
+                brush.c = function() {
+                    return {
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height()
+                    };
+                }
+            }
+        }
 
 		this.draw = function() {
+            var obj = brush.c(),
+                width = obj.width,
+                x = obj.x,
+                y = obj.y;
+
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
 			});
 
 			if (brush.split) {
-				var max = chart.width();	
+				var max = width;
 			} else {
-				var max = chart.width();
+				var max = width;
 			}
 
 			for(var i = 0, len = chart.data().length; i < len; i++) {
@@ -15154,7 +15111,7 @@ jui.define("chart.brush.bargauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(),  {
+            return this.getOptions({
                 cut: 5,
                 size: 20,
                 split: false,
@@ -15167,22 +15124,37 @@ jui.define("chart.brush.bargauge", [], function() {
 	return BarGaugeBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
+jui.define("chart.brush.circlegauge", [], function() {
 
 	var CircleGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
-            var min = width;
+            if (!brush.c) {
+                brush.c = function() {
+                    return {
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height()
+                    };
+                }
+            }
+
+            var obj = brush.c(),
+                width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y,
+                min = width;
 
             if (height < min) {
                 min = height;
             }
 
             w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
+            centerX = width / 2 + x;
+            centerY = height / 2 + y;
             outerRadius = w;
 		}
 
@@ -15215,7 +15187,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 min: 0,
                 max: 100,
                 value: 0
@@ -15273,16 +15245,31 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
-            var min = width;
+            if (!brush.c) {
+                brush.c = function() {
+                    return {
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height()
+                    };
+                }
+            }
+
+            var obj = brush.c(),
+                width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y,
+                min = width;
 
             if (height < min) {
                 min = height;
             }
 
             w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
+            centerX = width / 2 + x;
+            centerY = height / 2 + y;
             outerRadius = w;
             clipId = chart.createId("fill-gauge");
 
@@ -15364,7 +15351,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 		}
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15554,9 +15541,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-
 			if (!brush.c) {
-				brush.c = function(i) {
+				brush.c = function() {
 					return {
 						x : 0,
 						y : 0,
@@ -15566,11 +15552,12 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				}
 			}
 
-			var obj = brush.c(index);
-
-			var width = obj.width, height = obj.height;
-			var x = obj.x, y = obj.y;
-            var min = width;
+			var obj = brush.c(),
+				width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y,
+				min = width;
 
             if (height < min) {
                 min = height;
@@ -15620,10 +15607,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-
-			console.log(this.parent);
-
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15632,7 +15616,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 endAngle: 360,
                 arrow: true,
                 unitText: ""
-            })
+            });
         }
 	}
 
@@ -15679,16 +15663,31 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
-            var min = width;
+			if (!brush.c) {
+				brush.c = function() {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
 
-            if (height < min) {
-                min = height;
-            }
+			var obj = brush.c(),
+				width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y,
+				min = width;
 
-            w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
+			if (height < min) {
+				min = height;
+			}
+
+			w = min / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
             outerRadius = w;
             innerRadius = outerRadius - brush.size;
         }
@@ -15725,7 +15724,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15747,16 +15746,31 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-			var width = chart.width(), height = chart.height();
-			var min = width;
+			if (!brush.c) {
+				brush.c = function() {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
+
+			var obj = brush.c(),
+				width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y,
+				min = width;
 
 			if (height < min) {
 				min = height;
 			}
 
 			w = min / 2;
-			centerX = width / 2;
-			centerY = height / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
 			outerRadius = w;
 		}
 
@@ -15804,7 +15818,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 min: 0,
                 max: 100,
                 cut: 5,
@@ -15916,7 +15930,7 @@ jui.define("chart.brush.waterfall", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				line: true,
 				end: false,
                 outerPadding: 5
@@ -16003,7 +16017,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "normal", // normal, curve, step
                 split: null
             });
@@ -16119,7 +16133,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1
             });
@@ -16186,7 +16200,7 @@ jui.define("chart.brush.rangebar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1
             });
@@ -16289,11 +16303,11 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             return (this.widget.render === true) ? true : false;
         }
 
-        this.drawSetup = function() {
-            return {
+        this.getOptions = function(options) {
+            return $.extend({
                 brush: null,
                 render: false
-            }
+            }, options);
         }
 	}
 
@@ -16440,7 +16454,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 return key + ": " + chart.format(value);
             }
 
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 position: "top", // or bottom, left, right
                 all: false,
                 format: callback
@@ -16508,7 +16522,7 @@ jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math)
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 position: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
@@ -16691,7 +16705,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 position : "bottom",
                 align : "center", // or start, end
                 filter : false,
@@ -16802,7 +16816,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawSetup = function() {
-            return this.parent.drawSetup();
+            return this.getOptions();
         }
     }
 
@@ -16932,7 +16946,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.parent.drawSetup();
+            return this.getOptions();
         }
     }
 
@@ -17065,7 +17079,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 return chart.format(value);
             }
 
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 format: callback
             });
         }
@@ -17107,7 +17121,7 @@ jui.define("chart.widget.pin", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 split: null
             });
         }

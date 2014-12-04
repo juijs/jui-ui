@@ -65,9 +65,9 @@ jui.define("chart.brush.fullstack", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
-            })
+            });
         }
 	}
 

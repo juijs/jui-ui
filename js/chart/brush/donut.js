@@ -136,10 +136,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			console.log(this.parent);
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 size: 50
-            })
+            });
         }
 	}
 

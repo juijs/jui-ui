@@ -1,8 +1,6 @@
 jui.define("chart.grid.table", [  ], function() {
 
-
     var TableGrid = function(orient, chart, grid) {
-
         var start, size, rowUnit, columnUnit, outerPadding ;
 
         function getValue(value, max) {
@@ -27,7 +25,6 @@ jui.define("chart.grid.table", [  ], function() {
                 }
 
             } else if (value instanceof Array) {
-
                 for(var i = 0; i < value.length; i++) {
                     if (i == 0) {
                         value[i] = getValue(value[i], chart.width());
@@ -42,10 +39,9 @@ jui.define("chart.grid.table", [  ], function() {
             return start;
         }
 
-
-
         this.drawBefore = function() {
-            start = [0, 0];
+            start = [ 0, 0 ];
+
             if (grid.start !== null) {
                 start = getArrayValue(grid.start, chart);
             }
@@ -55,15 +51,13 @@ jui.define("chart.grid.table", [  ], function() {
                 size = getArrayValue(grid.size, chart);
             }
 
-            row = grid.row;
-            column = grid.column;
-
+            var row = grid.row,
+                column = grid.column;
 
             columnUnit = size[0] / column;
             rowUnit = size[1] / row;
 
             outerPadding = grid.outerPadding;
-
         }
 
         this.scale = function(chart) {
@@ -85,20 +79,18 @@ jui.define("chart.grid.table", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 row : 1,
                 column : 1,
                 outerPadding : 1
             });
         }
-
     }
     
     return TableGrid;

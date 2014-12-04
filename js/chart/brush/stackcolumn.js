@@ -56,7 +56,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
             });
         }

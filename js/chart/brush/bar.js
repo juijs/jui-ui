@@ -71,7 +71,7 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1
             });

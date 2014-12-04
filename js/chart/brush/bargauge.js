@@ -1,11 +1,10 @@
 jui.define("chart.brush.bargauge", [], function() {
 
 	var BarGaugeBrush = function(chart, brush) {
-        var y = 0, x = 0;
 
         this.drawBefore = function() {
             if (!brush.c) {
-                brush.c = function(i) {
+                brush.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -17,11 +16,10 @@ jui.define("chart.brush.bargauge", [], function() {
         }
 
 		this.draw = function() {
-
-            var obj = brush.c(index);
-
-            var width = obj.width, height = obj.height;
-            var x = obj.x, y = obj.y;
+            var obj = brush.c(),
+                width = obj.width,
+                x = obj.x,
+                y = obj.y;
 
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
@@ -108,7 +106,7 @@ jui.define("chart.brush.bargauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(),  {
+            return this.getOptions({
                 cut: 5,
                 size: 20,
                 split: false,

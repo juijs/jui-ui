@@ -98,7 +98,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawSetup = function() {
-            return this.parent.drawSetup();
+            return this.getOptions();
         }
     }
 

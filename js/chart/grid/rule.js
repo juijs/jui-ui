@@ -1,10 +1,5 @@
 jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 *
-	 * @param {Object} orient
-	 * @param {Object} grid
-	 */
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
@@ -220,7 +215,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// rule options
 				hideZero: false,
 				hideText: false,

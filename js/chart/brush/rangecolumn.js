@@ -52,7 +52,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 2,
                 innerPadding: 1
             });

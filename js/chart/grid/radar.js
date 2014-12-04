@@ -224,7 +224,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// core options
 				max: 100,
 

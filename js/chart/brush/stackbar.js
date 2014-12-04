@@ -55,7 +55,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
                 outerPadding: 15
             });
         }

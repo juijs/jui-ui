@@ -1,11 +1,11 @@
-jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
+jui.define("chart.brush.circlegauge", [], function() {
 
 	var CircleGaugeBrush = function(chart, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
             if (!brush.c) {
-                brush.c = function(i) {
+                brush.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -15,11 +15,12 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
                 }
             }
 
-            var obj = brush.c(index);
-
-            var width = obj.width, height = obj.height;
-            var x = obj.x, y = obj.y;
-            var min = width;
+            var obj = brush.c(),
+                width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y,
+                min = width;
 
             if (height < min) {
                 min = height;
@@ -60,7 +61,7 @@ jui.define("chart.brush.circlegauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 min: 0,
                 max: 100,
                 value: 0

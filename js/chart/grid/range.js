@@ -1,11 +1,5 @@
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 * 숫자 범위(range) 그리드 객체 
-	 *  
-	 * @param {Object} orient
-	 * @param {Object} grid
-	 */
 	var RangeGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
@@ -218,7 +212,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// range options
 				hideText: false,
 				nice: false

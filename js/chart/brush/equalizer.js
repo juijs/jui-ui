@@ -70,7 +70,7 @@ jui.define("chart.brush.equalizer", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 innerPadding: 10,
                 outerPadding: 15,
                 unit: 5,

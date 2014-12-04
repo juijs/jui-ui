@@ -1,16 +1,7 @@
 jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
-	/**
-	 * Block Grid 
-	 * 
-	 * @param {Object} orient		// grid 방향 
-	 * @param {Object} grid
-	 */
 	var BlockGrid = function(orient, chart, grid) {
 
-		/**
-		 * top 그리기 
-		 */
 		this.top = function(chart, g, scale) {
 			var full_height = chart.height();
 			
@@ -61,9 +52,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 		
-		/**
-		 * bottom 그리기
-		 */
 		this.bottom = function(chart, g, scale) {
 			var full_height = chart.height();
 
@@ -114,9 +102,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 		
-		/**
-		 * left 그리기 
-		 */
 		this.left = function(chart, g, scale) {
 			var full_width = chart.width();
 
@@ -164,10 +149,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
-		/**
-		 * right 그리기 
-		 * 
-		 */
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -245,7 +226,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				// core options
 				max: 10,
 				start: 0,

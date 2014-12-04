@@ -56,7 +56,7 @@ jui.define("chart.widget.title", [ "util.base", "util.math" ], function(_, math)
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 position: "top", // or bottom
                 align: "center", // or start, end
                 text: "",

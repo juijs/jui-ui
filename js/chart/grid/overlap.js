@@ -1,8 +1,6 @@
 jui.define("chart.grid.overlap", [  ], function() {
 
-
     var OverlapGrid = function(orient, chart, grid) {
-
         var size, widthUnit, heightUnit, width, height ;
 
         function getXY ( i ) {
@@ -12,10 +10,7 @@ jui.define("chart.grid.overlap", [  ], function() {
             return { x : x , y : y }
         }
 
-
-
         this.drawBefore = function() {
-
             size = grid.size || chart.data().length ||  1;
 
             widthUnit = (chart.width() / 2) / size;
@@ -27,7 +22,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
         this.scale = function(chart) {
             return function(i) {
-
                 var obj = getXY(size - i);
 
                 return {
@@ -40,16 +34,13 @@ jui.define("chart.grid.overlap", [  ], function() {
         }
 
         this.draw = function() {
-
             return {
                 scale : this.scale(chart)
             };
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
-
-            });
+            return this.getOptions();
         }
 
     }

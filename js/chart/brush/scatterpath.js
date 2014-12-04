@@ -31,7 +31,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7
             });

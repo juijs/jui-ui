@@ -139,7 +139,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 return key + ": " + chart.format(value);
             }
 
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 position: "top", // or bottom, left, right
                 all: false,
                 format: callback

@@ -297,12 +297,13 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-			var width = chart.width();
-			var height = chart.height();
-			var axis = (orient == "left" || orient == "right") ? chart.y() : chart.x();
-			var max = (orient == "left" || orient == "right") ? height : width;
+			var width = chart.width(),
+				height = chart.height(),
+				axis = (orient == "left" || orient == "right") ? chart.y() : chart.x(),
+				max = (orient == "left" || orient == "right") ? height : width,
+				start = (grid.axis) ? axis : 0,
+				size = max;
 
-			var start = (grid.axis) ? axis : 0;
 			if (grid.start) {
 				if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
 					start = max * parseFloat(grid.start.replace("%", ""))/100
@@ -311,7 +312,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 			}
 
-			var size = max ;
 			if (grid.size) {
 				if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
 					size = max * parseFloat(grid.size.replace("%", ""))/100
@@ -324,8 +324,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start = max / 2 - size / 2;
 			}
 
-			console.log(grid.type, orient, start, size, width, height);
-
 			return {
 				start  : start,
 				size : size,
@@ -333,14 +331,14 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 		}
 
-		this.drawSetup = function() {
+		this.getOptions = function(options) {
 			var self = this;
 
 			var callback = function(value) {
 				return self.chart.format(value);
 			}
 
-			return {
+			return $.extend({
 				domain: null,
 				step: 10,
 				min: 0,
@@ -356,7 +354,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				size: null,
 				line: false,
 				format: callback
-			}
+			}, options);
 		}
 	}
 

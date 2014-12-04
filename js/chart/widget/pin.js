@@ -32,7 +32,7 @@ jui.define("chart.widget.pin", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 split: null
             });
         }

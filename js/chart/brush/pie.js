@@ -111,7 +111,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {});
+			return this.getOptions();
         }
 	}
 

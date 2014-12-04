@@ -95,7 +95,7 @@ jui.define("chart.brush.waterfall", [], function() {
 		}
 
         this.drawSetup = function() {
-			return $.extend(this.parent.drawSetup(), {
+			return this.getOptions({
 				line: true,
 				end: false,
                 outerPadding: 5

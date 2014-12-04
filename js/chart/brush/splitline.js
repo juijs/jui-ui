@@ -74,7 +74,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return $.extend(this.parent.drawSetup(), {
+            return this.getOptions({
                 symbol: "normal", // normal, curve, step
                 split: null
             });

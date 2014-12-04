@@ -256,12 +256,11 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             text.attr({ y: (isTop) ? -7 : 16 });
         }
 
-        this.drawSetup = function() {
-            return {
-                axis: ""
-            }
+        this.getOptions = function(options) {
+            return $.extend({
+                axis: "default"
+            }, options);
         }
-
 	}
 
 	return CoreBrush;

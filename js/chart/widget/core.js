@@ -91,11 +91,11 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             return (this.widget.render === true) ? true : false;
         }
 
-        this.drawSetup = function() {
-            return {
+        this.getOptions = function(options) {
+            return $.extend({
                 brush: null,
                 render: false
-            }
+            }, options);
         }
 	}
 
