@@ -3,15 +3,34 @@ jui.define("chart.brush.bargauge", [], function() {
 	var BarGaugeBrush = function(chart, brush) {
         var y = 0, x = 0;
 
+        this.drawBefore = function() {
+            if (!brush.c) {
+                brush.c = function(i) {
+                    return {
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height()
+                    };
+                }
+            }
+        }
+
 		this.draw = function() {
+
+            var obj = brush.c(index);
+
+            var width = obj.width, height = obj.height;
+            var x = obj.x, y = obj.y;
+
 			var group = chart.svg.group({
 				"class" : "brush bar gauge"
 			});
 
 			if (brush.split) {
-				var max = chart.width();	
+				var max = width;
 			} else {
-				var max = chart.width();
+				var max = width;
 			}
 
 			for(var i = 0, len = chart.data().length; i < len; i++) {

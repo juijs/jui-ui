@@ -38,16 +38,30 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
-            var min = width;
+			if (!brush.c) {
+				brush.c = function(i) {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
 
-            if (height < min) {
-                min = height;
-            }
+			var obj = brush.c(index);
 
-            w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
+			var min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			w = min / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
             outerRadius = w;
             innerRadius = outerRadius - brush.size;
         }

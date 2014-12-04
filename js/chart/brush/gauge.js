@@ -106,7 +106,22 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
+
+			if (!brush.c) {
+				brush.c = function(i) {
+					return {
+						x : 0,
+						y : 0,
+						width : chart.width(),
+						height : chart.height()
+					};
+				}
+			}
+
+			var obj = brush.c(index);
+
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
             var min = width;
 
             if (height < min) {
@@ -114,9 +129,9 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             }
 
             w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
-            outerRadius = w;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w;
             innerRadius = outerRadius - brush.size;
         }
 
@@ -157,6 +172,9 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
+
+			console.log(this.parent);
+
 			return $.extend(this.parent.drawSetup(), {
                 min: 0,
                 max: 100,

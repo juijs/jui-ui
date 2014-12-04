@@ -45,7 +45,21 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 
         this.drawBefore = function() {
-            var width = chart.width(), height = chart.height();
+            if (!brush.c) {
+                brush.c = function(i) {
+                    return {
+                        x : 0,
+                        y : 0,
+                        width : chart.width(),
+                        height : chart.height()
+                    };
+                }
+            }
+
+            var obj = brush.c(index);
+
+            var width = obj.width, height = obj.height;
+            var x = obj.x, y = obj.y;
             var min = width;
 
             if (height < min) {
@@ -53,8 +67,8 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             }
 
             w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
+            centerX = width / 2 + x;
+            centerY = height / 2 + y;
             outerRadius = w;
             clipId = chart.createId("fill-gauge");
 

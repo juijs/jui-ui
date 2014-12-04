@@ -60,7 +60,8 @@
             brush : [
             	{ type : 'column', target : 'rainfall', outerPadding : 5, axis : "top" },
             	{ type : 'line', target : 'sealevel', symbol : 'curve', axis : "bottom" },
-            	{ type : 'line', target : 'temperature', y1 : 0, symbol : 'curve', axis: "bottom" }
+            	{ type : 'line', target : 'temperature', y1 : 0, symbol : 'curve', axis: "bottom" },
+                { type : 'scatter', target : 'temperature', y1 : 0, symbol : 'triangle', size : 8, axis : "bottom" }
             ],
             widget : [
                 { type : "legend", brush : [ 0, 1, 2 ], align : "end" }
