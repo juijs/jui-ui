@@ -180,8 +180,16 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 				
 				return old_scale(i);
-			}	
-			
+			}
+
+			new_scale.domain = function() {
+				return old_scale.domain.apply(old_scale, arguments);
+			}
+
+			new_scale.range = function() {
+				return old_scale.range.apply(old_scale, arguments);
+			}
+
 			new_scale.max = function() {
 				return old_scale.max.apply(old_scale, arguments);
 			}
@@ -291,9 +299,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.getGridSize = function(chart, orient, grid) {
 			var width = chart.width();
 			var height = chart.height();
+			var axis = (orient == "left" || orient == "right") ? chart.y() : chart.x();
 			var max = (orient == "left" || orient == "right") ? height : width;
 
-			var start = 0;
+			var start = (grid.axis) ? axis : 0;
 			if (grid.start) {
 				if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
 					start = max * parseFloat(grid.start.replace("%", ""))/100
@@ -315,6 +324,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start = max / 2 - size / 2;
 			}
 
+			console.log(grid.type, orient, start, size, width, height);
+
 			return {
 				start  : start,
 				size : size,
@@ -334,6 +345,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				step: 10,
 				min: 0,
 				max: 0,
+				axis : false,
 				reverse: false,
 				key: null,
 				hide: false,

@@ -69,7 +69,7 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.drawSetup = function() {
-            return {}
+            return $.extend(this.parent.drawSetup(), {});
         }
     }
 

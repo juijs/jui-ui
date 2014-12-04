@@ -56,9 +56,9 @@ jui.define("chart.brush.stackcolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-            return {
+			return $.extend(this.parent.drawSetup(), {
                 outerPadding: 15
-            }
+            });
         }
 	}
 

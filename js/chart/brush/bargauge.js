@@ -89,13 +89,13 @@ jui.define("chart.brush.bargauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(),  {
                 cut: 5,
                 size: 20,
                 split: false,
                 align: "left",
                 title: "title"
-            }
+            });
         }
 	}
 

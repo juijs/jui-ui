@@ -96,10 +96,10 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(), {
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7
-            }
+            });
         }
     }
 

@@ -114,12 +114,12 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(), {
                 symbol: "normal", // normal, curve, step
                 display: null,
                 active: null,
                 activeEvent: null // or click, mouseover, ...
-            }
+            });
         }
 	}
 

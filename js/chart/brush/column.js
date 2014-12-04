@@ -134,13 +134,13 @@ jui.define("chart.brush.column", [], function() {
 		}
 
         this.drawSetup = function() {
-            return {
+			return $.extend(this.parent.drawSetup(), {
                 outerPadding: 2,
                 innerPadding: 1,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
-            }
+            })
         }
 	}
 

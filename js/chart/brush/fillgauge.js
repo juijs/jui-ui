@@ -136,7 +136,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 		}
 
         this.drawSetup = function() {
-            return {
+            return $.extend(this.parent.drawSetup(), {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -144,7 +144,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                 direction: "vertical",
                 svg: "",
                 path: ""
-            }
+            })
         }
 	}
 

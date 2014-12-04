@@ -28,9 +28,50 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
      *
      */
     var UI = function() {
-        var _data = [], _page = 1, _start = 0, _end = 0;
-        var _grid = {}, _brush = [], _widget = [], _scales = [], _hash = {};
-        var _padding, _series, _area, _theme;
+        var _data = [], _tempData = [],  _page = 1, _start = 0, _end = 0;
+        var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
+        var _padding, _series, _area, _panel, _theme;
+
+
+
+
+        function getValue(value, max) {
+            if (typeof value == 'string' && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+
+
+        function getArrayValue (value) {
+            var arr;
+
+            if (typeof value == 'number') {
+                arr = [value, value];
+            } else if (typeof value == 'string') {
+
+                if (value.indexOf("%") > -1) {
+                    arr = [getValue(value, _area.width), getValue(value,  _area.height)]
+                } else {
+                    arr = [parseFloat(value), parseFloat(value)]
+                }
+
+            } else if (value instanceof Array) {
+
+                for(var i = 0; i < value.length; i++) {
+                    if (i == 0) {
+                        value[i] = getValue(value[i], _area.width);
+                    } else if (i == 1) {
+                        value[i] = getValue(value[i], _area.height);
+                    }
+                }
+
+                arr = value;
+            }
+
+            return arr;
+        }
 
 
         /**
@@ -67,6 +108,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             // 데이타 설정 , deepClone 으로 기존 옵션 값에 영향을 주지 않음
             var series = _.deepClone(self.options.series),
                 grid = _.deepClone(self.options.grid),
+                axis = _.deepClone(self.options.axis),
                 brush = _.deepClone(self.options.brush),
                 widget = _.deepClone(self.options.widget),
                 series_list = [];
@@ -113,6 +155,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _widget = createBrushData(widget, series_list);
             _series = series;
             _grid = grid;
+            _axis = axis;
 
             // hash code 삭제
             _hash = {};
@@ -211,6 +254,82 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function drawAxis(self) {
+
+
+            function drawAxisType(axis, k, chart) {
+
+                var orient = "custom";
+                if (k == 'x')
+                    orient = 'bottom';
+                else if (k == 'x1')
+                    orient = 'top';
+                else if (k == 'y')
+                    orient = 'left';
+                else if (k == 'y1')
+                    orient = 'right';
+
+                if (!(axis[k] instanceof Array)) {
+                    axis[k] = [axis[k]];
+                }
+
+                var scaleList = [];
+                for(var i = 0, len = axis[k].length ;i  < len; i++) {
+
+                    axis[k][i].axis = true;
+
+                    var Grid = jui.include("chart.grid." + (axis[k][i].type || "block"));
+
+                    // 브러쉬&위젯 기본 프로퍼티 정의
+                    Grid.prototype.chart = chart;
+                    Grid.prototype.grid = axis[k][i];
+
+                    var obj = new Grid(orient, chart, axis[k][i]).render(),
+                        dist = axis[k][i].dist || 0;
+
+                    // grid 별 dist 로 위치선정하기
+                    if (k == 'y') {
+                        obj.root.translate(_area.x - dist, _area.y);
+                    } else if (k == 'y1') {
+                        obj.root.translate(_area.x + chart.x2() + dist, _area.y);
+                    } else if (k == 'x') {
+                        obj.root.translate(_area.x , _area.y + chart.y2() + dist);
+                    } else if (k == 'x1') {
+                        obj.root.translate(_area.x , _area.y + chart.y() - dist);
+                    }
+
+                    scaleList.push(obj.scale);
+                }
+
+                return scaleList;
+
+            }
+
+            for (key in _axis) {
+
+                var axis = _axis[key];
+
+                // set panel
+                self.savePanel(self.caculatePanel(axis.start || [0, 0], axis.size ||  [self.width(), self.height()]));
+
+                // set data
+                self.saveData(axis.data);
+
+
+                // draw x grid
+                if (axis.x) { axis.xScale = drawAxisType(axis, "x", self); }
+                if (axis.y) { axis.yScale = drawAxisType(axis, "y", self); }
+                if (axis.x1) { axis.x1Scale = drawAxisType(axis, "x1", self); }
+                if (axis.y1) { axis.y1Scale = drawAxisType(axis, "y1", self); }
+                if (axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
+
+
+                self.restoreData();
+                self.restorePanel();
+            }
+
+        }
+
         /**
          * brush 그리기
          *
@@ -234,14 +353,36 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리
                     if (type == "widget") {
-                        var draw = new Obj(self, draws[i]),
-                            elem = draw.render();
 
-                        if(!draw.isRender()) {
-                            self.svg.autoRender(elem, false);
+                        if (draws[i].axis) {
+                            self.saveData(_axis[draws[i].axis].data);
+
+                            var draw = new Obj(self, draws[i]),
+                                elem = draw.render();
+                            if(!draw.isRender()) {
+                                self.svg.autoRender(elem, false);
+                            }
+
+                            self.restoreData();
+
+                        } else {
+                            var draw = new Obj(self, draws[i]),
+                                elem = draw.render();
+                            if(!draw.isRender()) {
+                                self.svg.autoRender(elem, false);
+                            }
                         }
+
                     } else {
-                        new Obj(self, draws[i]).render();
+                        if (draws[i].axis) {
+                            self.saveData(_axis[draws[i].axis].data);
+                            new Obj(self, draws[i]).render();
+                            self.restoreData();
+
+                        } else {
+                            new Obj(self, draws[i]).render();
+                        }
+
                     }
                 }
             }
@@ -278,6 +419,28 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param drawObj
          */
         function setGridAxis(draw) {
+
+
+            if (draw.axis) {
+
+                if (_axis[draw.axis].xScale) {
+                    draw.x = (typeof draw.x !== 'undefined') ? _axis[draw.axis].xScale[draw.x] : _axis[draw.axis].xScale[0];
+                }
+                if (typeof draw.x1 !== 'undefined') { draw.x = _axis[draw.axis].x1Scale[draw.x1] || _axis[draw.axis].x1Scale[0] ; }
+
+                if (_axis[draw.axis].yScale) {
+                    draw.y = (typeof draw.y !== 'undefined') ? _axis[draw.axis].yScale[draw.y] : _axis[draw.axis].yScale[0];
+                }
+                if (typeof draw.y1 !== 'undefined') { draw.y = _axis[draw.axis].y1Scale[draw.y1] || _axis[draw.axis].y1Scale[0] ; }
+
+                if (_axis[draw.axis].cScale) {
+                    draw.c = (typeof draw.c !== 'undefined') ? _axis[draw.axis].cScale[draw.c] : _axis[draw.axis].cScale[0];
+                }
+
+
+                return;
+            }
+
             if (_scales.x || _scales.x1) {
                 if (!_scales.x && _scales.x1) {
                     _scales.x = _scales.x1;
@@ -525,22 +688,61 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.width = function() {
+            if (_panel && typeof _panel.width !== 'undefined') return _panel.width;
             return _area.width;
         }
         this.height = function() {
+            if (_panel && typeof _panel.height !== 'undefined') return _panel.height;
             return _area.height;
         }
         this.x = function() {
+            if (_panel && typeof _panel.x !== 'undefined') return _panel.x;
             return _area.x;
         }
         this.y = function() {
+            if (_panel && typeof _panel.y !== 'undefined') return _panel.y;
             return _area.y;
         }
         this.x2 = function() {
+            if (_panel && typeof _panel.x2 !== 'undefined') return _panel.x2;
             return _area.x2;
         }
         this.y2 = function() {
+            if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
             return _area.y2;
+        }
+
+        this.savePanel = function(panel) {
+            _panel = panel;
+        }
+
+        this.restorePanel = function() {
+            _panel = null;
+        }
+
+        this.saveData = function(data) {
+            _tempData = _data;
+            _data = data;
+        }
+
+        this.restoreData = function() {
+            _data = _tempData;
+            _tempData = [] ;
+        }
+
+        this.caculatePanel = function(start, size) {
+
+            start = getArrayValue(start);
+            size = getArrayValue(size);
+
+            return {
+                x : start[0],
+                y : start[1],
+                width : size[0],
+                height : size[1],
+                x2 : start[0] + size[0],
+                y2 : start[1] + size[1]
+            };
         }
 
         /**
@@ -681,6 +883,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return _grid;
         }
 
+        this.axis = function(key) {
+            if(_axis[key]) {
+                return _axis[key];
+            }
+
+            return _axis;
+        }
+
         /**
          * brush 옵션 리턴
          *
@@ -791,6 +1001,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             drawBefore(this);
             drawDefs(this);
             drawGrid(this);
+            drawAxis(this);
             drawBrush(this, "brush");
             drawBrush(this, "widget");
 
@@ -1027,6 +1238,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             style: {},
             series: {},
             grid: {},
+            axis : {},
             brush: null,
             widget: null,
             data: [],

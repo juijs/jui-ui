@@ -61,7 +61,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-            return {
+			return $.extend(this.parent.drawSetup(), {
                 min: 0,
                 max: 100,
                 cut: 5,
@@ -69,7 +69,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
                 startAngle: -180,
                 endAngle: 360,
                 title: "title"
-            }
+            });
         }
 	}
 

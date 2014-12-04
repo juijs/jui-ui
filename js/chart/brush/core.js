@@ -105,6 +105,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @returns {Array}
          */
         this.getXY = function() {
+
+
             var xy = [];
 
             for (var i = 0, len = this.chart.data().length; i < len; i++) {
@@ -253,6 +255,13 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             text.element.textContent = this.chart.format(value);
             text.attr({ y: (isTop) ? -7 : 16 });
         }
+
+        this.drawSetup = function() {
+            return {
+                axis: ""
+            }
+        }
+
 	}
 
 	return CoreBrush;

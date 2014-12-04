@@ -91,7 +91,7 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.drawSetup = function() {
-            return {};
+            return $.extend(this.parent.drawSetup(), {});
         }
     }
 
