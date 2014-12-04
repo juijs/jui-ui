@@ -28,6 +28,14 @@
             { month :  'Dec', rainfall : 54.4, sealevel : 1016.7, temperature  : 9.6}
         ];
 
+        var data2 = [
+            { month : 'Jan', rainfall : 49.9, sealevel : 1016, temperature  : 7.0},
+            { month : 'Feb', rainfall : 71.5, sealevel : 1016, temperature  : 6.9 },
+            { month : 'Mar', rainfall : 106.49, sealevel : 1015.9, temperature  : 9.5 },
+            { month : 'Apr', rainfall : 129.2, sealevel : 1015.5, temperature  : 14.5 },
+            { month : 'May', rainfall : 144.0, sealevel : 1012.3, temperature  : 18.2 },
+            { month : 'Jun', rainfall : 176.0, sealevel : 1009.5, temperature  : 21.5 },
+        ];
 
         chart("#chart", {
             width: 800,
@@ -40,7 +48,7 @@
                     x : { target : "month", line : true },
                     y : { type : 'range', domain: [0, 300], step : 6, format : function(value) { return value + " mm"} },
                     size : ["100%", "40%"],
-                    data : data
+                    data : data2
                 },
 
                 "bottom" : {

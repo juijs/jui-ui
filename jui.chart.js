@@ -3561,9 +3561,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _panel, _theme;
 
-
-
-
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
                 return max * (parseFloat(value.replace("%", "")) /100);
@@ -3572,14 +3569,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return value;
         }
 
-
         function getArrayValue (value) {
             var arr;
 
             if (typeof value == 'number') {
                 arr = [value, value];
             } else if (typeof value == 'string') {
-
                 if (value.indexOf("%") > -1) {
                     arr = [getValue(value, _area.width), getValue(value,  _area.height)]
                 } else {
@@ -3587,7 +3582,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
             } else if (value instanceof Array) {
-
                 for(var i = 0; i < value.length; i++) {
                     if (i == 0) {
                         value[i] = getValue(value[i], _area.width);
@@ -3627,6 +3621,38 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             chart.y2 = chart.y + chart.height;
 
             _area = chart;
+        }
+
+        function savePanel(panel) {
+            _panel = panel;
+        }
+
+        function restorePanel() {
+            _panel = null;
+        }
+
+        function saveData(data) {
+            _tempData = _data;
+            _data = data;
+        }
+
+        function restoreData() {
+            _data = _tempData;
+            _tempData = [] ;
+        }
+
+        function caculatePanel(start, size) {
+            start = getArrayValue(start);
+            size = getArrayValue(size);
+
+            return {
+                x : start[0],
+                y : start[1],
+                width : size[0],
+                height : size[1],
+                x2 : start[0] + size[0],
+                y2 : start[1] + size[1]
+            };
         }
 
         /**
@@ -3785,10 +3811,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         function drawAxis(self) {
 
-
             function drawAxisType(axis, k, chart) {
+                var orient = "custom",
+                    scaleList = [];
 
-                var orient = "custom";
                 if (k == 'x')
                     orient = 'bottom';
                 else if (k == 'x1')
@@ -3802,9 +3828,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     axis[k] = [axis[k]];
                 }
 
-                var scaleList = [];
                 for(var i = 0, len = axis[k].length ;i  < len; i++) {
-
                     axis[k][i].axis = true;
 
                     var Grid = jui.include("chart.grid." + (axis[k][i].type || "block"));
@@ -3831,19 +3855,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
 
                 return scaleList;
-
             }
 
-            for (key in _axis) {
-
+            for (var key in _axis) {
                 var axis = _axis[key];
 
                 // set panel
-                self.savePanel(self.caculatePanel(axis.start || [0, 0], axis.size ||  [self.width(), self.height()]));
+                savePanel(caculatePanel(axis.start || [ 0, 0 ], axis.size || [ self.width(), self.height() ]));
 
                 // set data
-                self.saveData(axis.data);
-
+                saveData(axis.data);
 
                 // draw x grid
                 if (axis.x) { axis.xScale = drawAxisType(axis, "x", self); }
@@ -3852,11 +3873,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if (axis.y1) { axis.y1Scale = drawAxisType(axis, "y1", self); }
                 if (axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
 
-
-                self.restoreData();
-                self.restorePanel();
+                restoreData();
+                restorePanel();
             }
-
         }
 
         /**
@@ -3884,7 +3903,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     if (type == "widget") {
 
                         if (draws[i].axis) {
-                            self.saveData(_axis[draws[i].axis].data);
+                            saveData(_axis[draws[i].axis].data);
 
                             var draw = new Obj(self, draws[i]),
                                 elem = draw.render();
@@ -3892,7 +3911,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                                 self.svg.autoRender(elem, false);
                             }
 
-                            self.restoreData();
+                            restoreData();
 
                         } else {
                             var draw = new Obj(self, draws[i]),
@@ -3904,9 +3923,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     } else {
                         if (draws[i].axis) {
-                            self.saveData(_axis[draws[i].axis].data);
+                            saveData(_axis[draws[i].axis].data);
                             new Obj(self, draws[i]).render();
-                            self.restoreData();
+                            restoreData();
 
                         } else {
                             new Obj(self, draws[i]).render();
@@ -3948,10 +3967,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param drawObj
          */
         function setGridAxis(draw) {
-
-
             if (draw.axis) {
-
                 if (_axis[draw.axis].xScale) {
                     draw.x = (typeof draw.x !== 'undefined') ? _axis[draw.axis].xScale[draw.x] : _axis[draw.axis].xScale[0];
                 }
@@ -3965,7 +3981,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if (_axis[draw.axis].cScale) {
                     draw.c = (typeof draw.c !== 'undefined') ? _axis[draw.axis].cScale[draw.c] : _axis[draw.axis].cScale[0];
                 }
-
 
                 return;
             }
@@ -4239,39 +4254,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         this.y2 = function() {
             if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
             return _area.y2;
-        }
-
-        this.savePanel = function(panel) {
-            _panel = panel;
-        }
-
-        this.restorePanel = function() {
-            _panel = null;
-        }
-
-        this.saveData = function(data) {
-            _tempData = _data;
-            _data = data;
-        }
-
-        this.restoreData = function() {
-            _data = _tempData;
-            _tempData = [] ;
-        }
-
-        this.caculatePanel = function(start, size) {
-
-            start = getArrayValue(start);
-            size = getArrayValue(size);
-
-            return {
-                x : start[0],
-                y : start[1],
-                width : size[0],
-                height : size[1],
-                x2 : start[0] + size[0],
-                y2 : start[1] + size[1]
-            };
         }
 
         /**
