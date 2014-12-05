@@ -9992,6 +9992,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _data = [], _tempData = [],  _page = 1, _start = 0, _end = 0;
         var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _panel, _theme;
+        var _initialize = false;
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -10027,7 +10028,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             return value;
         }
-
 
         /**
          * chart 기본 영역 계산
@@ -10316,7 +10316,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * brush 에 맞는 x, y 축(grid) 설정
          *
          */
-        function drawBrush(self, type) {
+        function drawBrush(self, type, isAll) {
             var draws = (type == "brush") ? _brush : _widget;
 
             if (draws != null) {
@@ -10333,26 +10333,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리
                     if (type == "widget") {
+                        var draw = new Obj(self, draws[i]);
+
+                        if(_initialize && !draw.isRender() && isAll !== true) {
+                            return;
+                        }
 
                         if (draws[i].axis) {
                             saveData(_axis[draws[i].axis].data);
 
-                            var draw = new Obj(self, draws[i]),
-                                elem = draw.render();
+                            var elem = draw.render();
                             if(!draw.isRender()) {
                                 self.svg.autoRender(elem, false);
                             }
 
                             restoreData();
-
                         } else {
-                            var draw = new Obj(self, draws[i]),
-                                elem = draw.render();
+                            var elem = draw.render();
                             if(!draw.isRender()) {
                                 self.svg.autoRender(elem, false);
                             }
                         }
-
                     } else {
                         if (draws[i].axis) {
                             saveData(_axis[draws[i].axis].data);
@@ -10934,8 +10935,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             drawDefs(this);
             drawGrid(this);
             drawAxis(this);
-            drawBrush(this, "brush");
-            drawBrush(this, "widget");
+            drawBrush(this, "brush", isAll);
+            drawBrush(this, "widget", isAll);
 
             // SVG 태그 백그라운드 테마 설정
             this.svg.root.css({
@@ -10945,6 +10946,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             // SVG 메인/서브 렌더링
             this.svg.render(isAll);
             this.emit("render");
+
+            // 초기화 설정
+            _initialize = true;
         }
 
         /**
