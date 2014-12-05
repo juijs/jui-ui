@@ -215,6 +215,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			this.end = obj.end;
 			this.points = this.scale.range();
 			this.domain = this.scale.domain();
+
 			this.band = this.scale.rangeBand();
 			this.half_band = (grid.full) ? 0 : this.band / 2;
 			this.bar = 6;

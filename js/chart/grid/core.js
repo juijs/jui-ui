@@ -52,9 +52,12 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length && !grid.domain) {
-				var max = grid.max,
-					min = grid.min;
+				var min = grid.min || undefined,
+					max = grid.max || undefined;
 				var data = chart.data();
+
+
+				var value_list = [];
 
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
@@ -65,22 +68,29 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 							var value = +s(row);
 
-							if (max < value)
-								max = value;
-							if (min > value)
-								min = value;
-
+							value_list.push(value);
 						}
 					} else {
-						var _max = chart.series(s).max;
-						var _min = chart.series(s).min;
-						if (max < _max)
-							max = _max;
-						if (min > _min)
-							min = _min;
+						for (var index = 0; index < data.length; index++) {
+
+							var value = data[index][s];
+
+							if (value instanceof Array) {
+								for(var j = 0; j < value.length; j++) {
+									value_list.push(value[j]);
+								}
+							} else {
+								value_list.push(value);
+							}
+
+						}
 					}
 
 				}
+
+
+				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
+				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
 				
 				grid.max = max;
 				grid.min = min;
@@ -127,20 +137,20 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				var min = grid.min || undefined,
 					max = grid.max || undefined;
 				var data = chart.data();
-				
+
+				var value_list = [] ;
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 					
 					for(var index = 0; index < data.length; index++) {
 						var value = +data[index][s];
-						if (typeof min == "undefined") min = value;
-						else if (min > value) min = value;
-						
-						if (typeof max == "undefined") max = value;
-						else if (max < value) max = value;						
+						value_list.push(value);
 					}
 				}
-				
+
+				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
+				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
+
 				grid.max = max;
 				grid.min = min;
 				grid.domain = [grid.min, grid.max];
@@ -304,25 +314,28 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start = (grid.axis) ? axis : 0,
 				size = max;
 
-			if (grid.start) {
-				if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
-					start = max * parseFloat(grid.start.replace("%", ""))/100
-				} else {
-					start = grid.start
+			if (!grid.axis) {
+				if (grid.start) {
+					if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
+						start = max * parseFloat(grid.start.replace("%", ""))/100
+					} else {
+						start = grid.start;
+					}
+				}
+
+				if (grid.size) {
+					if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
+						size = max * parseFloat(grid.size.replace("%", ""))/100
+					} else {
+						size = grid.size
+					}
+				}
+
+				if (start == 'center') {
+					start = max / 2 - size / 2;
 				}
 			}
 
-			if (grid.size) {
-				if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
-					size = max * parseFloat(grid.size.replace("%", ""))/100
-				} else {
-					size = grid.size
-				}
-			}
-
-			if (start == 'center') {
-				start = max / 2 - size / 2;
-			}
 
 			return {
 				start  : start,

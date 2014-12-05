@@ -40,31 +40,31 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return value;
         }
 
-        function getArrayValue (value) {
+        function getArrayValue (value, isStart) {
             var arr;
 
             if (typeof value == 'number') {
-                arr = [value, value];
+                arr = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
             } else if (typeof value == 'string') {
                 if (value.indexOf("%") > -1) {
-                    arr = [getValue(value, _area.width), getValue(value,  _area.height)]
+                    var first = getValue(value, _area.width)
+                    var second = getValue(value,  _area.height)
+                    arr = (isStart) ? { left : first, top : second } : { width : first, height : second } ;
                 } else {
-                    arr = [parseFloat(value), parseFloat(value)]
+                    value = parseFloat(value);
+                    arr = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
                 }
-
-            } else if (value instanceof Array) {
-                for(var i = 0; i < value.length; i++) {
-                    if (i == 0) {
-                        value[i] = getValue(value[i], _area.width);
-                    } else if (i == 1) {
-                        value[i] = getValue(value[i], _area.height);
-                    }
+            } else {
+                if (isStart) {
+                    value.left = getValue(value.left, _area.width);
+                    value.top = getValue(value.top, _area.height);
+                } else {
+                    value.width = getValue(value.width, _area.width);
+                    value.height = getValue(value.height, _area.height);
                 }
-
-                arr = value;
             }
 
-            return arr;
+            return value;
         }
 
 
@@ -113,16 +113,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function caculatePanel(start, size) {
-            start = getArrayValue(start);
+            start = getArrayValue(start, true);
             size = getArrayValue(size);
-
             return {
-                x : start[0],
-                y : start[1],
-                width : size[0],
-                height : size[1],
-                x2 : start[0] + size[0],
-                y2 : start[1] + size[1]
+                x : start.left,
+                y : start.top,
+                width : size.width,
+                height : size.height,
+                x2 : start.left + size.width,
+                y2 : start.top + size.height
             };
         }
 
@@ -283,8 +282,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawAxis(self) {
 
             function drawAxisType(axis, k, chart) {
-                var orient = "custom",
-                    scaleList = [];
+                var ax = axis[k];
+                var orient = "custom";
 
                 if (k == 'x')
                     orient = 'bottom';
@@ -295,47 +294,47 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 else if (k == 'y1')
                     orient = 'right';
 
-                if (!(axis[k] instanceof Array)) {
-                    axis[k] = [axis[k]];
+
+                if (ax.extend) {
+                    ax = $.extend(_axis[ax.extend][k], ax);
+                    delete ax.extend;
                 }
 
-                for(var i = 0, len = axis[k].length ;i  < len; i++) {
-                    axis[k][i].axis = true;
+                ax.axis = true;
 
-                    var Grid = jui.include("chart.grid." + (axis[k][i].type || "block"));
+                var Grid = jui.include("chart.grid." + (ax.type || "block"));
 
-                    // 브러쉬&위젯 기본 프로퍼티 정의
-                    Grid.prototype.chart = chart;
-                    Grid.prototype.grid = axis[k][i];
+                // 브러쉬&위젯 기본 프로퍼티 정의
+                Grid.prototype.chart = chart;
+                Grid.prototype.grid = ax;
 
-                    var obj = new Grid(orient, chart, axis[k][i]).render(),
-                        dist = axis[k][i].dist || 0;
+                var obj = new Grid(orient, chart, ax).render(),
+                    dist = ax.dist || 0;
 
-                    // grid 별 dist 로 위치선정하기
-                    if (k == 'y') {
-                        obj.root.translate(_area.x - dist, _area.y);
-                    } else if (k == 'y1') {
-                        obj.root.translate(_area.x + chart.x2() + dist, _area.y);
-                    } else if (k == 'x') {
-                        obj.root.translate(_area.x , _area.y + chart.y2() + dist);
-                    } else if (k == 'x1') {
-                        obj.root.translate(_area.x , _area.y + chart.y() - dist);
-                    }
-
-                    scaleList.push(obj.scale);
+                // grid 별 dist 로 위치선정하기
+                if (k == 'y') {
+                    obj.root.translate(_area.x - dist, _area.y);
+                } else if (k == 'y1') {
+                    obj.root.translate(_area.x + chart.x2() + dist, _area.y);
+                } else if (k == 'x') {
+                    obj.root.translate(_area.x , _area.y + chart.y2() + dist);
+                } else if (k == 'x1') {
+                    obj.root.translate(_area.x , _area.y + chart.y() - dist);
                 }
 
-                return scaleList;
+                return obj.scale;
             }
 
             for (var key in _axis) {
                 var axis = _axis[key];
 
                 // set panel
-                savePanel(caculatePanel(axis.start || [ 0, 0 ], axis.size || [ self.width(), self.height() ]));
+                savePanel(caculatePanel(axis.start || {left : 0, top : 0 }, axis.size || {width : self.width(), height : self.height() }));
 
                 // set data
                 saveData(axis.data);
+
+                //saveSeries (axis.series);
 
                 // draw x grid
                 if (axis.x) { axis.xScale = drawAxisType(axis, "x", self); }
@@ -344,6 +343,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if (axis.y1) { axis.y1Scale = drawAxisType(axis, "y1", self); }
                 if (axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
 
+                //restoreSeries();
                 restoreData();
                 restorePanel();
             }
@@ -439,20 +439,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          */
         function setGridAxis(draw) {
             if (draw.axis) {
-                if (_axis[draw.axis].xScale) {
-                    draw.x = (typeof draw.x !== 'undefined') ? _axis[draw.axis].xScale[draw.x] : _axis[draw.axis].xScale[0];
-                }
-                if (typeof draw.x1 !== 'undefined') { draw.x = _axis[draw.axis].x1Scale[draw.x1] || _axis[draw.axis].x1Scale[0] ; }
-
-                if (_axis[draw.axis].yScale) {
-                    draw.y = (typeof draw.y !== 'undefined') ? _axis[draw.axis].yScale[draw.y] : _axis[draw.axis].yScale[0];
-                }
-                if (typeof draw.y1 !== 'undefined') { draw.y = _axis[draw.axis].y1Scale[draw.y1] || _axis[draw.axis].y1Scale[0] ; }
-
-                if (_axis[draw.axis].cScale) {
-                    draw.c = (typeof draw.c !== 'undefined') ? _axis[draw.axis].cScale[draw.c] : _axis[draw.axis].cScale[0];
-                }
-
+                draw.x = _axis[draw.axis].xScale || _axis[draw.axis].x1Scale;
+                draw.y = _axis[draw.axis].yScale || _axis[draw.axis].y1Scale;
+                draw.c = _axis[draw.axis].cScale;
                 return;
             }
 
