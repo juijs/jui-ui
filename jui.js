@@ -10335,6 +10335,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     if (type == "widget") {
                         var draw = new Obj(self, draws[i]);
 
+                        // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
+                        // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
                         if(_initialize && !draw.isRender() && isAll !== true) {
                             return;
                         }
@@ -11685,8 +11687,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length && !grid.domain) {
-				var min = grid.min || undefined,
-					max = grid.max || undefined;
+				var min = grid.min || 0,
+					max = grid.max || 0;
 				var data = chart.data();
 
 
@@ -11721,9 +11723,11 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 				}
 
+				var tempMin = Math.min.apply(Math, value_list);
+				var tempMax = Math.max.apply(Math, value_list);
 
-				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
-				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
+				if (min > tempMin) min = tempMin;
+				if (max < tempMax) max = tempMax;
 				
 				grid.max = max;
 				grid.min = min;

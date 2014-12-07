@@ -52,8 +52,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			if (grid.target && grid.target.length && !grid.domain) {
-				var min = grid.min || undefined,
-					max = grid.max || undefined;
+				var min = grid.min || 0,
+					max = grid.max || 0;
 				var data = chart.data();
 
 
@@ -88,9 +88,11 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 				}
 
+				var tempMin = Math.min.apply(Math, value_list);
+				var tempMax = Math.max.apply(Math, value_list);
 
-				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
-				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
+				if (min > tempMin) min = tempMin;
+				if (max < tempMax) max = tempMax;
 				
 				grid.max = max;
 				grid.min = min;

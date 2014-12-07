@@ -34,7 +34,7 @@
                     start : "50%",
                     size : "50%",
                     type : 'range',
-                    target : ["name", "value"],
+                    target : function(d) { return d.name ; },
                     step : 10
                 }
             },
