@@ -12,44 +12,37 @@
 <script src="../../js/ui/modal.js"></script>
 <script src="../../js/uix/window.js"></script>
 <script>
-	jui.defineUI("wintest", [ "uix.window" ], function(win) {
-		var UI = function() {
-			var w;
-
-			this.init = function () {
-				w = win(this.root, this.options);
-			}
-
-			this.show = function () {
-				w.show();
-			}
-
-			this.hide = function () {
-				w.hide();
-			}
-		}
-
-		UI.setup = function() {
-			return {
-				modal: false,
-				width: 400,
-				height: 300
-			}
-		}
-
-		return UI;
-	});
-
-	jui.ready([ "wintest" ], function(win) {
-		w1 = win("#w1", {
-			modal: true
+	jui.ready([ "uix.window" ], function(window) {
+		win_1 = window("#win_1", {
+			width: 500,
+			height: 300,
+			left: 100,
+			top: 100
 		});
 
-		w2 = win("#w2");
+		win_1_2 = window("#win_1_2", {
+			width: 500,
+			height: 300,
+			left: 100,
+			top: 400
+		});
+
+		win_1_3 = window("#win_1_3", {
+			width: 500,
+			height: 300,
+			left: 100,
+			top: 700
+		});
+
+		win_2 = window("#win_2", {
+			width: 500,
+			height: 300,
+			modal: true
+		});
 	});
 </script>
 </head>
-<body class="jui">
+<body class="jui" style="height: 768px">
 
 <div class="page-header">
 	<h1>Window</h1>
@@ -58,29 +51,71 @@
 <section>
 	<h2>Default</h2>
 	<p>
-		<div id="w1" class="window" style="width: 360px; height: 250px;">
-			<div class="head">
-				<div class="left">HOME</div>
-				<div class="right">
-					<i class='icon-close close'></i>
-				</div>
-			</div>
-			<div class="body">
-				Contents...<br/>
+	<div id="win_1" class="window">
+		<div class="head">
+			<div class="left">HOME</div>
+			<div class="right">
+				<a href="javascript:alert('plus');"><i class="icon-plus icon-white"></i></a>
+				<a href="javascript:alert('search');"><i class="icon-search icon-white"></i></a>
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
 			</div>
 		</div>
+		<div class="body">
+			Contents...<br/>
+		</div>
+	</div>
 
-		<div id="w2" class="window window-black" style="width: 360px; height: 250px;">
-			<div class="head">
-				<div class="left">HOME</div>
-				<div class="right">
-					<i class='icon-close close'></i>
-				</div>
-			</div>
-			<div class="body">
-				Contents...<br/>
+	<div id="win_1_2" class="window window-white">
+		<div class="head">
+			<div class="left">HOME</div>
+			<div class="right">
+				<a href="javascript:alert('plus');"><i class="icon-plus"></i></a>
+				<a href="javascript:alert('search');"><i class="icon-search"></i></a>
+				<a href="#" class='close'><i class='icon-exit'></i></a>
 			</div>
 		</div>
+		<div class="body">
+			Contents...<br/>
+		</div>
+		<div class="foot" align="center">
+			<a href="#" class="btn btn-purple">Save</a>
+			<a href="#" class="btn btn-gray">Close</a>
+		</div>
+	</div>
+
+	<div id="win_1_3" class="window window-black">
+		<div class="head">
+			<div class="left">HOME</div>
+			<div class="right">
+				<a href="javascript:alert('plus');"><i class="icon-plus icon-white"></i></a>
+				<a href="javascript:alert('search');"><i class="icon-search icon-white"></i></a>
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+			</div>
+		</div>
+		<div class="body">
+			Contents...<br/>
+		</div>
+		<div class="foot" align="center">
+			<a href="#" class="btn btn-black">Save</a>
+			<a href="#" class="btn btn-black">Close</a>
+		</div>
+	</div>
+
+	<div id="win_2" class="window">
+		<div class="head">
+			<div class="left">HOME</div>
+			<div class="right">
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+			</div>
+		</div>
+		<div class="body">
+			Contents...<br/>
+		</div>
+		<div class="foot" align="center">
+			<a href="#" class="btn btn-purple">Save</a>
+			<a href="#" class="btn btn-gray">Close</a>
+		</div>
+	</div>
 	</p>
 </section>
 </body>

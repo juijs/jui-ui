@@ -83,7 +83,7 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 					e.stopPropagation();
 				});
 			}
-			
+
 			// 윈도우 숨기기
 			this.addEvent($win_head.find(".close"), "click", function(e) {
 				self.hide();
@@ -121,19 +121,13 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			
 			// 기본 타입 설정
 			this.type = "hide";
-			
-			// 바디 리사이징
-			setBodyResize();
+			$win_root.hide();
 
-			// Init
-			setTimeout(function() {
-				$win_root.hide();
-				
-				if(opts.modal) {
-					var modalOpts = (opts.modalIndex > 0) ? { index: opts.modalIndex } : {};
-					ui_modal = modal(self.root, $.extend({ autoHide: false }, modalOpts));
-				}
-			}, 10);
+			// 모달 컴포넌트 설정
+			if(opts.modal) {
+				var modalOpts = (opts.modalIndex > 0) ? { index: opts.modalIndex } : {};
+				ui_modal = modal(self.root, $.extend({ autoHide: false }, modalOpts));
+			}
 		}
 		
 		this.hide = function() {
@@ -152,6 +146,8 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			
 			this.emit("show");
 			this.type = "show";
+
+			setBodyResize();
 		}
 		
 		this.move = function(x, y) {

@@ -472,8 +472,8 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 	 * 
 	 */
 	var UI = function() {
-		var $obj = null;
-		var dragIndex = { start: null, end: null }, 
+		var dragIndex = { start: null, end: null },
+            nodeIndex = null,
 			iParser = _.index();
 		
 		/**
@@ -789,9 +789,20 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			$(this.root).find("li").removeClass("active");
 			$(node.element).addClass("active");
-			
+
+            nodeIndex = index;
 			return node;
 		}
+
+        this.unselect = function() {
+            if(nodeIndex == null) return;
+            var node = this.get(nodeIndex);
+
+            $(node.element).removeClass("active");
+            nodeIndex = null;
+
+            return node;
+        }
 		
 		this.remove = function(index) {
 			this.uit.removeNode(index);
