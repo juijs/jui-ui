@@ -3571,18 +3571,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function getArrayValue (value, isStart) {
-            var arr;
 
             if (typeof value == 'number') {
-                arr = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
+                value = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
             } else if (typeof value == 'string') {
                 if (value.indexOf("%") > -1) {
-                    var first = getValue(value, _area.width)
-                    var second = getValue(value,  _area.height)
-                    arr = (isStart) ? { left : first, top : second } : { width : first, height : second } ;
+                    var first = getValue(value, _area.width);
+                    var second = getValue(value,  _area.height);
+                    value = (isStart) ? { left : first, top : second } : { width : first, height : second } ;
                 } else {
                     value = parseFloat(value);
-                    arr = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
+                    value = (isStart) ? { left : value, top : value } : { width : value, height : value } ;
                 }
             } else {
                 if (isStart) {
