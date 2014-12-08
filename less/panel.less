@@ -1,22 +1,22 @@
 .jui {
-	.panel {
+  .panel {
     position: relative;
     text-align: left;
     text-decoration: none;
     .box-sizing(border-box);
-	    
+
 		> * {
 			width: auto;
 		}
-		
+
 		> .head, > .foot {
 		  overflow: visible;
 		}
-		
+
 		> .body {
 			.text-default();
 		}
-		
+
 		// Default
 		.panel-normal;
 		.panel-white;
@@ -51,11 +51,13 @@
   }
 	
 	
-	// Panel Customizing
-	// --------------------------------------------------
-	.panel {
+  // Panel Customizing (Table)
+  // --------------------------------------------------
+  .panel {
     > .table-classic, 
-    > .xtable > .table-classic {
+    > .xtable > .table-classic,
+	> .body.fit > .table-classic,
+	> .body.fit > .xtable > .table-classic {
       > thead {
         th:first-child { 
           .border-top-left-radius(0px); 
@@ -67,21 +69,31 @@
       
       .border-bottom-radius(5px);
     }
-	}
+  }
+
+
+  // Panel Customizing (Tab)
+  // --------------------------------------------------
+  .panel > .head > .tab {
+	display: inline-block;
+	margin: 0px 0px 0px -10px;
+	padding-left: 0px;
+	line-height: normal;
+  }
 
 	
-	// Panel Close
-	// --------------------------------------------------
-	
-	.panel-close {
-		> .head {
-			.border-bottom-radius(5px);
-		}
-		
-		> *:not(.head) {
-			display: none;
-		}
+  // Panel Close
+  // --------------------------------------------------
+
+  .panel-close {
+	> .head {
+	  .border-bottom-radius(5px);
 	}
+
+	> *:not(.head) {
+	  display: none;
+	}
+  }
 	
 	
 	// Panel Sizes
@@ -91,9 +103,9 @@
 		font-size: 12px;
 		
 		> .head, > .foot {
-		  height: 24px;
-		  line-height: 22px;
-			padding: 4px 15px;
+		  height: 31px;
+		  line-height: 31px;
+		  padding: 4px 15px;
 		}
 		
 		> .body {

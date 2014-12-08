@@ -3,12 +3,14 @@ jui.define("chart.brush.candlestick", [], function() {
     var CandleStickBrush = function(chart, brush) {
         var g, count, width = 0, barWidth = 0, barPadding = 0;
 
-        function getTargets(chart) {
+        function getTargetData(data) {
             var target = {};
 
             for (var j = 0; j < brush.target.length; j++) {
-                var t = chart.series(brush.target[j]);
-                target[t.type] = t;
+                var k = brush.target[j],
+                    t = chart.series(k);
+
+                target[t.type] = data[k];
             }
 
             return target;
@@ -24,17 +26,16 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.draw = function() {
-            var targets = getTargets(chart);
-
             for (var i = 0; i < count; i++) {
-                var startX = brush.x(i),
+                var data = getTargetData(chart.data(i)),
+                    startX = brush.x(i),
                     r = null,
                     l = null;
 
-                var open = targets.open.data[i],
-                    close = targets.close.data[i],
-                    low =  targets.low.data[i],
-                    high = targets.high.data[i];
+                var open = data.open,
+                    close = data.close,
+                    low = data.low,
+                    high = data.high;
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
                     var y = brush.y(open);

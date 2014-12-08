@@ -10615,8 +10615,26 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return result;
         }
 
+        function checkOptions(opts) {
+            var isGridUsed = false;
+
+            for(var key in opts.grid) {
+                isGridUsed = true;
+                break;
+            }
+
+            if(opts.axis != null && isGridUsed) {
+                throw new Error("JUI_CRITICAL_ERR: 'axis' and 'grid' option can not be used together");
+            } else if(opts.axis != null && opts.data.length > 0) {
+                throw new Error("JUI_CRITICAL_ERR: 'axis' and 'data' option can not be used together");
+            }
+        }
+
         this.init = function() {
             var opts = this.options;
+
+            // 함께 사용되면 안되는 옵션 체크
+            checkOptions(opts);
 
             // 패딩 옵션 설정
             if (opts.padding == "empty") {
@@ -10649,7 +10667,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
-            this.update();
+            if(opts.axis == null) {
+                this.update();
+            } else {
+                this.render();
+            }
+
             this.emit("load");
 
             // 차트 배경 이벤트
@@ -10965,6 +10988,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {array} data
          */
         this.update = function(data) {
+            if(this.options.axis != null) return;
+
             if (data) {// 데이터가 있을 경우...
                 this.options.data = data;
             }
@@ -10973,6 +10998,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         this.page = function(pNo) {
+            if(this.options.axis != null) return;
+
             if (arguments.length == 0) {
                 return _page - 1;
             }
@@ -11007,6 +11034,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         this.next = function() {
+            if(this.options.axis != null) return;
+
             var dataList = this.options.data,
                 limit = this.options.bufferCount,
                 step = this.options.shiftCount;
@@ -11024,6 +11053,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         this.prev = function() {
+            if(this.options.axis != null) return;
+
             var dataList = this.options.data,
                 limit = this.options.bufferCount,
                 step = this.options.shiftCount;
@@ -11040,6 +11071,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         this.zoom = function(start, end) {
+            if(this.options.axis != null) return;
+
             if (arguments.length == 0) {
                 return {
                     start: _start,
@@ -11057,6 +11090,44 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _data = dataList.slice(_start, _end);
 
             this.render();
+        }
+
+        /**
+         * chart CSV 데이터 설정
+         *
+         * @param csv
+         */
+        this.setCsv = function(csv) {
+            if(this.options.axis != null) return;
+
+            var chartFields = [],
+                csvFields = this.options.csv,
+                csvNumber = this.options.csvNumber;
+
+            for (var key in _series) {
+                chartFields.push(key);
+            }
+
+            if (chartFields.length == 0 && !csvFields)
+                return;
+
+            var fields = _.getCsvFields(chartFields, csvFields), csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
+            this.update(_.csvToData(fields, csv, csvNumber));
+        }
+
+        /**
+         * chart CSV 파일 데이터 설정
+         *
+         * @param file
+         */
+        this.setCsvFile = function(file) {
+            if(this.options.axis != null) return;
+
+            var self = this;
+
+            _.fileToCsv(file, function(csv) {
+                self.setCsv(csv);
+            });
         }
 
         /**
@@ -11107,7 +11178,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param isNotAll
          */
         this.updateBrush = function(index, brush) {
-            for(var key in  brush) {
+            for(var key in brush) {
                 this.options.brush[index][key] = brush[key];
             }
 
@@ -11126,41 +11197,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 setThemeStyle($.extend(newTheme, this.options.style));
                 this.render(true);
             }
-        }
-
-        /**
-         * chart CSV 데이터 설정
-         *
-         * @param csv
-         */
-        this.setCsv = function(csv) {
-            var chartFields = [],
-                csvFields = this.options.csv,
-                csvNumber = this.options.csvNumber;
-
-            for (var key in _series) {
-                chartFields.push(key);
-            }
-
-            if (chartFields.length == 0 && !csvFields)
-                return;
-
-            var fields = _.getCsvFields(chartFields, csvFields), csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
-
-            this.update(_.csvToData(fields, csv, csvNumber));
-        }
-
-        /**
-         * chart CSV 파일 데이터 설정
-         *
-         * @param file
-         */
-        this.setCsvFile = function(file) {
-            var self = this;
-
-            _.fileToCsv(file, function(csv) {
-                self.setCsv(csv);
-            });
         }
     }
 
@@ -11182,7 +11218,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             style: {},
             series: {},
             grid: {},
-            axis : {},
+            axis : null,
             brush: null,
             widget: null,
             data: [],
@@ -13798,12 +13834,14 @@ jui.define("chart.brush.candlestick", [], function() {
     var CandleStickBrush = function(chart, brush) {
         var g, count, width = 0, barWidth = 0, barPadding = 0;
 
-        function getTargets(chart) {
+        function getTargetData(data) {
             var target = {};
 
             for (var j = 0; j < brush.target.length; j++) {
-                var t = chart.series(brush.target[j]);
-                target[t.type] = t;
+                var k = brush.target[j],
+                    t = chart.series(k);
+
+                target[t.type] = data[k];
             }
 
             return target;
@@ -13819,17 +13857,16 @@ jui.define("chart.brush.candlestick", [], function() {
         }
 
         this.draw = function() {
-            var targets = getTargets(chart);
-
             for (var i = 0; i < count; i++) {
-                var startX = brush.x(i),
+                var data = getTargetData(chart.data(i)),
+                    startX = brush.x(i),
                     r = null,
                     l = null;
 
-                var open = targets.open.data[i],
-                    close = targets.close.data[i],
-                    low =  targets.low.data[i],
-                    high = targets.high.data[i];
+                var open = data.open,
+                    close = data.close,
+                    low = data.low,
+                    high = data.high;
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
                     var y = brush.y(open);

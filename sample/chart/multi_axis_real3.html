@@ -124,20 +124,37 @@
                 data : dataSource
             }
         },
+        series : {
+            l: {
+                type: "low",
+                text: "최저"
+            },
+            h: {
+                type: "high",
+                text: "최고"
+            },
+            o: {
+                type: "open",
+                text: "시작"
+            },
+            c: {
+                type: "close",
+                text: "종료"
+            }
+        },
         brush : [{
-            type : "area",
-            target : "c",
-            axis : "top"
-        }, {
-            type : "line",
-            target : "c",
+            type : "candlestick",
+            target : [ "l", "h", "o", "c" ],
             axis : "top"
         }, {
             type : "column",
             target : "v",
             axis : "bottom"
         }],
-        bufferCount : 1
+        widget : {
+            type : "tooltip",
+            brush : 0
+        }
     });
 
 </script>
