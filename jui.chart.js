@@ -4228,12 +4228,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
-            if(opts.axis == null) {
-                this.update();
-            } else {
-                this.render();
-            }
-
+            this.update();
             this.emit("load");
 
             // 차트 배경 이벤트
@@ -4549,13 +4544,23 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {array} data
          */
         this.update = function(data) {
-            if(this.options.axis != null) return;
+            var opts = this.options;
 
-            if (data) {// 데이터가 있을 경우...
-                this.options.data = data;
+            if(opts.axis != null) {
+                if(_.typeCheck("object", data)) {
+                    for (var key in data) {
+                        opts.axis[key].data = data[key];
+                    }
+                }
+
+                this.render();
+            } else {
+                if (data) {// 데이터가 있을 경우...
+                    opts.data = data;
+                }
+
+                this.page(1);
             }
-
-            this.page(1);
         }
 
         this.page = function(pNo) {
