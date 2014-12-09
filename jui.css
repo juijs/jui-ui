@@ -6642,6 +6642,9 @@
   -moz-border-radius-topright: 0px;
   border-top-right-radius: 0px;
 }
+.jui .panel > .body.fit .xtable {
+  margin-left: -1px;
+}
 .jui .panel > .head > .tab {
   display: inline-block;
   margin: 0px 0px 0px -10px;
