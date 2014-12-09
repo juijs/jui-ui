@@ -6617,8 +6617,8 @@
 }
 .jui .panel > .table-classic,
 .jui .panel > .xtable > .table-classic,
-.jui .panel > .body.fit > .table-classic,
-.jui .panel > .body.fit > .xtable > .table-classic {
+.jui .panel > .body.fit .table-classic,
+.jui .panel > .body.fit .xtable > .table-classic {
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
@@ -6628,16 +6628,16 @@
 }
 .jui .panel > .table-classic > thead th:first-child,
 .jui .panel > .xtable > .table-classic > thead th:first-child,
-.jui .panel > .body.fit > .table-classic > thead th:first-child,
-.jui .panel > .body.fit > .xtable > .table-classic > thead th:first-child {
+.jui .panel > .body.fit .table-classic > thead th:first-child,
+.jui .panel > .body.fit .xtable > .table-classic > thead th:first-child {
   -webkit-border-top-left-radius: 0px;
   -moz-border-radius-topleft: 0px;
   border-top-left-radius: 0px;
 }
 .jui .panel > .table-classic > thead th:last-child,
 .jui .panel > .xtable > .table-classic > thead th:last-child,
-.jui .panel > .body.fit > .table-classic > thead th:last-child,
-.jui .panel > .body.fit > .xtable > .table-classic > thead th:last-child {
+.jui .panel > .body.fit .table-classic > thead th:last-child,
+.jui .panel > .body.fit .xtable > .table-classic > thead th:last-child {
   -webkit-border-top-right-radius: 0px;
   -moz-border-radius-topright: 0px;
   border-top-right-radius: 0px;
