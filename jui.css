@@ -6568,7 +6568,7 @@
 .jui .panel > .head,
 .jui .panel > .foot {
   height: 31px;
-  line-height: 31px;
+  line-height: 30px;
   padding: 4px 15px;
 }
 .jui .panel > .body {
@@ -6668,7 +6668,7 @@
 .jui .panel-normal > .head,
 .jui .panel-normal > .foot {
   height: 31px;
-  line-height: 31px;
+  line-height: 30px;
   padding: 4px 15px;
 }
 .jui .panel-normal > .body {
