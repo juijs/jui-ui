@@ -10334,13 +10334,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
-                    Obj.prototype.chart = self;
-                    Obj.prototype[type] = draws[i];
+                    var draw = new Obj(self, draws[i]);
+                    draw.chart = self;
+                    draw[type] = draws[i];
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리
                     if (type == "widget") {
-                        var draw = new Obj(self, draws[i]);
-
                         // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
                         // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
                         if(_initialize && !draw.isRender() && isAll !== true) {
@@ -10365,13 +10364,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     } else {
                         if (draws[i].axis) {
                             saveData(_axis[draws[i].axis].data);
-                            new Obj(self, draws[i]).render();
+                            draw.render();
                             restoreData();
 
                         } else {
-                            new Obj(self, draws[i]).render();
+                            draw.render();
                         }
-
                     }
                 }
             }
