@@ -5633,7 +5633,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i]);
+				var domain = grid.format(this.domain[i], i);
 
                 if (!domain && domain !== 0) {
                     continue;
@@ -5683,7 +5683,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = grid.format(this.domain[i]);
+				var domain = grid.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
                     continue;
@@ -5733,7 +5733,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i]);
+				var domain = grid.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -5778,7 +5778,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i]);
+				var domain = grid.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -5879,7 +5879,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -5917,7 +5917,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -5955,7 +5955,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -5993,7 +5993,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6330,7 +6330,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6374,7 +6374,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6419,7 +6419,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6465,7 +6465,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6557,7 +6557,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6602,7 +6602,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6648,7 +6648,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -6692,7 +6692,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;

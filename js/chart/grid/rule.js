@@ -18,7 +18,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -63,7 +63,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -109,7 +109,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -153,7 +153,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i]);
+				var domain = grid.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
