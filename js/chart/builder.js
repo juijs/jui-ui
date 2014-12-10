@@ -1128,7 +1128,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * chart CSV 데이터 설정
+         * chart CSV 데이터 갱신 후 렌더링
          *
          * @param csv
          */
@@ -1166,7 +1166,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * chart 사이즈 조정
+         * chart 사이즈 조정 후 렌더링
          *
          * @param {integer} width
          * @param {integer} height
@@ -1184,43 +1184,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * 브러쉬를 추가한 후 차트 렌더링
-         *
-         * @param brush
-         * @param isNotAll
-         */
-        this.addBrush = function(brush) {
-            this.options.brush.push(brush);
-            this.render();
-        }
-
-        /**
-         * 브러쉬를 삭제한 후 차트 렌더링
-         *
-         * @param index
-         * @param isNotAll
-         */
-        this.removeBrush = function(index) {
-            this.options.brush.splice(index, 1);
-            this.render();
-        }
-
-        /**
-         * 해당 인덱스의 브러쉬를 업데이트한 후 렌더링
-         *
-         * @param index
-         * @param brush
-         * @param isNotAll
-         */
-        this.updateBrush = function(index, brush) {
-            for(var key in brush) {
-                this.options.brush[index][key] = brush[key];
-            }
-
-            this.render();
-        }
-
-        /**
          * 테마 변경 후 차트 렌더링
          *
          * @param themeName
@@ -1232,6 +1195,43 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 setThemeStyle($.extend(newTheme, this.options.style));
                 this.render(true);
             }
+        }
+
+        /**
+         * 브러쉬를 추가한 후 차트 렌더링
+         *
+         * @param brush
+         * @param isNotAll
+         */
+        this.addBrush = function(brush, isNotRender) {
+            this.options.brush.push(brush);
+            if(!isNotRender) this.render();
+        }
+
+        /**
+         * 브러쉬를 삭제한 후 차트 렌더링
+         *
+         * @param index
+         * @param isNotAll
+         */
+        this.removeBrush = function(index, isNotRender) {
+            this.options.brush.splice(index, 1);
+            if(!isNotRender) this.render();
+        }
+
+        /**
+         * 해당 인덱스의 브러쉬를 업데이트한 후 렌더링
+         *
+         * @param index
+         * @param brush
+         * @param isNotAll
+         */
+        this.updateBrush = function(index, brush, isNotRender) {
+            for(var key in brush) {
+                this.options.brush[index][key] = brush[key];
+            }
+
+            if(!isNotRender) this.render();
         }
     }
 
