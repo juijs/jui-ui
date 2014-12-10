@@ -13536,9 +13536,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @returns {Array}
          */
         this.getXY = function() {
-
-
-            var xy = [];
+            var xy = [], isMax = false, isMin = false;
 
             for (var i = 0, len = this.chart.data().length; i < len; i++) {
                 var startX = this.brush.x(i),
@@ -13562,8 +13560,20 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                     xy[j].x.push(startX);
                     xy[j].y.push(this.brush.y(value));
                     xy[j].value.push(value);
-                    xy[j].min.push((value == series.min) ? true : false);
-                    xy[j].max.push((value == series.max) ? true : false);
+
+                    if(!isMin && value == series.min && value != 0) {
+                        xy[j].min.push(true);
+                        isMin = true;
+                    } else {
+                        xy[j].min.push(false);
+                    }
+
+                    if(!isMax && value == series.max && value != 0) {
+                        xy[j].max.push(true);
+                        isMax = true;
+                    } else {
+                        xy[j].max.push(false);
+                    }
                 }
             }
 
@@ -13681,10 +13691,11 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
         this.showTooltip = function(tooltip, x, y, value, isTop) {
             var text = tooltip.get(0);
-            tooltip.attr({ visibility: "visible" }).translate(x, y);
-
             text.element.textContent = this.chart.format(value);
             text.attr({ y: (isTop) ? -7 : 16 });
+
+            tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
+            tooltip.translate(x, y);
         }
 
         this.getOptions = function(options) {
@@ -14076,7 +14087,7 @@ jui.define("chart.brush.column", [], function() {
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = chart.data(i)[brush.target[j]],
-						startY = brush.y(value),
+						startY = brush.y((value == 0) ? brush.minValue : value),
 						isTop = true,
 						r = null;
 
@@ -14148,12 +14159,13 @@ jui.define("chart.brush.column", [], function() {
 
         this.drawSetup = function() {
 			return this.getOptions({
+				minValue: 0,
                 outerPadding: 2,
                 innerPadding: 1,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
-            })
+            });
         }
 	}
 

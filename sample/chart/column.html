@@ -19,10 +19,10 @@
             width: 400,
             height : 400,
             data : [
-                { name : 2, value : 15 },
-                { name : -15, value : 6 },
-                { name : -88, value : -100 },
-                { name : 18, value : 5 },
+                { name : 2, value : 0 },
+                { name : -15, value : 0 },
+                { name : -88, value : 0 },
+                { name : 18, value : 0 },
             ],
             grid : {
 
@@ -49,7 +49,8 @@
                 active : 1,
 //                activeTarget : "name",
                 activeEvent : "click",
-                display : "max"
+                display : "max",
+                minValue : 1
             },
             event : {
                 click : function(d, e) {

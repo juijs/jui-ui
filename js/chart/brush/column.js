@@ -63,7 +63,7 @@ jui.define("chart.brush.column", [], function() {
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = chart.data(i)[brush.target[j]],
-						startY = brush.y(value),
+						startY = brush.y((value == 0) ? brush.minValue : value),
 						isTop = true,
 						r = null;
 
@@ -135,12 +135,13 @@ jui.define("chart.brush.column", [], function() {
 
         this.drawSetup = function() {
 			return this.getOptions({
+				minValue: 0,
                 outerPadding: 2,
                 innerPadding: 1,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
-            })
+            });
         }
 	}
 
