@@ -3615,6 +3615,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 y: _padding.top
             };
 
+            // chart 크기가 마이너스일 경우 (엘리먼트가 hidden 상태)
+            if(chart.width < 0) chart.width = 0;
+            if(chart.height < 0) chart.height = 0;
+
             // chart 영역 계산
             chart.x2 = chart.x + chart.width;
             chart.y2 = chart.y + chart.height;
