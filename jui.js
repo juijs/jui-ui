@@ -14114,8 +14114,7 @@ jui.define("chart.brush.column", [], function() {
 						fill: chart.color(j, brush),
 						stroke: borderColor,
 						"stroke-width": borderWidth,
-						"stroke-opacity": borderOpacity,
-						"cursor": (brush.activeEvent != null) ? "pointer" : "normal"
+						"stroke-opacity": borderOpacity
 					});
 
 					// 컬럼 상태 설정
@@ -14126,21 +14125,23 @@ jui.define("chart.brush.column", [], function() {
 						color: chart.color(j, brush)
 					});
 
-					// 컬럼 관련 이벤트 설정
-					if (brush.activeEvent != null) {
-						setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
-					}
-
 					// 액티브 엘리먼트 설정
 					if (brush.active == i) {
 						setActiveEffect(this, r, tooltipX, tooltipY, value, isTop);
 					}
 
-					// 브러쉬 이벤트 및 그룹 추가
-                    this.addEvent(r, j, i);
-                    g.append(r);
+					// 컬럼 및 기본 브러쉬 이벤트 설정
+					if(value != 0) {
+						if (brush.activeEvent != null) {
+							setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+							r.attr({ cursor: "pointer" });
+						}
 
-					startX += columnWidth + innerPadding;
+						this.addEvent(r, j, i);
+					}
+
+					// 그룹에 컬럼 엘리먼트 추가
+                    g.append(r);
 
 					// Max & Min 툴팁 추가
 					if(display == "max" && points[j].max[i] || display == "min" && points[j].min[i]) {
@@ -14149,6 +14150,9 @@ jui.define("chart.brush.column", [], function() {
 						this.showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
 						g.append(tooltip);
 					}
+
+					// 다음 컬럼 좌표 설정
+					startX += columnWidth + innerPadding;
 				}
 			}
 
