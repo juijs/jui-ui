@@ -1203,7 +1203,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     settingEventAnimation(e);
                 else {
                     if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
-                        $(e.target).unbind(e.type);
+                        $(e.target).off(e.type);
                     }
 
                     if (_.isTouch) {
@@ -1264,52 +1264,38 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param type 발생시킬 이벤트
          * @param args 이벤트 핸들러에 넘기는 값
-         * @param _unique 내부적으로 사용하며, on 이벤트인지 bind 이벤트인지 구분
-         * @param _result 내부적으로 사용하며, 리턴 값은 커스텀 이벤트의 핸들러 값
          * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
          */
-        this.emit = function(type, args, _unique, _result) {
-            var unique = (!_unique) ? false : true;
+        this.emit = function(type, args) {
+            var result;
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
-                if(e.type == type.toLowerCase() && e.unique === unique) {
-                    if(typeof(args) == "object" && args.length != undefined) {
-                        _result = e.callback.apply(this, args);
-                    } else {
-                        _result = e.callback.call(this, args);
-                    }
+                if(e.type == type.toLowerCase()) {
+                    var arrArgs = (typeof(args) == "object" && args.length) ? args : [ args ];
+                    result = e.callback.apply(this, arrArgs);
                 }
             }
 
-            if(unique === false) {
-                return this.emit(type, args, true, _result);
-            }
-
-            return _result;
+            return result;
         }
 
         this.on = function(type, callback) {
-            if(typeof(type) != "string" && typeof(callback) != "object") return;
+            if(typeof(type) != "string" || typeof(callback) != "function") return;
             this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
         }
 
-        this.bind = function(type, callback) {
-            if(typeof(type) != "string" && typeof(callback) != "object") return;
-
-            this.unbind(type);
-            this.event.push({ type: type.toLowerCase(), callback: callback, unique: true });
-        }
-
-        this.unbind = function(type) {
+        this.off = function(type) {
             var event = [];
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
-                if (e.type != type.toLowerCase() || e.unique === false)
+                if ((typeof(type) == "function" && e.callback != type) ||
+                    (typeof(type) == "string" && e.type != type.toLowerCase())) {
                     event.push(e);
+                }
             }
 
             this.event = event;
@@ -2601,7 +2587,7 @@ jui.define("util.svg.element", [], function() {
          *
          */
 
-        this.on = function(type, handler) {
+        this.bind = function(type, handler) {
             this.element.addEventListener(type, function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
@@ -3560,7 +3546,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _data = [], _tempData = [],  _page = 1, _start = 0, _end = 0;
         var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _panel, _theme;
-        var _initialize = false;
+        var _initialize = false, _handler = [];
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -4007,7 +3993,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var elem = self.svg.root,
                 isMouseOver = false;
 
-            elem.on("click", function(e) {
+            elem.bind("click", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.click", [ e ]);
                 } else {
@@ -4015,7 +4001,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("dblclick", function(e) {
+            elem.bind("dblclick", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.dblclick", [ e ]);
                 } else {
@@ -4023,7 +4009,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("contextmenu", function(e) {
+            elem.bind("contextmenu", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.rclick", [ e ]);
                 } else {
@@ -4033,7 +4019,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 e.preventDefault();
             });
 
-            elem.on("mousemove", function(e) {
+            elem.bind("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
                         self.emit("chart.mouseout", [ e ]);
@@ -4051,7 +4037,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mousedown", function(e) {
+            elem.bind("mousedown", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mousedown", [ e ]);
                 } else {
@@ -4059,7 +4045,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mouseup", function(e) {
+            elem.bind("mouseup", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseup", [ e ]);
                 } else {
@@ -4067,20 +4053,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mouseover", function(e) {
+            elem.bind("mouseover", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseover", [ e ]);
                 }
             });
 
-            elem.on("mouseout", function(e) {
+            elem.bind("mouseout", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseout", [ e ]);
                 }
             });
 
             // 드래그 이벤트 막기
-            $(self.root).on("selectstart", function(e) {
+            self.addEvent(self.root, "selectstart", function(e) {
                 e.preventDefault();
                 return false;
             });
@@ -4193,6 +4179,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function resetEvent(self) {
+            for(var i = 0; i < _handler.length; i++) {
+                var obj = _handler[i];
+
+                if(obj.isRender) {
+                    self.off(obj.callback);
+                }
+            }
+
+            _handler = [];
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -4231,7 +4229,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
-            this.emit("load");
 
             // 차트 배경 이벤트
             setChartEvent(this);
@@ -4509,12 +4506,26 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
+         * 차트에서 사용할 커스텀 이벤트 핸들러
+         *
+         * @param type
+         * @param callback
+         */
+        this.bind = function(type, callback, isRender) {
+            _handler.push({ callback: callback, isRender: (isRender === false) ? false : true });
+            return this.on(type, callback);
+        }
+
+        /**
          * chart render 함수 재정의
          *
          */
         this.render = function(isAll) {
             // SVG 메인 리셋
             this.svg.reset(isAll);
+
+            // chart 이벤트 핸들러 초기화
+            resetEvent(this);
 
             // chart 영역 계산
             calculate(this);
@@ -4534,7 +4545,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             // SVG 메인/서브 렌더링
             this.svg.render(isAll);
-            this.emit("render");
 
             // 초기화 설정
             _initialize = true;
@@ -7194,43 +7204,43 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 data: (dataIndex != null) ? self.chart.data(dataIndex) : null
             };
 
-            elem.on("click", function(e) {
+            elem.bind("click", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("click", [ obj, e ]);
             });
 
-            elem.on("dblclick", function(e) {
+            elem.bind("dblclick", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("dblclick", [ obj, e ]);
             });
 
-            elem.on("contextmenu", function(e) {
+            elem.bind("contextmenu", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
-            elem.on("mouseover", function(e) {
+            elem.bind("mouseover", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseover", [ obj, e ]);
             });
 
-            elem.on("mouseout", function(e) {
+            elem.bind("mouseout", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseout", [ obj, e ]);
             });
 
-            elem.on("mousemove", function(e) {
+            elem.bind("mousemove", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousemove", [ obj, e ]);
             });
 
-            elem.on("mousedown", function(e) {
+            elem.bind("mousedown", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousedown", [ obj, e ]);
             });
 
-            elem.on("mouseup", function(e) {
+            elem.bind("mouseup", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseup", [ obj, e ]);
             });
@@ -7606,7 +7616,7 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		function setActiveEvent(self, elem, x, y, value, isTop) {
-			elem.on(brush.activeEvent, function(e) {
+			elem.bind(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
 				}
@@ -8065,7 +8075,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         function setActiveEvent(self, elem) {
-            elem.on(self.brush.activeEvent, function(e) {
+            elem.bind(self.brush.activeEvent, function(e) {
                 setActiveEffect(self, elem);
             });
         }
@@ -9887,6 +9897,10 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 render: false
             }, options);
         }
+
+        this.bind = function(type, callback) {
+            return this.chart.bind(type, callback, this.isRender());
+        }
 	}
 
 	return CoreWidget;
@@ -9974,7 +9988,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = false,
                 w, h;
 
-            chart.on("mouseover", function(obj, e) {
+            this.bind("mouseover", function(obj, e) {
                 if(isActive || !self.existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
@@ -9992,7 +10006,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = true;
             });
 
-            chart.on("mousemove", function(obj, e) {
+            this.bind("mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -10013,7 +10027,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 g.translate(x, y);
             });
 
-            chart.on("mouseout", function(obj, e) {
+            this.bind("mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });
@@ -10142,6 +10156,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             for(var i = 0; i < brushList.length; i++) {
                 chart.updateBrush(brushList[i].index, { target: target });
             }
+
+            chart.emit("legend.filter", [ target ]);
         }
 
         /**
@@ -10197,7 +10213,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                             cursor: "pointer"
                         });
 
-                        element.on("click", function(e) {
+                        element.bind("click", function(e) {
                             if(columns[brush.index][key]) {
                                 element.attr({ opacity: 0.7 });
                                 columns[brush.index][key] = false;
@@ -10305,12 +10321,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             piece = 0,
             rate = 0 ;
 
-        function setScrollEvent(chart, thumb) {
+        function setScrollEvent(self, thumb) {
             var isMove = false,
                 mouseStart = 0,
                 thumbStart = 0;
 
-            chart.on("bg.mousedown", function(e) {
+            self.bind("bg.mousedown", function(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
@@ -10318,10 +10334,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 thumbStart = thumbLeft;
             });
 
-            chart.on("bg.mousemove", mousemove);
-            chart.on("bg.mouseup", mouseup);
-            chart.on("chart.mousemove", mousemove);
-            chart.on("chart.mouseup", mouseup);
+            self.bind("bg.mousemove", mousemove);
+            self.bind("bg.mouseup", mouseup);
+            self.bind("chart.mousemove", mousemove);
+            self.bind("chart.mouseup", mouseup);
 
             function mousemove(e) {
                 if(!isMove) return;
@@ -10371,6 +10387,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function() {
+            var self = this;
+
             return chart.svg.group({}, function() {
                 chart.svg.rect({
                     width: chart.width(),
@@ -10388,7 +10406,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 }).translate(thumbLeft, 1);
 
                 // 차트 스크롤 이벤트
-                setScrollEvent(chart, thumb);
+                setScrollEvent(self, thumb);
 
             }).translate(chart.x(), chart.y2());
         }
@@ -10405,19 +10423,19 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
     var ZoomWidget = function(chart, widget) {
         var count, tick;
 
-        function setDragEvent(chart, thumb, bg) {
+        function setDragEvent(self, thumb, bg) {
             var isMove = false,
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            chart.on("chart.mousedown", function(e) {
+            self.bind("chart.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
             });
 
-            chart.on("chart.mousemove", function(e) {
+            self.bind("chart.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.bgX - mouseStart;
@@ -10437,11 +10455,12 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             });
 
-            chart.on("chart.mouseup", function(e) {
-                isMove = false;
-            });
+            self.bind("chart.mouseup", endZoomAction);
+            self.bind("bg.mouseup", endZoomAction);
+            self.bind("bg.mouseout", endZoomAction);
 
-            chart.addEvent("body", "mouseup", function(e) {
+            function endZoomAction() {
+                isMove = false;
                 if(thumbWidth == 0) return;
 
                 var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
@@ -10455,7 +10474,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
 
                 resetDragStatus();
-            });
+            }
 
             function resetDragStatus() { // 엘리먼트 및 데이터 초기화
                 isMove = false;
@@ -10477,6 +10496,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
+            var self = this;
             var cw = chart.width(),
                 ch = chart.height(),
                 r = 12;
@@ -10512,14 +10532,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                             d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
                             fill: chart.theme("zoomFocusColor")
                         }).translate(cw - r, -r);
-                    }).on("click", function(e) {
+                    }).bind("click", function(e) {
                         bg.attr({ visibility: "hidden" });
                         chart.page(1);
                     });
 
                 }).translate(chart.x(), chart.y());
 
-                setDragEvent(chart, thumb, bg);
+                setDragEvent(self, thumb, bg);
             });
         }
 
@@ -10613,15 +10633,15 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            chart.on("chart.mouseover", function(e) {
+            this.bind("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
 
-            chart.on("chart.mouseout", function(e) {
+            this.bind("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            chart.on("chart.mousemove", function(e) {
+            this.bind("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
                     top = e.chartY + 2;
 

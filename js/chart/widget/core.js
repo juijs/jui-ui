@@ -97,6 +97,10 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 render: false
             }, options);
         }
+
+        this.bind = function(type, callback) {
+            return this.chart.bind(type, callback, this.isRender());
+        }
 	}
 
 	return CoreWidget;

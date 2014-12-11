@@ -28,6 +28,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             for(var i = 0; i < brushList.length; i++) {
                 chart.updateBrush(brushList[i].index, { target: target });
             }
+
+            chart.emit("legend.filter", [ target ]);
         }
 
         /**
@@ -83,7 +85,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                             cursor: "pointer"
                         });
 
-                        element.on("click", function(e) {
+                        element.bind("click", function(e) {
                             if(columns[brush.index][key]) {
                                 element.attr({ opacity: 0.7 });
                                 columns[brush.index][key] = false;

@@ -81,7 +81,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = false,
                 w, h;
 
-            chart.on("mouseover", function(obj, e) {
+            this.bind("mouseover", function(obj, e) {
                 if(isActive || !self.existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
@@ -99,7 +99,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = true;
             });
 
-            chart.on("mousemove", function(obj, e) {
+            this.bind("mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -120,7 +120,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 g.translate(x, y);
             });
 
-            chart.on("mouseout", function(obj, e) {
+            this.bind("mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });

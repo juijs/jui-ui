@@ -9,12 +9,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             piece = 0,
             rate = 0 ;
 
-        function setScrollEvent(chart, thumb) {
+        function setScrollEvent(self, thumb) {
             var isMove = false,
                 mouseStart = 0,
                 thumbStart = 0;
 
-            chart.on("bg.mousedown", function(e) {
+            self.bind("bg.mousedown", function(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
@@ -22,10 +22,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 thumbStart = thumbLeft;
             });
 
-            chart.on("bg.mousemove", mousemove);
-            chart.on("bg.mouseup", mouseup);
-            chart.on("chart.mousemove", mousemove);
-            chart.on("chart.mouseup", mouseup);
+            self.bind("bg.mousemove", mousemove);
+            self.bind("bg.mouseup", mouseup);
+            self.bind("chart.mousemove", mousemove);
+            self.bind("chart.mouseup", mouseup);
 
             function mousemove(e) {
                 if(!isMove) return;
@@ -75,6 +75,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function() {
+            var self = this;
+
             return chart.svg.group({}, function() {
                 chart.svg.rect({
                     width: chart.width(),
@@ -92,7 +94,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 }).translate(thumbLeft, 1);
 
                 // 차트 스크롤 이벤트
-                setScrollEvent(chart, thumb);
+                setScrollEvent(self, thumb);
 
             }).translate(chart.x(), chart.y2());
         }

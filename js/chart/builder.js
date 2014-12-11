@@ -31,7 +31,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _data = [], _tempData = [],  _page = 1, _start = 0, _end = 0;
         var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _panel, _theme;
-        var _initialize = false;
+        var _initialize = false, _handler = [];
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -478,7 +478,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var elem = self.svg.root,
                 isMouseOver = false;
 
-            elem.on("click", function(e) {
+            elem.bind("click", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.click", [ e ]);
                 } else {
@@ -486,7 +486,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("dblclick", function(e) {
+            elem.bind("dblclick", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.dblclick", [ e ]);
                 } else {
@@ -494,7 +494,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("contextmenu", function(e) {
+            elem.bind("contextmenu", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.rclick", [ e ]);
                 } else {
@@ -504,7 +504,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 e.preventDefault();
             });
 
-            elem.on("mousemove", function(e) {
+            elem.bind("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
                         self.emit("chart.mouseout", [ e ]);
@@ -522,7 +522,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mousedown", function(e) {
+            elem.bind("mousedown", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mousedown", [ e ]);
                 } else {
@@ -530,7 +530,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mouseup", function(e) {
+            elem.bind("mouseup", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseup", [ e ]);
                 } else {
@@ -538,20 +538,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.on("mouseover", function(e) {
+            elem.bind("mouseover", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseover", [ e ]);
                 }
             });
 
-            elem.on("mouseout", function(e) {
+            elem.bind("mouseout", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseout", [ e ]);
                 }
             });
 
             // 드래그 이벤트 막기
-            $(self.root).on("selectstart", function(e) {
+            self.addEvent(self.root, "selectstart", function(e) {
                 e.preventDefault();
                 return false;
             });
@@ -664,6 +664,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function resetEvent(self) {
+            for(var i = 0; i < _handler.length; i++) {
+                var obj = _handler[i];
+
+                if(obj.isRender) {
+                    self.off(obj.callback);
+                }
+            }
+
+            _handler = [];
+        }
+
         this.init = function() {
             var opts = this.options;
 
@@ -702,7 +714,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
             this.update();
-            this.emit("load");
 
             // 차트 배경 이벤트
             setChartEvent(this);
@@ -980,12 +991,26 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
+         * 차트에서 사용할 커스텀 이벤트 핸들러
+         *
+         * @param type
+         * @param callback
+         */
+        this.bind = function(type, callback, isRender) {
+            _handler.push({ callback: callback, isRender: (isRender === false) ? false : true });
+            return this.on(type, callback);
+        }
+
+        /**
          * chart render 함수 재정의
          *
          */
         this.render = function(isAll) {
             // SVG 메인 리셋
             this.svg.reset(isAll);
+
+            // chart 이벤트 핸들러 초기화
+            resetEvent(this);
 
             // chart 영역 계산
             calculate(this);
@@ -1005,7 +1030,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             // SVG 메인/서브 렌더링
             this.svg.render(isAll);
-            this.emit("render");
 
             // 초기화 설정
             _initialize = true;

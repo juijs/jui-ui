@@ -48,7 +48,16 @@
             ],
             widget : [
                 //{ type : "tooltip", brush : 1 }
-            ]
+                { type : "legend", filter : true }
+            ],
+            event : {
+                "legend.filter": function(brush) {
+                    console.log(brush);
+                },
+                click: function(obj) {
+                    console.log(obj.brush);
+                }
+            }
         });
 	})
 </script>

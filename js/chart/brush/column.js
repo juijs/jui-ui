@@ -17,7 +17,7 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		function setActiveEvent(self, elem, x, y, value, isTop) {
-			elem.on(brush.activeEvent, function(e) {
+			elem.bind(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
 				}

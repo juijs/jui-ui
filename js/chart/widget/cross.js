@@ -81,15 +81,15 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            chart.on("chart.mouseover", function(e) {
+            this.bind("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
 
-            chart.on("chart.mouseout", function(e) {
+            this.bind("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            chart.on("chart.mousemove", function(e) {
+            this.bind("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
                     top = e.chartY + 2;
 

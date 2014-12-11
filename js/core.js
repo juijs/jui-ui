@@ -239,7 +239,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     settingEventAnimation(e);
                 else {
                     if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
-                        $(e.target).unbind(e.type);
+                        $(e.target).off(e.type);
                     }
 
                     if (_.isTouch) {
@@ -300,52 +300,38 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param type 발생시킬 이벤트
          * @param args 이벤트 핸들러에 넘기는 값
-         * @param _unique 내부적으로 사용하며, on 이벤트인지 bind 이벤트인지 구분
-         * @param _result 내부적으로 사용하며, 리턴 값은 커스텀 이벤트의 핸들러 값
          * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
          */
-        this.emit = function(type, args, _unique, _result) {
-            var unique = (!_unique) ? false : true;
+        this.emit = function(type, args) {
+            var result;
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
-                if(e.type == type.toLowerCase() && e.unique === unique) {
-                    if(typeof(args) == "object" && args.length != undefined) {
-                        _result = e.callback.apply(this, args);
-                    } else {
-                        _result = e.callback.call(this, args);
-                    }
+                if(e.type == type.toLowerCase()) {
+                    var arrArgs = (typeof(args) == "object" && args.length) ? args : [ args ];
+                    result = e.callback.apply(this, arrArgs);
                 }
             }
 
-            if(unique === false) {
-                return this.emit(type, args, true, _result);
-            }
-
-            return _result;
+            return result;
         }
 
         this.on = function(type, callback) {
-            if(typeof(type) != "string" && typeof(callback) != "object") return;
+            if(typeof(type) != "string" || typeof(callback) != "function") return;
             this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
         }
 
-        this.bind = function(type, callback) {
-            if(typeof(type) != "string" && typeof(callback) != "object") return;
-
-            this.unbind(type);
-            this.event.push({ type: type.toLowerCase(), callback: callback, unique: true });
-        }
-
-        this.unbind = function(type) {
+        this.off = function(type) {
             var event = [];
 
             for(var i = 0; i < this.event.length; i++) {
                 var e = this.event[i];
 
-                if (e.type != type.toLowerCase() || e.unique === false)
+                if ((typeof(type) == "function" && e.callback != type) ||
+                    (typeof(type) == "string" && e.type != type.toLowerCase())) {
                     event.push(e);
+                }
             }
 
             this.event = event;

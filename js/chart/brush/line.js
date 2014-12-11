@@ -15,7 +15,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         function setActiveEvent(self, elem) {
-            elem.on(self.brush.activeEvent, function(e) {
+            elem.bind(self.brush.activeEvent, function(e) {
                 setActiveEffect(self, elem);
             });
         }

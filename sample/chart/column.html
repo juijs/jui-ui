@@ -13,8 +13,11 @@
 <div id="chart2"></div>
 
 <script>
-    jui.ready([ "chart.builder" ], function(chart) {
+    var callback = function(d, e) {
+        console.log(d);
+    }
 
+    jui.ready([ "chart.builder" ], function(chart) {
         c = chart("#chart", {
             width: 400,
             height : 400,
@@ -53,9 +56,7 @@
                 minValue : 1
             },
             event : {
-                click : function(d, e) {
-                    console.log(this.selector);
-                }
+                click : callback
             }
         });
 
