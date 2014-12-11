@@ -26,7 +26,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = widget.format((t.text) ? t.text : k, d);
+                var message = widget.format((t.text) ? t.text : k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
@@ -45,7 +45,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    var message = widget.format((t.text) ? t.text : key, d);
+                    var message = widget.format((t.text) ? t.text : key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
