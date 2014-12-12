@@ -63,7 +63,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			var $list = $(ui_list.menu).find("li");
 			
 			// 이벤트 걸린거 초기화
-			$list.unbind("click").unbind("hover");
+			$list.off("click").off("hover");
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {

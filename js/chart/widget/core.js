@@ -98,8 +98,8 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             }, options);
         }
 
-        this.bind = function(type, callback) {
-            return this.chart.bind(type, callback, this.isRender());
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, this.isRender());
         }
 	}
 

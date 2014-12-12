@@ -918,7 +918,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 				self.scroll();
 			}
 			
-			$obj.tbody.unbind("scroll").scroll(function(e) {
+			$obj.tbody.off("scroll").scroll(function(e) {
 			    if(($obj.tbody.scrollTop() + self.options.scrollHeight) == $obj.tbody.get(0).scrollHeight){
 			    	self.emit("scroll", e);
 			    	return false;

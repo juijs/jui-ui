@@ -203,7 +203,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		function setScrollEvent(self) {
 			var $body = $(self.root).children(".body");
 			
-			$body.unbind("scroll").scroll(function(e) {
+			$body.off("scroll").scroll(function(e) {
 			    if((this.scrollTop + self.options.scrollHeight) >= $body.get(0).scrollHeight) {
 		    		self.next();
 			    	self.emit("scroll", e);

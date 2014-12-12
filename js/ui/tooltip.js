@@ -105,7 +105,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 			$(this.root).removeAttr("title");
 			
 			// 기존의 설정된 이벤트 제거
-			$(this.root).unbind(opts.showType).unbind(opts.hideType);
+			$(this.root).off(opts.showType).off(opts.hideType);
 			
 			// 보이기 이벤트
 			this.addEvent(this.root, opts.showType, function(e) {

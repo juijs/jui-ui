@@ -1421,7 +1421,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             for(var i = 0; i < this.listen.size(); i++) {
                 var obj = this.listen.get(i);
-                obj.target.unbind(obj.type);
+                obj.target.off(obj.type);
             }
 
             for(var key in this.__proto__) {
@@ -2587,7 +2587,7 @@ jui.define("util.svg.element", [], function() {
          *
          */
 
-        this.bind = function(type, handler) {
+        this.on = function(type, handler) {
             this.element.addEventListener(type, function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
@@ -3993,7 +3993,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var elem = self.svg.root,
                 isMouseOver = false;
 
-            elem.bind("click", function(e) {
+            elem.on("click", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.click", [ e ]);
                 } else {
@@ -4001,7 +4001,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.dblclick", [ e ]);
                 } else {
@@ -4009,7 +4009,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.rclick", [ e ]);
                 } else {
@@ -4019,7 +4019,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 e.preventDefault();
             });
 
-            elem.bind("mousemove", function(e) {
+            elem.on("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
                         self.emit("chart.mouseout", [ e ]);
@@ -4037,7 +4037,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mousedown", function(e) {
+            elem.on("mousedown", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mousedown", [ e ]);
                 } else {
@@ -4045,7 +4045,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mouseup", function(e) {
+            elem.on("mouseup", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseup", [ e ]);
                 } else {
@@ -4053,13 +4053,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mouseover", function(e) {
+            elem.on("mouseover", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseover", [ e ]);
                 }
             });
 
-            elem.bind("mouseout", function(e) {
+            elem.on("mouseout", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseout", [ e ]);
                 }
@@ -4511,9 +4511,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param type
          * @param callback
          */
-        this.bind = function(type, callback, isRender) {
+        this.on = function(type, callback, isRender) {
+            if(typeof(type) != "string" || typeof(callback) != "function") return;
+
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
             _handler.push({ callback: callback, isRender: (isRender === false) ? false : true });
-            return this.on(type, callback);
         }
 
         /**
@@ -7204,43 +7206,43 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 data: (dataIndex != null) ? self.chart.data(dataIndex) : null
             };
 
-            elem.bind("click", function(e) {
+            elem.on("click", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("click", [ obj, e ]);
             });
 
-            elem.bind("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("dblclick", [ obj, e ]);
             });
 
-            elem.bind("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
-            elem.bind("mouseover", function(e) {
+            elem.on("mouseover", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseover", [ obj, e ]);
             });
 
-            elem.bind("mouseout", function(e) {
+            elem.on("mouseout", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseout", [ obj, e ]);
             });
 
-            elem.bind("mousemove", function(e) {
+            elem.on("mousemove", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousemove", [ obj, e ]);
             });
 
-            elem.bind("mousedown", function(e) {
+            elem.on("mousedown", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousedown", [ obj, e ]);
             });
 
-            elem.bind("mouseup", function(e) {
+            elem.on("mouseup", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseup", [ obj, e ]);
             });
@@ -7616,7 +7618,7 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		function setActiveEvent(self, elem, x, y, value, isTop) {
-			elem.bind(brush.activeEvent, function(e) {
+			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
 				}
@@ -8075,7 +8077,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         function setActiveEvent(self, elem) {
-            elem.bind(self.brush.activeEvent, function(e) {
+            elem.on(self.brush.activeEvent, function(e) {
                 setActiveEffect(self, elem);
             });
         }
@@ -9898,8 +9900,8 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             }, options);
         }
 
-        this.bind = function(type, callback) {
-            return this.chart.bind(type, callback, this.isRender());
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, this.isRender());
         }
 	}
 
@@ -9988,7 +9990,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = false,
                 w, h;
 
-            this.bind("mouseover", function(obj, e) {
+            this.on("mouseover", function(obj, e) {
                 if(isActive || !self.existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
@@ -10006,7 +10008,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 isActive = true;
             });
 
-            this.bind("mousemove", function(obj, e) {
+            this.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -10027,7 +10029,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 g.translate(x, y);
             });
 
-            this.bind("mouseout", function(obj, e) {
+            this.on("mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });
@@ -10213,7 +10215,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                             cursor: "pointer"
                         });
 
-                        element.bind("click", function(e) {
+                        element.on("click", function(e) {
                             if(columns[brush.index][key]) {
                                 element.attr({ opacity: 0.7 });
                                 columns[brush.index][key] = false;
@@ -10326,7 +10328,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 mouseStart = 0,
                 thumbStart = 0;
 
-            self.bind("bg.mousedown", function(e) {
+            self.on("bg.mousedown", function(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
@@ -10334,10 +10336,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 thumbStart = thumbLeft;
             });
 
-            self.bind("bg.mousemove", mousemove);
-            self.bind("bg.mouseup", mouseup);
-            self.bind("chart.mousemove", mousemove);
-            self.bind("chart.mouseup", mouseup);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
 
             function mousemove(e) {
                 if(!isMove) return;
@@ -10428,14 +10430,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            self.bind("chart.mousedown", function(e) {
+            self.on("chart.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
             });
 
-            self.bind("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.bgX - mouseStart;
@@ -10455,9 +10457,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             });
 
-            self.bind("chart.mouseup", endZoomAction);
-            self.bind("bg.mouseup", endZoomAction);
-            self.bind("bg.mouseout", endZoomAction);
+            self.on("chart.mouseup", endZoomAction);
+            self.on("bg.mouseup", endZoomAction);
+            self.on("bg.mouseout", endZoomAction);
 
             function endZoomAction() {
                 isMove = false;
@@ -10532,7 +10534,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                             d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
                             fill: chart.theme("zoomFocusColor")
                         }).translate(cw - r, -r);
-                    }).bind("click", function(e) {
+                    }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
                         chart.page(1);
                     });
@@ -10633,15 +10635,15 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            this.bind("chart.mouseover", function(e) {
+            this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
 
-            this.bind("chart.mouseout", function(e) {
+            this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            this.bind("chart.mousemove", function(e) {
+            this.on("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
                     top = e.chartY + 2;
 

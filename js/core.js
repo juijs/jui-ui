@@ -457,7 +457,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             for(var i = 0; i < this.listen.size(); i++) {
                 var obj = this.listen.get(i);
-                obj.target.unbind(obj.type);
+                obj.target.off(obj.type);
             }
 
             for(var key in this.__proto__) {

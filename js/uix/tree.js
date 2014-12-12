@@ -557,11 +557,11 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			if(!self.options.drag) return;
 			
 			var root = self.uit.getRoot();
-			$("body").unbind("mousemove").unbind("mouseup");
+			$("body").off("mousemove").off("mouseup");
 
 			for(var i = 0; i < nodeList.length; i++) {
 				(function(node) {
-					$(node.element).unbind("mousedown").unbind("mouseup");
+					$(node.element).off("mousedown").off("mouseup");
 					
 					self.addEvent(node.element, "mousedown", function(e) {
 						if(e.target.tagName == "I") return;

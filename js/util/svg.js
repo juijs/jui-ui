@@ -151,7 +151,7 @@ jui.define("util.svg.element", [], function() {
          *
          */
 
-        this.bind = function(type, handler) {
+        this.on = function(type, handler) {
             this.element.addEventListener(type, function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);

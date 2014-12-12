@@ -8,14 +8,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            self.bind("chart.mousedown", function(e) {
+            self.on("chart.mousedown", function(e) {
                 if(isMove || chart.zoom().start > 0) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
             });
 
-            self.bind("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.bgX - mouseStart;
@@ -35,9 +35,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             });
 
-            self.bind("chart.mouseup", endZoomAction);
-            self.bind("bg.mouseup", endZoomAction);
-            self.bind("bg.mouseout", endZoomAction);
+            self.on("chart.mouseup", endZoomAction);
+            self.on("bg.mouseup", endZoomAction);
+            self.on("bg.mouseout", endZoomAction);
 
             function endZoomAction() {
                 isMove = false;
@@ -112,7 +112,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                             d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
                             fill: chart.theme("zoomFocusColor")
                         }).translate(cw - r, -r);
-                    }).bind("click", function(e) {
+                    }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
                         chart.page(1);
                     });

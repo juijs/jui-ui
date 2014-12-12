@@ -478,7 +478,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var elem = self.svg.root,
                 isMouseOver = false;
 
-            elem.bind("click", function(e) {
+            elem.on("click", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.click", [ e ]);
                 } else {
@@ -486,7 +486,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.dblclick", [ e ]);
                 } else {
@@ -494,7 +494,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.rclick", [ e ]);
                 } else {
@@ -504,7 +504,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 e.preventDefault();
             });
 
-            elem.bind("mousemove", function(e) {
+            elem.on("mousemove", function(e) {
                 if (!checkPosition(e)) {
                     if (isMouseOver) {
                         self.emit("chart.mouseout", [ e ]);
@@ -522,7 +522,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mousedown", function(e) {
+            elem.on("mousedown", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mousedown", [ e ]);
                 } else {
@@ -530,7 +530,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mouseup", function(e) {
+            elem.on("mouseup", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseup", [ e ]);
                 } else {
@@ -538,13 +538,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             });
 
-            elem.bind("mouseover", function(e) {
+            elem.on("mouseover", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseover", [ e ]);
                 }
             });
 
-            elem.bind("mouseout", function(e) {
+            elem.on("mouseout", function(e) {
                 if (!checkPosition(e)) {
                     self.emit("bg.mouseout", [ e ]);
                 }
@@ -996,9 +996,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param type
          * @param callback
          */
-        this.bind = function(type, callback, isRender) {
+        this.on = function(type, callback, isRender) {
+            if(typeof(type) != "string" || typeof(callback) != "function") return;
+
+            this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
             _handler.push({ callback: callback, isRender: (isRender === false) ? false : true });
-            return this.on(type, callback);
         }
 
         /**

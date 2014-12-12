@@ -14,7 +14,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 mouseStart = 0,
                 thumbStart = 0;
 
-            self.bind("bg.mousedown", function(e) {
+            self.on("bg.mousedown", function(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
@@ -22,10 +22,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 thumbStart = thumbLeft;
             });
 
-            self.bind("bg.mousemove", mousemove);
-            self.bind("bg.mouseup", mouseup);
-            self.bind("chart.mousemove", mousemove);
-            self.bind("chart.mouseup", mouseup);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
 
             function mousemove(e) {
                 if(!isMove) return;

@@ -85,7 +85,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                             cursor: "pointer"
                         });
 
-                        element.bind("click", function(e) {
+                        element.on("click", function(e) {
                             if(columns[brush.index][key]) {
                                 element.attr({ opacity: 0.7 });
                                 columns[brush.index][key] = false;

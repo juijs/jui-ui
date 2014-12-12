@@ -198,43 +198,43 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 data: (dataIndex != null) ? self.chart.data(dataIndex) : null
             };
 
-            elem.bind("click", function(e) {
+            elem.on("click", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("click", [ obj, e ]);
             });
 
-            elem.bind("dblclick", function(e) {
+            elem.on("dblclick", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("dblclick", [ obj, e ]);
             });
 
-            elem.bind("contextmenu", function(e) {
+            elem.on("contextmenu", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
-            elem.bind("mouseover", function(e) {
+            elem.on("mouseover", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseover", [ obj, e ]);
             });
 
-            elem.bind("mouseout", function(e) {
+            elem.on("mouseout", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseout", [ obj, e ]);
             });
 
-            elem.bind("mousemove", function(e) {
+            elem.on("mousemove", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousemove", [ obj, e ]);
             });
 
-            elem.bind("mousedown", function(e) {
+            elem.on("mousedown", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mousedown", [ obj, e ]);
             });
 
-            elem.bind("mouseup", function(e) {
+            elem.on("mouseup", function(e) {
                 setMouseEvent(self, e);
                 self.chart.emit("mouseup", [ obj, e ]);
             });
