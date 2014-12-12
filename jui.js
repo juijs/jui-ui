@@ -9985,7 +9985,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _data = [], _tempData = [],  _page = 1, _start = 0, _end = 0;
         var _grid = {}, _axis = {}, _brush = [], _widget = [], _scales = [], _hash = {};
         var _padding, _series, _area, _panel, _theme;
-        var _initialize = false, _handler = [];
+        var _initialize = false, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -10620,11 +10620,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         function resetEvent(self) {
             for(var i = 0; i < _handler.length; i++) {
-                var obj = _handler[i];
-
-                if(obj.isRender) {
-                    self.off(obj.callback);
-                }
+                self.off(_handler[i]);
             }
 
             _handler = [];
@@ -10950,11 +10946,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param type
          * @param callback
          */
-        this.on = function(type, callback, isRender) {
+        this.on = function(type, callback, isReset) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
 
-            this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
-            _handler.push({ callback: callback, isRender: (isRender === false) ? false : true });
+            this.event.push({ type: type.toLowerCase(), callback: callback  });
+            if(isReset === true) _handler.push(callback);
         }
 
         /**
@@ -10965,7 +10961,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
-            // chart 이벤트 핸들러 초기화
+            // chart 이벤트 초기화 (삭제 대상)
             resetEvent(this);
 
             // chart 영역 계산
