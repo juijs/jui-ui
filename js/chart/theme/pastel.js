@@ -43,6 +43,7 @@ jui.define("chart.theme.pastel", [], function() {
 		columnBorderOpacity : 0,
 		columnActiveBackgroundColor : "#ffb9ce",
 		columnCircleBorderColor : "#ebebeb",
+		columnDisableBorderOpacity : 0.7,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
