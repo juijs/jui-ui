@@ -73,7 +73,8 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var brush = this.brush,
+            var self = this,
+                brush = this.brush,
                 g = this.chart.svg.group();
 
             for(var k = 0; k < path.length; k++) {
@@ -99,12 +100,12 @@ jui.define("chart.brush.line", [], function() {
                 }
             }
 
-            for(var k = 0; k < path.length; k++) {
-                // 액티브 라인 설정
-                if(brush.active == brush.target[k]) {
-                    setActiveEffect(this, p);
+            // 액티브 라인 설정
+            g.each(function(i, p) {
+                if(brush.active == brush.target[i]) {
+                    setActiveEffect(self, p);
                 }
-            }
+            });
 
             return g;
         }
