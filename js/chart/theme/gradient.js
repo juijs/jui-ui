@@ -49,7 +49,7 @@ jui.define("chart.theme.gradient", [], function() {
         columnBorderOpacity : 0,
         columnActiveBackgroundColor : "linear(top) #3aedcf,0.9 #06d9b6",
         columnCircleBorderColor : "white",
-        columnDisableBorderOpacity : 0.7,
+        columnDisableBackgroundOpacity : 0.5,
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",

@@ -11305,7 +11305,7 @@ jui.define("chart.theme.jennifer", [], function() {
         columnBorderOpacity : 0,
         columnActiveBackgroundColor : "#06d9b6",
         columnCircleBorderColor : "white",
-        columnDisableBorderOpacity : 0.7,
+        columnDisableBackgroundOpacity : 0.5,
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11417,7 +11417,7 @@ jui.define("chart.theme.gradient", [], function() {
         columnBorderOpacity : 0,
         columnActiveBackgroundColor : "linear(top) #3aedcf,0.9 #06d9b6",
         columnCircleBorderColor : "white",
-        columnDisableBorderOpacity : 0.7,
+        columnDisableBackgroundOpacity : 0.5,
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11527,7 +11527,7 @@ jui.define("chart.theme.dark", [], function() {
         columnBorderOpacity : 0,
         columnActiveBackgroundColor : "#fc6d65",
         columnCircleBorderColor : "white",
-        columnDisableBorderOpacity : 0.7,
+        columnDisableBackgroundOpacity : 0.5,
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",
@@ -11633,7 +11633,7 @@ jui.define("chart.theme.pastel", [], function() {
 		columnBorderOpacity : 0,
 		columnActiveBackgroundColor : "#ffb9ce",
 		columnCircleBorderColor : "#ebebeb",
-		columnDisableBorderOpacity : 0.7,
+		columnDisableBackgroundOpacity : 0.5,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
@@ -15017,7 +15017,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		function setActiveEffect(self, elem) {
 			for(var i = 0; i < columns.length; i++) {
-				var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("columnDisableBorderOpacity");
+				var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("columnDisableBackgroundOpacity");
 
 				columns[i].element.attr({ opacity: opacity });
 			}

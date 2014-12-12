@@ -47,7 +47,7 @@ jui.define("chart.theme.dark", [], function() {
         columnBorderOpacity : 0,
         columnActiveBackgroundColor : "#fc6d65",
         columnCircleBorderColor : "white",
-        columnDisableBorderOpacity : 0.7,
+        columnDisableBackgroundOpacity : 0.5,
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",

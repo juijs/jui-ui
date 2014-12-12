@@ -7,7 +7,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		function setActiveEffect(self, elem) {
 			for(var i = 0; i < columns.length; i++) {
-				var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("columnDisableBorderOpacity");
+				var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("columnDisableBackgroundOpacity");
 
 				columns[i].element.attr({ opacity: opacity });
 			}
