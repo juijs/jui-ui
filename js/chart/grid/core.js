@@ -66,7 +66,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
-							var value = +s(row);
+							var value = +s.call(chart, row);
 
 							value_list.push(value);
 						}
@@ -340,19 +340,13 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 
 			return {
-				start  : start,
-				size : size,
-				end : start + size
+				start: start,
+				size: size,
+				end: start + size
 			}
 		}
 
 		this.getOptions = function(options) {
-			var self = this;
-
-			var callback = function(value) {
-				return self.chart.format(value);
-			}
-
 			return $.extend({
 				domain: null,
 				step: 10,
@@ -368,7 +362,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start: null,
 				size: null,
 				line: false,
-				format: callback
+				format: null
 			}, options);
 		}
 	}

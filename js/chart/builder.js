@@ -927,16 +927,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         /**
          * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
          *
-         * @param value
          */
-        this.format = function(value) {
+        this.format = function() {
+            if(arguments.length == 0) return;
             var callback = this.options.format;
 
             if(_.typeCheck("function", callback)) {
-                return callback(value);
+                return callback.apply(this, arguments);
             }
 
-            return value;
+            return arguments[0];
         }
 
         /**
@@ -949,10 +949,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * jui component binding
-         *
          * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
-         *
          * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
          *
          * @param {object} bind   uix.table, uix.xtable 객체 사용

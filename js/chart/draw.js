@@ -74,6 +74,17 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return obj;
 		}
+
+        /**
+         * Draw 객체 기본 포맷 메소드
+         *
+         */
+        this.format = function() {
+            var draw = this.grid || this.brush || this.widget,
+                callback = draw.format || this.chart.format;
+
+            return callback.apply(this.chart, arguments);
+        }
 	}
 
 	return Draw;

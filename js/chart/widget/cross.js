@@ -13,7 +13,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 tspan[index] = elem;
             }
 
-            tspan[index].textContent = widget.format(message);
+            tspan[index].textContent = self.format(message);
         }
 
         this.drawBefore = function() {
@@ -41,7 +41,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 });
 
                 // 포맷 옵션이 없을 경우, 툴팁을 생성하지 않음
-                if(_.typeCheck("function", widget.format)) {
+                if(_.typeCheck("function", self.format)) {
                     yTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
@@ -104,7 +104,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 });
 
                 // 포맷 옵션이 없을 경우, 처리하지 않음
-                if(_.typeCheck("function", widget.format)) {
+                if(_.typeCheck("function", self.format)) {
                     if (yTooltip) {
                         yTooltip.translate(-(tw + ta), top - (th / 2));
                         printTooltip(0, yTooltip.get(1), self.widget.y.invert(top));
@@ -121,12 +121,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            var callback = function(value) {
-                return chart.format(value);
-            }
-
             return this.getOptions({
-                format: callback
+                format: null
             });
         }
     }

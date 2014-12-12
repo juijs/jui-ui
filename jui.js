@@ -9947,6 +9947,17 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return obj;
 		}
+
+        /**
+         * Draw 객체 기본 포맷 메소드
+         *
+         */
+        this.format = function() {
+            var draw = this.grid || this.brush || this.widget,
+                callback = draw.format || this.chart.format;
+
+            return callback.apply(this.chart, arguments);
+        }
 	}
 
 	return Draw;
@@ -10881,16 +10892,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         /**
          * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
          *
-         * @param value
          */
-        this.format = function(value) {
+        this.format = function() {
+            if(arguments.length == 0) return;
             var callback = this.options.format;
 
             if(_.typeCheck("function", callback)) {
-                return callback(value);
+                return callback.apply(this, arguments);
             }
 
-            return value;
+            return arguments[0];
         }
 
         /**
@@ -11762,7 +11773,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
-							var value = +s(row);
+							var value = +s.call(chart, row);
 
 							value_list.push(value);
 						}
@@ -12036,19 +12047,13 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 
 			return {
-				start  : start,
-				size : size,
-				end : start + size
+				start: start,
+				size: size,
+				end: start + size
 			}
 		}
 
 		this.getOptions = function(options) {
-			var self = this;
-
-			var callback = function(value) {
-				return self.chart.format(value);
-			}
-
 			return $.extend({
 				domain: null,
 				step: 10,
@@ -12064,7 +12069,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start: null,
 				size: null,
 				line: false,
-				format: callback
+				format: null
 			}, options);
 		}
 	}
@@ -12086,7 +12091,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
                 if (!domain && domain !== 0) {
                     continue;
@@ -12136,7 +12141,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
                     continue;
@@ -12186,7 +12191,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12231,7 +12236,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12332,7 +12337,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12370,7 +12375,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12408,7 +12413,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12446,7 +12451,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 				bar = this.bar;
 			
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12783,7 +12788,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12827,7 +12832,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12872,7 +12877,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 			for (var i = 0; i < ticks.length; i++) {
 
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -12918,7 +12923,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -13010,7 +13015,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -13055,7 +13060,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -13101,7 +13106,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -13145,7 +13150,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				bar = this.bar;
 
 			for (var i = 0; i < ticks.length; i++) {
-				var domain = grid.format(ticks[i], i);
+				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -13707,7 +13712,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
         this.showTooltip = function(tooltip, x, y, value, isTop) {
             var text = tooltip.get(0);
-            text.element.textContent = this.chart.format(value);
+            text.element.textContent = this.format(value);
             text.attr({ y: (isTop) ? -7 : 16 });
 
             tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
@@ -14041,13 +14046,14 @@ jui.define("chart.brush.ohlc", [], function() {
 jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
+		var self = this;
 		var g, activeTooltip;
 		var zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding, display;
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEffect(self, elem, x, y, value, isTop) {
+		function setActiveEffect(elem, x, y, value, isTop) {
 			for(var i = 0; i < columns.length; i++) {
 				columns[i].element.attr({ fill: columns[i].color });
 			}
@@ -14056,7 +14062,7 @@ jui.define("chart.brush.column", [], function() {
 			self.showTooltip(activeTooltip, x, y, value, isTop);
 		}
 
-		function setActiveEvent(self, elem, x, y, value, isTop) {
+		function setActiveEvent(elem, x, y, value, isTop) {
 			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
@@ -14143,13 +14149,13 @@ jui.define("chart.brush.column", [], function() {
 
 					// 액티브 엘리먼트 설정
 					if (brush.active == i) {
-						setActiveEffect(this, r, tooltipX, tooltipY, value, isTop);
+						setActiveEffect(r, tooltipX, tooltipY, value, isTop);
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
 					if(value != 0) {
 						if (brush.activeEvent != null) {
-							setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+							setActiveEvent(r, tooltipX, tooltipY, value, isTop);
 							r.attr({ cursor: "pointer" });
 						}
 
@@ -14502,9 +14508,10 @@ jui.define("chart.brush.fullstack", [], function() {
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
-        var columns = [];
+        var self = this,
+            columns = [];
 
-        function setActiveEffect(self, elem) {
+        function setActiveEffect(elem) {
             for(var i = 0; i < columns.length; i++) {
                 var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
@@ -14515,9 +14522,9 @@ jui.define("chart.brush.line", [], function() {
             }
         }
 
-        function setActiveEvent(self, elem) {
+        function setActiveEvent(elem) {
             elem.on(self.brush.activeEvent, function(e) {
-                setActiveEffect(self, elem);
+                setActiveEffect(elem);
             });
         }
 
@@ -14574,8 +14581,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var self = this,
-                brush = this.brush,
+            var brush = this.brush,
                 g = this.chart.svg.group();
 
             for(var k = 0; k < path.length; k++) {
@@ -14597,14 +14603,14 @@ jui.define("chart.brush.line", [], function() {
 
                 // 액티브 라인 추가
                 if(brush.activeEvent != null) {
-                    setActiveEvent(this, p);
+                    setActiveEvent(p);
                 }
             }
 
             // 액티브 라인 설정
             g.each(function(i, p) {
                 if(brush.active == brush.target[i]) {
-                    setActiveEffect(self, p);
+                    setActiveEffect(p);
                 }
             });
 
@@ -14796,9 +14802,9 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 jui.define("chart.brush.scatter", [], function() {
 
     var ScatterBrush = function() {
-        this.createScatter = function(pos, index) {
-            var self = this;
+        var self = this;
 
+        this.createScatter = function(pos, index) {
             var elem = null,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
@@ -14809,8 +14815,6 @@ jui.define("chart.brush.scatter", [], function() {
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
             if(symbol == "triangle" || symbol == "cross") {
-                var self = this;
-
                 elem = this.chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
                         var poly = self.chart.svg.polygon();
@@ -16411,15 +16415,15 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             return (this.widget.render === true) ? true : false;
         }
 
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, this.isRender());
+        }
+
         this.getOptions = function(options) {
             return $.extend({
                 brush: null,
                 render: false
             }, options);
-        }
-
-        this.on = function(type, callback) {
-            return this.chart.on(type, callback, this.isRender());
         }
 	}
 
@@ -16427,6 +16431,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(chart, widget) {
+        var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
         var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
@@ -16441,6 +16446,18 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             tspan[index].textContent = message;
         }
 
+        function getFormat(key, value, data) {
+            if(typeof(widget.format) == "function") {
+                return widget.format.apply(self.chart, [ key, value, data ]);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + self.format(value);
+            }
+        }
+
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
                 var t = chart.series(obj.dataKey),
@@ -16453,7 +16470,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = widget.format((t.text) ? t.text : k, d, obj.data);
+                var message = getFormat((t.text) ? t.text : k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
@@ -16472,7 +16489,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    var message = widget.format((t.text) ? t.text : key, d, obj.data);
+                    var message = getFormat((t.text) ? t.text : key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -16558,18 +16575,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            var callback = function(key, value) {
-                if(!value) {
-                    return key;
-                }
-
-                return key + ": " + chart.format(value);
-            }
-
             return this.getOptions({
                 position: "top", // or bottom, left, right
                 all: false,
-                format: callback
+                format: null
             });
         }
     }
@@ -17085,7 +17094,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 tspan[index] = elem;
             }
 
-            tspan[index].textContent = widget.format(message);
+            tspan[index].textContent = self.format(message);
         }
 
         this.drawBefore = function() {
@@ -17113,7 +17122,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 });
 
                 // 포맷 옵션이 없을 경우, 툴팁을 생성하지 않음
-                if(_.typeCheck("function", widget.format)) {
+                if(_.typeCheck("function", self.format)) {
                     yTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
@@ -17176,7 +17185,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 });
 
                 // 포맷 옵션이 없을 경우, 처리하지 않음
-                if(_.typeCheck("function", widget.format)) {
+                if(_.typeCheck("function", self.format)) {
                     if (yTooltip) {
                         yTooltip.translate(-(tw + ta), top - (th / 2));
                         printTooltip(0, yTooltip.get(1), self.widget.y.invert(top));
@@ -17193,12 +17202,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            var callback = function(value) {
-                return chart.format(value);
-            }
-
             return this.getOptions({
-                format: callback
+                format: null
             });
         }
     }

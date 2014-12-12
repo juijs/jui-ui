@@ -260,7 +260,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
         this.showTooltip = function(tooltip, x, y, value, isTop) {
             var text = tooltip.get(0);
-            text.element.textContent = this.chart.format(value);
+            text.element.textContent = this.format(value);
             text.attr({ y: (isTop) ? -7 : 16 });
 
             tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });

@@ -1,5 +1,6 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
     var TooltipWidget = function(chart, widget) {
+        var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
         var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
@@ -14,6 +15,18 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             tspan[index].textContent = message;
         }
 
+        function getFormat(key, value, data) {
+            if(typeof(widget.format) == "function") {
+                return widget.format.apply(self.chart, [ key, value, data ]);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + self.format(value);
+            }
+        }
+
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
                 var t = chart.series(obj.dataKey),
@@ -26,7 +39,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = widget.format((t.text) ? t.text : k, d, obj.data);
+                var message = getFormat((t.text) ? t.text : k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
@@ -45,7 +58,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    var message = widget.format((t.text) ? t.text : key, d, obj.data);
+                    var message = getFormat((t.text) ? t.text : key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -131,18 +144,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            var callback = function(key, value) {
-                if(!value) {
-                    return key;
-                }
-
-                return key + ": " + chart.format(value);
-            }
-
             return this.getOptions({
                 position: "top", // or bottom, left, right
                 all: false,
-                format: callback
+                format: null
             });
         }
     }

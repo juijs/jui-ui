@@ -1,9 +1,10 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
-        var columns = [];
+        var self = this,
+            columns = [];
 
-        function setActiveEffect(self, elem) {
+        function setActiveEffect(elem) {
             for(var i = 0; i < columns.length; i++) {
                 var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
 
@@ -14,9 +15,9 @@ jui.define("chart.brush.line", [], function() {
             }
         }
 
-        function setActiveEvent(self, elem) {
+        function setActiveEvent(elem) {
             elem.on(self.brush.activeEvent, function(e) {
-                setActiveEffect(self, elem);
+                setActiveEffect(elem);
             });
         }
 
@@ -73,8 +74,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var self = this,
-                brush = this.brush,
+            var brush = this.brush,
                 g = this.chart.svg.group();
 
             for(var k = 0; k < path.length; k++) {
@@ -96,14 +96,14 @@ jui.define("chart.brush.line", [], function() {
 
                 // 액티브 라인 추가
                 if(brush.activeEvent != null) {
-                    setActiveEvent(this, p);
+                    setActiveEvent(p);
                 }
             }
 
             // 액티브 라인 설정
             g.each(function(i, p) {
                 if(brush.active == brush.target[i]) {
-                    setActiveEffect(self, p);
+                    setActiveEffect(p);
                 }
             });
 

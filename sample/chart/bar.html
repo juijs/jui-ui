@@ -40,7 +40,11 @@
             },
             widget : [
             	{ type : 'title', text : 'Bar Sample' },
-            	{ type : 'legend' }
+            	{ type : 'legend' },
+                { type : 'tooltip', format : function(d) {
+                    console.log(d);
+                    return d;
+                }}
             ],
             brush : {
                 type : 'bar',

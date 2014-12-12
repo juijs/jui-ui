@@ -36,7 +36,10 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value" ],
+                    target : function(d) {
+                        console.log("grid.y.target: " + this.index)
+                        return d.name + d.value;
+                    },
                     step : 10,
                     line : true
                 }
@@ -55,8 +58,8 @@
                 display : "max",
                 minValue : 1
             },
-            event : {
-                click : callback
+            widget : {
+                type: "tooltip"
             }
         });
 

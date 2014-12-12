@@ -91,15 +91,15 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             return (this.widget.render === true) ? true : false;
         }
 
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, this.isRender());
+        }
+
         this.getOptions = function(options) {
             return $.extend({
                 brush: null,
                 render: false
             }, options);
-        }
-
-        this.on = function(type, callback) {
-            return this.chart.on(type, callback, this.isRender());
         }
 	}
 

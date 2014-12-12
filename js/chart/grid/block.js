@@ -13,7 +13,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
                 if (!domain && domain !== 0) {
                     continue;
@@ -63,7 +63,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
                     continue;
@@ -113,7 +113,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -158,7 +158,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 
 			for (var i = 0; i < this.points.length; i++) {
-				var domain = grid.format(this.domain[i], i);
+				var domain = this.format(this.domain[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;

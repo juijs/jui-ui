@@ -1,9 +1,9 @@
 jui.define("chart.brush.scatter", [], function() {
 
     var ScatterBrush = function() {
-        this.createScatter = function(pos, index) {
-            var self = this;
+        var self = this;
 
+        this.createScatter = function(pos, index) {
             var elem = null,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
@@ -14,8 +14,6 @@ jui.define("chart.brush.scatter", [], function() {
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
             if(symbol == "triangle" || symbol == "cross") {
-                var self = this;
-
                 elem = this.chart.svg.group({ width: w, height: h }, function() {
                     if(symbol == "triangle") {
                         var poly = self.chart.svg.polygon();

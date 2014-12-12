@@ -1,13 +1,14 @@
 jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
+		var self = this;
 		var g, activeTooltip;
 		var zeroY, count, width, columnWidth, half_width;
 		var outerPadding, innerPadding, display;
 		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
 		var columns = [];
 
-		function setActiveEffect(self, elem, x, y, value, isTop) {
+		function setActiveEffect(elem, x, y, value, isTop) {
 			for(var i = 0; i < columns.length; i++) {
 				columns[i].element.attr({ fill: columns[i].color });
 			}
@@ -16,7 +17,7 @@ jui.define("chart.brush.column", [], function() {
 			self.showTooltip(activeTooltip, x, y, value, isTop);
 		}
 
-		function setActiveEvent(self, elem, x, y, value, isTop) {
+		function setActiveEvent(elem, x, y, value, isTop) {
 			elem.on(brush.activeEvent, function(e) {
 				for(var i = 0; i < columns.length; i++) {
 					columns[i].element.attr({ fill: columns[i].color });
@@ -103,13 +104,13 @@ jui.define("chart.brush.column", [], function() {
 
 					// 액티브 엘리먼트 설정
 					if (brush.active == i) {
-						setActiveEffect(this, r, tooltipX, tooltipY, value, isTop);
+						setActiveEffect(r, tooltipX, tooltipY, value, isTop);
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
 					if(value != 0) {
 						if (brush.activeEvent != null) {
-							setActiveEvent(this, r, tooltipX, tooltipY, value, isTop);
+							setActiveEvent(r, tooltipX, tooltipY, value, isTop);
 							r.attr({ cursor: "pointer" });
 						}
 
