@@ -1229,9 +1229,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isNotAll
          */
-        this.addBrush = function(brush, isNotRender) {
+        this.addBrush = function(brush, isRender) {
             this.options.brush.push(brush);
-            if(!isNotRender) this.render();
+            if(isRender !== false) this.render();
         }
 
         /**
@@ -1240,9 +1240,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param index
          * @param isNotAll
          */
-        this.removeBrush = function(index, isNotRender) {
+        this.removeBrush = function(index, isRender) {
             this.options.brush.splice(index, 1);
-            if(!isNotRender) this.render();
+            if(isRender !== false) this.render();
         }
 
         /**
@@ -1252,12 +1252,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isNotAll
          */
-        this.updateBrush = function(index, brush, isNotRender) {
+        this.updateBrush = function(index, brush, isRender) {
             for(var key in brush) {
                 this.options.brush[index][key] = brush[key];
             }
 
-            if(!isNotRender) this.render();
+            if(isRender !== false) this.render();
         }
     }
 
