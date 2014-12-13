@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+<hr>
+<div id="chart2"></div>
+
+<script>
+    var callback = function(d, e) {
+        console.log(d);
+    }
+
+    jui.ready([ "chart.builder" ], function(chart) {
+        c = chart("#chart", {
+            width: 400,
+            height : 400,
+            data : [
+                { name : -25, value : 1 },
+                { name : 15, value : 3 },
+                { name : 0, value : 5 },
+                { name : 18, value : 0 },
+            ],
+            grid : {
+
+                y : {
+                    //type : "block",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true
+                },
+                x : {
+                    type : 'range',
+                    domain : [ -50, 50 ],
+                    step : 10,
+                    line : true
+                }
+            },
+            series : {
+                name : { text : "이름" },
+                value : { text : "값" }
+            },
+            brush : {
+                type : 'bar',
+                target : ['name'],
+                minValue : 1,
+                active : 1,
+                activeEvent : "click",
+                display : "max"
+            },
+            widget : {
+                type: "tooltip"
+            }
+        });
+
+	})
+</script>
+
+
+</body>
+</html>

@@ -69,8 +69,8 @@
             width: 400,
             height : 400,
             data : [
-                { name : 2, value : 1 },
-                { name : -15, value : 1 },
+                { name : 2, value : 0 },
+                { name : -15, value : 0 },
                 { name : -88, value : 2 },
                 { name : 18, value : 1 },
             ],
@@ -96,12 +96,9 @@
                 type : 'column',
                 x1 : 0,
                 target : ['name','value'],
-                display : "max"
-            },
-            event : {
-                click : function(d, e) {
-                    alert(this.selector);
-                }
+                display : "max",
+                active : 2,
+                activeEvent : "click"
             }
         });
 	})

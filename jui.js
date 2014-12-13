@@ -11308,12 +11308,9 @@ jui.define("chart.theme.jennifer", [], function() {
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
-        columnBorderColor : "none",
-        columnBorderWidth : 0,
-        columnBorderOpacity : 0,
-        columnActiveBackgroundColor : "#06d9b6",
-        columnCircleBorderColor : "white",
-        columnDisableBackgroundOpacity : 0.5,
+        barActiveBackgroundColor : "#06d9b6",
+        barCircleBorderColor : "white",
+        barDisableBackgroundOpacity : 0.5,
     	gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11420,12 +11417,9 @@ jui.define("chart.theme.gradient", [], function() {
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
-        columnBorderColor : "none",
-        columnBorderWidth : 0,
-        columnBorderOpacity : 0,
-        columnActiveBackgroundColor : "linear(top) #3aedcf,0.9 #06d9b6",
-        columnCircleBorderColor : "white",
-        columnDisableBackgroundOpacity : 0.5,
+        barActiveBackgroundColor : "linear(top) #3aedcf,0.9 #06d9b6",
+        barCircleBorderColor : "white",
+        barDisableBackgroundOpacity : 0.5,
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
@@ -11530,12 +11524,9 @@ jui.define("chart.theme.dark", [], function() {
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
-        columnBorderColor : "none",
-        columnBorderWidth : 0,
-        columnBorderOpacity : 0,
-        columnActiveBackgroundColor : "#fc6d65",
-        columnCircleBorderColor : "white",
-        columnDisableBackgroundOpacity : 0.5,
+        barActiveBackgroundColor : "#fc6d65",
+        barCircleBorderColor : "white",
+        barDisableBackgroundOpacity : 0.5,
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",
@@ -11636,12 +11627,9 @@ jui.define("chart.theme.pastel", [], function() {
 		barBorderColor : "none",
 		barBorderWidth : 0,
 		barBorderOpacity : 0,
-		columnBorderColor : "none",
-		columnBorderWidth : 0,
-		columnBorderOpacity : 0,
-		columnActiveBackgroundColor : "#ffb9ce",
-		columnCircleBorderColor : "#ebebeb",
-		columnDisableBackgroundOpacity : 0.5,
+		barActiveBackgroundColor : "#ffb9ce",
+		barCircleBorderColor : "#ebebeb",
+		barDisableBackgroundOpacity : 0.5,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
@@ -13695,10 +13683,19 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             });
         }
 
-        this.showTooltip = function(tooltip, x, y, value, isTop) {
+        this.showTooltip = function(tooltip, x, y, value, position) {
             var text = tooltip.get(0);
             text.element.textContent = this.format(value);
-            text.attr({ y: (isTop) ? -7 : 16 });
+
+            if(position == "left") {
+                text.attr({ x: -7, y: 4, "text-anchor": "end" });
+            } else if(position == "right") {
+                text.attr({ x: 7, y: 4, "text-anchor": "start" });
+            } else if(position == "bottom") {
+                text.attr({ y: 16 });
+            } else {
+                text.attr({ y: -7 });
+            }
 
             tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
             tooltip.translate(x, y);
@@ -13716,79 +13713,171 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 jui.define("chart.brush.bar", [], function() {
 
 	var BarBrush = function(chart, brush) {
-		var g, zeroX, count, height, half_height, barHeight;
-		var outerPadding, innerPadding;
-		var borderColor, borderWidth, borderOpacity;
+		var g, activeTooltip;
+		var zeroX, count, height, half_height, bar_height;
+
+		this.getBarStyle = function() {
+			return {
+				borderColor: this.chart.theme("barBorderColor"),
+				borderWidth: this.chart.theme("barBorderWidth"),
+				borderOpacity: this.chart.theme("barBorderOpacity"),
+				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
+				activeColor: this.chart.theme("barActiveBackgroundColor"),
+				circleColor: this.chart.theme("barCircleBorderColor")
+			}
+		}
+
+		this.addBarElement = function(elem) {
+			if(!this.barList) {
+				this.barList = [];
+			}
+
+			this.barList.push(elem);
+		}
+
+		this.getBarElement = function(width, height, dataIndex, targetIndex) {
+			var style = this.getBarStyle(),
+				color = this.chart.color(targetIndex, this.brush),
+				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+
+			var r = this.chart.svg.rect({
+				width : width,
+				height : height,
+				fill : color,
+				stroke : style.borderColor,
+				"stroke-width" : style.borderWidth,
+				"stroke-opacity" : style.borderOpacity
+			});
+
+			if(value != 0) {
+				this.addEvent(r, targetIndex, dataIndex);
+			}
+
+			this.addBarElement({
+				index: dataIndex,
+				target: this.brush.target[targetIndex],
+				element: r,
+				color: color
+			});
+
+			return r;
+		}
+
+		this.setActiveEffect = function(bar, tooltip, x, y, value, position) {
+			var style = this.getBarStyle(),
+				columns = this.barList;
+
+			for(var i = 0; i < columns.length; i++) {
+				columns[i].element.attr({ fill: columns[i].color });
+			}
+
+			bar.attr({ fill: style.activeColor });
+			this.showTooltip(tooltip, x, y, value, position);
+		}
+
+		this.setActiveEvent = function(bar, tooltip, x, y, value, position) {
+			var self = this,
+				style = this.getBarStyle(),
+				columns = this.barList;
+
+			bar.on(this.brush.activeEvent, function(e) {
+				for(var i = 0; i < columns.length; i++) {
+					var child = columns[i].element;
+
+					if(e.target == child.element) {
+						child.attr({ fill: style.activeColor });
+						self.showTooltip(tooltip, x, y, value, position);
+					} else {
+						child.attr({ fill: columns[i].color });
+					}
+				}
+			});
+		}
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-
-            outerPadding = brush.outerPadding;
-            innerPadding = brush.innerPadding;
+			var style = this.getBarStyle();
 
 			zeroX = brush.x(0);
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
-			half_height = height - (outerPadding * 2);
-			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
+			half_height = height - (brush.outerPadding * 2);
+			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
-			borderColor = chart.theme("barBorderColor");
-			borderWidth = chart.theme("barBorderWidth");
-			borderOpacity = chart.theme("barBorderOpacity");
+			g = chart.svg.group();
+			activeTooltip = this.createTooltip(style.activeColor, style.circleColor);
 		}
 
 		this.draw = function() {
+			var style = this.getBarStyle(),
+				points = this.getXY();
+
 			for (var i = 0; i < count; i++) {
-				var group = chart.svg.group(),
-					startY = brush.y(i) - (half_height / 2);
+				var startY = brush.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var startX = brush.x(chart.data(i, brush.target[j])),
-                        r = null;
+					var value = chart.data(i, brush.target[j]),
+						startX = brush.x((value == 0) ? brush.minValue : value),
+						width = Math.abs(zeroX - startX),
+						position = (startX >= zeroX) ? "right" : "left",
+                        r = this.getBarElement(width, bar_height, i, j);
+
+					var tooltipX = startX,
+						tooltipY = startY + (half_height / 2);
 
 					if (startX >= zeroX) {
-						r = chart.svg.rect({
+						r = r.attr({
 							x : zeroX,
-							y : startY,
-							height : barHeight,
-							width : Math.abs(zeroX - startX),
-							fill : chart.color(j, brush),
-							stroke : borderColor,
-							"stroke-width" : borderWidth,
-							"stroke-opacity" : borderOpacity
+							y : startY
 						});
 					} else {
-						var w = Math.abs(zeroX - startX);
-
-						r = chart.svg.rect({
-							y : startY,
-							x : zeroX - w,
-							height : barHeight,
-							width : w,
-							fill : chart.color(j, brush),
-							stroke : borderColor,
-							"stroke-width" : borderWidth,
-							"stroke-opacity" : borderOpacity
+						r = r.attr({
+							x : zeroX - width,
+							y : startY
 						});
 					}
 
-                    this.addEvent(r, j, i);
-                    group.append(r);
+					// 그룹에 컬럼 엘리먼트 추가
+					g.append(r);
 
-					startY += barHeight + innerPadding;
+					// 액티브 엘리먼트 설정
+					if (brush.active == i) {
+						this.setActiveEffect(r, activeTooltip, tooltipX, tooltipY, value, position);
+					}
+
+					// 컬럼 및 기본 브러쉬 이벤트 설정
+					if(value != 0 && brush.activeEvent != null) {
+						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
+						r.attr({ cursor: "pointer" });
+					}
+
+					// Max & Min 툴팁 추가
+					if(brush.display == "max" && points[j].max[i] ||
+						brush.display == "min" && points[j].min[i]) {
+						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
+
+						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
+						g.append(tooltip);
+					}
+
+					// 다음 컬럼 좌표 설정
+					startY += bar_height + brush.innerPadding;
 				}
-				
-				g.append(group);
 			}
+
+			g.append(activeTooltip);
 
             return g;
 		}
 
         this.drawSetup = function() {
 			return this.getOptions({
-                outerPadding: 2,
-                innerPadding: 1
+				minValue: 0,
+				outerPadding: 2,
+				innerPadding: 1,
+				active: null,
+				activeEvent: null, // or click, mouseover, ...
+				display: null // or max, min
             });
         }
 	}
@@ -14031,59 +14120,21 @@ jui.define("chart.brush.ohlc", [], function() {
 jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
-		var self = this;
-		var g, activeTooltip;
-		var zeroY, count, width, columnWidth, half_width;
-		var outerPadding, innerPadding, display;
-		var borderColor, borderWidth, borderOpacity, tooltipColor, circleColor;
-		var columns = [];
-
-		function setActiveEffect(elem, x, y, value, isTop) {
-			for(var i = 0; i < columns.length; i++) {
-				columns[i].element.attr({ fill: columns[i].color });
-			}
-
-			elem.attr({ fill: tooltipColor });
-			self.showTooltip(activeTooltip, x, y, value, isTop);
-		}
-
-		function setActiveEvent(elem, x, y, value, isTop) {
-			elem.on(brush.activeEvent, function(e) {
-				for(var i = 0; i < columns.length; i++) {
-					columns[i].element.attr({ fill: columns[i].color });
-				}
-
-				g.each(function(i, child) {
-					if(e.target == child.element) {
-						child.attr({ fill: tooltipColor });
-						self.showTooltip(activeTooltip, x, y, value, isTop);
-					}
-				});
-			});
-		}
+		var g, activeTooltip, style;
+		var zeroY, count, width, col_width, half_width;
 
 		this.drawBefore = function() {
-			// 기본 값 세팅
-			display = brush.display;
-			outerPadding = brush.outerPadding;
-			innerPadding = brush.innerPadding;
-
+			style = this.getBarStyle();
 			zeroY = brush.y(0);
 			count = chart.data().length;
 
 			width = brush.x.rangeBand();
-			half_width = (width - outerPadding * 2);
-			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
-
-			borderColor = chart.theme("columnBorderColor");
-			borderWidth = chart.theme("columnBorderWidth");
-			borderOpacity = chart.theme("columnBorderOpacity");
-			tooltipColor = chart.theme("columnActiveBackgroundColor");
-			circleColor = chart.theme("columnCircleBorderColor");
+			half_width = (width - brush.outerPadding * 2);
+			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
 			// 엘리먼트 생성
 			g = chart.svg.group();
-			activeTooltip = this.createTooltip(tooltipColor, circleColor);
+			activeTooltip = this.createTooltip(style.activeColor, style.circleColor);
 		}
 
 		this.draw = function() {
@@ -14095,71 +14146,49 @@ jui.define("chart.brush.column", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = chart.data(i)[brush.target[j]],
 						startY = brush.y((value == 0) ? brush.minValue : value),
-						isTop = true,
-						r = null;
+						position = (startY <= zeroY) ? "top" : "bottom",
+						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
 
-					var tooltipX = startX + (columnWidth / 2),
+					var tooltipX = startX + (col_width / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
-						r = chart.svg.rect({
+						r = r.attr({
 							x: startX,
 							y: startY
 						});
 					} else {
-						r = chart.svg.rect({
+						r = r.attr({
 							x: startX,
 							y: zeroY
 						});
-
-						isTop = false;
-					}
-
-					r.attr({
-						width: columnWidth,
-						height: Math.abs(zeroY - startY),
-						fill: chart.color(j, brush),
-						stroke: borderColor,
-						"stroke-width": borderWidth,
-						"stroke-opacity": borderOpacity
-					});
-
-					// 컬럼 상태 설정
-					columns.push({
-						index: i,
-						target: brush.target[j],
-						element: r,
-						color: chart.color(j, brush)
-					});
-
-					// 액티브 엘리먼트 설정
-					if (brush.active == i) {
-						setActiveEffect(r, tooltipX, tooltipY, value, isTop);
-					}
-
-					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0) {
-						if (brush.activeEvent != null) {
-							setActiveEvent(r, tooltipX, tooltipY, value, isTop);
-							r.attr({ cursor: "pointer" });
-						}
-
-						this.addEvent(r, j, i);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
-                    g.append(r);
+					g.append(r);
+
+					// 액티브 엘리먼트 설정
+					if (brush.active == i) {
+						this.setActiveEffect(r, activeTooltip, tooltipX, tooltipY, value, position);
+					}
+
+					// 컬럼 및 기본 브러쉬 이벤트 설정
+					if(value != 0 && brush.activeEvent != null) {
+						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
+						r.attr({ cursor: "pointer" });
+					}
 
 					// Max & Min 툴팁 추가
-					if(display == "max" && points[j].max[i] || display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), circleColor);
+					if(brush.display == "max" && points[j].max[i] ||
+						brush.display == "min" && points[j].min[i]) {
+						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
 
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, isTop);
+						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
 						g.append(tooltip);
 					}
 
 					// 다음 컬럼 좌표 설정
-					startX += columnWidth + innerPadding;
+					startX += col_width + brush.innerPadding;
 				}
 			}
 
@@ -14167,21 +14196,10 @@ jui.define("chart.brush.column", [], function() {
 
             return g;
 		}
-
-        this.drawSetup = function() {
-			return this.getOptions({
-				minValue: 0,
-                outerPadding: 2,
-                innerPadding: 1,
-				active: null,
-				activeEvent: null, // or click, mouseover, ...
-				display: null // or max, min
-            });
-        }
 	}
 
 	return ColumnBrush;
-}, "chart.brush.core");
+}, "chart.brush.bar");
 
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
@@ -14554,9 +14572,9 @@ jui.define("chart.brush.line", [], function() {
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var tooltip = this.createTooltip(this.chart.color(index, this.brush), circleColor),
-                        isTop = (display == "max" && pos.max[i]) ? true : false;
+                        position = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], isTop);
+                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], position);
                     g.append(tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
@@ -14934,8 +14952,44 @@ jui.define("chart.brush.scatterpath", [], function() {
 jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, brush) {
-		var g, series, count, height, barWidth;
-		var borderColor, borderWidth, borderOpacity;
+		var g, series, count, height, bar_width;
+
+		this.getBarElement = function(dataIndex, targetIndex) {
+			var style = this.getBarStyle(),
+				color = this.chart.color(targetIndex, this.brush),
+				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+
+			var r = this.chart.svg.rect({
+				fill : color,
+				stroke : style.borderColor,
+				"stroke-width" : style.borderWidth,
+				"stroke-opacity" : style.borderOpacity
+			});
+
+			if(value != 0) {
+				this.addEvent(r, targetIndex, dataIndex);
+			}
+
+			return r;
+		}
+
+		this.setActiveEffect = function(group) {
+			var style = this.getBarStyle();
+
+			for(var i = 0; i < this.barList.length; i++) {
+				var opacity = (group == this.barList[i]) ? 1 : style.disableOpacity;
+
+				this.barList[i].attr({ opacity: opacity });
+			}
+		}
+
+		this.setActiveEvent = function(group) {
+			var self = this;
+
+			group.on(self.brush.activeEvent, function(e) {
+				self.setActiveEffect(group);
+			});
+		}
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
@@ -14944,44 +14998,48 @@ jui.define("chart.brush.stackbar", [], function() {
 			count = chart.data().length;
 
 			height = brush.y.rangeBand();
-			barWidth = height - brush.outerPadding * 2;
-
-			borderColor = chart.theme("barBorderColor");
-			borderWidth = chart.theme("barBorderWidth");
-			borderOpacity = chart.theme("barBorderOpacity");
+			bar_width = height - brush.outerPadding * 2;
 		}
 
 		this.draw = function() {
 			for (var i = 0; i < count; i++) {
 				var group = chart.svg.group();
 				
-				var startY = brush.y(i) - barWidth/ 2,
+				var startY = brush.y(i) - bar_width/ 2,
                     startX = brush.x(0),
                     value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
 					var xValue = chart.data(i, brush.target[j]) + value,
-                        endX = brush.x(xValue);
+                        endX = brush.x(xValue),
+						r = this.getBarElement(i, j);
 
-					var r = chart.svg.rect({
+					r.attr({
 						x : (startX < endX) ? startX : endX,
 						y : startY,
 						width : Math.abs(startX - endX),
-						height : barWidth,
-						fill : chart.color(j, brush),
-						stroke : borderColor,
-						"stroke-width" : borderWidth,
-						"stroke-opacity" : borderOpacity
+						height : bar_width
 					});
 
-                    this.addEvent(r, j, i);
-					group.append(r);					
-					
+					group.append(r);
+
 					startX = endX;
 					value = xValue;
 				}
-				
+
+				// 액티브 엘리먼트 이벤트 설정
+				if(brush.activeEvent != null) {
+					this.setActiveEvent(group);
+					group.attr({ cursor: "pointer" });
+				}
+
+				this.addBarElement(group);
 				g.append(group);
+			}
+
+			// 액티브 엘리먼트 설정
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
 			}
 
             return g;
@@ -14989,34 +15047,20 @@ jui.define("chart.brush.stackbar", [], function() {
 
         this.drawSetup = function() {
 			return this.getOptions({
-                outerPadding: 15
+				outerPadding: 15,
+				active: null,
+				activeEvent: null // or click, mouseover, ...
             });
         }
 	}
 
 	return StackBarBrush;
-}, "chart.brush.core");
+}, "chart.brush.bar");
 
 jui.define("chart.brush.stackcolumn", [], function() {
 
 	var ColumnStackBrush = function(chart, brush) {
-		var g, zeroY, count, width, barWidth;
-		var borderColor, borderWidth, borderOpacity;
-		var columns = [];
-
-		function setActiveEffect(self, elem) {
-			for(var i = 0; i < columns.length; i++) {
-				var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("columnDisableBackgroundOpacity");
-
-				columns[i].element.attr({ opacity: opacity });
-			}
-		}
-
-		function setActiveEvent(self, elem) {
-			elem.on(self.brush.activeEvent, function(e) {
-				setActiveEffect(self, elem);
-			});
-		}
+		var g, zeroY, count, width, bar_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
@@ -15025,80 +15069,56 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			count = chart.data().length;
 
 			width = brush.x.rangeBand();
-			barWidth = width - brush.outerPadding * 2;
-
-			borderColor = chart.theme("columnBorderColor");
-			borderWidth = chart.theme("columnBorderWidth");
-			borderOpacity = chart.theme("columnBorderOpacity");
+			bar_width = width - brush.outerPadding * 2;
 		}
 
 		this.draw = function() {
-			var self = this;
-
 			for (var i = 0; i < count; i++) {
 				var group = chart.svg.group();
 				
-				var startX = brush.x(i) - barWidth / 2,
+				var startX = brush.x(i) - bar_width / 2,
                     startY = brush.y(0),
                     value = 0;
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var yValue = chart.data(i, brush.target[j]) + value,
-                        endY = brush.y(yValue);
-					
-					var r = chart.svg.rect({
+                        endY = brush.y(yValue),
+						r = this.getBarElement(i, j);
+
+					r.attr({
 						x : startX,
 						y : (startY > endY) ? endY : startY,
-						width : barWidth,
-						height : Math.abs(startY - endY),
-						fill : chart.color(j, brush),
-						stroke : borderColor,
-						"stroke-width" : borderWidth,
-						"stroke-opacity" : borderOpacity
+						width : bar_width,
+						height : Math.abs(startY - endY)
 					});
 
-                    this.addEvent(r, j, i);
-					group.append(r);					
+					group.append(r);
 					
 					startY = endY;
 					value = yValue;
 				}
 
-				// 스택컬럼 상태 설정
-				columns[i] = {
-					element: group
-				};
-
 				// 액티브 엘리먼트 이벤트 설정
 				if(brush.activeEvent != null) {
-					setActiveEvent(this, group);
+					this.setActiveEvent(group);
 					group.attr({ cursor: "pointer" });
 				}
 
+				this.addBarElement(group);
 				g.append(group);
 			}
 
 			// 액티브 엘리먼트 설정
-			g.each(function(i, group) {
-				if (brush.active == i) {
-					setActiveEffect(self, group);
-				}
-			});
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
+			}
 
             return g;
 		}
-
-        this.drawSetup = function() {
-			return this.getOptions({
-                outerPadding: 15,
-				active: null,
-				activeEvent: null // or click, mouseover, ...
-            });
-        }
 	}
 
 	return ColumnStackBrush;
-}, "chart.brush.core");
+}, "chart.brush.stackbar");
 
 jui.define("chart.brush.bargauge", [], function() {
 

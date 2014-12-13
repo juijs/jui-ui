@@ -246,10 +246,19 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             });
         }
 
-        this.showTooltip = function(tooltip, x, y, value, isTop) {
+        this.showTooltip = function(tooltip, x, y, value, position) {
             var text = tooltip.get(0);
             text.element.textContent = this.format(value);
-            text.attr({ y: (isTop) ? -7 : 16 });
+
+            if(position == "left") {
+                text.attr({ x: -7, y: 4, "text-anchor": "end" });
+            } else if(position == "right") {
+                text.attr({ x: 7, y: 4, "text-anchor": "start" });
+            } else if(position == "bottom") {
+                text.attr({ y: 16 });
+            } else {
+                text.attr({ y: -7 });
+            }
 
             tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
             tooltip.translate(x, y);

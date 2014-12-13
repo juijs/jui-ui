@@ -62,9 +62,9 @@ jui.define("chart.brush.line", [], function() {
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var tooltip = this.createTooltip(this.chart.color(index, this.brush), circleColor),
-                        isTop = (display == "max" && pos.max[i]) ? true : false;
+                        position = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], isTop);
+                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], position);
                     g.append(tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
