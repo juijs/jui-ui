@@ -18,13 +18,14 @@
     }
 
     jui.ready([ "chart.builder" ], function(chart) {
+        /*/
         c = chart("#chart", {
             width: 400,
             height : 400,
             data : [
-                { name : 2, value : 0 },
-                { name : -15, value : 0 },
-                { name : -88, value : 0 },
+                { name : 2, value : 1 },
+                { name : -15, value : 3 },
+                { name : -88, value : 5 },
                 { name : 18, value : 0 },
             ],
             grid : {
@@ -62,15 +63,16 @@
                 type: "tooltip"
             }
         });
+        /**/
 
         c2 = chart("#chart2", {
             width: 400,
             height : 400,
             data : [
-                { name : 2, value : 15 },
-                { name : -15, value : 6 },
-                { name : -88, value : -100 },
-                { name : 18, value : 5 },
+                { name : 2, value : 1 },
+                { name : -15, value : 1 },
+                { name : -88, value : 2 },
+                { name : 18, value : 1 },
             ],
             grid : {
 
@@ -94,9 +96,6 @@
                 type : 'column',
                 x1 : 0,
                 target : ['name','value'],
-                active : 1,
-//                activeTarget : "name",
-                activeEvent : "click",
                 display : "max"
             },
             event : {

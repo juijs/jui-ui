@@ -105,7 +105,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @returns {Array}
          */
         this.getXY = function() {
-            var xy = [], isMax = false, isMin = false;
+            var xy = [];
 
             for (var i = 0, len = this.chart.data().length; i < len; i++) {
                 var startX = this.brush.x(i),
@@ -129,20 +129,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                     xy[j].x.push(startX);
                     xy[j].y.push(this.brush.y(value));
                     xy[j].value.push(value);
-
-                    if(!isMin && value == series.min && value != 0) {
-                        xy[j].min.push(true);
-                        isMin = true;
-                    } else {
-                        xy[j].min.push(false);
-                    }
-
-                    if(!isMax && value == series.max && value != 0) {
-                        xy[j].max.push(true);
-                        isMax = true;
-                    } else {
-                        xy[j].max.push(false);
-                    }
+                    xy[j].min.push(value == series.min);
+                    xy[j].max.push(value == series.max);
                 }
             }
 
