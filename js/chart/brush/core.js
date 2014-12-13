@@ -1,17 +1,6 @@
 jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
-        function setMouseEvent(self, e) {
-            var pos = $(self.chart.root).offset(),
-                offsetX = e.pageX - pos.left,
-                offsetY = e.pageY - pos.top;
-
-            e.bgX = offsetX;
-            e.bgY = offsetY;
-            e.chartX = offsetX - self.chart.padding("left");
-            e.chartY = offsetY - self.chart.padding("top");
-        }
-
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -177,55 +166,66 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(elem, targetIndex, dataIndex) {
-            var self = this;
-            var obj = {
-                brush: self.brush,
+        this.addEvent = function(elem, dataIndex, targetIndex) {
+            var chart = this.chart,
+                obj = {
+                brush: this.brush,
                 dataIndex: dataIndex,
-                dataKey: (targetIndex != null) ? self.brush.target[targetIndex] : null,
-                data: (dataIndex != null) ? self.chart.data(dataIndex) : null
+                dataKey: (targetIndex != null) ? this.brush.target[targetIndex] : null,
+                data: (dataIndex != null) ? chart.data(dataIndex) : null
             };
 
             elem.on("click", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("click", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("click", [ obj, e ]);
             });
 
             elem.on("dblclick", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("dblclick", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("dblclick", [ obj, e ]);
             });
 
             elem.on("contextmenu", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("rclick", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
             elem.on("mouseover", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseover", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseover", [ obj, e ]);
             });
 
             elem.on("mouseout", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseout", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseout", [ obj, e ]);
             });
 
             elem.on("mousemove", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mousemove", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mousemove", [ obj, e ]);
             });
 
             elem.on("mousedown", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mousedown", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mousedown", [ obj, e ]);
             });
 
             elem.on("mouseup", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseup", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseup", [ obj, e ]);
             });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
+            }
         }
 
         this.createTooltip = function(fill, stroke) {

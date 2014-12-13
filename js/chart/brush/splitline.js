@@ -62,7 +62,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                this.addEvent(p, k, null);
+                this.addEvent(p, null, k);
                 g.append(p);
             }
 

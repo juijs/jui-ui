@@ -58,7 +58,7 @@ jui.define("chart.brush.ohlc", [], function() {
                     "stroke-width": 1
                 });
 
-                this.addEvent(lowHigh, null, i);
+                this.addEvent(lowHigh, i, null);
 
                 g.append(lowHigh);
                 g.append(close);

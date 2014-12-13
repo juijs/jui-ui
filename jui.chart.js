@@ -6999,17 +6999,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 jui.define("chart.brush.core", [ "util.base" ], function(_) {
 	var CoreBrush = function() {
 
-        function setMouseEvent(self, e) {
-            var pos = $(self.chart.root).offset(),
-                offsetX = e.pageX - pos.left,
-                offsetY = e.pageY - pos.top;
-
-            e.bgX = offsetX;
-            e.bgY = offsetY;
-            e.chartX = offsetX - self.chart.padding("left");
-            e.chartY = offsetY - self.chart.padding("top");
-        }
-
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -7175,55 +7164,66 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
          * @param targetIndex
          * @param dataIndex
          */
-        this.addEvent = function(elem, targetIndex, dataIndex) {
-            var self = this;
-            var obj = {
-                brush: self.brush,
+        this.addEvent = function(elem, dataIndex, targetIndex) {
+            var chart = this.chart,
+                obj = {
+                brush: this.brush,
                 dataIndex: dataIndex,
-                dataKey: (targetIndex != null) ? self.brush.target[targetIndex] : null,
-                data: (dataIndex != null) ? self.chart.data(dataIndex) : null
+                dataKey: (targetIndex != null) ? this.brush.target[targetIndex] : null,
+                data: (dataIndex != null) ? chart.data(dataIndex) : null
             };
 
             elem.on("click", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("click", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("click", [ obj, e ]);
             });
 
             elem.on("dblclick", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("dblclick", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("dblclick", [ obj, e ]);
             });
 
             elem.on("contextmenu", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("rclick", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("rclick", [ obj, e ]);
                 e.preventDefault();
             });
 
             elem.on("mouseover", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseover", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseover", [ obj, e ]);
             });
 
             elem.on("mouseout", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseout", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseout", [ obj, e ]);
             });
 
             elem.on("mousemove", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mousemove", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mousemove", [ obj, e ]);
             });
 
             elem.on("mousedown", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mousedown", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mousedown", [ obj, e ]);
             });
 
             elem.on("mouseup", function(e) {
-                setMouseEvent(self, e);
-                self.chart.emit("mouseup", [ obj, e ]);
+                setMouseEvent(e);
+                chart.emit("mouseup", [ obj, e ]);
             });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
+            }
         }
 
         this.createTooltip = function(fill, stroke) {
@@ -7311,7 +7311,7 @@ jui.define("chart.brush.bar", [], function() {
 			});
 
 			if(value != 0) {
-				this.addEvent(r, targetIndex, dataIndex);
+				this.addEvent(r, dataIndex, targetIndex);
 			}
 
 			this.addBarElement({
@@ -7477,7 +7477,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(b, i, j);
+                    this.addEvent(b, j, i);
                     g.append(b);
                 }
             }
@@ -7583,7 +7583,7 @@ jui.define("chart.brush.candlestick", [], function() {
                     });
                 }
 
-                this.addEvent(r, null, i);
+                this.addEvent(r, i, null);
 
                 g.append(l);
                 g.append(r);
@@ -7660,7 +7660,7 @@ jui.define("chart.brush.ohlc", [], function() {
                     "stroke-width": 1
                 });
 
-                this.addEvent(lowHigh, null, i);
+                this.addEvent(lowHigh, i, null);
 
                 g.append(lowHigh);
                 g.append(close);
@@ -7890,7 +7890,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
 
-                this.addEvent(g, i, 0);
+                this.addEvent(g, 0, i);
 				group.append(g);
 
 				startAngle += endAngle;
@@ -7970,7 +7970,7 @@ jui.define("chart.brush.equalizer", [], function() {
                         }
                     }
 
-                    this.addEvent(barGroup, j, i);
+                    this.addEvent(barGroup, i, j);
                     g.append(barGroup);
 
                     startX += barWidth + brush.innerPadding;
@@ -8038,7 +8038,7 @@ jui.define("chart.brush.fullstack", [], function() {
 						fill : chart.color(j, brush)
 					});
 
-                    this.addEvent(r, j, i);
+                    this.addEvent(r, i, j);
 					g.append(r);
 
 					if (brush.text) {
@@ -8151,7 +8151,7 @@ jui.define("chart.brush.line", [], function() {
             for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                this.addEvent(p, k, null);
+                this.addEvent(p, null, k);
                 g.append(p);
 
                 // 컬럼 상태 설정
@@ -8280,7 +8280,6 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-
 			if (!brush.c) {
 				brush.c = function(i) {
 					return {
@@ -8291,11 +8290,9 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					};
 				}
 			}
-
         }
 
 		this.drawUnit = function(index, data, group) {
-
 			var obj = brush.c(index);
 
 			var width = obj.width, height = obj.height;
@@ -8331,12 +8328,11 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-				this.addEvent(g, i, index);
+				this.addEvent(g, index, i);
 				group.append(g);
 
 				startAngle += endAngle;
 			}
-
 		}
 
 		this.draw = function() {
@@ -8344,13 +8340,11 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-
 			var data = chart.data();
 
 			for(var i = 0; i < data.length; i++) {
 				this.drawUnit(i, data[i], group);
 			}
-
 
             return group;
 		}
@@ -8446,7 +8440,7 @@ jui.define("chart.brush.scatter", [], function() {
                         value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(p, i, j);
+                    this.addEvent(p, j, i);
                     g.append(p);
                 }
             }
@@ -8486,7 +8480,7 @@ jui.define("chart.brush.stackbar", [], function() {
 			});
 
 			if(value != 0) {
-				this.addEvent(r, targetIndex, dataIndex);
+				this.addEvent(r, dataIndex, targetIndex);
 			}
 
 			return r;
@@ -8737,7 +8731,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     fill : textColor
                 }, brush.format ? brush.format(data.value) : data.value + "%"))
 
-                this.addEvent(g, null, i);
+                this.addEvent(g, i, null);
                 group.append(g);
                 
                 y += brush.size + brush.cut;
@@ -9023,7 +9017,7 @@ jui.define("chart.brush.area", [], function() {
                     "stroke-width": 0
                 });
 
-                this.addEvent(p, null, null);
+                this.addEvent(p, null, k);
                 g.prepend(p);
             }
 
@@ -9556,7 +9550,7 @@ jui.define("chart.brush.waterfall", [], function() {
 					}
 				}
 
-				this.addEvent(r, 0, i);
+				this.addEvent(r, i, 0);
 				g.append(r);
 
 				startX += columnWidth;
@@ -9641,7 +9635,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                this.addEvent(p, k, null);
+                this.addEvent(p, null, k);
                 g.append(p);
             }
 
@@ -9700,7 +9694,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                     p.ClosePath();
                 });
 
-                this.addEvent(line, null, null);
+                this.addEvent(line, null, k);
                 g.prepend(line);
             }
 
@@ -9758,7 +9752,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, j, i);
+                    this.addEvent(r, i, j);
                     g.append(r);
 
 					startX += columnWidth + innerPadding;
@@ -9823,7 +9817,7 @@ jui.define("chart.brush.rangebar", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, j, i);
+                    this.addEvent(r, i, j);
                     group.append(r);
 
 					startY += barHeight + innerPadding;

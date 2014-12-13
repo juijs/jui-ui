@@ -29,7 +29,7 @@ jui.define("chart.brush.bubble", [], function() {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(b, i, j);
+                    this.addEvent(b, j, i);
                     g.append(b);
                 }
             }

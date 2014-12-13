@@ -16,7 +16,7 @@ jui.define("chart.brush.stackbar", [], function() {
 			});
 
 			if(value != 0) {
-				this.addEvent(r, targetIndex, dataIndex);
+				this.addEvent(r, dataIndex, targetIndex);
 			}
 
 			return r;

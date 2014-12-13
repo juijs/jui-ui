@@ -38,7 +38,7 @@ jui.define("chart.brush.bar", [], function() {
 			});
 
 			if(value != 0) {
-				this.addEvent(r, targetIndex, dataIndex);
+				this.addEvent(r, dataIndex, targetIndex);
 			}
 
 			this.addBarElement({

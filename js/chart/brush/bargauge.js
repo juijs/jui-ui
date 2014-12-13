@@ -96,7 +96,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     fill : textColor
                 }, brush.format ? brush.format(data.value) : data.value + "%"))
 
-                this.addEvent(g, null, i);
+                this.addEvent(g, i, null);
                 group.append(g);
                 
                 y += brush.size + brush.cut;

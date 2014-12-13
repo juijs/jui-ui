@@ -85,7 +85,7 @@ jui.define("chart.brush.waterfall", [], function() {
 					}
 				}
 
-				this.addEvent(r, 0, i);
+				this.addEvent(r, i, 0);
 				g.append(r);
 
 				startX += columnWidth;

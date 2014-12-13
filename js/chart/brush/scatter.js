@@ -81,7 +81,7 @@ jui.define("chart.brush.scatter", [], function() {
                         value: points[i].value[j]
                     }, i);
 
-                    this.addEvent(p, i, j);
+                    this.addEvent(p, j, i);
                     g.append(p);
                 }
             }

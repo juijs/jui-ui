@@ -59,7 +59,7 @@ jui.define("chart.brush.equalizer", [], function() {
                         }
                     }
 
-                    this.addEvent(barGroup, j, i);
+                    this.addEvent(barGroup, i, j);
                     g.append(barGroup);
 
                     startX += barWidth + brush.innerPadding;

@@ -42,7 +42,7 @@ jui.define("chart.brush.rangebar", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, j, i);
+                    this.addEvent(r, i, j);
                     group.append(r);
 
 					startY += barHeight + innerPadding;

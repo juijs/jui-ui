@@ -41,7 +41,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						"stroke-opacity" : borderOpacity
 					});
 
-                    this.addEvent(r, j, i);
+                    this.addEvent(r, i, j);
                     g.append(r);
 
 					startX += columnWidth + innerPadding;

@@ -80,7 +80,7 @@ jui.define("chart.brush.line", [], function() {
             for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
-                this.addEvent(p, k, null);
+                this.addEvent(p, null, k);
                 g.append(p);
 
                 // 컬럼 상태 설정

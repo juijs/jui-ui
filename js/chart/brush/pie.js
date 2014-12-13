@@ -35,7 +35,6 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-
 			if (!brush.c) {
 				brush.c = function(i) {
 					return {
@@ -46,11 +45,9 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					};
 				}
 			}
-
         }
 
 		this.drawUnit = function(index, data, group) {
-
 			var obj = brush.c(index);
 
 			var width = obj.width, height = obj.height;
@@ -86,12 +83,11 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
 
-				this.addEvent(g, i, index);
+				this.addEvent(g, index, i);
 				group.append(g);
 
 				startAngle += endAngle;
 			}
-
 		}
 
 		this.draw = function() {
@@ -99,13 +95,11 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-
 			var data = chart.data();
 
 			for(var i = 0; i < data.length; i++) {
 				this.drawUnit(i, data[i], group);
 			}
-
 
             return group;
 		}
