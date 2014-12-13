@@ -1,24 +1,34 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
-        var self = this,
-            columns = [];
 
-        function setActiveEffect(elem) {
-            for(var i = 0; i < columns.length; i++) {
-                var opacity = (elem == columns[i].element) ? 1 : self.chart.theme("lineDisableBorderOpacity");
+        this.setActiveEffect = function(elem) {
+            var lines = this.lineList;
 
-                columns[i].element.attr({ opacity: opacity });
-                if(columns[i].tooltip != null) {
-                    columns[i].tooltip.attr({ opacity: opacity });
+            for(var i = 0; i < lines.length; i++) {
+                var opacity = (elem == lines[i].element) ? 1 : this.chart.theme("lineDisableBorderOpacity");
+
+                lines[i].element.attr({ opacity: opacity });
+                if(lines[i].tooltip != null) {
+                    lines[i].tooltip.attr({ opacity: opacity });
                 }
             }
         }
 
-        function setActiveEvent(elem) {
-            elem.on(self.brush.activeEvent, function(e) {
-                setActiveEffect(elem);
+        this.setActiveEvent = function(elem) {
+            var self = this;
+
+            elem.on(this.brush.activeEvent, function(e) {
+                self.setActiveEffect(elem);
             });
+        }
+
+        this.addLineElement = function(elem) {
+            if(!this.lineList) {
+                this.lineList = [];
+            }
+
+            this.lineList.push(elem);
         }
 
         this.createLine = function(pos, index) {
@@ -68,12 +78,13 @@ jui.define("chart.brush.line", [], function() {
                     g.append(tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
-                    columns[index].tooltip = tooltip;
+                    this.lineList[index].tooltip = tooltip;
                 }
             }
         }
 
         this.drawLine = function(path) {
+            var self = this;
             var brush = this.brush,
                 g = this.chart.svg.group();
 
@@ -84,10 +95,10 @@ jui.define("chart.brush.line", [], function() {
                 g.append(p);
 
                 // 컬럼 상태 설정
-                columns[k] = {
+                this.addLineElement({
                     element: p,
                     tooltip: null
-                };
+                });
 
                 // Max & Min 툴팁 추가
                 if(brush.display != null) {
@@ -96,14 +107,14 @@ jui.define("chart.brush.line", [], function() {
 
                 // 액티브 라인 추가
                 if(brush.activeEvent != null) {
-                    setActiveEvent(p);
+                    this.setActiveEvent(p);
                 }
             }
 
             // 액티브 라인 설정
             g.each(function(i, p) {
                 if(brush.active == brush.target[i]) {
-                    setActiveEffect(p);
+                    self.setActiveEffect(p);
                 }
             });
 

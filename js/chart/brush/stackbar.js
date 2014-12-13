@@ -23,12 +23,13 @@ jui.define("chart.brush.stackbar", [], function() {
 		}
 
 		this.setActiveEffect = function(group) {
-			var style = this.getBarStyle();
+			var style = this.getBarStyle(),
+				columns = this.barList;
 
-			for(var i = 0; i < this.barList.length; i++) {
-				var opacity = (group == this.barList[i]) ? 1 : style.disableOpacity;
+			for(var i = 0; i < columns.length; i++) {
+				var opacity = (group == columns[i]) ? 1 : style.disableOpacity;
 
-				this.barList[i].attr({ opacity: opacity });
+				columns[i].attr({ opacity: opacity });
 			}
 		}
 

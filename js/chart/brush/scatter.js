@@ -1,9 +1,8 @@
 jui.define("chart.brush.scatter", [], function() {
 
     var ScatterBrush = function() {
-        var self = this;
-
         this.createScatter = function(pos, index) {
+            var self = this;
             var elem = null,
                 target = this.chart.series(this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
@@ -50,19 +49,19 @@ jui.define("chart.brush.scatter", [], function() {
                     stroke: borderColor,
                     "stroke-width": borderWidth
                 })
-                    .hover(function () {
-                        elem.attr({
-                            fill: self.chart.theme("scatterHoverColor"),
-                            stroke: color,
-                            "stroke-width": borderWidth * 2
-                        });
-                    }, function () {
-                        elem.attr({
-                            fill: color,
-                            stroke: borderColor,
-                            "stroke-width": borderWidth
-                        });
+                .hover(function () {
+                    elem.attr({
+                        fill: self.chart.theme("scatterHoverColor"),
+                        stroke: color,
+                        "stroke-width": borderWidth * 2
                     });
+                }, function () {
+                    elem.attr({
+                        fill: color,
+                        stroke: borderColor,
+                        "stroke-width": borderWidth
+                    });
+                });
             }
 
             return elem;
