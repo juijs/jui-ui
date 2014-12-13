@@ -14594,7 +14594,6 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var self = this;
             var brush = this.brush,
                 g = this.chart.svg.group();
 
@@ -14622,11 +14621,11 @@ jui.define("chart.brush.line", [], function() {
             }
 
             // 액티브 라인 설정
-            g.each(function(i, p) {
+            for(var i = 0; i < this.lineList.length; i++) {
                 if(brush.active == brush.target[i]) {
-                    self.setActiveEffect(p);
+                    this.setActiveEffect(p);
                 }
-            });
+            }
 
             return g;
         }
