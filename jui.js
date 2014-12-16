@@ -13885,6 +13885,443 @@ jui.define("chart.brush.bar", [], function() {
 	return BarBrush;
 }, "chart.brush.core");
 
+jui.define("chart.brush.column", [], function() {
+
+	var ColumnBrush = function(chart, brush) {
+		var g, activeTooltip, style;
+		var zeroY, count, width, col_width, half_width;
+
+		this.drawBefore = function() {
+			style = this.getBarStyle();
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			half_width = (width - brush.outerPadding * 2);
+			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+
+			// 엘리먼트 생성
+			g = chart.svg.group();
+			activeTooltip = this.createTooltip(style.activeColor, style.circleColor);
+		}
+
+		this.draw = function() {
+			var points = this.getXY();
+
+			for (var i = 0; i < count; i++) {
+				var startX = brush.x(i) - (half_width / 2);
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var value = chart.data(i)[brush.target[j]],
+						startY = brush.y((value == 0) ? brush.minValue : value),
+						position = (startY <= zeroY) ? "top" : "bottom",
+						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
+
+					var tooltipX = startX + (col_width / 2),
+						tooltipY = startY;
+
+					if (startY <= zeroY) {
+						r = r.attr({
+							x: startX,
+							y: startY
+						});
+					} else {
+						r = r.attr({
+							x: startX,
+							y: zeroY
+						});
+					}
+
+					// 그룹에 컬럼 엘리먼트 추가
+					g.append(r);
+
+					// 액티브 엘리먼트 설정
+					if (brush.active == i) {
+						this.setActiveEffect(r, activeTooltip, tooltipX, tooltipY, value, position);
+					}
+
+					// 컬럼 및 기본 브러쉬 이벤트 설정
+					if(value != 0 && brush.activeEvent != null) {
+						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
+						r.attr({ cursor: "pointer" });
+					}
+
+					// Max & Min 툴팁 추가
+					if(brush.display == "max" && points[j].max[i] ||
+						brush.display == "min" && points[j].min[i]) {
+						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
+
+						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
+						g.append(tooltip);
+					}
+
+					// 다음 컬럼 좌표 설정
+					startX += col_width + brush.innerPadding;
+				}
+			}
+
+			g.append(activeTooltip);
+
+            return g;
+		}
+	}
+
+	return ColumnBrush;
+}, "chart.brush.bar");
+
+jui.define("chart.brush.stackbar", [], function() {
+
+	var StackBarBrush = function(chart, brush) {
+		var g, series, count, height, bar_width;
+
+		this.getBarElement = function(dataIndex, targetIndex) {
+			var style = this.getBarStyle(),
+				color = this.chart.color(targetIndex, this.brush),
+				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+
+			var r = this.chart.svg.rect({
+				fill : color,
+				stroke : style.borderColor,
+				"stroke-width" : style.borderWidth,
+				"stroke-opacity" : style.borderOpacity
+			});
+
+			if(value != 0) {
+				this.addEvent(r, dataIndex, targetIndex);
+			}
+
+			return r;
+		}
+
+		this.setActiveEffect = function(group) {
+			var style = this.getBarStyle(),
+				columns = this.barList;
+
+			for(var i = 0; i < columns.length; i++) {
+				var opacity = (group == columns[i]) ? 1 : style.disableOpacity;
+
+				columns[i].attr({ opacity: opacity });
+			}
+		}
+
+		this.setActiveEvent = function(group) {
+			var self = this;
+
+			group.on(self.brush.activeEvent, function(e) {
+				self.setActiveEffect(group);
+			});
+		}
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+
+			series = chart.series();
+			count = chart.data().length;
+
+			height = brush.y.rangeBand();
+			bar_width = height - brush.outerPadding * 2;
+		}
+
+		this.draw = function() {
+			for (var i = 0; i < count; i++) {
+				var group = chart.svg.group();
+				
+				var startY = brush.y(i) - bar_width/ 2,
+                    startX = brush.x(0),
+                    value = 0;
+				
+				for (var j = 0; j < brush.target.length; j++) {
+					var xValue = chart.data(i, brush.target[j]) + value,
+                        endX = brush.x(xValue),
+						r = this.getBarElement(i, j);
+
+					r.attr({
+						x : (startX < endX) ? startX : endX,
+						y : startY,
+						width : Math.abs(startX - endX),
+						height : bar_width
+					});
+
+					group.append(r);
+
+					startX = endX;
+					value = xValue;
+				}
+
+				// 액티브 엘리먼트 이벤트 설정
+				if(brush.activeEvent != null) {
+					this.setActiveEvent(group);
+					group.attr({ cursor: "pointer" });
+				}
+
+				this.addBarElement(group);
+				g.append(group);
+			}
+
+			// 액티브 엘리먼트 설정
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
+			}
+
+            return g;
+		}
+
+        this.drawSetup = function() {
+			return this.getOptions({
+				outerPadding: 15,
+				active: null,
+				activeEvent: null // or click, mouseover, ...
+            });
+        }
+	}
+
+	return StackBarBrush;
+}, "chart.brush.bar");
+
+jui.define("chart.brush.stackcolumn", [], function() {
+
+	var ColumnStackBrush = function(chart, brush) {
+		var g, zeroY, count, width, bar_width;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			bar_width = width - brush.outerPadding * 2;
+		}
+
+		this.draw = function() {
+			for (var i = 0; i < count; i++) {
+				var group = chart.svg.group();
+				
+				var startX = brush.x(i) - bar_width / 2,
+                    startY = brush.y(0),
+                    value = 0;
+
+				for(var j = 0; j < brush.target.length; j++) {
+					var yValue = chart.data(i, brush.target[j]) + value,
+                        endY = brush.y(yValue),
+						r = this.getBarElement(i, j);
+
+					r.attr({
+						x : startX,
+						y : (startY > endY) ? endY : startY,
+						width : bar_width,
+						height : Math.abs(startY - endY)
+					});
+
+					group.append(r);
+					
+					startY = endY;
+					value = yValue;
+				}
+
+				// 액티브 엘리먼트 이벤트 설정
+				if(brush.activeEvent != null) {
+					this.setActiveEvent(group);
+					group.attr({ cursor: "pointer" });
+				}
+
+				this.addBarElement(group);
+				g.append(group);
+			}
+
+			// 액티브 엘리먼트 설정
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
+			}
+
+            return g;
+		}
+	}
+
+	return ColumnStackBrush;
+}, "chart.brush.stackbar");
+
+jui.define("chart.brush.fullstackbar", [], function() {
+
+	var FullStackBarBrush = function(chart, brush) {
+		var g, zeroX, count, height, bar_height;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+
+			zeroX = brush.x(0);
+			count = chart.data().length;
+
+			height = brush.y.rangeBand();
+			bar_height = height - brush.outerPadding * 2;
+		}
+
+		this.drawText = function(percent, x, y) {
+			var text = this.chart.text({
+				x : x,
+				y : y,
+				"text-anchor" : "middle"
+			}, percent + "%");
+
+			return text;
+		}
+
+		this.draw = function() {
+			for (var i = 0; i < count; i++) {
+				var group = chart.svg.group();
+
+				var startY = brush.y(i) - bar_height / 2,
+					sum = 0,
+					list = [];
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var width = chart.data(i, brush.target[j]);
+
+					sum += width;
+					list.push(width);
+				}
+
+				var startX = 0,
+					max = brush.x.max();
+
+				for (var j = list.length - 1; j >= 0; j--) {
+					var width = brush.x.rate(list[j], sum),
+						r = this.getBarElement(i, j);
+
+					r.attr({
+						x : startX,
+						y : startY,
+						width: width,
+						height: bar_height
+					});
+
+					group.append(r);
+
+					// 퍼센트 노출 옵션 설정
+					if(brush.showText) {
+						var p = Math.round((list[j] / sum) * max),
+							x = startX + width / 2,
+							y = startY + bar_height / 2 + 5;
+
+						group.append(this.drawText(p, x, y));
+					}
+
+					// 액티브 엘리먼트 이벤트 설정
+					if(brush.activeEvent != null) {
+						this.setActiveEvent(group);
+						group.attr({ cursor: "pointer" });
+					}
+
+					startX += width;
+				}
+
+				this.addBarElement(group);
+				g.append(group);
+			}
+
+			// 액티브 엘리먼트 설정
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
+			}
+
+			return g;
+		}
+
+		this.drawSetup = function() {
+			return this.getOptions({
+				outerPadding: 15,
+				active: null,
+				activeEvent: null, // or click, mouseover, ...
+				showText: false
+			});
+		}
+	}
+
+	return FullStackBarBrush;
+}, "chart.brush.stackbar");
+
+jui.define("chart.brush.fullstackcolumn", [], function() {
+
+	var FullStackColumnBrush = function(chart, brush) {
+		var g, zeroY, count, width, bar_width;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+
+			zeroY = brush.y(0);
+			count = chart.data().length;
+
+			width = brush.x.rangeBand();
+			bar_width = width - brush.outerPadding * 2;
+		}
+
+		this.draw = function() {
+			var chart_height = chart.height();
+
+			for (var i = 0; i < count; i++) {
+				var group = chart.svg.group();
+
+				var startX = brush.x(i) - bar_width / 2,
+                    sum = 0,
+                    list = [];
+
+				for (var j = 0; j < brush.target.length; j++) {
+					var height = chart.data(i, brush.target[j]);
+
+					sum += height;
+					list.push(height);
+				}
+
+				var startY = 0,
+                    max = brush.y.max();
+				
+				for (var j = list.length - 1; j >= 0; j--) {
+					var height = chart_height - brush.y.rate(list[j], sum),
+						r = this.getBarElement(i, j);
+
+					r.attr({
+						x: startX,
+						y: startY,
+						width: bar_width,
+						height: height
+					});
+
+					group.append(r);
+
+					// 퍼센트 노출 옵션 설정
+					if(brush.showText) {
+						var p = Math.round((list[j] / sum) * max),
+							x = startX + bar_width / 2,
+							y = startY + height / 2 + 8;
+
+						group.append(this.drawText(p, x, y));
+					}
+
+					// 액티브 엘리먼트 이벤트 설정
+					if(brush.activeEvent != null) {
+						this.setActiveEvent(group);
+						group.attr({ cursor: "pointer" });
+					}
+
+					startY += height;										
+				}
+
+				this.addBarElement(group);
+				g.append(group);
+			}
+
+			// 액티브 엘리먼트 설정
+			if(this.barList[brush.active]) {
+				this.setActiveEffect(this.barList[brush.active]);
+			}
+
+            return g;
+		}
+	}
+
+	return FullStackColumnBrush;
+}, "chart.brush.fullstackbar");
+
 jui.define("chart.brush.bubble", [], function() {
 
 	var BubbleBrush = function(chart, brush) {
@@ -14117,90 +14554,6 @@ jui.define("chart.brush.ohlc", [], function() {
     return OHLCBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.column", [], function() {
-
-	var ColumnBrush = function(chart, brush) {
-		var g, activeTooltip, style;
-		var zeroY, count, width, col_width, half_width;
-
-		this.drawBefore = function() {
-			style = this.getBarStyle();
-			zeroY = brush.y(0);
-			count = chart.data().length;
-
-			width = brush.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-
-			// 엘리먼트 생성
-			g = chart.svg.group();
-			activeTooltip = this.createTooltip(style.activeColor, style.circleColor);
-		}
-
-		this.draw = function() {
-			var points = this.getXY();
-
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - (half_width / 2);
-
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.data(i)[brush.target[j]],
-						startY = brush.y((value == 0) ? brush.minValue : value),
-						position = (startY <= zeroY) ? "top" : "bottom",
-						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
-
-					var tooltipX = startX + (col_width / 2),
-						tooltipY = startY;
-
-					if (startY <= zeroY) {
-						r = r.attr({
-							x: startX,
-							y: startY
-						});
-					} else {
-						r = r.attr({
-							x: startX,
-							y: zeroY
-						});
-					}
-
-					// 그룹에 컬럼 엘리먼트 추가
-					g.append(r);
-
-					// 액티브 엘리먼트 설정
-					if (brush.active == i) {
-						this.setActiveEffect(r, activeTooltip, tooltipX, tooltipY, value, position);
-					}
-
-					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0 && brush.activeEvent != null) {
-						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
-						r.attr({ cursor: "pointer" });
-					}
-
-					// Max & Min 툴팁 추가
-					if(brush.display == "max" && points[j].max[i] ||
-						brush.display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
-
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
-						g.append(tooltip);
-					}
-
-					// 다음 컬럼 좌표 설정
-					startX += col_width + brush.innerPadding;
-				}
-			}
-
-			g.append(activeTooltip);
-
-            return g;
-		}
-	}
-
-	return ColumnBrush;
-}, "chart.brush.bar");
-
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 	var DonutBrush = function() {
@@ -14430,82 +14783,6 @@ jui.define("chart.brush.equalizer", [], function() {
     }
 
     return EqualizerBrush;
-}, "chart.brush.core");
-
-jui.define("chart.brush.fullstack", [], function() {
-
-	var FullStackBrush = function(chart, brush) {
-		var g, zeroY, count, width, barWidth;
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-
-			zeroY = brush.y(0);
-			count = chart.data().length;
-
-			width = brush.x.rangeBand();
-			barWidth = width - brush.outerPadding * 2;
-		}
-
-		this.draw = function() {
-			var chart_height = chart.height();
-
-			for (var i = 0; i < count; i++) {
-				var startX = brush.x(i) - barWidth / 2,
-                    sum = 0,
-                    list = [];
-
-				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.data(i, brush.target[j]);
-
-					sum += height;
-					list.push(height);
-				}
-
-				var startY = 0,
-                    max = brush.y.max(),
-                    current = max;
-				
-				for (var j = list.length - 1; j >= 0; j--) {
-					var height = chart_height - brush.y.rate(list[j] , sum);
-					
-					var r = chart.svg.rect({
-						x : startX,
-						y : startY,
-						width : barWidth,
-						height : height,
-						fill : chart.color(j, brush)
-					});
-
-                    this.addEvent(r, i, j);
-					g.append(r);
-
-					if (brush.text) {
-						var percent = Math.round((list[j]/sum)*max);
-						var text = chart.svg.text({
-							x : startX + barWidth / 2,
-							y : startY + height / 2 + 8,
-							"text-anchor" : "middle"
-						}, ((current - percent < 0 ) ? current : percent) + "%");					
-						g.append(text);					
-						current -= percent;
-					}
-					
-					startY += height;										
-				}
-			}
-
-            return g;
-		}
-
-        this.drawSetup = function() {
-			return this.getOptions({
-                outerPadding: 15
-            });
-        }
-	}
-
-	return FullStackBrush;
 }, "chart.brush.core");
 
 jui.define("chart.brush.line", [], function() {
@@ -14952,178 +15229,6 @@ jui.define("chart.brush.scatterpath", [], function() {
 
 	return ScatterPathBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.stackbar", [], function() {
-
-	var StackBarBrush = function(chart, brush) {
-		var g, series, count, height, bar_width;
-
-		this.getBarElement = function(dataIndex, targetIndex) {
-			var style = this.getBarStyle(),
-				color = this.chart.color(targetIndex, this.brush),
-				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
-
-			var r = this.chart.svg.rect({
-				fill : color,
-				stroke : style.borderColor,
-				"stroke-width" : style.borderWidth,
-				"stroke-opacity" : style.borderOpacity
-			});
-
-			if(value != 0) {
-				this.addEvent(r, dataIndex, targetIndex);
-			}
-
-			return r;
-		}
-
-		this.setActiveEffect = function(group) {
-			var style = this.getBarStyle(),
-				columns = this.barList;
-
-			for(var i = 0; i < columns.length; i++) {
-				var opacity = (group == columns[i]) ? 1 : style.disableOpacity;
-
-				columns[i].attr({ opacity: opacity });
-			}
-		}
-
-		this.setActiveEvent = function(group) {
-			var self = this;
-
-			group.on(self.brush.activeEvent, function(e) {
-				self.setActiveEffect(group);
-			});
-		}
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-
-			series = chart.series();
-			count = chart.data().length;
-
-			height = brush.y.rangeBand();
-			bar_width = height - brush.outerPadding * 2;
-		}
-
-		this.draw = function() {
-			for (var i = 0; i < count; i++) {
-				var group = chart.svg.group();
-				
-				var startY = brush.y(i) - bar_width/ 2,
-                    startX = brush.x(0),
-                    value = 0;
-				
-				for (var j = 0; j < brush.target.length; j++) {
-					var xValue = chart.data(i, brush.target[j]) + value,
-                        endX = brush.x(xValue),
-						r = this.getBarElement(i, j);
-
-					r.attr({
-						x : (startX < endX) ? startX : endX,
-						y : startY,
-						width : Math.abs(startX - endX),
-						height : bar_width
-					});
-
-					group.append(r);
-
-					startX = endX;
-					value = xValue;
-				}
-
-				// 액티브 엘리먼트 이벤트 설정
-				if(brush.activeEvent != null) {
-					this.setActiveEvent(group);
-					group.attr({ cursor: "pointer" });
-				}
-
-				this.addBarElement(group);
-				g.append(group);
-			}
-
-			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
-
-            return g;
-		}
-
-        this.drawSetup = function() {
-			return this.getOptions({
-				outerPadding: 15,
-				active: null,
-				activeEvent: null // or click, mouseover, ...
-            });
-        }
-	}
-
-	return StackBarBrush;
-}, "chart.brush.bar");
-
-jui.define("chart.brush.stackcolumn", [], function() {
-
-	var ColumnStackBrush = function(chart, brush) {
-		var g, zeroY, count, width, bar_width;
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-
-			zeroY = brush.y(0);
-			count = chart.data().length;
-
-			width = brush.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
-		}
-
-		this.draw = function() {
-			for (var i = 0; i < count; i++) {
-				var group = chart.svg.group();
-				
-				var startX = brush.x(i) - bar_width / 2,
-                    startY = brush.y(0),
-                    value = 0;
-
-				for(var j = 0; j < brush.target.length; j++) {
-					var yValue = chart.data(i, brush.target[j]) + value,
-                        endY = brush.y(yValue),
-						r = this.getBarElement(i, j);
-
-					r.attr({
-						x : startX,
-						y : (startY > endY) ? endY : startY,
-						width : bar_width,
-						height : Math.abs(startY - endY)
-					});
-
-					group.append(r);
-					
-					startY = endY;
-					value = yValue;
-				}
-
-				// 액티브 엘리먼트 이벤트 설정
-				if(brush.activeEvent != null) {
-					this.setActiveEvent(group);
-					group.attr({ cursor: "pointer" });
-				}
-
-				this.addBarElement(group);
-				g.append(group);
-			}
-
-			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
-
-            return g;
-		}
-	}
-
-	return ColumnStackBrush;
-}, "chart.brush.stackbar");
-
 jui.define("chart.brush.bargauge", [], function() {
 
 	var BarGaugeBrush = function(chart, brush) {

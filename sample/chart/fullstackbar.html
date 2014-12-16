@@ -24,12 +24,11 @@
                 { name : 18, value : 5, test : 20 }
             ],
             grid : {
-
-                x : {
+                y : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
                 },
-                y : {
+                x : {
                     type : 'range',
                     domain : [0, 100],
                     format : function(value) { return value + "%" ;},
@@ -43,11 +42,11 @@
                 test : { text : "테스트값" }
             },
             brush : {
-                type : 'fullstackcolumn',
+                type : 'fullstackbar',
                 target : ['name', 'value', 'test'],
                 showText: true,
-                active : 2,
-                activeEvent : "mouseover"
+                activeEvent : "click",
+                active : 1
             },
             event: {
                 click: function(obj, e) {
