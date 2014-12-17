@@ -1284,7 +1284,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             format: null,
 
             // buffer
-            bufferCount: 100,
+            bufferCount: 10000,
             shiftCount: 1,
 
             // csv
