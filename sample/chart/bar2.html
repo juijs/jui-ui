@@ -52,15 +52,21 @@
                 minValue : 1,
                 active : 1,
                 activeEvent : "click",
-                display : "max",
-                id : "123"
+                display : "max"
             },
             widget : {
                 type: "tooltip"
+            },
+            style : {
+                tooltipPointFontWeight : "normal",
+                tooltipPointRadius: 5,
+                tooltipPointBorderWidth: 1.5,
+                titleFontWeight: "bold"
             }
         });
 
         c.update(data);
+        c.addWidget({ type: "title", text: "testtest" });
 	})
 </script>
 

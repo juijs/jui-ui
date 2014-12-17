@@ -35,7 +35,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     yTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
-                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            "fill-opacity": chart.theme("crossBalloonBackgroundOpacity"),
                             points: self.balloonPoints("left", tw, th, ta)
                         });
 
@@ -64,7 +64,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
-                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            "fill-opacity": chart.theme("crossBalloonBackgroundOpacity"),
                             points: self.balloonPoints("bottom", tw, th, ta)
                         });
 
@@ -92,8 +92,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             this.on("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
-                    top = e.chartY + 2,
-                    brush = self.getBrush(0);
+                    top = e.chartY + 2;
 
                 if(xline) {
                     xline.attr({
@@ -113,7 +112,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if (yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = brush.y.invert(top),
+                    var value = widget.y.invert(top),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -121,7 +120,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if (xTooltip) {
                     xTooltip.translate(left - (tw / 2), chart.height() + ta);
 
-                    var value = brush.x.invert(left),
+                    var value = widget.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }

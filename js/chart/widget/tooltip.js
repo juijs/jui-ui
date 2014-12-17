@@ -75,7 +75,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             }, function() {
                 rect = chart.svg.polygon({
                     fill: chart.theme("tooltipBackgroundColor"),
-                    "fill-opacity": chart.theme("tooltipOpacity"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
                     stroke: chart.theme("tooltipBorderColor"),
                     "stroke-width": 1
                 });

@@ -11326,6 +11326,9 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        tooltipPointRadius : 5, // common
+        tooltipPointBorderWidth : 1, // common
+        tooltipPointFontWeight : "bold", // common
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -11339,9 +11342,9 @@ jui.define("chart.theme.jennifer", [], function() {
         pieBorderWidth : 1,
         donutBorderColor : "white",
         donutBorderWidth : 1,
-    	areaOpacity : 0.5,
+    	areaBackgroundOpacity : 0.5,
         areaSplitBackgroundColor : "#929292",
-        bubbleOpacity : 0.5,
+        bubbleBackgroundOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "black",
         candlestickBackgroundColor : "white",
@@ -11355,27 +11358,32 @@ jui.define("chart.theme.jennifer", [], function() {
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
-        pathOpacity : 0.5,
+        pathBackgroundOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 1,
         scatterHoverColor : "white",
-        waterfallBackgroundColor : "#87BB66", // 4
-        waterfallInvertBackgroundColor : "#FF7800", // 3
-        waterfallEdgeBackgroundColor : "#7BBAE7", // 1
+        waterfallBackgroundColor : "#87BB66",
+        waterfallInvertBackgroundColor : "#FF7800",
+        waterfallEdgeBackgroundColor : "#7BBAE7",
         waterfallLineColor : "#a9a9a9",
         waterfallLineDashArray : "0.9",
+        focusBorderColor : "#FF7800",
+        focusBorderWidth : 1,
+        focusBackgroundColor : "#FF7800",
+        focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "12px",
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
-        tooltipOpacity : 0.7,
+        tooltipBackgroundOpacity : 0.7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -11387,7 +11395,7 @@ jui.define("chart.theme.jennifer", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.5,
+        crossBalloonBackgroundOpacity : 0.5,
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7
     }
@@ -11435,6 +11443,9 @@ jui.define("chart.theme.gradient", [], function() {
         gridActiveBorderWidth: 1,
 
         // brush styles
+        tooltipPointRadius : 5, // common
+        tooltipPointBorderWidth : 1, // common
+        tooltipPointFontWeight : "bold", // common
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -11448,9 +11459,9 @@ jui.define("chart.theme.gradient", [], function() {
         pieBorderWidth : 1,
         donutBorderColor : "white",
         donutBorderWidth : 1,
-        areaOpacity : 0.4,
+        areaBackgroundOpacity : 0.4,
         areaSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
-        bubbleOpacity : 0.5,
+        bubbleBackgroundOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "black",
         candlestickBackgroundColor : "linear(top) white",
@@ -11464,27 +11475,32 @@ jui.define("chart.theme.gradient", [], function() {
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
-        pathOpacity : 0.5,
+        pathBackgroundOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 2,
         scatterHoverColor : "white",
-        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66", // 4
-        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800", // 3
-        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7", // 1
+        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66",
+        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800",
+        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7",
         waterfallLineColor : "#a9a9a9",
         waterfallLineDashArray : "0.9",
+        focusBorderColor : "#FF7800",
+        focusBorderWidth : 1,
+        focusBackgroundColor : "#FF7800",
+        focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        titleFontWeight : "normal",
         legendFontColor : "#666",
         legendFontSize : "12px",
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
-        tooltipOpacity : 1,
+        tooltipBackgroundOpacity : 1,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -11496,7 +11512,7 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.8,
+        crossBalloonBackgroundOpacity : 0.8,
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7
     }
@@ -11542,6 +11558,9 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        tooltipPointRadius : 5, // common
+        tooltipPointBorderWidth : 1, // common
+        tooltipPointFontWeight : "bold", // common
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -11555,9 +11574,9 @@ jui.define("chart.theme.dark", [], function() {
         pieBorderWidth : 1,
         donutBorderColor : "#232323",
         donutBorderWidth : 1,
-    	areaOpacity : 0.5,
+        areaBackgroundOpacity : 0.5,
         areaSplitBackgroundColor : "#ebebeb",
-        bubbleOpacity : 0.5,
+        bubbleBackgroundOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "#14be9d",
         candlestickBackgroundColor : "#14be9d",
@@ -11571,27 +11590,32 @@ jui.define("chart.theme.dark", [], function() {
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
-        pathOpacity : 0.2,
+        pathBackgroundOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "none",
         scatterBorderWidth : 1,
         scatterHoverColor : "#222222",
-        waterfallBackgroundColor : "#26f67c", //
-        waterfallInvertBackgroundColor : "#f94590", // 3
-        waterfallEdgeBackgroundColor : "#8bccf9", // 1
+        waterfallBackgroundColor : "#26f67c",
+        waterfallInvertBackgroundColor : "#f94590",
+        waterfallEdgeBackgroundColor : "#8bccf9",
         waterfallLineColor : "#a9a9a9",
         waterfallLineDashArray : "0.9",
+        focusBorderColor : "#FF7800",
+        focusBorderWidth : 1,
+        focusBackgroundColor : "#FF7800",
+        focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#ffffff",
         titleFontSize : "14px",
+        titleFontWeight : "normal",
         legendFontColor : "#ffffff",
         legendFontSize : "11px",
         tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
-        tooltipOpacity : 1,
+        tooltipBackgroundOpacity : 1,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",
@@ -11603,7 +11627,7 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonOpacity : 1,
+        crossBalloonBackgroundOpacity : 1,
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7
     }	
@@ -11645,6 +11669,9 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveBorderWidth : 1,
 
 		// brush styles
+		tooltipPointRadius : 5, // common
+		tooltipPointBorderWidth : 1, // common
+		tooltipPointFontWeight : "bold", // common
 		barBorderColor : "none",
 		barBorderWidth : 0,
 		barBorderOpacity : 0,
@@ -11658,9 +11685,9 @@ jui.define("chart.theme.pastel", [], function() {
 		pieBorderWidth : 1,
 		donutBorderColor : "white",
 		donutBorderWidth : 3,
-		areaOpacity : 0.4,
+		areaBackgroundOpacity : 0.4,
 		areaSplitBackgroundColor : "#ebebeb",
-		bubbleOpacity : 0.5,
+		bubbleBackgroundOpacity : 0.5,
 		bubbleBorderWidth : 1,
 		candlestickBorderColor : "#14be9d",
 		candlestickBackgroundColor : "#14be9d",
@@ -11674,27 +11701,32 @@ jui.define("chart.theme.pastel", [], function() {
 		lineCircleBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
-		pathOpacity : 0.5,
+		pathBackgroundOpacity : 0.5,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
 		scatterBorderWidth : 1,
 		scatterHoverColor : "white",
-		waterfallBackgroundColor : "#73e9d2", // 4
-		waterfallInvertBackgroundColor : "#ffb9ce", // 3
-		waterfallEdgeBackgroundColor : "#08c4e0", // 1
+		waterfallBackgroundColor : "#73e9d2",
+		waterfallInvertBackgroundColor : "#ffb9ce",
+		waterfallEdgeBackgroundColor : "#08c4e0",
 		waterfallLineColor : "#a9a9a9",
 		waterfallLineDashArray : "0.9",
+		focusBorderColor : "#FF7800",
+		focusBorderWidth : 1,
+		focusBackgroundColor : "#FF7800",
+		focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "18px",
+		titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "11px",
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
-        tooltipOpacity : 0.7,
+		tooltipBackgroundOpacity : 0.7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",
@@ -11706,7 +11738,7 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonOpacity : 0.7,
+		crossBalloonBackgroundOpacity : 0.7,
 		pinBorderColor : "#FF7800",
 		pinBorderWidth : 0.7
 	}
@@ -13692,14 +13724,14 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return this.chart.svg.group({ "visibility" : "hidden" }, function() {
                 chart.text({
                     "text-anchor" : "middle",
-                    "font-weight" : 600
+                    "font-weight" : chart.theme("tooltipPointFontWeight")
                 });
 
                 chart.svg.circle({
-                    r: 5,
+                    r: chart.theme("tooltipPointRadius"),
                     fill: fill,
                     stroke: stroke,
-                    "stroke-width": 1
+                    "stroke-width": chart.theme("tooltipPointBorderWidth")
                 });
             });
         }
@@ -14346,7 +14378,7 @@ jui.define("chart.brush.bubble", [], function() {
                 cy: pos.y,
                 r: radius,
                 "fill": chart.color(index, brush),
-                "fill-opacity": chart.theme("bubbleOpacity"),
+                "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
                 "stroke": chart.color(index, brush),
                 "stroke-width": chart.theme("bubbleBorderWidth")
             });
@@ -14952,7 +14984,7 @@ jui.define("chart.brush.path", [], function() {
 
 				var path = chart.svg.path({
 					fill : color,
-					"fill-opacity" : chart.theme("pathOpacity"),
+					"fill-opacity" : chart.theme("pathBackgroundOpacity"),
 					stroke : color,
 					"stroke-width" : chart.theme("pathBorderWidth")
 				});
@@ -15621,7 +15653,7 @@ jui.define("chart.brush.area", [], function() {
                 p.ClosePath();
                 p.attr({
                     fill: this.chart.color(k, this.brush),
-                    "fill-opacity": this.chart.theme("areaOpacity"),
+                    "fill-opacity": this.chart.theme("areaBackgroundOpacity"),
                     "stroke-width": 0
                 });
 
@@ -16448,6 +16480,59 @@ jui.define("chart.brush.rangebar", [], function() {
 	return RangeBarBrush;
 }, "chart.brush.core");
 
+jui.define("chart.brush.focus", [], function() {
+    var FocusBrush = function(chart, brush) {
+        var g;
+
+        this.draw = function() {
+            var borderColor = chart.theme("focusBorderColor"),
+                borderSize = chart.theme("focusBorderWidth"),
+                bgColor = chart.theme("focusBackgroundColor"),
+                bgOpacity = chart.theme("focusBackgroundOpacity");
+
+            g = chart.svg.group({}, function() {
+                var startX = brush.x(brush.start),
+                    endX = brush.x(brush.end);
+
+                chart.svg.line({
+                    stroke: borderColor,
+                    "stroke-width": borderSize,
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: chart.height()
+                }).translate(startX, 0);
+
+                chart.svg.rect({
+                    width: Math.abs(endX - startX),
+                    height: chart.height(),
+                    fill: bgColor,
+                    opacity: bgOpacity
+                }).translate(startX, 0)
+
+                chart.svg.line({
+                    stroke: borderColor,
+                    "stroke-width": borderSize,
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: chart.height()
+                }).translate(endX, 0);
+            }).translate(chart.x(), chart.y());
+
+            return g;
+        }
+
+        this.drawSetup = function() {
+            return this.getOptions({
+                start: 0,
+                end: 0
+            });
+        }
+    }
+
+    return FocusBrush;
+}, "chart.brush.core");
 jui.define("chart.widget.core", [ "util.base" ], function(_) {
 
 	var CoreWidget = function() {
@@ -16632,7 +16717,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             }, function() {
                 rect = chart.svg.polygon({
                     fill: chart.theme("tooltipBackgroundColor"),
-                    "fill-opacity": chart.theme("tooltipOpacity"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
                     stroke: chart.theme("tooltipBorderColor"),
                     "stroke-width": 1
                 });
@@ -16749,6 +16834,7 @@ jui.define("chart.widget.title", [], function() {
                 "text-anchor" : anchor,
                 "font-family" : chart.theme("fontFamily"),
                 "font-size" : chart.theme("titleFontSize"),
+                "font-weight" : chart.theme("titleFontWeight"),
                 "fill" : chart.theme("titleFontColor")
             }, widget.text);
 
@@ -17237,7 +17323,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     yTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
-                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            "fill-opacity": chart.theme("crossBalloonBackgroundOpacity"),
                             points: self.balloonPoints("left", tw, th, ta)
                         });
 
@@ -17266,7 +17352,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
-                            "fill-opacity": chart.theme("crossBalloonOpacity"),
+                            "fill-opacity": chart.theme("crossBalloonBackgroundOpacity"),
                             points: self.balloonPoints("bottom", tw, th, ta)
                         });
 
@@ -17294,8 +17380,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             this.on("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
-                    top = e.chartY + 2,
-                    brush = self.getBrush(0);
+                    top = e.chartY + 2;
 
                 if(xline) {
                     xline.attr({
@@ -17315,7 +17400,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if (yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = brush.y.invert(top),
+                    var value = widget.y.invert(top),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -17323,7 +17408,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if (xTooltip) {
                     xTooltip.translate(left - (tw / 2), chart.height() + ta);
 
-                    var value = brush.x.invert(left),
+                    var value = widget.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
@@ -17342,42 +17427,39 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     return CrossWidget;
 }, "chart.widget.core");
-jui.define("chart.widget.pin", [ "jquery" ], function($) {
+jui.define("chart.widget.pin", [], function() {
     var PinWidget = function(chart, widget) {
         var g;
         var size = 6;
 
         this.draw = function() {
-            if(widget.split == null) return;
-
-            var self = this,
-                color = this.chart.theme("pinBorderColor"),
-                width = this.chart.theme("pinBorderWidth");
+            var color = chart.theme("pinBorderColor"),
+                width = chart.theme("pinBorderWidth");
 
             g = chart.svg.group({}, function() {
-                self.chart.svg.polygon({
+                chart.svg.polygon({
                     fill: color
                 })
                 .point(size, 0)
                 .point(size / 2, size)
                 .point(0, 0);
 
-                self.chart.svg.line({
+                chart.svg.line({
                     stroke: color,
                     "stroke-width": width,
                     x1: size / 2,
                     y1: 0,
                     x2: size / 2,
-                    y2: self.chart.height()
+                    y2: chart.height()
                 });
-            }).translate(this.chart.x() + widget.x(widget.split) - (size / 2), this.chart.y());
+            }).translate(chart.x() + widget.x(widget.split) - (size / 2), chart.y());
 
             return g;
         }
 
         this.drawSetup = function() {
             return this.getOptions({
-                split: null
+                split: 0
             });
         }
     }

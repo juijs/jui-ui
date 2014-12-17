@@ -111,6 +111,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/splitarea.js",
                     "js/chart/brush/rangecolumn.js",
                     "js/chart/brush/rangebar.js",
+                    "js/chart/brush/focus.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",
@@ -195,6 +196,7 @@ module.exports = function(grunt) {
                     "js/chart/brush/splitarea.js",
                     "js/chart/brush/rangecolumn.js",
                     "js/chart/brush/rangebar.js",
+                    "js/chart/brush/focus.js",
 
                     // chart.widget
                     "js/chart/widget/core.js",

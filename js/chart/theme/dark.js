@@ -39,6 +39,9 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        tooltipPointRadius : 5, // common
+        tooltipPointBorderWidth : 1, // common
+        tooltipPointFontWeight : "bold", // common
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -52,9 +55,9 @@ jui.define("chart.theme.dark", [], function() {
         pieBorderWidth : 1,
         donutBorderColor : "#232323",
         donutBorderWidth : 1,
-    	areaOpacity : 0.5,
+        areaBackgroundOpacity : 0.5,
         areaSplitBackgroundColor : "#ebebeb",
-        bubbleOpacity : 0.5,
+        bubbleBackgroundOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "#14be9d",
         candlestickBackgroundColor : "#14be9d",
@@ -68,27 +71,32 @@ jui.define("chart.theme.dark", [], function() {
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
-        pathOpacity : 0.2,
+        pathBackgroundOpacity : 0.2,
         pathBorderWidth : 1,
         scatterBorderColor : "none",
         scatterBorderWidth : 1,
         scatterHoverColor : "#222222",
-        waterfallBackgroundColor : "#26f67c", //
-        waterfallInvertBackgroundColor : "#f94590", // 3
-        waterfallEdgeBackgroundColor : "#8bccf9", // 1
+        waterfallBackgroundColor : "#26f67c",
+        waterfallInvertBackgroundColor : "#f94590",
+        waterfallEdgeBackgroundColor : "#8bccf9",
         waterfallLineColor : "#a9a9a9",
         waterfallLineDashArray : "0.9",
+        focusBorderColor : "#FF7800",
+        focusBorderWidth : 1,
+        focusBackgroundColor : "#FF7800",
+        focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#ffffff",
         titleFontSize : "14px",
+        titleFontWeight : "normal",
         legendFontColor : "#ffffff",
         legendFontSize : "11px",
         tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
-        tooltipOpacity : 1,
+        tooltipBackgroundOpacity : 1,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",
@@ -100,7 +108,7 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonOpacity : 1,
+        crossBalloonBackgroundOpacity : 1,
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7
     }	

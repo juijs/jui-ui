@@ -62,11 +62,15 @@
                         text : "날짜"
                     }
                 },
-                brush : {  
+                brush : [{
+                    type : 'focus',
+                    start : 0,
+                    end : 3
+                }, {
                     type : 'scatter',
                     size : 10
-                }
-            }).render();
+                }]
+            });
     })
 </script>
 

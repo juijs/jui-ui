@@ -41,6 +41,9 @@ jui.define("chart.theme.gradient", [], function() {
         gridActiveBorderWidth: 1,
 
         // brush styles
+        tooltipPointRadius : 5, // common
+        tooltipPointBorderWidth : 1, // common
+        tooltipPointFontWeight : "bold", // common
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -54,9 +57,9 @@ jui.define("chart.theme.gradient", [], function() {
         pieBorderWidth : 1,
         donutBorderColor : "white",
         donutBorderWidth : 1,
-        areaOpacity : 0.4,
+        areaBackgroundOpacity : 0.4,
         areaSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
-        bubbleOpacity : 0.5,
+        bubbleBackgroundOpacity : 0.5,
         bubbleBorderWidth : 1,
         candlestickBorderColor : "black",
         candlestickBackgroundColor : "linear(top) white",
@@ -70,27 +73,32 @@ jui.define("chart.theme.gradient", [], function() {
         lineCircleBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
-        pathOpacity : 0.5,
+        pathBackgroundOpacity : 0.5,
         pathBorderWidth : 1,
         scatterBorderColor : "white",
         scatterBorderWidth : 2,
         scatterHoverColor : "white",
-        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66", // 4
-        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800", // 3
-        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7", // 1
+        waterfallBackgroundColor : "linear(top) #9cd37a,0.9 #87bb66",
+        waterfallInvertBackgroundColor : "linear(top) #ff9d46,0.9 #ff7800",
+        waterfallEdgeBackgroundColor : "linear(top) #a1d6fc,0.9 #7BBAE7",
         waterfallLineColor : "#a9a9a9",
         waterfallLineDashArray : "0.9",
+        focusBorderColor : "#FF7800",
+        focusBorderWidth : 1,
+        focusBackgroundColor : "#FF7800",
+        focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "13px",
+        titleFontWeight : "normal",
         legendFontColor : "#666",
         legendFontSize : "12px",
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
-        tooltipOpacity : 1,
+        tooltipBackgroundOpacity : 1,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -102,7 +110,7 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonOpacity : 0.8,
+        crossBalloonBackgroundOpacity : 0.8,
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7
     }

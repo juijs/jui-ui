@@ -234,14 +234,14 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return this.chart.svg.group({ "visibility" : "hidden" }, function() {
                 chart.text({
                     "text-anchor" : "middle",
-                    "font-weight" : 600
+                    "font-weight" : chart.theme("tooltipPointFontWeight")
                 });
 
                 chart.svg.circle({
-                    r: 5,
+                    r: chart.theme("tooltipPointRadius"),
                     fill: fill,
                     stroke: stroke,
-                    "stroke-width": 1
+                    "stroke-width": chart.theme("tooltipPointBorderWidth")
                 });
             });
         }

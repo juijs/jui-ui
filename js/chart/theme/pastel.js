@@ -35,6 +35,9 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveBorderWidth : 1,
 
 		// brush styles
+		tooltipPointRadius : 5, // common
+		tooltipPointBorderWidth : 1, // common
+		tooltipPointFontWeight : "bold", // common
 		barBorderColor : "none",
 		barBorderWidth : 0,
 		barBorderOpacity : 0,
@@ -48,9 +51,9 @@ jui.define("chart.theme.pastel", [], function() {
 		pieBorderWidth : 1,
 		donutBorderColor : "white",
 		donutBorderWidth : 3,
-		areaOpacity : 0.4,
+		areaBackgroundOpacity : 0.4,
 		areaSplitBackgroundColor : "#ebebeb",
-		bubbleOpacity : 0.5,
+		bubbleBackgroundOpacity : 0.5,
 		bubbleBorderWidth : 1,
 		candlestickBorderColor : "#14be9d",
 		candlestickBackgroundColor : "#14be9d",
@@ -64,27 +67,32 @@ jui.define("chart.theme.pastel", [], function() {
 		lineCircleBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
-		pathOpacity : 0.5,
+		pathBackgroundOpacity : 0.5,
 		pathBorderWidth : 1,
 		scatterBorderColor : "white",
 		scatterBorderWidth : 1,
 		scatterHoverColor : "white",
-		waterfallBackgroundColor : "#73e9d2", // 4
-		waterfallInvertBackgroundColor : "#ffb9ce", // 3
-		waterfallEdgeBackgroundColor : "#08c4e0", // 1
+		waterfallBackgroundColor : "#73e9d2",
+		waterfallInvertBackgroundColor : "#ffb9ce",
+		waterfallEdgeBackgroundColor : "#08c4e0",
 		waterfallLineColor : "#a9a9a9",
 		waterfallLineDashArray : "0.9",
+		focusBorderColor : "#FF7800",
+		focusBorderWidth : 1,
+		focusBackgroundColor : "#FF7800",
+		focusBackgroundOpacity : 0.1,
 
         // widget styles
         titleFontColor : "#333",
         titleFontSize : "18px",
+		titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "11px",
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
-        tooltipOpacity : 0.7,
+		tooltipBackgroundOpacity : 0.7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",
@@ -96,7 +104,7 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonOpacity : 0.7,
+		crossBalloonBackgroundOpacity : 0.7,
 		pinBorderColor : "#FF7800",
 		pinBorderWidth : 0.7
 	}
