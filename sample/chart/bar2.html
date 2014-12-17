@@ -18,15 +18,16 @@
     }
 
     jui.ready([ "chart.builder" ], function(chart) {
+        var data = [
+            { name : -25, value : 1 },
+            { name : 15, value : 3 },
+            { name : 0, value : 5 },
+            { name : 18, value : 0 },
+        ];
+
         c = chart("#chart", {
             width: 400,
             height : 400,
-            data : [
-                { name : -25, value : 1 },
-                { name : 15, value : 3 },
-                { name : 0, value : 5 },
-                { name : 18, value : 0 },
-            ],
             grid : {
 
                 y : {
@@ -58,6 +59,7 @@
             }
         });
 
+        c.update(data);
 	})
 </script>
 

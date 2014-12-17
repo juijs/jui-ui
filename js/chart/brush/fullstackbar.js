@@ -64,10 +64,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					}
 
 					// 액티브 엘리먼트 이벤트 설정
-					if(brush.activeEvent != null) {
-						this.setActiveEvent(group);
-						group.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(group);
 
 					startX += width;
 				}
@@ -77,9 +74,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
 			return g;
 		}

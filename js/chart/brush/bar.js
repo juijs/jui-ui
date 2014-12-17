@@ -63,6 +63,16 @@ jui.define("chart.brush.bar", [], function() {
 			this.showTooltip(tooltip, x, y, value, position);
 		}
 
+		this.setActiveEffectOption = function(g, color, isMax, isMin, tooltipX, tooltipY, value, position) {
+			if(this.brush.display == "max" && isMax || this.brush.display == "min" && isMin) {
+				var style = this.getBarStyle(),
+					tooltip = this.createTooltip(color, style.circleColor);
+
+				this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
+				g.append(tooltip);
+			}
+		}
+
 		this.setActiveEvent = function(bar, tooltip, x, y, value, position) {
 			var self = this,
 				style = this.getBarStyle(),
@@ -80,6 +90,13 @@ jui.define("chart.brush.bar", [], function() {
 					}
 				}
 			});
+		}
+
+		this.setActiveEventOption = function(bar, tooltip, x, y, value, position) {
+			if(value != 0 && this.brush.activeEvent != null) {
+				this.setActiveEvent(bar, tooltip, x, y, value, position);
+				bar.attr({ cursor: "pointer" });
+			}
 		}
 
 		this.drawBefore = function() {
@@ -134,19 +151,10 @@ jui.define("chart.brush.bar", [], function() {
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0 && brush.activeEvent != null) {
-						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
-						r.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					if(brush.display == "max" && points[j].max[i] ||
-						brush.display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
-
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
-						g.append(tooltip);
-					}
+					this.setActiveEffectOption(g, chart.color(j, brush), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startY += bar_height + brush.innerPadding;

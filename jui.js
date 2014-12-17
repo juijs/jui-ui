@@ -13775,6 +13775,16 @@ jui.define("chart.brush.bar", [], function() {
 			this.showTooltip(tooltip, x, y, value, position);
 		}
 
+		this.setActiveEffectOption = function(g, color, isMax, isMin, tooltipX, tooltipY, value, position) {
+			if(this.brush.display == "max" && isMax || this.brush.display == "min" && isMin) {
+				var style = this.getBarStyle(),
+					tooltip = this.createTooltip(color, style.circleColor);
+
+				this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
+				g.append(tooltip);
+			}
+		}
+
 		this.setActiveEvent = function(bar, tooltip, x, y, value, position) {
 			var self = this,
 				style = this.getBarStyle(),
@@ -13792,6 +13802,13 @@ jui.define("chart.brush.bar", [], function() {
 					}
 				}
 			});
+		}
+
+		this.setActiveEventOption = function(bar, tooltip, x, y, value, position) {
+			if(value != 0 && this.brush.activeEvent != null) {
+				this.setActiveEvent(bar, tooltip, x, y, value, position);
+				bar.attr({ cursor: "pointer" });
+			}
 		}
 
 		this.drawBefore = function() {
@@ -13846,19 +13863,10 @@ jui.define("chart.brush.bar", [], function() {
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0 && brush.activeEvent != null) {
-						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
-						r.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					if(brush.display == "max" && points[j].max[i] ||
-						brush.display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
-
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
-						g.append(tooltip);
-					}
+					this.setActiveEffectOption(g, chart.color(j, brush), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startY += bar_height + brush.innerPadding;
@@ -13941,19 +13949,10 @@ jui.define("chart.brush.column", [], function() {
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0 && brush.activeEvent != null) {
-						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
-						r.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					if(brush.display == "max" && points[j].max[i] ||
-						brush.display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
-
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
-						g.append(tooltip);
-					}
+					this.setActiveEffectOption(g, chart.color(j, brush), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;
@@ -14004,12 +14003,27 @@ jui.define("chart.brush.stackbar", [], function() {
 			}
 		}
 
+		this.setActiveEffectOption = function() {
+			var active = this.brush.active;
+
+			if(this.barList && this.barList[active]) {
+				this.setActiveEffect(this.barList[active]);
+			}
+		}
+
 		this.setActiveEvent = function(group) {
 			var self = this;
 
-			group.on(self.brush.activeEvent, function(e) {
+			group.on(self.brush.activeEvent, function (e) {
 				self.setActiveEffect(group);
 			});
+		}
+
+		this.setActiveEventOption = function(group) {
+			if(this.brush.activeEvent != null) {
+				this.setActiveEvent(group);
+				group.attr({ cursor: "pointer" });
+			}
 		}
 
 		this.drawBefore = function() {
@@ -14048,20 +14062,13 @@ jui.define("chart.brush.stackbar", [], function() {
 					value = xValue;
 				}
 
-				// 액티브 엘리먼트 이벤트 설정
-				if(brush.activeEvent != null) {
-					this.setActiveEvent(group);
-					group.attr({ cursor: "pointer" });
-				}
-
+				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
             return g;
 		}
@@ -14119,20 +14126,13 @@ jui.define("chart.brush.stackcolumn", [], function() {
 					value = yValue;
 				}
 
-				// 액티브 엘리먼트 이벤트 설정
-				if(brush.activeEvent != null) {
-					this.setActiveEvent(group);
-					group.attr({ cursor: "pointer" });
-				}
-
+				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
             return g;
 		}
@@ -14207,10 +14207,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					}
 
 					// 액티브 엘리먼트 이벤트 설정
-					if(brush.activeEvent != null) {
-						this.setActiveEvent(group);
-						group.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(group);
 
 					startX += width;
 				}
@@ -14220,9 +14217,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
 			return g;
 		}
@@ -14298,10 +14293,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 					}
 
 					// 액티브 엘리먼트 이벤트 설정
-					if(brush.activeEvent != null) {
-						this.setActiveEvent(group);
-						group.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(group);
 
 					startY += height;										
 				}
@@ -14311,9 +14303,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
             return g;
 		}
@@ -14898,9 +14888,11 @@ jui.define("chart.brush.line", [], function() {
             }
 
             // 액티브 라인 설정
-            for(var i = 0; i < this.lineList.length; i++) {
-                if(brush.active == brush.target[i]) {
-                    this.setActiveEffect(p);
+            if(this.lineList) {
+                for (var i = 0; i < this.lineList.length; i++) {
+                    if (brush.active == brush.target[i]) {
+                        this.setActiveEffect(p);
+                    }
                 }
             }
 

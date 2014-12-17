@@ -111,9 +111,11 @@ jui.define("chart.brush.line", [], function() {
             }
 
             // 액티브 라인 설정
-            for(var i = 0; i < this.lineList.length; i++) {
-                if(brush.active == brush.target[i]) {
-                    this.setActiveEffect(p);
+            if(this.lineList) {
+                for (var i = 0; i < this.lineList.length; i++) {
+                    if (brush.active == brush.target[i]) {
+                        this.setActiveEffect(p);
+                    }
                 }
             }
 

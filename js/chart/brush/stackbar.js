@@ -33,12 +33,27 @@ jui.define("chart.brush.stackbar", [], function() {
 			}
 		}
 
+		this.setActiveEffectOption = function() {
+			var active = this.brush.active;
+
+			if(this.barList && this.barList[active]) {
+				this.setActiveEffect(this.barList[active]);
+			}
+		}
+
 		this.setActiveEvent = function(group) {
 			var self = this;
 
-			group.on(self.brush.activeEvent, function(e) {
+			group.on(self.brush.activeEvent, function (e) {
 				self.setActiveEffect(group);
 			});
+		}
+
+		this.setActiveEventOption = function(group) {
+			if(this.brush.activeEvent != null) {
+				this.setActiveEvent(group);
+				group.attr({ cursor: "pointer" });
+			}
 		}
 
 		this.drawBefore = function() {
@@ -77,20 +92,13 @@ jui.define("chart.brush.stackbar", [], function() {
 					value = xValue;
 				}
 
-				// 액티브 엘리먼트 이벤트 설정
-				if(brush.activeEvent != null) {
-					this.setActiveEvent(group);
-					group.attr({ cursor: "pointer" });
-				}
-
+				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
 			}
 
 			// 액티브 엘리먼트 설정
-			if(this.barList[brush.active]) {
-				this.setActiveEffect(this.barList[brush.active]);
-			}
+			this.setActiveEffectOption();
 
             return g;
 		}

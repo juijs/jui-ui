@@ -54,19 +54,10 @@ jui.define("chart.brush.column", [], function() {
 					}
 
 					// 컬럼 및 기본 브러쉬 이벤트 설정
-					if(value != 0 && brush.activeEvent != null) {
-						this.setActiveEvent(r, activeTooltip, tooltipX, tooltipY, value, position);
-						r.attr({ cursor: "pointer" });
-					}
+					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					if(brush.display == "max" && points[j].max[i] ||
-						brush.display == "min" && points[j].min[i]) {
-						var tooltip = this.createTooltip(chart.color(j, brush), style.circleColor);
-
-						this.showTooltip(tooltip, tooltipX, tooltipY, value, position);
-						g.append(tooltip);
-					}
+					this.setActiveEffectOption(g, chart.color(j, brush), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;
