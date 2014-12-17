@@ -11189,7 +11189,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * 브러쉬를 추가한 후 차트 렌더링
          *
          * @param brush
-         * @param isNotAll
+         * @param isRender
          */
         this.addBrush = function(brush, isRender) {
             this.options.brush.push(brush);
@@ -11200,7 +11200,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * 브러쉬를 삭제한 후 차트 렌더링
          *
          * @param index
-         * @param isNotAll
+         * @param isRender
          */
         this.removeBrush = function(index, isRender) {
             this.options.brush.splice(index, 1);
@@ -11212,7 +11212,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param index
          * @param brush
-         * @param isNotAll
+         * @param isRender
          */
         this.updateBrush = function(index, brush, isRender) {
             for(var key in brush) {
@@ -11220,6 +11220,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             if(isRender !== false) this.render();
+        }
+
+        // 브러쉬와 동일한 구조
+        this.addWidget = function(widget, isRender) {
+            this.options.widget.push(widget);
+            if(isRender !== false) this.render(true);
+        }
+
+        // 브러쉬와 동일한 구조
+        this.removeWidget = function(index, isRender) {
+            this.options.widget.splice(index, 1);
+            if(isRender !== false) this.render(true);
+        }
+
+        // 브러쉬와 동일한 구조
+        this.updateWidget = function(index, widget, isRender) {
+            for(var key in widget) {
+                this.options.widget[index][key] = widget[key];
+            }
+
+            if(isRender !== false) this.render(true);
         }
     }
 
@@ -13826,8 +13847,7 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
 		this.draw = function() {
-			var style = this.getBarStyle(),
-				points = this.getXY();
+			var points = this.getXY();
 
 			for (var i = 0; i < count; i++) {
 				var startY = brush.y(i) - (half_height / 2);

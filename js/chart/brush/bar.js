@@ -114,8 +114,7 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
 		this.draw = function() {
-			var style = this.getBarStyle(),
-				points = this.getXY();
+			var points = this.getXY();
 
 			for (var i = 0; i < count; i++) {
 				var startY = brush.y(i) - (half_height / 2);
