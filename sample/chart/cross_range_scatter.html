@@ -61,13 +61,13 @@
                 { type : 'title', text : 'Cross Widget Sample' },
                 {
                     type : 'cross',
-                    format : function(d) {
-                        if(_.typeCheck("date", d)) {
-                            return _.dateFormat(d, "hh:mm");
-                        } else {
-                            return Math.round(d);
-                        }
-                    }
+                    yFormat : function(d) {
+                        return Math.round(d);
+                    },
+                    xFormat : function(d) {
+                        return _.dateFormat(d, "hh:mm");
+                    },
+                    brush : [ 0, 1, 2, 3 ]
                 },
                 { type : 'tooltip' }
             ],

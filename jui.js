@@ -17200,35 +17200,25 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 tspan[index] = elem;
             }
 
-            tspan[index].textContent = self.format(message);
+            tspan[index].textContent = message;
         }
 
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
-                xline = chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: chart.width(),
-                    y2: 0,
-                    stroke: chart.theme("crossBorderColor"),
-                    "stroke-width": chart.theme("crossBorderWidth"),
-                    opacity: chart.theme("crossBorderOpacity")
-                });
-
-                yline = chart.svg.line({
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: chart.height(),
-                    stroke: chart.theme("crossBorderColor"),
-                    "stroke-width": chart.theme("crossBorderWidth"),
-                    opacity: chart.theme("crossBorderOpacity")
-                });
-
                 // 포맷 옵션이 없을 경우, 툴팁을 생성하지 않음
-                if(_.typeCheck("function", self.format)) {
+                if(_.typeCheck("function", widget.yFormat)) {
+                    xline = chart.svg.line({
+                        x1: 0,
+                        y1: 0,
+                        x2: chart.width(),
+                        y2: 0,
+                        stroke: chart.theme("crossBorderColor"),
+                        "stroke-width": chart.theme("crossBorderWidth"),
+                        opacity: chart.theme("crossBorderOpacity")
+                    });
+
                     yTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
                             fill: chart.theme("crossBalloonBackgroundColor"),
@@ -17245,6 +17235,18 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             y: 12
                         });
                     }).translate(-(tw + ta), 0);
+                }
+
+                if(_.typeCheck("function", widget.xFormat)) {
+                    yline = chart.svg.line({
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: chart.height(),
+                        stroke: chart.theme("crossBorderColor"),
+                        "stroke-width": chart.theme("crossBorderWidth"),
+                        opacity: chart.theme("crossBorderOpacity")
+                    });
 
                     xTooltip = chart.svg.group({}, function () {
                         chart.svg.polygon({
@@ -17263,7 +17265,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         });
                     }).translate(0, chart.height() + ta);
                 }
-
             }).translate(chart.x(), chart.y());
         }
 
@@ -17278,29 +17279,38 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             this.on("chart.mousemove", function(e) {
                 var left = e.chartX + 2,
-                    top = e.chartY + 2;
+                    top = e.chartY + 2,
+                    brush = self.getBrush(0);
 
-                xline.attr({
-                    y1: top,
-                    y2: top
-                });
+                if(xline) {
+                    xline.attr({
+                        y1: top,
+                        y2: top
+                    });
+                }
 
-                yline.attr({
-                    x1: left,
-                    x2: left
-                });
+                if(yline) {
+                    yline.attr({
+                        x1: left,
+                        x2: left
+                    });
+                }
 
                 // 포맷 옵션이 없을 경우, 처리하지 않음
-                if(_.typeCheck("function", self.format)) {
-                    if (yTooltip) {
-                        yTooltip.translate(-(tw + ta), top - (th / 2));
-                        printTooltip(0, yTooltip.get(1), self.widget.y.invert(top));
-                    }
+                if (yTooltip) {
+                    yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    if (xTooltip) {
-                        xTooltip.translate(left - (tw / 2), chart.height() + ta);
-                        printTooltip(1, xTooltip.get(1), self.widget.x.invert(left));
-                    }
+                    var value = brush.y.invert(top),
+                        message = widget.yFormat.call(self.chart, value);
+                    printTooltip(0, yTooltip.get(1), message);
+                }
+
+                if (xTooltip) {
+                    xTooltip.translate(left - (tw / 2), chart.height() + ta);
+
+                    var value = brush.x.invert(left),
+                        message = widget.xFormat.call(self.chart, value);
+                    printTooltip(1, xTooltip.get(1), message);
                 }
             });
 
@@ -17309,7 +17319,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return this.getOptions({
-                format: null
+                xFormat: null,
+                yFormat: null
             });
         }
     }
