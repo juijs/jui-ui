@@ -68,12 +68,6 @@
         c2 = chart("#chart2", {
             width: 400,
             height : 400,
-            data : [
-                { name : 2, value : 0 },
-                { name : -15, value : 0 },
-                { name : -88, value : 2 },
-                { name : 18, value : 1 },
-            ],
             grid : {
 
                 x1 : {
@@ -92,15 +86,26 @@
                 name : { text : "이름" },
                 value : { text : "값" }
             },
-            brush : {
+            brush : [{
                 type : 'column',
                 x1 : 0,
                 target : ['name','value'],
                 display : "max",
                 active : 2,
                 activeEvent : "click"
-            }
+            },
+                { type : "focus", start : 0, end : 2 }
+            ]
         });
+
+        c2.update([
+            { name : 2, value : 0 },
+            { name : -15, value : 0 },
+            { name : -88, value : 2 },
+            { name : 18, value : 1 },
+        ], false);
+
+        c2.render(true);
 	})
 </script>
 
