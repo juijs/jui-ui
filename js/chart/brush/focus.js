@@ -3,6 +3,7 @@ jui.define("chart.brush.focus", [], function() {
         var g;
 
         this.drawFocus = function(start, end) {
+
             var borderColor = chart.theme("focusBorderColor"),
                 borderSize = chart.theme("focusBorderWidth"),
                 bgColor = chart.theme("focusBackgroundColor"),
@@ -13,6 +14,10 @@ jui.define("chart.brush.focus", [], function() {
             g = chart.svg.group({}, function() {
                 var startX = start,
                     endX = end;
+
+                if (brush.hide) {
+                    return ;
+                }
 
                 chart.svg.line({
                     stroke: borderColor,
@@ -38,7 +43,7 @@ jui.define("chart.brush.focus", [], function() {
                     x2: 0,
                     y2: height
                 }).translate(endX, 0);
-            }).translate(chart.x(), chart.y());
+            });
 
             return g;
         }
@@ -47,10 +52,15 @@ jui.define("chart.brush.focus", [], function() {
 
             var start = 0;
             var end = 0;
+            brush.hide = false;
+
+            if (brush.start == -1 && brush.end == -1) {
+                brush.hide = true;
+            }
 
             if (brush.x.type == 'block') {
                 start = brush.x(brush.start) - brush.x.rangeBand()/2;
-                end = brush.x.rangeBand() * Math.abs(brush.end- brush.start);
+                end = brush.x(brush.end) + brush.x.rangeBand()/2;
             } else  {
                 start = brush.x(brush.start);
                 end = brush.x(brush.end);
@@ -61,8 +71,8 @@ jui.define("chart.brush.focus", [], function() {
 
         this.drawSetup = function() {
             return this.getOptions({
-                start: 0,
-                end: 0
+                start: -1,
+                end: -1
             });
         }
     }

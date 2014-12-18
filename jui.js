@@ -10689,26 +10689,64 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @returns {*}
          */
+
+        this.area = function(key) {
+            if (_panel) {
+              return _panel[key] || _panel;
+            } else {
+              return _area[key] || _area;
+            }
+        }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.width = function() {
             if (_panel && typeof _panel.width !== 'undefined') return _panel.width;
             return _area.width;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.height = function() {
             if (_panel && typeof _panel.height !== 'undefined') return _panel.height;
             return _area.height;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x = function() {
             if (_panel && typeof _panel.x !== 'undefined') return _panel.x;
             return _area.x;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y = function() {
             if (_panel && typeof _panel.y !== 'undefined') return _panel.y;
             return _area.y;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x2 = function() {
             if (_panel && typeof _panel.x2 !== 'undefined') return _panel.x2;
             return _area.x2;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y2 = function() {
             if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
             return _area.y2;
@@ -11931,7 +11969,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.wrapper = function(chart, scale, key) {
-			var old_scale = scale; 
+			var old_scale = scale;
+			var self = this;
 			
 			function new_scale(i) {
 				
@@ -11979,6 +12018,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 			
 			new_scale.key = key;
+			new_scale.type = self.grid.type;
 			
 			return new_scale;
 		}
@@ -16489,15 +16529,24 @@ jui.define("chart.brush.rangebar", [], function() {
 
 jui.define("chart.brush.focus", [], function() {
     var FocusBrush = function(chart, brush) {
-        this.draw = function() {
+        var g;
+
+        this.drawFocus = function(start, end) {
+
             var borderColor = chart.theme("focusBorderColor"),
                 borderSize = chart.theme("focusBorderWidth"),
                 bgColor = chart.theme("focusBackgroundColor"),
                 bgOpacity = chart.theme("focusBackgroundOpacity");
 
-            var g = chart.svg.group({}, function() {
-                var startX = brush.x(brush.start) || 0,
-                    endX = brush.x(brush.end) || 0;
+            var height = chart.height();
+
+            g = chart.svg.group({}, function() {
+                var startX = start,
+                    endX = end;
+
+                if (brush.hide) {
+                    return ;
+                }
 
                 chart.svg.line({
                     stroke: borderColor,
@@ -16505,12 +16554,12 @@ jui.define("chart.brush.focus", [], function() {
                     x1: 0,
                     y1: 0,
                     x2: 0,
-                    y2: chart.height()
+                    y2: height
                 }).translate(startX, 0);
 
                 chart.svg.rect({
                     width: Math.abs(endX - startX),
-                    height: chart.height(),
+                    height: height,
                     fill: bgColor,
                     opacity: bgOpacity
                 }).translate(startX, 0)
@@ -16521,17 +16570,38 @@ jui.define("chart.brush.focus", [], function() {
                     x1: 0,
                     y1: 0,
                     x2: 0,
-                    y2: chart.height()
+                    y2: height
                 }).translate(endX, 0);
             });
 
             return g;
         }
 
+        this.draw = function() {
+
+            var start = 0;
+            var end = 0;
+            brush.hide = false;
+
+            if (brush.start == -1 && brush.end == -1) {
+                brush.hide = true;
+            }
+
+            if (brush.x.type == 'block') {
+                start = brush.x(brush.start) - brush.x.rangeBand()/2;
+                end = brush.x(brush.end) + brush.x.rangeBand()/2;
+            } else  {
+                start = brush.x(brush.start);
+                end = brush.x(brush.end);
+            }
+
+            return this.drawFocus(start, end);
+        }
+
         this.drawSetup = function() {
             return this.getOptions({
-                start: 0,
-                end: 0
+                start: -1,
+                end: -1
             });
         }
     }
