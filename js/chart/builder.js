@@ -720,26 +720,64 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @returns {*}
          */
+
+        this.area = function(key) {
+            if (_panel) {
+              return _panel[key] || _panel;
+            } else {
+              return _area[key] || _area;
+            }
+        }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.width = function() {
             if (_panel && typeof _panel.width !== 'undefined') return _panel.width;
             return _area.width;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.height = function() {
             if (_panel && typeof _panel.height !== 'undefined') return _panel.height;
             return _area.height;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x = function() {
             if (_panel && typeof _panel.x !== 'undefined') return _panel.x;
             return _area.x;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y = function() {
             if (_panel && typeof _panel.y !== 'undefined') return _panel.y;
             return _area.y;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x2 = function() {
             if (_panel && typeof _panel.x2 !== 'undefined') return _panel.x2;
             return _area.x2;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y2 = function() {
             if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
             return _area.y2;

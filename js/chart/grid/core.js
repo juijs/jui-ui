@@ -183,7 +183,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.wrapper = function(chart, scale, key) {
-			var old_scale = scale; 
+			var old_scale = scale;
+			var self = this;
 			
 			function new_scale(i) {
 				
@@ -231,6 +232,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 			
 			new_scale.key = key;
+			new_scale.type = self.grid.type;
 			
 			return new_scale;
 		}

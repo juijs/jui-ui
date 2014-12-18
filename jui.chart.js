@@ -4250,26 +4250,64 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @returns {*}
          */
+
+        this.area = function(key) {
+            if (_panel) {
+              return _panel[key] || _panel;
+            } else {
+              return _area[key] || _area;
+            }
+        }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.width = function() {
             if (_panel && typeof _panel.width !== 'undefined') return _panel.width;
             return _area.width;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.height = function() {
             if (_panel && typeof _panel.height !== 'undefined') return _panel.height;
             return _area.height;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x = function() {
             if (_panel && typeof _panel.x !== 'undefined') return _panel.x;
             return _area.x;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y = function() {
             if (_panel && typeof _panel.y !== 'undefined') return _panel.y;
             return _area.y;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.x2 = function() {
             if (_panel && typeof _panel.x2 !== 'undefined') return _panel.x2;
             return _area.x2;
         }
+
+        /**
+         * @deprecated
+         * @returns {*}
+         */
         this.y2 = function() {
             if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
             return _area.y2;
@@ -4565,7 +4603,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param {array} data
          */
-        this.update = function(data, isRender) {
+        this.update = function(data) {
             var opts = this.options;
 
             if(opts.axis != null) {
@@ -4575,17 +4613,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     }
                 }
 
-                if(isRender !== false) this.render();
+                this.render();
             } else {
-                if(data) {// 데이터가 있을 경우...
+                if (data) {// 데이터가 있을 경우...
                     opts.data = data;
                 }
 
-                this.page(1, isRender);
+                this.page(1);
             }
         }
 
-        this.page = function(pNo, isRender) {
+        this.page = function(pNo) {
             if(this.options.axis != null) return;
 
             if (arguments.length == 0) {
@@ -4597,7 +4635,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 maxPage = Math.ceil(dataList.length / limit);
 
             // 최소 & 최대 페이지 설정
-            if(pNo < 1) {
+            if (pNo < 1) {
                 _page = 1;
             } else {
                 _page = (pNo > maxPage) ? maxPage : pNo;
@@ -4606,21 +4644,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (_page - 1) * limit, _end = _start + limit;
 
             // 마지막 페이지 처리
-            if(_end > dataList.length) {
+            if (_end > dataList.length) {
                 _start = dataList.length - limit;
                 _end = dataList.length;
             }
 
-            if(_end <= dataList.length) {
+            if (_end <= dataList.length) {
                 _start = (_start < 0) ? 0 : _start;
                 _data = dataList.slice(_start, _end);
 
-                if(isRender !== false) this.render();
-                if(dataList.length > 0) _page++;
+                this.render();
+                if (dataList.length > 0)
+                    _page++;
             }
         }
 
-        this.next = function(isRender) {
+        this.next = function() {
             if(this.options.axis != null) return;
 
             var dataList = this.options.data,
@@ -4636,10 +4675,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (_start < 0) ? 0 : _start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            this.render();
         }
 
-        this.prev = function(isRender) {
+        this.prev = function() {
             if(this.options.axis != null) return;
 
             var dataList = this.options.data,
@@ -4654,10 +4693,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (isLimit) ? 0 : _start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            this.render();
         }
 
-        this.zoom = function(start, end, isRender) {
+        this.zoom = function(start, end) {
             if(this.options.axis != null) return;
 
             if (arguments.length == 0) {
@@ -4676,7 +4715,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (start < 0) ? 0 : start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            this.render();
         }
 
         /**
@@ -4684,22 +4723,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param csv
          */
-        this.setCsv = function(csv, isRender) {
+        this.setCsv = function(csv) {
             if(this.options.axis != null) return;
 
             var chartFields = [],
                 csvFields = this.options.csv,
                 csvNumber = this.options.csvNumber;
 
-            for(var key in _series) {
+            for (var key in _series) {
                 chartFields.push(key);
             }
 
-            if(chartFields.length == 0 && !csvFields)
+            if (chartFields.length == 0 && !csvFields)
                 return;
 
             var fields = _.getCsvFields(chartFields, csvFields), csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
-            this.update(_.csvToData(fields, csv, csvNumber), isRender);
+            this.update(_.csvToData(fields, csv, csvNumber));
         }
 
         /**
@@ -4707,14 +4746,46 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param file
          */
-        this.setCsvFile = function(file, isRender) {
+        this.setCsvFile = function(file) {
             if(this.options.axis != null) return;
 
             var self = this;
 
             _.fileToCsv(file, function(csv) {
-                self.setCsv(csv, isRender);
+                self.setCsv(csv);
             });
+        }
+
+        /**
+         * chart 사이즈 조정 후 렌더링
+         *
+         * @param {integer} width
+         * @param {integer} height
+         */
+        this.resize = function(width, height) {
+            if(arguments.length == 2) {
+                this.setOption({
+                    width: width,
+                    height: height
+                });
+            }
+
+            this.svg.size(this.options.width, this.options.height);
+            this.render(true);
+        }
+
+        /**
+         * 테마 변경 후 차트 렌더링
+         *
+         * @param themeName
+         */
+        this.setTheme = function(theme) {
+            var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
+
+            if(newTheme != null) {
+                setThemeStyle($.extend(newTheme, this.options.style));
+                this.render(true);
+            }
         }
 
         /**
@@ -4773,38 +4844,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             if(isRender !== false) this.render(true);
-        }
-
-        /**
-         * chart 사이즈 조정 후 렌더링
-         *
-         * @param {integer} width
-         * @param {integer} height
-         */
-        this.resize = function(width, height) {
-            if(arguments.length == 2) {
-                this.setOption({
-                    width: width,
-                    height: height
-                });
-            }
-
-            this.svg.size(this.options.width, this.options.height);
-            this.render(true);
-        }
-
-        /**
-         * 테마 변경 후 차트 렌더링
-         *
-         * @param themeName
-         */
-        this.setTheme = function(theme) {
-            var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
-
-            if(newTheme != null) {
-                setThemeStyle($.extend(newTheme, this.options.style));
-                this.render(true);
-            }
         }
     }
 
@@ -5492,7 +5531,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.wrapper = function(chart, scale, key) {
-			var old_scale = scale; 
+			var old_scale = scale;
+			var self = this;
 			
 			function new_scale(i) {
 				
@@ -5540,6 +5580,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 			
 			new_scale.key = key;
+			new_scale.type = self.grid.type;
 			
 			return new_scale;
 		}
@@ -10008,15 +10049,19 @@ jui.define("chart.brush.rangebar", [], function() {
 
 jui.define("chart.brush.focus", [], function() {
     var FocusBrush = function(chart, brush) {
-        this.draw = function() {
+        var g;
+
+        this.drawFocus = function(start, end) {
             var borderColor = chart.theme("focusBorderColor"),
                 borderSize = chart.theme("focusBorderWidth"),
                 bgColor = chart.theme("focusBackgroundColor"),
                 bgOpacity = chart.theme("focusBackgroundOpacity");
 
-            var g = chart.svg.group({}, function() {
-                var startX = brush.x(brush.start) || 0,
-                    endX = brush.x(brush.end) || 0;
+            var height = chart.height();
+
+            g = chart.svg.group({}, function() {
+                var startX = start,
+                    endX = end;
 
                 chart.svg.line({
                     stroke: borderColor,
@@ -10024,12 +10069,12 @@ jui.define("chart.brush.focus", [], function() {
                     x1: 0,
                     y1: 0,
                     x2: 0,
-                    y2: chart.height()
+                    y2: height
                 }).translate(startX, 0);
 
                 chart.svg.rect({
                     width: Math.abs(endX - startX),
-                    height: chart.height(),
+                    height: height,
                     fill: bgColor,
                     opacity: bgOpacity
                 }).translate(startX, 0)
@@ -10040,11 +10085,27 @@ jui.define("chart.brush.focus", [], function() {
                     x1: 0,
                     y1: 0,
                     x2: 0,
-                    y2: chart.height()
+                    y2: height
                 }).translate(endX, 0);
-            });
+            }).translate(chart.x(), chart.y());
 
             return g;
+        }
+
+        this.draw = function() {
+
+            var start = 0;
+            var end = 0;
+
+            if (brush.x.type == 'block') {
+                start = brush.x(brush.start) - brush.x.rangeBand()/2;
+                end = brush.x.rangeBand() * Math.abs(brush.end- brush.start);
+            } else  {
+                start = brush.x(brush.start);
+                end = brush.x(brush.end);
+            }
+
+            return this.drawFocus(start, end);
         }
 
         this.drawSetup = function() {
