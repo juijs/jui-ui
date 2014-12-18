@@ -8,9 +8,9 @@
 </head>
 <body>
 
-<div id="chart"></div>
+<div id="chart" style="height: 300px;"></div>
 <hr>
-<div id="chart2"></div>
+<div id="chart2" style="height: 300px;"></div>
 
 <script>
     var callback = function(d, e) {
@@ -65,8 +65,8 @@
         });
         /**/
 
-        c2 = chart("#chart2", {
-            width: 400,
+        c2 = chart("#chart,#chart2", {
+            width: "100%",
             height : 400,
             grid : {
 
@@ -96,14 +96,18 @@
             }]
         });
 
-        c2.update([
-            { name : 2, value : 0 },
-            { name : -15, value : 0 },
-            { name : -88, value : 2 },
-            { name : 18, value : 1 },
-        ], false);
+        var data = [
+            { name : 2, value : 5 },
+            { name : -15, value : 5 },
+            { name : -88, value : 10 },
+            { name : 18, value : 10 },
+        ];
 
-        c2.render(true);
+        c2[0].updateBrush(0, { target: "name" }, false);
+        c2[0].update(data);
+
+        c2[1].updateBrush(0, { target: "value" }, false);
+        c2[1].update(data);
 	})
 </script>
 

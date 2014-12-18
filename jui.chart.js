@@ -3664,22 +3664,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawBefore(self) {
             var target = [];
 
-            _series = _.deepClone(_options.series);
-            _grid = _.deepClone(_options.grid);
-            _axis = _.deepClone(_options.axis);
+            _grid = _.deepClone(self.options.grid);
+            _axis = _.deepClone(self.options.axis);
+            _series = _.deepClone(self.options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
             // 시리즈 데이터 구성
-            for (var i = 0, len = _data.length; i < len; i++) {
+            for(var i = 0, len = _data.length; i < len; i++) {
                 var row = _data[i];
 
-                for (var key in row) {
+                for(var key in row) {
                     var obj = _series[key] || {},
                         value = row[key],
                         range = null;
 
-                    if (value instanceof Array) {
+                    if(value instanceof Array) {
                         range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
                     } else {
                         range = { max : +value, min : +value }
@@ -4416,7 +4416,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.grid = function(key) {
-            if (_grid[key]) {
+            if(_grid[key]) {
                 return _grid[key];
             }
 
@@ -4438,7 +4438,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.brush = function(key) {
-            if (_brush[key]) {
+            if(_brush[key]) {
                 return _brush[key];
             }
 
@@ -4452,9 +4452,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.data = function(index, field) {
-            if (_data[index]) {
-
-                if (typeof field != 'undefined') {
+            if(_data[index]) {
+                if(!_.typeCheck("undefined", field)) {
                     return _data[index][field];
                 }
 
@@ -4791,10 +4790,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          */
         this.resize = function(width, height) {
             if(arguments.length == 2) {
-                this.setOption({
-                    width: width,
-                    height: height
-                });
+                _options.width = width;
+                _options.height = height;
             }
 
             this.svg.size(_options.width, _options.height);
