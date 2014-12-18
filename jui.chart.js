@@ -10000,17 +10000,15 @@ jui.define("chart.brush.rangebar", [], function() {
 
 jui.define("chart.brush.focus", [], function() {
     var FocusBrush = function(chart, brush) {
-        var g;
-
         this.draw = function() {
             var borderColor = chart.theme("focusBorderColor"),
                 borderSize = chart.theme("focusBorderWidth"),
                 bgColor = chart.theme("focusBackgroundColor"),
                 bgOpacity = chart.theme("focusBackgroundOpacity");
 
-            g = chart.svg.group({}, function() {
-                var startX = brush.x(brush.start),
-                    endX = brush.x(brush.end);
+            var g = chart.svg.group({}, function() {
+                var startX = brush.x(brush.start) || 0,
+                    endX = brush.x(brush.end) || 0;
 
                 chart.svg.line({
                     stroke: borderColor,
@@ -10036,7 +10034,7 @@ jui.define("chart.brush.focus", [], function() {
                     x2: 0,
                     y2: chart.height()
                 }).translate(endX, 0);
-            }).translate(chart.x(), chart.y());
+            });
 
             return g;
         }
