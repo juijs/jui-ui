@@ -9982,8 +9982,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var ui_list = call_list[i].list;
 
             for(var j = 0; j < ui_list.length; j++) {
-                if(ui_list[j].options.width == "100%") {
-                    ui_list[j].resize();
+                if(ui_list[j].isFullSize()) {
+                    ui_list[j].setSize();
                 }
             }
         }
@@ -11222,22 +11222,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * chart 사이즈 조정 후 렌더링
-         *
-         * @param {integer} width
-         * @param {integer} height
-         */
-        this.resize = function(width, height) {
-            if(arguments.length == 2) {
-                _options.width = width;
-                _options.height = height;
-            }
-
-            this.svg.size(_options.width, _options.height);
-            this.render(true);
-        }
-
-        /**
          * 테마 변경 후 차트 렌더링
          *
          * @param themeName
@@ -11249,6 +11233,34 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 setThemeStyle($.extend(newTheme, _options.style));
                 this.render(true);
             }
+        }
+
+        /**
+         * 사이즈 조정 후 차트 렌더링
+         *
+         * @param {integer} width
+         * @param {integer} height
+         */
+        this.setSize = function(width, height) {
+            if(arguments.length == 2) {
+                _options.width = width;
+                _options.height = height;
+            }
+
+            this.svg.size(_options.width, _options.height);
+            this.render(true);
+        }
+
+        /**
+         * 차트가 풀-사이즈인지 확인
+         *
+         * @returns {boolean}
+         */
+        this.isFullSize = function() {
+            if(_options.width == "100%" || _options.height == "100%")
+                return true;
+
+            return true;
         }
     }
 
