@@ -215,6 +215,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return _rangeBand;
 			}
 
+			func.invert = function(x) {
+				return Math.ceil(x / _rangeBand);
+			}
+
 			return func;
 		},
 

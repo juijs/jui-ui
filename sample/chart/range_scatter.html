@@ -38,7 +38,7 @@
                     
                     x : { 
                         type : "date",  // default type is block 
-                        domain : [ start, end ],
+                        target : "value",
                         step : [time.hours, 1],
                         format : "hh:mm",
                         key: "value",
@@ -62,15 +62,15 @@
                         text : "날짜"
                     }
                 },
-                brush : [{
-                    type : 'focus',
-                    start : 0,
-                    end : 3
-                }, {
+                brush : {  
                     type : 'scatter',
                     size : 10
-                }]
-            });
+                },
+                widget : {
+                    type : 'zoom',
+                    render : true
+                }
+            }).render();
     })
 </script>
 

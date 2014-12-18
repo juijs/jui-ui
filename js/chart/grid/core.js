@@ -145,7 +145,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 					var s = grid.target[i];
 					
 					for(var index = 0; index < data.length; index++) {
-						var value = +data[index][s];
+						var value = +new Date(data[index][s]);
 						value_list.push(value);
 					}
 				}
@@ -156,7 +156,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				grid.max = max;
 				grid.min = min;
 				grid.domain = [grid.min, grid.max];
-				
+
 				if (grid.reverse) {
 					grid.domain.reverse();
 				}				
@@ -192,6 +192,10 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				}
 				
 				return old_scale(i);
+			}
+
+			new_scale.update = function(obj) {
+				self.grid = $.extend(self.grid, obj);
 			}
 
 			new_scale.domain = function() {

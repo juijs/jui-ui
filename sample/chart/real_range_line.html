@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+
+
+			var c = chart("#chart", {
+				"width": "100%",
+				"height": 150,
+				"padding": {
+					"left": 70,
+					"right": 20,
+					"bottom": 25,
+					"top": 20
+				},
+				"theme": "jennifer",
+				"style": {},
+				"series": {},
+				"bufferCount" : 100000,
+				"grid": {
+					"x": {
+						"type" : "date",
+						"target": "date",
+						"key": "date",
+						"step": [ 4, 1 ],
+						format : "dd HH",
+						"line": false
+					},
+					"y": {
+						"type": "range",
+						"target" : "concurrent_user",
+						"step" : 2,
+						"line": true
+					}
+				},
+				"brush": [
+					{
+						"type": "line",
+						"display": "max",
+						"target": "concurrent_user"
+					}
+				],
+				"data": [
+					{
+						"service_rate": 11.806666374206543,
+						"concurrent_user": 116.1366470336914,
+						"service_time": 1483,
+						"date": "2015-01-16T15:00:00.000Z"
+					},
+					{
+						"service_rate": 16.47333354949951,
+						"concurrent_user": 150.24272918701172,
+						"service_time": 1304.8,
+						"date": "2015-01-16T15:05:00.000Z"
+					},
+					{
+						"service_rate": 25.36999969482422,
+						"concurrent_user": 249.89498291015624,
+						"service_time": 1391.4,
+						"date": "2015-01-16T15:10:00.000Z"
+					},
+					{
+						"service_rate": 21.97666702270508,
+						"concurrent_user": 217.74219360351563,
+						"service_time": 1437.2,
+						"date": "2015-01-16T15:15:00.000Z"
+					},
+					{
+						"service_rate": 18.729999923706053,
+						"concurrent_user": 184.38628540039062,
+						"service_time": 1292.8,
+						"date": "2015-01-16T15:20:00.000Z"
+					},
+					{
+						"service_rate": 15.19333324432373,
+						"concurrent_user": 154.01095581054688,
+						"service_time": 1307,
+						"date": "2015-01-16T15:25:00.000Z"
+					},
+					{
+						"service_rate": 11.980000114440918,
+						"concurrent_user": 120.64103698730469,
+						"service_time": 1322.4,
+						"date": "2015-01-16T15:30:00.000Z"
+					},
+					{
+						"service_rate": 8.519999980926514,
+						"concurrent_user": 87.36402282714843,
+						"service_time": 1400.6,
+						"date": "2015-01-16T15:35:00.000Z"
+					},
+					{
+						"service_rate": 7.240000057220459,
+						"concurrent_user": 69.97555236816406,
+						"service_time": 1305.4,
+						"date": "2015-01-16T15:40:00.000Z"
+					},
+					{
+						"service_rate": 7.086666679382324,
+						"concurrent_user": 69.21319122314453,
+						"service_time": 1472.4,
+						"date": "2015-01-16T15:45:00.000Z"
+					},
+					{
+						"service_rate": 7.046666622161865,
+						"concurrent_user": 69.12535247802734,
+						"service_time": 1416,
+						"date": "2015-01-16T15:50:00.000Z"
+					},
+					{
+						"service_rate": 7.1066666603088375,
+						"concurrent_user": 69.23045043945312,
+						"service_time": 1449.8,
+						"date": "2015-01-16T15:55:00.000Z"
+					},
+					{
+						"service_rate": 7.0133332252502445,
+						"concurrent_user": 69.14929962158203,
+						"service_time": 1494.4,
+						"date": "2015-01-16T16:00:00.000Z"
+					},
+					{
+						"service_rate": 7.199999904632568,
+						"concurrent_user": 68.87350463867188,
+						"service_time": 1338.6,
+						"date": "2015-01-16T16:05:00.000Z"
+					},
+					{
+						"service_rate": 7.126666641235351,
+						"concurrent_user": 69.69652862548828,
+						"service_time": 1366.6,
+						"date": "2015-01-16T16:10:00.000Z"
+					},
+					{
+						"service_rate": 7.053333282470703,
+						"concurrent_user": 69.10417175292969,
+						"service_time": 1491.6,
+						"date": "2015-01-16T16:15:00.000Z"
+					},
+					{
+						"service_rate": 7.263333320617676,
+						"concurrent_user": 69.08736572265624,
+						"service_time": 1273.6,
+						"date": "2015-01-16T16:20:00.000Z"
+					},
+					{
+						"service_rate": 7.146666717529297,
+						"concurrent_user": 69.08698883056641,
+						"service_time": 1275,
+						"date": "2015-01-16T16:25:00.000Z"
+					},
+					{
+						"service_rate": 7.023333263397217,
+						"concurrent_user": 68.85740661621094,
+						"service_time": 1558,
+						"date": "2015-01-16T16:30:00.000Z"
+					},
+					{
+						"service_rate": 7.113333320617675,
+						"concurrent_user": 69.4033432006836,
+						"service_time": 1411.8,
+						"date": "2015-01-16T16:35:00.000Z"
+					},
+					{
+						"service_rate": 7.0100000381469725,
+						"concurrent_user": 68.5751220703125,
+						"service_time": 1397.4,
+						"date": "2015-01-16T16:40:00.000Z"
+					},
+					{
+						"service_rate": 7.009999847412109,
+						"concurrent_user": 69.11287689208984,
+						"service_time": 1530.6,
+						"date": "2015-01-16T16:45:00.000Z"
+					},
+					{
+						"service_rate": 6.9,
+						"concurrent_user": 69.2187515258789,
+						"service_time": 1520.2,
+						"date": "2015-01-16T16:50:00.000Z"
+					},
+					{
+						"service_rate": 7.019999980926514,
+						"concurrent_user": 69.47406921386718,
+						"service_time": 1555.6,
+						"date": "2015-01-16T16:55:00.000Z"
+					},
+					{
+						"service_rate": 7.019999980926514,
+						"concurrent_user": 68.81173858642578,
+						"service_time": 1460,
+						"date": "2015-01-16T17:00:00.000Z"
+					},
+					{
+						"service_rate": 7.139999961853027,
+						"concurrent_user": 69.10327758789063,
+						"service_time": 1424.4,
+						"date": "2015-01-16T17:05:00.000Z"
+					},
+					{
+						"service_rate": 6.980000019073486,
+						"concurrent_user": 69.07130584716796,
+						"service_time": 1504.4,
+						"date": "2015-01-16T17:10:00.000Z"
+					},
+					{
+						"service_rate": 6.989999866485595,
+						"concurrent_user": 68.86498413085937,
+						"service_time": 1474.2,
+						"date": "2015-01-16T17:15:00.000Z"
+					},
+					{
+						"service_rate": 7.149999904632568,
+						"concurrent_user": 69.60291748046875,
+						"service_time": 1435.2,
+						"date": "2015-01-16T17:20:00.000Z"
+					},
+					{
+						"service_rate": 6.903333377838135,
+						"concurrent_user": 68.33495483398437,
+						"service_time": 1641,
+						"date": "2015-01-16T17:25:00.000Z"
+					},
+					{
+						"service_rate": 7.076666641235351,
+						"concurrent_user": 69.27046813964844,
+						"service_time": 1426.8,
+						"date": "2015-01-16T17:30:00.000Z"
+					},
+					{
+						"service_rate": 7.160000038146973,
+						"concurrent_user": 69.54209594726562,
+						"service_time": 1471.4,
+						"date": "2015-01-16T17:35:00.000Z"
+					},
+					{
+						"service_rate": 7.053333377838134,
+						"concurrent_user": 68.65728759765625,
+						"service_time": 1360.6,
+						"date": "2015-01-16T17:40:00.000Z"
+					},
+					{
+						"service_rate": 7.203333377838135,
+						"concurrent_user": 68.72530364990234,
+						"service_time": 1252.4,
+						"date": "2015-01-16T17:45:00.000Z"
+					},
+					{
+						"service_rate": 7.06666669845581,
+						"concurrent_user": 69.67509002685547,
+						"service_time": 1425,
+						"date": "2015-01-16T17:50:00.000Z"
+					},
+					{
+						"service_rate": 6.95,
+						"concurrent_user": 68.70317840576172,
+						"service_time": 1606.8,
+						"date": "2015-01-16T17:55:00.000Z"
+					},
+					{
+						"service_rate": 7.3,
+						"concurrent_user": 68.67872772216796,
+						"service_time": 1166.8,
+						"date": "2015-01-16T18:00:00.000Z"
+					},
+					{
+						"service_rate": 7.003333282470703,
+						"concurrent_user": 68.56622009277343,
+						"service_time": 1628.6,
+						"date": "2015-01-16T18:05:00.000Z"
+					},
+					{
+						"service_rate": 6.923333358764649,
+						"concurrent_user": 68.09052276611328,
+						"service_time": 1596,
+						"date": "2015-01-16T18:10:00.000Z"
+					},
+					{
+						"service_rate": 6.896666622161865,
+						"concurrent_user": 68.4924087524414,
+						"service_time": 1809.4,
+						"date": "2015-01-16T18:15:00.000Z"
+					},
+					{
+						"service_rate": 7.163333320617676,
+						"concurrent_user": 68.53388061523438,
+						"service_time": 1315.2,
+						"date": "2015-01-16T18:20:00.000Z"
+					},
+					{
+						"service_rate": 7.1433333396911625,
+						"concurrent_user": 68.13069152832031,
+						"service_time": 1334.4,
+						"date": "2015-01-16T18:25:00.000Z"
+					},
+					{
+						"service_rate": 7.003333377838135,
+						"concurrent_user": 68.70489044189453,
+						"service_time": 1544,
+						"date": "2015-01-16T18:30:00.000Z"
+					},
+					{
+						"service_rate": 7.136666679382325,
+						"concurrent_user": 68.138671875,
+						"service_time": 1364,
+						"date": "2015-01-16T18:35:00.000Z"
+					},
+					{
+						"service_rate": 6.866666698455811,
+						"concurrent_user": 67.79795684814454,
+						"service_time": 1658,
+						"date": "2015-01-16T18:40:00.000Z"
+					},
+					{
+						"service_rate": 6.803333377838134,
+						"concurrent_user": 69.08940124511719,
+						"service_time": 1596.6,
+						"date": "2015-01-16T18:45:00.000Z"
+					},
+					{
+						"service_rate": 7.030000019073486,
+						"concurrent_user": 68.76309204101562,
+						"service_time": 1605.2,
+						"date": "2015-01-16T18:50:00.000Z"
+					},
+					{
+						"service_rate": 7.146666717529297,
+						"concurrent_user": 68.07842559814453,
+						"service_time": 1458.4,
+						"date": "2015-01-16T18:55:00.000Z"
+					},
+					{
+						"service_rate": 7.086666679382324,
+						"concurrent_user": 68.86657257080078,
+						"service_time": 1359.8,
+						"date": "2015-01-16T19:00:00.000Z"
+					},
+					{
+						"service_rate": 7.086666679382324,
+						"concurrent_user": 69.2258087158203,
+						"service_time": 1442,
+						"date": "2015-01-16T19:05:00.000Z"
+					},
+					{
+						"service_rate": 7.080000019073486,
+						"concurrent_user": 69.77934112548829,
+						"service_time": 1421.8,
+						"date": "2015-01-16T19:10:00.000Z"
+					},
+					{
+						"service_rate": 7.039999961853027,
+						"concurrent_user": 69.12303466796875,
+						"service_time": 1514.2,
+						"date": "2015-01-16T19:15:00.000Z"
+					},
+					{
+						"service_rate": 7.146666717529297,
+						"concurrent_user": 69.79205932617188,
+						"service_time": 1412.2,
+						"date": "2015-01-16T19:20:00.000Z"
+					},
+					{
+						"service_rate": 7.106666851043701,
+						"concurrent_user": 68.83507690429687,
+						"service_time": 1368.2,
+						"date": "2015-01-16T19:25:00.000Z"
+					},
+					{
+						"service_rate": 7.100000095367432,
+						"concurrent_user": 69.95265502929688,
+						"service_time": 1468.2,
+						"date": "2015-01-16T19:30:00.000Z"
+					},
+					{
+						"service_rate": 6.93333330154419,
+						"concurrent_user": 69.4508888244629,
+						"service_time": 1535.4,
+						"date": "2015-01-16T19:35:00.000Z"
+					},
+					{
+						"service_rate": 7.046666622161865,
+						"concurrent_user": 69.49810943603515,
+						"service_time": 1450,
+						"date": "2015-01-16T19:40:00.000Z"
+					},
+					{
+						"service_rate": 7.210000038146973,
+						"concurrent_user": 69.14205322265624,
+						"service_time": 1310.2,
+						"date": "2015-01-16T19:45:00.000Z"
+					},
+					{
+						"service_rate": 7.01666669845581,
+						"concurrent_user": 69.333349609375,
+						"service_time": 1541.6,
+						"date": "2015-01-16T19:50:00.000Z"
+					},
+					{
+						"service_rate": 6.990000057220459,
+						"concurrent_user": 69.24214172363281,
+						"service_time": 1485,
+						"date": "2015-01-16T19:55:00.000Z"
+					},
+					{
+						"service_rate": 7.213333225250244,
+						"concurrent_user": 70.17808227539062,
+						"service_time": 1295,
+						"date": "2015-01-16T20:00:00.000Z"
+					},
+					{
+						"service_rate": 7.19000015258789,
+						"concurrent_user": 72.01555786132812,
+						"service_time": 1541.2,
+						"date": "2015-01-16T20:05:00.000Z"
+					},
+					{
+						"service_rate": 7.983333396911621,
+						"concurrent_user": 78.82611236572265,
+						"service_time": 1249.4,
+						"date": "2015-01-16T20:10:00.000Z"
+					},
+					{
+						"service_rate": 7.770000076293945,
+						"concurrent_user": 77.93372192382813,
+						"service_time": 1499.2,
+						"date": "2015-01-16T20:15:00.000Z"
+					},
+					{
+						"service_rate": 7.5699999809265135,
+						"concurrent_user": 77.84469909667969,
+						"service_time": 1717.4,
+						"date": "2015-01-16T20:20:00.000Z"
+					},
+					{
+						"service_rate": 7.98333330154419,
+						"concurrent_user": 79.03275756835937,
+						"service_time": 1309.4,
+						"date": "2015-01-16T20:25:00.000Z"
+					},
+					{
+						"service_rate": 7.866666698455811,
+						"concurrent_user": 78.26939239501954,
+						"service_time": 1456.8,
+						"date": "2015-01-16T20:30:00.000Z"
+					},
+					{
+						"service_rate": 7.826666641235351,
+						"concurrent_user": 78.60204315185547,
+						"service_time": 1435.4,
+						"date": "2015-01-16T20:35:00.000Z"
+					},
+					{
+						"service_rate": 8.54000015258789,
+						"concurrent_user": 82.9500015258789,
+						"service_time": 1262.8,
+						"date": "2015-01-16T20:40:00.000Z"
+					},
+					{
+						"service_rate": 9.079999923706055,
+						"concurrent_user": 89.05019836425781,
+						"service_time": 1297.4,
+						"date": "2015-01-16T20:45:00.000Z"
+					},
+					{
+						"service_rate": 9.533333206176758,
+						"concurrent_user": 95.19835815429687,
+						"service_time": 1495.2,
+						"date": "2015-01-16T20:50:00.000Z"
+					},
+					{
+						"service_rate": 10.25,
+						"concurrent_user": 102.15348968505859,
+						"service_time": 1474.8,
+						"date": "2015-01-16T20:55:00.000Z"
+					},
+					{
+						"service_rate": 11.25,
+						"concurrent_user": 108.05665130615235,
+						"service_time": 1199.6,
+						"date": "2015-01-16T21:00:00.000Z"
+					},
+					{
+						"service_rate": 11.650000190734863,
+						"concurrent_user": 113.35695190429688,
+						"service_time": 1457.8,
+						"date": "2015-01-16T21:05:00.000Z"
+					},
+					{
+						"service_rate": 12.4,
+						"concurrent_user": 118.59110260009766,
+						"service_time": 1315,
+						"date": "2015-01-16T21:10:00.000Z"
+					},
+					{
+						"service_rate": 13.086666488647461,
+						"concurrent_user": 125.77403411865234,
+						"service_time": 1341.8,
+						"date": "2015-01-16T21:15:00.000Z"
+					},
+					{
+						"service_rate": 13.696666717529297,
+						"concurrent_user": 131.06781005859375,
+						"service_time": 1424.8,
+						"date": "2015-01-16T21:20:00.000Z"
+					},
+					{
+						"service_rate": 14.289999961853027,
+						"concurrent_user": 140.0630676269531,
+						"service_time": 1289.8,
+						"date": "2015-01-16T21:25:00.000Z"
+					},
+					{
+						"service_rate": 15.266666603088378,
+						"concurrent_user": 146.2945587158203,
+						"service_time": 1258.4,
+						"date": "2015-01-16T21:30:00.000Z"
+					},
+					{
+						"service_rate": 15.80333309173584,
+						"concurrent_user": 152.44512329101562,
+						"service_time": 1307,
+						"date": "2015-01-16T21:35:00.000Z"
+					},
+					{
+						"service_rate": 17.426666259765625,
+						"concurrent_user": 167.16525268554688,
+						"service_time": 1232.4,
+						"date": "2015-01-16T21:40:00.000Z"
+					},
+					{
+						"service_rate": 19.17666702270508,
+						"concurrent_user": 185.29774169921876,
+						"service_time": 1344.6,
+						"date": "2015-01-16T21:45:00.000Z"
+					},
+					{
+						"service_rate": 21.436666870117186,
+						"concurrent_user": 205.19473571777343,
+						"service_time": 1347.6,
+						"date": "2015-01-16T21:50:00.000Z"
+					},
+					{
+						"service_rate": 23.04000015258789,
+						"concurrent_user": 224.37099914550782,
+						"service_time": 1323.2,
+						"date": "2015-01-16T21:55:00.000Z"
+					},
+					{
+						"service_rate": 25.503333282470702,
+						"concurrent_user": 241.49973754882814,
+						"service_time": 1192.4,
+						"date": "2015-01-16T22:00:00.000Z"
+					},
+					{
+						"service_rate": 27.49000015258789,
+						"concurrent_user": 260.96947021484374,
+						"service_time": 1234.6,
+						"date": "2015-01-16T22:05:00.000Z"
+					},
+					{
+						"service_rate": 29.373333740234376,
+						"concurrent_user": 279.0827209472656,
+						"service_time": 1319,
+						"date": "2015-01-16T22:10:00.000Z"
+					},
+					{
+						"service_rate": 31.193333053588866,
+						"concurrent_user": 298.30457763671876,
+						"service_time": 1268,
+						"date": "2015-01-16T22:15:00.000Z"
+					},
+					{
+						"service_rate": 33.08999938964844,
+						"concurrent_user": 317.478515625,
+						"service_time": 1305.6,
+						"date": "2015-01-16T22:20:00.000Z"
+					},
+					{
+						"service_rate": 35.35666732788086,
+						"concurrent_user": 335.9307556152344,
+						"service_time": 1256.2,
+						"date": "2015-01-16T22:25:00.000Z"
+					},
+					{
+						"service_rate": 37.46999893188477,
+						"concurrent_user": 353.90521850585935,
+						"service_time": 1260.2,
+						"date": "2015-01-16T22:30:00.000Z"
+					},
+					{
+						"service_rate": 38.92999954223633,
+						"concurrent_user": 374.68816528320315,
+						"service_time": 1351,
+						"date": "2015-01-16T22:35:00.000Z"
+					},
+					{
+						"service_rate": 41.936666870117186,
+						"concurrent_user": 399.0332885742188,
+						"service_time": 1299.6,
+						"date": "2015-01-16T22:40:00.000Z"
+					},
+					{
+						"service_rate": 45.44333267211914,
+						"concurrent_user": 429.96738891601564,
+						"service_time": 1253.8,
+						"date": "2015-01-16T22:45:00.000Z"
+					},
+					{
+						"service_rate": 49.096666717529295,
+						"concurrent_user": 464.02879028320314,
+						"service_time": 1189.4,
+						"date": "2015-01-16T22:50:00.000Z"
+					},
+					{
+						"service_rate": 52.07999954223633,
+						"concurrent_user": 491.53643188476565,
+						"service_time": 1226.6,
+						"date": "2015-01-16T22:55:00.000Z"
+					},
+					{
+						"service_rate": 54.98000030517578,
+						"concurrent_user": 523.4744506835938,
+						"service_time": 1289.6,
+						"date": "2015-01-16T23:00:00.000Z"
+					},
+					{
+						"service_rate": 58.84000015258789,
+						"concurrent_user": 556.5910766601562,
+						"service_time": 1248.6,
+						"date": "2015-01-16T23:05:00.000Z"
+					},
+					{
+						"service_rate": 61.5,
+						"concurrent_user": 587.2537353515625,
+						"service_time": 1316.8,
+						"date": "2015-01-16T23:10:00.000Z"
+					},
+					{
+						"service_rate": 65.3633316040039,
+						"concurrent_user": 619.2328125,
+						"service_time": 1257.8,
+						"date": "2015-01-16T23:15:00.000Z"
+					},
+					{
+						"service_rate": 67.98333282470703,
+						"concurrent_user": 651.455810546875,
+						"service_time": 1252.2,
+						"date": "2015-01-16T23:20:00.000Z"
+					},
+					{
+						"service_rate": 71.94999847412109,
+						"concurrent_user": 682.0059326171875,
+						"service_time": 1251.2,
+						"date": "2015-01-16T23:25:00.000Z"
+					},
+					{
+						"service_rate": 76.06999816894532,
+						"concurrent_user": 713.8049194335938,
+						"service_time": 1208.6,
+						"date": "2015-01-16T23:30:00.000Z"
+					},
+					{
+						"service_rate": 77.21666564941407,
+						"concurrent_user": 738.7463134765625,
+						"service_time": 1284.2,
+						"date": "2015-01-16T23:35:00.000Z"
+					},
+					{
+						"service_rate": 75.37000045776367,
+						"concurrent_user": 768.12255859375,
+						"service_time": 1300,
+						"date": "2015-01-16T23:40:00.000Z"
+					},
+					{
+						"service_rate": 82.15999755859374,
+						"concurrent_user": 779.2530883789062,
+						"service_time": 1245.4,
+						"date": "2015-01-16T23:45:00.000Z"
+					},
+					{
+						"service_rate": 83.57333374023438,
+						"concurrent_user": 792.8892333984375,
+						"service_time": 1269.8,
+						"date": "2015-01-16T23:50:00.000Z"
+					},
+					{
+						"service_rate": 84.75666656494141,
+						"concurrent_user": 805.4057250976563,
+						"service_time": 1269.2,
+						"date": "2015-01-16T23:55:00.000Z"
+					},
+					{
+						"service_rate": 84.5433334350586,
+						"concurrent_user": 816.9857543945312,
+						"service_time": 1266,
+						"date": "2015-01-17T00:00:00.000Z"
+					},
+					{
+						"service_rate": 87.21666564941407,
+						"concurrent_user": 832.5769775390625,
+						"service_time": 1287.6,
+						"date": "2015-01-17T00:05:00.000Z"
+					},
+					{
+						"service_rate": 89.43333435058594,
+						"concurrent_user": 846.1441528320313,
+						"service_time": 1208,
+						"date": "2015-01-17T00:10:00.000Z"
+					},
+					{
+						"service_rate": 89.51666564941407,
+						"concurrent_user": 857.561474609375,
+						"service_time": 1317.6,
+						"date": "2015-01-17T00:15:00.000Z"
+					},
+					{
+						"service_rate": 91.72666778564454,
+						"concurrent_user": 870.339501953125,
+						"service_time": 1299.6,
+						"date": "2015-01-17T00:20:00.000Z"
+					},
+					{
+						"service_rate": 92.79666748046876,
+						"concurrent_user": 883.6314331054688,
+						"service_time": 1226.4,
+						"date": "2015-01-17T00:25:00.000Z"
+					},
+					{
+						"service_rate": 93.76333160400391,
+						"concurrent_user": 896.0435668945313,
+						"service_time": 1313.2,
+						"date": "2015-01-17T00:30:00.000Z"
+					},
+					{
+						"service_rate": 95.43333282470704,
+						"concurrent_user": 910.883544921875,
+						"service_time": 1286.6,
+						"date": "2015-01-17T00:35:00.000Z"
+					},
+					{
+						"service_rate": 95.35000152587891,
+						"concurrent_user": 913.523681640625,
+						"service_time": 1290.6,
+						"date": "2015-01-17T00:40:00.000Z"
+					},
+					{
+						"service_rate": 97.29666748046876,
+						"concurrent_user": 923.0853393554687,
+						"service_time": 1237.4,
+						"date": "2015-01-17T00:45:00.000Z"
+					},
+					{
+						"service_rate": 96.87666473388671,
+						"concurrent_user": 920.0538940429688,
+						"service_time": 1257.8,
+						"date": "2015-01-17T00:50:00.000Z"
+					},
+					{
+						"service_rate": 96.70333557128906,
+						"concurrent_user": 925.9223754882812,
+						"service_time": 1302.6,
+						"date": "2015-01-17T00:55:00.000Z"
+					},
+					{
+						"service_rate": 97.94333343505859,
+						"concurrent_user": 940.996630859375,
+						"service_time": 1252,
+						"date": "2015-01-17T01:00:00.000Z"
+					},
+					{
+						"service_rate": 97.90333251953125,
+						"concurrent_user": 944.4105712890625,
+						"service_time": 1247.8,
+						"date": "2015-01-17T01:05:00.000Z"
+					},
+					{
+						"service_rate": 98.23666534423828,
+						"concurrent_user": 961.0032958984375,
+						"service_time": 1261.4,
+						"date": "2015-01-17T01:10:00.000Z"
+					},
+					{
+						"service_rate": 99.6633316040039,
+						"concurrent_user": 958.6549682617188,
+						"service_time": 1227.8,
+						"date": "2015-01-17T01:15:00.000Z"
+					},
+					{
+						"service_rate": 100.11999969482422,
+						"concurrent_user": 964.446875,
+						"service_time": 1260.8,
+						"date": "2015-01-17T01:20:00.000Z"
+					},
+					{
+						"service_rate": 100.17666473388672,
+						"concurrent_user": 966.611572265625,
+						"service_time": 1271.4,
+						"date": "2015-01-17T01:25:00.000Z"
+					},
+					{
+						"service_rate": 100.05666809082031,
+						"concurrent_user": 967.4026977539063,
+						"service_time": 1225,
+						"date": "2015-01-17T01:30:00.000Z"
+					},
+					{
+						"service_rate": 97.61666564941406,
+						"concurrent_user": 953.9256958007812,
+						"service_time": 1250,
+						"date": "2015-01-17T01:35:00.000Z"
+					},
+					{
+						"service_rate": 94.8,
+						"concurrent_user": 980.9074462890625,
+						"service_time": 1492.4,
+						"date": "2015-01-17T01:40:00.000Z"
+					},
+					{
+						"service_rate": 99.78999938964844,
+						"concurrent_user": 966.0893310546875,
+						"service_time": 1270.6,
+						"date": "2015-01-17T01:45:00.000Z"
+					},
+					{
+						"service_rate": 98.3933334350586,
+						"concurrent_user": 958.400146484375,
+						"service_time": 1278.4,
+						"date": "2015-01-17T01:50:00.000Z"
+					},
+					{
+						"service_rate": 98.19999847412109,
+						"concurrent_user": 954.7198608398437,
+						"service_time": 1294.4,
+						"date": "2015-01-17T01:55:00.000Z"
+					},
+					{
+						"service_rate": 96.63333435058594,
+						"concurrent_user": 948.993408203125,
+						"service_time": 1279.8,
+						"date": "2015-01-17T02:00:00.000Z"
+					},
+					{
+						"service_rate": 95.19000091552735,
+						"concurrent_user": 933.1366577148438,
+						"service_time": 1249.4,
+						"date": "2015-01-17T02:05:00.000Z"
+					},
+					{
+						"service_rate": 89.15333557128906,
+						"concurrent_user": 875.0137573242188,
+						"service_time": 1245.8,
+						"date": "2015-01-17T02:10:00.000Z"
+					},
+					{
+						"service_rate": 86.21000061035156,
+						"concurrent_user": 855.89072265625,
+						"service_time": 1298.6,
+						"date": "2015-01-17T02:15:00.000Z"
+					},
+					{
+						"service_rate": 82.56666717529296,
+						"concurrent_user": 839.8109130859375,
+						"service_time": 1261.8,
+						"date": "2015-01-17T02:20:00.000Z"
+					},
+					{
+						"service_rate": 83.80000152587891,
+						"concurrent_user": 822.275244140625,
+						"service_time": 1265,
+						"date": "2015-01-17T02:25:00.000Z"
+					},
+					{
+						"service_rate": 82.58333435058594,
+						"concurrent_user": 806.84423828125,
+						"service_time": 1245.8,
+						"date": "2015-01-17T02:30:00.000Z"
+					},
+					{
+						"service_rate": 80.43999938964843,
+						"concurrent_user": 789.4724243164062,
+						"service_time": 1248.8,
+						"date": "2015-01-17T02:35:00.000Z"
+					},
+					{
+						"service_rate": 79.7933334350586,
+						"concurrent_user": 779.76103515625,
+						"service_time": 1267.6,
+						"date": "2015-01-17T02:40:00.000Z"
+					},
+					{
+						"service_rate": 79.22999877929688,
+						"concurrent_user": 774.9177001953125,
+						"service_time": 1296.6,
+						"date": "2015-01-17T02:45:00.000Z"
+					},
+					{
+						"service_rate": 75.08666534423828,
+						"concurrent_user": 741.4386474609375,
+						"service_time": 1284.8,
+						"date": "2015-01-17T02:50:00.000Z"
+					},
+					{
+						"service_rate": 74.2300033569336,
+						"concurrent_user": 781.148388671875,
+						"service_time": 1227.4,
+						"date": "2015-01-17T02:55:00.000Z"
+					},
+					{
+						"service_rate": 77.53999938964844,
+						"concurrent_user": 746.4228637695312,
+						"service_time": 1247,
+						"date": "2015-01-17T03:00:00.000Z"
+					},
+					{
+						"service_rate": 73.56999969482422,
+						"concurrent_user": 713.915869140625,
+						"service_time": 1281.4,
+						"date": "2015-01-17T03:05:00.000Z"
+					},
+					{
+						"service_rate": 74.83333435058594,
+						"concurrent_user": 750.9869750976562,
+						"service_time": 1226.4,
+						"date": "2015-01-17T03:10:00.000Z"
+					},
+					{
+						"service_rate": 74.50333251953126,
+						"concurrent_user": 721.9956420898437,
+						"service_time": 1367,
+						"date": "2015-01-17T03:15:00.000Z"
+					},
+					{
+						"service_rate": 74.53888702392578,
+						"concurrent_user": 716.2030436197916,
+						"service_time": 1251,
+						"date": "2015-01-17T03:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T03:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T04:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T05:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T06:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T07:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T08:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T09:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T10:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T11:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T12:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T13:55:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:00:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:05:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:10:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:15:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:20:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:25:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:30:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:35:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:40:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:45:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:50:00.000Z"
+					},
+					{
+						"service_rate": 0,
+						"concurrent_user": 0,
+						"service_time": 0,
+						"date": "2015-01-17T14:55:00.000Z"
+					}
+				]
+			});
+
+
+	})
+</script>
+
+
+</body>
+</html>
