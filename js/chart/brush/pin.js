@@ -1,5 +1,5 @@
-jui.define("chart.widget.pin", [], function() {
-    var PinWidget = function(chart, widget) {
+jui.define("chart.brush.pin", [], function() {
+    var PinBrush = function(chart, brush) {
         var g;
         var size = 6;
 
@@ -8,12 +8,15 @@ jui.define("chart.widget.pin", [], function() {
                 width = chart.theme("pinBorderWidth");
 
             g = chart.svg.group({}, function() {
+                var x = brush.x(brush.split) - (size / 2);
+
                 chart.svg.polygon({
                     fill: color
                 })
                 .point(size, 0)
                 .point(size / 2, size)
-                .point(0, 0);
+                .point(0, 0)
+                .translate(x, 0);
 
                 chart.svg.line({
                     stroke: color,
@@ -22,8 +25,8 @@ jui.define("chart.widget.pin", [], function() {
                     y1: 0,
                     x2: size / 2,
                     y2: chart.height()
-                });
-            }).translate(chart.x() + widget.x(widget.split) - (size / 2), chart.y());
+                }).translate(x, 0);
+            });
 
             return g;
         }
@@ -35,5 +38,5 @@ jui.define("chart.widget.pin", [], function() {
         }
     }
 
-    return PinWidget;
-}, "chart.widget.core");
+    return PinBrush;
+}, "chart.brush.core");

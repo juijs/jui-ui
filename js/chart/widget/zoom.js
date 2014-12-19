@@ -51,6 +51,11 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(start < end) {
                     chart.zoom(start, end);
                     bg.attr({ "visibility": "visible" });
+
+                    // 차트 렌더링이 활성화되지 않았을 경우
+                    if(!chart.isRender()) {
+                        chart.render();
+                    }
                 }
 
                 resetDragStatus();
@@ -115,6 +120,11 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
                         chart.page(1);
+
+                        // 차트 렌더링이 활성화되지 않았을 경우
+                        if(!chart.isRender()) {
+                            chart.render();
+                        }
                     });
 
                 }).translate(chart.x(), chart.y());

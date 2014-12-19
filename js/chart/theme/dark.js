@@ -85,6 +85,8 @@ jui.define("chart.theme.dark", [], function() {
         focusBorderWidth : 1,
         focusBackgroundColor : "#FF7800",
         focusBackgroundOpacity : 0.1,
+        pinBorderColor : "#FF7800",
+        pinBorderWidth : 0.7,
 
         // widget styles
         titleFontColor : "#ffffff",
@@ -108,8 +110,6 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1,
-        pinBorderColor : "#FF7800",
-        pinBorderWidth : 0.7
-    }	
+        crossBalloonBackgroundOpacity : 1
+    }
 });

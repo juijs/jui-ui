@@ -695,7 +695,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          */
 
         this.area = function(key) {
-            if (_panel) {
+            if(_panel) {
               return _panel[key] || _panel;
             } else {
               return _area[key] || _area;
@@ -707,7 +707,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.width = function() {
-            if (_panel && typeof _panel.width !== 'undefined') return _panel.width;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.width;
             return _area.width;
         }
 
@@ -716,7 +718,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.height = function() {
-            if (_panel && typeof _panel.height !== 'undefined') return _panel.height;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.height;
             return _area.height;
         }
 
@@ -725,7 +729,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.x = function() {
-            if (_panel && typeof _panel.x !== 'undefined') return _panel.x;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.x;
             return _area.x;
         }
 
@@ -734,7 +740,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.y = function() {
-            if (_panel && typeof _panel.y !== 'undefined') return _panel.y;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.y;
             return _area.y;
         }
 
@@ -743,7 +751,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.x2 = function() {
-            if (_panel && typeof _panel.x2 !== 'undefined') return _panel.x2;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.x2;
             return _area.x2;
         }
 
@@ -752,7 +762,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.y2 = function() {
-            if (_panel && typeof _panel.y2 !== 'undefined') return _panel.y2;
+            if(!_area && !_panel) return null;
+
+            if(_panel) return _panel.y2;
             return _area.y2;
         }
 
@@ -763,7 +775,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.padding = function(key) {
-            if (_padding[key]) {
+            if(_padding[key]) {
                 return _padding[key];
             }
 
@@ -1045,7 +1057,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param {array} data
          */
-        this.update = function(data, isRender) {
+        this.update = function(data) {
             if(_options.axis != null) {
                 if(_.typeCheck("object", data)) {
                     for (var key in data) {
@@ -1053,17 +1065,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     }
                 }
 
-                if(isRender !== false) this.render();
+                if(_options.render) this.render();
             } else {
                 if(data) {// 데이터가 있을 경우...
                     _options.data = data;
                 }
 
-                this.page(1, isRender);
+                this.page(1);
             }
         }
 
-        this.page = function(pNo, isRender) {
+        this.page = function(pNo) {
             if(_options.axis != null) return;
 
             if (arguments.length == 0) {
@@ -1093,12 +1105,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 _start = (_start < 0) ? 0 : _start;
                 _data = dataList.slice(_start, _end);
 
-                if(isRender !== false) this.render();
+                if(_options.render) this.render();
                 if(dataList.length > 0) _page++;
             }
         }
 
-        this.next = function(isRender) {
+        this.next = function() {
             if(_options.axis != null) return;
 
             var dataList = _options.data,
@@ -1114,10 +1126,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (_start < 0) ? 0 : _start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
-        this.prev = function(isRender) {
+        this.prev = function() {
             if(_options.axis != null) return;
 
             var dataList = _options.data,
@@ -1132,10 +1144,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (isLimit) ? 0 : _start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
-        this.zoom = function(start, end, isRender) {
+        this.zoom = function(start, end) {
             if(_options.axis != null) return;
 
             if (arguments.length == 0) {
@@ -1154,7 +1166,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _start = (start < 0) ? 0 : start;
             _data = dataList.slice(_start, _end);
 
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
         /**
@@ -1162,7 +1174,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param csv
          */
-        this.setCsv = function(csv, isRender) {
+        this.setCsv = function(csv) {
             if(_options.axis != null) return;
 
             var chartFields = [],
@@ -1176,8 +1188,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(chartFields.length == 0 && !csvFields)
                 return;
 
-            var fields = _.getCsvFields(chartFields, csvFields), csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
-            this.update(_.csvToData(fields, csv, csvNumber), isRender);
+            var fields = _.getCsvFields(chartFields, csvFields),
+                csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
+
+            this.update(_.csvToData(fields, csv, csvNumber));
         }
 
         /**
@@ -1185,13 +1199,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param file
          */
-        this.setCsvFile = function(file, isRender) {
+        this.setCsvFile = function(file) {
             if(_options.axis != null) return;
 
             var self = this;
 
             _.fileToCsv(file, function(csv) {
-                self.setCsv(csv, isRender);
+                self.setCsv(csv);
             });
         }
 
@@ -1201,9 +1215,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isRender
          */
-        this.addBrush = function(brush, isRender) {
+        this.addBrush = function(brush) {
             _options.brush.push(brush);
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
         /**
@@ -1212,9 +1226,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param index
          * @param isRender
          */
-        this.removeBrush = function(index, isRender) {
+        this.removeBrush = function(index) {
             _options.brush.splice(index, 1);
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
         /**
@@ -1224,33 +1238,33 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param brush
          * @param isRender
          */
-        this.updateBrush = function(index, brush, isRender) {
+        this.updateBrush = function(index, brush) {
             for(var key in brush) {
                 _options.brush[index][key] = brush[key];
             }
 
-            if(isRender !== false) this.render();
+            if(_options.render) this.render();
         }
 
         // 브러쉬와 동일한 구조
-        this.addWidget = function(widget, isRender) {
+        this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(isRender !== false) this.render(true);
+            if(_options.render) this.render(true);
         }
 
         // 브러쉬와 동일한 구조
-        this.removeWidget = function(index, isRender) {
+        this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(isRender !== false) this.render(true);
+            if(_options.render) this.render(true);
         }
 
         // 브러쉬와 동일한 구조
-        this.updateWidget = function(index, widget, isRender) {
+        this.updateWidget = function(index, widget) {
             for(var key in widget) {
                 _options.widget[index][key] = widget[key];
             }
 
-            if(isRender !== false) this.render(true);
+            if(_options.render) this.render(true);
         }
 
         /**
@@ -1258,12 +1272,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param themeName
          */
-        this.setTheme = function(theme, isRender) {
+        this.setTheme = function(theme) {
             var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));
-                if(isRender !== false) this.render(true);
+                if(_options.render) this.render(true);
             }
         }
 
@@ -1273,14 +1287,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {integer} width
          * @param {integer} height
          */
-        this.setSize = function(width, height, isRender) {
+        this.setSize = function(width, height) {
             if(arguments.length == 2) {
                 _options.width = width;
                 _options.height = height;
             }
 
             this.svg.size(_options.width, _options.height);
-            if(isRender !== false) this.render(true);
+            if(_options.render) this.render(true);
         }
 
         /**
@@ -1293,6 +1307,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 return true;
 
             return true;
+        }
+
+        /**
+         * 차트의 렌더링 상태 확인
+         *
+         * @returns {boolean}
+         */
+        this.isRender = function() {
+            return _options.render;
         }
     }
 
@@ -1320,6 +1343,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             data: [],
             bind: null,
             format: null,
+            render: true,
 
             // buffer
             bufferCount: 10000,

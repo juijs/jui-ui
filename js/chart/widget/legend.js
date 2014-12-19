@@ -29,6 +29,11 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 chart.updateBrush(brushList[i].index, { target: target });
             }
 
+            // 차트 렌더링이 활성화되지 않았을 경우
+            if(!chart.isRender()) {
+                chart.render();
+            }
+
             chart.emit("legend.filter", [ target ]);
         }
 

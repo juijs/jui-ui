@@ -51,6 +51,11 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 }
 
                 chart.zoom(start, start + bufferCount);
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!chart.isRender()) {
+                    chart.render();
+                }
             }
 
             function mouseup(e) {
