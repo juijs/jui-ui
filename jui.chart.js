@@ -4787,12 +4787,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param themeName
          */
-        this.setTheme = function(theme) {
+        this.setTheme = function(theme, isRender) {
             var newTheme = (_.typeCheck("string", theme)) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));
-                this.render(true);
+                if(isRender !== false) this.render(true);
             }
         }
 
@@ -4802,14 +4802,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {integer} width
          * @param {integer} height
          */
-        this.setSize = function(width, height) {
+        this.setSize = function(width, height, isRender) {
             if(arguments.length == 2) {
                 _options.width = width;
                 _options.height = height;
             }
 
             this.svg.size(_options.width, _options.height);
-            this.render(true);
+            if(isRender !== false) this.render(true);
         }
 
         /**
