@@ -558,27 +558,28 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function createGradient(self, obj, hashKey) {
-            if (typeof hashKey != 'undefined' && _hash[hashKey]) {
+            if(typeof hashKey != "undefined" && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
             }
 
-            var id = self.createId('gradient');
+            var g = null,
+                id = self.createId("gradient");
 
             obj.id = id;
-            var g;
-            if (obj.type == 'linear') {
+
+            if(obj.type == "linear") {
                 g = self.svg.linearGradient(obj);
-            } else if (obj.type == 'radial') {
+            } else if(obj.type == "radial") {
                 g = self.svg.radialGradient(obj);
             }
 
-            for (var i = 0; i < obj.stops.length; i++) {
+            for(var i = 0; i < obj.stops.length; i++) {
                 g.append(self.svg.stop(obj.stops[i]));
             }
 
             self.defs.append(g);
 
-            if (typeof hashKey != 'undefined') {
+            if(typeof hashKey != "undefined") {
                 _hash[hashKey] = id;
             }
 
@@ -859,18 +860,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.theme = function(key, value, value2) {
-            if (arguments.length == 0) {
+            if(arguments.length == 0) {
                 return _theme;
-            } else if (arguments.length == 1) {
-                if (key.indexOf("Color") > -1 && _theme[key] != null) {
+            } else if(arguments.length == 1) {
+                if(key.indexOf("Color") > -1 && _theme[key] != null) {
                     return getColor(this, _theme[key]);
                 }
 
                 return _theme[key];
-            } else if (arguments.length == 3) {
+            } else if(arguments.length == 3) {
                 var val = (key) ? value : value2;
 
-                if (val.indexOf("Color") > -1 && _theme[val] != null) {
+                if(val.indexOf("Color") > -1 && _theme[val] != null) {
                     return getColor(this, _theme[val]);
                 }
 
@@ -885,7 +886,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.series = function(key) {
-            if (_series[key]) {
+            if(_series[key]) {
                 return _series[key];
             }
 
@@ -1150,14 +1151,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         this.zoom = function(start, end) {
             if(_options.axis != null) return;
 
-            if (arguments.length == 0) {
+            if(arguments.length == 0) {
                 return {
                     start: _start,
                     end: _end
                 }
             }
 
-            if (start == end)
+            if(start == end)
                 return;
 
             var dataList = _options.data;
