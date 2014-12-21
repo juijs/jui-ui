@@ -16,6 +16,15 @@
 <script src="../../js/uix/xtable.js"></script>
 
 <script>
+jui.setup({
+    template: {
+       evaluate : /<\?([\s\S]+?)\?>/g,
+       interpolate : /<\?=([\s\S]+?)\?>/g,
+       escape : /<\?-([\s\S]+?)\?>/g
+    },
+    logUrl: "../../tool/debug.html"
+});
+
 jui.ready(function(ui, uix, _) {
     var table_data = [
         {"min":21.55,"max":21.55,"count":1,"sumCpu":0,"hash":1495461794,"sd":0,"tpmc":0,"avgCpu":0,"failure":1,"rate":77.66,"sumTime":21.55,"name":"/db2sql.jsp","avgTime":21.55,"success":0},
@@ -73,14 +82,14 @@ jui.ready(function(ui, uix, _) {
 
 <script data-jui="#table" data-tpl="row" type="text/template">
     <tr>
-        <td><!= min !></td>
-        <td><!= max !></td>
-        <td><!= count !></td>
-        <td><!= hash !></td>
-        <td><!= failure !></td>
-        <td><!= sumTime !></td>
-        <td><!= avgTime !></td>
-        <td><!= name !></td>
+        <td><?= min ?></td>
+        <td><?= max ?></td>
+        <td><?= count ?></td>
+        <td><?= hash ?></td>
+        <td><?= failure ?></td>
+        <td><?= sumTime ?></td>
+        <td><?= avgTime ?></td>
+        <td><?= name ?></td>
     </tr>
 </script>
 

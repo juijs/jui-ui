@@ -11,7 +11,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         var call_list = jui.get("chart.builder");
         for(var i = 0; i < call_list.length; i++) {
-            var ui_list = call_list[i].list;
+            var ui_list = call_list[i];
 
             for(var j = 0; j < ui_list.length; j++) {
                 if(ui_list[j].isFullSize()) {

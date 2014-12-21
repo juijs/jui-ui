@@ -1,7 +1,5 @@
 jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
-        var self = this;
-
         this.element = null;
         this.order = "asc";
         this.name = null;

@@ -1,6 +1,16 @@
 (function(exports, $) {
 	var global = { jquery: $ }, globalFunc = {};
 
+	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
+	var globalOpts = {
+		template: {
+			evaluate : /<\!([\s\S]+?)\!>/g,
+			interpolate : /<\!=([\s\S]+?)\!>/g,
+			escape : /<\!-([\s\S]+?)\!>/g
+		},
+		logUrl: "tool/debug.html"
+	};
+
 	/**
 	 * Private Classes
 	 * 
@@ -327,14 +337,8 @@
 			return obj;
 		};
 	
-		_.templateSettings = {
-			evaluate : /<\!([\s\S]+?)\!>/g,
-			interpolate : /<\!=([\s\S]+?)\!>/g,
-			escape : /<\!-([\s\S]+?)\!>/g
-		};
-	
 		_.template = function(text, data, settings) {
-			settings = _.defaults(settings || {}, _.templateSettings);
+			settings = _.defaults(settings || {}, globalOpts.template);
 	
 			var source = "__p+='" + text.replace(escaper, function(match) {
 				return '\\' + escapes[match];
@@ -948,7 +952,7 @@
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
-				logUrl || "tool/debug.html",
+				logUrl || globalOpts.logUrl,
 				"JUIM",
 				"width=1024, height=768, toolbar=no, menubar=no, resizable=yes"
 			);
@@ -958,6 +962,14 @@
 			});
 
 			return jui_mng;
+		},
+
+		setup: function(options) {
+			if(utility.typeCheck("object", options)) {
+				globalOpts = $.extend(globalOpts, options);
+			}
+
+			return globalOpts;
 		}
 	};
 })(window, jQuery || $);
@@ -982,17 +994,23 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 				return instances[key];
 			} else if(_.typeCheck("string", key)) {
 				for(var i = 0; i < instances.length; i++) {
-					if(key == instances[i].type) {
-						result.push(instances[i]);
-					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
-                        if(instances[i].type.indexOf("." + key) != -1) {
-                            result.push(instances[i]);
-                        }
+                    var uiSet = instances[i];
+
+					if(key == uiSet.selector) {
+					    return (uiSet.length == 1) ? uiSet[0] : uiSet;
                     }
 				}
+
+                for(var i = 0; i < instances.length; i++) {
+                    var uiSet = instances[i];
+
+                    if(key == uiSet.type) {
+                        result.push(uiSet);
+                    }
+                }
 			}
-			
-			return result;
+
+            return result;
 		}
 		
 		this.getAll = function() {
@@ -1071,7 +1089,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
-				var uiList = instances[i].list;
+				var uiList = instances[i];
 				
 				for(var j = 0; j < uiList.length; j++) {
 					this.debug(uiList[j], i, j, callback);
@@ -1136,7 +1154,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		function settingEventAnimation(e) {
-			var pfx = ["webkit", "moz", "MS", "o", ""];
+			var pfx = [ "webkit", "moz", "MS", "o", "" ];
 			
 			for(var p = 0; p < pfx.length; p++) {
 				var type = e.type;
@@ -1236,19 +1254,24 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
      * UIManager에서 관리되는 객체
      * 객체 생성 정보와 목록을 가지고 있음
      */
-    var UICoreSet = function(type, list, selector, options) {
-
+    var UICoreSet = function(type, selector, options, list) {
         this.type = type;
-        this.list = list;
         this.selector = selector;
         this.options = options;
 
         this.destroy = function() {
-            for(var i = 0; i < this.list.length; i++) {
-                this.list[i].destroy();
+            for(var i = 0; i < list.length; i++) {
+                list[i].destroy();
             }
         }
+
+        for(var i = 0; i < list.length; i++) {
+            this.push(list[i]);
+        }
     }
+
+    // 배열 클래스 상속
+    UICoreSet.prototype = Object.create(Array.prototype);
 	
 	
 	/** 
@@ -1396,7 +1419,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             this.tpl[name] = _.template(html);
         }
 
-        this.setVo = function() {
+        this.setVo = function() { // @Deprecated
             if(!this.options.vo) return;
 
             if(vo != null) vo.reload();
@@ -1420,7 +1443,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
             for(var i = 0; i < this.listen.size(); i++) {
                 var obj = this.listen.get(i);
-                obj.target.off(obj.type);
+                $(obj.target).off(obj.type);
             }
 
             for(var key in this.__proto__) {
@@ -1475,7 +1498,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.event = new Array(); // Custom Event
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
                 mainObj.init.prototype.timestamp = new Date().getTime();
-                mainObj.init.prototype.index = ($root.size() == 0) ? null : index;
+                mainObj.init.prototype.index = index;
                 mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
@@ -1515,7 +1538,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             });
 
             // UIManager에 데이터 입력
-            UIManager.add(new UICoreSet(UI.type, list, selector, options));
+            UIManager.add(new UICoreSet(UI.type, selector, options, list));
 
             // 객체가 없을 경우에는 null을 반환 (기존에는 빈 배열을 반환)
             if(list.length == 0) {
@@ -3635,10 +3658,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	 * 
 	 */
 	var hideAll = function() {
-		var call_list = jui.get("combo");
+		var call_list = jui.get("ui.combo");
 		
 		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
+			var ui_list = call_list[i];
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "open") ui_list[j].fold();
@@ -4280,10 +4303,10 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 	}
 	
 	var getDropdown = function() {
-		var call_list = jui.get("dropdown");
+		var call_list = jui.get("ui.dropdown");
 		
 		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
+			var ui_list = call_list[i];
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") return ui_list[j];
@@ -4555,9 +4578,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	_.resize(function() {
 		if(win_width == $(window).width()) return; 
 		
-		var call_list = jui.get("modal");
+		var call_list = jui.get("ui.modal");
 		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
+			var ui_list = call_list[i];
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") {
@@ -6112,8 +6135,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 });
 jui.define("uix.table.column", [ "jquery" ], function($) {
     var Column = function(index) {
-        var self = this;
-
         this.element = null;
         this.order = "asc";
         this.name = null;
@@ -9114,10 +9135,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 	 * 
 	 */
 	_.resize(function() {
-		var call_list = jui.get("xtable");
+		var call_list = jui.get("uix.xtable");
 		
 		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
+			var ui_list = call_list[i];
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				ui_list[j].resize();
@@ -9979,7 +10000,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         var call_list = jui.get("chart.builder");
         for(var i = 0; i < call_list.length; i++) {
-            var ui_list = call_list[i].list;
+            var ui_list = call_list[i];
 
             for(var j = 0; j < ui_list.length; j++) {
                 if(ui_list[j].isFullSize()) {

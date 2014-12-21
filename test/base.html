@@ -88,7 +88,7 @@ jui.ready([ "util.base" ], function(_) {
     QUnit.test("[전역 함수] - jui.get", function(assert) {
         var ui = jui.include("ui.sample")("#sample");
 
-        assert.ok(jui.get("ui.sample")[0].list[0] == ui, "생성된 모듈 객체 확인");
+        assert.ok(jui.get("ui.sample")[0][0] == ui, "생성된 모듈 객체 확인");
     });
 
     QUnit.test("[전역 함수] - jui.getAll", function(assert) {

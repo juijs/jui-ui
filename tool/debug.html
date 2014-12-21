@@ -29,7 +29,7 @@ jui.ready(function(ui, uix, _) {
 					ui_table_info = uix.table("#mng_info_table", {
 						expand: "auto",
 						resize: true,
-						rows: p_jui.getAll()
+						data: p_jui.getAll()
 					});
 				}
 			}
@@ -69,7 +69,7 @@ function juiSetTotalCount() {
 	var o_cnt = 0, e_cnt = 0, c_cnt = 0;
 
 	for(var i = 0; i < p_jui.size(); i++) {
-		var ui_list = p_jui.get(i).list;
+		var ui_list = p_jui.get(i);
 		o_cnt += ui_list.length;
 
 		for(var j = 0; j < ui_list.length; j++) {
@@ -99,7 +99,7 @@ function juiSetTypeCount() {
 		}
 
 		for(var j = 0; j < uiList.length; j++) {
-			counts[types[i]].obj += uiList[j].list.length;
+			counts[types[i]].obj += uiList[j].length;
 		}
 	}
 
@@ -226,7 +226,7 @@ h3 {
 						<!= JSON.stringify(options) !>
 						<! } else { !>{}<! } !>
 					</td>
-					<td><!= list.length !></td>
+					<td><!= length !></td>
 				</tr>
 			</script>
 		</div>

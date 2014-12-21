@@ -1,6 +1,16 @@
 (function(exports, $) {
 	var global = { jquery: $ }, globalFunc = {};
 
+	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
+	var globalOpts = {
+		template: {
+			evaluate : /<\!([\s\S]+?)\!>/g,
+			interpolate : /<\!=([\s\S]+?)\!>/g,
+			escape : /<\!-([\s\S]+?)\!>/g
+		},
+		logUrl: "tool/debug.html"
+	};
+
 	/**
 	 * Private Classes
 	 * 
@@ -327,14 +337,8 @@
 			return obj;
 		};
 	
-		_.templateSettings = {
-			evaluate : /<\!([\s\S]+?)\!>/g,
-			interpolate : /<\!=([\s\S]+?)\!>/g,
-			escape : /<\!-([\s\S]+?)\!>/g
-		};
-	
 		_.template = function(text, data, settings) {
-			settings = _.defaults(settings || {}, _.templateSettings);
+			settings = _.defaults(settings || {}, globalOpts.template);
 	
 			var source = "__p+='" + text.replace(escaper, function(match) {
 				return '\\' + escapes[match];
@@ -948,7 +952,7 @@
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
-				logUrl || "tool/debug.html",
+				logUrl || globalOpts.logUrl,
 				"JUIM",
 				"width=1024, height=768, toolbar=no, menubar=no, resizable=yes"
 			);
@@ -958,6 +962,14 @@
 			});
 
 			return jui_mng;
+		},
+
+		setup: function(options) {
+			if(utility.typeCheck("object", options)) {
+				globalOpts = $.extend(globalOpts, options);
+			}
+
+			return globalOpts;
 		}
 	};
 })(window, jQuery || $);

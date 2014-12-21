@@ -9,9 +9,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	_.resize(function() {
 		if(win_width == $(window).width()) return; 
 		
-		var call_list = jui.get("modal");
+		var call_list = jui.get("ui.modal");
 		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
+			var ui_list = call_list[i];
 			
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") {
