@@ -19,7 +19,7 @@ jui.define("chart.grid.panel", [  ], function() {
             } else if (typeof value == 'string') {
 
                 if (value.indexOf("%") > -1) {
-                    start = [getValue(value, chart.width()), getValue(value,  chart.height())]
+                    start = [getValue(value, chart.area('width')), getValue(value,  chart.area('height'))]
                 } else {
                     start = [parseFloat(value), parseFloat(value)]
                 }
@@ -28,9 +28,9 @@ jui.define("chart.grid.panel", [  ], function() {
 
                 for(var i = 0; i < value.length; i++) {
                     if (i == 0) {
-                        value[i] = getValue(value[i], chart.width());
+                        value[i] = getValue(value[i], chart.area('width'));
                     } else if (i == 1) {
-                        value[i] = getValue(value[i], chart.height());
+                        value[i] = getValue(value[i], chart.area('height'));
                     }
                 }
 
@@ -47,7 +47,7 @@ jui.define("chart.grid.panel", [  ], function() {
                 start = getArrayValue(grid.start, chart);
             }
 
-            size = [chart.width(), chart.height()];
+            size = [chart.area('width'), chart.area('height')];
             if (grid.size != null) {
                 size = getArrayValue(grid.size, chart);
             }

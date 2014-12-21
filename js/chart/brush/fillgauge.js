@@ -8,13 +8,13 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
             if (direction == "vertical") {
-                var height = chart.height() * rate;
-                var width = chart.width();
+                var height = chart.area('height') * rate;
+                var width = chart.area('width');
                 var x = 0;
-                var y = chart.height() - height;
+                var y = chart.area('height') - height;
             } else {		// horizontal
-                var height = chart.height();
-                var width = chart.width() * rate;
+                var height = chart.area('height');
+                var width = chart.area('width') * rate;
                 var x = 0;
                 var y = 0;
             }
@@ -50,8 +50,8 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                     return {
                         x : 0,
                         y : 0,
-                        width : chart.width(),
-                        height : chart.height()
+                        width : chart.area('width'),
+                        height : chart.area('height')
                     };
                 }
             }
@@ -130,16 +130,16 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                     group.append(chart.svg.rect({
                         x : 0,
                         y : 0,
-                        width : chart.width(),
-                        height : chart.height(),
+                        width : chart.area('width'),
+                        height : chart.area('height'),
                         fill : chart.theme("gaugeBackgroundColor")
                     }));
 
                     group.append(chart.svg.rect({
                         x : 0,
                         y : 0,
-                        width : chart.width(),
-                        height : chart.height(),
+                        width : chart.area('width'),
+                        height : chart.area('height'),
                         fill : chart.color(0, brush),
                         "clip-path" : "url(#" + clipId + ")"
                     }));

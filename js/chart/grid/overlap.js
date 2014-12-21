@@ -13,11 +13,11 @@ jui.define("chart.grid.overlap", [  ], function() {
         this.drawBefore = function() {
             size = grid.size || chart.data().length ||  1;
 
-            widthUnit = (chart.width() / 2) / size;
-            heightUnit = (chart.height() / 2) / size;
+            widthUnit = (chart.area('width') / 2) / size;
+            heightUnit = (chart.area('height') / 2) / size;
 
-            width = chart.width();
-            height = chart.height();
+            width = chart.area('width');
+            height = chart.area('height');
         }
 
         this.scale = function(chart) {

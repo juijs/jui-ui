@@ -3,7 +3,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 	var BlockGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g, scale) {
-			var full_height = chart.height();
+			var full_height = chart.area('height');
 			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -53,7 +53,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 		
 		this.bottom = function(chart, g, scale) {
-			var full_height = chart.height();
+			var full_height = chart.area('height');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -103,7 +103,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		}
 		
 		this.left = function(chart, g, scale) {
-			var full_width = chart.width();
+			var full_width = chart.area('width');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -142,7 +142,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.width() : -this.bar
+					x2 : (grid.line) ? chart.area('width') : -this.bar
 				}));
 
 				g.append(axis);
@@ -169,7 +169,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.width() : this.bar
+					x2 : (grid.line) ? -chart.area('width') : this.bar
 				}));
 
 				axis.append(chart.text({
@@ -187,7 +187,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.width() : this.bar
+					x2 : (grid.line) ? -chart.area('width') : this.bar
 				}));
 
 				g.append(axis);
@@ -199,6 +199,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			grid = this.setBlockDomain(chart, grid);
 
 			var obj = this.getGridSize(chart, orient, grid);
+
+            console.log(obj);
 
 			// scale 설정
 			this.scale = UtilScale.ordinal().domain(grid.domain);

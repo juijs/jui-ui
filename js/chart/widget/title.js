@@ -5,21 +5,21 @@ jui.define("chart.widget.title", [], function() {
 
         this.drawBefore = function() {
             if (widget.position == "bottom") {
-                y = chart.y2() + chart.padding("bottom") - 20;
+                y = chart.area('y2') + chart.padding("bottom") - 20;
             } else if (widget.position == "top") {
                 y = 20;
             } else {
-                y = chart.y() + chart.height() / 2
+                y = chart.area('y') + chart.area('height') / 2
             }
 
             if (widget.align == "center") {
-                x = chart.x() + chart.width()/2;
+                x = chart.x() + chart.area('width')/2;
                 anchor = "middle";
             } else if (widget.align == "start") {
                 x = chart.x();
                 anchor = "start";
             } else {
-                x = chart.x2();
+                x = chart.area('x2');
                 anchor = "end";
             }
         }

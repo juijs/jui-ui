@@ -24,7 +24,7 @@ jui.define("chart.brush.pin", [], function() {
                     x1: size / 2,
                     y1: 0,
                     x2: size / 2,
-                    y2: chart.height()
+                    y2: chart.area('height')
                 }).translate(x, 0);
             });
 

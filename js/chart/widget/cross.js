@@ -25,7 +25,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xline = chart.svg.line({
                         x1: 0,
                         y1: 0,
-                        x2: chart.width(),
+                        x2: chart.area('width'),
                         y2: 0,
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
@@ -55,7 +55,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         x1: 0,
                         y1: 0,
                         x2: 0,
-                        y2: chart.height(),
+                        y2: chart.area('height'),
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
                         opacity: chart.theme("crossBorderOpacity")
@@ -76,9 +76,9 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             x: tw / 2,
                             y: 17
                         });
-                    }).translate(0, chart.height() + ta);
+                    }).translate(0, chart.area('height') + ta);
                 }
-            }).translate(chart.x(), chart.y());
+            }).translate(chart.x(), chart.area('y'));
         }
 
         this.draw = function() {
@@ -118,7 +118,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 }
 
                 if (xTooltip) {
-                    xTooltip.translate(left - (tw / 2), chart.height() + ta);
+                    xTooltip.translate(left - (tw / 2), chart.area('height') + ta);
 
                     var value = widget.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);

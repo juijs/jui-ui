@@ -29,7 +29,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.height() : -bar,
+					y2 : (grid.line) ? chart.area('height') : -bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -73,7 +73,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.height() : bar,
+					y2 : (grid.line) ? -chart.area('height') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -118,7 +118,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.width() : -bar,
+					x2 : (grid.line) ? chart.area('width') : -bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
@@ -164,7 +164,7 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.width() : bar,
+					x2 : (grid.line) ? -chart.area('width') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));

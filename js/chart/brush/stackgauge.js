@@ -9,8 +9,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					return {
 						x : 0,
 						y : 0,
-						width : chart.width(),
-						height : chart.height()
+						width : chart.area('width'),
+						height : chart.area('height')
 					};
 				}
 			}

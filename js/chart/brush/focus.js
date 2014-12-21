@@ -8,7 +8,7 @@ jui.define("chart.brush.focus", [], function() {
                 bgColor = chart.theme("focusBackgroundColor"),
                 bgOpacity = chart.theme("focusBackgroundOpacity");
 
-            var height = chart.height();
+            var height = chart.area('height');
 
             g = chart.svg.group({}, function() {
                 var startX = start,

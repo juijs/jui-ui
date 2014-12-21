@@ -266,7 +266,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
         this.getOptions = function(options) {
             return $.extend({
-                axis: "default"
+                axis: 0
             }, options);
         }
 	}

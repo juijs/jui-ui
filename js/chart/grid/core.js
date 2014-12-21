@@ -315,35 +315,14 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-			var width = chart.width(),
-				height = chart.height(),
-				axis = (orient == "left" || orient == "right") ? chart.y() : chart.x(),
+			var width = chart.area('width'),
+				height = chart.area('height'),
+				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
 				max = (orient == "left" || orient == "right") ? height : width,
 				start = (grid.axis) ? axis : 0,
 				size = max;
 
-			if (!grid.axis) {
-				if (grid.start) {
-					if (typeof grid.start == 'string' && grid.start.indexOf("%") > -1){
-						start = max * parseFloat(grid.start.replace("%", ""))/100
-					} else {
-						start = grid.start;
-					}
-				}
-
-				if (grid.size) {
-					if (typeof grid.size == 'string' && grid.size.indexOf("%") > -1){
-						size = max * parseFloat(grid.size.replace("%", ""))/100
-					} else {
-						size = grid.size
-					}
-				}
-
-				if (start == 'center') {
-					start = max / 2 - size / 2;
-				}
-			}
-
+            console.log(chart.area('width'), chart.area('height'), chart.area('y'))
 
 			return {
 				start: start,

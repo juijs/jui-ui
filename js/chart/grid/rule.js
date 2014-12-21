@@ -3,7 +3,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 	var RuleGrid = function(orient, chart, grid) {
 
 		this.top = function(chart, g) {
-			var height = chart.height(),
+			var height = chart.area('height'),
 				half_height = height/2;
 
 			g.append(this.axisLine(chart, {
@@ -48,7 +48,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.bottom = function(chart, g) {
-			var height = chart.height(),
+			var height = chart.area('height'),
 				half_height = height/2;
 		  
 			g.append(this.axisLine(chart, {
@@ -93,8 +93,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.left = function(chart, g) {
-			var width = chart.width(),
-				height = chart.height(),
+			var width = chart.area('width'),
+				height = chart.area('height'),
 				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
@@ -138,7 +138,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		}
 
 		this.right = function(chart, g) {
-			var width = chart.width(),
+			var width = chart.area('width'),
 				half_width = width/2;
 
 			g.append(this.axisLine(chart, {

@@ -4,7 +4,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
-                maxY = this.chart.height(),
+                maxY = this.chart.area('height'),
                 split = this.brush.split,
                 splitColor = this.chart.theme("areaSplitBackgroundColor");
 

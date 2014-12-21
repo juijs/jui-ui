@@ -25,13 +25,13 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         width: thumbWidth
                     });
 
-                    thumb.translate(mouseStart, chart.y());
+                    thumb.translate(mouseStart, chart.area('y'));
                 } else {
                     thumb.attr({
                         width: Math.abs(thumbWidth)
                     });
 
-                    thumb.translate(mouseStart + thumbWidth, chart.y());
+                    thumb.translate(mouseStart + thumbWidth, chart.area('y'));
                 }
             });
 
@@ -77,13 +77,13 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 len = opts.data.length;
 
             count = (len < opts.bufferCount && len > 0) ? len : opts.bufferCount;
-            tick = chart.width() / count;
+            tick = chart.area('width') / count;
         }
 
         this.draw = function() {
             var self = this;
-            var cw = chart.width(),
-                ch = chart.height(),
+            var cw = chart.area('width'),
+                ch = chart.area('height'),
                 r = 12;
 
             return chart.svg.group({}, function() {
@@ -127,7 +127,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         }
                     });
 
-                }).translate(chart.x(), chart.y());
+                }).translate(chart.x(), chart.area('y'));
 
                 setDragEvent(self, thumb, bg);
             });

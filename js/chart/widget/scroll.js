@@ -35,8 +35,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 if(gap < 0) {
                     gap = 0;
                 } else {
-                    if(gap + thumbWidth > chart.width()) {
-                        gap = chart.width() - thumbWidth;
+                    if(gap + thumbWidth > chart.area('width')) {
+                        gap = chart.area('width') - thumbWidth;
                     }
                 }
 
@@ -46,7 +46,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 var startgap = gap * rate,
                     start = startgap == 0 ? 0 : Math.floor(startgap / piece);
 
-                if (gap + thumbWidth == chart.width()) {
+                if (gap + thumbWidth == chart.area('width')) {
                     start += 1;
                 }
 
@@ -73,10 +73,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 			dataLength =  opts.data.length; 
 			bufferCount = opts.bufferCount;
 
-			piece = chart.width() / bufferCount;
+			piece = chart.area('width') / bufferCount;
 			totalWidth = piece * dataLength;
-			rate = totalWidth / chart.width();
-            thumbWidth = chart.width() * (bufferCount / dataLength) + 2;
+			rate = totalWidth / chart.area('width');
+            thumbWidth = chart.area('width') * (bufferCount / dataLength) + 2;
         }
 
         this.draw = function() {
@@ -84,7 +84,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
             return chart.svg.group({}, function() {
                 chart.svg.rect({
-                    width: chart.width(),
+                    width: chart.area('width'),
                     height: 7,
                     fill: chart.theme("scrollBackgroundColor")
                 });
@@ -101,7 +101,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 // 차트 스크롤 이벤트
                 setScrollEvent(self, thumb);
 
-            }).translate(chart.x(), chart.y2());
+            }).translate(chart.x(), chart.area('y2'));
         }
 
         this.drawSetup = function() {

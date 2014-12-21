@@ -82,8 +82,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-            var width = this.chart.width(),
-                height = this.chart.height(),
+            var width = this.chart.area('width'),
+                height = this.chart.area('height'),
                 min = width;
 
             if (height < min) {

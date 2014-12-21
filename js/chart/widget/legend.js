@@ -149,24 +149,24 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             
             // legend 위치  선정
             if (widget.position == "bottom" || widget.position == "top") {
-                var y = (widget.position == "bottom") ? chart.y2() + chart.padding("bottom") - max_height : chart.y() - chart.padding("top");
+                var y = (widget.position == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
                 
                 if (widget.align == "start") {
                     x = chart.x();
                 } else if (widget.align == "center") {
-                    x = chart.x() + (chart.width() / 2- total_width / 2);
+                    x = chart.x() + (chart.area('width') / 2- total_width / 2);
                 } else if (widget.align == "end") {
-                    x = chart.x2() - total_width;
+                    x = chart.area('x2') - total_width;
                 }
             } else {
-                var x = (widget.position == "left") ? chart.x() - chart.padding("left") : chart.x2() + chart.padding("right") - max_width;
+                var x = (widget.position == "left") ? chart.x() - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
-                    y = chart.y();
+                    y = chart.area('y');
                 } else if (widget.align == "center") {
-                    y = chart.y() + (chart.height() / 2 - total_height / 2);
+                    y = chart.area('y') + (chart.area('height') / 2 - total_height / 2);
                 } else if (widget.align == "end") {
-                    y = chart.y2() - total_height;
+                    y = chart.area('y2') - total_height;
                 }
             } 
             

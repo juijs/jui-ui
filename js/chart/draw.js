@@ -8,8 +8,8 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
         function setupOptions(options, defOpts) {
             var exceptOpts = [
-                    "type", "target", "index", "colors", // only brush
-                    "x", "y", "x1", "y1", "c", "dist" // only grid
+                    "orient", "x", "y", "c",   // axis
+                    "type", "target", "index", "colors", "axis" // only brush
                 ],
                 defOptKeys = [],
                 optKeys = [];
@@ -68,7 +68,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
-                    obj.translate(this.chart.x(), this.chart.y());
+                    obj.translate(this.chart.area('x'), this.chart.area('y'));
                 }
             }
 
