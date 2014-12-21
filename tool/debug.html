@@ -91,7 +91,7 @@ function juiSetTypeCount() {
 	    counts = {};
 
 	for(var i = 0; i < types.length; i++) {
-		var uiList = p_jui.get(types[i]);
+		var uiList = p_jui.get(types[i].type);
 
 		counts[types[i].type] = {
 			caller: uiList.length,
@@ -99,16 +99,10 @@ function juiSetTypeCount() {
 		}
 
 		for(var j = 0; j < uiList.length; j++) {
-			counts[types[i]].obj += uiList[j].length;
+			counts[types[i].type].obj += uiList[j].length;
 		}
 	}
 
-	$("#mng_sum_table_type").html(
-		template($("#tpl_sum_type").html(), { counts: counts })
-	);
-}
-
-function juiSetUiInfo() {
 	$("#mng_sum_table_type").html(
 		template($("#tpl_sum_type").html(), { counts: counts })
 	);
@@ -301,16 +295,20 @@ h3 {
 			<thead>
 				<tr>
 					<! for(var key in counts) { !>
-					<th><!= key !></th>
+						<! if(counts[key].caller > 0) { !>
+						<th><!= key !></th>
+						<! } !>
 					<! } !>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<! for(var key in counts) { !>
-					<td>
-						<!= counts[key].caller !>, <!= counts[key].obj !>
-					</td>
+						<! if(counts[key].caller > 0) { !>
+						<td>
+							<!= counts[key].caller !>, <!= counts[key].obj !>
+						</td>
+						<! } !>
 					<! } !>
 				</tr>
 			</tbody>
