@@ -11,13 +11,32 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		this.add = function(uiIns) {
 			instances.push(uiIns);
 		}
+
+        this.emit = function(key, type, args) {
+            var targets = [];
+
+            for(var i = 0; i < instances.length; i++) {
+                var uiSet = instances[i];
+
+                if(key == uiSet.selector || key == uiSet.type) {
+                    targets.push(uiSet);
+                }
+            }
+
+            for(var i = 0; i < targets.length; i++) {
+                var uiSet = targets[i];
+
+                for(var j = 0; j < uiSet.length; j++) {
+                    uiSet[j].emit(type, args);
+                }
+            }
+        }
 		
 		this.get = function(key) {
-			var result = [];
-
 			if(_.typeCheck("integer", key)) {
 				return instances[key];
 			} else if(_.typeCheck("string", key)) {
+                // 셀렉터 객체 검색
 				for(var i = 0; i < instances.length; i++) {
                     var uiSet = instances[i];
 
@@ -26,6 +45,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                     }
 				}
 
+                // 모듈 객체 검색
+                var result = [];
                 for(var i = 0; i < instances.length; i++) {
                     var uiSet = instances[i];
 
@@ -33,9 +54,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                         result.push(uiSet);
                     }
                 }
-			}
 
-            return result;
+                return result;
+			}
 		}
 		
 		this.getAll = function() {
@@ -314,6 +335,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
          */
         this.emit = function(type, args) {
+            if(typeof(type) != "string") return;
             var result;
 
             for(var i = 0; i < this.event.length; i++) {
