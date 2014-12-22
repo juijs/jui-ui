@@ -266,7 +266,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
         this.getOptions = function(options) {
             return $.extend({
-                axis: 0
+                // 공통 옵션 추가 영역
             }, options);
         }
 	}

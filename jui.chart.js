@@ -3681,26 +3681,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         function drawBefore(self) {
-            var target = [];
-
             _axis = _.deepClone(_options.axis);
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
-
-            for(var i = 0;  i < _axis.length; i ++) {
-                setMaxValue(_axis[i]);
-            }
-
-            // 브러쉬 타겟 설정
-            for(var i = 0; i < _brush.length; i++) {
-                var b = _brush[i];
-                if(!b.target) {
-                    b.target = _.deepClone(_axis[b.axis].series);
-                } else if(typeof b.target == "string") {
-                    b.target = [ b.target ];
-                }
-            }
 
             // 해쉬 코드 초기화
             _hash = {};
@@ -3820,7 +3804,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 var axis = _axis[key];
 
                 // set panel
-                savePanel(caculatePanel(axis.area || {left : 0, top : 0 , width : _area.width, height : _area.height }));
+                savePanel(caculatePanel(axis.area || { x: 0, y: 0 , width: _area.width, height: _area.height }));
 
                 // set data
                 saveData(axis.data);
@@ -3836,6 +3820,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 restoreData();
                 restorePanel();
+
+                // 시리즈 구하기
+                setMaxValue(axis);
             }
         }
 
@@ -3850,13 +3837,28 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart." + type + "." + draws[i].type);
+                    var Obj = jui.include("chart." + type + "." + draws[i].type),
+                        axisIndex = draws[i].axis || 0;
 
-                    console.log(_axis);
+                    // 브러쉬 타겟 설정
+                    if(type == "brush") {
+                        if(!draws[i].target) {
+                            var target = [];
 
-                    // 그리드 축 설정
-                    draws[i].axis  = draws[i].axis || 0;
-                    setGridAxis(draws[i], type);
+                            for(var key in _axis[axisIndex].series) {
+                                target.push(key);
+                            }
+
+                            draws[i].target = target;
+                        } else if(typeof draws[i].target == "string") {
+                            draws[i].target = [ draws[i].target ];
+                        }
+                    }
+
+                    // 브러쉬&위젯 축 설정
+                    draws[i].x = _axis[axisIndex].xScale;
+                    draws[i].y = _axis[axisIndex].yScale;
+                    draws[i].c = _axis[axisIndex].cScale;
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
@@ -3872,7 +3874,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                             return;
                         }
 
-                        saveData(_axis[draws[i].axis].data);
+                        saveData(_axis[axisIndex].data);
 
                         var elem = draw.render();
                         if(!draw.isRender()) {
@@ -3881,27 +3883,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                         restoreData();
                     } else {
-
-                        saveData(_axis[draws[i].axis].data);
+                        saveData(_axis[axisIndex].data);
                         draw.render();
                         restoreData();
-
                     }
                 }
             }
-        }
-
-        /**
-         * 브러쉬와 위젯의 그리드 객체 설정
-         *
-         * @param draw
-         * @param drawObj
-         */
-        function setGridAxis(draw) {
-
-            draw.x = _axis[draw.axis || 0].xScale;
-            draw.y = _axis[draw.axis || 0].yScale;
-            draw.c = _axis[draw.axis || 0].cScale;
         }
 
         function setChartEvent(self) {

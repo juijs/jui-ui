@@ -23,7 +23,7 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            grid : {
+            axis : {
 
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -33,16 +33,10 @@
                 {
                     type : 'range',
                     target : [ "apple", "ms", "oracle" ],
-                    step : 10,
-                    format : function(value) {
-                        if(value < 5) {
-                            return value;
-                        }
-
-                        //return value;
-                    }
-                }
-
+                    step : 10
+                },
+                //area : { x : 0, y : 0, width : '100%', height : '100%' },
+                data : data
             },
             brush : [
                 {
@@ -51,10 +45,6 @@
                     activeEvent : "click",
                     active: "ms"
                 }
-            ],
-            widget : [
-                //{ type : "tooltip", brush : 1 }
-                { type : "legend", filter : true }
             ],
             event : {
                 "legend.filter": function(brush) {
@@ -66,7 +56,7 @@
             }
         });
 
-        c.update(data);
+        c.render();
 	})
 </script>
 
