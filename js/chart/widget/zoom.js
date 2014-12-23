@@ -127,7 +127,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         }
                     });
 
-                }).translate(chart.x(), chart.area('y'));
+                }).translate(chart.area('x'), chart.area('y'));
 
                 setDragEvent(self, thumb, bg);
             });

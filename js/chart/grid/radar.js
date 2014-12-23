@@ -102,7 +102,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			// center
 			var w = min / 2,
-				centerX = chart.x() + width / 2,
+				centerX = chart.area('x') + width / 2,
 				centerY = chart.area('y') + height / 2;
 
 			var startY = -w,

@@ -152,14 +152,14 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var y = (widget.position == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
                 
                 if (widget.align == "start") {
-                    x = chart.x();
+                    x = chart.area('x');
                 } else if (widget.align == "center") {
-                    x = chart.x() + (chart.area('width') / 2- total_width / 2);
+                    x = chart.area('x') + (chart.area('width') / 2- total_width / 2);
                 } else if (widget.align == "end") {
                     x = chart.area('x2') - total_width;
                 }
             } else {
-                var x = (widget.position == "left") ? chart.x() - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.position == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
                     y = chart.area('y');

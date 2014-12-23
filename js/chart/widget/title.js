@@ -13,10 +13,10 @@ jui.define("chart.widget.title", [], function() {
             }
 
             if (widget.align == "center") {
-                x = chart.x() + chart.area('width')/2;
+                x = chart.area('x') + chart.area('width')/2;
                 anchor = "middle";
             } else if (widget.align == "start") {
-                x = chart.x();
+                x = chart.area('x');
                 anchor = "start";
             } else {
                 x = chart.area('x2');

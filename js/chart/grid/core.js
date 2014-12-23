@@ -337,6 +337,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				step: 10,
 				min: 0,
 				max: 0,
+				dist : 0,
+				extend : 0,
 				axis : false,
 				reverse: false,
 				key: null,

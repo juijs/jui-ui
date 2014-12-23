@@ -16,19 +16,19 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { yellow : 46, red : 15, black : 180, blue : 10 },
-                { yellow : 46, red : 150, black : 18, blue : 10 },
-            ],
+            axis : {
+                data : [
+                    { yellow : 46, red : 15, black : 180, blue : 10 },
+                    { yellow : 46, red : 150, black : 18, blue : 10 },
+                ],
+                c : { type : "overlap" }
+
+            },
             series : {
                 yellow : { text : "노랑" },
                 red : { text : "빨강" },
                 black : { text : "검정" },
                 blue : { text : "파랑" }
-            },
-
-            grid : {
-              c : { type : "overlap" }
             },
 
             brush : [{
@@ -39,7 +39,7 @@
             }, {
                 type : "tooltip"
             }]
-        });
+        }).render();
 	})
 </script>
 

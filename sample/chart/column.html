@@ -124,9 +124,9 @@
         c2 = chart("#chart,#chart2", {
             width: "100%",
             height : 400,
-            grid : {
-
-                x1 : {
+            axis : {
+                x : {
+                    orient : 'top',
                     //type : "block",  // default type is block
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
@@ -144,7 +144,6 @@
             },
             brush : [{
                 type : 'column',
-                x1 : 0,
                 target : ['name','value'],
                 display : "max",
                 active : 2,

@@ -16,14 +16,13 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { name : 2, value : 15 },
-                { name : -32, value : 6 },
-                { name : 8, value : 10 },
-                { name : 18, value : 5 },
-            ],
-            grid : {
-
+            axis : [{
+                data : [
+                    { name : 2, value : 15 },
+                    { name : -32, value : 6 },
+                    { name : 8, value : 10 },
+                    { name : 18, value : 5 },
+                ],
                 x : {
 
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -35,7 +34,7 @@
                     step : 10,
                     line : true
                 }
-            },
+            }],
             series : {
                 name : { text : "이름" },
                 value : { text : "값" }

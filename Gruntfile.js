@@ -131,6 +131,9 @@ module.exports = function(grunt) {
                 src : base_src.concat(ui_src, chart_src),
                 dest : "jui.js"
             },
+
+
+
             // jui all 
             chart : {
                 src : base_src.concat(chart_src),

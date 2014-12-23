@@ -17,9 +17,11 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { yellow : 46, red : 15, black : 18, blue : 10 }
-            ],
+            axis : [{
+                data : [
+                    { yellow : 46, red : 15, black : 18, blue : 10 }
+                ]
+            }],
             series : {
                 yellow : { text : "노랑" },
                 red : { text : "빨강" },
@@ -34,7 +36,7 @@
             }, {
                 type : "tooltip"
             }]
-        });
+        }).render();
 	})
 </script>
 

@@ -1,7 +1,7 @@
 jui.define("chart.grid.table", [  ], function() {
 
     var TableGrid = function(orient, chart, grid) {
-        var start, size, rowUnit, columnUnit, outerPadding ;
+        var start, size, rowUnit, columnUnit, outerPadding, row, column ;
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -51,8 +51,8 @@ jui.define("chart.grid.table", [  ], function() {
                 size = getArrayValue(grid.size, chart);
             }
 
-            var row = grid.row,
-                column = grid.column;
+            row = grid.row;
+            column = grid.column;
 
             columnUnit = size[0] / column;
             rowUnit = size[1] / row;

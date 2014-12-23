@@ -12,17 +12,19 @@
 <script>
     jui.ready([ "chart.builder" ], function(chart) {
 
+        var dataSource = [
+            { name : 2, value : 15 },
+            { name : 5, value : 11 },
+            { name : 8, value : 10 },
+            { name : 1, value : 12 },
+        ];
+
         chart("#chart", {
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { name : 2, value : 15 },
-                { name : 5, value : 11 },
-                { name : 8, value : 10 },
-                { name : 1, value : 12 },
-            ],
-            grid : {
+            axis : [{
+                data : dataSource,
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
@@ -31,24 +33,31 @@
                     type : 'range',
                     target : [ "name", "value" ],
                     step : 10
+                }
+            },{
+                data : dataSource,
+                x : {
+                    extend : 0,
+                    hide :true
                 },
-                y1 : {
+                y : {
+                    orient : 'right',
                     type : "range",
                     target : function(data) {
                         return data.name + data.value + 10;
                     },
                     step : 10
                 }
-            },
+            }],
             series : {
                 name : { text : "이름" },
                 value : { text : "값"}
             },
             brush : [
                 { type : 'line', target : "name", colors : [ "#7977C2" ] },
-                { type : 'line', target : "value", y1 : 0, colors : [ "#7BBAE7" ]   },
+                { type : 'line', target : "value", axis : 1, colors : [ "#7BBAE7" ]   },
                 { type : 'scatter', target : "name", colors : [ "#7977C2" ], size : 7 },
-                { type : 'scatter', target : "value", y1 : 0, colors : [ "#7BBAE7" ], size : 7 }
+                { type : 'scatter', target : "value", axis: 1, colors : [ "#7BBAE7" ], size : 7 }
             ],
             widget : {
                 type : "tooltip",

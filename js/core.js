@@ -582,10 +582,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 }
 
                 list[index] = uiObj;
+
+                this.jui = uiObj;
             });
 
             // UIManager에 데이터 입력
             UIManager.add(new UICoreSet(UI.type, selector, options, list));
+
+
 
             // 객체가 없을 경우에는 null을 반환 (기존에는 빈 배열을 반환)
             if(list.length == 0) {

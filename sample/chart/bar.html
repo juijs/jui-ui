@@ -16,28 +16,27 @@
             width: 400,
             height : 400,
             theme : "gradient",
-            data : [
-                { name : 2, value : 15 },
-                { name : -15, value : -35 },
-                { name : 8, value : 10 },
-                { name : 18, value : 5 }
-            ],
-            grid : {
-                y1 : {
-                    start : "50%",
-                    size : "50%",
-
-                    domain : [ "week1", "week2", "week3", "week4" ],
-                    color : "#22bbcc"
-                },
-                x : {
-                    start : "50%",
-                    size : "50%",
-                    type : 'range',
-                    target : function(d) { return d.name ; },
-                    step : 10
+            axis : [
+                {
+                    data : [
+                        { name : 2, value : 15 },
+                        { name : -15, value : -35 },
+                        { name : 8, value : 10 },
+                        { name : 18, value : 5 }
+                    ],
+                    y : {
+                        orient : 'right',
+                        domain : [ "week1", "week2", "week3", "week4" ],
+                        color : "#22bbcc"
+                    },
+                    x : {
+                        type : 'range',
+                        target : function(d) { return d.name ; },
+                        step : 10
+                    }
                 }
-            },
+
+            ],
             widget : [
             	{ type : 'title' },
             	{ type : 'legend' },
@@ -56,7 +55,7 @@
                 barBorderColor : "black",
                 barBorderOpacity : 0.3
             }
-        });
+        }).render();
 	})
 </script>
 

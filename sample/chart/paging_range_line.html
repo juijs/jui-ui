@@ -31,10 +31,10 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : data,
-            //bufferCount : 5,
-            grid : {
 
+            //bufferCount : 5,
+            axis : {
+                data : data,
                 x : {
                     type : "date",  // default type is block
                     //domain : [ start, end ],
@@ -66,7 +66,7 @@
                 //smooth : true,
                 target : ["name", "name2"]
             }
-        });
+        }).render();
 	})
 </script>
 

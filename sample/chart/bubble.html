@@ -17,13 +17,13 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { name : 2, value : 15 },
-                { name : 10, value : 6 },
-                { name : 8, value : 10 },
-                { name : 18, value : 5 },
-            ],
-            grid : {
+            axis : [{
+                data : [
+                    { name : 2, value : 15 },
+                    { name : 10, value : 6 },
+                    { name : 8, value : 10 },
+                    { name : 18, value : 5 },
+                ],
                 x : {
                     //type : "block",  // default type is block
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -34,7 +34,7 @@
                     target : [ "name", "value" ],
                     step : 10
                 }
-            },
+            }],
             series : {
                 name : { text : "test" },
                 value : { text : "test" }
@@ -51,7 +51,7 @@
                     console.log(obj);
                 }
             }
-        });
+        }).render();
 	})
 </script>
 

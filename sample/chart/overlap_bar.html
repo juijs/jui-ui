@@ -15,18 +15,19 @@
         chart("#chart", {
             width : 800,
             height : 600,
-            data : [
-                { quarter : "1Q", samsung : 300, apple : 450, google : 430, facebook: 350 },
-                { quarter : "2Q", samsung : 200, apple : 430, google : 410, facebook: 280 },
-                { quarter : "3Q", samsung : 190, apple : 360, google : 380, facebook: 320 },
-                { quarter : "4Q", samsung : 260, apple : 470, google : 350, facebook: 340 }
-            ],
-            grid : {
+            axis : {
+                data : [
+                    { quarter : "1Q", samsung : 300, apple : 450, google : 430, facebook: 350 },
+                    { quarter : "2Q", samsung : 200, apple : 430, google : 410, facebook: 280 },
+                    { quarter : "3Q", samsung : 190, apple : 360, google : 380, facebook: 320 },
+                    { quarter : "4Q", samsung : 260, apple : 470, google : 350, facebook: 340 }
+                ],
                 y : {
                     target : "quarter",
                     line : true
                 },
-                x1 : {
+                x : {
+                    orient : 'top',
                     type : "range",
                     step : 10,
                     line : true,
@@ -47,7 +48,7 @@
                 { type : "tooltip", position: "right" },
                 { type : "legend", align: "end" }
             ]
-        });
+        }).render();
 
     })
 </script>

@@ -70,7 +70,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         this.drawBefore = function() {
             var opts = chart.options;
 
-			dataLength =  opts.data.length; 
+			dataLength =  chart.data().length;
 			bufferCount = opts.bufferCount;
 
 			piece = chart.area('width') / bufferCount;
@@ -101,7 +101,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 // 차트 스크롤 이벤트
                 setScrollEvent(self, thumb);
 
-            }).translate(chart.x(), chart.area('y2'));
+            }).translate(chart.area('x'), chart.area('y2'));
         }
 
         this.drawSetup = function() {

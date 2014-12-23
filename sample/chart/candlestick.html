@@ -42,10 +42,10 @@
             width: 600,
             height : 400,
             theme : "gradient",
-            data : dataSource,
             bufferCount : 10,
             shiftCount : 1,
-            grid : {
+            axis : [{
+                data : dataSource,
                 x : {
                     type : "block",  // default type is block
                     target : 'date',
@@ -58,9 +58,11 @@
                     type : 'range',
                     domain: [ 20, 30 ],
                     step: 5,
-                    line : true 
+                    line : true
                 }
-            },
+            }
+
+            ],
             series : {
                 l: {
                     type: "low",

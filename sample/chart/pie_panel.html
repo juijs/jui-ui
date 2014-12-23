@@ -16,9 +16,7 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { yellow : 46, red : 15, black : 18, blue : 10 }
-            ],
+
             series : {
                 yellow : { text : "노랑" },
                 red : { text : "빨강" },
@@ -26,9 +24,12 @@
                 blue : { text : "파랑" }
             },
 
-            grid : [{
-              c : { type : "panel", start : '50%', size : '50%' }
-            }],
+            axis : {
+              c : { type : "panel", start : '50%', size : '50%' },
+                data : [
+                    { yellow : 46, red : 15, black : 18, blue : 10 }
+                ]
+            },
 
             brush : [{
                 type : "pie"
@@ -38,7 +39,7 @@
             }, {
                 type : "tooltip"
             }]
-        });
+        }).render();
 	})
 </script>
 

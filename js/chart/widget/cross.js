@@ -78,7 +78,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         });
                     }).translate(0, chart.area('height') + ta);
                 }
-            }).translate(chart.x(), chart.area('y'));
+            }).translate(chart.area('x'), chart.area('y'));
         }
 
         this.draw = function() {

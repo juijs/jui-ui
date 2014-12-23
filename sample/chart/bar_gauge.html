@@ -19,14 +19,16 @@
             padding : {
                 top : 0
             },
-            data : [
-                { title : "OPTION 1", value : 75 },
-                { title : "OPTION 2", value : 68 },
-                { title : "OPTION 3", value : 60 },
-                { title : "OPTION 4", value : 70 },
-                { title : "OPTION 5", value : 20 },
-                { title : "OPTION 6", value : 20 },
-            ],
+            axis : {
+                data : [
+                    { title : "OPTION 1", value : 75 },
+                    { title : "OPTION 2", value : 68 },
+                    { title : "OPTION 3", value : 60 },
+                    { title : "OPTION 4", value : 70 },
+                    { title : "OPTION 5", value : 20 },
+                    { title : "OPTION 6", value : 20 },
+                ]
+            },
             brush : [{
                 type : 'bargauge',
                 target : "value",
@@ -37,7 +39,7 @@
             widget : {
                 type : "tooltip"
             }
-        });
+        }).render();
 	})
 </script>
 
