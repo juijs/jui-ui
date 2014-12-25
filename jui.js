@@ -10084,8 +10084,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _chart.y2 = _chart.y + _chart.height;
 
             _area = _chart;
-
-            console.log(_area);
         }
 
         function savePanel(panel) {
@@ -10252,7 +10250,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 savePanel(caculatePanel(axis.area || { x: 0, y: 0 , width: _area.width, height: _area.height }));
 
                 // set data
-                if (axis.data) saveData(axis._data || axis.data);
+                if(axis.data) saveData(axis._data || axis.data);
 
                 if(axis.x) {
                     axis.x.orient = axis.x.orient || "bottom"
@@ -10264,7 +10262,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
                 if(axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
 
-                if (axis.data) restoreData();
+                if(axis.data) restoreData();
                 restorePanel();
 
                 // 시리즈 구하기
@@ -10425,9 +10423,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             function checkPosition(e) {
-
-                if (!_options.render) return;
-
                 var pos = $(self.root).offset(),
                     offsetX = e.pageX - pos.left,
                     offsetY = e.pageY - pos.top;
@@ -10438,9 +10433,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 e.chartY = offsetY - self.padding("top");
 
                 if(e.chartX < 0) return;
-                if(e.chartX > self.area('width')) return;
+                if(e.chartX > self.area("width")) return;
                 if(e.chartY < 0) return;
-                if(e.chartY > self.area('height')) return;
+                if(e.chartY > self.area("height")) return;
 
                 return true;
             }
@@ -10492,23 +10487,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function setThemeStyle() {
-            if (arguments.length == 1) {
+            if(arguments.length == 1) {
                 _theme = $.extend(_theme, arguments[0]);
             } else if (arguments.length == 2) {
                 _theme[arguments[0]] = arguments[1];
             }
         }
 
-        function checkDefaultOptions() {
-            var isGridUsed = false;
-
-        }
-
         function setDefaultOptions(self) {
             var opts = self.options;
 
             // UI 바인딩 설정
-            if (opts.bind) {
+            if(opts.bind) {
                 self.bindUI(opts.bind);
                 opts.bind = null;
             }
@@ -10517,7 +10507,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _options = _.deepClone(opts);
 
             // 패딩 옵션 설정
-            if (_options.padding == "empty") {
+            if(_options.padding == "empty") {
                 _padding = {
                     left: 0,
                     right: 0,
@@ -10553,9 +10543,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             // 기본 옵션 설정
             setDefaultOptions(this);
 
-            // 옵션 간의 유효성 체크
-            checkDefaultOptions();
-
             // 차트 테마 설정 (+옵션 스타일)
             setThemeStyle($.extend(jui.include("chart.theme." + _options.theme), _options.style));
 
@@ -10566,7 +10553,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 데이터 업데이트 및 커스텀 이벤트 발생
-            //this.update();
+            this.update();
 
             // 차트 배경 이벤트
             setChartEvent(this);
@@ -10579,11 +10566,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          */
 
         this.area = function(key) {
-
             if(_panel) {
-              return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
+                return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
             } else {
-              return typeof _area[key] == 'undefined' ? _area : _area[key];
+                return typeof _area[key] == 'undefined' ? _area : _area[key];
             }
         }
 
@@ -10704,16 +10690,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {string} key
          *
          */
-        this.series = function(key, a) {
-            a = a || 0;
-
-            var _axis = this.axis(a);
+        this.series = function(key) {
+            var _axis = this.axis(_options.axisIndex);
 
             if(_axis.series[key]) {
-                obj = $.extend(_series[key], _.deepClone(_axis.series[key]));
+                return $.extend(_series[key], _.deepClone(_axis.series[key]));
             }
 
-            return obj;
+            return _series;
         }
 
         this.axis = function(key) {
@@ -10744,10 +10728,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {integer} index
          *
          */
-        this.data = function(index, field, a) {
-            a = a || 0;
-
-            var _data = _options.axis[a]._data || _options.axis[a].data || [];
+        this.data = function(index, field) {
+            var _data = _options.axis[_options.axisIndex].data || [];
 
             if(_data[index]) {
                 if(!_.typeCheck("undefined", field)) {
@@ -10846,15 +10828,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             // chart 영역 계산
             calculate(this);
 
-            console.log(_area);
-
             // chart 관련된 요소 draw
-            if (_initialize) {
-                drawBefore(this);
-            } else {
-                drawBefore(this);
-            }
-
+            drawBefore(this);
             drawDefs(this);
             drawAxis(this);
             drawBrush(this, "brush", isAll);
@@ -10877,20 +10852,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          * @param {array} data
          */
-        this.update = function(data, a) {
-            a = a || 0;
-            (_options.axis[a] || {}).data = data;
+        this.update = function(data) {
+            var axis = _options.axis[_options.axisIndex];
+
+            if(axis == null) return;
+            if(data) axis.data = data;
+
+            this.page(1);
         }
 
-        this.page = function(pNo, a) {
-            a = a || 0;
-            if (arguments.length == 0) {
+        this.page = function(pNo) {
+            if(arguments.length == 0) {
                 return _page - 1;
             }
 
-            var axis = _options.axis[a] || {};
-
-            var dataList = axis.data,
+            var axis = _options.axis[_options.axisIndex],
+                dataList = axis.data || [],
                 limit = _options.bufferCount,
                 maxPage = Math.ceil(dataList.length / limit);
 
@@ -10918,12 +10895,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
-        this.next = function(a) {
-            a = a || 0;
-
-            var axis = _options.axis[a] || {};
-
-            var dataList = axis.data,
+        this.next = function() {
+            var axis = _options.axis[_options.axisIndex],
+                dataList = axis.data || [],
                 limit = _options.bufferCount,
                 step = _options.shiftCount;
 
@@ -10939,11 +10913,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(_options.render) this.render();
         }
 
-        this.prev = function(a) {
-
-            var axis = _options.axis[a] || {};
-
-            var dataList = axis.data,
+        this.prev = function() {
+            var axis = _options.axis[_options.axisIndex],
+                dataList = axis.data || [],
                 limit = _options.bufferCount,
                 step = _options.shiftCount;
 
@@ -10958,9 +10930,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(_options.render) this.render();
         }
 
-        this.zoom = function(start, end, a) {
-            a = a || 0;
-
+        this.zoom = function(start, end) {
             if(arguments.length == 0) {
                 return {
                     start: _start,
@@ -10971,8 +10941,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(start == end)
                 return;
 
-            var axis = _options.axis[a] || {};
-            var dataList = axis.data;
+            var axis = _options.axis[_options.axisIndex],
+                dataList = axis.data || [];
 
             _end = (end > dataList.length) ? dataList.length : end;
             _start = (start < 0) ? 0 : start;
@@ -11080,6 +11050,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(_options.render) this.render(true);
         }
 
+        // 브러쉬와 동일한 구조
+        this.addAxis = function(axis) {
+            _options.axis.push(axis);
+            if(_options.render) this.render(true);
+        }
+
+        // 브러쉬와 동일한 구조
+        this.removeAxis = function(index) {
+            _options.axis.splice(index, 1);
+            if(_options.render) this.render(true);
+        }
+
+        // 브러쉬와 동일한 구조
+        this.updateAxis = function(index, axis) {
+            for(var key in axis) {
+                _options.axis[index][key] = axis[key];
+            }
+
+            if(_options.render) this.render(true);
+        }
+
         /**
          * 테마 변경 후 차트 렌더링
          *
@@ -11149,7 +11140,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             theme: "jennifer", // 기본 테마 jennifer
             style: {},
             series: {},
-            axis : null,
+            axis: null,
+            axisIndex: 0,
             brush: [],
             widget: [],
             data: [],
