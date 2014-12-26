@@ -437,15 +437,15 @@
         deepClone: function(obj) {
             var value = null;
 
-            if(this.typeCheck("array", obj)) {
+            if(obj instanceof Array) {
                 value = [];
 
                 for(var i = 0, len = obj.length; i < len; i++) {
                     value[i] = this.deepClone(obj[i]);
                 }
-            } else if(this.typeCheck("date", obj)) {
+            } else if(obj instanceof Date ) {
                 value = obj;
-            } else if(this.typeCheck("object", obj)) {
+            } else if(typeof obj == 'object') {
                 value = {};
 
                 for(var key in obj) {
@@ -3695,7 +3695,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         function drawBefore(self) {
-            _axis = _.deepClone(_options.axis);
+            _axis = _options.axis;
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -4270,7 +4270,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var _axis = this.axis(_options.axisIndex);
 
             if(_axis.series[key]) {
-                return $.extend(_series[key], _.deepClone(_axis.series[key]));
+                return $.extend(_series[key], _axis.series[key]);
             }
 
             return _series;
@@ -6070,6 +6070,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             var max = grid.max;
             var domain = grid.domain;
 
+            var dx = chart.padding('left');
+            var dy = chart.padding('top');
+
             return function(index, value) {
                 var rate = value / max;
 
@@ -6088,8 +6091,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
                 y = o.y;
 
                 return {
-                    x : cx + x,
-                    y : cy + y
+                    x : dx + cx + x,
+                    y : dy + cy + y
                 }
             }
         }
@@ -8670,6 +8673,48 @@ jui.define("chart.brush.scatter", [], function() {
     }
 
     return ScatterBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.scatterpath", [], function() {
+
+	var ScatterPathBrush = function() {
+
+        this.drawScatter = function(points) {
+            var width = height = this.brush.size;
+
+            var g = this.chart.svg.group();
+            var path = this.chart.svg.path({
+                fill : this.chart.color(0, this.brush),
+                stroke : this.chart.color(0, this.brush),
+                "stroke-width" : this.chart.theme("scatterBorderWidth")
+            });
+
+            for(var i = 0; i < points.length; i++) {
+                var target = this.chart.series(this.brush.target[i]),
+                    symbol = (!target.symbol) ? this.brush.symbol : target.symbol;
+              
+                for(var j = 0; j < points[i].x.length; j++) {
+                    path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
+                }
+            }
+
+            g.append(path);
+
+            return g;
+        }
+
+        this.draw = function() {
+            return this.drawScatter(this.getXY());
+        }
+
+        this.drawSetup = function() {
+            return this.getOptions({
+                symbol: "circle", // or triangle, rectangle, cross
+                size: 7
+            });
+        }
+	}
+
+	return ScatterPathBrush;
 }, "chart.brush.core");
 jui.define("chart.brush.bargauge", [], function() {
 

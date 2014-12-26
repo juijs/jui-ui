@@ -437,15 +437,15 @@
         deepClone: function(obj) {
             var value = null;
 
-            if(this.typeCheck("array", obj)) {
+            if(obj instanceof Array) {
                 value = [];
 
                 for(var i = 0, len = obj.length; i < len; i++) {
                     value[i] = this.deepClone(obj[i]);
                 }
-            } else if(this.typeCheck("date", obj)) {
+            } else if(obj instanceof Date ) {
                 value = obj;
-            } else if(this.typeCheck("object", obj)) {
+            } else if(typeof obj == 'object') {
                 value = {};
 
                 for(var key in obj) {

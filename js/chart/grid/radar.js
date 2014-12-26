@@ -64,6 +64,9 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             var max = grid.max;
             var domain = grid.domain;
 
+            var dx = chart.padding('left');
+            var dy = chart.padding('top');
+
             return function(index, value) {
                 var rate = value / max;
 
@@ -82,8 +85,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
                 y = o.y;
 
                 return {
-                    x : cx + x,
-                    y : cy + y
+                    x : dx + cx + x,
+                    y : dy + cy + y
                 }
             }
         }

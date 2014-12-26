@@ -681,7 +681,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var _axis = this.axis(_options.axisIndex);
 
             if(_axis.series[key]) {
-                return $.extend(_series[key], _.deepClone(_axis.series[key]));
+                return $.extend(_series[key], _axis.series[key]);
             }
 
             return _series;

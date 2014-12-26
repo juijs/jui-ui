@@ -71,6 +71,7 @@ module.exports = function(grunt) {
         "js/chart/brush/path.js",
         "js/chart/brush/pie.js",
         "js/chart/brush/scatter.js",
+        "js/chart/brush/scatterpath.js",
         "js/chart/brush/bargauge.js",
         "js/chart/brush/circlegauge.js",
         "js/chart/brush/fillgauge.js",
