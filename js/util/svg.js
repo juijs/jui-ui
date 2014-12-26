@@ -103,6 +103,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
+
+            if (typeof attr == 'string') {
+                return this.element.getAttribute(attr);
+            }
+
             for(var k in attr) {
                 this.attributes[k] = attr[k];
             }
@@ -244,8 +249,15 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
             return this;
         }
 
-        this.rotate = function() {
-            orders["rotate"] = "rotate(" + getStringArgs(arguments) + ")";
+        this.rotate = function(angle, x, y) {
+
+            if (arguments.length == 1) {
+                var str = angle;
+            } else if (arguments.length == 3) {
+                var str = angle + " " + x + "," + y;
+            }
+
+            orders["rotate"] = "rotate(" + str + ")";
             applyOrders(this);
 
             return this;

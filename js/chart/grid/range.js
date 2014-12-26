@@ -34,12 +34,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -78,12 +78,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain))
+				}, domain)))
 
 				g.append(axis);
 			}
@@ -124,12 +124,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				if (!grid.hideText) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 						x : -bar - 4,
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);
@@ -169,12 +169,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : bar + 4,
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}

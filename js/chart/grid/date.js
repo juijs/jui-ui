@@ -29,12 +29,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y2 : (grid.line) ? chart.area('height') : -bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -67,12 +67,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y2 : (grid.line) ? -chart.area('height') : bar
 				}));
 
-				group.append(chart.text({
+				group.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(group);
 			}
@@ -105,12 +105,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					x2 : (grid.line) ? chart.area('width') : -bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : -bar-2,
 					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -143,12 +143,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					x2 : (grid.line) ? -chart.area('width') : bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : bar + 4,
 					y : -bar,
 					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}

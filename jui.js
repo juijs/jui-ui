@@ -2591,6 +2591,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
+
+            if (typeof attr == 'string') {
+                return this.element.getAttribute(attr);
+            }
+
             for(var k in attr) {
                 this.attributes[k] = attr[k];
             }
@@ -2732,8 +2737,15 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
             return this;
         }
 
-        this.rotate = function() {
-            orders["rotate"] = "rotate(" + getStringArgs(arguments) + ")";
+        this.rotate = function(angle, x, y) {
+
+            if (arguments.length == 1) {
+                var str = angle;
+            } else if (arguments.length == 3) {
+                var str = angle + " " + x + "," + y;
+            }
+
+            orders["rotate"] = "rotate(" + str + ")";
             applyOrders(this);
 
             return this;
@@ -11931,6 +11943,25 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			};
 		}
 
+		this.getTextRotate = function(textElement) {
+			var rotate = this.grid.textRotate;
+
+			if (rotate == null) {
+				return textElement;
+			}
+
+			if (typeof rotate == 'function') {
+				rotate = rotate(textElement, this.chart, this.grid);
+			}
+
+			var x = textElement.attr("x");
+			var y = textElement.attr("y");
+
+			textElement.rotate(rotate, x, y);
+
+			return textElement;
+		}
+
 		/**
 		 * grid 의 실제 위치와 size 를 구함
 		 *
@@ -11946,8 +11977,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				max = (orient == "left" || orient == "right") ? height : width,
 				start = (grid.axis) ? axis : 0,
 				size = max;
-
-            console.log(chart.area('width'), chart.area('height'), chart.area('y'))
 
 			return {
 				start: start,
@@ -11974,7 +12003,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start: null,
 				size: null,
 				line: false,
-				format: null
+				format: null,
+				textRotate : null
 			}, options);
 		}
 	}
@@ -12013,11 +12043,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y2 : (grid.line) ? full_height : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12063,11 +12093,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y2 : (grid.line) ? -full_height : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : 20,
 					"text-anchor" : "middle"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12110,11 +12140,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : (grid.line) ? full_width : -this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12155,11 +12185,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : (grid.line) ? -chart.area('width') : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12182,8 +12212,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			grid = this.setBlockDomain(chart, grid);
 
 			var obj = this.getGridSize(chart, orient, grid);
-
-            console.log(obj);
 
 			// scale 설정
 			this.scale = UtilScale.ordinal().domain(grid.domain);
@@ -12258,12 +12286,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y2 : (grid.line) ? chart.area('height') : -bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12296,12 +12324,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					y2 : (grid.line) ? -chart.area('height') : bar
 				}));
 
-				group.append(chart.text({
+				group.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(group);
 			}
@@ -12334,12 +12362,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					x2 : (grid.line) ? chart.area('width') : -bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : -bar-2,
 					y : bar-2,
 					"text-anchor" : "end",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12372,12 +12400,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 					x2 : (grid.line) ? -chart.area('width') : bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : bar + 4,
 					y : -bar,
 					"text-anchor" : "start",
 					fill : chart.theme("gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12713,12 +12741,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12757,12 +12785,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain))
+				}, domain)))
 
 				g.append(axis);
 			}
@@ -12803,12 +12831,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				if (!grid.hideText) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 						x : -bar - 4,
 						y : bar,
 						"text-anchor" : "end",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);
@@ -12848,12 +12876,12 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : bar + 4,
 					y : bar,
 					"text-anchor" : "start",
 					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -12939,12 +12967,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				if (!isZero || (isZero && !this.hideZero)) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 						x : 0,
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
 						fill : chart.theme("gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);
@@ -12984,12 +13012,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				}));
 				
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 						x : 0,
 						y : -bar * 2,
 						"text-anchor" : "middle",
 						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);
@@ -13030,11 +13058,11 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				}));
 				
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 					  x : bar/2 + 4,
 					  y : bar-2,
 					  fill : chart.theme("gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);
@@ -13074,12 +13102,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				}));
 
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(chart.text({
+					axis.append(this.getTextRotate(chart.text({
 						x : -bar - 4,
 						y : bar-2,
 						"text-anchor" : "end",
 						fill : chart.theme("gridFontColor")
-					}, domain));
+					}, domain)));
 				}
 
 				g.append(axis);

@@ -30,11 +30,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y2 : (grid.line) ? full_height : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : -20,
 					"text-anchor" : "middle"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -80,11 +80,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					y2 : (grid.line) ? -full_height : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : 0,
 					y : 20,
 					"text-anchor" : "middle"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -127,11 +127,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : (grid.line) ? full_width : -this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : -this.bar - 4,
 					y : this.half_band,
 					"text-anchor" : "end"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -172,11 +172,11 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 					x2 : (grid.line) ? -chart.area('width') : this.bar
 				}));
 
-				axis.append(chart.text({
+				axis.append(this.getTextRotate(chart.text({
 					x : this.bar + 4,
 					y : this.half_band,
 					"text-anchor" : "start"
-				}, domain));
+				}, domain)));
 
 				g.append(axis);
 			}
@@ -199,8 +199,6 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			grid = this.setBlockDomain(chart, grid);
 
 			var obj = this.getGridSize(chart, orient, grid);
-
-            console.log(obj);
 
 			// scale 설정
 			this.scale = UtilScale.ordinal().domain(grid.domain);

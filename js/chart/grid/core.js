@@ -306,6 +306,25 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			};
 		}
 
+		this.getTextRotate = function(textElement) {
+			var rotate = this.grid.textRotate;
+
+			if (rotate == null) {
+				return textElement;
+			}
+
+			if (typeof rotate == 'function') {
+				rotate = rotate(textElement, this.chart, this.grid);
+			}
+
+			var x = textElement.attr("x");
+			var y = textElement.attr("y");
+
+			textElement.rotate(rotate, x, y);
+
+			return textElement;
+		}
+
 		/**
 		 * grid 의 실제 위치와 size 를 구함
 		 *
@@ -321,8 +340,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				max = (orient == "left" || orient == "right") ? height : width,
 				start = (grid.axis) ? axis : 0,
 				size = max;
-
-            console.log(chart.area('width'), chart.area('height'), chart.area('y'))
 
 			return {
 				start: start,
@@ -349,7 +366,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				start: null,
 				size: null,
 				line: false,
-				format: null
+				format: null,
+				textRotate : null
 			}, options);
 		}
 	}
