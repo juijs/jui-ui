@@ -434,8 +434,9 @@
 	        
 	        return clone;
 		},
-        deepClone: function(obj) {
+        deepClone: function(obj, emit) {
             var value = null;
+            emit = emit  || {};
 
             if(obj instanceof Array) {
                 value = [];
@@ -449,7 +450,11 @@
                 value = {};
 
                 for(var key in obj) {
-                    value[key] = this.deepClone(obj[key]);
+                    if (emit[key]) {
+                        value[key] = obj[key];
+                    }  else {
+                        value[key] = this.deepClone(obj[key]);
+                    }
                 }
             } else {
                 value = obj;

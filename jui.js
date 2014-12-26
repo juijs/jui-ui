@@ -434,8 +434,9 @@
 	        
 	        return clone;
 		},
-        deepClone: function(obj) {
+        deepClone: function(obj, emit) {
             var value = null;
+            emit = emit  || {};
 
             if(obj instanceof Array) {
                 value = [];
@@ -449,7 +450,11 @@
                 value = {};
 
                 for(var key in obj) {
-                    value[key] = this.deepClone(obj[key]);
+                    if (emit[key]) {
+                        value[key] = obj[key];
+                    }  else {
+                        value[key] = this.deepClone(obj[key]);
+                    }
                 }
             } else {
                 value = obj;
@@ -10132,7 +10137,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         function drawBefore(self) {
-            _axis = _options.axis;
+            _axis = _.deepClone(_options.axis, { data : true });
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -10513,7 +10518,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // 바인딩 옵션을 제외하고 클론
-            _options = _.deepClone(opts);
+            _options = _.deepClone(opts, { data : true });
 
             // 패딩 옵션 설정
             if(_options.padding == "empty") {
