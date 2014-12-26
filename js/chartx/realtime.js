@@ -5,18 +5,23 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             dataList = [];
 
         function runningChart(self) {
-            var domain = initDomain(self);
+            var opts = self.options,
+                domain = initDomain(self);
 
             for(var i = 0; i < dataList.length; i++) {
-                if (dataList[i][self.options.grid.key].getTime() <= domain[0].getTime()) {
+                if(dataList[i][opts.axis.key].getTime() <= domain[0].getTime()) {
                     dataList.splice(i, 1);
                 } else {
                     break;
                 }
             }
 
-            self.chart.options.grid.x.domain = domain;
-            self.chart.update(dataList);
+            self.chart.updateAxis(0, {
+                x: {
+                    domain: domain
+                },
+                data: dataList
+            });
         }
 
         function initDomain(self) {
@@ -28,7 +33,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "grid", "interval", "period" ];
+                excepts = [ "axis", "interval", "period" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -45,21 +50,21 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
             this.chart = builder(this.selector, $.extend(true, {
                 bufferCount : opts.period * 60,
-                grid : {
+                axis : {
                     x : {
                         type : "date",
                         domain : initDomain(this),
-                        step : [ time.minutes, opts.grid.xstep ],
+                        step : [ time.minutes, opts.axis.xstep ],
                         realtime : true,
-                        format : opts.grid.format,
-                        key : opts.grid.key,
-                        line : opts.grid.xline
+                        format : opts.axis.format,
+                        key : opts.axis.key,
+                        line : opts.axis.xline
                     },
                     y : {
                         type : "range",
-                        target : (opts.grid.target != null) ? opts.grid.target : target,
-                        step : opts.grid.ystep,
-                        line : opts.grid.yline
+                        target : (opts.axis.target != null) ? opts.axis.target : target,
+                        step : opts.axis.ystep,
+                        line : opts.axis.yline
                     }
                 }
             }, getOptions(this)));
@@ -70,7 +75,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             }
 
             // 그리드 러닝
-            this.start();
+            //this.start();
         }
 
         this.update = function(data) {
@@ -137,7 +142,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             widget : null,
 
             // grid (custom)
-            grid : {
+            axis : {
                 target : null,
                 format : "hh:mm",
                 key : "time",

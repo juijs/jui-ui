@@ -17,14 +17,8 @@
             width: 400,
             height : 400,
             theme : "pastel",
-            data : [
-                { name : [-20, 10], value : [-15, 10] },
-                { name : [10, 20], value : [6, 10] },
-                { name : [30, 40], value : [50, 90] },
-                { name : [18, 55], value : [90, 97] }
-            ],
-            grid : {
-                x1 : {
+            axis : {
+                x : {
                     //type : "block",  // default type is block
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
@@ -33,8 +27,15 @@
                     type : 'range',
                     target : ['name', 'value'],
                     step : 10,
-                    line : true
-                }
+                    line : true,
+                    orient : "right"
+                },
+                data : [
+                    { name : [-20, 10], value : [-15, 10] },
+                    { name : [10, 20], value : [6, 10] },
+                    { name : [30, 40], value : [50, 90] },
+                    { name : [18, 55], value : [90, 97] }
+                ]
             },
             series : {
                 name : { text : "이름" },

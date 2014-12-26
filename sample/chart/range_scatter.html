@@ -33,10 +33,8 @@
                 width: 400,
                 height : 400,
 	            theme : "jennifer",
-                data : data,
-                grid : {
-                    
-                    x : { 
+                axis : {
+                    x : {
                         type : "date",  // default type is block 
                         target : "value",
                         step : [time.hours, 1],
@@ -48,7 +46,8 @@
                         type : 'range', 
                         target : ["name", "name2"], 
                         step : 10
-                    }
+                    },
+                    data : data
                 },
                 series : {
                     name : {
@@ -70,7 +69,7 @@
                     type : 'zoom',
                     render : true
                 }
-            }).render();
+            });
     })
 </script>
 

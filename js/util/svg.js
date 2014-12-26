@@ -103,8 +103,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
-
-            if (typeof attr == 'string') {
+            if(typeof attr == "string") {
                 return this.element.getAttribute(attr);
             }
 

@@ -271,7 +271,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 
 		this.color  = function(theme) {
-
 			if (arguments.length == 3) {
 				return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme.apply(this.chart, arguments);
 			}
@@ -286,8 +285,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group({
-				"class" : ["grid", cls].join(" ")
-			})
+				"class" : [ "grid", cls ].join(" ")
+			});
 
 			// render axis
 			this[orient].call(this, chart, root);
@@ -313,8 +312,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				return textElement;
 			}
 
-			if (typeof rotate == 'function') {
-				rotate = rotate(textElement, this.chart, this.grid);
+			if (typeof rotate == "function") {
+				rotate = rotate.apply(this.chart, [ textElement ]);
 			}
 
 			var x = textElement.attr("x");

@@ -49,7 +49,7 @@
                 x : {
                     type : "block",  // default type is block
                     target : 'date',
-                    textRotate : function(chart, grid) { return -60; },
+                    textRotate : function(chart, grid) { console.log(this); return -20; },
                     format: function(d) {
                         return time.format(d, "MM-dd");
                     },
@@ -91,11 +91,9 @@
             }, {
                 type : "tooltip",
                 position : "bottom"
-            }],
-            render : false
+            }]
         });
 
-        c.render();
     })
 </script>
 

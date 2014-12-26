@@ -26,9 +26,8 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
-            data : data,
             padding : { right : 0 },
-            grid : {
+            axis : {
                 y : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true
@@ -38,7 +37,8 @@
                     reverse : true, 
                     target : "name",
                     step : 10
-                }
+                },
+                data : data
             },
             brush : {
                 type : 'bar',
@@ -47,9 +47,8 @@
         });
         
 		c2 = chart("#chart2", {
-            data : data,
             padding : { left : 0 },
-            grid : {
+            axis : {
                 y : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     line : true,
@@ -59,7 +58,8 @@
                     type : 'range',
                     target : "name",
                     step : 10
-                }
+                },
+                data : data
             },
             brush : {
                 type : 'bar',

@@ -38,9 +38,8 @@
         chart("#chart", {
             width: 800,
             height: 400,
-            data : today.data,
             bufferCount : today.data.length,
-            grid : {
+            axis : {
                 x : {
                     type : "date",
                     domain : [ today.start, today.end ],
@@ -54,7 +53,8 @@
                     target : function(d) {
                         return 600;
                     }
-                }
+                },
+                data : today.data,
             },
             brush : {
                 type : "splitline",

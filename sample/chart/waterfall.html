@@ -17,18 +17,7 @@
             theme: "gradient",
             width: 800,
             height : 400,
-            data : [
-                { name : "Start", value : 90 },
-                { name : "a", value : 105 },
-                { name : "b", value : 126 },
-                { name : "c", value : 89 },
-                { name : "d", value : 6 },
-                { name : "e", value : -30 },
-                { name : "f", value : 16 },
-                { name : "g", value : 107 },
-                { name : "end", value : 168 }
-            ],
-            grid : {
+            axis : {
                 x : {
                     target: "name"
                 },
@@ -36,7 +25,18 @@
                     type : "range",
                     step : 10,
                     target : "value"
-                }
+                },
+                data : [
+                    { name : "Start", value : 90 },
+                    { name : "a", value : 105 },
+                    { name : "b", value : 126 },
+                    { name : "c", value : 89 },
+                    { name : "d", value : 6 },
+                    { name : "e", value : -30 },
+                    { name : "f", value : 16 },
+                    { name : "g", value : 107 },
+                    { name : "end", value : 168 }
+                ]
             },
             brush : {
                 type : "waterfall",

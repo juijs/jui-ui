@@ -4,7 +4,7 @@ jui.define("chart.brush.path", [], function() {
 
 		this.draw = function() {
 			var g = chart.svg.group({
-				'class' : 'brush path'
+				"class" : "brush path"
 			});
 			
 			var data = chart.data(),
@@ -24,8 +24,8 @@ jui.define("chart.brush.path", [], function() {
 	
 				for (var i = 0; i < data_count; i++) {
 					var obj = brush.c(i, chart.data(i, brush.target[ti])),
-						x = obj.x - chart.area('x'),
-						y = obj.y - chart.area('y');
+						x = obj.x,
+						y = obj.y;
 	
 					if (i == 0) {
 						path.MoveTo(x, y);

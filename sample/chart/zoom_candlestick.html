@@ -42,10 +42,9 @@
             width: 1000,
             height : 400,
             theme : "jennifer",
-            data : dataSource,
             bufferCount : 100,
             shiftCount : 1,
-            grid : {
+            axis : {
                 x : {
                     type : "block",  // default type is block
                     target : 'date',
@@ -59,7 +58,8 @@
                     domain: [ 20, 30 ],
                     step: 5,
                     line : true 
-                }
+                },
+                data : dataSource,
             },
             series : {
                 l: {

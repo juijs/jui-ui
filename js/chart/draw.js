@@ -68,7 +68,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
-                    obj.translate(this.chart.area('x'), this.chart.area('y'));
+                    obj.translate(this.chart.area("x"), this.chart.area("y"));
                 }
             }
 

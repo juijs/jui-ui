@@ -42,8 +42,7 @@
     jui.ready([ "chart.builder", "chart.theme.pastel" ], function(chart, theme) {
         chart("#chart-female", {
             height : 400,
-            data : data,
-            grid : {
+            axis : {
                 y : {
                     target : "age",
                     hide : true
@@ -54,7 +53,8 @@
                     step : 10,
                     line : true,
                     reverse : true
-                }
+                },
+                data : data
             },
             widget : {
                 type : "legend"
@@ -68,8 +68,7 @@
 
         chart("#chart-male", {
             height : 400,
-            data : data,
-            grid : {
+            axis : {
                 y : {
                     target : "age"
                 },
@@ -78,7 +77,8 @@
                     target : "male",
                     step : 10,
                     line: true
-                }
+                },
+                data : data
             },
             widget : {
                 type : "legend"

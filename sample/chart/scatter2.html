@@ -17,13 +17,7 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { name : 2, value : 15, test : 20 },
-                { name : 15, value : 6, test : 20 },
-                { name : 8, value : 10, test : 20 },
-                { name : 18, value : 5, test : 20 }
-            ],
-            grid : {
+            axis : {
                 x : {
                     domain : [ "봄", "여름", "가을", "겨울" ],
                     line : true
@@ -32,7 +26,13 @@
                     type : 'range',
                     target : [ "name", "value", "test" ],
                     step : 10
-                }
+                },
+                data : [
+                    { name : 2, value : 15, test : 20 },
+                    { name : 15, value : 6, test : 20 },
+                    { name : 8, value : 10, test : 20 },
+                    { name : 18, value : 5, test : 20 }
+                ]
             },
             series : {
                 name : { text : "이름", symbol : "rectangle" },
@@ -41,12 +41,12 @@
             },
             brush : [{
                 type : 'scatter',
-                size : 10,
+                size : 10
                 //symbol: "rectangle"
             }],
             widget : [
                 { type: "tooltip", brush: 0 },
-                { type: "title", text : "Title", align : 'left', attr : { 'font-size' : '20pt' } },
+                { type: "title", text : "Title", align : 'left' },
                 { type : 'legend' }
             ],
             event : {
@@ -63,8 +63,6 @@
         c.on("click", function(obj, e) {
             console.log(2);
         });
-
-        c.render();
 	})
 </script>
 

@@ -90,7 +90,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function caculatePanel(a) {
-
             a.x = getValue(a.x, _area.width);
             a.y = getValue(a.y, _area.height);
             a.width = getValue(a.width, _area.width);
@@ -116,10 +115,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _hash = {};
         }
 
-        function setMaxValue(a) {
-            var _data = a.data;
-            if (!_data) return;
-            var _series = {} ;
+        function setMaxValue(axis) {
+            if (!axis.data) return;
+
+            var _series = {},
+                _data = axis.data;
 
             // 시리즈 데이터 구성
             for(var i = 0, len = _data.length; i < len; i++) {
@@ -158,8 +158,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 }
             }
 
-            a.series = _series;
-
+            axis.series = _series;
         }
 
         /**
@@ -235,7 +234,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 savePanel(caculatePanel(axis.area || { x: 0, y: 0 , width: _area.width, height: _area.height }));
 
                 // set data
-                if(axis.data) saveData(axis._data || axis.data);
+                if(axis.data) saveData(axis.data);
 
                 if(axis.x) {
                     axis.x.orient = axis.x.orient || "bottom"
@@ -267,13 +266,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
                     var Obj = jui.include("chart." + type + "." + draws[i].type),
-                        axisIndex = draws[i].axis || 0;
+                        axisIndex = draws[i].axis || _options.axisIndex;
 
                     // 브러쉬 타겟 설정
                     if(type == "brush") {
                         if(!draws[i].target) {
                             var target = [];
-
 
                             if (_axis[axisIndex]) {
                                 for(var key in _axis[axisIndex].series) {
@@ -308,18 +306,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                             return;
                         }
 
-                        if (_axis[axisIndex]) saveData(_options.axis[axisIndex]._data || _options.axis[axisIndex].data);
+                        if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
 
                         var elem = draw.render();
                         if(!draw.isRender()) {
                             self.svg.autoRender(elem, false);
                         }
 
-                        if (_axis[axisIndex]) restoreData();
+                        if(_axis[axisIndex]) restoreData();
                     } else {
-                        if (_axis[axisIndex]) saveData(_options.axis[axisIndex]._data || _options.axis[axisIndex].data);
+                        if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
                         draw.render();
-                        if (_axis[axisIndex]) restoreData();
+                        if(_axis[axisIndex]) restoreData();
                     }
                 }
             }
@@ -537,10 +535,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 height: _options.height
             });
 
-            // 데이터 업데이트 및 커스텀 이벤트 발생
-            this.update();
+            // 차트 기본 렌더링
+            if(_options.axis[_options.axisIndex]) {
+                this.update();
+            } else {
+                this.render();
+            }
 
-            // 차트 배경 이벤트
+            // 차트 이벤트 설정
             setChartEvent(this);
         }
 
@@ -714,17 +716,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
         this.data = function(index, field) {
-            var _data = _options.axis[_options.axisIndex].data || [];
-
-            if(_data[index]) {
+            if(_data && _data[index]) {
                 if(!_.typeCheck("undefined", field)) {
                     return _data[index][field];
                 }
 
-                return _data[index];
+                return _data[index]
             }
 
-            return _data;
+            return _data || [];
         }
 
         /**
@@ -839,20 +839,26 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          */
         this.update = function(data) {
             var axis = _options.axis[_options.axisIndex];
+            if(!axis) return;
 
-            if(axis == null) return;
-            if(data) axis.data = data;
+            if (data) {
+                axis.originData = data;
+            } else {
+                axis.originData = axis.data || [];
+            }
 
             this.page(1);
         }
 
         this.page = function(pNo) {
+            var axis = _options.axis[_options.axisIndex];
+            if(!axis) return;
+
             if(arguments.length == 0) {
                 return _page - 1;
             }
 
-            var axis = _options.axis[_options.axisIndex],
-                dataList = axis.data || [],
+            var dataList = axis.originData,
                 limit = _options.bufferCount,
                 maxPage = Math.ceil(dataList.length / limit);
 
@@ -873,16 +879,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(_end <= dataList.length) {
                 _start = (_start < 0) ? 0 : _start;
-                axis._data = dataList.slice(_start, _end);
+                axis.data = dataList.slice(_start, _end);
 
-                if(_options.render) this.render();
+                if(this.isRender()) this.render();
                 if(dataList.length > 0) _page++;
             }
         }
 
         this.next = function() {
-            var axis = _options.axis[_options.axisIndex],
-                dataList = axis.data || [],
+            var axis = _options.axis[_options.axisIndex];
+            if(!axis) return;
+
+            var dataList = axis.originData,
                 limit = _options.bufferCount,
                 step = _options.shiftCount;
 
@@ -893,14 +901,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _end = (isLimit) ? dataList.length : _start + limit;
             _start = (isLimit) ? dataList.length - limit : _start;
             _start = (_start < 0) ? 0 : _start;
-            axis._data = dataList.slice(_start, _end);
+            axis.data = dataList.slice(_start, _end);
 
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
         this.prev = function() {
-            var axis = _options.axis[_options.axisIndex],
-                dataList = axis.data || [],
+            var axis = _options.axis[_options.axisIndex];
+            if(!axis) return;
+
+            var dataList = axis.originData,
                 limit = _options.bufferCount,
                 step = _options.shiftCount;
 
@@ -910,12 +920,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             _end = (isLimit) ? limit : _start + limit;
             _start = (isLimit) ? 0 : _start;
-            axis._data = dataList.slice(_start, _end);
+            axis.data = dataList.slice(_start, _end);
 
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
         this.zoom = function(start, end) {
+            var axis = _options.axis[_options.axisIndex];
+            if(!axis) return;
+
             if(arguments.length == 0) {
                 return {
                     start: _start,
@@ -926,15 +939,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(start == end)
                 return;
 
-            var axis = _options.axis[_options.axisIndex],
-                dataList = axis.data || [];
+            var dataList = axis.originData;
 
             _end = (end > dataList.length) ? dataList.length : end;
             _start = (start < 0) ? 0 : start;
 
-            axis._data = dataList.slice(_start, _end);
+            axis.data = dataList.slice(_start, _end);
 
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
         /**
@@ -943,8 +955,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param csv
          */
         this.setCsv = function(csv) {
-            if(_options.axis != null) return;
-
             var chartFields = [],
                 csvFields = _options.csv,
                 csvNumber = _options.csvNumber;
@@ -968,8 +978,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param file
          */
         this.setCsvFile = function(file) {
-            if(_options.axis != null) return;
-
             var self = this;
 
             _.fileToCsv(file, function(csv) {
@@ -977,83 +985,57 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
         }
 
-        /**
-         * 브러쉬를 추가한 후 차트 렌더링
-         *
-         * @param brush
-         * @param isRender
-         */
         this.addBrush = function(brush) {
             _options.brush.push(brush);
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
-        /**
-         * 브러쉬를 삭제한 후 차트 렌더링
-         *
-         * @param index
-         * @param isRender
-         */
         this.removeBrush = function(index) {
             _options.brush.splice(index, 1);
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
-        /**
-         * 해당 인덱스의 브러쉬를 업데이트한 후 렌더링
-         *
-         * @param index
-         * @param brush
-         * @param isRender
-         */
         this.updateBrush = function(index, brush) {
             for(var key in brush) {
                 _options.brush[index][key] = brush[key];
             }
 
-            if(_options.render) this.render();
+            if(this.isRender()) this.render();
         }
 
-        // 브러쉬와 동일한 구조
         this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
-        // 브러쉬와 동일한 구조
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
-        // 브러쉬와 동일한 구조
         this.updateWidget = function(index, widget) {
             for(var key in widget) {
                 _options.widget[index][key] = widget[key];
             }
 
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
-        // 브러쉬와 동일한 구조
         this.addAxis = function(axis) {
             _options.axis.push(axis);
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
-        // 브러쉬와 동일한 구조
         this.removeAxis = function(index) {
             _options.axis.splice(index, 1);
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
-        // 브러쉬와 동일한 구조
         this.updateAxis = function(index, axis) {
-            for(var key in axis) {
-                _options.axis[index][key] = axis[key];
-            }
+            if(!_options.axis[index] || !axis) return;
 
-            if(_options.render) this.render(true);
+            $.extend(true, _options.axis[index], axis);
+            if(this.isRender()) this.render(true);
         }
 
         /**
@@ -1066,7 +1048,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));
-                if(_options.render) this.render(true);
+                if(this.isRender()) this.render(true);
             }
         }
 
@@ -1083,7 +1065,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             this.svg.size(_options.width, _options.height);
-            if(_options.render) this.render(true);
+            if(this.isRender()) this.render(true);
         }
 
         /**
@@ -1104,7 +1086,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {boolean}
          */
         this.isRender = function() {
-            return _options.render;
+            return (!_initialize) ? true : _options.render;
         }
     }
 
@@ -1125,10 +1107,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             theme: "jennifer", // 기본 테마 jennifer
             style: {},
             series: {},
-            axis: null,
-            axisIndex: 0,
             brush: [],
             widget: [],
+            axis: [],
+            axisIndex: 0,
             data: [],
             bind: null,
             format: null,

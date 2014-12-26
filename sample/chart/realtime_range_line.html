@@ -53,7 +53,7 @@
                     text : "날짜"
                 }
             },
-            grid : {
+            axis : {
                 key : "value"
             },
             brush : [{
@@ -61,6 +61,7 @@
                 target : [ "name", "name2" ]
             }],
             widget : [
+                    /*/
                 {
                     type : "title", text : 'Range Bubble Sample'
                 }, {
@@ -77,6 +78,7 @@
                 }, {
                     type : "tooltip"
                 }
+                /**/
 
             ],
             style : {
@@ -84,7 +86,7 @@
             }
         });
 
-        //c.update(getData(5));
+        c.update(getData(5));
     });
     
 

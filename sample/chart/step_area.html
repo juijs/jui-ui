@@ -16,13 +16,7 @@
             width: 400,
             height : 400,
             theme : "jennifer",
-            data : [
-                { name : 5, value : 8, test : 0 },
-                { name : 6, value : 9, test : 2 },
-                { name : 8, value : 12, test : 6 },
-                { name : 11, value : 14, test :9 }
-            ],
-            grid : {
+            axis : {
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
                     full: true,
@@ -32,7 +26,13 @@
                     type : 'range',
                     target : [ "name", "value", "test" ],
                     step : 10
-                }
+                },
+                data : [
+                    { name : 5, value : 8, test : 0 },
+                    { name : 6, value : 9, test : 2 },
+                    { name : 8, value : 12, test : 6 },
+                    { name : 11, value : 14, test :9 }
+                ]
             },
 
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
@@ -51,7 +51,7 @@
                 type : "scatter",
                 size : 10
             }]
-        }).render();
+        });
 	})
 </script>
 

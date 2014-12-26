@@ -68,15 +68,16 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var opts = chart.options;
+            var opts = chart.options,
+                axis = chart.axis(opts.axisIndex);
 
-			dataLength =  chart.data().length;
+			dataLength =  axis.originData.length;
 			bufferCount = opts.bufferCount;
 
-			piece = chart.area('width') / bufferCount;
+			piece = chart.area("width") / bufferCount;
 			totalWidth = piece * dataLength;
-			rate = totalWidth / chart.area('width');
-            thumbWidth = chart.area('width') * (bufferCount / dataLength) + 2;
+			rate = totalWidth / chart.area("width");
+            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
         }
 
         this.draw = function() {
@@ -84,7 +85,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
             return chart.svg.group({}, function() {
                 chart.svg.rect({
-                    width: chart.area('width'),
+                    width: chart.area("width"),
                     height: 7,
                     fill: chart.theme("scrollBackgroundColor")
                 });
@@ -101,7 +102,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 // 차트 스크롤 이벤트
                 setScrollEvent(self, thumb);
 
-            }).translate(chart.area('x'), chart.area('y2'));
+            }).translate(chart.area("x"), chart.area("y2"));
         }
 
         this.drawSetup = function() {

@@ -31,9 +31,7 @@
 				width: 400,
 				height : 400,
 	            theme : "jennifer",
-				data : data,
-				grid : {
-					
+				axis : {
 					y : {
 						type : "date",  // default type is block 
 						domain : [ start, end ],
@@ -48,7 +46,8 @@
 						target : ["name"], 
 						step : 10,
 						line : true
-					}
+					},
+					data : data
 				},
 				series : {
 					name : {
