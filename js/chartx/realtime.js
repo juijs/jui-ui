@@ -109,7 +109,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var self = this;
             interval = setInterval(function () {
                 runningChart(self);
-            }, this.interval * 1000);
+            }, this.options.interval * 1000);
         }
 
         this.stop = function() {

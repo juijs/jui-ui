@@ -65,20 +65,10 @@
                 }, {
                     type : "legend"
                 }, {
-                    type : "cross",
-                    format : function(d) {
-                        if(_.typeCheck("date", d)) {
-                            return _.dateFormat(d, "hh:mm:ss");
-                        } else {
-                            return Math.round(d);
-                        }
-                    }
-                }, {
                     type : "tooltip"
                 }
-
             ],
-            grid : {
+            axis : {
                 key : "value",
                 target : function(d) {
                     return d.name + 5;

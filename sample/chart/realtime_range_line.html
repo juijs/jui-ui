@@ -61,29 +61,23 @@
                 target : [ "name", "name2" ]
             }],
             widget : [
-                    /*/
                 {
                     type : "title", text : 'Range Bubble Sample'
                 }, {
                     type : "legend"
                 }, {
                     type : "cross",
-                    format : function(d) {
-                        if(_.typeCheck("date", d)) {
-                            return _.dateFormat(d, "hh:mm:ss");
-                        } else {
-                            return Math.round(d);
-                        }
+                    xFormat : function(d) {
+                        return _.dateFormat(d, "hh:mm:ss");
+                    },
+                    yFormat : function(d) {
+                        return Math.round(d);
+
                     }
                 }, {
                     type : "tooltip"
                 }
-                /**/
-
-            ],
-            style : {
-                //"tooltipBackgroundColor": "red"
-            }
+            ]
         });
 
         c.update(getData(5));

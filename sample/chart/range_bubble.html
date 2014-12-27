@@ -32,10 +32,8 @@
             width: 800,
             height : 800,
             theme : "jennifer",
-            data : data,
-            grid : {
-
-                x : [{
+            axis : {
+                x : {
                     type : "date",  // default type is block
                     domain : [ start, end ],
                     step : [time.hours, 1],
@@ -44,31 +42,13 @@
                     //line : true,
                     //start : 'center',
                     size : "50%"
-                },{
-                    type : "date",  // default type is block
-                    domain : [ start, end ],
-                    step : [time.hours, 3],
-                    format : "hh:mm",
-                    key: "value",
-                    //line : true,
-                    start : '60%',
-                    size : "40%"
-                }],
-                y : [{
+                },
+                y : {
                     type : 'range',
                     target : ["name", "name2"],
-                    step : 10,
-                    min : -100,
-                    //line : true,
-                    size : "50%"
-                },{
-                    type : 'range',
-                    target : ["name"],
-                    step : 10,
-                    //line : true,
-                    start : 'center',
-                    size : "40%"
-                }]
+                    step : 10
+                },
+                data : data
             },
             series : {
                 name : {
@@ -87,32 +67,9 @@
                 min : 1,
                 max : 50,
                 target : ["name", "name2"]
-            },{
-                type : 'bubble',
-                y : 1,
-                //smooth : true,
-                min : 1,
-                max : 25,
-                target : ["name"]
-            },{
-                type : 'bubble',
-                x : 1,
-                y : 1,
-                //smooth : true,
-                min : 1,
-                max : 2,
-                target : ["name"]
-            },{
-                type : 'bubble',
-                x : 1,
-                y : 0,
-                //smooth : true,
-                min : 1,
-                max : 5,
-                target : ["name2"]
             }],
             widget : [
-            	{ type : 'tooltip', position : 'top', brush : [0,1,2] },
+            	{ type : 'tooltip', position : 'top' },
             	{ type : 'title', text : 'Range Bubble Sample'},
             	{ type : 'legend' }
             ],

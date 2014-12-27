@@ -64,14 +64,13 @@
             width: 500,
             height : 500,
             theme : "jennifer",
-            bufferCount: 1000,
             event : {
                 render : function() {
                     years = {};
                     months = {};
                 }
             },
-            grid : {
+            axis : {
                 x : {
                     type : "block",  // default type is block
                     target : "date",
@@ -100,7 +99,8 @@
                     target: [ "open", "high", "low", "close" ],
                     step: 5,
                     line : true
-                }
+                },
+                buffer: 1000
             },
             series : {
                 low: {

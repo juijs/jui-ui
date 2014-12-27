@@ -974,6 +974,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          *
          */
 
+        this.addAxis = function(axis) {
+            _options.axis.push(axis);
+            if(this.isRender()) this.render();
+        }
+        this.removeAxis = function(index) {
+            _options.axis.splice(index, 1);
+            if(this.isRender()) this.render();
+        }
+        this.updateAxis = function(index, axis) {
+            $.extend(true, _options.axis[index], axis);
+            if(this.isRender()) this.render();
+        }
+
         this.addBrush = function(brush) {
             _options.brush.push(brush);
             if(this.isRender()) this.render();
@@ -989,29 +1002,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.updateWidget = function(index, widget) {
             $.extend(_options.widget[index], widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
 
-        this.addAxis = function(axis) {
-            _options.axis.push(axis);
-            if(this.isRender()) this.render(true);
-        }
-        this.removeAxis = function(index) {
-            _options.axis.splice(index, 1);
-            if(this.isRender()) this.render(true);
-        }
-        this.updateAxis = function(index, axis) {
-            $.extend(true, _options.axis[index], axis);
-            if(this.isRender()) this.render(true);
-        }
 
         /**
          * 테마 변경 후 차트 렌더링
