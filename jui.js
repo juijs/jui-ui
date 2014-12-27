@@ -10060,8 +10060,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
      */
     var UI = function() {
         var _data = [], _tempData = [];
-        var _axis = [], _brush = [], _widget = [], _hash = {};
-        var _padding, _series, _area, _panel, _theme;
+        var _axis = [], _brush = [], _widget = [];
+        var _padding, _series, _area, _panel, _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         function getValue(value, max) {
@@ -10597,7 +10597,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
-
         /**
          * padding 옵션 리턴
          *
@@ -10612,6 +10611,48 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return _padding;
         }
 
+        /**
+         * draw 객체 반환
+         *
+         * @param key
+         */
+        this.draw = function(type, key) {
+            var obj = {
+                axis: _axis,
+                brush: _brush,
+                widget: _widget
+            };
+
+            if(obj[type][key]) {
+                return obj[type][key];
+            }
+
+            return obj[type] || obj;
+        }
+
+        /**
+         * series 객체 반환
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.series = function(key) {
+            var axis = this.draw("axis", _options.axisIndex);
+
+            if(axis.series[key]) {
+                return $.extend(_series[key], axis.series[key]);
+            }
+
+            return _series;
+        }
+
+        /**
+         * 브러쉬 컬러 관련 함수
+         *
+         * @param i
+         * @param brush
+         * @returns {*}
+         */
         this.color = function(i, brush) {
             var color;
 
@@ -10706,40 +10747,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 return _theme[val];
             }
-        }
-
-        this.series = function(key) {
-            var axis = this.axis(_options.axisIndex);
-
-            if(axis.series[key]) {
-                return $.extend(_series[key], axis.series[key]);
-            }
-
-            return _series;
-        }
-
-        this.axis = function(key) {
-            if(_axis[key]) {
-                return _axis[key];
-            }
-
-            return _axis;
-        }
-
-        this.brush = function(key) {
-            if(_brush[key]) {
-                return _brush[key];
-            }
-
-            return _brush;
-        }
-
-        this.widget = function(key) {
-            if(_widget[key]) {
-                return _widget[key];
-            }
-
-            return _widget;
         }
 
         /**
@@ -16503,8 +16510,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             var list = getBrushIndex(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
-                callback.prototype = this;
-                new callback(i, this.chart.brush(list[i]));
+                callback.apply(this, [ i, this.chart.draw("brush", list[i]) ]);
             }
         }
 
@@ -16513,7 +16519,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.brush(list[i]);
+                result[i] = this.chart.draw("brush", list[i]);
             }
 
             return result;
@@ -17028,7 +17034,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var axis = chart.axis(chart.options.axisIndex);
+            var axis = chart.draw("axis", chart.options.axisIndex);
 
 			dataLength =  axis.origin.length;
 			bufferCount = axis.buffer;
@@ -17146,7 +17152,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
-            axis = chart.axis(chart.options.axisIndex);
+            axis = chart.draw("axis", chart.options.axisIndex);
             count = (axis.data.length < axis.buffer && axis.data.length > 0) ? axis.data.length : axis.buffer;
             tick = chart.area("width") / count;
         }
@@ -17238,7 +17244,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xline = chart.svg.line({
                         x1: 0,
                         y1: 0,
-                        x2: chart.area('width'),
+                        x2: chart.area("width"),
                         y2: 0,
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),

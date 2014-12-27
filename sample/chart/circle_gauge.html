@@ -11,8 +11,7 @@
 
 <script>
     jui.ready([ "chart.builder" ], function(chart) {
-
-        var c = chart("#chart", {
+        c = chart("#chart", {
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -26,9 +25,6 @@
                 type : "tooltip"
             }
         });
-
-        c.brush(0).value = Math.round(Math.random() * 100) % 100
-        c.render();
 	})
 </script>
 

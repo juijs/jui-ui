@@ -73,7 +73,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
-            axis = chart.axis(chart.options.axisIndex);
+            axis = chart.draw("axis", chart.options.axisIndex);
             count = (axis.data.length < axis.buffer && axis.data.length > 0) ? axis.data.length : axis.buffer;
             tick = chart.area("width") / count;
         }

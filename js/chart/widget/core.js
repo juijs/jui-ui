@@ -61,8 +61,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
             var list = getBrushIndex(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
-                callback.prototype = this;
-                new callback(i, this.chart.brush(list[i]));
+                callback.apply(this, [ i, this.chart.draw("brush", list[i]) ]);
             }
         }
 
@@ -71,7 +70,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.brush(list[i]);
+                result[i] = this.chart.draw("brush", list[i]);
             }
 
             return result;

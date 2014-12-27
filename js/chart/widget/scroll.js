@@ -68,7 +68,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var axis = chart.axis(chart.options.axisIndex);
+            var axis = chart.draw("axis", chart.options.axisIndex);
 
 			dataLength =  axis.origin.length;
 			bufferCount = axis.buffer;
