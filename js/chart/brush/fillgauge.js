@@ -1,6 +1,6 @@
 jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
-	var FillGaugeBrush = function(chart, brush) {
+	var FillGaugeBrush = function(chart, axis, brush) {
         var self = this;
         var w, centerX, centerY, outerRadius, clipId;
         var rect;

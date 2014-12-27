@@ -1,4 +1,4 @@
-jui.define("chart.brush.core", [ "util.base" ], function(_) {
+jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 	var CoreBrush = function() {
 
         /**
@@ -99,7 +99,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             }
         }
         this.listData = function() {
-            return this.brush.axis.data;
+            return this.axis.data;
         }
         this.getData = function(index) {
             return this.listData()[index];

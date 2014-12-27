@@ -1,6 +1,6 @@
 jui.define("chart.brush.stackbar", [], function() {
 
-	var StackBarBrush = function(chart, brush) {
+	var StackBarBrush = function(chart, axis, brush) {
 		var g, series, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {

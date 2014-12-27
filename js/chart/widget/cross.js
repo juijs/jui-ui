@@ -1,6 +1,6 @@
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
-    var CrossWidget = function(chart, widget) {
+    var CrossWidget = function(chart, axis, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
         var g, xline, yline, xTooltip, yTooltip;

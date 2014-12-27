@@ -1,6 +1,6 @@
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
-	var StackGaugeBrush = function(chart, brush) {
+	var StackGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {

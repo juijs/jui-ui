@@ -1,6 +1,6 @@
 jui.define("chart.brush.equalizer", [], function() {
 
-    var EqualizerBrush = function(chart, brush) {
+    var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;
 
         this.drawBefore = function() {

@@ -1,6 +1,6 @@
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
-    var ScrollWidget = function(chart, widget) {
+    var ScrollWidget = function(chart, axis, widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
             bufferCount = 0,
@@ -68,11 +68,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var axis = chart.draw("axis", chart.options.axisIndex);
-
 			dataLength =  axis.origin.length;
 			bufferCount = axis.buffer;
-
 			piece = chart.area("width") / bufferCount;
 			totalWidth = piece * dataLength;
 			rate = totalWidth / chart.area("width");

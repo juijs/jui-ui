@@ -1,6 +1,6 @@
 jui.define("chart.brush.rangebar", [], function() {
 
-	var RangeBarBrush = function(chart, brush) {
+	var RangeBarBrush = function(chart, axis, brush) {
 		var g, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;

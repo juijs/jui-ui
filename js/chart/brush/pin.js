@@ -1,5 +1,5 @@
 jui.define("chart.brush.pin", [], function() {
-    var PinBrush = function(chart, brush) {
+    var PinBrush = function(chart, axis, brush) {
         var g;
         var size = 6;
 

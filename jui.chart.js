@@ -3510,8 +3510,8 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
         function setupOptions(options, defOpts) {
             var exceptOpts = [
-                    "orient", "x", "y", "c",   // axis
-                    "type", "target", "index", "colors", "axis" // only brush
+                    "extend", "dist", "orient", "x", "y", "c",   // axis
+                    "type", "target", "index", "colors", "axis" // common
                 ],
                 defOptKeys = [],
                 optKeys = [];
@@ -3786,10 +3786,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             function drawAxisType(axis, k, chart) {
                 var grid = axis[k];
 
-                // 엑시스 설정
-                grid.axis = axis;
-
-                if (typeof grid.extend != "undefined") {
+                // 그리드 옵션 재사용
+                if(_.typeCheck("integer", grid.extend)) {
                     grid = $.extend(_axis[grid.extend][k], grid);
                     delete grid.extend;
                 }
@@ -3797,26 +3795,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 var Grid = jui.include("chart.grid." + (grid.type || "block"));
 
                 // axis 기본 프로퍼티 정의
-                var obj = new Grid(grid.orient, chart, grid),
+                var obj = new Grid(chart, axis, grid),
                     dist = grid.dist || 0;
 
                 obj.chart = chart;
+                obj.axis = axis;
                 obj.grid = grid;
 
                 var elem = obj.render();
 
                 // grid 별 dist 로 위치선정하기
-                if(grid.orient == 'left') {
+                if(grid.orient == "left") {
                     elem.root.translate(_area.x - dist, _area.y);
-                } else if(grid.orient == 'right') {
-                    elem.root.translate(_area.x + chart.area('x2') + dist, _area.y);
-                } else if(grid.orient == 'bottom') {
-                    elem.root.translate(_area.x , _area.y + chart.area('y2') + dist);
-                } else if(grid.orient == 'top') {
-                    elem.root.translate(_area.x , _area.y + chart.area('y') - dist);
+                } else if(grid.orient == "right") {
+                    elem.root.translate(_area.x + chart.area("x2") + dist, _area.y);
+                } else if(grid.orient == "bottom") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y2") + dist);
+                } else if(grid.orient == "top") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y") - dist);
                 } else {
                     // custom
-                    if (elem.root) elem.root.translate(_area.x, _area.y);
+                    if(elem.root) elem.root.translate(_area.x, _area.y);
                 }
 
                 return elem.scale;
@@ -3884,7 +3883,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                         // 축 설정
                         if(_axis[axisIndex]) {
-                            draws[i].axis = _axis[axisIndex];
                             draws[i].x = _axis[axisIndex].xScale;
                             draws[i].y = _axis[axisIndex].yScale;
                             draws[i].c = _axis[axisIndex].cScale;
@@ -3895,8 +3893,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
-                    var draw = new Obj(self, draws[i]);
+                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
                     draw.chart = self;
+                    draw.axis = _axis[axisIndex];
                     draw[type] = draws[i];
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리
@@ -5153,7 +5152,7 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonBackgroundOpacity : 0.7
 	}
 }); 
-jui.define("chart.grid.core", [ "util.base" ], function(_) {
+jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * Grid Core 객체 
 	 * 
@@ -5394,7 +5393,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.axisLine = function(chart, attr) {
-			return chart.svg.line(_.extend({
+			return chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -5410,7 +5409,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.line = function(chart, attr) {
-			return chart.svg.line(_.extend({
+			return chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -5431,15 +5430,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 
 		this.data = function(index, field) {
-			if(this.grid.axis.data && this.grid.axis.data[index]) {
+			if(this.axis.data && this.axis.data[index]) {
 				if(!_.typeCheck("undefined", field)) {
-					return this.grid.axis.data[index][field];
+					return this.axis.data[index][field];
 				}
 
-				return this.grid.axis.data[index]
+				return this.axis.data[index]
 			}
 
-			return this.grid.axis.data || [];
+			return this.axis.data || [];
 		}
 
 		/**
@@ -5517,8 +5516,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				step: 10,
 				min: 0,
 				max: 0,
-				dist : 0,
-				extend : 0,
 				reverse: false,
 				key: null,
 				hide: false,
@@ -5538,7 +5535,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
-	var BlockGrid = function(orient, chart, grid) {
+	var BlockGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g, scale) {
 			var full_height = chart.area('height');
@@ -5782,7 +5780,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
 
-	var DateGrid = function(orient, chart, grid) {
+	var DateGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -5988,7 +5987,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
-	var RadarGrid = function(orient, chart, grid) {
+	var RadarGrid = function(chart, axis, grid) {
 		var self = this,
 			position = [];
 
@@ -6235,7 +6234,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
-	var RangeGrid = function(orient, chart, grid) {
+	var RangeGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -6460,7 +6460,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
-	var RuleGrid = function(orient, chart, grid) {
+	var RuleGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g) {
 			var height = chart.area('height'),
@@ -6690,8 +6691,8 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 jui.define("chart.grid.panel", [  ], function() {
 
-    var PanelGrid = function(orient, chart, grid) {
-        var start, size ;
+    var PanelGrid = function(chart, axis, grid) {
+        var start, size;
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {
@@ -6767,7 +6768,7 @@ jui.define("chart.grid.panel", [  ], function() {
 
 jui.define("chart.grid.table", [  ], function() {
 
-    var TableGrid = function(orient, chart, grid) {
+    var TableGrid = function(chart, axis, grid) {
         var start, size, rowUnit, columnUnit, outerPadding, row, column ;
 
         function getValue(value, max) {
@@ -6865,7 +6866,7 @@ jui.define("chart.grid.table", [  ], function() {
 
 jui.define("chart.grid.overlap", [  ], function() {
 
-    var OverlapGrid = function(orient, chart, grid) {
+    var OverlapGrid = function(chart, axis, grid) {
         var size, widthUnit, heightUnit, width, height ;
 
         function getXY ( i ) {
@@ -6913,7 +6914,7 @@ jui.define("chart.grid.overlap", [  ], function() {
     return OverlapGrid;
 }, "chart.grid.core");
 
-jui.define("chart.brush.core", [ "util.base" ], function(_) {
+jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 	var CoreBrush = function() {
 
         /**
@@ -7014,7 +7015,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             }
         }
         this.listData = function() {
-            return this.brush.axis.data;
+            return this.axis.data;
         }
         this.getData = function(index) {
             return this.listData()[index];
@@ -7211,7 +7212,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 }, "chart.draw"); 
 jui.define("chart.brush.bar", [], function() {
 
-	var BarBrush = function(chart, brush) {
+	var BarBrush = function(chart, axis, brush) {
 		var g, activeTooltip;
 		var zeroX, height, half_height, bar_height;
 
@@ -7391,7 +7392,7 @@ jui.define("chart.brush.bar", [], function() {
 
 jui.define("chart.brush.column", [], function() {
 
-	var ColumnBrush = function(chart, brush) {
+	var ColumnBrush = function(chart, axis, brush) {
 		var g, activeTooltip, style;
 		var zeroY, width, col_width, half_width;
 
@@ -7465,7 +7466,7 @@ jui.define("chart.brush.column", [], function() {
 
 jui.define("chart.brush.stackbar", [], function() {
 
-	var StackBarBrush = function(chart, brush) {
+	var StackBarBrush = function(chart, axis, brush) {
 		var g, series, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {
@@ -7579,7 +7580,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 jui.define("chart.brush.stackcolumn", [], function() {
 
-	var ColumnStackBrush = function(chart, brush) {
+	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {
@@ -7632,7 +7633,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 jui.define("chart.brush.fullstackbar", [], function() {
 
-	var FullStackBarBrush = function(chart, brush) {
+	var FullStackBarBrush = function(chart, axis, brush) {
 		var g, zeroX, height, bar_height;
 
 		this.drawBefore = function() {
@@ -7723,7 +7724,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 jui.define("chart.brush.fullstackcolumn", [], function() {
 
-	var FullStackColumnBrush = function(chart, brush) {
+	var FullStackColumnBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {
@@ -7797,7 +7798,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 jui.define("chart.brush.bubble", [], function() {
 
-	var BubbleBrush = function(chart, brush) {
+	var BubbleBrush = function(chart, axis, brush) {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
@@ -7850,7 +7851,7 @@ jui.define("chart.brush.bubble", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.candlestick", [], function() {
 
-    var CandleStickBrush = function(chart, brush) {
+    var CandleStickBrush = function(chart, axis, brush) {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
         function getTargetData(data) {
@@ -7949,7 +7950,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
 jui.define("chart.brush.ohlc", [], function() {
 
-    var OHLCBrush = function(chart, brush) {
+    var OHLCBrush = function(chart, axis, brush) {
         var g;
 
         function getTargets(chart) {
@@ -8173,7 +8174,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.equalizer", [], function() {
 
-    var EqualizerBrush = function(chart, brush) {
+    var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;
 
         this.drawBefore = function() {
@@ -8394,7 +8395,7 @@ jui.define("chart.brush.line", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.path", [], function() {
 
-	var PathBrush = function(chart, brush) {
+	var PathBrush = function(chart, axis, brush) {
 
 		this.draw = function() {
 			var g = chart.svg.group({
@@ -8437,7 +8438,7 @@ jui.define("chart.brush.path", [], function() {
 
 jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
-	var PieBrush = function(chart, brush) {
+	var PieBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
@@ -8695,7 +8696,7 @@ jui.define("chart.brush.scatterpath", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.bargauge", [], function() {
 
-	var BarGaugeBrush = function(chart, brush) {
+	var BarGaugeBrush = function(chart, axis, brush) {
 
         this.drawBefore = function() {
             if (!brush.c) {
@@ -8814,7 +8815,7 @@ jui.define("chart.brush.bargauge", [], function() {
 
 jui.define("chart.brush.circlegauge", [], function() {
 
-	var CircleGaugeBrush = function(chart, brush) {
+	var CircleGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
@@ -8888,7 +8889,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
 jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
-	var FillGaugeBrush = function(chart, brush) {
+	var FillGaugeBrush = function(chart, axis, brush) {
         var self = this;
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
@@ -9124,7 +9125,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 }, "chart.brush.scatter");
 jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
-	var GaugeBrush = function(chart, brush) {
+	var GaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
@@ -9315,7 +9316,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
-	var GaugeBrush = function(chart, brush) {
+	var GaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
@@ -9433,7 +9434,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
-	var StackGaugeBrush = function(chart, brush) {
+	var StackGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
@@ -9526,7 +9527,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.waterfall", [], function() {
 
-	var WaterFallBrush = function(chart, brush) {
+	var WaterFallBrush = function(chart, axis, brush) {
 		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
 
@@ -9772,7 +9773,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
 jui.define("chart.brush.rangecolumn", [], function() {
 
-	var RangeColumnBrush = function(chart, brush) {
+	var RangeColumnBrush = function(chart, axis, brush) {
 		var g, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
@@ -9835,7 +9836,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 jui.define("chart.brush.rangebar", [], function() {
 
-	var RangeBarBrush = function(chart, brush) {
+	var RangeBarBrush = function(chart, axis, brush) {
 		var g, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
@@ -9900,7 +9901,7 @@ jui.define("chart.brush.rangebar", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.focus", [], function() {
-    var FocusBrush = function(chart, brush) {
+    var FocusBrush = function(chart, axis, brush) {
         var g;
 
         this.drawFocus = function(start, end) {
@@ -9978,7 +9979,7 @@ jui.define("chart.brush.focus", [], function() {
     return FocusBrush;
 }, "chart.brush.core");
 jui.define("chart.brush.pin", [], function() {
-    var PinBrush = function(chart, brush) {
+    var PinBrush = function(chart, axis, brush) {
         var g;
         var size = 6;
 
@@ -10019,7 +10020,7 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
-jui.define("chart.widget.core", [ "util.base" ], function(_) {
+jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 	var CoreWidget = function() {
         function getBrushIndex(brush) {
@@ -10126,7 +10127,7 @@ jui.define("chart.widget.core", [ "util.base" ], function(_) {
 	return CoreWidget;
 }, "chart.draw"); 
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
-    var TooltipWidget = function(chart, widget) {
+    var TooltipWidget = function(chart, axis, widget) {
         var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;
@@ -10283,7 +10284,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 }, "chart.widget.core");
 jui.define("chart.widget.title", [], function() {
 
-    var TitleWidget = function(chart, widget) {
+    var TitleWidget = function(chart, axis, widget) {
         var x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function() {
@@ -10349,7 +10350,7 @@ jui.define("chart.widget.title", [], function() {
 }, "chart.widget.core");
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
-    var LegendWidget = function(chart, widget) {
+    var LegendWidget = function(chart, axis, widget) {
         var columns = [];
 
         function setLegendStatus(brush) {
@@ -10538,7 +10539,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
-    var ScrollWidget = function(chart, widget) {
+    var ScrollWidget = function(chart, axis, widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
             bufferCount = 0,
@@ -10606,11 +10607,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var axis = chart.draw("axis", chart.options.axisIndex);
-
 			dataLength =  axis.origin.length;
 			bufferCount = axis.buffer;
-
 			piece = chart.area("width") / bufferCount;
 			totalWidth = piece * dataLength;
 			rate = totalWidth / chart.area("width");
@@ -10651,8 +10649,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
-    var ZoomWidget = function(chart, widget) {
-        var axis, count, tick;
+    var ZoomWidget = function(chart, axis, widget) {
+        var count, tick;
 
         function setDragEvent(self, thumb, bg) {
             var isMove = false,
@@ -10724,7 +10722,6 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
-            axis = chart.draw("axis", chart.options.axisIndex);
             count = (axis.data.length < axis.buffer && axis.data.length > 0) ? axis.data.length : axis.buffer;
             tick = chart.area("width") / count;
         }
@@ -10791,7 +10788,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
-    var CrossWidget = function(chart, widget) {
+    var CrossWidget = function(chart, axis, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
         var g, xline, yline, xTooltip, yTooltip;

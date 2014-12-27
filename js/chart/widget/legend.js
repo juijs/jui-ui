@@ -1,6 +1,6 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
-    var LegendWidget = function(chart, widget) {
+    var LegendWidget = function(chart, axis, widget) {
         var columns = [];
 
         function setLegendStatus(brush) {

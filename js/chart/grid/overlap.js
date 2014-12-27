@@ -1,6 +1,6 @@
 jui.define("chart.grid.overlap", [  ], function() {
 
-    var OverlapGrid = function(orient, chart, grid) {
+    var OverlapGrid = function(chart, axis, grid) {
         var size, widthUnit, heightUnit, width, height ;
 
         function getXY ( i ) {

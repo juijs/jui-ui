@@ -1,6 +1,6 @@
 jui.define("chart.brush.bargauge", [], function() {
 
-	var BarGaugeBrush = function(chart, brush) {
+	var BarGaugeBrush = function(chart, axis, brush) {
 
         this.drawBefore = function() {
             if (!brush.c) {

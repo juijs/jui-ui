@@ -1,6 +1,7 @@
 jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
-	var BlockGrid = function(orient, chart, grid) {
+	var BlockGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g, scale) {
 			var full_height = chart.area('height');

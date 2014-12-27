@@ -1,6 +1,6 @@
 jui.define("chart.brush.bubble", [], function() {
 
-	var BubbleBrush = function(chart, brush) {
+	var BubbleBrush = function(chart, axis, brush) {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {

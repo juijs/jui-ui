@@ -1,6 +1,6 @@
 jui.define("chart.brush.fullstackcolumn", [], function() {
 
-	var FullStackColumnBrush = function(chart, brush) {
+	var FullStackColumnBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {

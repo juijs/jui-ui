@@ -1,6 +1,6 @@
 jui.define("chart.brush.column", [], function() {
 
-	var ColumnBrush = function(chart, brush) {
+	var ColumnBrush = function(chart, axis, brush) {
 		var g, activeTooltip, style;
 		var zeroY, width, col_width, half_width;
 

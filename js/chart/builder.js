@@ -192,10 +192,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             function drawAxisType(axis, k, chart) {
                 var grid = axis[k];
 
-                // 엑시스 설정
-                grid.axis = axis;
-
-                if (typeof grid.extend != "undefined") {
+                // 그리드 옵션 재사용
+                if(_.typeCheck("integer", grid.extend)) {
                     grid = $.extend(_axis[grid.extend][k], grid);
                     delete grid.extend;
                 }
@@ -203,26 +201,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 var Grid = jui.include("chart.grid." + (grid.type || "block"));
 
                 // axis 기본 프로퍼티 정의
-                var obj = new Grid(grid.orient, chart, grid),
+                var obj = new Grid(chart, axis, grid),
                     dist = grid.dist || 0;
 
                 obj.chart = chart;
+                obj.axis = axis;
                 obj.grid = grid;
 
                 var elem = obj.render();
 
                 // grid 별 dist 로 위치선정하기
-                if(grid.orient == 'left') {
+                if(grid.orient == "left") {
                     elem.root.translate(_area.x - dist, _area.y);
-                } else if(grid.orient == 'right') {
-                    elem.root.translate(_area.x + chart.area('x2') + dist, _area.y);
-                } else if(grid.orient == 'bottom') {
-                    elem.root.translate(_area.x , _area.y + chart.area('y2') + dist);
-                } else if(grid.orient == 'top') {
-                    elem.root.translate(_area.x , _area.y + chart.area('y') - dist);
+                } else if(grid.orient == "right") {
+                    elem.root.translate(_area.x + chart.area("x2") + dist, _area.y);
+                } else if(grid.orient == "bottom") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y2") + dist);
+                } else if(grid.orient == "top") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y") - dist);
                 } else {
                     // custom
-                    if (elem.root) elem.root.translate(_area.x, _area.y);
+                    if(elem.root) elem.root.translate(_area.x, _area.y);
                 }
 
                 return elem.scale;
@@ -290,7 +289,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                         // 축 설정
                         if(_axis[axisIndex]) {
-                            draws[i].axis = _axis[axisIndex];
                             draws[i].x = _axis[axisIndex].xScale;
                             draws[i].y = _axis[axisIndex].yScale;
                             draws[i].c = _axis[axisIndex].cScale;
@@ -301,8 +299,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     draws[i].index = i;
 
                     // 브러쉬&위젯 기본 프로퍼티 정의
-                    var draw = new Obj(self, draws[i]);
+                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
                     draw.chart = self;
+                    draw.axis = _axis[axisIndex];
                     draw[type] = draws[i];
 
                     // 브러쉬&위젯 엘리먼트 생성 및 후처리

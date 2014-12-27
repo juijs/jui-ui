@@ -1,6 +1,6 @@
 jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
-	var PieBrush = function(chart, brush) {
+	var PieBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {

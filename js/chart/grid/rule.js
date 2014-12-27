@@ -1,6 +1,7 @@
 jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
-	var RuleGrid = function(orient, chart, grid) {
+	var RuleGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g) {
 			var height = chart.area('height'),

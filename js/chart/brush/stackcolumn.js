@@ -1,6 +1,6 @@
 jui.define("chart.brush.stackcolumn", [], function() {
 
-	var ColumnStackBrush = function(chart, brush) {
+	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {

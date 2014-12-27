@@ -1,4 +1,4 @@
-jui.define("chart.widget.core", [ "util.base" ], function(_) {
+jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 	var CoreWidget = function() {
         function getBrushIndex(brush) {

@@ -1,4 +1,4 @@
-jui.define("chart.grid.core", [ "util.base" ], function(_) {
+jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * Grid Core 객체 
 	 * 
@@ -239,7 +239,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.axisLine = function(chart, attr) {
-			return chart.svg.line(_.extend({
+			return chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -255,7 +255,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		 * 
 		 */
 		this.line = function(chart, attr) {
-			return chart.svg.line(_.extend({
+			return chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -276,15 +276,15 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 
 		this.data = function(index, field) {
-			if(this.grid.axis.data && this.grid.axis.data[index]) {
+			if(this.axis.data && this.axis.data[index]) {
 				if(!_.typeCheck("undefined", field)) {
-					return this.grid.axis.data[index][field];
+					return this.axis.data[index][field];
 				}
 
-				return this.grid.axis.data[index]
+				return this.axis.data[index]
 			}
 
-			return this.grid.axis.data || [];
+			return this.axis.data || [];
 		}
 
 		/**
@@ -362,8 +362,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				step: 10,
 				min: 0,
 				max: 0,
-				dist : 0,
-				extend : 0,
 				reverse: false,
 				key: null,
 				hide: false,

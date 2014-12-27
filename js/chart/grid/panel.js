@@ -1,7 +1,7 @@
 jui.define("chart.grid.panel", [  ], function() {
 
-    var PanelGrid = function(orient, chart, grid) {
-        var start, size ;
+    var PanelGrid = function(chart, axis, grid) {
+        var start, size;
 
         function getValue(value, max) {
             if (typeof value == 'string' && value.indexOf("%") > -1) {

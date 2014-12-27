@@ -1,6 +1,6 @@
 jui.define("chart.widget.title", [], function() {
 
-    var TitleWidget = function(chart, widget) {
+    var TitleWidget = function(chart, axis, widget) {
         var x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function() {

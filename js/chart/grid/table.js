@@ -1,6 +1,6 @@
 jui.define("chart.grid.table", [  ], function() {
 
-    var TableGrid = function(orient, chart, grid) {
+    var TableGrid = function(chart, axis, grid) {
         var start, size, rowUnit, columnUnit, outerPadding, row, column ;
 
         function getValue(value, max) {

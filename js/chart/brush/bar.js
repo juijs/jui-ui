@@ -1,6 +1,6 @@
 jui.define("chart.brush.bar", [], function() {
 
-	var BarBrush = function(chart, brush) {
+	var BarBrush = function(chart, axis, brush) {
 		var g, activeTooltip;
 		var zeroX, height, half_height, bar_height;
 

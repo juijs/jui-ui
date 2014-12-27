@@ -1,6 +1,6 @@
 jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
-	var RadarGrid = function(orient, chart, grid) {
+	var RadarGrid = function(chart, axis, grid) {
 		var self = this,
 			position = [];
 

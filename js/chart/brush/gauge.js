@@ -1,6 +1,6 @@
 jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
-	var GaugeBrush = function(chart, brush) {
+	var GaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 

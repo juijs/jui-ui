@@ -1,5 +1,5 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
-    var TooltipWidget = function(chart, widget) {
+    var TooltipWidget = function(chart, axis, widget) {
         var self = this;
         var g, text, rect;
         var padding = 7, anchor = 7, textY = 14;

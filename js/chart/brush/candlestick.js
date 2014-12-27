@@ -1,6 +1,6 @@
 jui.define("chart.brush.candlestick", [], function() {
 
-    var CandleStickBrush = function(chart, brush) {
+    var CandleStickBrush = function(chart, axis, brush) {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
         function getTargetData(data) {

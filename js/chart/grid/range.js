@@ -1,6 +1,7 @@
 jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
-	var RangeGrid = function(orient, chart, grid) {
+	var RangeGrid = function(chart, axis, grid) {
+		var orient = grid.orient;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {

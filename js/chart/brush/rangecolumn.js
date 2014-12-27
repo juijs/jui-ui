@@ -1,6 +1,6 @@
 jui.define("chart.brush.rangecolumn", [], function() {
 
-	var RangeColumnBrush = function(chart, brush) {
+	var RangeColumnBrush = function(chart, axis, brush) {
 		var g, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;

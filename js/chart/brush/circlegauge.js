@@ -1,6 +1,6 @@
 jui.define("chart.brush.circlegauge", [], function() {
 
-	var CircleGaugeBrush = function(chart, brush) {
+	var CircleGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {

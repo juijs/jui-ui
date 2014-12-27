@@ -1,6 +1,6 @@
 jui.define("chart.brush.ohlc", [], function() {
 
-    var OHLCBrush = function(chart, brush) {
+    var OHLCBrush = function(chart, axis, brush) {
         var g;
 
         function getTargets(chart) {

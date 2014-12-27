@@ -1,5 +1,5 @@
 jui.define("chart.brush.focus", [], function() {
-    var FocusBrush = function(chart, brush) {
+    var FocusBrush = function(chart, axis, brush) {
         var g;
 
         this.drawFocus = function(start, end) {

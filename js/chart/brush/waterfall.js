@@ -1,6 +1,6 @@
 jui.define("chart.brush.waterfall", [], function() {
 
-	var WaterFallBrush = function(chart, brush) {
+	var WaterFallBrush = function(chart, axis, brush) {
 		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
 
