@@ -7,8 +7,8 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var g = this.chart.svg.group();
             var path = this.chart.svg.path({
-                fill : this.getColor(0),
-                stroke : this.getColor(0),
+                fill : this.color(0),
+                stroke : this.color(0),
                 "stroke-width" : this.chart.theme("scatterBorderWidth")
             });
 

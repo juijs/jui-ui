@@ -16,7 +16,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
-				"fill" : self.getColor(0)
+				"fill" : self.color(0)
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -155,7 +155,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : this.getColor(0)
+				fill : this.color(0)
 			});
 
 			group.append(g);

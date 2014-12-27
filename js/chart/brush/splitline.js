@@ -4,7 +4,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
         this.createLine = function(pos, index) {
             var opts = {
-                stroke: this.getColor(index),
+                stroke: this.color(index),
                 "stroke-width": this.chart.theme("lineBorderWidth"),
                 fill: "transparent"
             };

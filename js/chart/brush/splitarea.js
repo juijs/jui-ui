@@ -10,7 +10,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
             for(var k = 0; k < path.length; k++) {
                 var opts = {
-                    fill: this.getColor(k),
+                    fill: this.color(k),
                     "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 };

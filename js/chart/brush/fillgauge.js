@@ -39,7 +39,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
-                fill : self.getColor(0),
+                fill : self.color(0),
                 d : path,
                 "clip-path" : "url(#" + clipId + ")"
             }));
@@ -141,7 +141,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                         y : 0,
                         width : chart.area('width'),
                         height : chart.area('height'),
-                        fill : this.getColor(0),
+                        fill : this.color(0),
                         "clip-path" : "url(#" + clipId + ")"
                     }));
 

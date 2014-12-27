@@ -8,7 +8,7 @@ jui.define("chart.brush.path", [], function() {
 			});
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				var color = this.getColor(ti);
+				var color = this.color(ti);
 
 				var path = chart.svg.path({
 					fill : color,

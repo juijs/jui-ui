@@ -40,7 +40,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     x : x,
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
-                    fill : this.getColor(i)
+                    fill : this.color(i)
                 }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({

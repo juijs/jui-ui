@@ -87,16 +87,6 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         }
 
         /**
-         * 브러쉬 색상을 가져오는 함수
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.getColor = function(key) {
-            return this.chart.color(key, this.brush);
-        }
-
-        /**
          * 차트 데이터 핸들링 함수
          *
          */
@@ -289,6 +279,10 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
             tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
             tooltip.translate(x, y);
+        }
+
+        this.color = function(key) {
+            return this.chart.color(key, this.brush);
         }
 
         this.getOptions = function(options) {

@@ -56,7 +56,7 @@ jui.define("chart.brush.column", [], function() {
 					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					this.setActiveEffectOption(g, this.getColor(j), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
+					this.setActiveEffectOption(g, this.color(j), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;

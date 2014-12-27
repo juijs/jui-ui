@@ -34,7 +34,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						y : startY,
 						width : columnWidth,
 						height : Math.abs(zeroY - startY),
-						fill : this.getColor(j),
+						fill : this.color(j),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity

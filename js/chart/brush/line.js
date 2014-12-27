@@ -36,7 +36,7 @@ jui.define("chart.brush.line", [], function() {
                 y = pos.y;
 
             var p = this.chart.svg.path({
-                stroke : this.getColor(index),
+                stroke : this.color(index),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
@@ -71,7 +71,7 @@ jui.define("chart.brush.line", [], function() {
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
-                    var tooltip = this.createTooltip(this.getColor(index), circleColor),
+                    var tooltip = this.createTooltip(this.color(index), circleColor),
                         position = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
                     this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], position);

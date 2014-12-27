@@ -14,7 +14,7 @@ jui.define("chart.brush.area", [], function() {
                 p.LineTo(xList[0], maxY);
                 p.ClosePath();
                 p.attr({
-                    fill: this.getColor(k),
+                    fill: this.color(k),
                     "fill-opacity": this.chart.theme("areaBackgroundOpacity"),
                     "stroke-width": 0
                 });

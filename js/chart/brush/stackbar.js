@@ -5,7 +5,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
-				color = this.getColor(targetIndex),
+				color = this.color(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
