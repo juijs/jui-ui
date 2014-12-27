@@ -51,12 +51,12 @@
                 },
                 data : data
             },
-            brush : [{
+            brush : [{ type : "focus" },
+            {
                 type : 'scatter',
                 size : 10,
                 target : [ "name", "name2" ]
-            },
-                { type : "focus" }],
+            }],
             widget : [
                 { type : 'title', text : 'Cross Widget Sample' },
                 {
@@ -67,7 +67,7 @@
                     xFormat : function(d) {
                         return _.dateFormat(d, "hh:mm");
                     },
-                    brush : [ 0, 1, 2, 3 ]
+                    brush : 1
                 },
                 { type : 'tooltip' }
             ],

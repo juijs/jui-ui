@@ -76,12 +76,14 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             x: tw / 2,
                             y: 17
                         });
-                    }).translate(0, chart.area('height') + ta);
+                    }).translate(0, chart.area("height") + ta);
                 }
-            }).translate(chart.area('x'), chart.area('y'));
+            }).translate(chart.area("x"), chart.area("y"));
         }
 
         this.draw = function() {
+            var brush = this.getBrush(0);
+
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             });
@@ -109,18 +111,18 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 }
 
                 // 포맷 옵션이 없을 경우, 처리하지 않음
-                if (yTooltip) {
+                if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = widget.y.invert(top),
+                    var value = brush.y.invert(top),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
 
-                if (xTooltip) {
-                    xTooltip.translate(left - (tw / 2), chart.area('height') + ta);
+                if(xTooltip) {
+                    xTooltip.translate(left - (tw / 2), chart.area("height") + ta);
 
-                    var value = widget.x.invert(left),
+                    var value = brush.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }

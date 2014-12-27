@@ -1,7 +1,7 @@
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     var ZoomWidget = function(chart, widget) {
-        var count, tick;
+        var axis, count, tick;
 
         function setDragEvent(self, thumb, bg) {
             var isMove = false,
@@ -9,7 +9,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 thumbWidth = 0;
 
             self.on("chart.mousedown", function(e) {
-                if(isMove || chart.zoom().start > 0) return;
+                if(isMove || axis.start > 0) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
@@ -73,10 +73,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
-            var opts = chart.options,
-                len = opts.data.length;
-
-            count = (len < opts.bufferCount && len > 0) ? len : opts.bufferCount;
+            axis = chart.axis(chart.options.axisIndex);
+            count = (axis.data.length < axis.buffer && axis.data.length > 0) ? axis.data.length : axis.buffer;
             tick = chart.area("width") / count;
         }
 

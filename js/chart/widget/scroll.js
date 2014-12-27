@@ -35,8 +35,8 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 if(gap < 0) {
                     gap = 0;
                 } else {
-                    if(gap + thumbWidth > chart.area('width')) {
-                        gap = chart.area('width') - thumbWidth;
+                    if(gap + thumbWidth > chart.area("width")) {
+                        gap = chart.area("width") - thumbWidth;
                     }
                 }
 
@@ -46,7 +46,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 var startgap = gap * rate,
                     start = startgap == 0 ? 0 : Math.floor(startgap / piece);
 
-                if (gap + thumbWidth == chart.area('width')) {
+                if(gap + thumbWidth == chart.area("width")) {
                     start += 1;
                 }
 
@@ -68,11 +68,10 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.drawBefore = function() {
-            var opts = chart.options,
-                axis = chart.axis(opts.axisIndex);
+            var axis = chart.axis(chart.options.axisIndex);
 
-			dataLength =  axis.originData.length;
-			bufferCount = opts.bufferCount;
+			dataLength =  axis.origin.length;
+			bufferCount = axis.buffer;
 
 			piece = chart.area("width") / bufferCount;
 			totalWidth = piece * dataLength;

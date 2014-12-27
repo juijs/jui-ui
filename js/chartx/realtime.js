@@ -33,7 +33,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "axis", "interval", "period" ];
+                excepts = [ "interval", "period", "data" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -49,7 +49,6 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
             this.chart = builder(this.selector, $.extend(true, {
-                bufferCount : opts.period * 60,
                 axis : {
                     x : {
                         type : "date",
@@ -65,7 +64,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                         target : (opts.axis.target != null) ? opts.axis.target : target,
                         step : opts.axis.ystep,
                         line : opts.axis.yline
-                    }
+                    },
+                    buffer: opts.period * 60
                 }
             }, getOptions(this)));
 
@@ -75,7 +75,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             }
 
             // 그리드 러닝
-            //this.start();
+            this.start();
         }
 
         this.update = function(data) {
