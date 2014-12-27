@@ -44,7 +44,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 text.attr({ "text-anchor": "middle" });
             } else {
-                var brush = chart.brush(obj.brush.index);
+                var brush = obj.brush;
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],

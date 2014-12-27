@@ -10519,7 +10519,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var opts = self.options;
 
             // 일부 옵션을 제외하고 클론
-            _options = _.deepClone(opts, { data : true, bind : true });
+            _options = _.deepClone(opts, { data: true, bind: true });
 
             // 패딩 옵션 설정
             if(_options.padding == "empty") {
@@ -13438,6 +13438,20 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return tg + minRadius;
         }
 
+        /**
+         * 브러쉬 색상을 가져오는 함수
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.getColor = function(key) {
+            return this.chart.color(key, this.brush);
+        }
+
+        /**
+         * 차트 데이터 핸들링 함수
+         *
+         */
         this.eachData = function(callback) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
@@ -13446,11 +13460,9 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 callback.apply(this, [ i, list[i] ]);
             }
         }
-
         this.listData = function() {
             return this.brush.axis.data;
         }
-
         this.getData = function(index) {
             return this.listData()[index];
         }
@@ -13667,7 +13679,7 @@ jui.define("chart.brush.bar", [], function() {
 
 		this.getBarElement = function(width, height, dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
-				color = this.chart.color(targetIndex, this.brush),
+				color = this.getColor(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
@@ -13878,7 +13890,7 @@ jui.define("chart.brush.column", [], function() {
 					this.setActiveEventOption(r, activeTooltip, tooltipX, tooltipY, value, position);
 
 					// Max & Min 툴팁 추가
-					this.setActiveEffectOption(g, chart.color(j, brush), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
+					this.setActiveEffectOption(g, this.getColor(j), points[j].max[i], points[j].min[i], tooltipX, tooltipY, value, position);
 
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;
@@ -13901,7 +13913,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
-				color = this.chart.color(targetIndex, this.brush),
+				color = this.getColor(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
@@ -14239,9 +14251,9 @@ jui.define("chart.brush.bubble", [], function() {
                 cx: pos.x,
                 cy: pos.y,
                 r: radius,
-                "fill": chart.color(index, brush),
+                "fill": self.getColor(index),
                 "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                "stroke": chart.color(index, brush),
+                "stroke": self.getColor(index),
                 "stroke-width": chart.theme("bubbleBorderWidth")
             });
         }
@@ -14578,7 +14590,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					endAngle = all * (value / max);
 
 				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
-					fill : this.chart.color(i, this.brush),
+					fill : this.getColor(i),
 					stroke : this.chart.theme("donutBorderColor"),
 					"stroke-width" : this.chart.theme("donutBorderWidth")
 				});
@@ -14634,7 +14646,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY - unitHeight,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
+                                fill : this.getColor(Math.floor(eIndex / brush.gap))
                             });
 
                             eY -= unitHeight + padding;
@@ -14650,7 +14662,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
+                                fill : this.getColor(Math.floor(eIndex / brush.gap))
                             });
 
                             eY += unitHeight + padding;
@@ -14676,7 +14688,7 @@ jui.define("chart.brush.equalizer", [], function() {
                 outerPadding: 15,
                 unit: 5,
                 gap: 5
-            })
+            });
         }
     }
 
@@ -14721,7 +14733,7 @@ jui.define("chart.brush.line", [], function() {
                 y = pos.y;
 
             var p = this.chart.svg.path({
-                stroke : this.chart.color(index, this.brush),
+                stroke : this.getColor(index),
                 "stroke-width" : this.chart.theme("lineBorderWidth"),
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
@@ -14756,7 +14768,7 @@ jui.define("chart.brush.line", [], function() {
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
-                    var tooltip = this.createTooltip(this.chart.color(index, this.brush), circleColor),
+                    var tooltip = this.createTooltip(this.getColor(index), circleColor),
                         position = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
                     this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], position);
@@ -14833,7 +14845,7 @@ jui.define("chart.brush.path", [], function() {
 			});
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
-				var color = chart.color(ti, brush);
+				var color = this.getColor(ti);
 
 				var path = chart.svg.path({
 					fill : color,
@@ -14946,7 +14958,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
-					fill : chart.color(i, brush),
+					fill : this.getColor(i),
 					stroke : chart.theme("pieBorderColor"),
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});
@@ -14988,7 +15000,7 @@ jui.define("chart.brush.scatter", [], function() {
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.chart.color(index, this.brush),
+            var color = this.getColor(index),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -15091,8 +15103,8 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var g = this.chart.svg.group();
             var path = this.chart.svg.path({
-                fill : this.chart.color(0, this.brush),
-                stroke : this.chart.color(0, this.brush),
+                fill : this.getColor(0),
+                stroke : this.getColor(0),
                 "stroke-width" : this.chart.theme("scatterBorderWidth")
             });
 
@@ -15166,7 +15178,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     x : x,
                     y : y + brush.size / 2 + brush.cut,
                     "text-anchor" : "end",
-                    fill : chart.color(i, brush)
+                    fill : this.getColor(i)
                 }, data[brush.title] || ""))
                 
                 g.append(chart.svg.rect({
@@ -15289,7 +15301,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 cy : centerY,
                 r : outerRadius,
                 fill : chart.theme("gaugeBackgroundColor"),
-                stroke : chart.color(0, brush),
+                stroke : this.getColor(0),
                 "stroke-width" : 2
             }));
             
@@ -15297,7 +15309,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 cx : centerX,
                 cy : centerY,
                 r : outerRadius * rate,
-                fill : chart.color(0, brush)
+                fill : this.getColor(0)
             }));
 
             this.addEvent(group, null, null);
@@ -15320,6 +15332,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
 	var FillGaugeBrush = function(chart, brush) {
+        var self = this;
         var w, centerX, centerY, outerRadius, clipId;
         var rect;
 
@@ -15357,7 +15370,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             group.append(chart.svg.path({
                 x : 0,
                 y : 0,
-                fill : chart.color(0, brush),
+                fill : self.getColor(0),
                 d : path,
                 "clip-path" : "url(#" + clipId + ")"
             }));
@@ -15459,7 +15472,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                         y : 0,
                         width : chart.area('width'),
                         height : chart.area('height'),
-                        fill : chart.color(0, brush),
+                        fill : this.getColor(0),
                         "clip-path" : "url(#" + clipId + ")"
                     }));
 
@@ -15501,7 +15514,7 @@ jui.define("chart.brush.area", [], function() {
                 p.LineTo(xList[0], maxY);
                 p.ClosePath();
                 p.attr({
-                    fill: this.chart.color(k, this.brush),
+                    fill: this.getColor(k),
                     "fill-opacity": this.chart.theme("areaBackgroundOpacity"),
                     "stroke-width": 0
                 });
@@ -15555,6 +15568,7 @@ jui.define("chart.brush.stackscatter", [], function() {
 jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	var GaugeBrush = function(chart, brush) {
+		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
         function createText(startAngle, endAngle, min, max, value) {
@@ -15569,7 +15583,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
-				"fill" : chart.color(0, brush)
+				"fill" : self.getColor(0)
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -15708,7 +15722,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush)
+				fill : this.getColor(0)
 			});
 
 			group.append(g);
@@ -15745,6 +15759,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	var GaugeBrush = function(chart, brush) {
+		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
 		function createText(startAngle, endAngle, min, max, value) {
@@ -15762,7 +15777,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					"font-family" : chart.theme("fontFamily"),
 					"font-size" : "3.5em",
 					"font-weight" : 1000,
-					"fill" : chart.color(0, brush)
+					"fill" : self.getColor(0)
 				}, value + ""));
 			}
 			
@@ -15830,7 +15845,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush)
+				fill : this.getColor(0)
 			});
 
 			group.append(g);
@@ -15916,7 +15931,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				
 				// 채워진 공간 그리기 
 				g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle,{
-					fill : chart.color(i, brush)
+					fill : this.getColor(i)
 				}, true);
 	
 				group.append(g);
@@ -15925,7 +15940,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				group.append(chart.text({
 					x : centerX + 2,
 					y : centerY + Math.abs(outerRadius) - 5,
-					fill : chart.color(i, brush),
+					fill : this.getColor(i),
 					"font-size" : "12px",
 					"font-weight" : "bold"
 				}, data[brush.title] || ""))
@@ -16066,7 +16081,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
         this.createLine = function(pos, index) {
             var opts = {
-                stroke: this.chart.color(index, this.brush),
+                stroke: this.getColor(index),
                 "stroke-width": this.chart.theme("lineBorderWidth"),
                 fill: "transparent"
             };
@@ -16157,7 +16172,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
             for(var k = 0; k < path.length; k++) {
                 var opts = {
-                    fill: this.chart.color(k, this.brush),
+                    fill: this.getColor(k),
                     "fill-opacity": this.chart.theme("areaOpacity"),
                     "stroke-width": 0
                 };
@@ -16234,7 +16249,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 						y : startY,
 						width : columnWidth,
 						height : Math.abs(zeroY - startY),
-						fill : chart.color(j, brush),
+						fill : this.getColor(j),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -16298,7 +16313,7 @@ jui.define("chart.brush.rangebar", [], function() {
 						y : startY,
 						height : barHeight,
 						width : Math.abs(zeroX - startX),
-						fill : chart.color(j, brush),
+						fill : this.getColor(j),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity
@@ -16599,7 +16614,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 text.attr({ "text-anchor": "middle" });
             } else {
-                var brush = chart.brush(obj.brush.index);
+                var brush = obj.brush;
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],

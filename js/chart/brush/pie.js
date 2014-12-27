@@ -78,7 +78,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 					endAngle = all * (value / max);
 
 				var g = this.drawPie(chart, centerX, centerY, outerRadius, startAngle, endAngle, {
-					fill : chart.color(i, brush),
+					fill : this.getColor(i),
 					stroke : chart.theme("pieBorderColor"),
 					"stroke-width" : chart.theme("pieBorderWidth")
 				});

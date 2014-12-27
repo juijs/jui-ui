@@ -40,15 +40,12 @@
             widget : [
             	{ type : 'title' },
             	{ type : 'legend' },
-                { type : 'tooltip', format : function(d) {
-                    console.log(d);
-                    return d;
-                }}
+                { type : 'tooltip', all : true }
             ],
             brush : {
                 type : 'bar',
                 target : ['name', 'value'],
-                innerPadding : 5
+                innerPadding : 2
             },
             style : {
                 barBorderWidth : 1,

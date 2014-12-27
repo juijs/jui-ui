@@ -30,7 +30,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY - unitHeight,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
+                                fill : this.getColor(Math.floor(eIndex / brush.gap))
                             });
 
                             eY -= unitHeight + padding;
@@ -46,7 +46,7 @@ jui.define("chart.brush.equalizer", [], function() {
                                 y : eY,
                                 width : barWidth,
                                 height : unitHeight,
-                                fill : chart.color(Math.floor(eIndex / brush.gap), brush)
+                                fill : this.getColor(Math.floor(eIndex / brush.gap))
                             });
 
                             eY += unitHeight + padding;
@@ -72,7 +72,7 @@ jui.define("chart.brush.equalizer", [], function() {
                 outerPadding: 15,
                 unit: 5,
                 gap: 5
-            })
+            });
         }
     }
 

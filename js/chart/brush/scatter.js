@@ -8,7 +8,7 @@ jui.define("chart.brush.scatter", [], function() {
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.chart.color(index, this.brush),
+            var color = this.getColor(index),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 

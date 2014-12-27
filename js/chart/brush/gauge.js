@@ -1,6 +1,7 @@
 jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	var GaugeBrush = function(chart, brush) {
+		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
         function createText(startAngle, endAngle, min, max, value) {
@@ -15,7 +16,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
-				"fill" : chart.color(0, brush)
+				"fill" : self.getColor(0)
 			}, value + ""));
 
 			if (brush.unitText != "") {
@@ -154,7 +155,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : chart.color(0, brush)
+				fill : this.getColor(0)
 			});
 
 			group.append(g);

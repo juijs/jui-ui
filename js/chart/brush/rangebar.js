@@ -35,7 +35,7 @@ jui.define("chart.brush.rangebar", [], function() {
 						y : startY,
 						height : barHeight,
 						width : Math.abs(zeroX - startX),
-						fill : chart.color(j, brush),
+						fill : this.getColor(j),
 						stroke : borderColor,
 						"stroke-width" : borderWidth,
 						"stroke-opacity" : borderOpacity

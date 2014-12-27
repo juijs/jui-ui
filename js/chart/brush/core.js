@@ -86,6 +86,20 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return tg + minRadius;
         }
 
+        /**
+         * 브러쉬 색상을 가져오는 함수
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.getColor = function(key) {
+            return this.chart.color(key, this.brush);
+        }
+
+        /**
+         * 차트 데이터 핸들링 함수
+         *
+         */
         this.eachData = function(callback) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
@@ -94,11 +108,9 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 callback.apply(this, [ i, list[i] ]);
             }
         }
-
         this.listData = function() {
             return this.brush.axis.data;
         }
-
         this.getData = function(index) {
             return this.listData()[index];
         }

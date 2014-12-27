@@ -11,9 +11,9 @@ jui.define("chart.brush.bubble", [], function() {
                 cx: pos.x,
                 cy: pos.y,
                 r: radius,
-                "fill": chart.color(index, brush),
+                "fill": self.getColor(index),
                 "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                "stroke": chart.color(index, brush),
+                "stroke": self.getColor(index),
                 "stroke-width": chart.theme("bubbleBorderWidth")
             });
         }

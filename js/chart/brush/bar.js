@@ -25,7 +25,7 @@ jui.define("chart.brush.bar", [], function() {
 
 		this.getBarElement = function(width, height, dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
-				color = this.chart.color(targetIndex, this.brush),
+				color = this.getColor(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
