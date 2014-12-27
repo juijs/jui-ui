@@ -1,14 +1,11 @@
 jui.define("chart.brush.fullstackcolumn", [], function() {
 
 	var FullStackColumnBrush = function(chart, brush) {
-		var g, zeroY, count, width, bar_width;
+		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			zeroY = brush.y(0);
-			count = chart.data().length;
-
 			width = brush.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
@@ -16,7 +13,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		this.draw = function() {
 			var chart_height = chart.area('height');
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
 				var startX = brush.x(i) - bar_width / 2,
@@ -24,7 +21,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
                     list = [];
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.data(i, brush.target[j]);
+					var height = data[brush.target[j]];
 
 					sum += height;
 					list.push(height);
@@ -63,7 +60,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();

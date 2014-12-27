@@ -7,9 +7,6 @@ jui.define("chart.brush.path", [], function() {
 				"class" : "brush path"
 			});
 			
-			var data = chart.data(),
-                data_count = data.length;
-			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var color = chart.color(ti, brush);
 
@@ -22,8 +19,8 @@ jui.define("chart.brush.path", [], function() {
 	
 				g.append(path);
 	
-				for(var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, chart.data(i, brush.target[ti])),
+				this.eachData(function(i, data) {
+					var obj = brush.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
 	
@@ -32,7 +29,7 @@ jui.define("chart.brush.path", [], function() {
 					} else {
 						path.LineTo(x, y);
 					}
-				}
+				});
 	
 				path.ClosePath();
 			}

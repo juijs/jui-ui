@@ -13,7 +13,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			if (grid.type == "radar" || grid.type == "block") {
 				if (grid.target && !grid.domain) {
 					var domain = [],
-						data = chart.data();
+						data = this.data();
 					
                     if (grid.reverse) {
                         var start = data.length - 1,
@@ -53,10 +53,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			if (grid.target && grid.target.length && !grid.domain) {
 				var min = grid.min || 0,
-					max = grid.max || 0;
-				var data = chart.data();
-
-
+					max = grid.max || 0,
+					data = this.data();
 				var value_list = [];
 
 				for (var i = 0; i < grid.target.length; i++) {
@@ -138,7 +136,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			if (grid.target && grid.target.length) {
 				var min = grid.min || undefined,
 					max = grid.max || undefined;
-				var data = chart.data();
+				var data = this.data();
 
 				var value_list = [] ;
 				for (var i = 0; i < grid.target.length; i++) {
@@ -187,9 +185,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			var self = this;
 			
 			function new_scale(i) {
-				
 				if (key) {
-					i = chart.data(i)[key];
+					i = self.data(i)[key];
 				}
 				
 				return old_scale(i);
@@ -238,7 +235,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 		
 		/**
-		 * theme 이 적용된  axis line 리턴 
+		 * theme 이 적용된  axis line 리턴
 		 * 
 		 */
 		this.axisLine = function(chart, attr) {
@@ -276,6 +273,18 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
+		}
+
+		this.data = function(index, field) {
+			if(this.grid.axis.data && this.grid.axis.data[index]) {
+				if(!_.typeCheck("undefined", field)) {
+					return this.grid.axis.data[index][field];
+				}
+
+				return this.grid.axis.data[index]
+			}
+
+			return this.grid.axis.data || [];
 		}
 
 		/**
@@ -355,7 +364,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				max: 0,
 				dist : 0,
 				extend : 0,
-				axis : false,
 				reverse: false,
 				key: null,
 				hide: false,

@@ -106,7 +106,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			});
 
 			var target = this.brush.target,
-				data = this.chart.data(0);
+				data = this.getData(0);
 
 			var all = 360,
 				startAngle = 0,

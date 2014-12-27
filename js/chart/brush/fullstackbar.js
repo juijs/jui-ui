@@ -1,14 +1,11 @@
 jui.define("chart.brush.fullstackbar", [], function() {
 
 	var FullStackBarBrush = function(chart, brush) {
-		var g, zeroX, count, height, bar_height;
+		var g, zeroX, height, bar_height;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			zeroX = brush.x(0);
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
 		}
@@ -24,7 +21,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
 				var startY = brush.y(i) - bar_height / 2,
@@ -32,7 +29,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					list = [];
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.data(i, brush.target[j]);
+					var width = data[brush.target[j]];
 
 					sum += width;
 					list.push(width);
@@ -71,7 +68,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();

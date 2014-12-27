@@ -8,7 +8,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                 split = this.brush.split,
                 splitColor = this.chart.theme("areaSplitBackgroundColor");
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var opts = {
                     fill: this.chart.color(k, this.brush),
                     "fill-opacity": this.chart.theme("areaOpacity"),

@@ -86,6 +86,23 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return tg + minRadius;
         }
 
+        this.eachData = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+            var list = this.listData();
+
+            for(var i = 0; i < list.length; i++) {
+                callback.apply(this, [ i, list[i] ]);
+            }
+        }
+
+        this.listData = function() {
+            return this.brush.axis.data;
+        }
+
+        this.getData = function(index) {
+            return this.listData()[index];
+        }
+
         /**
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
@@ -96,9 +113,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.getXY = function() {
             var xy = [];
 
-            for (var i = 0, len = this.chart.data().length; i < len; i++) {
-                var startX = this.brush.x(i),
-                    data = this.chart.data(i);
+            this.eachData(function(i, data) {
+                var startX = this.brush.x(i);
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -121,7 +137,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                     xy[j].min.push(value == series.min);
                     xy[j].max.push(value == series.max);
                 }
-            }
+            });
 
             return xy;
         }
@@ -138,9 +154,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.getStackXY = function() {
             var xy = this.getXY();
 
-            for (var i = 0, len = this.chart.data().length; i < len; i++) {
-                var data = this.chart.data(i),
-                    valueSum = 0;
+            this.eachData(function(i, data) {
+                var valueSum = 0;
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -152,7 +167,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
                     xy[j].y[i] = this.brush.y(value + valueSum);
                 }
-            }
+            });
 
             return xy;
         }
@@ -172,7 +187,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 brush: this.brush,
                 dataIndex: dataIndex,
                 dataKey: (targetIndex != null) ? this.brush.target[targetIndex] : null,
-                data: (dataIndex != null) ? chart.data(dataIndex) : null
+                data: (dataIndex != null) ? this.getData(dataIndex) : null
             };
 
             elem.on("click", function(e) {

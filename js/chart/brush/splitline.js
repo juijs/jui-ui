@@ -24,7 +24,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
                 py = this.curvePoints(y);
             }
 
-            for (var i = 0; i < x.length - 1; i++) {
+            for(var i = 0; i < x.length - 1; i++) {
                 if(i == split) {
                     var color = this.chart.theme("lineSplitBorderColor"),
                         opacity = this.chart.theme("lineSplitBorderOpacity");

@@ -190,32 +190,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawAxis(self) {
 
             function drawAxisType(axis, k, chart) {
-                var ax = axis[k];
-                if (typeof ax.extend != 'undefined') {
-                    ax = $.extend(_axis[ax.extend][k], ax);
-                    delete ax.extend;
-                }
-                ax.axis = true;
+                var grid = axis[k];
 
-                var Grid = jui.include("chart.grid." + (ax.type || "block"));
+                // 엑시스 설정
+                grid.axis = axis;
+
+                if (typeof grid.extend != "undefined") {
+                    grid = $.extend(_axis[grid.extend][k], grid);
+                    delete grid.extend;
+                }
+
+                var Grid = jui.include("chart.grid." + (grid.type || "block"));
 
                 // axis 기본 프로퍼티 정의
-                var obj = new Grid(ax.orient, chart, ax),
-                    dist = ax.dist || 0;
+                var obj = new Grid(grid.orient, chart, grid),
+                    dist = grid.dist || 0;
 
                 obj.chart = chart;
-                obj.grid = ax;
+                obj.grid = grid;
 
                 var elem = obj.render();
 
                 // grid 별 dist 로 위치선정하기
-                if(ax.orient == 'left') {
+                if(grid.orient == 'left') {
                     elem.root.translate(_area.x - dist, _area.y);
-                } else if(ax.orient == 'right') {
+                } else if(grid.orient == 'right') {
                     elem.root.translate(_area.x + chart.area('x2') + dist, _area.y);
-                } else if(ax.orient == 'bottom') {
+                } else if(grid.orient == 'bottom') {
                     elem.root.translate(_area.x , _area.y + chart.area('y2') + dist);
-                } else if(ax.orient == 'top') {
+                } else if(grid.orient == 'top') {
                     elem.root.translate(_area.x , _area.y + chart.area('y') - dist);
                 } else {
                     // custom
@@ -706,18 +709,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             return _widget;
-        }
-
-        this.data = function(index, field) {
-            if(_data && _data[index]) {
-                if(!_.typeCheck("undefined", field)) {
-                    return _data[index][field];
-                }
-
-                return _data[index]
-            }
-
-            return _data || [];
         }
 
         /**

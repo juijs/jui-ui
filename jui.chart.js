@@ -3784,32 +3784,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawAxis(self) {
 
             function drawAxisType(axis, k, chart) {
-                var ax = axis[k];
-                if (typeof ax.extend != 'undefined') {
-                    ax = $.extend(_axis[ax.extend][k], ax);
-                    delete ax.extend;
-                }
-                ax.axis = true;
+                var grid = axis[k];
 
-                var Grid = jui.include("chart.grid." + (ax.type || "block"));
+                // 엑시스 설정
+                grid.axis = axis;
+
+                if (typeof grid.extend != "undefined") {
+                    grid = $.extend(_axis[grid.extend][k], grid);
+                    delete grid.extend;
+                }
+
+                var Grid = jui.include("chart.grid." + (grid.type || "block"));
 
                 // axis 기본 프로퍼티 정의
-                var obj = new Grid(ax.orient, chart, ax),
-                    dist = ax.dist || 0;
+                var obj = new Grid(grid.orient, chart, grid),
+                    dist = grid.dist || 0;
 
                 obj.chart = chart;
-                obj.grid = ax;
+                obj.grid = grid;
 
                 var elem = obj.render();
 
                 // grid 별 dist 로 위치선정하기
-                if(ax.orient == 'left') {
+                if(grid.orient == 'left') {
                     elem.root.translate(_area.x - dist, _area.y);
-                } else if(ax.orient == 'right') {
+                } else if(grid.orient == 'right') {
                     elem.root.translate(_area.x + chart.area('x2') + dist, _area.y);
-                } else if(ax.orient == 'bottom') {
+                } else if(grid.orient == 'bottom') {
                     elem.root.translate(_area.x , _area.y + chart.area('y2') + dist);
-                } else if(ax.orient == 'top') {
+                } else if(grid.orient == 'top') {
                     elem.root.translate(_area.x , _area.y + chart.area('y') - dist);
                 } else {
                     // custom
@@ -4300,18 +4303,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             return _widget;
-        }
-
-        this.data = function(index, field) {
-            if(_data && _data[index]) {
-                if(!_.typeCheck("undefined", field)) {
-                    return _data[index][field];
-                }
-
-                return _data[index]
-            }
-
-            return _data || [];
         }
 
         /**
@@ -5170,7 +5161,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			if (grid.type == "radar" || grid.type == "block") {
 				if (grid.target && !grid.domain) {
 					var domain = [],
-						data = chart.data();
+						data = this.data();
 					
                     if (grid.reverse) {
                         var start = data.length - 1,
@@ -5210,10 +5201,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 
 			if (grid.target && grid.target.length && !grid.domain) {
 				var min = grid.min || 0,
-					max = grid.max || 0;
-				var data = chart.data();
-
-
+					max = grid.max || 0,
+					data = this.data();
 				var value_list = [];
 
 				for (var i = 0; i < grid.target.length; i++) {
@@ -5295,7 +5284,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			if (grid.target && grid.target.length) {
 				var min = grid.min || undefined,
 					max = grid.max || undefined;
-				var data = chart.data();
+				var data = this.data();
 
 				var value_list = [] ;
 				for (var i = 0; i < grid.target.length; i++) {
@@ -5344,9 +5333,8 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			var self = this;
 			
 			function new_scale(i) {
-				
 				if (key) {
-					i = chart.data(i)[key];
+					i = self.data(i)[key];
 				}
 				
 				return old_scale(i);
@@ -5395,7 +5383,7 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 		}
 		
 		/**
-		 * theme 이 적용된  axis line 리턴 
+		 * theme 이 적용된  axis line 리턴
 		 * 
 		 */
 		this.axisLine = function(chart, attr) {
@@ -5433,6 +5421,18 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 			}
 
 			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
+		}
+
+		this.data = function(index, field) {
+			if(this.grid.axis.data && this.grid.axis.data[index]) {
+				if(!_.typeCheck("undefined", field)) {
+					return this.grid.axis.data[index][field];
+				}
+
+				return this.grid.axis.data[index]
+			}
+
+			return this.grid.axis.data || [];
 		}
 
 		/**
@@ -5512,7 +5512,6 @@ jui.define("chart.grid.core", [ "util.base" ], function(_) {
 				max: 0,
 				dist : 0,
 				extend : 0,
-				axis : false,
 				reverse: false,
 				key: null,
 				hide: false,
@@ -6870,7 +6869,7 @@ jui.define("chart.grid.overlap", [  ], function() {
         }
 
         this.drawBefore = function() {
-            size = grid.size || chart.data().length ||  1;
+            size = grid.size || this.data().length ||  1;
 
             widthUnit = (chart.area('width') / 2) / size;
             heightUnit = (chart.area('height') / 2) / size;
@@ -6995,6 +6994,23 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
             return tg + minRadius;
         }
 
+        this.eachData = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+            var list = this.listData();
+
+            for(var i = 0; i < list.length; i++) {
+                callback.apply(this, [ i, list[i] ]);
+            }
+        }
+
+        this.listData = function() {
+            return this.brush.axis.data;
+        }
+
+        this.getData = function(index) {
+            return this.listData()[index];
+        }
+
         /**
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
@@ -7005,9 +7021,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.getXY = function() {
             var xy = [];
 
-            for (var i = 0, len = this.chart.data().length; i < len; i++) {
-                var startX = this.brush.x(i),
-                    data = this.chart.data(i);
+            this.eachData(function(i, data) {
+                var startX = this.brush.x(i);
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -7030,7 +7045,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                     xy[j].min.push(value == series.min);
                     xy[j].max.push(value == series.max);
                 }
-            }
+            });
 
             return xy;
         }
@@ -7047,9 +7062,8 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
         this.getStackXY = function() {
             var xy = this.getXY();
 
-            for (var i = 0, len = this.chart.data().length; i < len; i++) {
-                var data = this.chart.data(i),
-                    valueSum = 0;
+            this.eachData(function(i, data) {
+                var valueSum = 0;
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -7061,7 +7075,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
 
                     xy[j].y[i] = this.brush.y(value + valueSum);
                 }
-            }
+            });
 
             return xy;
         }
@@ -7081,7 +7095,7 @@ jui.define("chart.brush.core", [ "util.base" ], function(_) {
                 brush: this.brush,
                 dataIndex: dataIndex,
                 dataKey: (targetIndex != null) ? this.brush.target[targetIndex] : null,
-                data: (dataIndex != null) ? chart.data(dataIndex) : null
+                data: (dataIndex != null) ? this.getData(dataIndex) : null
             };
 
             elem.on("click", function(e) {
@@ -7186,7 +7200,7 @@ jui.define("chart.brush.bar", [], function() {
 
 	var BarBrush = function(chart, brush) {
 		var g, activeTooltip;
-		var zeroX, count, height, half_height, bar_height;
+		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
 			return {
@@ -7210,7 +7224,7 @@ jui.define("chart.brush.bar", [], function() {
 		this.getBarElement = function(width, height, dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
 				color = this.chart.color(targetIndex, this.brush),
-				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
 				width : width,
@@ -7287,8 +7301,6 @@ jui.define("chart.brush.bar", [], function() {
 			var style = this.getBarStyle();
 
 			zeroX = brush.x(0);
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
@@ -7300,11 +7312,11 @@ jui.define("chart.brush.bar", [], function() {
 		this.draw = function() {
 			var points = this.getXY();
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startY = brush.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.data(i, brush.target[j]),
+					var value = data[brush.target[j]],
 						startX = brush.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
@@ -7342,7 +7354,7 @@ jui.define("chart.brush.bar", [], function() {
 					// 다음 컬럼 좌표 설정
 					startY += bar_height + brush.innerPadding;
 				}
-			}
+			});
 
 			g.append(activeTooltip);
 
@@ -7368,12 +7380,11 @@ jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
 		var g, activeTooltip, style;
-		var zeroY, count, width, col_width, half_width;
+		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
 			style = this.getBarStyle();
 			zeroY = brush.y(0);
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
@@ -7387,11 +7398,11 @@ jui.define("chart.brush.column", [], function() {
 		this.draw = function() {
 			var points = this.getXY();
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.data(i)[brush.target[j]],
+					var value = data[brush.target[j]],
 						startY = brush.y((value == 0) ? brush.minValue : value),
 						position = (startY <= zeroY) ? "top" : "bottom",
 						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
@@ -7428,7 +7439,7 @@ jui.define("chart.brush.column", [], function() {
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;
 				}
-			}
+			});
 
 			g.append(activeTooltip);
 
@@ -7442,12 +7453,12 @@ jui.define("chart.brush.column", [], function() {
 jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, brush) {
-		var g, series, count, height, bar_width;
+		var g, series, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
 				color = this.chart.color(targetIndex, this.brush),
-				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
 				fill : color,
@@ -7499,16 +7510,13 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			series = chart.series();
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
 				var startY = brush.y(i) - bar_width/ 2,
@@ -7516,7 +7524,7 @@ jui.define("chart.brush.stackbar", [], function() {
                     value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
-					var xValue = chart.data(i, brush.target[j]) + value,
+					var xValue = data[brush.target[j]] + value,
                         endX = brush.x(xValue),
 						r = this.getBarElement(i, j);
 
@@ -7536,7 +7544,7 @@ jui.define("chart.brush.stackbar", [], function() {
 				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();
@@ -7559,20 +7567,17 @@ jui.define("chart.brush.stackbar", [], function() {
 jui.define("chart.brush.stackcolumn", [], function() {
 
 	var ColumnStackBrush = function(chart, brush) {
-		var g, zeroY, count, width, bar_width;
+		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			zeroY = brush.y(0);
-			count = chart.data().length;
-
 			width = brush.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
 				var startX = brush.x(i) - bar_width / 2,
@@ -7580,7 +7585,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
                     value = 0;
 
 				for(var j = 0; j < brush.target.length; j++) {
-					var yValue = chart.data(i, brush.target[j]) + value,
+					var yValue = data[brush.target[j]] + value,
                         endY = brush.y(yValue),
 						r = this.getBarElement(i, j);
 
@@ -7600,7 +7605,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();
@@ -7615,14 +7620,11 @@ jui.define("chart.brush.stackcolumn", [], function() {
 jui.define("chart.brush.fullstackbar", [], function() {
 
 	var FullStackBarBrush = function(chart, brush) {
-		var g, zeroX, count, height, bar_height;
+		var g, zeroX, height, bar_height;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			zeroX = brush.x(0);
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
 		}
@@ -7638,7 +7640,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
 				var startY = brush.y(i) - bar_height / 2,
@@ -7646,7 +7648,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					list = [];
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var width = chart.data(i, brush.target[j]);
+					var width = data[brush.target[j]];
 
 					sum += width;
 					list.push(width);
@@ -7685,7 +7687,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();
@@ -7709,14 +7711,11 @@ jui.define("chart.brush.fullstackbar", [], function() {
 jui.define("chart.brush.fullstackcolumn", [], function() {
 
 	var FullStackColumnBrush = function(chart, brush) {
-		var g, zeroY, count, width, bar_width;
+		var g, zeroY, width, bar_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			zeroY = brush.y(0);
-			count = chart.data().length;
-
 			width = brush.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
@@ -7724,7 +7723,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		this.draw = function() {
 			var chart_height = chart.area('height');
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
 				var startX = brush.x(i) - bar_width / 2,
@@ -7732,7 +7731,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
                     list = [];
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var height = chart.data(i, brush.target[j]);
+					var height = data[brush.target[j]];
 
 					sum += height;
 					list.push(height);
@@ -7771,7 +7770,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();
@@ -7839,7 +7838,7 @@ jui.define("chart.brush.bubble", [], function() {
 jui.define("chart.brush.candlestick", [], function() {
 
     var CandleStickBrush = function(chart, brush) {
-        var g, count, width = 0, barWidth = 0, barPadding = 0;
+        var g, width = 0, barWidth = 0, barPadding = 0;
 
         function getTargetData(data) {
             var target = {};
@@ -7856,16 +7855,14 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-
-            count = chart.data().length;
             width = brush.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
 
         this.draw = function() {
-            for (var i = 0; i < count; i++) {
-                var data = getTargetData(chart.data(i)),
+            this.eachData(function(i, data) {
+                var data = getTargetData(data),
                     startX = brush.x(i),
                     r = null,
                     l = null;
@@ -7924,7 +7921,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
                 g.append(l);
                 g.append(r);
-            }
+            });
 
             return g;
         }
@@ -7940,7 +7937,7 @@ jui.define("chart.brush.candlestick", [], function() {
 jui.define("chart.brush.ohlc", [], function() {
 
     var OHLCBrush = function(chart, brush) {
-        var g, count;
+        var g;
 
         function getTargets(chart) {
             var target = {};
@@ -7955,13 +7952,12 @@ jui.define("chart.brush.ohlc", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            count = chart.data().length;
         }
 
         this.draw = function() {
             var targets = getTargets(chart);
 
-            for (var i = 0; i < count; i++) {
+            this.eachData(function(i, data) {
                 var startX = brush.x(i);
 
                 var open = targets.open.data[i],
@@ -8002,7 +7998,7 @@ jui.define("chart.brush.ohlc", [], function() {
                 g.append(lowHigh);
                 g.append(close);
                 g.append(open);
-            }
+            });
 
             return g;
         }
@@ -8123,7 +8119,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			});
 
 			var target = this.brush.target,
-				data = this.chart.data(0);
+				data = this.getData(0);
 
 			var all = 360,
 				startAngle = 0,
@@ -8165,26 +8161,23 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 jui.define("chart.brush.equalizer", [], function() {
 
     var EqualizerBrush = function(chart, brush) {
-        var g, zeroY, count, width, barWidth, half_width;
+        var g, zeroY, width, barWidth, half_width;
 
         this.drawBefore = function() {
             g = chart.svg.group();
-
             zeroY = brush.y(0);
-            count = chart.data().length;
-
             width = brush.x.rangeBand();
             half_width = (width - brush.outerPadding * 2) / 2;
             barWidth = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
         }
 
         this.draw = function() {
-            for (var i = 0; i < count; i++) {
+            this.eachData(function(i, data) {
                 var startX = brush.x(i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(chart.data(i, brush.target[j])),
+                    var startY = brush.y(data[brush.target[j]]),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;
@@ -8228,7 +8221,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
                     startX += barWidth + brush.innerPadding;
                 }
-            }
+            });
 
             return g;
         }
@@ -8395,9 +8388,6 @@ jui.define("chart.brush.path", [], function() {
 				"class" : "brush path"
 			});
 			
-			var data = chart.data(),
-                data_count = data.length;
-			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var color = chart.color(ti, brush);
 
@@ -8410,8 +8400,8 @@ jui.define("chart.brush.path", [], function() {
 	
 				g.append(path);
 	
-				for(var i = 0; i < data_count; i++) {
-					var obj = brush.c(i, chart.data(i, brush.target[ti])),
+				this.eachData(function(i, data) {
+					var obj = brush.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
 	
@@ -8420,7 +8410,7 @@ jui.define("chart.brush.path", [], function() {
 					} else {
 						path.LineTo(x, y);
 					}
-				}
+				});
 	
 				path.ClosePath();
 			}
@@ -8529,11 +8519,9 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-			var data = chart.data();
-
-			for(var i = 0; i < data.length; i++) {
-				this.drawUnit(i, data[i], group);
-			}
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
+			});
 
             return group;
 		}
@@ -8725,9 +8713,7 @@ jui.define("chart.brush.bargauge", [], function() {
 				var max = width;
 			}
 
-			for(var i = 0, len = chart.data().length; i < len; i++) {
-                var data = chart.data(i);
-                
+			this.eachData(function(i, data) {
                 var g = chart.svg.group({
                     "class" : "bar"
                 });
@@ -8794,7 +8780,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 group.append(g);
                 
                 y += brush.size + brush.cut;
-			}
+			});
 
             return group;
 		}
@@ -9468,8 +9454,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 			
-			for(var i = 0, len = chart.data().length; i < len; i++) {
-				var rate = (chart.data(i)[brush.target] - brush.min) / (brush.max - brush.min),
+			this.eachData(function(i, data) {
+				var rate = (data[brush.target] - brush.min) / (brush.max - brush.min),
                     currentAngle = (brush.endAngle) * rate,
                     innerRadius = outerRadius - brush.size + brush.cut;
 				
@@ -9498,10 +9484,10 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					fill : chart.color(i, brush),
 					"font-size" : "12px",
 					"font-weight" : "bold"
-				}, chart.data(i)[brush.title] || ""))
+				}, data[brush.title] || ""))
 				
 				outerRadius -= brush.size;
-			}
+			});
 
             return group;
 		}
@@ -9525,15 +9511,15 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 jui.define("chart.brush.waterfall", [], function() {
 
 	var WaterFallBrush = function(chart, brush) {
-		var g, zeroY, count, width, columnWidth, half_width;
+		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
+			count = this.listData().length;
 			zeroY = brush.y(0);
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
@@ -9544,9 +9530,9 @@ jui.define("chart.brush.waterfall", [], function() {
 			var target = brush.target[0],
 				stroke = chart.theme("waterfallLineColor");
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - half_width / 2,
-					startY = brush.y(chart.data(i)[target]),
+					startY = brush.y(data[target]),
 					r = null, l = null;
 
 				if(i == 0 || (i == count - 1 && brush.end)) {
@@ -9570,8 +9556,8 @@ jui.define("chart.brush.waterfall", [], function() {
 						});
 					}
 				} else {
-					var preValue = chart.data(i - 1)[target],
-						nowValue = chart.data(i)[target],
+					var preValue = this.getData(i - 1)[target],
+						nowValue = data[target],
 						preStartY = brush.y(preValue),
 						nowStartY = brush.y(nowValue),
 						h = preStartY - nowStartY;
@@ -9613,7 +9599,7 @@ jui.define("chart.brush.waterfall", [], function() {
 				g.append(r);
 
 				startX += columnWidth;
-			}
+			});
 
             return g;
 		}
@@ -9656,7 +9642,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
                 py = this.curvePoints(y);
             }
 
-            for (var i = 0; i < x.length - 1; i++) {
+            for(var i = 0; i < x.length - 1; i++) {
                 if(i == split) {
                     var color = this.chart.theme("lineSplitBorderColor"),
                         opacity = this.chart.theme("lineSplitBorderOpacity");
@@ -9725,7 +9711,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                 split = this.brush.split,
                 splitColor = this.chart.theme("areaSplitBackgroundColor");
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var opts = {
                     fill: this.chart.color(k, this.brush),
                     "fill-opacity": this.chart.theme("areaOpacity"),
@@ -9771,7 +9757,7 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 jui.define("chart.brush.rangecolumn", [], function() {
 
 	var RangeColumnBrush = function(chart, brush) {
-		var g, count, width, columnWidth, half_width;
+		var g, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
 
@@ -9780,7 +9766,6 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
@@ -9792,13 +9777,13 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - (half_width / 2);
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var data = chart.data(i)[ brush.target[j]],
-						startY = brush.y(data[1]),
-						zeroY = brush.y(data[0]);
+				for(var j = 0; j < brush.target.length; j++) {
+					var value = data[brush.target[j]],
+						startY = brush.y(value[1]),
+						zeroY = brush.y(value[0]);
 
 					var r = chart.svg.rect({
 						x : startX,
@@ -9816,7 +9801,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 					startX += columnWidth + innerPadding;
 				}
-			}
+			});
 
             return g;
 		}
@@ -9835,7 +9820,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 jui.define("chart.brush.rangebar", [], function() {
 
 	var RangeBarBrush = function(chart, brush) {
-		var g, count, height, half_height, barHeight;
+		var g, height, half_height, barHeight;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
 
@@ -9844,7 +9829,6 @@ jui.define("chart.brush.rangebar", [], function() {
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
-			count = chart.data().length;
 
 			height = brush.y.rangeBand();
 			half_height = height - (outerPadding * 2);
@@ -9856,14 +9840,14 @@ jui.define("chart.brush.rangebar", [], function() {
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group(),
 					startY = brush.y(i) - (half_height / 2);
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var data = chart.data(i, brush.target[j]),
-						startX = brush.x(data[1]),
-						zeroX = brush.x(data[0]);
+				for(var j = 0; j < brush.target.length; j++) {
+					var value = data[brush.target[j]],
+						startX = brush.x(value[1]),
+						zeroX = brush.x(value[0]);
 
 					var r = chart.svg.rect({
 						x : zeroX,
@@ -9883,7 +9867,7 @@ jui.define("chart.brush.rangebar", [], function() {
 				}
 				
 				g.append(group);
-			}
+			});
 
             return g;
 		}

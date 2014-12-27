@@ -1,15 +1,15 @@
 jui.define("chart.brush.waterfall", [], function() {
 
 	var WaterFallBrush = function(chart, brush) {
-		var g, zeroY, count, width, columnWidth, half_width;
+		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
 
             outerPadding = brush.outerPadding;
+			count = this.listData().length;
 			zeroY = brush.y(0);
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
@@ -20,9 +20,9 @@ jui.define("chart.brush.waterfall", [], function() {
 			var target = brush.target[0],
 				stroke = chart.theme("waterfallLineColor");
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - half_width / 2,
-					startY = brush.y(chart.data(i)[target]),
+					startY = brush.y(data[target]),
 					r = null, l = null;
 
 				if(i == 0 || (i == count - 1 && brush.end)) {
@@ -46,8 +46,8 @@ jui.define("chart.brush.waterfall", [], function() {
 						});
 					}
 				} else {
-					var preValue = chart.data(i - 1)[target],
-						nowValue = chart.data(i)[target],
+					var preValue = this.getData(i - 1)[target],
+						nowValue = data[target],
 						preStartY = brush.y(preValue),
 						nowStartY = brush.y(nowValue),
 						h = preStartY - nowStartY;
@@ -89,7 +89,7 @@ jui.define("chart.brush.waterfall", [], function() {
 				g.append(r);
 
 				startX += columnWidth;
-			}
+			});
 
             return g;
 		}

@@ -2,7 +2,7 @@ jui.define("chart.brush.bar", [], function() {
 
 	var BarBrush = function(chart, brush) {
 		var g, activeTooltip;
-		var zeroX, count, height, half_height, bar_height;
+		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
 			return {
@@ -26,7 +26,7 @@ jui.define("chart.brush.bar", [], function() {
 		this.getBarElement = function(width, height, dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
 				color = this.chart.color(targetIndex, this.brush),
-				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
 				width : width,
@@ -103,8 +103,6 @@ jui.define("chart.brush.bar", [], function() {
 			var style = this.getBarStyle();
 
 			zeroX = brush.x(0);
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
@@ -116,11 +114,11 @@ jui.define("chart.brush.bar", [], function() {
 		this.draw = function() {
 			var points = this.getXY();
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startY = brush.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.data(i, brush.target[j]),
+					var value = data[brush.target[j]],
 						startX = brush.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
@@ -158,7 +156,7 @@ jui.define("chart.brush.bar", [], function() {
 					// 다음 컬럼 좌표 설정
 					startY += bar_height + brush.innerPadding;
 				}
-			}
+			});
 
 			g.append(activeTooltip);
 

@@ -31,9 +31,7 @@ jui.define("chart.brush.bargauge", [], function() {
 				var max = width;
 			}
 
-			for(var i = 0, len = chart.data().length; i < len; i++) {
-                var data = chart.data(i);
-                
+			this.eachData(function(i, data) {
                 var g = chart.svg.group({
                     "class" : "bar"
                 });
@@ -100,7 +98,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 group.append(g);
                 
                 y += brush.size + brush.cut;
-			}
+			});
 
             return group;
 		}

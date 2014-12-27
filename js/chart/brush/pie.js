@@ -95,11 +95,9 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 
-			var data = chart.data();
-
-			for(var i = 0; i < data.length; i++) {
-				this.drawUnit(i, data[i], group);
-			}
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
+			});
 
             return group;
 		}

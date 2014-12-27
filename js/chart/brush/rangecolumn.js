@@ -1,7 +1,7 @@
 jui.define("chart.brush.rangecolumn", [], function() {
 
 	var RangeColumnBrush = function(chart, brush) {
-		var g, count, width, columnWidth, half_width;
+		var g, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
 		var borderColor, borderWidth, borderOpacity;
 
@@ -10,7 +10,6 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - outerPadding * 2);
@@ -22,13 +21,13 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - (half_width / 2);
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var data = chart.data(i)[ brush.target[j]],
-						startY = brush.y(data[1]),
-						zeroY = brush.y(data[0]);
+				for(var j = 0; j < brush.target.length; j++) {
+					var value = data[brush.target[j]],
+						startY = brush.y(value[1]),
+						zeroY = brush.y(value[0]);
 
 					var r = chart.svg.rect({
 						x : startX,
@@ -46,7 +45,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 					startX += columnWidth + innerPadding;
 				}
-			}
+			});
 
             return g;
 		}

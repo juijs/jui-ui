@@ -2,12 +2,11 @@ jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, brush) {
 		var g, activeTooltip, style;
-		var zeroY, count, width, col_width, half_width;
+		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
 			style = this.getBarStyle();
 			zeroY = brush.y(0);
-			count = chart.data().length;
 
 			width = brush.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
@@ -21,11 +20,11 @@ jui.define("chart.brush.column", [], function() {
 		this.draw = function() {
 			var points = this.getXY();
 
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var startX = brush.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
-					var value = chart.data(i)[brush.target[j]],
+					var value = data[brush.target[j]],
 						startY = brush.y((value == 0) ? brush.minValue : value),
 						position = (startY <= zeroY) ? "top" : "bottom",
 						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
@@ -62,7 +61,7 @@ jui.define("chart.brush.column", [], function() {
 					// 다음 컬럼 좌표 설정
 					startX += col_width + brush.innerPadding;
 				}
-			}
+			});
 
 			g.append(activeTooltip);
 

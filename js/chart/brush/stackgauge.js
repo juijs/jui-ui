@@ -37,8 +37,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				"class" : "brush donut"
 			});
 			
-			for(var i = 0, len = chart.data().length; i < len; i++) {
-				var rate = (chart.data(i)[brush.target] - brush.min) / (brush.max - brush.min),
+			this.eachData(function(i, data) {
+				var rate = (data[brush.target] - brush.min) / (brush.max - brush.min),
                     currentAngle = (brush.endAngle) * rate,
                     innerRadius = outerRadius - brush.size + brush.cut;
 				
@@ -67,10 +67,10 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					fill : chart.color(i, brush),
 					"font-size" : "12px",
 					"font-weight" : "bold"
-				}, chart.data(i)[brush.title] || ""))
+				}, data[brush.title] || ""))
 				
 				outerRadius -= brush.size;
-			}
+			});
 
             return group;
 		}

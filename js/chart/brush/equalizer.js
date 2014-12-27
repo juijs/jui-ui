@@ -1,26 +1,23 @@
 jui.define("chart.brush.equalizer", [], function() {
 
     var EqualizerBrush = function(chart, brush) {
-        var g, zeroY, count, width, barWidth, half_width;
+        var g, zeroY, width, barWidth, half_width;
 
         this.drawBefore = function() {
             g = chart.svg.group();
-
             zeroY = brush.y(0);
-            count = chart.data().length;
-
             width = brush.x.rangeBand();
             half_width = (width - brush.outerPadding * 2) / 2;
             barWidth = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
         }
 
         this.draw = function() {
-            for (var i = 0; i < count; i++) {
+            this.eachData(function(i, data) {
                 var startX = brush.x(i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(chart.data(i, brush.target[j])),
+                    var startY = brush.y(data[brush.target[j]]),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;
@@ -64,7 +61,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
                     startX += barWidth + brush.innerPadding;
                 }
-            }
+            });
 
             return g;
         }

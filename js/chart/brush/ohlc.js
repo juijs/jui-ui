@@ -1,7 +1,7 @@
 jui.define("chart.brush.ohlc", [], function() {
 
     var OHLCBrush = function(chart, brush) {
-        var g, count;
+        var g;
 
         function getTargets(chart) {
             var target = {};
@@ -16,13 +16,12 @@ jui.define("chart.brush.ohlc", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            count = chart.data().length;
         }
 
         this.draw = function() {
             var targets = getTargets(chart);
 
-            for (var i = 0; i < count; i++) {
+            this.eachData(function(i, data) {
                 var startX = brush.x(i);
 
                 var open = targets.open.data[i],
@@ -63,7 +62,7 @@ jui.define("chart.brush.ohlc", [], function() {
                 g.append(lowHigh);
                 g.append(close);
                 g.append(open);
-            }
+            });
 
             return g;
         }

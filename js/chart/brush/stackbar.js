@@ -1,12 +1,12 @@
 jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, brush) {
-		var g, series, count, height, bar_width;
+		var g, series, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
 				color = this.chart.color(targetIndex, this.brush),
-				value = this.chart.data(dataIndex)[this.brush.target[targetIndex]];
+				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.rect({
 				fill : color,
@@ -58,16 +58,13 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-
 			series = chart.series();
-			count = chart.data().length;
-
 			height = brush.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
 
 		this.draw = function() {
-			for (var i = 0; i < count; i++) {
+			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
 				var startY = brush.y(i) - bar_width/ 2,
@@ -75,7 +72,7 @@ jui.define("chart.brush.stackbar", [], function() {
                     value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
-					var xValue = chart.data(i, brush.target[j]) + value,
+					var xValue = data[brush.target[j]] + value,
                         endX = brush.x(xValue),
 						r = this.getBarElement(i, j);
 
@@ -95,7 +92,7 @@ jui.define("chart.brush.stackbar", [], function() {
 				this.setActiveEventOption(group); // 액티브 엘리먼트 이벤트 설정
 				this.addBarElement(group);
 				g.append(group);
-			}
+			});
 
 			// 액티브 엘리먼트 설정
 			this.setActiveEffectOption();

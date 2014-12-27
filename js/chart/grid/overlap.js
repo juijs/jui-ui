@@ -11,7 +11,7 @@ jui.define("chart.grid.overlap", [  ], function() {
         }
 
         this.drawBefore = function() {
-            size = grid.size || chart.data().length ||  1;
+            size = grid.size || this.data().length ||  1;
 
             widthUnit = (chart.area('width') / 2) / size;
             heightUnit = (chart.area('height') / 2) / size;

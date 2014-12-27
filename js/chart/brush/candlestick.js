@@ -1,7 +1,7 @@
 jui.define("chart.brush.candlestick", [], function() {
 
     var CandleStickBrush = function(chart, brush) {
-        var g, count, width = 0, barWidth = 0, barPadding = 0;
+        var g, width = 0, barWidth = 0, barPadding = 0;
 
         function getTargetData(data) {
             var target = {};
@@ -18,16 +18,14 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-
-            count = chart.data().length;
             width = brush.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
 
         this.draw = function() {
-            for (var i = 0; i < count; i++) {
-                var data = getTargetData(chart.data(i)),
+            this.eachData(function(i, data) {
+                var data = getTargetData(data),
                     startX = brush.x(i),
                     r = null,
                     l = null;
@@ -86,7 +84,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
                 g.append(l);
                 g.append(r);
-            }
+            });
 
             return g;
         }
