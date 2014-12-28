@@ -272,7 +272,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 브러쉬 관련 설정 설정
                     if(type == "brush") {
-                        // 타겟 설정
+                        // 타겟 프로퍼티 설정
                         if(!draws[i].target) {
                             var target = [];
 
@@ -287,8 +287,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                             draws[i].target = [ draws[i].target ];
                         }
 
-                        // 축 설정
+                        // 엑시스 프로퍼티 설정
                         if(_axis[axisIndex]) {
+                            draws[i].axis = axisIndex;
                             draws[i].x = _axis[axisIndex].xScale;
                             draws[i].y = _axis[axisIndex].yScale;
                             draws[i].c = _axis[axisIndex].cScale;
