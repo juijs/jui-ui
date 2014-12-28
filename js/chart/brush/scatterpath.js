@@ -12,12 +12,17 @@ jui.define("chart.brush.scatterpath", [], function() {
                 "stroke-width" : this.chart.theme("scatterBorderWidth")
             });
 
+            var tpl = path.getSymbolTemplate(width, height);
+
+            var series = this.chart.series();
+
             for(var i = 0; i < points.length; i++) {
-                var target = this.chart.series(this.brush.target[i]),
-                    symbol = (!target.symbol) ? this.brush.symbol : target.symbol;
+                var target = series[this.brush.target[i]],
+                    symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
               
                 for(var j = 0; j < points[i].x.length; j++) {
-                    path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
+                    //path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
+                    path.template(points[i].x[j], points[i].y[j], tpl[symbol]);
                 }
             }
 
@@ -27,7 +32,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.draw = function() {
-            return this.drawScatter(this.getXY());
+            return this.drawScatter(this.getXY(false));
         }
 
         this.drawSetup = function() {

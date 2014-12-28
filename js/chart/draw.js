@@ -23,7 +23,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             for(var key in defOpts) {
                 defOptKeys.push(key);
 
-                if(_.typeCheck("undefined", options[key])) {
+                if(typeof options[key] == 'undefined') {
                     options[key] = defOpts[key];
                 }
             }
@@ -43,28 +43,28 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.render = function() {
-            if (!_.typeCheck("function", this.draw)) {
+            if (typeof this.draw != 'function') {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
             // Call drawSetting method (Only brush and widget)
-            if (_.typeCheck("function", this.drawSetup)) {
+            if (typeof this.drawSetup == 'function') {
                 var tmpOpts = this.drawSetup(),
-                    opts = _.typeCheck("object", tmpOpts) ? tmpOpts : {};
+                    opts = (typeof tmpOpts == 'object') ? tmpOpts : {};
 
                 // Options Check
                 setupOptions(this.grid || this.brush || this.widget, opts);
             }
 
             // Call drawBefore method (All)
-            if (_.typeCheck("function", this.drawBefore)) {
+            if (typeof this.drawBefore == 'function') {
                 this.drawBefore();
             }
 
             // Call draw method (All)
 			var obj = this.draw();
 
-            if (!_.typeCheck("object", obj)) {
+            if (typeof obj != 'object') {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정

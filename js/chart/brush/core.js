@@ -91,7 +91,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          */
         this.eachData = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
+            if(typeof callback != 'function') return;
             var list = this.listData();
 
             for(var i = 0; i < list.length; i++) {
@@ -112,16 +112,22 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-        this.getXY = function() {
+        this.getXY = function(isCheckMinMax) {
             var xy = [];
+            isCheckMinMax = typeof isCheckMinMax == 'undefined' ? true : false;
+
+            var series = {};
+
+            if (isCheckMinMax) {
+                series = $.extend(true, this.chart.series(), this.axis.series);
+            }
 
             this.eachData(function(i, data) {
                 var startX = this.brush.x(i);
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
-                        value = data[key],
-                        series = this.chart.series(key);
+                        value = data[key];
 
                     if (!xy[j]) {
                         xy[j] = {
@@ -136,8 +142,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     xy[j].x.push(startX);
                     xy[j].y.push(this.brush.y(value));
                     xy[j].value.push(value);
-                    xy[j].min.push(value == series.min);
-                    xy[j].max.push(value == series.max);
+
+                    if (isCheckMinMax) {
+                        xy[j].min.push(value == series[key].min);
+                        xy[j].max.push(value == series[key].max);
+                    }
+
                 }
             });
 

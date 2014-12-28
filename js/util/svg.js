@@ -290,10 +290,16 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
 jui.define("util.svg.element.path", [], function() { // path
     var PathElement = function() {
         var orders = [];
+        var ordersString = "";
 
         function applyOrders(self) {
-            if(orders.length == 0) return;
-            self.attr({ d: orders.join(" ") });
+            if (ordersString.length > 0) {
+                self.attr({ d: ordersString });
+            } else {
+                if(orders.length == 0) return;
+                self.attr({ d: orders.join(" ") });
+            }
+
         }
 
         this.moveTo = function(x, y, type) {
@@ -382,7 +388,40 @@ jui.define("util.svg.element.path", [], function() { // path
         this.join = function() {
             applyOrders(this);
         }
-        
+
+        /**
+         * 심볼 템플릿
+         *
+         */
+        this.getSymbolTemplate = function(width, height) {
+            var r = width;
+            var half_width = half_r =  width / 2;
+            var half_height = height / 2;
+
+            var start = "a" + half_r + "," + half_r + " 0 1,1 " + r + ",0";
+            var end = "a" + half_r + "," + half_r + " 0 1,1 " + -r + ",0";
+
+            var obj = {
+                triangle : ["m0," + -half_height, "l" + (half_width) + "," + height, "l" + (-width) + ",0", "l" + (half_width) + "," + (-height)].join(" "),
+                rect : ["m" + (-half_width) + "," + (-half_height), "l" + (width) + ",0", "l0," + (height) , "l" + (-width) + ',0', "l0," + (-height)].join(" "),
+                cross : ["m" + (-half_width) + ',' + (-half_height), "l" + (width) + "," + (height), "m0," + (-height), "l" + (-width) + "," + (height)].join(" "),
+                circle : ["m" + (-r) + ",0", start, end  ].join(" ")
+            }
+
+            obj.rectangle = obj.rect;
+
+            return obj;
+
+        }
+
+        /**
+         * 심볼 추가 하기 (튜닝)
+         */
+        this.template = function(cx, cy, tpl) {
+            ordersString += " M" + (cx) + "," + (cy) + tpl;
+            //orders.push(" M" + (cx) + "," + (cy) + tpl);
+        }
+
         /**
          * path 내 심볼 생성 
          * 

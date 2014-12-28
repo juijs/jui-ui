@@ -277,7 +277,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
-				if(!_.typeCheck("undefined", field)) {
+				if(typeof field != 'undefined') {
 					return this.axis.data[index][field];
 				}
 
@@ -342,11 +342,13 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
+
+            var originArea = chart.area("", true);
 			var width = chart.area('width'),
 				height = chart.area('height'),
 				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
 				max = (orient == "left" || orient == "right") ? height : width,
-				start = (grid.axis) ? axis : 0,
+				start = axis,
 				size = max;
 
 			return {
