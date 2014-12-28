@@ -34,7 +34,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
-                if(widget.position == "bottom") {
+                if(widget.orient == "bottom") {
                     text.attr({ y: textY + anchor });
                 }
 
@@ -54,7 +54,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         d = (obj.data != null) ? obj.data[key] : null;
 
                     // 위젯 포지션에 따른 별도 처리
-                    if(widget.position == "bottom") {
+                    if(widget.orient == "bottom") {
                         y = y + anchor;
                     }
 
@@ -106,7 +106,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 h = size.height + padding;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(widget.position, w, h, anchor) });
+                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -118,15 +118,15 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 var x = e.bgX - (w / 2),
                     y = e.bgY - h - anchor - (padding / 2);
 
-                if(widget.position == "left" || widget.position == "right") {
+                if(widget.orient == "left" || widget.orient == "right") {
                     y = e.bgY - (h / 2) - (padding / 2);
                 }
 
-                if(widget.position == "left") {
+                if(widget.orient == "left") {
                     x = e.bgX - w - anchor;
-                } else if(widget.position == "right") {
+                } else if(widget.orient == "right") {
                     x = e.bgX + anchor;
-                } else if(widget.position == "bottom") {
+                } else if(widget.orient == "bottom") {
                     y = e.bgY + (anchor * 2);
                 }
 
@@ -145,7 +145,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position: "top", // or bottom, left, right
+                orient: "top", // or bottom, left, right
                 all: false,
                 format: null
             });

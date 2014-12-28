@@ -4,9 +4,9 @@ jui.define("chart.widget.title", [], function() {
         var x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function() {
-            if (widget.position == "bottom") {
+            if (widget.orient == "bottom") {
                 y = chart.area('y2') + chart.padding("bottom") - 20;
-            } else if (widget.position == "top") {
+            } else if (widget.orient == "top") {
                 y = 20;
             } else {
                 y = chart.area('y') + chart.area('height') / 2
@@ -40,7 +40,7 @@ jui.define("chart.widget.title", [], function() {
                 "fill" : chart.theme("titleFontColor")
             }, widget.text);
 
-            if (widget.position == "center") {
+            if (widget.orient == "center") {
                 if (widget.align == 'start') {
                     text.rotate(-90, x + widget.dx + half_text_width, y + widget.dy + half_text_height)
                 } else if (widget.align == 'end') {
@@ -53,7 +53,7 @@ jui.define("chart.widget.title", [], function() {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position: "top", // or bottom
+                orient: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,

@@ -127,7 +127,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     group.append(arr[k].icon);
                     arr[k].icon.translate(x, y);
 
-                    if (widget.position == "bottom" || widget.position == "top") {
+                    if (widget.orient == "bottom" || widget.orient == "top") {
                         x += arr[k].width;
                         total_width += arr[k].width;
 
@@ -148,8 +148,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             });
             
             // legend 위치  선정
-            if (widget.position == "bottom" || widget.position == "top") {
-                var y = (widget.position == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
+            if (widget.orient == "bottom" || widget.orient == "top") {
+                var y = (widget.orient == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
                 
                 if (widget.align == "start") {
                     x = chart.area('x');
@@ -159,7 +159,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     x = chart.area('x2') - total_width;
                 }
             } else {
-                var x = (widget.position == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.orient == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
                     y = chart.area('y');
@@ -177,10 +177,10 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position : "bottom",
-                align : "center", // or start, end
-                filter : false,
-                brushSync : false
+                orient: "bottom",
+                align: "center", // or start, end
+                filter: false,
+                brushSync: false
             });
         }
     }

@@ -10162,7 +10162,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
-                if(widget.position == "bottom") {
+                if(widget.orient == "bottom") {
                     text.attr({ y: textY + anchor });
                 }
 
@@ -10182,7 +10182,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         d = (obj.data != null) ? obj.data[key] : null;
 
                     // 위젯 포지션에 따른 별도 처리
-                    if(widget.position == "bottom") {
+                    if(widget.orient == "bottom") {
                         y = y + anchor;
                     }
 
@@ -10234,7 +10234,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 h = size.height + padding;
 
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(widget.position, w, h, anchor) });
+                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -10246,15 +10246,15 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 var x = e.bgX - (w / 2),
                     y = e.bgY - h - anchor - (padding / 2);
 
-                if(widget.position == "left" || widget.position == "right") {
+                if(widget.orient == "left" || widget.orient == "right") {
                     y = e.bgY - (h / 2) - (padding / 2);
                 }
 
-                if(widget.position == "left") {
+                if(widget.orient == "left") {
                     x = e.bgX - w - anchor;
-                } else if(widget.position == "right") {
+                } else if(widget.orient == "right") {
                     x = e.bgX + anchor;
-                } else if(widget.position == "bottom") {
+                } else if(widget.orient == "bottom") {
                     y = e.bgY + (anchor * 2);
                 }
 
@@ -10273,7 +10273,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position: "top", // or bottom, left, right
+                orient: "top", // or bottom, left, right
                 all: false,
                 format: null
             });
@@ -10288,9 +10288,9 @@ jui.define("chart.widget.title", [], function() {
         var x = 0, y = 0, anchor = "middle";
 
         this.drawBefore = function() {
-            if (widget.position == "bottom") {
+            if (widget.orient == "bottom") {
                 y = chart.area('y2') + chart.padding("bottom") - 20;
-            } else if (widget.position == "top") {
+            } else if (widget.orient == "top") {
                 y = 20;
             } else {
                 y = chart.area('y') + chart.area('height') / 2
@@ -10324,7 +10324,7 @@ jui.define("chart.widget.title", [], function() {
                 "fill" : chart.theme("titleFontColor")
             }, widget.text);
 
-            if (widget.position == "center") {
+            if (widget.orient == "center") {
                 if (widget.align == 'start') {
                     text.rotate(-90, x + widget.dx + half_text_width, y + widget.dy + half_text_height)
                 } else if (widget.align == 'end') {
@@ -10337,7 +10337,7 @@ jui.define("chart.widget.title", [], function() {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position: "top", // or bottom
+                orient: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,
@@ -10477,7 +10477,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     group.append(arr[k].icon);
                     arr[k].icon.translate(x, y);
 
-                    if (widget.position == "bottom" || widget.position == "top") {
+                    if (widget.orient == "bottom" || widget.orient == "top") {
                         x += arr[k].width;
                         total_width += arr[k].width;
 
@@ -10498,8 +10498,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             });
             
             // legend 위치  선정
-            if (widget.position == "bottom" || widget.position == "top") {
-                var y = (widget.position == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
+            if (widget.orient == "bottom" || widget.orient == "top") {
+                var y = (widget.orient == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
                 
                 if (widget.align == "start") {
                     x = chart.area('x');
@@ -10509,7 +10509,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     x = chart.area('x2') - total_width;
                 }
             } else {
-                var x = (widget.position == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.orient == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
                     y = chart.area('y');
@@ -10527,10 +10527,10 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
         this.drawSetup = function() {
             return this.getOptions({
-                position : "bottom",
-                align : "center", // or start, end
-                filter : false,
-                brushSync : false
+                orient: "bottom",
+                align: "center", // or start, end
+                filter: false,
+                brushSync: false
             });
         }
     }
