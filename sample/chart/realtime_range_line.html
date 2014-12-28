@@ -54,7 +54,8 @@
                 }
             },
             axis : {
-                key : "value"
+                key : "value",
+                data : getData(5)
             },
             brush : [{
                 type : "line",
@@ -80,10 +81,7 @@
             ]
         });
 
-        c.update(getData(5));
-
         runData();
-        //c.start();
     });
     
 

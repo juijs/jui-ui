@@ -233,7 +233,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if (!axis) continue;
 
                 // set panel
-                savePanel(caculatePanel(axis.area || { x: 0, y: 0 , width: _area.width, height: _area.height }));
+                axis.area = $.extend({
+                    x: 0, y: 0 , width: _area.width, height: _area.height
+                }, axis.area);
+                savePanel(caculatePanel(axis.area));
 
                 // set data
                 if(axis.data) saveData(axis.data);
@@ -246,7 +249,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     axis.y.orient = axis.y.orient || "left";
                     axis.yScale = drawAxisType(axis, "y", self);
                 }
-                if(axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
+                if(axis.c) {
+                    axis.cScale = drawAxisType(axis, "c", self);
+                }
 
                 if(axis.data) restoreData();
                 restorePanel();

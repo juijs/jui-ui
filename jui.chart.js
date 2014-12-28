@@ -3827,7 +3827,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if (!axis) continue;
 
                 // set panel
-                savePanel(caculatePanel(axis.area || { x: 0, y: 0 , width: _area.width, height: _area.height }));
+                axis.area = $.extend({
+                    x: 0, y: 0 , width: _area.width, height: _area.height
+                }, axis.area);
+                savePanel(caculatePanel(axis.area));
 
                 // set data
                 if(axis.data) saveData(axis.data);
@@ -3840,7 +3843,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     axis.y.orient = axis.y.orient || "left";
                     axis.yScale = drawAxisType(axis, "y", self);
                 }
-                if(axis.c) { axis.cScale = drawAxisType(axis, "c", self); }
+                if(axis.c) {
+                    axis.cScale = drawAxisType(axis, "c", self);
+                }
 
                 if(axis.data) restoreData();
                 restorePanel();
@@ -10965,7 +10970,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "interval", "period", "data" ];
+                excepts = [ "interval", "period" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -11002,8 +11007,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             }, getOptions(this)));
 
             // 초기값 세팅
-            if(opts.data.length > 0) {
-                this.update(opts.data);
+            if(opts.axis.data.length > 0) {
+                this.update(opts.axis.data);
             }
 
             // 그리드 러닝
@@ -11067,11 +11072,10 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
             // chart
             theme : "jennifer",	// 기본 테마 jennifer
-            data : [],
             style : {},
             series : {},
-            brush : null,
-            widget : null,
+            brush : [],
+            widget : [],
 
             // grid (custom)
             axis : {
@@ -11081,7 +11085,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 xstep : 1, // x축 분 간격
                 ystep : 10,
                 xline : true,
-                yline : true
+                yline : true,
+                data : []
             },
 
             // realtime
