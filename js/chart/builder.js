@@ -196,8 +196,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if(typeof grid.extend == 'number') {
                     grid = $.extend({}, _options.axis[grid.extend][k], grid);
                     delete grid.extend;
-
-                    console.log(grid);
                 }
 
                 var Grid = jui.include("chart.grid." + (grid.type || "block"));

@@ -1914,8 +1914,14 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [];
 			var _range = [];
 			var _rangeBand = 0;
+            var _cache = {};
 
 			function func(t) {
+
+                var key = "" + t;
+                if (typeof _cache[key] != 'undefined') {
+                    return _cache[key];
+                }
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
@@ -1926,10 +1932,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				if (index > -1) {
+                    _cache[key] = _range[index];
 					return _range[index];
 				} else {
 					if ( typeof _range[t] != 'undefined') {
 						_domain[t] = t;
+                        _cache[key] = _range[t];
 						return _range[t];
 					}
 
@@ -2149,21 +2157,26 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [0, 1];
 			var _range = [0, 1];
 			var _isRound = false;
-			var _isClamp = false; 
+			var _isClamp = false;
+            var _cache = {};
 
 			function func(x) {
+
+                var key = x + "";
+                if (typeof _cache[key] != 'undefined') {
+                    return _cache[key];
+                }
+
 				var index = -1;
 				var target;
-				
 
-				
 				for (var i = 0, len = _domain.length; i < len; i++) {
 
-					if (i == len - 1) {
-              if (x == _domain[i]) {
-                index = i;
-                break;
-              }
+                    if (i == len - 1) {
+                      if (x == _domain[i]) {
+                        index = i;
+                        break;
+                      }
 					} else {
 						if (_domain[i] < _domain[i + 1]) {
 							if (x >= _domain[i] && x < _domain[i + 1]) {
@@ -2182,15 +2195,17 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				if (!_range) {
 					if (index == 0) {
+                        _cache[key] = 0;
 						return 0;
 					} else if (index == -1) {
+                        _cache[key] = 1;
 						return 1;
 					} else {
 						var min = _domain[index - 1];
 						var max = _domain[index];
 
 						var pos = (x - min) / (max - min);
-
+                        _cache[key] = pos;
 						return pos;
 					}
 				} else {
@@ -2205,7 +2220,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					  
 					  if (max < x) {
 					    
-              if (_isClamp) return max;					    
+                        if (_isClamp) {
+                            _cache[key] = max;
+                            return max;
+                        }
 					    
 					    var last = _domain[_domain.length -1];
 					    var last2 = _domain[_domain.length -2];
@@ -2215,26 +2233,32 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					    
 					    var distLast = Math.abs(last - last2);
 					    var distRLast = Math.abs(rlast - rlast2);
-					    
-					    return rlast + Math.abs(x - max) * distRLast / distLast; 
+
+                        _cache[key] = rlast + Math.abs(x - max) * distRLast / distLast;
+					    return _cache[key];
 					    
 					  } else if (min > x) {
 					    
-					    if (_isClamp) return min;
+					    if (_isClamp) {
+                            _cache[key] = min;
+                            return min;
+                        }
 					    
-              var first = _domain[0];
-              var first2 = _domain[1];
-              
-              var rfirst = _range[0];
-              var rfirst2 = _range[1];
-              
-              var distFirst = Math.abs(first - first2);
-              var distRFirst = Math.abs(rfirst - rfirst2);
-              
-              return rfirst - Math.abs(x - min) * distRFirst / distFirst;					    
+                          var first = _domain[0];
+                          var first2 = _domain[1];
+
+                          var rfirst = _range[0];
+                          var rfirst2 = _range[1];
+
+                          var distFirst = Math.abs(first - first2);
+                          var distRFirst = Math.abs(rfirst - rfirst2);
+
+                          _cache[key] = rfirst - Math.abs(x - min) * distRFirst / distFirst;
+                          return _cache[key];
 					  }
 					  
-						return _range[_range.length - 1];
+						_cache[key] = _range[_range.length - 1];
+						return _cache[key];
 					} else {
 
 						var min = _domain[index];
@@ -2247,7 +2271,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 						var scale = _isRound ? math.interpolateRound(minR, maxR) : math.interpolateNumber(minR, maxR);
 
-						return scale(pos);
+                        _cache[key] = scale(pos);
+						return _cache[key];
 
 					}
 				}
@@ -3829,8 +3854,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if(typeof grid.extend == 'number') {
                     grid = $.extend({}, _options.axis[grid.extend][k], grid);
                     delete grid.extend;
-
-                    console.log(grid);
                 }
 
                 var Grid = jui.include("chart.grid." + (grid.type || "block"));
@@ -8725,7 +8748,7 @@ jui.define("chart.brush.scatterpath", [], function() {
             var path = this.chart.svg.path({
                 fill : this.color(0),
                 stroke : this.color(0),
-                "stroke-width" : this.chart.theme("scatterBorderWidth")
+                "stroke-width" : this.brush.strokeWidth
             });
 
             var tpl = path.getSymbolTemplate(width, height);
@@ -8754,7 +8777,8 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawSetup = function() {
             return this.getOptions({
                 symbol: "circle", // or triangle, rectangle, cross
-                size: 7
+                size: 7,
+                strokeWidth : 1
             });
         }
 	}

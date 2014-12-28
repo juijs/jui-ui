@@ -30,11 +30,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 					}
 
 					grid.domain = domain;
-
-					if (grid.reverse) {
-						grid.domain.reverse();
-					}
 				}
+
+                if (grid.reverse) {
+                    grid.domain.reverse();
+                }
+
 			}
 			
 			return grid; 			
@@ -111,12 +112,13 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 					grid.domain = [0, 0];
 				} else {
 					grid.domain = [end, start];					
-					if (grid.reverse) {
-						grid.domain.reverse();
-					}
-					grid.step = Math.abs(start / unit) + Math.abs(end / unit);					
+					grid.step = Math.abs(start / unit) + Math.abs(end / unit);
 					
 				}
+
+                if (grid.reverse) {
+                    grid.domain.reverse();
+                }
 			}
 			
 			return grid; 
@@ -155,10 +157,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				grid.min = min;
 				grid.domain = [grid.min, grid.max];
 
-				if (grid.reverse) {
-					grid.domain.reverse();
-				}				
 			}
+
+            if (grid.reverse) {
+                grid.domain.reverse();
+            }
 			
 			return grid; 
 		}		

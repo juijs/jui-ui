@@ -9,7 +9,7 @@ jui.define("chart.brush.scatterpath", [], function() {
             var path = this.chart.svg.path({
                 fill : this.color(0),
                 stroke : this.color(0),
-                "stroke-width" : this.chart.theme("scatterBorderWidth")
+                "stroke-width" : this.brush.strokeWidth
             });
 
             var tpl = path.getSymbolTemplate(width, height);
@@ -38,7 +38,8 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawSetup = function() {
             return this.getOptions({
                 symbol: "circle", // or triangle, rectangle, cross
-                size: 7
+                size: 7,
+                strokeWidth : 1
             });
         }
 	}

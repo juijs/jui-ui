@@ -8,7 +8,7 @@
 </head>
 <body class="jui">
 
-<div id="chart"></div>
+<div id="chart" style="display:none;"></div>
 <div><canvas id="chartCanvas"></canvas></div>
 <script id="tpl_tooltip" type="text/template">
     <div class="tooltip tooltip-top tooltip-black">
@@ -79,28 +79,28 @@
             },
             series : {
                 name : { text : "이름", symbol : "cross" },
-                value : { text : "값", symbol : "circle" },
-                test : { text : "테스트값", symbol : "rectangle" }
+                value : { text : "값", symbol : "cross" },
+                test : { text : "테스트값", symbol : "cross" }
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name", size : 3,
+                target : "name", size : 5, strokeWidth : 2 ,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",size : 3,
+                target : "value",size : 5,strokeWidth : 2 ,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",size : 3,
+                target : "test",size : 5,strokeWidth : 2 ,
                 colors : [ theme.colors[2] ]
             }]
         });
 
         setInterval(function() {
-            c.update(data);
+            c.update(data = changeData(data));
             //c.render();
-            //c.svg.exportCanvas($("#chartCanvas")[0]);
+            c.svg.exportCanvas($("#chartCanvas")[0]);
         }, 1000);
 
 
