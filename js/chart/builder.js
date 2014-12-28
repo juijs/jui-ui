@@ -194,8 +194,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 // 그리드 옵션 재사용
                 if(typeof grid.extend == 'number') {
-                    grid = $.extend(_axis[grid.extend][k], grid);
+                    grid = $.extend({}, _options.axis[grid.extend][k], grid);
                     delete grid.extend;
+
+                    console.log(grid);
                 }
 
                 var Grid = jui.include("chart.grid." + (grid.type || "block"));

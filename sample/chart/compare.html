@@ -9,14 +9,7 @@
 
 <body class="jui">
 
-<div class="row">
-    <div class="col col-6">
-        <div id="chart-female"></div>
-    </div>
-    <div class="col col-6" style="margin-left: -55px;">
-        <div id="chart-male"></div>
-    </div>
-</div>
+        <div id="chart-content"></div>
 
 <script>
     var data = [
@@ -40,53 +33,53 @@
     ];
 
     jui.ready([ "chart.builder", "chart.theme.pastel" ], function(chart, theme) {
-        chart("#chart-female", {
+        chart("#chart-content", {
+            width : 800,
             height : 400,
-            axis : {
-                y : {
-                    target : "age",
-                    hide : true
-                },
+            axis : [{
                 x : {
                     type : "range",
-                    target : "female",
+                    target : [ "female", "male" ],
                     step : 10,
                     line : true,
                     reverse : true
                 },
-                data : data
-            },
-            widget : {
-                type : "legend"
-            },
-            brush : {
-                type : "bar",
-                target : "female",
-                colors : [ theme.colors[0] ]
-            }
-        });
-
-        chart("#chart-male", {
-            height : 400,
-            axis : {
                 y : {
+                    type : "block",
                     target : "age"
                 },
+                data : data,
+                area : {
+                    x : 0, y : 0, width : "50%", height : "100%"
+                }
+            }, {
                 x : {
-                    type : "range",
-                    target : "male",
-                    step : 10,
-                    line: true
+                    extend : 0,
+                    reverse : false
                 },
-                data : data
-            },
-            widget : {
-                type : "legend"
-            },
-            brush : {
+                y : {
+                    extend : 0,
+                    orient : "right"
+                },
+                data : data,
+                area : {
+                    x : "50%", y : 0, width : "50%", height : "100%"
+                }
+            }],
+            brush : [{
+                type : "bar",
+                target : "female",
+                colors : [ 1 ],
+                axis : 0
+            }, {
                 type : "bar",
                 target : "male",
-                colors : [ theme.colors[2] ]
+                colors : [ 2 ],
+                axis : 1
+            }],
+            widget : {
+                type : "legend",
+                brush : [ 0, 1 ]
             }
         });
 	});
