@@ -95,11 +95,11 @@ jui.define("chart.brush.waterfall", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				line: true,
 				end: false,
                 outerPadding: 5
-            });
+            };
         }
 	}
 

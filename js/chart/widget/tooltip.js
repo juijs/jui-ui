@@ -144,11 +144,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "top", // or bottom, left, right
                 all: false,
                 format: null
-            });
+            };
         }
     }
 

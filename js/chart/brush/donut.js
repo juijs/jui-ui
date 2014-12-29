@@ -136,9 +136,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 size: 50
-            });
+            };
         }
 	}
 

@@ -61,11 +61,11 @@ jui.define("chart.brush.circlegauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 min: 0,
                 max: 100,
                 value: 0
-            });
+            };
         }
 	}
 

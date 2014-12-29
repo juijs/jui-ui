@@ -66,10 +66,6 @@ jui.define("chart.brush.ohlc", [], function() {
 
             return g;
         }
-
-        this.drawSetup = function() {
-            return this.getOptions();
-        }
     }
 
     return OHLCBrush;

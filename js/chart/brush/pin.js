@@ -32,9 +32,9 @@ jui.define("chart.brush.pin", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 split: 0
-            });
+            };
         }
     }
 

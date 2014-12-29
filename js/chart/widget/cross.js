@@ -132,10 +132,10 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 xFormat: null,
                 yFormat: null
-            });
+            };
         }
     }
 

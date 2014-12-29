@@ -67,10 +67,10 @@ jui.define("chart.brush.focus", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 start: -1,
                 end: -1
-            });
+            };
         }
     }
 

@@ -176,12 +176,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "bottom",
                 align: "center", // or start, end
                 filter: false,
                 brushSync: false
-            });
+            };
         }
     }
 

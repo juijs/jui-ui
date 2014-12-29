@@ -164,14 +164,14 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				minValue: 0,
 				outerPadding: 2,
 				innerPadding: 1,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
-            });
+            };
         }
 	}
 

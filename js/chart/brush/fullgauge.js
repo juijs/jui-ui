@@ -1,6 +1,6 @@
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
-	var GaugeBrush = function(chart, axis, brush) {
+	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
@@ -100,7 +100,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -109,9 +109,9 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 endAngle: 300,
                 text: "",
                 unitText: ""
-            });
+            };
         }
 	}
 
-	return GaugeBrush;
+	return FullGaugeBrush;
 }, "chart.brush.donut");

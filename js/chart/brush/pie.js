@@ -101,10 +101,6 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-			return this.getOptions();
-        }
 	}
 
 	return PieBrush;

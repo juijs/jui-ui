@@ -51,10 +51,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 outerPadding: 2,
                 innerPadding: 1
-            });
+            };
         }
 	}
 

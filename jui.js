@@ -10011,8 +10011,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
         function setupOptions(options, defOpts) {
             var exceptOpts = [
+                    "type", "target", "index", "colors", "axis", // common
                     "extend", "dist", "orient", "x", "y", "c",   // axis
-                    "type", "target", "index", "colors", "axis" // common
+                    "brush", "render"  // widget
                 ],
                 defOptKeys = [],
                 optKeys = [];
@@ -13726,12 +13727,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         this.color = function(key) {
             return this.chart.color(key, this.brush);
         }
-
-        this.getOptions = function(options) {
-            return $.extend({
-                // 공통 옵션 추가 영역
-            }, options);
-        }
 	}
 
 	return CoreBrush;
@@ -13902,14 +13897,14 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				minValue: 0,
 				outerPadding: 2,
 				innerPadding: 1,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				display: null // or max, min
-            });
+            };
         }
 	}
 
@@ -14093,11 +14088,11 @@ jui.define("chart.brush.stackbar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				outerPadding: 15,
 				active: null,
 				activeEvent: null // or click, mouseover, ...
-            });
+            };
         }
 	}
 
@@ -14236,12 +14231,12 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		}
 
 		this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				outerPadding: 15,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				showText: false
-			});
+			};
 		}
 	}
 
@@ -14366,10 +14361,10 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 min: 5,
                 max: 30
-            })
+            };
         }
 	}
 
@@ -14465,10 +14460,6 @@ jui.define("chart.brush.candlestick", [], function() {
 
             return g;
         }
-
-        this.drawSetup = function() {
-            return this.getOptions();
-        }
     }
 
     return CandleStickBrush;
@@ -14541,10 +14532,6 @@ jui.define("chart.brush.ohlc", [], function() {
             });
 
             return g;
-        }
-
-        this.drawSetup = function() {
-            return this.getOptions();
         }
     }
 
@@ -14689,9 +14676,9 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 size: 50
-            });
+            };
         }
 	}
 
@@ -14767,12 +14754,12 @@ jui.define("chart.brush.equalizer", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 innerPadding: 10,
                 outerPadding: 15,
                 unit: 5,
                 gap: 5
-            });
+            };
         }
     }
 
@@ -14908,12 +14895,12 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 symbol: "normal", // normal, curve, step
                 display: null,
                 active: null,
                 activeEvent: null // or click, mouseover, ...
-            });
+            };
         }
 	}
 
@@ -15065,10 +15052,6 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-			return this.getOptions();
-        }
 	}
 
 	return PieBrush;
@@ -15169,10 +15152,10 @@ jui.define("chart.brush.scatter", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7
-            });
+            };
         }
     }
 
@@ -15216,11 +15199,11 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 symbol: "circle", // or triangle, rectangle, cross
                 size: 7,
                 strokeWidth : 1
-            });
+            };
         }
 	}
 
@@ -15332,13 +15315,13 @@ jui.define("chart.brush.bargauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 cut: 5,
                 size: 20,
                 split: false,
                 align: "left",
                 title: "title"
-            });
+            };
         }
 	}
 
@@ -15408,11 +15391,11 @@ jui.define("chart.brush.circlegauge", [], function() {
 		}
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 min: 0,
                 max: 100,
                 value: 0
-            });
+            };
         }
 	}
 
@@ -15573,7 +15556,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 		}
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15581,7 +15564,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                 direction: "vertical",
                 svg: "",
                 path: ""
-            })
+            };
         }
 	}
 
@@ -15830,7 +15813,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15839,7 +15822,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 endAngle: 360,
                 arrow: true,
                 unitText: ""
-            });
+            };
         }
 	}
 
@@ -15848,7 +15831,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
-	var GaugeBrush = function(chart, axis, brush) {
+	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
@@ -15948,7 +15931,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -15957,11 +15940,11 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 endAngle: 300,
                 text: "",
                 unitText: ""
-            });
+            };
         }
 	}
 
-	return GaugeBrush;
+	return FullGaugeBrush;
 }, "chart.brush.donut");
 
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
@@ -16042,7 +16025,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 min: 0,
                 max: 100,
                 cut: 5,
@@ -16050,7 +16033,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
                 startAngle: -180,
                 endAngle: 360,
                 title: "title"
-            });
+            };
         }
 	}
 
@@ -16154,11 +16137,11 @@ jui.define("chart.brush.waterfall", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				line: true,
 				end: false,
                 outerPadding: 5
-            });
+            };
         }
 	}
 
@@ -16241,10 +16224,10 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 symbol: "normal", // normal, curve, step
                 split: null
-            });
+            };
         }
 	}
 
@@ -16356,10 +16339,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 outerPadding: 2,
                 innerPadding: 1
-            });
+            };
         }
 	}
 
@@ -16422,10 +16405,10 @@ jui.define("chart.brush.rangebar", [], function() {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 outerPadding: 2,
                 innerPadding: 1
-            });
+            };
         }
 	}
 
@@ -16501,10 +16484,10 @@ jui.define("chart.brush.focus", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 start: -1,
                 end: -1
-            });
+            };
         }
     }
 
@@ -16544,9 +16527,9 @@ jui.define("chart.brush.pin", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 split: 0
-            });
+            };
         }
     }
 
@@ -16646,13 +16629,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
         this.on = function(type, callback) {
             return this.chart.on(type, callback, this.isRender());
-        }
-
-        this.getOptions = function(options) {
-            return $.extend({
-                brush: null,
-                render: false
-            }, options);
         }
 	}
 
@@ -16804,11 +16780,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "top", // or bottom, left, right
                 all: false,
                 format: null
-            });
+            };
         }
     }
 
@@ -16868,13 +16844,13 @@ jui.define("chart.widget.title", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,
                 dy: 0
-            });
+            };
         }
     }
 
@@ -17058,12 +17034,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "bottom",
                 align: "center", // or start, end
                 filter: false,
                 brushSync: false
-            });
+            };
         }
     }
 
@@ -17170,10 +17146,6 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 setScrollEvent(self, thumb);
 
             }).translate(chart.area("x"), chart.area("y2"));
-        }
-
-        this.drawSetup = function() {
-            return this.getOptions();
         }
     }
 
@@ -17309,10 +17281,6 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 setDragEvent(self, thumb, bg);
             });
-        }
-
-        this.drawSetup = function() {
-            return this.getOptions();
         }
     }
 
@@ -17452,10 +17420,10 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 xFormat: null,
                 yFormat: null
-            });
+            };
         }
     }
 

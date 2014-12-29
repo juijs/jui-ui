@@ -93,13 +93,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         this.on = function(type, callback) {
             return this.chart.on(type, callback, this.isRender());
         }
-
-        this.getOptions = function(options) {
-            return $.extend({
-                brush: null,
-                render: false
-            }, options);
-        }
 	}
 
 	return CoreWidget;

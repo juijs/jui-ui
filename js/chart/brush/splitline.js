@@ -74,10 +74,10 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 symbol: "normal", // normal, curve, step
                 split: null
-            });
+            };
         }
 	}
 

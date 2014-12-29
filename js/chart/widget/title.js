@@ -52,13 +52,13 @@ jui.define("chart.widget.title", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 orient: "top", // or bottom
                 align: "center", // or start, end
                 text: "",
                 dx: 0,
                 dy: 0
-            });
+            };
         }
     }
 

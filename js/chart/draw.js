@@ -8,8 +8,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
         function setupOptions(options, defOpts) {
             var exceptOpts = [
+                    "type", "target", "index", "colors", "axis", // common
                     "extend", "dist", "orient", "x", "y", "c",   // axis
-                    "type", "target", "index", "colors", "axis" // common
+                    "brush", "render"  // widget
                 ],
                 defOptKeys = [],
                 optKeys = [];

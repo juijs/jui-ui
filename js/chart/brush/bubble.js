@@ -42,10 +42,10 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 min: 5,
                 max: 30
-            })
+            };
         }
 	}
 

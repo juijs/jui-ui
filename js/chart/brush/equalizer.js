@@ -67,12 +67,12 @@ jui.define("chart.brush.equalizer", [], function() {
         }
 
         this.drawSetup = function() {
-            return this.getOptions({
+            return {
                 innerPadding: 10,
                 outerPadding: 15,
                 unit: 5,
                 gap: 5
-            });
+            };
         }
     }
 

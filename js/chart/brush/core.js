@@ -294,12 +294,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         this.color = function(key) {
             return this.chart.color(key, this.brush);
         }
-
-        this.getOptions = function(options) {
-            return $.extend({
-                // 공통 옵션 추가 영역
-            }, options);
-        }
 	}
 
 	return CoreBrush;

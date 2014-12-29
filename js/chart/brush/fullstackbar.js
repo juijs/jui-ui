@@ -77,12 +77,12 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		}
 
 		this.drawSetup = function() {
-			return this.getOptions({
+			return {
 				outerPadding: 15,
 				active: null,
 				activeEvent: null, // or click, mouseover, ...
 				showText: false
-			});
+			};
 		}
 	}
 

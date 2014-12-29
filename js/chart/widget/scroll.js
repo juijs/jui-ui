@@ -100,10 +100,6 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
             }).translate(chart.area("x"), chart.area("y2"));
         }
-
-        this.drawSetup = function() {
-            return this.getOptions();
-        }
     }
 
     return ScrollWidget;

@@ -173,7 +173,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawSetup = function() {
-			return this.getOptions({
+			return {
                 min: 0,
                 max: 100,
                 value: 0,
@@ -182,7 +182,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 endAngle: 360,
                 arrow: true,
                 unitText: ""
-            });
+            };
         }
 	}
 
