@@ -267,74 +267,89 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * brush 에 맞는 x, y 축(grid) 설정
          *
          */
-        function drawBrush(self, type, isAll) {
-            var draws = (type == "brush") ? _brush : _widget;
+        function drawBrush(self) {
+            var draws = _brush;
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart." + type + "." + draws[i].type),
+                    var Obj = jui.include("chart.brush." + draws[i].type),
                         axisIndex = draws[i].axis || _options.axisIndex;
 
-                    // 브러쉬 관련 설정 설정
-                    if(type == "brush") {
-                        // 타겟 프로퍼티 설정
-                        if(!draws[i].target) {
-                            var target = [];
+                    // 타겟 프로퍼티 설정
+                    if(!draws[i].target) {
+                        var target = [];
 
-                            if(_axis[axisIndex]) {
-                                for(var key in _axis[axisIndex].series) {
-                                    target.push(key);
-                                }
-                            }
-
-                            draws[i].target = target;
-                        } else if(typeof draws[i].target == "string") {
-                            draws[i].target = [ draws[i].target ];
-                        }
-
-                        // 엑시스 프로퍼티 설정
                         if(_axis[axisIndex]) {
-                            draws[i].axis = axisIndex;
-
-                            if(_axis[axisIndex].x)
-                                draws[i].x = _axis[axisIndex].x.scale;
-                            if(_axis[axisIndex].y)
-                                draws[i].y = _axis[axisIndex].y.scale;
-                            if(_axis[axisIndex].c)
-                                draws[i].c = _axis[axisIndex].c.scale;
+                            for(var key in _axis[axisIndex].series) {
+                                target.push(key);
+                            }
                         }
+
+                        draws[i].target = target;
+                    } else if(typeof draws[i].target == "string") {
+                        draws[i].target = [ draws[i].target ];
                     }
 
-                    // 브러쉬&위젯 인덱스 설정
+                    // 엑시스 프로퍼티 설정
+                    if(_axis[axisIndex]) {
+                        draws[i].axis = axisIndex;
+
+                        if(_axis[axisIndex].x)
+                            draws[i].x = _axis[axisIndex].x.scale;
+                        if(_axis[axisIndex].y)
+                            draws[i].y = _axis[axisIndex].y.scale;
+                        if(_axis[axisIndex].c)
+                            draws[i].c = _axis[axisIndex].c.scale;
+                    }
+
+                    // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
-                    // 브러쉬&위젯 기본 프로퍼티 정의
+                    // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
                     draw.chart = self;
                     draw.axis = _axis[axisIndex];
-                    draw[type] = draws[i];
+                    draw.brush = draws[i];
 
-                    // 브러쉬&위젯 엘리먼트 생성 및 후처리
-                    if(type == "widget") {
-                        // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
-                        // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
-                        if(_initialize && !draw.isRender() && isAll !== true) {
-                            return;
-                        }
+                    // 브러쉬 렌더링
+                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+                    draw.render();
+                    if(_axis[axisIndex]) restoreData();
+                }
+            }
+        }
 
-                        if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+        function drawWidget(self, isAll) {
+            var draws = _widget;
 
-                        var elem = draw.render();
-                        if(!draw.isRender()) {
-                            self.svg.autoRender(elem, false);
-                        }
+            if(draws != null) {
+                for(var i = 0; i < draws.length; i++) {
+                    var Obj = jui.include("chart.widget." + draws[i].type),
+                        axisIndex = _options.axisIndex;
 
-                        if(_axis[axisIndex]) restoreData();
-                    } else {
-                        if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
-                        draw.render();
-                        if(_axis[axisIndex]) restoreData();
+                    // 위젯 인덱스 설정
+                    draws[i].index = i;
+
+                    // 위젯 기본 프로퍼티 정의
+                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
+                    draw.chart = self;
+                    draw.axis = _axis[axisIndex];
+                    draw.widget = draws[i];
+
+                    // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
+                    // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
+                    if(_initialize && !draw.isRender() && isAll !== true) {
+                        return;
                     }
+
+                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+
+                    var elem = draw.render();
+                    if(!draw.isRender()) {
+                        self.svg.autoRender(elem, false);
+                    }
+
+                    if(_axis[axisIndex]) restoreData();
                 }
             }
         }
@@ -817,8 +832,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             drawBefore(this);
             drawDefs(this);
             drawAxis(this);
-            drawBrush(this, "brush", isAll);
-            drawBrush(this, "widget", isAll);
+            drawBrush(this);
+            drawWidget(this, isAll);
 
             // SVG 태그 백그라운드 테마 설정
             this.svg.root.css({
