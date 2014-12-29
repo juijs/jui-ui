@@ -3901,14 +3901,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(axis.x) {
                     axis.x.orient = axis.x.orient || "bottom"
-                    axis.xScale = drawAxisType(axis, "x", self);
+                    axis.x.scale = drawAxisType(axis, "x", self);
                 }
                 if(axis.y) {
                     axis.y.orient = axis.y.orient || "left";
-                    axis.yScale = drawAxisType(axis, "y", self);
+                    axis.y.scale = drawAxisType(axis, "y", self);
                 }
                 if(axis.c) {
-                    axis.cScale = drawAxisType(axis, "c", self);
+                    axis.c.scale = drawAxisType(axis, "c", self);
                 }
 
                 if(axis.data) restoreData();
@@ -3953,9 +3953,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         // 엑시스 프로퍼티 설정
                         if(_axis[axisIndex]) {
                             draws[i].axis = axisIndex;
-                            draws[i].x = _axis[axisIndex].xScale;
-                            draws[i].y = _axis[axisIndex].yScale;
-                            draws[i].c = _axis[axisIndex].cScale;
+
+                            if(_axis[axisIndex].x)
+                                draws[i].x = _axis[axisIndex].x.scale;
+                            if(_axis[axisIndex].y)
+                                draws[i].y = _axis[axisIndex].y.scale;
+                            if(_axis[axisIndex].c)
+                                draws[i].c = _axis[axisIndex].c.scale;
                         }
                     }
 
