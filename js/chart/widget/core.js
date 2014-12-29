@@ -61,7 +61,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var list = getBrushIndex(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
-                callback.apply(this, [ i, this.chart.draw("brush", list[i]) ]);
+                callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
             }
         }
 

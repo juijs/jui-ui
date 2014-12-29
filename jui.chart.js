@@ -4236,39 +4236,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * 차트 영역 데이터 반환
+         * 차트의 구성요소 반환
          *
-         * @returns {*}
+         * @param key (axis | brush | widget)
          */
-
-        this.area = function(key) {
-            if(_panel) {
-                return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
-            } else {
-                return typeof _area[key] == 'undefined' ? _area : _area[key];
-            }
-        }
-
-        /**
-         * padding 옵션 리턴
-         *
-         * @param {string} key
-         *
-         */
-        this.padding = function(key) {
-            if(_padding[key]) {
-                return _padding[key];
-            }
-
-            return _padding;
-        }
-
-        /**
-         * draw 객체 반환
-         *
-         * @param key
-         */
-        this.draw = function(type, key) {
+        this.get = function(type, key) {
             var obj = {
                 axis: _axis,
                 brush: _brush,
@@ -4283,13 +4255,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
+         * 차트의 영역요소 반환
+         *
+         * @param key (width | height | x | y | x2 | y2)
+         * @returns {*}
+         */
+
+        this.area = function(key) {
+            if(_panel) {
+                return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
+            } else {
+                return typeof _area[key] == 'undefined' ? _area : _area[key];
+            }
+        }
+
+        /**
+         * 차트의 여백요소 반환
+         * @param key (top | left | bottom | right)
+         * @returns {*}
+         */
+        this.padding = function(key) {
+            if(_padding[key]) {
+                return _padding[key];
+            }
+
+            return _padding;
+        }
+
+        /**
          * series 객체 반환
          *
          * @param key
          * @returns {*}
          */
         this.series = function(key) {
-            var axis = this.draw("axis", _options.axisIndex);
+            var axis = this.get("axis", _options.axisIndex);
 
             if(axis.series && axis.series[key]) {
                 return $.extend(_series[key], axis.series[key]);
@@ -10176,7 +10176,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var list = getBrushIndex(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
-                callback.apply(this, [ i, this.chart.draw("brush", list[i]) ]);
+                callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
             }
         }
 
