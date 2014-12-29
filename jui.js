@@ -12054,8 +12054,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				unit: 0,
 				color: null,
 				title: null,
-				start: null,
-				size: null,
 				line: false,
 				format: null,
 				textRotate : null
