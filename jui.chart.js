@@ -388,14 +388,14 @@
 		//-- Functions
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
-			
-			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>'); 
-			$('body').append(div); 
-			var w1 = $('div', div).innerWidth(); 
-			div.css('overflow-y', 'auto'); 
-			var w2 = $('div', div).innerWidth(); 
-			$(div).remove(); 
-		    
+
+			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>');
+			$('body').append(div);
+			var w1 = $('div', div).innerWidth();
+			div.css('overflow-y', 'auto');
+			var w2 = $('div', div).innerWidth();
+			$(div).remove();
+
 			return (isJUI) ? 10 : (w1 - w2);
 		},
 		inherit: function(ctor, superCtor) {
@@ -406,32 +406,32 @@
 		extend: function(origin, add) {
 			// Don't do anything if add isn't an object
 			if (!add || typeof add !== 'object') return origin;
-			
+
 			var keys = Object.keys(add);
 			var i = keys.length;
 			while (i--) {
 				origin[keys[i]] = add[keys[i]];
 			}
-			
+
 			return origin;
 		},
 		pxToInt: function(px) {
 			if(typeof(px) == "string" && px.indexOf("px") != -1) {
 				return parseInt(px.split("px").join(""));
 			}
-			
+
 			return px;
 		},
 		clone: function(obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
-			
+
 	        for(var i in obj) {
 	            if(typeof(obj[i]) == "object")
 	                clone[i] = this.clone(obj[i]);
 	            else
 	                clone[i] = obj[i];
 	        }
-	        
+
 	        return clone;
 		},
         deepClone: function(obj, emit) {
@@ -468,8 +468,8 @@
 		runtime: function(name, callback) {
 			var nStart = new Date().getTime();
 			callback();
-			var nEnd = new Date().getTime(); 
-			
+			var nEnd = new Date().getTime();
+
 			console.log(name + " : " + (nEnd - nStart) + "ms");
 		},
 		template: function(html, obj) {
@@ -479,13 +479,13 @@
 		resize: function(callback, ms) {
 			var after_resize = (function(){
 				var timer = 0;
-				
+
 				return function() {
 				    clearTimeout(timer);
 				    timer = setTimeout(callback, ms);
 				}
 			})();
-			
+
 			$(window).resize(function() {
 				after_resize();
 			});
@@ -497,28 +497,31 @@
 		  var chunks = [],
 		      i = 0,
 		      n = arr.length;
-		
+
 		  while (i < n) {
 		    chunks.push(arr.slice(i, i += len));
 		  }
-		
+
 		  return chunks;
 		},
 		typeCheck: function(t, v) {
 			function check(type, value) {
-				return {
-					"string": (typeof(value) == "string") ? true : false,
-					"integer": (typeof(value) == "number" && value % 1 == 0) ? true : false,
-					"float": (typeof(value) == "number" && value % 1 != 0) ? true : false,
-					"number": (typeof(value) == "number") ? true : false,
-					"object": (typeof(value) == "object" && value !== null) ? true : false,
-					"function": (typeof(value) == "function") ? true : false,
-					"array": (value != null && typeof(value) == "object" && typeof(value.length) == "number") ? true : false,
-					"boolean"	: (typeof(value) == "boolean") ? true : false, 
-					"undefined": (typeof(value) == "undefined") ? true: false,
-					"null": (value === null) ? true : false,
-                    "date": (typeof(value) == "object" && value !== null && typeof(value.getTime) == "function") ? true : false
-				}[type];
+				if(typeof(type) != "string") return false;
+				var t = type.toLowerCase();
+
+				if(t == "string") 	if(typeof(value) == "string") return true;
+				if(t == "integer") 	if(typeof(value) == "number" && value % 1 == 0) return true;
+				if(t == "float") 	if(typeof(value) == "number" && value % 1 != 0) return true;
+				if(t == "number") 	if(typeof(value) == "number") return true;
+				if(t == "boolean") 	if(typeof(value) == "boolean") return true;
+				if(t == "undefined")if(typeof(value) == "undefined") return true;
+				if(t == "null") 	if(value === null) return true;
+				if(t == "array") 	if(value instanceof Array) return true;
+				if(t == "date") 	if(value instanceof Date) return true;
+				if(t == "function") if(typeof(value) == "function") return true;
+				if(t == "object") 	if(typeof(value) == "object" && value !== null) return true;
+
+				return false;
 			}
 			
 			if(typeof(t) == "object" && t.length) {
@@ -810,8 +813,8 @@
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
 				depends = (arguments.length == 2) ? arguments[0] : null;
-				
-			if(!utility.typeCheck([ "array", "null" ], depends) || 
+
+			if(!utility.typeCheck([ "array", "null" ], depends) ||
 					!utility.typeCheck("function", callback)) {
 			
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
