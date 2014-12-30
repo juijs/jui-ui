@@ -231,12 +231,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	BlockGrid.setup = function() {
 		return {
-			// core options
 			max: 10,
-			start: 0,
-			size: 0,
-
-			// block options
 			full: false
 		};
 	}

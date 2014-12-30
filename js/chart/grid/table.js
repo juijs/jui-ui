@@ -87,9 +87,9 @@ jui.define("chart.grid.table", [  ], function() {
 
     TableGrid.setup = function() {
         return {
-            row : 1,
-            column : 1,
-            outerPadding : 1
+            row: 1,
+            column: 1,
+            outerPadding: 1
         };
     }
     

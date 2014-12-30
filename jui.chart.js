@@ -3833,17 +3833,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             function drawAxisType(axis, k, chart) {
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
-                // 다른 그리드 옵션을 사용함
-                var extOpts = (_.typeCheck("integer", axis[k].extend)) ?
-                    _.deepClone(_options.axis[axis[k].extend][k]) : {};
+                // 다른 그리드 옵션을 사용함 (Extend 동작안함 ㅠㅠ)
+                if(_.typeCheck("integer", axis[k].extend)) {
+                    axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
+                    delete axis[k].extend;
+                }
 
                 // 그리드 기본 옵션을 가져옴
-                var defOpts = getDrawOptions(extOpts, Grid);
+                var defOpts = getDrawOptions({}, Grid);
 
                 // 그리드 기본 옵션과 사용자 옵션을 합침
                 setDrawOptions(axis[k], defOpts);
 
-                // axis 기본 프로퍼티 정의
+                // 엑시스 기본 프로퍼티 정의
                 var obj = new Grid(chart, axis, axis[k]);
                 obj.chart = chart;
                 obj.axis = axis;
@@ -3851,7 +3853,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 var elem = obj.render();
 
-                // grid 별 dist 로 위치선정하기
+                // 그리드 별 위치 선정하기
                 if(axis[k].orient == "left") {
                     elem.root.translate(_area.x - axis[k].dist, _area.y);
                 } else if(axis[k].orient == "right") {
@@ -5634,8 +5636,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-
-            var originArea = chart.area("", true);
 			var width = chart.area('width'),
 				height = chart.area('height'),
 				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
@@ -5657,7 +5657,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			extend:	null,
 			dist: 0,
 			orient: null,
-
 			domain: null,
 			step: 10,
 			min: 0,
@@ -5909,12 +5908,7 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	BlockGrid.setup = function() {
 		return {
-			// core options
 			max: 10,
-			start: 0,
-			size: 0,
-
-			// block options
 			full: false
 		};
 	}
@@ -6121,7 +6115,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 	DateGrid.setup = function() {
 		return {
-			// date options
 			realtime: false
 		};
 	}
@@ -6360,13 +6353,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	RadarGrid.setup = function() {
 		return {
-			// core options
 			max: 100,
-
-			// common options
 			line: true,
-
-			// radar options
 			hideText: false,
 			extra: false,
 			shape: "radial" // or circle
@@ -6593,7 +6581,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	RangeGrid.setup = function() {
 		return {
-			// range options
 			hideText: false,
 			nice: false
 		};
@@ -6822,7 +6809,6 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	RuleGrid.setup = function() {
 		return {
-			// rule options
 			hideZero: false,
 			hideText: false,
 			nice: false,
@@ -6998,9 +6984,9 @@ jui.define("chart.grid.table", [  ], function() {
 
     TableGrid.setup = function() {
         return {
-            row : 1,
-            column : 1,
-            outerPadding : 1
+            row: 1,
+            column: 1,
+            outerPadding: 1
         };
     }
     

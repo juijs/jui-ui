@@ -218,7 +218,6 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	RuleGrid.setup = function() {
 		return {
-			// rule options
 			hideZero: false,
 			hideText: false,
 			nice: false,

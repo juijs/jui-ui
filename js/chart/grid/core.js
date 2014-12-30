@@ -345,8 +345,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @returns {{start: number, size: *}}
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-
-            var originArea = chart.area("", true);
 			var width = chart.area('width'),
 				height = chart.area('height'),
 				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
@@ -368,7 +366,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			extend:	null,
 			dist: 0,
 			orient: null,
-
 			domain: null,
 			step: 10,
 			min: 0,

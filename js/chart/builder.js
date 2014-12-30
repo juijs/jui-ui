@@ -184,17 +184,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             function drawAxisType(axis, k, chart) {
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
-                // 다른 그리드 옵션을 사용함
-                var extOpts = (_.typeCheck("integer", axis[k].extend)) ?
-                    _.deepClone(_options.axis[axis[k].extend][k]) : {};
+                // 다른 그리드 옵션을 사용함 (Extend 동작안함 ㅠㅠ)
+                if(_.typeCheck("integer", axis[k].extend)) {
+                    axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
+                    delete axis[k].extend;
+                }
 
                 // 그리드 기본 옵션을 가져옴
-                var defOpts = getDrawOptions(extOpts, Grid);
+                var defOpts = getDrawOptions({}, Grid);
 
                 // 그리드 기본 옵션과 사용자 옵션을 합침
                 setDrawOptions(axis[k], defOpts);
 
-                // axis 기본 프로퍼티 정의
+                // 엑시스 기본 프로퍼티 정의
                 var obj = new Grid(chart, axis, axis[k]);
                 obj.chart = chart;
                 obj.axis = axis;
@@ -202,7 +204,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 var elem = obj.render();
 
-                // grid 별 dist 로 위치선정하기
+                // 그리드 별 위치 선정하기
                 if(axis[k].orient == "left") {
                     elem.root.translate(_area.x - axis[k].dist, _area.y);
                 } else if(axis[k].orient == "right") {

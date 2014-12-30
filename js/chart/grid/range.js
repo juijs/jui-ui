@@ -215,7 +215,6 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	RangeGrid.setup = function() {
 		return {
-			// range options
 			hideText: false,
 			nice: false
 		};

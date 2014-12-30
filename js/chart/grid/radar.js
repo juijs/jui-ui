@@ -229,13 +229,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	RadarGrid.setup = function() {
 		return {
-			// core options
 			max: 100,
-
-			// common options
 			line: true,
-
-			// radar options
 			hideText: false,
 			extra: false,
 			shape: "radial" // or circle
