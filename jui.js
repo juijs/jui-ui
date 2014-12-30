@@ -399,6 +399,7 @@
 			return (isJUI) ? 10 : (w1 - w2);
 		},
 		inherit: function(ctor, superCtor) {
+			ctor.parent = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
@@ -4132,7 +4133,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             		d = (no < 10) ? "0" + no : no;
                 selDate = new Date(year + "/" + m + "/" + d);
             } else if(opts.type == "monthly") {
-            	var m = (month < 10) ? "0" + month : month;
+            	var m = (no < 10) ? "0" + no : no;
                 selDate = new Date(year + "/" + m + "/01");
             } else if(opts.type == "yearly") {
                 selDate = new Date(no + "/01/01");
@@ -4279,20 +4280,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          */
 
         this.init = function() {
-            var d = new Date(this.timestamp);
-
-            year = d.getFullYear();
-            month = d.getMonth() + 1;
-            date = d.getDate();
-
             $head = $(this.root).children(".head");
             $body = $(this.root).children(".body");
 
             // 이벤트 정의
             setCalendarEvent(this);
-
-            // 화면 초기화
-            this.page(year, month);
 
             // 기본 날짜 설정
             this.select(this.options.date);

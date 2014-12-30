@@ -399,6 +399,7 @@
 			return (isJUI) ? 10 : (w1 - w2);
 		},
 		inherit: function(ctor, superCtor) {
+			ctor.parent = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
