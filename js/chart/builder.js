@@ -34,7 +34,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         function getValue(value, max) {
-            if(typeof value == 'string' && value.indexOf("%") > -1) {
+            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
                 return max * (parseFloat(value.replace("%", "")) /100);
             }
 
@@ -130,7 +130,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         value = row[key],
                         range = null;
 
-                    if(typeof obj.data == 'undefined') {
+                    if(_.typeCheck("undefined", obj.data)) {
                         obj.data = [];
                     }
 
@@ -142,8 +142,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         range = { max : +value, min : +value }
                     }
 
-                    obj.min = typeof obj.min == 'undefined' ? 0 : obj.min;
-                    obj.max = typeof obj.max == 'undefined' ? 0 : obj.max;
+                    obj.min = _.typeCheck("undefined", obj.min) ? 0 : obj.min;
+                    obj.max = _.typeCheck("undefined", obj.max) ? 0 : obj.max;
 
                     if (range.min < obj.min) {
                         obj.min = range.min;
@@ -193,7 +193,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 var grid = axis[k];
 
                 // 그리드 옵션 재사용
-                if(typeof grid.extend == 'number') {
+                if(_.typeCheck("integer", grid.extend)) {
                     grid = $.extend({}, _options.axis[grid.extend][k], grid);
                     delete grid.extend;
                 }
@@ -286,7 +286,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         }
 
                         draws[i].target = target;
-                    } else if(typeof draws[i].target == "string") {
+                    } else if(_.typeCheck("string", draws[i].target)) {
                         draws[i].target = [ draws[i].target ];
                     }
 
@@ -456,7 +456,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function createGradient(self, obj, hashKey) {
-            if(typeof hashKey != "undefined" && _hash[hashKey]) {
+            if(!_.typeCheck("undefined", hashKey) && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
             }
 
@@ -477,7 +477,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             self.defs.append(g);
 
-            if(typeof hashKey != "undefined") {
+            if(!_.typeCheck("undefined", hashKey)) {
                 _hash[hashKey] = id;
             }
 
@@ -485,11 +485,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function getColor(self, color) {
-            if(typeof color == 'undefined') {
+            if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
-            if(typeof color == 'object') {
+            if(_.typeCheck("object", color)) {
                 return createGradient(self, color);
             }
 
@@ -604,9 +604,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         this.area = function(key) {
             if(_panel) {
-                return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
+                return _.typeCheck("undefined", _panel[key]) ? _panel : _panel[key];
             } else {
-                return typeof _area[key] == 'undefined' ? _area : _area[key];
+                return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
             }
         }
 
@@ -653,7 +653,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(brush.colors instanceof Array) {
                 color = brush.colors[i];
 
-                if(typeof color == "number") {
+                if(_.typeCheck("integer", color)) {
                     color = nextColor(color);
                 }
             } else {
@@ -661,13 +661,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // 시리즈 컬러 설정
-            if(brush.target instanceof Array) {
+            if(_.typeCheck("array", brush.target)) {
                 var series = _series[brush.target[i]];
 
                 if(series && series.color) {
                     color = series.color;
 
-                    if(typeof color == 'number') {
+                    if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
                     }
                 }
@@ -750,7 +750,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(arguments.length == 0) return;
             var callback = _options.format;
 
-            if(typeof callback == 'function') {
+            if(_.typeCheck("function", callback)) {
                 return callback.apply(this, arguments);
             }
 
@@ -808,7 +808,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param callback
          */
         this.on = function(type, callback, isReset) {
-            if(typeof(type) != "string" || typeof(callback) != "function") return;
+            if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
 
             this.event.push({ type: type.toLowerCase(), callback: callback  });
             if(isReset === true) _handler.push(callback);
@@ -1042,7 +1042,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param themeName
          */
         this.setTheme = function(theme) {
-            var newTheme = (typeof theme == 'string') ? jui.include("chart.theme." + theme) : theme;
+            var newTheme = _.typeCheck("string", theme) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));

@@ -426,7 +426,7 @@
 			var clone = ($.isArray(obj)) ? [] : {};
 
 	        for(var i in obj) {
-	            if(typeof(obj[i]) == "object")
+	            if(utility.typeCheck("object", obj[i]))
 	                clone[i] = this.clone(obj[i]);
 	            else
 	                clone[i] = obj[i];
@@ -438,15 +438,15 @@
             var value = null;
             emit = emit  || {};
 
-            if(obj instanceof Array) {
+            if(utility.typeCheck("array", obj )) {
                 value = [];
 
                 for(var i = 0, len = obj.length; i < len; i++) {
                     value[i] = this.deepClone(obj[i]);
                 }
-            } else if(obj instanceof Date ) {
+            } else if(utility.typeCheck("date", obj)) {
                 value = obj;
-            } else if(typeof obj == 'object') {
+            } else if(utility.typeCheck("object", obj)) {
                 value = {};
 
                 for(var key in obj) {
@@ -506,19 +506,42 @@
 		},
 		typeCheck: function(t, v) {
 			function check(type, value) {
+
 				if(typeof(type) != "string") return false;
 
-				if(type == "string") 	if(typeof(value) == "string") return true;
-				if(type == "integer") 	if(typeof(value) == "number" && value % 1 == 0) return true;
-				if(type == "float") 	if(typeof(value) == "number" && value % 1 != 0) return true;
-				if(type == "number") 	if(typeof(value) == "number") return true;
-				if(type == "boolean") 	if(typeof(value) == "boolean") return true;
-				if(type == "undefined")	if(typeof(value) == "undefined") return true;
-				if(type == "null") 		if(value === null) return true;
-				if(type == "array") 	if(value instanceof Array) return true;
-				if(type == "date") 		if(value instanceof Date) return true;
-				if(type == "function") 	if(typeof(value) == "function") return true;
-				if(type == "object") 	if(typeof(value) == "object" && value !== null) return true;
+				if (type == "string") {
+					return (typeof(value) == "string");
+				}
+				else if (type == "integer") {
+					return (typeof(value) == "number" && value % 1 == 0);
+				}
+				else if (type == "float") {
+					return (typeof(value) == "number" && value % 1 != 0);
+				}
+				else if (type == "number") {
+					return (typeof(value) == "number");
+				}
+				else if (type == "boolean") {
+					return (typeof(value) == "boolean");
+				}
+				else if (type == "undefined") {
+					return (typeof(value) == "undefined");
+				}
+				else if (type == "null") {
+					return (value === null);
+				}
+				else if (type == "array") {
+					return (value instanceof Array);
+				}
+				else if (type == "date") {
+					return (value instanceof Date);
+				}
+				else if (type == "function") {
+					return (typeof(value) == "function");
+				}
+				else if (type == "object") {
+					return (typeof(value) == "object" && value !== null);
+				}
 
 				return false;
 			}
@@ -10029,7 +10052,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             for(var key in defOpts) {
                 defOptKeys.push(key);
 
-                if(typeof options[key] == 'undefined') {
+                if(_.typeCheck("undefined", options[key])) {
                     options[key] = defOpts[key];
                 }
             }
@@ -10049,28 +10072,28 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.render = function() {
-            if (typeof this.draw != 'function') {
+            if (!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
             // Call drawSetting method (Only brush and widget)
-            if (typeof this.drawSetup == 'function') {
+            if (_.typeCheck("function", this.drawSetup)) {
                 var tmpOpts = this.drawSetup(),
-                    opts = (typeof tmpOpts == 'object') ? tmpOpts : {};
+                    opts = (_.typeCheck("object", tmpOpts)) ? tmpOpts : {};
 
                 // Options Check
                 setupOptions(this.grid || this.brush || this.widget, opts);
             }
 
             // Call drawBefore method (All)
-            if (typeof this.drawBefore == 'function') {
+            if (_.typeCheck("function", this.drawBefore)) {
                 this.drawBefore();
             }
 
             // Call draw method (All)
 			var obj = this.draw();
 
-            if (typeof obj != 'object') {
+            if (!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
@@ -10132,7 +10155,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         function getValue(value, max) {
-            if(typeof value == 'string' && value.indexOf("%") > -1) {
+            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
                 return max * (parseFloat(value.replace("%", "")) /100);
             }
 
@@ -10228,7 +10251,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         value = row[key],
                         range = null;
 
-                    if(typeof obj.data == 'undefined') {
+                    if(_.typeCheck("undefined", obj.data)) {
                         obj.data = [];
                     }
 
@@ -10240,8 +10263,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         range = { max : +value, min : +value }
                     }
 
-                    obj.min = typeof obj.min == 'undefined' ? 0 : obj.min;
-                    obj.max = typeof obj.max == 'undefined' ? 0 : obj.max;
+                    obj.min = _.typeCheck("undefined", obj.min) ? 0 : obj.min;
+                    obj.max = _.typeCheck("undefined", obj.max) ? 0 : obj.max;
 
                     if (range.min < obj.min) {
                         obj.min = range.min;
@@ -10291,7 +10314,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 var grid = axis[k];
 
                 // 그리드 옵션 재사용
-                if(typeof grid.extend == 'number') {
+                if(_.typeCheck("integer", grid.extend)) {
                     grid = $.extend({}, _options.axis[grid.extend][k], grid);
                     delete grid.extend;
                 }
@@ -10384,7 +10407,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         }
 
                         draws[i].target = target;
-                    } else if(typeof draws[i].target == "string") {
+                    } else if(_.typeCheck("string", draws[i].target)) {
                         draws[i].target = [ draws[i].target ];
                     }
 
@@ -10554,7 +10577,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function createGradient(self, obj, hashKey) {
-            if(typeof hashKey != "undefined" && _hash[hashKey]) {
+            if(!_.typeCheck("undefined", hashKey) && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
             }
 
@@ -10575,7 +10598,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             self.defs.append(g);
 
-            if(typeof hashKey != "undefined") {
+            if(!_.typeCheck("undefined", hashKey)) {
                 _hash[hashKey] = id;
             }
 
@@ -10583,11 +10606,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function getColor(self, color) {
-            if(typeof color == 'undefined') {
+            if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
-            if(typeof color == 'object') {
+            if(_.typeCheck("object", color)) {
                 return createGradient(self, color);
             }
 
@@ -10702,9 +10725,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         this.area = function(key) {
             if(_panel) {
-                return typeof _panel[key] == 'undefined' ? _panel : _panel[key];
+                return _.typeCheck("undefined", _panel[key]) ? _panel : _panel[key];
             } else {
-                return typeof _area[key] == 'undefined' ? _area : _area[key];
+                return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
             }
         }
 
@@ -10751,7 +10774,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(brush.colors instanceof Array) {
                 color = brush.colors[i];
 
-                if(typeof color == "number") {
+                if(_.typeCheck("integer", color)) {
                     color = nextColor(color);
                 }
             } else {
@@ -10759,13 +10782,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // 시리즈 컬러 설정
-            if(brush.target instanceof Array) {
+            if(_.typeCheck("array", brush.target)) {
                 var series = _series[brush.target[i]];
 
                 if(series && series.color) {
                     color = series.color;
 
-                    if(typeof color == 'number') {
+                    if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
                     }
                 }
@@ -10848,7 +10871,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(arguments.length == 0) return;
             var callback = _options.format;
 
-            if(typeof callback == 'function') {
+            if(_.typeCheck("function", callback)) {
                 return callback.apply(this, arguments);
             }
 
@@ -10906,7 +10929,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param callback
          */
         this.on = function(type, callback, isReset) {
-            if(typeof(type) != "string" || typeof(callback) != "function") return;
+            if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
 
             this.event.push({ type: type.toLowerCase(), callback: callback  });
             if(isReset === true) _handler.push(callback);
@@ -11140,7 +11163,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param themeName
          */
         this.setTheme = function(theme) {
-            var newTheme = (typeof theme == 'string') ? jui.include("chart.theme." + theme) : theme;
+            var newTheme = _.typeCheck("string", theme) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));
@@ -11731,7 +11754,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.setRangeDomain = function(chart, grid) {
-			if ( typeof grid.target == "string" || typeof grid.target == "function") {
+			if (_.typeCheck(["string", "function"], grid.target)) {
 				grid.target = [grid.target];
 			}
 
@@ -11744,7 +11767,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 
-					if ( typeof s == "function") {
+					if (_.typeCheck("function", s)) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
@@ -11757,7 +11780,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 							var value = data[index][s];
 
-							if (value instanceof Array) {
+							if (_.typeCheck("array", value)) {
 								for(var j = 0; j < value.length; j++) {
 									value_list.push(value[j]);
 								}
@@ -11814,7 +11837,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.setDateDomain = function(chart, grid) {
-			if ( typeof grid.target == "string" || typeof grid.target == "function") {
+			if (_.typeCheck(["string", "function"], grid.target)) {
 				grid.target = [grid.target];
 			}
 
@@ -11833,8 +11856,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 					}
 				}
 
-				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
-				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
+				if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
+				if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
 
 				grid.max = max;
 				grid.min = min;
@@ -11963,7 +11986,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
-				if(typeof field != 'undefined') {
+				if(!_.typeCheck("undefined", field)) {
 					return this.axis.data[index][field];
 				}
 
@@ -12007,7 +12030,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				return textElement;
 			}
 
-			if (typeof rotate == "function") {
+			if (_.typeCheck("function", rotate)) {
 				rotate = rotate.apply(this.chart, [ textElement ]);
 			}
 
@@ -13539,7 +13562,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          */
         this.eachData = function(callback) {
-            if(typeof callback != 'function') return;
+            if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
             for(var i = 0; i < list.length; i++) {
@@ -13562,7 +13585,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [];
-            isCheckMinMax = typeof isCheckMinMax == 'undefined' ? true : false;
+            isCheckMinMax = _.typeCheck("undefined", isCheckMinMax) ? true : false;
 
             var series = {};
 

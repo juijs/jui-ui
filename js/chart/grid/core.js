@@ -48,7 +48,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.setRangeDomain = function(chart, grid) {
-			if ( typeof grid.target == "string" || typeof grid.target == "function") {
+			if (_.typeCheck(["string", "function"], grid.target)) {
 				grid.target = [grid.target];
 			}
 
@@ -61,7 +61,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				for (var i = 0; i < grid.target.length; i++) {
 					var s = grid.target[i];
 
-					if ( typeof s == "function") {
+					if (_.typeCheck("function", s)) {
 						for (var index = 0; index < data.length; index++) {
 							var row = data[index];
 
@@ -74,7 +74,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 							var value = data[index][s];
 
-							if (value instanceof Array) {
+							if (_.typeCheck("array", value)) {
 								for(var j = 0; j < value.length; j++) {
 									value_list.push(value[j]);
 								}
@@ -131,7 +131,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.setDateDomain = function(chart, grid) {
-			if ( typeof grid.target == "string" || typeof grid.target == "function") {
+			if (_.typeCheck(["string", "function"], grid.target)) {
 				grid.target = [grid.target];
 			}
 
@@ -150,8 +150,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 					}
 				}
 
-				if (typeof min == 'undefined') min = Math.min.apply(Math, value_list);
-				if (typeof max == 'undefined') max = Math.max.apply(Math, value_list);
+				if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
+				if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
 
 				grid.max = max;
 				grid.min = min;
@@ -280,7 +280,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
-				if(typeof field != 'undefined') {
+				if(!_.typeCheck("undefined", field)) {
 					return this.axis.data[index][field];
 				}
 
@@ -324,7 +324,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				return textElement;
 			}
 
-			if (typeof rotate == "function") {
+			if (_.typeCheck("function", rotate)) {
 				rotate = rotate.apply(this.chart, [ textElement ]);
 			}
 

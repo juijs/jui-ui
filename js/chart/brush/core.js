@@ -91,7 +91,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          */
         this.eachData = function(callback) {
-            if(typeof callback != 'function') return;
+            if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
             for(var i = 0; i < list.length; i++) {
@@ -114,7 +114,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [];
-            isCheckMinMax = typeof isCheckMinMax == 'undefined' ? true : false;
+            isCheckMinMax = _.typeCheck("undefined", isCheckMinMax) ? true : false;
 
             var series = {};
 
