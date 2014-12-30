@@ -507,19 +507,18 @@
 		typeCheck: function(t, v) {
 			function check(type, value) {
 				if(typeof(type) != "string") return false;
-				var t = type.toLowerCase();
 
-				if(t == "string") 	if(typeof(value) == "string") return true;
-				if(t == "integer") 	if(typeof(value) == "number" && value % 1 == 0) return true;
-				if(t == "float") 	if(typeof(value) == "number" && value % 1 != 0) return true;
-				if(t == "number") 	if(typeof(value) == "number") return true;
-				if(t == "boolean") 	if(typeof(value) == "boolean") return true;
-				if(t == "undefined")if(typeof(value) == "undefined") return true;
-				if(t == "null") 	if(value === null) return true;
-				if(t == "array") 	if(value instanceof Array) return true;
-				if(t == "date") 	if(value instanceof Date) return true;
-				if(t == "function") if(typeof(value) == "function") return true;
-				if(t == "object") 	if(typeof(value) == "object" && value !== null) return true;
+				if(type == "string") 	if(typeof(value) == "string") return true;
+				if(type == "integer") 	if(typeof(value) == "number" && value % 1 == 0) return true;
+				if(type == "float") 	if(typeof(value) == "number" && value % 1 != 0) return true;
+				if(type == "number") 	if(typeof(value) == "number") return true;
+				if(type == "boolean") 	if(typeof(value) == "boolean") return true;
+				if(type == "undefined")	if(typeof(value) == "undefined") return true;
+				if(type == "null") 		if(value === null) return true;
+				if(type == "array") 	if(value instanceof Array) return true;
+				if(type == "date") 		if(value instanceof Date) return true;
+				if(type == "function") 	if(typeof(value) == "function") return true;
+				if(type == "object") 	if(typeof(value) == "object" && value !== null) return true;
 
 				return false;
 			}
