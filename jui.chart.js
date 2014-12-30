@@ -3831,13 +3831,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawAxis(self) {
 
             function drawAxisType(axis, k, chart) {
-                var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
                 // 다른 그리드 옵션을 사용함 (Extend 동작안함 ㅠㅠ)
                 if(_.typeCheck("integer", axis[k].extend)) {
                     axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
-                    delete axis[k].extend;
                 }
+
+                var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
                 // 그리드 기본 옵션을 가져옴
                 var defOpts = getDrawOptions({}, Grid);
@@ -3887,16 +3887,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(_.typeCheck("object", axis.x)) {
                     axis.x.orient = axis.x.orient || "bottom"
-                    axis.x.scale = drawAxisType(axis, "x", self);
+                    axis.xScale = drawAxisType(axis, "x", self);
                 }
 
                 if(_.typeCheck("object", axis.y)) {
                     axis.y.orient = axis.y.orient || "left";
-                    axis.y.scale = drawAxisType(axis, "y", self);
+                    axis.yScale = drawAxisType(axis, "y", self);
                 }
 
                 if(_.typeCheck("object", axis.c)) {
-                    axis.c.scale = drawAxisType(axis, "c", self);
+                    axis.cScale = drawAxisType(axis, "c", self);
                 }
 
                 if(_.typeCheck("array", axis.data))
@@ -3943,11 +3943,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         draws[i].axis = axisIndex;
 
                         if(_axis[axisIndex].x)
-                            draws[i].x = _axis[axisIndex].x.scale;
+                            draws[i].x = _axis[axisIndex].xScale;
                         if(_axis[axisIndex].y)
-                            draws[i].y = _axis[axisIndex].y.scale;
+                            draws[i].y = _axis[axisIndex].yScale;
                         if(_axis[axisIndex].c)
-                            draws[i].c = _axis[axisIndex].c.scale;
+                            draws[i].c = _axis[axisIndex].cScale;
                     }
 
                     // 브러쉬 인덱스 설정
