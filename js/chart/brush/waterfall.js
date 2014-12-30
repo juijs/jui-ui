@@ -93,14 +93,14 @@ jui.define("chart.brush.waterfall", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				line: true,
-				end: false,
-                outerPadding: 5
-            };
-        }
+	WaterFallBrush.setup = function() {
+		return {
+			line: true,
+			end: false,
+			outerPadding: 5
+		};
 	}
 
 	return WaterFallBrush;

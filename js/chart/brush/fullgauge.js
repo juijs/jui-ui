@@ -98,19 +98,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                value: 0,
-                size: 60,
-                startAngle: 0,
-                endAngle: 300,
-                text: "",
-                unitText: ""
-            };
-        }
+	FullGaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			value: 0,
+			size: 60,
+			startAngle: 0,
+			endAngle: 300,
+			text: "",
+			unitText: ""
+		};
 	}
 
 	return FullGaugeBrush;

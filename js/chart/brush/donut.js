@@ -134,12 +134,12 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                size: 50
-            };
-        }
+	DonutBrush.setup = function() {
+		return {
+			size: 50
+		};
 	}
 
 	return DonutBrush;

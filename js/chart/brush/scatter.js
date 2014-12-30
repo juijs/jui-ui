@@ -91,13 +91,13 @@ jui.define("chart.brush.scatter", [], function() {
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                symbol: "circle", // or triangle, rectangle, cross
-                size: 7
-            };
-        }
+    ScatterBrush.setup = function() {
+        return {
+            symbol: "circle", // or triangle, rectangle, cross
+            size: 7
+        };
     }
 
     return ScatterBrush;

@@ -125,16 +125,16 @@ jui.define("chart.brush.line", [], function() {
         this.draw = function() {
             return this.drawLine(this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "normal", // normal, curve, step
-                display: null,
-                active: null,
-                activeEvent: null // or click, mouseover, ...
-            };
-        }
 	}
+
+    LineBrush.setup = function() {
+        return {
+            symbol: "normal", // normal, curve, step
+            display: null,
+            active: null,
+            activeEvent: null // or click, mouseover, ...
+        };
+    }
 
 	return LineBrush;
 }, "chart.brush.core");

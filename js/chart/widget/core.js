@@ -70,7 +70,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.draw("brush", list[i]);
+                result[i] = this.chart.get("brush", list[i]);
             }
 
             return result;
@@ -94,6 +94,14 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.on(type, callback, this.isRender());
         }
 	}
+
+    CoreWidget.setup = function() {
+        return {
+            brush: 0,
+            render: false,
+            index: 0
+        }
+    }
 
 	return CoreWidget;
 }, "chart.draw"); 

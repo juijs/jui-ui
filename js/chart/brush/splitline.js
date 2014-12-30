@@ -72,14 +72,14 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawLine(this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "normal", // normal, curve, step
-                split: null
-            };
-        }
 	}
+
+    SplitLineBrush.setup = function() {
+        return {
+            symbol: "normal", // normal, curve, step
+            split: null
+        };
+    }
 
 	return SplitLineBrush;
 }, "chart.brush.core");

@@ -225,21 +225,21 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				scale : scale(position[0])
 			};
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// core options
-				max: 100,
+	RadarGrid.setup = function() {
+		return {
+			// core options
+			max: 100,
 
-				// common options
-				line: true,
+			// common options
+			line: true,
 
-				// radar options
-				hideText: false,
-				extra: false,
-				shape: "radial" // or circle
-			});
-		}
+			// radar options
+			hideText: false,
+			extra: false,
+			shape: "radial" // or circle
+		};
 	}
 
 	return RadarGrid;

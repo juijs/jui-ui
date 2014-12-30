@@ -99,14 +99,14 @@ jui.define("chart.brush.stackbar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				outerPadding: 15,
-				active: null,
-				activeEvent: null // or click, mouseover, ...
-            };
-        }
+	StackBarBrush.setup = function() {
+		return {
+			outerPadding: 15,
+			active: null,
+			activeEvent: null // or click, mouseover, ...
+		};
 	}
 
 	return StackBarBrush;

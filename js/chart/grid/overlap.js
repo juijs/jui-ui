@@ -38,11 +38,6 @@ jui.define("chart.grid.overlap", [  ], function() {
                 scale : this.scale(chart)
             };
         }
-
-        this.drawSetup = function() {
-            return this.getOptions();
-        }
-
     }
     
     return OverlapGrid;

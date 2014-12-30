@@ -75,15 +75,15 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 			return g;
 		}
+	}
 
-		this.drawSetup = function() {
-			return {
-				outerPadding: 15,
-				active: null,
-				activeEvent: null, // or click, mouseover, ...
-				showText: false
-			};
-		}
+	FullStackBarBrush.setup = function() {
+		return {
+			outerPadding: 15,
+			active: null,
+			activeEvent: null, // or click, mouseover, ...
+			showText: false
+		};
 	}
 
 	return FullStackBarBrush;

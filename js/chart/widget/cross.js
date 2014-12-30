@@ -130,13 +130,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                xFormat: null,
-                yFormat: null
-            };
-        }
+    CrossWidget.setup = function() {
+        return {
+            xFormat: null,
+            yFormat: null
+        };
     }
 
     return CrossWidget;

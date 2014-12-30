@@ -226,18 +226,19 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// core options
-				max: 10,
-				start: 0,
-				size: 0,
 
-				// block options
-				full: false
-			});
-		}
+	BlockGrid.setup = function() {
+		return {
+			// core options
+			max: 10,
+			start: 0,
+			size: 0,
+
+			// block options
+			full: false
+		};
 	}
 
 	return BlockGrid;

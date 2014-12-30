@@ -74,18 +74,18 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                cut: 5,
-                size: 24,
-                startAngle: -180,
-                endAngle: 360,
-                title: "title"
-            };
-        }
+	StackGaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			cut: 5,
+			size: 24,
+			startAngle: -180,
+			endAngle: 360,
+			title: "title"
+		};
 	}
 
 	return StackGaugeBrush;

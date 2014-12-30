@@ -193,13 +193,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "date", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// date options
-				realtime: false
-			});
-		}
+	DateGrid.setup = function() {
+		return {
+			// date options
+			realtime: false
+		};
 	}
 
 	return DateGrid;

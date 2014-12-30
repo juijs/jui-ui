@@ -52,13 +52,13 @@ jui.define("chart.brush.rangebar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                outerPadding: 2,
-                innerPadding: 1
-            };
-        }
+	RangeBarBrush.setup = function() {
+		return {
+			outerPadding: 2,
+			innerPadding: 1
+		};
 	}
 
 	return RangeBarBrush;

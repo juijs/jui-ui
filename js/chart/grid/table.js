@@ -83,14 +83,14 @@ jui.define("chart.grid.table", [  ], function() {
                 scale : this.scale(chart)
             };
         }
+    }
 
-        this.drawSetup = function() {
-            return this.getOptions({
-                row : 1,
-                column : 1,
-                outerPadding : 1
-            });
-        }
+    TableGrid.setup = function() {
+        return {
+            row : 1,
+            column : 1,
+            outerPadding : 1
+        };
     }
     
     return TableGrid;

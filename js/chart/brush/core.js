@@ -296,5 +296,17 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
+    CoreBrush.setup = function() {
+        return {
+            target: null,
+            colors: null,
+            axis: 0,
+            index: null,
+            x: null,
+            y: null,
+            c: null
+        }
+    }
+
 	return CoreBrush;
 }, "chart.draw"); 

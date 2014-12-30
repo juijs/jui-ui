@@ -150,19 +150,19 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-            return {
-                min: 0,
-                max: 100,
-                value: 0,
-                shape: "circle", // or rectangle
-                direction: "vertical",
-                svg: "",
-                path: ""
-            };
-        }
 	}
+
+    FillGaugeBrush.setup = function() {
+        return {
+            min: 0,
+            max: 100,
+            value: 0,
+            shape: "circle", // or rectangle
+            direction: "vertical",
+            svg: "",
+            path: ""
+        };
+    }
 
 	return FillGaugeBrush;
 }, "chart.brush.core");

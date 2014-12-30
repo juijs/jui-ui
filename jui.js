@@ -10026,39 +10026,6 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var Draw = function() {
 
-        function setupOptions(options, defOpts) {
-            var exceptOpts = [
-                    "type", "target", "index", "colors", "axis", // common
-                    "extend", "dist", "orient", "x", "y", "c",   // axis
-                    "brush", "render"  // widget
-                ],
-                defOptKeys = [],
-                optKeys = [];
-
-            // 사용자가 넘긴 옵션
-            for(var key in options) {
-                optKeys.push(key);
-            }
-
-            // 드로우 객체의 정의된 옵션
-            for(var key in defOpts) {
-                defOptKeys.push(key);
-
-                if(_.typeCheck("undefined", options[key])) {
-                    options[key] = defOpts[key];
-                }
-            }
-
-            // 정의되지 않은 옵션 사용 유무 체크
-            for(var i = 0; i < optKeys.length; i++) {
-                var name = optKeys[i];
-
-                if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
-                }
-            }
-        }
-		
 		/**
 		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
 		 * 
@@ -10066,15 +10033,6 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		this.render = function() {
             if (!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
-            }
-
-            // Call drawSetting method (Only brush and widget)
-            if (_.typeCheck("function", this.drawSetup)) {
-                var tmpOpts = this.drawSetup(),
-                    opts = (_.typeCheck("object", tmpOpts)) ? tmpOpts : {};
-
-                // Options Check
-                setupOptions(this.grid || this.brush || this.widget, opts);
             }
 
             // Call drawBefore method (All)
@@ -10107,6 +10065,12 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             return callback.apply(this.chart, arguments);
         }
 	}
+
+    Draw.setup = function() {
+        return {
+            type: null
+        }
+    }
 
 	return Draw;
 });
@@ -10146,14 +10110,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         var _padding, _series, _area, _panel, _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
-        function getValue(value, max) {
-            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
-
-            return value;
-        }
-
         /**
          * chart 기본 영역 계산
          *
@@ -10184,6 +10140,26 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _area = _chart;
         }
 
+        function caculatePanel(a) {
+            a.x = getValue(a.x, _area.width);
+            a.y = getValue(a.y, _area.height);
+            a.width = getValue(a.width, _area.width);
+            a.height = getValue(a.height, _area.height);
+
+            a.x2 = a.x + a.width;
+            a.y2 = a.y + a.height;
+
+            return a;
+        }
+
+        function getValue(value, max) {
+            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+
         function savePanel(panel) {
             _panel = panel;
         }
@@ -10200,32 +10176,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function restoreData() {
             _data = _tempData;
             _tempData = [] ;
-        }
-
-        function caculatePanel(a) {
-            a.x = getValue(a.x, _area.width);
-            a.y = getValue(a.y, _area.height);
-            a.width = getValue(a.width, _area.width);
-            a.height = getValue(a.height, _area.height);
-
-            a.x2 = a.x + a.width;
-            a.y2 = a.y + a.height;
-
-            return a;
-        }
-
-        /**
-         * draw 이전에 환경 셋팅
-         *
-         */
-        function drawBefore(self) {
-            _axis = _.deepClone(_options.axis, { data : true });
-            _series = _.deepClone(_options.series);
-            _brush = _.deepClone(_options.brush);
-            _widget = _.deepClone(_options.widget);
-
-            // 해쉬 코드 초기화
-            _hash = {};
         }
 
         function setMaxValue(axis) {
@@ -10274,10 +10224,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             axis.series = _seriesList;
         }
 
-        /**
-         * svg 기본 defs element 생성
-         *
-         */
+        function drawBefore(self) {
+            _axis = _.deepClone(_options.axis, { data : true });
+            _series = _.deepClone(_options.series);
+            _brush = _.deepClone(_options.brush);
+            _widget = _.deepClone(_options.widget);
+
+            // 해쉬 코드 초기화
+            _hash = {};
+        }
+
         function drawDefs(self) {
             // draw defs
             var defs = self.svg.defs();
@@ -10303,35 +10259,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         function drawAxis(self) {
 
             function drawAxisType(axis, k, chart) {
-                var grid = axis[k];
+                var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
-                // 그리드 옵션 재사용
-                if(_.typeCheck("integer", grid.extend)) {
-                    grid = $.extend({}, _options.axis[grid.extend][k], grid);
-                    delete grid.extend;
-                }
+                // 다른 그리드 옵션을 사용함
+                var extOpts = (_.typeCheck("integer", axis[k].extend)) ?
+                    _.deepClone(_options.axis[axis[k].extend][k]) : {};
 
-                var Grid = jui.include("chart.grid." + (grid.type || "block"));
+                // 그리드 기본 옵션을 가져옴
+                var defOpts = getDrawOptions(extOpts, Grid);
+
+                // 그리드 기본 옵션과 사용자 옵션을 합침
+                setDrawOptions(axis[k], defOpts);
 
                 // axis 기본 프로퍼티 정의
-                var obj = new Grid(chart, axis, grid),
-                    dist = grid.dist || 0;
-
+                var obj = new Grid(chart, axis, axis[k]);
                 obj.chart = chart;
                 obj.axis = axis;
-                obj.grid = grid;
+                obj.grid = axis[k];
 
                 var elem = obj.render();
 
                 // grid 별 dist 로 위치선정하기
-                if(grid.orient == "left") {
-                    elem.root.translate(_area.x - dist, _area.y);
-                } else if(grid.orient == "right") {
-                    elem.root.translate(_area.x + chart.area("x2") + dist, _area.y);
-                } else if(grid.orient == "bottom") {
-                    elem.root.translate(_area.x , _area.y + chart.area("y2") + dist);
-                } else if(grid.orient == "top") {
-                    elem.root.translate(_area.x , _area.y + chart.area("y") - dist);
+                if(axis[k].orient == "left") {
+                    elem.root.translate(_area.x - axis[k].dist, _area.y);
+                } else if(axis[k].orient == "right") {
+                    elem.root.translate(_area.x + chart.area("x2") + axis[k].dist, _area.y);
+                } else if(axis[k].orient == "bottom") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y2") + axis[k].dist);
+                } else if(axis[k].orient == "top") {
+                    elem.root.translate(_area.x , _area.y + chart.area("y") - axis[k].dist);
                 } else {
                     // custom
                     if(elem.root) elem.root.translate(_area.x, _area.y);
@@ -10343,30 +10299,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             for(var key in _axis) {
                 var axis = _axis[key];
 
-                if (!axis) continue;
+                if(!axis) continue;
 
-                // set panel
+                // 엑시스 영역 설정
                 axis.area = $.extend({
                     x: 0, y: 0 , width: _area.width, height: _area.height
                 }, axis.area);
+
                 savePanel(caculatePanel(axis.area));
 
-                // set data
-                if(axis.data) saveData(axis.data);
+                if(_.typeCheck("array", axis.data))
+                    saveData(axis.data);
 
-                if(axis.x) {
+                if(_.typeCheck("object", axis.x)) {
                     axis.x.orient = axis.x.orient || "bottom"
                     axis.x.scale = drawAxisType(axis, "x", self);
                 }
-                if(axis.y) {
+
+                if(_.typeCheck("object", axis.y)) {
                     axis.y.orient = axis.y.orient || "left";
                     axis.y.scale = drawAxisType(axis, "y", self);
                 }
-                if(axis.c) {
+
+                if(_.typeCheck("object", axis.c)) {
                     axis.c.scale = drawAxisType(axis, "c", self);
                 }
 
-                if(axis.data) restoreData();
+                if(_.typeCheck("array", axis.data))
+                    restoreData();
+
                 restorePanel();
 
                 // 시리즈 구하기
@@ -10418,6 +10379,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
+                    // 브러쉬 기본 옵션을 가져옴
+                    var defOpts = getDrawOptions({}, Obj);
+
+                    // 브러쉬 기본 옵션과 사용자 옵션을 합침
+                    setDrawOptions(draws[i], defOpts);
+
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
                     draw.chart = self;
@@ -10442,6 +10409,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
+
+                    // 위젯 기본 옵션을 가져옴
+                    var defOpts = getDrawOptions({}, Obj);
+
+                    // 위젯 기본 옵션과 사용자 옵션을 합침
+                    setDrawOptions(draws[i], defOpts);
 
                     // 위젯 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
@@ -10568,6 +10541,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
+        function resetCustomEvent(self) {
+            for(var i = 0; i < _handler.length; i++) {
+                self.off(_handler[i]);
+            }
+
+            _handler = [];
+        }
+
         function createGradient(self, obj, hashKey) {
             if(!_.typeCheck("undefined", hashKey) && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
@@ -10657,12 +10638,50 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
         }
 
-        function resetEvent(self) {
-            for(var i = 0; i < _handler.length; i++) {
-                self.off(_handler[i]);
+        function getDrawOptions(options, Draw) {
+            if(_.typeCheck("function", Draw)) {
+                if(_.typeCheck("function", Draw.setup)) {
+                    var opts = Draw.setup();
+
+                    for(var key in opts) {
+                        if(_.typeCheck("undefined", options[key])) {
+                            options[key] = opts[key];
+                        }
+                    }
+                }
+
+                getDrawOptions(options, Draw.parent);
             }
 
-            _handler = [];
+            return options;
+        }
+
+        function setDrawOptions(options, defOpts) {
+            var defOptKeys = [],
+                optKeys = [];
+
+            // 사용자가 넘긴 옵션
+            for(var key in options) {
+                optKeys.push(key);
+            }
+
+            // 드로우 객체의 정의된 옵션
+            for(var key in defOpts) {
+                defOptKeys.push(key);
+
+                if(_.typeCheck("undefined", options[key])) {
+                    options[key] = defOpts[key];
+                }
+            }
+
+            // 정의되지 않은 옵션 사용 유무 체크
+            for(var i = 0; i < optKeys.length; i++) {
+                var name = optKeys[i];
+
+                if($.inArray(name, defOptKeys) == -1) {
+                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
+                }
+            }
         }
 
         this.init = function() {
@@ -10936,7 +10955,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             this.svg.reset(isAll);
 
             // chart 이벤트 초기화 (삭제 대상)
-            resetEvent(this);
+            resetCustomEvent(this);
 
             // chart 영역 계산
             calculate(this);
@@ -12058,24 +12077,29 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				end: start + size
 			}
 		}
+	}
 
-		this.getOptions = function(options) {
-			return $.extend({
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-				color: null,
-				title: null,
-				line: false,
-				format: null,
-				textRotate : null
-			}, options);
-		}
+	CoreGrid.setup = function() {
+		return {
+			target: null,
+			extend:	null,
+			dist: 0,
+			orient: null,
+
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			reverse: false,
+			key: null,
+			hide: false,
+			unit: 0,
+			color: null,
+			title: null,
+			line: false,
+			format: null,
+			textRotate : null
+		};
 	}
 
 	return CoreGrid;
@@ -12308,18 +12332,19 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// core options
-				max: 10,
-				start: 0,
-				size: 0,
 
-				// block options
-				full: false
-			});
-		}
+	BlockGrid.setup = function() {
+		return {
+			// core options
+			max: 10,
+			start: 0,
+			size: 0,
+
+			// block options
+			full: false
+		};
 	}
 
 	return BlockGrid;
@@ -12520,13 +12545,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "date", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// date options
-				realtime: false
-			});
-		}
+	DateGrid.setup = function() {
+		return {
+			// date options
+			realtime: false
+		};
 	}
 
 	return DateGrid;
@@ -12759,21 +12784,21 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 				scale : scale(position[0])
 			};
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// core options
-				max: 100,
+	RadarGrid.setup = function() {
+		return {
+			// core options
+			max: 100,
 
-				// common options
-				line: true,
+			// common options
+			line: true,
 
-				// radar options
-				hideText: false,
-				extra: false,
-				shape: "radial" // or circle
-			});
-		}
+			// radar options
+			hideText: false,
+			extra: false,
+			shape: "radial" // or circle
+		};
 	}
 
 	return RadarGrid;
@@ -12992,14 +13017,14 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "range", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// range options
-				hideText: false,
-				nice: false
-			});
-		}
+	RangeGrid.setup = function() {
+		return {
+			// range options
+			hideText: false,
+			nice: false
+		};
 	}
 
 	return RangeGrid;
@@ -13221,16 +13246,16 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "rule", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// rule options
-				hideZero: false,
-				hideText: false,
-				nice: false,
-				center: false
-			});
-		}
+	RuleGrid.setup = function() {
+		return {
+			// rule options
+			hideZero: false,
+			hideText: false,
+			nice: false,
+			center: false
+		};
 	}
 
 	return RuleGrid;
@@ -13307,7 +13332,6 @@ jui.define("chart.grid.panel", [  ], function() {
                 scale : this.scale(chart)
             };
         }
-
     }
     
     return PanelGrid;
@@ -13398,14 +13422,14 @@ jui.define("chart.grid.table", [  ], function() {
                 scale : this.scale(chart)
             };
         }
+    }
 
-        this.drawSetup = function() {
-            return this.getOptions({
-                row : 1,
-                column : 1,
-                outerPadding : 1
-            });
-        }
+    TableGrid.setup = function() {
+        return {
+            row : 1,
+            column : 1,
+            outerPadding : 1
+        };
     }
     
     return TableGrid;
@@ -13451,11 +13475,6 @@ jui.define("chart.grid.overlap", [  ], function() {
                 scale : this.scale(chart)
             };
         }
-
-        this.drawSetup = function() {
-            return this.getOptions();
-        }
-
     }
     
     return OverlapGrid;
@@ -13759,6 +13778,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
+    CoreBrush.setup = function() {
+        return {
+            target: null,
+            colors: null,
+            axis: 0,
+            index: null,
+            x: null,
+            y: null,
+            c: null
+        }
+    }
+
 	return CoreBrush;
 }, "chart.draw"); 
 jui.define("chart.brush.bar", [], function() {
@@ -13925,17 +13956,17 @@ jui.define("chart.brush.bar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				minValue: 0,
-				outerPadding: 2,
-				innerPadding: 1,
-				active: null,
-				activeEvent: null, // or click, mouseover, ...
-				display: null // or max, min
-            };
-        }
+	BarBrush.setup = function() {
+		return {
+			minValue: 0,
+			outerPadding: 2,
+			innerPadding: 1,
+			active: null,
+			activeEvent: null, // or click, mouseover, ...
+			display: null // or max, min
+		};
 	}
 
 	return BarBrush;
@@ -14116,14 +14147,14 @@ jui.define("chart.brush.stackbar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				outerPadding: 15,
-				active: null,
-				activeEvent: null // or click, mouseover, ...
-            };
-        }
+	StackBarBrush.setup = function() {
+		return {
+			outerPadding: 15,
+			active: null,
+			activeEvent: null // or click, mouseover, ...
+		};
 	}
 
 	return StackBarBrush;
@@ -14259,15 +14290,15 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 			return g;
 		}
+	}
 
-		this.drawSetup = function() {
-			return {
-				outerPadding: 15,
-				active: null,
-				activeEvent: null, // or click, mouseover, ...
-				showText: false
-			};
-		}
+	FullStackBarBrush.setup = function() {
+		return {
+			outerPadding: 15,
+			active: null,
+			activeEvent: null, // or click, mouseover, ...
+			showText: false
+		};
 	}
 
 	return FullStackBarBrush;
@@ -14389,14 +14420,14 @@ jui.define("chart.brush.bubble", [], function() {
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                min: 5,
-                max: 30
-            };
-        }
 	}
+
+    BubbleBrush.setup = function() {
+        return {
+            min: 5,
+            max: 30
+        };
+    }
 
 	return BubbleBrush;
 }, "chart.brush.core");
@@ -14704,12 +14735,12 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                size: 50
-            };
-        }
+	DonutBrush.setup = function() {
+		return {
+			size: 50
+		};
 	}
 
 	return DonutBrush;
@@ -14782,15 +14813,15 @@ jui.define("chart.brush.equalizer", [], function() {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                innerPadding: 10,
-                outerPadding: 15,
-                unit: 5,
-                gap: 5
-            };
-        }
+    EqualizerBrush.setup = function() {
+        return {
+            innerPadding: 10,
+            outerPadding: 15,
+            unit: 5,
+            gap: 5
+        };
     }
 
     return EqualizerBrush;
@@ -14923,16 +14954,16 @@ jui.define("chart.brush.line", [], function() {
         this.draw = function() {
             return this.drawLine(this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "normal", // normal, curve, step
-                display: null,
-                active: null,
-                activeEvent: null // or click, mouseover, ...
-            };
-        }
 	}
+
+    LineBrush.setup = function() {
+        return {
+            symbol: "normal", // normal, curve, step
+            display: null,
+            active: null,
+            activeEvent: null // or click, mouseover, ...
+        };
+    }
 
 	return LineBrush;
 }, "chart.brush.core");
@@ -15180,13 +15211,13 @@ jui.define("chart.brush.scatter", [], function() {
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                symbol: "circle", // or triangle, rectangle, cross
-                size: 7
-            };
-        }
+    ScatterBrush.setup = function() {
+        return {
+            symbol: "circle", // or triangle, rectangle, cross
+            size: 7
+        };
     }
 
     return ScatterBrush;
@@ -15227,15 +15258,15 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.draw = function() {
             return this.drawScatter(this.getXY(false));
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "circle", // or triangle, rectangle, cross
-                size: 7,
-                strokeWidth : 1
-            };
-        }
 	}
+
+    ScatterPathBrush.setup = function() {
+        return {
+            symbol: "circle", // or triangle, rectangle, cross
+            size: 7,
+            strokeWidth : 1
+        };
+    }
 
 	return ScatterPathBrush;
 }, "chart.brush.core");
@@ -15343,17 +15374,17 @@ jui.define("chart.brush.bargauge", [], function() {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-            return {
-                cut: 5,
-                size: 20,
-                split: false,
-                align: "left",
-                title: "title"
-            };
-        }
 	}
+
+    BarGaugeBrush.setup = function() {
+        return {
+            cut: 5,
+            size: 20,
+            split: false,
+            align: "left",
+            title: "title"
+        };
+    }
 
 	return BarGaugeBrush;
 }, "chart.brush.core");
@@ -15419,15 +15450,15 @@ jui.define("chart.brush.circlegauge", [], function() {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-            return {
-                min: 0,
-                max: 100,
-                value: 0
-            };
-        }
 	}
+
+    CircleGaugeBrush.setup = function() {
+        return {
+            min: 0,
+            max: 100,
+            value: 0
+        };
+    }
 
 	return CircleGaugeBrush;
 }, "chart.brush.core");
@@ -15584,19 +15615,19 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-            return {
-                min: 0,
-                max: 100,
-                value: 0,
-                shape: "circle", // or rectangle
-                direction: "vertical",
-                svg: "",
-                path: ""
-            };
-        }
 	}
+
+    FillGaugeBrush.setup = function() {
+        return {
+            min: 0,
+            max: 100,
+            value: 0,
+            shape: "circle", // or rectangle
+            direction: "vertical",
+            svg: "",
+            path: ""
+        };
+    }
 
 	return FillGaugeBrush;
 }, "chart.brush.core");
@@ -15841,19 +15872,19 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                value: 0,
-                size: 60,
-                startAngle: 0,
-                endAngle: 360,
-                arrow: true,
-                unitText: ""
-            };
-        }
+	GaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			value: 0,
+			size: 60,
+			startAngle: 0,
+			endAngle: 360,
+			arrow: true,
+			unitText: ""
+		};
 	}
 
 	return GaugeBrush;
@@ -15959,19 +15990,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                value: 0,
-                size: 60,
-                startAngle: 0,
-                endAngle: 300,
-                text: "",
-                unitText: ""
-            };
-        }
+	FullGaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			value: 0,
+			size: 60,
+			startAngle: 0,
+			endAngle: 300,
+			text: "",
+			unitText: ""
+		};
 	}
 
 	return FullGaugeBrush;
@@ -16053,18 +16084,18 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                cut: 5,
-                size: 24,
-                startAngle: -180,
-                endAngle: 360,
-                title: "title"
-            };
-        }
+	StackGaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			cut: 5,
+			size: 24,
+			startAngle: -180,
+			endAngle: 360,
+			title: "title"
+		};
 	}
 
 	return StackGaugeBrush;
@@ -16165,14 +16196,14 @@ jui.define("chart.brush.waterfall", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				line: true,
-				end: false,
-                outerPadding: 5
-            };
-        }
+	WaterFallBrush.setup = function() {
+		return {
+			line: true,
+			end: false,
+			outerPadding: 5
+		};
 	}
 
 	return WaterFallBrush;
@@ -16252,14 +16283,14 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawLine(this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "normal", // normal, curve, step
-                split: null
-            };
-        }
 	}
+
+    SplitLineBrush.setup = function() {
+        return {
+            symbol: "normal", // normal, curve, step
+            split: null
+        };
+    }
 
 	return SplitLineBrush;
 }, "chart.brush.core");
@@ -16367,13 +16398,13 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                outerPadding: 2,
-                innerPadding: 1
-            };
-        }
+	RangeColumnBrush.setup = function() {
+		return {
+			outerPadding: 2,
+			innerPadding: 1
+		};
 	}
 
 	return RangeColumnBrush;
@@ -16433,13 +16464,13 @@ jui.define("chart.brush.rangebar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                outerPadding: 2,
-                innerPadding: 1
-            };
-        }
+	RangeBarBrush.setup = function() {
+		return {
+			outerPadding: 2,
+			innerPadding: 1
+		};
 	}
 
 	return RangeBarBrush;
@@ -16512,13 +16543,13 @@ jui.define("chart.brush.focus", [], function() {
 
             return this.drawFocus(start, end);
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                start: -1,
-                end: -1
-            };
-        }
+    FocusBrush.setup = function() {
+        return {
+            start: -1,
+            end: -1
+        };
     }
 
     return FocusBrush;
@@ -16555,12 +16586,12 @@ jui.define("chart.brush.pin", [], function() {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                split: 0
-            };
-        }
+    PinBrush.setup = function() {
+        return {
+            split: 0
+        };
     }
 
     return PinBrush;
@@ -16637,7 +16668,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.draw("brush", list[i]);
+                result[i] = this.chart.get("brush", list[i]);
             }
 
             return result;
@@ -16661,6 +16692,14 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.on(type, callback, this.isRender());
         }
 	}
+
+    CoreWidget.setup = function() {
+        return {
+            brush: 0,
+            render: false,
+            index: 0
+        }
+    }
 
 	return CoreWidget;
 }, "chart.draw"); 
@@ -16808,14 +16847,14 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "top", // or bottom, left, right
-                all: false,
-                format: null
-            };
-        }
+    TooltipWidget.setup = function() {
+        return {
+            orient: "top", // or bottom, left, right
+            all: false,
+            format: null
+        };
     }
 
     return TooltipWidget;
@@ -16872,15 +16911,16 @@ jui.define("chart.widget.title", [], function() {
 
             return text;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "top", // or bottom
-                align: "center", // or start, end
-                text: "",
-                dx: 0,
-                dy: 0
-            };
+    TitleWidget.setup = function() {
+        return {
+            orient: "top", // or bottom
+            align: "center", // or start, end
+            text: "",
+            dx: 0,
+            dy: 0,
+            type: "title"
         }
     }
 
@@ -17062,15 +17102,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
             return group;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "bottom",
-                align: "center", // or start, end
-                filter: false,
-                brushSync: false
-            };
-        }
+    LegendWidget.setup = function() {
+        return {
+            orient: "bottom",
+            align: "center", // or start, end
+            filter: false,
+            brushSync: false
+        };
     }
 
     return LegendWidget;
@@ -17448,13 +17488,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                xFormat: null,
-                yFormat: null
-            };
-        }
+    CrossWidget.setup = function() {
+        return {
+            xFormat: null,
+            yFormat: null
+        };
     }
 
     return CrossWidget;

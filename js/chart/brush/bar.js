@@ -162,17 +162,17 @@ jui.define("chart.brush.bar", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-				minValue: 0,
-				outerPadding: 2,
-				innerPadding: 1,
-				active: null,
-				activeEvent: null, // or click, mouseover, ...
-				display: null // or max, min
-            };
-        }
+	BarBrush.setup = function() {
+		return {
+			minValue: 0,
+			outerPadding: 2,
+			innerPadding: 1,
+			active: null,
+			activeEvent: null, // or click, mouseover, ...
+			display: null // or max, min
+		};
 	}
 
 	return BarBrush;

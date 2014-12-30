@@ -50,15 +50,16 @@ jui.define("chart.widget.title", [], function() {
 
             return text;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "top", // or bottom
-                align: "center", // or start, end
-                text: "",
-                dx: 0,
-                dy: 0
-            };
+    TitleWidget.setup = function() {
+        return {
+            orient: "top", // or bottom
+            align: "center", // or start, end
+            text: "",
+            dx: 0,
+            dy: 0,
+            type: "title"
         }
     }
 

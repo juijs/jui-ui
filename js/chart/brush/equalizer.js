@@ -65,15 +65,15 @@ jui.define("chart.brush.equalizer", [], function() {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                innerPadding: 10,
-                outerPadding: 15,
-                unit: 5,
-                gap: 5
-            };
-        }
+    EqualizerBrush.setup = function() {
+        return {
+            innerPadding: 10,
+            outerPadding: 15,
+            unit: 5,
+            gap: 5
+        };
     }
 
     return EqualizerBrush;

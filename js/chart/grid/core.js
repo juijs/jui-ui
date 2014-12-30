@@ -360,24 +360,29 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				end: start + size
 			}
 		}
+	}
 
-		this.getOptions = function(options) {
-			return $.extend({
-				domain: null,
-				step: 10,
-				min: 0,
-				max: 0,
-				reverse: false,
-				key: null,
-				hide: false,
-				unit: 0,
-				color: null,
-				title: null,
-				line: false,
-				format: null,
-				textRotate : null
-			}, options);
-		}
+	CoreGrid.setup = function() {
+		return {
+			target: null,
+			extend:	null,
+			dist: 0,
+			orient: null,
+
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			reverse: false,
+			key: null,
+			hide: false,
+			unit: 0,
+			color: null,
+			title: null,
+			line: false,
+			format: null,
+			textRotate : null
+		};
 	}
 
 	return CoreGrid;

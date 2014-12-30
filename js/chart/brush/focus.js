@@ -65,13 +65,13 @@ jui.define("chart.brush.focus", [], function() {
 
             return this.drawFocus(start, end);
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                start: -1,
-                end: -1
-            };
-        }
+    FocusBrush.setup = function() {
+        return {
+            start: -1,
+            end: -1
+        };
     }
 
     return FocusBrush;

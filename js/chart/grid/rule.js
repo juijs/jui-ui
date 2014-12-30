@@ -214,16 +214,16 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "rule", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// rule options
-				hideZero: false,
-				hideText: false,
-				nice: false,
-				center: false
-			});
-		}
+	RuleGrid.setup = function() {
+		return {
+			// rule options
+			hideZero: false,
+			hideText: false,
+			nice: false,
+			center: false
+		};
 	}
 
 	return RuleGrid;

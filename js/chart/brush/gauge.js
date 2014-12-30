@@ -171,19 +171,19 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
             return group;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                min: 0,
-                max: 100,
-                value: 0,
-                size: 60,
-                startAngle: 0,
-                endAngle: 360,
-                arrow: true,
-                unitText: ""
-            };
-        }
+	GaugeBrush.setup = function() {
+		return {
+			min: 0,
+			max: 100,
+			value: 0,
+			size: 60,
+			startAngle: 0,
+			endAngle: 360,
+			arrow: true,
+			unitText: ""
+		};
 	}
 
 	return GaugeBrush;

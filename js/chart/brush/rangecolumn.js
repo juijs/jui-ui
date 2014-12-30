@@ -49,13 +49,13 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
             return g;
 		}
+	}
 
-        this.drawSetup = function() {
-			return {
-                outerPadding: 2,
-                innerPadding: 1
-            };
-        }
+	RangeColumnBrush.setup = function() {
+		return {
+			outerPadding: 2,
+			innerPadding: 1
+		};
 	}
 
 	return RangeColumnBrush;

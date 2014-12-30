@@ -34,15 +34,15 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.draw = function() {
             return this.drawScatter(this.getXY(false));
         }
-
-        this.drawSetup = function() {
-            return {
-                symbol: "circle", // or triangle, rectangle, cross
-                size: 7,
-                strokeWidth : 1
-            };
-        }
 	}
+
+    ScatterPathBrush.setup = function() {
+        return {
+            symbol: "circle", // or triangle, rectangle, cross
+            size: 7,
+            strokeWidth : 1
+        };
+    }
 
 	return ScatterPathBrush;
 }, "chart.brush.core");

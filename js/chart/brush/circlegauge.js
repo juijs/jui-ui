@@ -59,15 +59,15 @@ jui.define("chart.brush.circlegauge", [], function() {
 
             return group;
 		}
-
-        this.drawSetup = function() {
-            return {
-                min: 0,
-                max: 100,
-                value: 0
-            };
-        }
 	}
+
+    CircleGaugeBrush.setup = function() {
+        return {
+            min: 0,
+            max: 100,
+            value: 0
+        };
+    }
 
 	return CircleGaugeBrush;
 }, "chart.brush.core");

@@ -40,14 +40,14 @@ jui.define("chart.brush.bubble", [], function() {
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
         }
-
-        this.drawSetup = function() {
-            return {
-                min: 5,
-                max: 30
-            };
-        }
 	}
+
+    BubbleBrush.setup = function() {
+        return {
+            min: 5,
+            max: 30
+        };
+    }
 
 	return BubbleBrush;
 }, "chart.brush.core");

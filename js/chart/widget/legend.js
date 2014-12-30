@@ -174,15 +174,15 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
             return group;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "bottom",
-                align: "center", // or start, end
-                filter: false,
-                brushSync: false
-            };
-        }
+    LegendWidget.setup = function() {
+        return {
+            orient: "bottom",
+            align: "center", // or start, end
+            filter: false,
+            brushSync: false
+        };
     }
 
     return LegendWidget;

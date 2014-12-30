@@ -69,7 +69,6 @@ jui.define("chart.grid.panel", [  ], function() {
                 scale : this.scale(chart)
             };
         }
-
     }
     
     return PanelGrid;

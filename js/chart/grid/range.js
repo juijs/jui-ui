@@ -211,14 +211,14 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "range", grid);
 		}
+	}
 
-		this.drawSetup = function() {
-			return this.getOptions({
-				// range options
-				hideText: false,
-				nice: false
-			});
-		}
+	RangeGrid.setup = function() {
+		return {
+			// range options
+			hideText: false,
+			nice: false
+		};
 	}
 
 	return RangeGrid;

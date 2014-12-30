@@ -142,14 +142,14 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                orient: "top", // or bottom, left, right
-                all: false,
-                format: null
-            };
-        }
+    TooltipWidget.setup = function() {
+        return {
+            orient: "top", // or bottom, left, right
+            all: false,
+            format: null
+        };
     }
 
     return TooltipWidget;

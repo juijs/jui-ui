@@ -30,12 +30,12 @@ jui.define("chart.brush.pin", [], function() {
 
             return g;
         }
+    }
 
-        this.drawSetup = function() {
-            return {
-                split: 0
-            };
-        }
+    PinBrush.setup = function() {
+        return {
+            split: 0
+        };
     }
 
     return PinBrush;
