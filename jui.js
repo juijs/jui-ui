@@ -10335,7 +10335,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 // 엑시스 영역 설정
                 axis.area = _.extend(axis.area, {
                     x: 0, y: 0 , width: _area.width, height: _area.height
-                });
+                }, true);
 
                 savePanel(caculatePanel(axis.area));
 
@@ -11141,12 +11141,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param themeName
          */
         this.setTheme = function(theme) {
-            var newTheme = _.typeCheck("string", theme) ? jui.include("chart.theme." + theme) : theme;
-
-            if(newTheme != null) {
-                setThemeStyle(newTheme, _options.style);
-                if(this.isRender()) this.render(true);
-            }
+            setThemeStyle(theme, _options.style);
+            if(this.isRender()) this.render(true);
         }
 
         /**
