@@ -48,7 +48,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
-            this.chart = builder(this.selector, $.extend(true, {
+            this.chart = builder(this.selector, _.extend({
                 axis : {
                     x : {
                         type : "date",

@@ -407,22 +407,27 @@
             ctor.prototype.parent = ctor.prototype;
 		},
 		extend: function(origin, add, skip) {
-			if(!this.typeCheck("object", origin) || !this.typeCheck("object", add)) return;
+			if(!this.typeCheck("object", origin)) origin = {};
+			if(!this.typeCheck("object", add)) return origin;
 
 			for(var key in add) {
 				if(skip === true) {
-					if(this.typeCheck("undefined", origin[key])) {
-						origin[key] = add[key];
-					} else if (this.typeCheck("object", origin[key])) {
+					if(isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
+					} else if(this.typeCheck("undefined", origin[key])) {
+						origin[key] = add[key];
 					}
 				} else {
-					if(!this.typeCheck("object", origin[key])) {
-						origin[key] = add[key];
-					} else {
+					if(isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
+					} else {
+						origin[key] = add[key];
 					}
 				}
+			}
+
+			function isRecursive(value) {
+				return (utility.typeCheck("object", value) && !utility.typeCheck("date", value));
 			}
 
 			return origin;

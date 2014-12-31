@@ -407,22 +407,27 @@
             ctor.prototype.parent = ctor.prototype;
 		},
 		extend: function(origin, add, skip) {
-			if(!this.typeCheck("object", origin) || !this.typeCheck("object", add)) return;
+			if(!this.typeCheck("object", origin)) origin = {};
+			if(!this.typeCheck("object", add)) return origin;
 
 			for(var key in add) {
 				if(skip === true) {
-					if(this.typeCheck("undefined", origin[key])) {
-						origin[key] = add[key];
-					} else if (this.typeCheck("object", origin[key])) {
+					if(isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
+					} else if(this.typeCheck("undefined", origin[key])) {
+						origin[key] = add[key];
 					}
 				} else {
-					if(!this.typeCheck("object", origin[key])) {
-						origin[key] = add[key];
-					} else {
+					if(isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
+					} else {
+						origin[key] = add[key];
 					}
 				}
+			}
+
+			function isRecursive(value) {
+				return (utility.typeCheck("object", value) && !utility.typeCheck("date", value));
 			}
 
 			return origin;
@@ -10328,9 +10333,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 if(!axis) continue;
 
                 // 엑시스 영역 설정
-                axis.area = $.extend({
+                axis.area = _.extend(axis.area, {
                     x: 0, y: 0 , width: _area.width, height: _area.height
-                }, axis.area);
+                });
 
                 savePanel(caculatePanel(axis.area));
 
@@ -10602,11 +10607,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return createGradient(self, parsedColor, color);
         }
 
-        function setThemeStyle() {
-            if(arguments.length == 1) {
-                _theme = $.extend(_theme, arguments[0]);
-            } else if (arguments.length == 2) {
-                _theme[arguments[0]] = arguments[1];
+        function setThemeStyle(theme, options) {
+            if(_.typeCheck("string", theme)) {
+                _theme = _.extend(jui.include("chart.theme." + theme), options);
+            } else if(_.typeCheck("object", theme)) {
+                _theme = _.extend(_theme, theme);
             }
         }
 
@@ -10651,7 +10656,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             setDefaultOptions(this);
 
             // 차트 테마 설정 (+옵션 스타일)
-            setThemeStyle($.extend(jui.include("chart.theme." + _options.theme), _options.style));
+            setThemeStyle(_options.theme, _options.style);
 
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
@@ -10727,7 +10732,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var axis = this.get("axis", _options.axisIndex);
 
             if(axis.series && axis.series[key]) {
-                return $.extend(_series[key], axis.series[key]);
+                return _.extend(_series[key], axis.series[key]);
             }
 
             return _series;
@@ -10788,7 +10793,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {string|function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
-            var el = this.svg.text($.extend({
+            var el = this.svg.text(_.extend({
                 "font-family": this.theme("fontFamily"),
                 "font-size": this.theme("fontSize"),
                 "fill": this.theme("fontColor")
@@ -11099,7 +11104,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(this.isRender()) this.render();
         }
         this.updateAxis = function(index, axis) {
-            $.extend(true, _options.axis[index], axis);
+            _.extend(_options.axis[index], axis);
             if(this.isRender()) this.render();
         }
 
@@ -11112,21 +11117,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             if(this.isRender()) this.render();
         }
         this.updateBrush = function(index, brush) {
-            $.extend(_options.brush[index], brush);
+            _.extend(_options.brush[index], brush);
             if(this.isRender()) this.render();
         }
 
         this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(this.isRender()) this.render();
+            if(this.isRender()) this.render(true);
         }
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(this.isRender()) this.render();
+            if(this.isRender()) this.render(true);
         }
         this.updateWidget = function(index, widget) {
-            $.extend(_options.widget[index], widget);
-            if(this.isRender()) this.render();
+            _.extend(_options.widget[index], widget);
+            if(this.isRender()) this.render(true);
         }
 
 
@@ -11139,7 +11144,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var newTheme = _.typeCheck("string", theme) ? jui.include("chart.theme." + theme) : theme;
 
             if(newTheme != null) {
-                setThemeStyle($.extend(newTheme, _options.style));
+                setThemeStyle(newTheme, _options.style);
                 if(this.isRender()) this.render(true);
             }
         }
@@ -17500,7 +17505,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
-            this.chart = builder(this.selector, $.extend(true, {
+            this.chart = builder(this.selector, _.extend({
                 axis : {
                     x : {
                         type : "date",
