@@ -107,6 +107,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
+			var axis = axis || {};
+
 			if (!axis.c) {
 				axis.c = function() {
 					return {

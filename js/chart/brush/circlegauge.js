@@ -4,6 +4,8 @@ jui.define("chart.brush.circlegauge", [], function() {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
+            var axis = axis || {};
+
             if (!axis.c) {
                 axis.c = function() {
                     return {

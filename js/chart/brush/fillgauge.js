@@ -46,6 +46,8 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 
         this.drawBefore = function() {
+            var axis = axis || {};
+
             if (!axis.c) {
                 axis.c = function() {
                     return {
