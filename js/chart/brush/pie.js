@@ -35,8 +35,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function(i) {
+			if (!axis.c) {
+				axis.c = function(i) {
 					return {
 						x : 0,
 						y : 0,
@@ -48,7 +48,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         }
 
 		this.drawUnit = function(index, data, group) {
-			var obj = brush.c(index);
+			var obj = axis.c(index);
 
 			var width = obj.width, height = obj.height;
 			var x = obj.x, y = obj.y;

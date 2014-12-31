@@ -4,8 +4,8 @@ jui.define("chart.brush.circlegauge", [], function() {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-            if (!brush.c) {
-                brush.c = function() {
+            if (!axis.c) {
+                axis.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -15,7 +15,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 }
             }
 
-            var obj = brush.c(),
+            var obj = axis.c(),
                 width = obj.width,
                 height = obj.height,
                 x = obj.x,

@@ -301,10 +301,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             target: null,
             colors: null,
             axis: 0,
-            index: null,
-            x: null,
-            y: null,
-            c: null
+            index: null
         }
     }
 

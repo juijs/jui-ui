@@ -39,8 +39,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function() {
+			if (!axis.c) {
+				axis.c = function() {
 					return {
 						x : 0,
 						y : 0,
@@ -50,7 +50,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				}
 			}
 
-			var obj = brush.c(),
+			var obj = axis.c(),
 				width = obj.width,
 				height = obj.height,
 				x = obj.x,

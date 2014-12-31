@@ -7307,10 +7307,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             target: null,
             colors: null,
             axis: 0,
-            index: null,
-            x: null,
-            y: null,
-            c: null
+            index: null
         }
     }
 
@@ -8571,8 +8568,8 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function(i) {
+			if (!axis.c) {
+				axis.c = function(i) {
 					return {
 						x : 0,
 						y : 0,
@@ -8584,7 +8581,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         }
 
 		this.drawUnit = function(index, data, group) {
-			var obj = brush.c(index);
+			var obj = axis.c(index);
 
 			var width = obj.width, height = obj.height;
 			var x = obj.x, y = obj.y;
@@ -8799,8 +8796,8 @@ jui.define("chart.brush.bargauge", [], function() {
 	var BarGaugeBrush = function(chart, axis, brush) {
 
         this.drawBefore = function() {
-            if (!brush.c) {
-                brush.c = function() {
+            if (!axis.c) {
+                axis.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -8812,7 +8809,7 @@ jui.define("chart.brush.bargauge", [], function() {
         }
 
 		this.draw = function() {
-            var obj = brush.c(),
+            var obj = axis.c(),
                 width = obj.width,
                 x = obj.x,
                 y = obj.y;
@@ -8919,8 +8916,8 @@ jui.define("chart.brush.circlegauge", [], function() {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-            if (!brush.c) {
-                brush.c = function() {
+            if (!axis.c) {
+                axis.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -8930,7 +8927,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 }
             }
 
-            var obj = brush.c(),
+            var obj = axis.c(),
                 width = obj.width,
                 height = obj.height,
                 x = obj.x,
@@ -9035,8 +9032,8 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
         }
 
         this.drawBefore = function() {
-            if (!brush.c) {
-                brush.c = function() {
+            if (!axis.c) {
+                axis.c = function() {
                     return {
                         x : 0,
                         y : 0,
@@ -9046,7 +9043,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
                 }
             }
 
-            var obj = brush.c(),
+            var obj = axis.c(),
                 width = obj.width,
                 height = obj.height,
                 x = obj.x,
@@ -9332,8 +9329,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function() {
+			if (!axis.c) {
+				axis.c = function() {
 					return {
 						x : 0,
 						y : 0,
@@ -9343,7 +9340,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				}
 			}
 
-			var obj = brush.c(),
+			var obj = axis.c(),
 				width = obj.width,
 				height = obj.height,
 				x = obj.x,
@@ -9455,8 +9452,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function() {
+			if (!axis.c) {
+				axis.c = function() {
 					return {
 						x : 0,
 						y : 0,
@@ -9466,7 +9463,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				}
 			}
 
-			var obj = brush.c(),
+			var obj = axis.c(),
 				width = obj.width,
 				height = obj.height,
 				x = obj.x,
@@ -9538,8 +9535,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-			if (!brush.c) {
-				brush.c = function() {
+			if (!axis.c) {
+				axis.c = function() {
 					return {
 						x : 0,
 						y : 0,
@@ -9549,7 +9546,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 				}
 			}
 
-			var obj = brush.c(),
+			var obj = axis.c(),
 				width = obj.width,
 				height = obj.height,
 				x = obj.x,
