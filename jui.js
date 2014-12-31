@@ -946,17 +946,6 @@
 			// 모듈 옵션 키 배열 생성
 			for(var key in defOpts) {
 				defOptKeys.push(key);
-
-				// 사용자 + 모듈 옵션
-				if(utility.typeCheck("undefined", options[key])) {
-					options[key] = defOpts[key];
-				} else if(utility.typeCheck("object", options[key])) {
-					for(var k in defOpts[key]) {
-						if(utility.typeCheck("undefined", options[key][k])) {
-							options[key][k] = defOpts[key][k];
-						}
-					}
-				}
 			}
 
 			// 정의되지 않은 옵션 사용 유무 체크
@@ -968,6 +957,23 @@
 				}
 			}
 
+			// 사용자 옵션 + 기본 옵션
+			setOptions(options, defOpts);
+
+			// 옵션을 합치는 함수 (참조를 건들이지 않음)
+			function setOptions(options, defOpts) {
+				if(!utility.typeCheck("object", defOpts)) return;
+
+				for(var key in defOpts) {
+					if(utility.typeCheck("undefined", options[key])) {
+						options[key] = defOpts[key];
+					} else if(utility.typeCheck("object", options[key])) {
+						setOptions(options[key], defOpts[key]);
+					}
+				}
+			}
+
+			// 상위 모듈의 옵션까지 모두 얻어오는 함수
 			function getOptions(Module, options) {
 				if(utility.typeCheck("function", Module)) {
 					if(utility.typeCheck("function", Module.setup)) {
