@@ -102,8 +102,8 @@ jui.define("chart.brush.bar", [], function() {
 		this.drawBefore = function() {
 			var style = this.getBarStyle();
 
-			zeroX = brush.x(0);
-			height = brush.y.rangeBand();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
@@ -115,11 +115,11 @@ jui.define("chart.brush.bar", [], function() {
 			var points = this.getXY();
 
 			this.eachData(function(i, data) {
-				var startY = brush.y(i) - (half_height / 2);
+				var startY = axis.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startX = brush.x((value == 0) ? brush.minValue : value),
+						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
                         r = this.getBarElement(width, bar_height, i, j);

@@ -55,12 +55,12 @@ jui.define("chart.brush.focus", [], function() {
                 brush.hide = true;
             }
 
-            if(brush.x.type == "block") {
-                start = brush.x(brush.start) - brush.x.rangeBand() / 2;
-                end = brush.x(brush.end) + brush.x.rangeBand() / 2;
+            if(axis.x.type == "block") {
+                start = axis.x(brush.start) - axis.x.rangeBand() / 2;
+                end = axis.x(brush.end) + axis.x.rangeBand() / 2;
             } else  {
-                start = brush.x(brush.start);
-                end = brush.x(brush.end);
+                start = axis.x(brush.start);
+                end = axis.x(brush.end);
             }
 
             return this.drawFocus(start, end);

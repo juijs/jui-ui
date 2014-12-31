@@ -8,7 +8,7 @@ jui.define("chart.brush.pin", [], function() {
                 width = chart.theme("pinBorderWidth");
 
             g = chart.svg.group({}, function() {
-                var x = brush.x(brush.split) - (size / 2);
+                var x = axis.x(brush.split) - (size / 2);
 
                 chart.svg.polygon({
                     fill: color

@@ -22,7 +22,7 @@ jui.define("chart.brush.ohlc", [], function() {
             var targets = getTargets(chart);
 
             this.eachData(function(i, data) {
-                var startX = brush.x(i);
+                var startX = axis.x(i);
 
                 var open = targets.open.data[i],
                     close = targets.close.data[i],
@@ -32,27 +32,27 @@ jui.define("chart.brush.ohlc", [], function() {
 
                 var lowHigh = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(high),
+                    y1: axis.y(high),
                     x2: startX,
-                    y2: brush.y(low),
+                    y2: axis.y(low),
                     stroke: color,
                     "stroke-width": 1
                 });
 
                 var close = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(close),
+                    y1: axis.y(close),
                     x2: startX + chart.theme("ohlcBorderRadius"),
-                    y2: brush.y(close),
+                    y2: axis.y(close),
                     stroke: color,
                     "stroke-width": 1
                 });
 
                 var open = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(open),
+                    y1: axis.y(open),
                     x2: startX - chart.theme("ohlcBorderRadius"),
-                    y2: brush.y(open),
+                    y2: axis.y(open),
                     stroke: color,
                     "stroke-width": 1
                 });

@@ -59,7 +59,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			series = chart.series();
-			height = brush.y.rangeBand();
+			height = axis.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
 
@@ -67,13 +67,13 @@ jui.define("chart.brush.stackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = brush.y(i) - bar_width/ 2,
-                    startX = brush.x(0),
+				var startY = axis.y(i) - bar_width/ 2,
+                    startX = axis.x(0),
                     value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
 					var xValue = data[brush.target[j]] + value,
-                        endX = brush.x(xValue),
+                        endX = axis.x(xValue),
 						r = this.getBarElement(i, j);
 
 					r.attr({

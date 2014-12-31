@@ -5,19 +5,19 @@ jui.define("chart.brush.equalizer", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            zeroY = brush.y(0);
-            width = brush.x.rangeBand();
+            zeroY = axis.y(0);
+            width = axis.x.rangeBand();
             half_width = (width - brush.outerPadding * 2) / 2;
             barWidth = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = brush.x(i) - half_width;
+                var startX = axis.x(i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(data[brush.target[j]]),
+                    var startY = axis.y(data[brush.target[j]]),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;

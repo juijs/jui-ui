@@ -18,7 +18,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            width = brush.x.rangeBand();
+            width = axis.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
@@ -26,7 +26,7 @@ jui.define("chart.brush.candlestick", [], function() {
         this.draw = function() {
             this.eachData(function(i, data) {
                 var data = getTargetData(data),
-                    startX = brush.x(i),
+                    startX = axis.x(i),
                     r = null,
                     l = null;
 
@@ -36,13 +36,13 @@ jui.define("chart.brush.candlestick", [], function() {
                     high = data.high;
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
-                    var y = brush.y(open);
+                    var y = axis.y(open);
 
                     l = chart.svg.line({
                         x1: startX,
-                        y1: brush.y(high),
+                        y1: axis.y(high),
                         x2: startX,
-                        y2: brush.y(low),
+                        y2: axis.y(low),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
@@ -51,20 +51,20 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(brush.y(close) - y),
+                        height : Math.abs(axis.y(close) - y),
                         fill : chart.theme("candlestickInvertBackgroundColor"),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
                 } else {
-                    var y = brush.y(close);
+                    var y = axis.y(close);
 
                     l = chart.svg.line({
                         x1: startX,
-                        y1: brush.y(high),
+                        y1: axis.y(high),
                         x2: startX,
-                        y2: brush.y(low),
+                        y2: axis.y(low),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width":1
                     });
@@ -73,7 +73,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(brush.y(open) - y),
+                        height : Math.abs(axis.y(open) - y),
                         fill : chart.theme("candlestickBackgroundColor"),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width": 1

@@ -123,7 +123,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             this.eachData(function(i, data) {
-                var startX = this.brush.x(i);
+                var startX = this.axis.x(i);
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -140,7 +140,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     }
 
                     xy[j].x.push(startX);
-                    xy[j].y.push(this.brush.y(value));
+                    xy[j].y.push(this.axis.y(value));
                     xy[j].value.push(value);
 
                     if (isCheckMinMax) {
@@ -177,7 +177,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         valueSum += data[this.brush.target[j - 1]];
                     }
 
-                    xy[j].y[i] = this.brush.y(value + valueSum);
+                    xy[j].y[i] = this.axis.y(value + valueSum);
                 }
             });
 

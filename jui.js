@@ -10315,16 +10315,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(_.typeCheck("object", axis.x)) {
                     axis.x.orient = axis.x.orient || "bottom"
-                    axis.xScale = drawAxisType(axis, "x", self);
+                    axis.x = drawAxisType(axis, "x", self);
                 }
 
                 if(_.typeCheck("object", axis.y)) {
                     axis.y.orient = axis.y.orient || "left";
-                    axis.yScale = drawAxisType(axis, "y", self);
+                    axis.y = drawAxisType(axis, "y", self);
                 }
 
                 if(_.typeCheck("object", axis.c)) {
-                    axis.cScale = drawAxisType(axis, "c", self);
+                    axis.c = drawAxisType(axis, "c", self);
                 }
 
                 if(_.typeCheck("array", axis.data))
@@ -10364,18 +10364,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         draws[i].target = target;
                     } else if(_.typeCheck("string", draws[i].target)) {
                         draws[i].target = [ draws[i].target ];
-                    }
-
-                    // 엑시스 프로퍼티 설정
-                    if(_axis[axisIndex]) {
-                        draws[i].axis = axisIndex;
-
-                        if(_axis[axisIndex].x)
-                            draws[i].x = _axis[axisIndex].xScale;
-                        if(_axis[axisIndex].y)
-                            draws[i].y = _axis[axisIndex].yScale;
-                        if(_axis[axisIndex].c)
-                            draws[i].c = _axis[axisIndex].cScale;
                     }
 
                     // 브러쉬 인덱스 설정
@@ -13591,7 +13579,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             this.eachData(function(i, data) {
-                var startX = this.brush.x(i);
+                var startX = this.axis.x(i);
 
                 for (var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -13608,7 +13596,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     }
 
                     xy[j].x.push(startX);
-                    xy[j].y.push(this.brush.y(value));
+                    xy[j].y.push(this.axis.y(value));
                     xy[j].value.push(value);
 
                     if (isCheckMinMax) {
@@ -13645,7 +13633,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         valueSum += data[this.brush.target[j - 1]];
                     }
 
-                    xy[j].y[i] = this.brush.y(value + valueSum);
+                    xy[j].y[i] = this.axis.y(value + valueSum);
                 }
             });
 
@@ -13882,8 +13870,8 @@ jui.define("chart.brush.bar", [], function() {
 		this.drawBefore = function() {
 			var style = this.getBarStyle();
 
-			zeroX = brush.x(0);
-			height = brush.y.rangeBand();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
@@ -13895,11 +13883,11 @@ jui.define("chart.brush.bar", [], function() {
 			var points = this.getXY();
 
 			this.eachData(function(i, data) {
-				var startY = brush.y(i) - (half_height / 2);
+				var startY = axis.y(i) - (half_height / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startX = brush.x((value == 0) ? brush.minValue : value),
+						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
                         r = this.getBarElement(width, bar_height, i, j);
@@ -13966,9 +13954,9 @@ jui.define("chart.brush.column", [], function() {
 
 		this.drawBefore = function() {
 			style = this.getBarStyle();
-			zeroY = brush.y(0);
+			zeroY = axis.y(0);
 
-			width = brush.x.rangeBand();
+			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
 			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
@@ -13981,11 +13969,11 @@ jui.define("chart.brush.column", [], function() {
 			var points = this.getXY();
 
 			this.eachData(function(i, data) {
-				var startX = brush.x(i) - (half_width / 2);
+				var startX = axis.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startY = brush.y((value == 0) ? brush.minValue : value),
+						startY = axis.y((value == 0) ? brush.minValue : value),
 						position = (startY <= zeroY) ? "top" : "bottom",
 						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
 
@@ -14093,7 +14081,7 @@ jui.define("chart.brush.stackbar", [], function() {
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			series = chart.series();
-			height = brush.y.rangeBand();
+			height = axis.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
 
@@ -14101,13 +14089,13 @@ jui.define("chart.brush.stackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = brush.y(i) - bar_width/ 2,
-                    startX = brush.x(0),
+				var startY = axis.y(i) - bar_width/ 2,
+                    startX = axis.x(0),
                     value = 0;
 				
 				for (var j = 0; j < brush.target.length; j++) {
 					var xValue = data[brush.target[j]] + value,
-                        endX = brush.x(xValue),
+                        endX = axis.x(xValue),
 						r = this.getBarElement(i, j);
 
 					r.attr({
@@ -14153,8 +14141,8 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroY = brush.y(0);
-			width = brush.x.rangeBand();
+			zeroY = axis.y(0);
+			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
 
@@ -14162,13 +14150,13 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startX = brush.x(i) - bar_width / 2,
-                    startY = brush.y(0),
+				var startX = axis.x(i) - bar_width / 2,
+                    startY = axis.y(0),
                     value = 0;
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var yValue = data[brush.target[j]] + value,
-                        endY = brush.y(yValue),
+                        endY = axis.y(yValue),
 						r = this.getBarElement(i, j);
 
 					r.attr({
@@ -14206,8 +14194,8 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroX = brush.x(0);
-			height = brush.y.rangeBand();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
 		}
 
@@ -14225,7 +14213,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startY = brush.y(i) - bar_height / 2,
+				var startY = axis.y(i) - bar_height / 2,
 					sum = 0,
 					list = [];
 
@@ -14237,10 +14225,10 @@ jui.define("chart.brush.fullstackbar", [], function() {
 				}
 
 				var startX = 0,
-					max = brush.x.max();
+					max = axis.x.max();
 
 				for (var j = list.length - 1; j >= 0; j--) {
-					var width = brush.x.rate(list[j], sum),
+					var width = axis.x.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 
 					r.attr({
@@ -14297,8 +14285,8 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroY = brush.y(0);
-			width = brush.x.rangeBand();
+			zeroY = axis.y(0);
+			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
 
@@ -14308,7 +14296,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startX = brush.x(i) - bar_width / 2,
+				var startX = axis.x(i) - bar_width / 2,
                     sum = 0,
                     list = [];
 
@@ -14320,10 +14308,10 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 				}
 
 				var startY = 0,
-                    max = brush.y.max();
+                    max = axis.y.max();
 				
 				for (var j = list.length - 1; j >= 0; j--) {
-					var height = chart_height - brush.y.rate(list[j], sum),
+					var height = chart_height - axis.y.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 
 					r.attr({
@@ -14437,7 +14425,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            width = brush.x.rangeBand();
+            width = axis.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
@@ -14445,7 +14433,7 @@ jui.define("chart.brush.candlestick", [], function() {
         this.draw = function() {
             this.eachData(function(i, data) {
                 var data = getTargetData(data),
-                    startX = brush.x(i),
+                    startX = axis.x(i),
                     r = null,
                     l = null;
 
@@ -14455,13 +14443,13 @@ jui.define("chart.brush.candlestick", [], function() {
                     high = data.high;
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
-                    var y = brush.y(open);
+                    var y = axis.y(open);
 
                     l = chart.svg.line({
                         x1: startX,
-                        y1: brush.y(high),
+                        y1: axis.y(high),
                         x2: startX,
-                        y2: brush.y(low),
+                        y2: axis.y(low),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
@@ -14470,20 +14458,20 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(brush.y(close) - y),
+                        height : Math.abs(axis.y(close) - y),
                         fill : chart.theme("candlestickInvertBackgroundColor"),
                         stroke: chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
                 } else {
-                    var y = brush.y(close);
+                    var y = axis.y(close);
 
                     l = chart.svg.line({
                         x1: startX,
-                        y1: brush.y(high),
+                        y1: axis.y(high),
                         x2: startX,
-                        y2: brush.y(low),
+                        y2: axis.y(low),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width":1
                     });
@@ -14492,7 +14480,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(brush.y(open) - y),
+                        height : Math.abs(axis.y(open) - y),
                         fill : chart.theme("candlestickBackgroundColor"),
                         stroke: chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
@@ -14536,7 +14524,7 @@ jui.define("chart.brush.ohlc", [], function() {
             var targets = getTargets(chart);
 
             this.eachData(function(i, data) {
-                var startX = brush.x(i);
+                var startX = axis.x(i);
 
                 var open = targets.open.data[i],
                     close = targets.close.data[i],
@@ -14546,27 +14534,27 @@ jui.define("chart.brush.ohlc", [], function() {
 
                 var lowHigh = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(high),
+                    y1: axis.y(high),
                     x2: startX,
-                    y2: brush.y(low),
+                    y2: axis.y(low),
                     stroke: color,
                     "stroke-width": 1
                 });
 
                 var close = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(close),
+                    y1: axis.y(close),
                     x2: startX + chart.theme("ohlcBorderRadius"),
-                    y2: brush.y(close),
+                    y2: axis.y(close),
                     stroke: color,
                     "stroke-width": 1
                 });
 
                 var open = chart.svg.line({
                     x1: startX,
-                    y1: brush.y(open),
+                    y1: axis.y(open),
                     x2: startX - chart.theme("ohlcBorderRadius"),
-                    y2: brush.y(open),
+                    y2: axis.y(open),
                     stroke: color,
                     "stroke-width": 1
                 });
@@ -14739,19 +14727,19 @@ jui.define("chart.brush.equalizer", [], function() {
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            zeroY = brush.y(0);
-            width = brush.x.rangeBand();
+            zeroY = axis.y(0);
+            width = axis.x.rangeBand();
             half_width = (width - brush.outerPadding * 2) / 2;
             barWidth = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = brush.x(i) - half_width;
+                var startX = axis.x(i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
-                    var startY = brush.y(data[brush.target[j]]),
+                    var startY = axis.y(data[brush.target[j]]),
                         padding = 1.5,
                         eY = zeroY,
                         eIndex = 0;
@@ -15624,7 +15612,7 @@ jui.define("chart.brush.area", [], function() {
 
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
-                maxY = this.brush.y(this.brush.y.min());
+                maxY = this.axis.y(this.axis.y.min());
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k),
@@ -16098,9 +16086,9 @@ jui.define("chart.brush.waterfall", [], function() {
 
             outerPadding = brush.outerPadding;
 			count = this.listData().length;
-			zeroY = brush.y(0);
+			zeroY = axis.y(0);
 
-			width = brush.x.rangeBand();
+			width = axis.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1)) / brush.target.length;
 		}
@@ -16110,8 +16098,8 @@ jui.define("chart.brush.waterfall", [], function() {
 				stroke = chart.theme("waterfallLineColor");
 
 			this.eachData(function(i, data) {
-				var startX = brush.x(i) - half_width / 2,
-					startY = brush.y(data[target]),
+				var startX = axis.x(i) - half_width / 2,
+					startY = axis.y(data[target]),
 					r = null, l = null;
 
 				if(i == 0 || (i == count - 1 && brush.end)) {
@@ -16137,8 +16125,8 @@ jui.define("chart.brush.waterfall", [], function() {
 				} else {
 					var preValue = this.getData(i - 1)[target],
 						nowValue = data[target],
-						preStartY = brush.y(preValue),
-						nowStartY = brush.y(nowValue),
+						preStartY = axis.y(preValue),
+						nowStartY = axis.y(nowValue),
 						h = preStartY - nowStartY;
 
 					if(h > 0) {
@@ -16346,7 +16334,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
 
-			width = brush.x.rangeBand();
+			width = axis.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
@@ -16357,12 +16345,12 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = brush.x(i) - (half_width / 2);
+				var startX = axis.x(i) - (half_width / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startY = brush.y(value[1]),
-						zeroY = brush.y(value[0]);
+						startY = axis.y(value[1]),
+						zeroY = axis.y(value[0]);
 
 					var r = chart.svg.rect({
 						x : startX,
@@ -16409,7 +16397,7 @@ jui.define("chart.brush.rangebar", [], function() {
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
 
-			height = brush.y.rangeBand();
+			height = axis.y.rangeBand();
 			half_height = height - (outerPadding * 2);
 			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
@@ -16421,12 +16409,12 @@ jui.define("chart.brush.rangebar", [], function() {
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group(),
-					startY = brush.y(i) - (half_height / 2);
+					startY = axis.y(i) - (half_height / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startX = brush.x(value[1]),
-						zeroX = brush.x(value[0]);
+						startX = axis.x(value[1]),
+						zeroX = axis.x(value[0]);
 
 					var r = chart.svg.rect({
 						x : zeroX,
@@ -16519,12 +16507,12 @@ jui.define("chart.brush.focus", [], function() {
                 brush.hide = true;
             }
 
-            if(brush.x.type == "block") {
-                start = brush.x(brush.start) - brush.x.rangeBand() / 2;
-                end = brush.x(brush.end) + brush.x.rangeBand() / 2;
+            if(axis.x.type == "block") {
+                start = axis.x(brush.start) - axis.x.rangeBand() / 2;
+                end = axis.x(brush.end) + axis.x.rangeBand() / 2;
             } else  {
-                start = brush.x(brush.start);
-                end = brush.x(brush.end);
+                start = axis.x(brush.start);
+                end = axis.x(brush.end);
             }
 
             return this.drawFocus(start, end);
@@ -16550,7 +16538,7 @@ jui.define("chart.brush.pin", [], function() {
                 width = chart.theme("pinBorderWidth");
 
             g = chart.svg.group({}, function() {
-                var x = brush.x(brush.split) - (size / 2);
+                var x = axis.x(brush.split) - (size / 2);
 
                 chart.svg.polygon({
                     fill: color
@@ -17458,7 +17446,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = brush.y.invert(top),
+                    var value = axis.y.invert(top),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -17466,7 +17454,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(xTooltip) {
                     xTooltip.translate(left - (tw / 2), chart.area("height") + ta);
 
-                    var value = brush.x.invert(left),
+                    var value = axis.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }

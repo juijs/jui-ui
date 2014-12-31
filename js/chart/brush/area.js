@@ -4,7 +4,7 @@ jui.define("chart.brush.area", [], function() {
 
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
-                maxY = this.brush.y(this.brush.y.min());
+                maxY = this.axis.y(this.axis.y.min());
 
             for (var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k),

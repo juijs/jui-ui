@@ -114,7 +114,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = brush.y.invert(top),
+                    var value = axis.y.invert(top),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -122,7 +122,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(xTooltip) {
                     xTooltip.translate(left - (tw / 2), chart.area("height") + ta);
 
-                    var value = brush.x.invert(left),
+                    var value = axis.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }

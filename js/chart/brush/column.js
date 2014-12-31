@@ -6,9 +6,9 @@ jui.define("chart.brush.column", [], function() {
 
 		this.drawBefore = function() {
 			style = this.getBarStyle();
-			zeroY = brush.y(0);
+			zeroY = axis.y(0);
 
-			width = brush.x.rangeBand();
+			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
 			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 
@@ -21,11 +21,11 @@ jui.define("chart.brush.column", [], function() {
 			var points = this.getXY();
 
 			this.eachData(function(i, data) {
-				var startX = brush.x(i) - (half_width / 2);
+				var startX = axis.x(i) - (half_width / 2);
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startY = brush.y((value == 0) ? brush.minValue : value),
+						startY = axis.y((value == 0) ? brush.minValue : value),
 						position = (startY <= zeroY) ? "top" : "bottom",
 						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
 

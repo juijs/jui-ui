@@ -11,7 +11,7 @@ jui.define("chart.brush.rangebar", [], function() {
             outerPadding = brush.outerPadding;
             innerPadding = brush.innerPadding;
 
-			height = brush.y.rangeBand();
+			height = axis.y.rangeBand();
 			half_height = height - (outerPadding * 2);
 			barHeight = (half_height - (brush.target.length - 1) * innerPadding) / brush.target.length;
 
@@ -23,12 +23,12 @@ jui.define("chart.brush.rangebar", [], function() {
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group(),
-					startY = brush.y(i) - (half_height / 2);
+					startY = axis.y(i) - (half_height / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
-						startX = brush.x(value[1]),
-						zeroX = brush.x(value[0]);
+						startX = axis.x(value[1]),
+						zeroX = axis.x(value[0]);
 
 					var r = chart.svg.rect({
 						x : zeroX,

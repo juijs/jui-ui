@@ -9,9 +9,9 @@ jui.define("chart.brush.waterfall", [], function() {
 
             outerPadding = brush.outerPadding;
 			count = this.listData().length;
-			zeroY = brush.y(0);
+			zeroY = axis.y(0);
 
-			width = brush.x.rangeBand();
+			width = axis.x.rangeBand();
 			half_width = (width - outerPadding * 2);
 			columnWidth = (width - outerPadding * 2 - (brush.target.length - 1)) / brush.target.length;
 		}
@@ -21,8 +21,8 @@ jui.define("chart.brush.waterfall", [], function() {
 				stroke = chart.theme("waterfallLineColor");
 
 			this.eachData(function(i, data) {
-				var startX = brush.x(i) - half_width / 2,
-					startY = brush.y(data[target]),
+				var startX = axis.x(i) - half_width / 2,
+					startY = axis.y(data[target]),
 					r = null, l = null;
 
 				if(i == 0 || (i == count - 1 && brush.end)) {
@@ -48,8 +48,8 @@ jui.define("chart.brush.waterfall", [], function() {
 				} else {
 					var preValue = this.getData(i - 1)[target],
 						nowValue = data[target],
-						preStartY = brush.y(preValue),
-						nowStartY = brush.y(nowValue),
+						preStartY = axis.y(preValue),
+						nowStartY = axis.y(nowValue),
 						h = preStartY - nowStartY;
 
 					if(h > 0) {

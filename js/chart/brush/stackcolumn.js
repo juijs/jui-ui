@@ -5,8 +5,8 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroY = brush.y(0);
-			width = brush.x.rangeBand();
+			zeroY = axis.y(0);
+			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
 		}
 
@@ -14,13 +14,13 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startX = brush.x(i) - bar_width / 2,
-                    startY = brush.y(0),
+				var startX = axis.x(i) - bar_width / 2,
+                    startY = axis.y(0),
                     value = 0;
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var yValue = data[brush.target[j]] + value,
-                        endY = brush.y(yValue),
+                        endY = axis.y(yValue),
 						r = this.getBarElement(i, j);
 
 					r.attr({

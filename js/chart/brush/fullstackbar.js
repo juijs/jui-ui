@@ -5,8 +5,8 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroX = brush.x(0);
-			height = brush.y.rangeBand();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
 		}
 
@@ -24,7 +24,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startY = brush.y(i) - bar_height / 2,
+				var startY = axis.y(i) - bar_height / 2,
 					sum = 0,
 					list = [];
 
@@ -36,10 +36,10 @@ jui.define("chart.brush.fullstackbar", [], function() {
 				}
 
 				var startX = 0,
-					max = brush.x.max();
+					max = axis.x.max();
 
 				for (var j = list.length - 1; j >= 0; j--) {
-					var width = brush.x.rate(list[j], sum),
+					var width = axis.x.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 
 					r.attr({

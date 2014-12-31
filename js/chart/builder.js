@@ -238,16 +238,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 if(_.typeCheck("object", axis.x)) {
                     axis.x.orient = axis.x.orient || "bottom"
-                    axis.xScale = drawAxisType(axis, "x", self);
+                    axis.x = drawAxisType(axis, "x", self);
                 }
 
                 if(_.typeCheck("object", axis.y)) {
                     axis.y.orient = axis.y.orient || "left";
-                    axis.yScale = drawAxisType(axis, "y", self);
+                    axis.y = drawAxisType(axis, "y", self);
                 }
 
                 if(_.typeCheck("object", axis.c)) {
-                    axis.cScale = drawAxisType(axis, "c", self);
+                    axis.c = drawAxisType(axis, "c", self);
                 }
 
                 if(_.typeCheck("array", axis.data))
@@ -287,18 +287,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         draws[i].target = target;
                     } else if(_.typeCheck("string", draws[i].target)) {
                         draws[i].target = [ draws[i].target ];
-                    }
-
-                    // 엑시스 프로퍼티 설정
-                    if(_axis[axisIndex]) {
-                        draws[i].axis = axisIndex;
-
-                        if(_axis[axisIndex].x)
-                            draws[i].x = _axis[axisIndex].xScale;
-                        if(_axis[axisIndex].y)
-                            draws[i].y = _axis[axisIndex].yScale;
-                        if(_axis[axisIndex].c)
-                            draws[i].c = _axis[axisIndex].cScale;
                     }
 
                     // 브러쉬 인덱스 설정
