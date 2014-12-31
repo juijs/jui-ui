@@ -896,7 +896,6 @@
                 type: name,
                 "class": uiFunc
             });
-
 		},
 
         /**
@@ -933,6 +932,62 @@
             global[name] = uiFunc;
             globalFunc[name] = true;
         },
+
+		defineOptions: function(Module, options, exceptOpts) {
+			var defOpts = getOptions(Module, {});
+			var defOptKeys = [],
+				optKeys = [];
+
+			// 사용자 옵션 키 배열 생성
+			for(var key in options) {
+				optKeys.push(key);
+			}
+
+			// 모듈 옵션 키 배열 생성
+			for(var key in defOpts) {
+				defOptKeys.push(key);
+
+				// 사용자 + 모듈 옵션
+				if(utility.typeCheck("undefined", options[key])) {
+					options[key] = defOpts[key];
+				} else if(utility.typeCheck("object", options[key])) {
+					for(var k in defOpts[key]) {
+						if(utility.typeCheck("undefined", options[key][k])) {
+							options[key][k] = defOpts[key][k];
+						}
+					}
+				}
+			}
+
+			// 정의되지 않은 옵션 사용 유무 체크
+			for(var i = 0; i < optKeys.length; i++) {
+				var name = optKeys[i];
+
+				if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
+					throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
+				}
+			}
+
+			function getOptions(Module, options) {
+				if(utility.typeCheck("function", Module)) {
+					if(utility.typeCheck("function", Module.setup)) {
+						var opts = Module.setup();
+
+						for(var key in opts) {
+							if(utility.typeCheck("undefined", options[key])) {
+								options[key] = opts[key];
+							}
+						}
+					}
+
+					getOptions(Module.parent, options);
+				}
+
+				return options;
+			}
+
+			return options;
+		},
 
         /**
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
@@ -1507,40 +1562,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.build = function(UI) {
 
-        // 세팅 메소드에 정의되지 않은 옵션을 사용할 경우에 에러 발생
-        function checkedOptions(defOpts, opts) {
-            var exceptOpts = [ "event", "tpl", "vo" ],
-                defOptKeys = [],
-                optKeys = [];
-
-            for(var key in defOpts) { defOptKeys.push(key); }
-            for(var key in opts) { optKeys.push(key); }
-
-            for(var i = 0; i < optKeys.length; i++) {
-                var name = optKeys[i];
-
-                if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
-                }
-            }
-        }
-
         return function(selector, options) {
             var $root = $(selector);
-            var list = [],
-                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+            var list = [];
 
             $root.each(function(index) {
                 var mainObj = new UI["class"]();
 
                 // Check Options
-                if(_.typeCheck("object", defOpts)) {
-                    checkedOptions(defOpts, options);
-                }
-
-                // Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+                var opts = jui.defineOptions(UI["class"], options || {});
 
                 // Public Properties
                 mainObj.init.prototype = mainObj;
@@ -1568,34 +1598,29 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 });
 
                 // Template Setting (Script)
-                if(_.typeCheck("object", opts.tpl)) {
-                    for(var name in opts.tpl) {
-                        var tplHtml = opts.tpl[name];
+                for(var name in opts.tpl) {
+                    var tplHtml = opts.tpl[name];
 
-                        if(_.typeCheck("string", tplHtml) && tplHtml != "") {
-                            mainObj.init.prototype.tpl[name] = _.template(tplHtml);
-                        }
+                    if(_.typeCheck("string", tplHtml) && tplHtml != "") {
+                        mainObj.init.prototype.tpl[name] = _.template(tplHtml);
                     }
                 }
 
                 var uiObj = new mainObj.init();
 
                 // Event Setting
-                if(_.typeCheck("object", uiObj.options.event)) {
-                    for(var key in uiObj.options.event) {
-                        uiObj.on(key, uiObj.options.event[key]);
-                    }
+                for(var key in opts.event) {
+                    uiObj.on(key, opts.event[key]);
                 }
 
                 list[index] = uiObj;
 
+                // 엘리먼트 객체에 jui 속성 추가
                 this.jui = uiObj;
             });
 
             // UIManager에 데이터 입력
             UIManager.add(new UICoreSet(UI.type, selector, options, list));
-
-
 
             // 객체가 없을 경우에는 null을 반환 (기존에는 빈 배열을 반환)
             if(list.length == 0) {
@@ -1618,6 +1643,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		
 		return uiObj;
 	}
+
+    UICore.setup = function() {
+        return {
+            tpl: {},
+            event: {},
+            vo: null
+        }
+    }
 	
 	// UIManager는 Global 객체로 정의
 	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;
@@ -10260,18 +10293,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             function drawAxisType(axis, k, chart) {
 
-                // 다른 그리드 옵션을 사용함 (Extend 동작안함 ㅠㅠ)
+                // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
                     axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
-                // 그리드 기본 옵션을 가져옴
-                var defOpts = getDrawOptions({}, Grid);
-
                 // 그리드 기본 옵션과 사용자 옵션을 합침
-                setDrawOptions(axis[k], defOpts);
+                jui.defineOptions(Grid, axis[k]);
 
                 // 엑시스 기본 프로퍼티 정의
                 var obj = new Grid(chart, axis, axis[k]);
@@ -10369,11 +10399,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
-                    // 브러쉬 기본 옵션을 가져옴
-                    var defOpts = getDrawOptions({}, Obj);
-
                     // 브러쉬 기본 옵션과 사용자 옵션을 합침
-                    setDrawOptions(draws[i], defOpts);
+                    jui.defineOptions(Obj, draws[i]);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
@@ -10400,11 +10427,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
 
-                    // 위젯 기본 옵션을 가져옴
-                    var defOpts = getDrawOptions({}, Obj);
-
                     // 위젯 기본 옵션과 사용자 옵션을 합침
-                    setDrawOptions(draws[i], defOpts);
+                    jui.defineOptions(Obj, draws[i]);
 
                     // 위젯 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
@@ -10625,52 +10649,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(!(_options.widget instanceof Array)) {
                 _options.widget = [ _options.widget ];
-            }
-        }
-
-        function getDrawOptions(options, Draw) {
-            if(_.typeCheck("function", Draw)) {
-                if(_.typeCheck("function", Draw.setup)) {
-                    var opts = Draw.setup();
-
-                    for(var key in opts) {
-                        if(_.typeCheck("undefined", options[key])) {
-                            options[key] = opts[key];
-                        }
-                    }
-                }
-
-                getDrawOptions(options, Draw.parent);
-            }
-
-            return options;
-        }
-
-        function setDrawOptions(options, defOpts) {
-            var defOptKeys = [],
-                optKeys = [];
-
-            // 사용자가 넘긴 옵션
-            for(var key in options) {
-                optKeys.push(key);
-            }
-
-            // 드로우 객체의 정의된 옵션
-            for(var key in defOpts) {
-                defOptKeys.push(key);
-
-                if(_.typeCheck("undefined", options[key])) {
-                    options[key] = defOpts[key];
-                }
-            }
-
-            // 정의되지 않은 옵션 사용 유무 체크
-            for(var i = 0; i < optKeys.length; i++) {
-                var name = optKeys[i];
-
-                if($.inArray(name, defOptKeys) == -1) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
-                }
             }
         }
 
@@ -11242,7 +11220,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
     }
 
     return UI;
-}, "core");
+});
 
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
@@ -14963,7 +14941,7 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				this.eachData(function(i, data) {
-					var obj = brush.c(i, data[brush.target[ti]]),
+					var obj = axis.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
 	
@@ -17634,4 +17612,4 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
     }
 
     return UI;
-}, "core");
+});

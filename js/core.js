@@ -501,40 +501,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.build = function(UI) {
 
-        // 세팅 메소드에 정의되지 않은 옵션을 사용할 경우에 에러 발생
-        function checkedOptions(defOpts, opts) {
-            var exceptOpts = [ "event", "tpl", "vo" ],
-                defOptKeys = [],
-                optKeys = [];
-
-            for(var key in defOpts) { defOptKeys.push(key); }
-            for(var key in opts) { optKeys.push(key); }
-
-            for(var i = 0; i < optKeys.length; i++) {
-                var name = optKeys[i];
-
-                if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
-                }
-            }
-        }
-
         return function(selector, options) {
             var $root = $(selector);
-            var list = [],
-                defOpts = _.typeCheck("function", UI["class"].setup) ? UI["class"].setup() : {};
+            var list = [];
 
             $root.each(function(index) {
                 var mainObj = new UI["class"]();
 
                 // Check Options
-                if(_.typeCheck("object", defOpts)) {
-                    checkedOptions(defOpts, options);
-                }
-
-                // Options Setting
-                var opts = $.extend(true, defOpts, options);
-                    opts.tpl = _.typeCheck("object", opts.tpl) ? opts.tpl : {};
+                var opts = jui.defineOptions(UI["class"], options || {});
 
                 // Public Properties
                 mainObj.init.prototype = mainObj;
@@ -562,34 +537,29 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 });
 
                 // Template Setting (Script)
-                if(_.typeCheck("object", opts.tpl)) {
-                    for(var name in opts.tpl) {
-                        var tplHtml = opts.tpl[name];
+                for(var name in opts.tpl) {
+                    var tplHtml = opts.tpl[name];
 
-                        if(_.typeCheck("string", tplHtml) && tplHtml != "") {
-                            mainObj.init.prototype.tpl[name] = _.template(tplHtml);
-                        }
+                    if(_.typeCheck("string", tplHtml) && tplHtml != "") {
+                        mainObj.init.prototype.tpl[name] = _.template(tplHtml);
                     }
                 }
 
                 var uiObj = new mainObj.init();
 
                 // Event Setting
-                if(_.typeCheck("object", uiObj.options.event)) {
-                    for(var key in uiObj.options.event) {
-                        uiObj.on(key, uiObj.options.event[key]);
-                    }
+                for(var key in opts.event) {
+                    uiObj.on(key, opts.event[key]);
                 }
 
                 list[index] = uiObj;
 
+                // 엘리먼트 객체에 jui 속성 추가
                 this.jui = uiObj;
             });
 
             // UIManager에 데이터 입력
             UIManager.add(new UICoreSet(UI.type, selector, options, list));
-
-
 
             // 객체가 없을 경우에는 null을 반환 (기존에는 빈 배열을 반환)
             if(list.length == 0) {
@@ -612,6 +582,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		
 		return uiObj;
 	}
+
+    UICore.setup = function() {
+        return {
+            tpl: {},
+            event: {},
+            vo: null
+        }
+    }
 	
 	// UIManager는 Global 객체로 정의
 	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;

@@ -20,7 +20,7 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				this.eachData(function(i, data) {
-					var obj = brush.c(i, data[brush.target[ti]]),
+					var obj = axis.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
 	

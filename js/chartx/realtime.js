@@ -159,4 +159,4 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
     }
 
     return UI;
-}, "core");
+});

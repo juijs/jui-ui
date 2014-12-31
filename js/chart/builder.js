@@ -183,18 +183,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             function drawAxisType(axis, k, chart) {
 
-                // 다른 그리드 옵션을 사용함 (Extend 동작안함 ㅠㅠ)
+                // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
                     axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
 
-                // 그리드 기본 옵션을 가져옴
-                var defOpts = getDrawOptions({}, Grid);
-
                 // 그리드 기본 옵션과 사용자 옵션을 합침
-                setDrawOptions(axis[k], defOpts);
+                jui.defineOptions(Grid, axis[k]);
 
                 // 엑시스 기본 프로퍼티 정의
                 var obj = new Grid(chart, axis, axis[k]);
@@ -292,11 +289,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
-                    // 브러쉬 기본 옵션을 가져옴
-                    var defOpts = getDrawOptions({}, Obj);
-
                     // 브러쉬 기본 옵션과 사용자 옵션을 합침
-                    setDrawOptions(draws[i], defOpts);
+                    jui.defineOptions(Obj, draws[i]);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
@@ -323,11 +317,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
 
-                    // 위젯 기본 옵션을 가져옴
-                    var defOpts = getDrawOptions({}, Obj);
-
                     // 위젯 기본 옵션과 사용자 옵션을 합침
-                    setDrawOptions(draws[i], defOpts);
+                    jui.defineOptions(Obj, draws[i]);
 
                     // 위젯 기본 프로퍼티 정의
                     var draw = new Obj(self, _axis[axisIndex], draws[i]);
@@ -548,52 +539,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(!(_options.widget instanceof Array)) {
                 _options.widget = [ _options.widget ];
-            }
-        }
-
-        function getDrawOptions(options, Draw) {
-            if(_.typeCheck("function", Draw)) {
-                if(_.typeCheck("function", Draw.setup)) {
-                    var opts = Draw.setup();
-
-                    for(var key in opts) {
-                        if(_.typeCheck("undefined", options[key])) {
-                            options[key] = opts[key];
-                        }
-                    }
-                }
-
-                getDrawOptions(options, Draw.parent);
-            }
-
-            return options;
-        }
-
-        function setDrawOptions(options, defOpts) {
-            var defOptKeys = [],
-                optKeys = [];
-
-            // 사용자가 넘긴 옵션
-            for(var key in options) {
-                optKeys.push(key);
-            }
-
-            // 드로우 객체의 정의된 옵션
-            for(var key in defOpts) {
-                defOptKeys.push(key);
-
-                if(_.typeCheck("undefined", options[key])) {
-                    options[key] = defOpts[key];
-                }
-            }
-
-            // 정의되지 않은 옵션 사용 유무 체크
-            for(var i = 0; i < optKeys.length; i++) {
-                var name = optKeys[i];
-
-                if($.inArray(name, defOptKeys) == -1) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option in chart.draw");
-                }
             }
         }
 
@@ -1165,4 +1110,4 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
     }
 
     return UI;
-}, "core");
+});

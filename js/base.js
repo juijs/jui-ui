@@ -896,7 +896,6 @@
                 type: name,
                 "class": uiFunc
             });
-
 		},
 
         /**
@@ -933,6 +932,62 @@
             global[name] = uiFunc;
             globalFunc[name] = true;
         },
+
+		defineOptions: function(Module, options, exceptOpts) {
+			var defOpts = getOptions(Module, {});
+			var defOptKeys = [],
+				optKeys = [];
+
+			// 사용자 옵션 키 배열 생성
+			for(var key in options) {
+				optKeys.push(key);
+			}
+
+			// 모듈 옵션 키 배열 생성
+			for(var key in defOpts) {
+				defOptKeys.push(key);
+
+				// 사용자 + 모듈 옵션
+				if(utility.typeCheck("undefined", options[key])) {
+					options[key] = defOpts[key];
+				} else if(utility.typeCheck("object", options[key])) {
+					for(var k in defOpts[key]) {
+						if(utility.typeCheck("undefined", options[key][k])) {
+							options[key][k] = defOpts[key][k];
+						}
+					}
+				}
+			}
+
+			// 정의되지 않은 옵션 사용 유무 체크
+			for(var i = 0; i < optKeys.length; i++) {
+				var name = optKeys[i];
+
+				if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
+					throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
+				}
+			}
+
+			function getOptions(Module, options) {
+				if(utility.typeCheck("function", Module)) {
+					if(utility.typeCheck("function", Module.setup)) {
+						var opts = Module.setup();
+
+						for(var key in opts) {
+							if(utility.typeCheck("undefined", options[key])) {
+								options[key] = opts[key];
+							}
+						}
+					}
+
+					getOptions(Module.parent, options);
+				}
+
+				return options;
+			}
+
+			return options;
+		},
 
         /**
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
