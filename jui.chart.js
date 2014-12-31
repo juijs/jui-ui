@@ -399,19 +399,30 @@
 			return (isJUI) ? 10 : (w1 - w2);
 		},
 		inherit: function(ctor, superCtor) {
+			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
+
 			ctor.parent = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
 		},
-		extend: function(origin, add) {
-			// Don't do anything if add isn't an object
-			if (!add || typeof add !== 'object') return origin;
+		extend: function(origin, add, skip) {
+			if(!this.typeCheck("object", origin) || !this.typeCheck("object", add)) return;
 
-			var keys = Object.keys(add);
-			var i = keys.length;
-			while (i--) {
-				origin[keys[i]] = add[keys[i]];
+			for(var key in add) {
+				if(skip === true) {
+					if(this.typeCheck("undefined", origin[key])) {
+						origin[key] = add[key];
+					} else if (this.typeCheck("object", origin[key])) {
+						this.extend(origin[key], add[key], skip);
+					}
+				} else {
+					if(!this.typeCheck("object", origin[key])) {
+						origin[key] = add[key];
+					} else {
+						this.extend(origin[key], add[key], skip);
+					}
+				}
 			}
 
 			return origin;
@@ -427,7 +438,7 @@
 			var clone = ($.isArray(obj)) ? [] : {};
 
 	        for(var i in obj) {
-	            if(utility.typeCheck("object", obj[i]))
+	            if(this.typeCheck("object", obj[i]))
 	                clone[i] = this.clone(obj[i]);
 	            else
 	                clone[i] = obj[i];
@@ -439,15 +450,15 @@
             var value = null;
             emit = emit  || {};
 
-            if(utility.typeCheck("array", obj )) {
+            if(this.typeCheck("array", obj )) {
                 value = [];
 
                 for(var i = 0, len = obj.length; i < len; i++) {
                     value[i] = this.deepClone(obj[i]);
                 }
-            } else if(utility.typeCheck("date", obj)) {
+            } else if(this.typeCheck("date", obj)) {
                 value = obj;
-            } else if(utility.typeCheck("object", obj)) {
+            } else if(this.typeCheck("object", obj)) {
                 value = {};
 
                 for(var key in obj) {
@@ -935,18 +946,8 @@
 
 		defineOptions: function(Module, options, exceptOpts) {
 			var defOpts = getOptions(Module, {});
-			var defOptKeys = [],
-				optKeys = [];
-
-			// 사용자 옵션 키 배열 생성
-			for(var key in options) {
-				optKeys.push(key);
-			}
-
-			// 모듈 옵션 키 배열 생성
-			for(var key in defOpts) {
-				defOptKeys.push(key);
-			}
+			var defOptKeys = Object.keys(defOpts),
+				optKeys = Object.keys(options);
 
 			// 정의되지 않은 옵션 사용 유무 체크
 			for(var i = 0; i < optKeys.length; i++) {
@@ -958,20 +959,7 @@
 			}
 
 			// 사용자 옵션 + 기본 옵션
-			setOptions(options, defOpts);
-
-			// 옵션을 합치는 함수 (참조를 건들이지 않음)
-			function setOptions(options, defOpts) {
-				if(!utility.typeCheck("object", defOpts)) return;
-
-				for(var key in defOpts) {
-					if(utility.typeCheck("undefined", options[key])) {
-						options[key] = defOpts[key];
-					} else if(utility.typeCheck("object", options[key])) {
-						setOptions(options[key], defOpts[key]);
-					}
-				}
-			}
+			utility.extend(options, defOpts, true);
 
 			// 상위 모듈의 옵션까지 모두 얻어오는 함수
 			function getOptions(Module, options) {
@@ -3873,7 +3861,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
-                    axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
+                    _.extend(axis[k], _options.axis[axis[k].extend][k], true);
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));

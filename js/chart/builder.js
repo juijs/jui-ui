@@ -185,7 +185,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
-                    axis[k] = $.extend(true, _options.axis[axis[k].extend][k], axis[k]);
+                    _.extend(axis[k], _options.axis[axis[k].extend][k], true);
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
