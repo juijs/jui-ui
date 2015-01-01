@@ -507,21 +507,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function setDefaultOptions(self) {
-            var opts = self.options;
-
             // 일부 옵션을 제외하고 클론
-            _options = _.deepClone(opts, { data: true, bind: true });
+            _options = _.deepClone(self.options, { data: true, bind: true });
+
+            var padding = _options.padding;
 
             // 패딩 옵션 설정
-            if(_options.padding == "empty") {
-                _padding = {
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0
-                };
+            if(padding == "empty") {
+                _padding = { left: 0, right: 0, bottom: 0, top: 0 };
             } else {
-                _padding = _options.padding;
+                if(_.typeCheck("integer", padding)) {
+                    _padding = { left: padding, right: padding, bottom: padding, top: padding };
+                } else {
+                    _padding = padding;
+                }
             }
 
             // UI 바인딩 설정
@@ -529,15 +528,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 self.bindUI(_options.bind);
             }
 
-            if(!(_options.axis instanceof Array)) {
+            if(!_.typeCheck("array", _options.axis)) {
                 _options.axis = [ _options.axis ];
             }
 
-            if(!(_options.brush instanceof Array)) {
+            if(!_.typeCheck("array", _options.brush)) {
                 _options.brush = [ _options.brush ];
             }
 
-            if(!(_options.widget instanceof Array)) {
+            if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
             }
         }
@@ -1078,13 +1077,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         return {
             width: "100%", // chart 기본 넓이
             height: "100%", // chart 기본 높이
-
-            // style
             padding: {
-                left: 50,
-                right: 50,
+                top: 50,
                 bottom: 50,
-                top: 50
+                left: 50,
+                right: 50
             },
 
             // chart
