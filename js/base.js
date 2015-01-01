@@ -427,11 +427,7 @@
 			}
 
 			function isRecursive(value) {
-				return (
-					utility.typeCheck("object", value) &&
-					!utility.typeCheck("date", value) &&
-					!utility.typeCheck("array", value)
-				);
+				return utility.typeCheck("object", value);
 			}
 
 			return origin;
@@ -561,7 +557,13 @@
 					return (typeof(value) == "function");
 				}
 				else if (type == "object") {
-					return (typeof(value) == "object" && value !== null);
+					// typeCheck에 정의된 타입일 경우에는 object 체크시 false를 반환 (date, array, null)
+					return (
+						typeof(value) == "object" &&
+						value !== null &&
+						!(value instanceof Array) &&
+						!(value instanceof Date)
+					);
 				}
 
 				return false;

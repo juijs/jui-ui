@@ -122,6 +122,12 @@ jui.ready([ "util.base" ], function(_) {
 
         _.extend(origin, { name: "Park", age: 20 });
         assert.ok(origin.name == "Park" && origin.age == 20, "객체 확장 확인");
+
+        _.extend(origin, { data: [ 0, 1, 2, 3 ]});
+        assert.ok(origin.data[1] == 1, "객체 확장 확인 (array)");
+
+        _.extend(origin, { date: new Date() });
+        assert.ok(_.typeCheck("date", origin.date), "객체 확장 확인 (date)");
     });
 
     QUnit.test("[유틸리티 함수] - pxToInt", function(assert) {
@@ -200,7 +206,11 @@ jui.ready([ "util.base" ], function(_) {
 
     QUnit.test("[유틸리티 함수] - typeCheck", function(assert) {
         assert.ok(_.typeCheck("object", {}), "'object' 타입 확인");
-        assert.ok(_.typeCheck("object", null) == false, "'object' 타입 확인 (null)");
+        assert.ok(!_.typeCheck("object", null), "'object' 타입 확인 (null)");
+        assert.ok(!_.typeCheck("object", []), "'object' 타입 확인 (array)");
+        assert.ok(!_.typeCheck("object", new Date()), "'object' 타입 확인 (date)");
+        assert.ok(_.typeCheck("array", []), "'array' 타입 확인");
+        assert.ok(_.typeCheck("date", new Date()), "'date' 타입 확인");
     });
 
     QUnit.test("[유틸리티 함수] - dataToCsv", function(assert) {

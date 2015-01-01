@@ -427,11 +427,7 @@
 			}
 
 			function isRecursive(value) {
-				return (
-					utility.typeCheck("object", value) &&
-					!utility.typeCheck("date", value) &&
-					!utility.typeCheck("array", value)
-				);
+				return utility.typeCheck("object", value);
 			}
 
 			return origin;
@@ -561,7 +557,12 @@
 					return (typeof(value) == "function");
 				}
 				else if (type == "object") {
-					return (typeof(value) == "object" && value !== null);
+					return (
+						typeof(value) == "object" &&
+						value !== null &&
+						!(value instanceof Array) &&
+						!(value instanceof Date)
+					);
 				}
 
 				return false;
