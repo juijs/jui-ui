@@ -427,7 +427,11 @@
 			}
 
 			function isRecursive(value) {
-				return (utility.typeCheck("object", value) && !utility.typeCheck("date", value));
+				return (
+					utility.typeCheck("object", value) &&
+					!utility.typeCheck("date", value) &&
+					!utility.typeCheck("array", value)
+				);
 			}
 
 			return origin;
