@@ -5697,7 +5697,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 				//grid.domain = domain;
 			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
-				domain = this.grid.domain();
+				domain = this.grid.domain.call(this.chart);
 			} else {
 				domain = this.grid.domain;
 			}
@@ -5933,7 +5933,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var func = this.grid.domain;
-				value_list = func();
+				value_list = func.call(this.chart);
 			} else {
 				value_list = this.grid.domain;
 			}
@@ -6516,7 +6516,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = this.grid.domain(data[index]);
+					var value = this.grid.domain.call(this.chart, data[index]);
 
 					if (_.typeCheck("array", value)) {
 
@@ -6542,7 +6542,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit(chart, grid);
+				unit = this.grid.unit.call(this.chart, grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
@@ -6845,7 +6845,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 				for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = this.grid.domain(data[index]);
+					var value = this.grid.domain.call(this.chart, data[index]);
 
 					if (_.typeCheck("array", value)) {
 
@@ -6871,7 +6871,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit(chart, grid);
+				unit = this.grid.unit.call(this.chart);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
