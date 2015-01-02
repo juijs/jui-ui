@@ -5,8 +5,8 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawScatter = function(points) {
             var width = height = this.brush.size;
 
-            var g = this.chart.svg.group();
-            var path = this.chart.svg.path({
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.path({
                 fill : this.color(0),
                 stroke : this.color(0),
                 "stroke-width" : this.brush.strokeWidth
@@ -14,10 +14,8 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var tpl = path.getSymbolTemplate(width, height);
 
-            var series = this.chart.series();
-
             for(var i = 0; i < points.length; i++) {
-                var target = series[this.brush.target[i]],
+                var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
               
                 for(var j = 0; j < points[i].x.length; j++) {

@@ -10689,7 +10689,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var obj = {
                 axis: _axis,
                 brush: _brush,
-                widget: _widget
+                widget: _widget,
+                series: _series
             };
 
             if(obj[type][key]) {
@@ -10728,23 +10729,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * series 객체 반환
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.series = function(key) {
-            if(_series[key]) {
-                return _series[key];
-            }
-
-            return _series;
-        }
-
-        /**
          * 브러쉬 컬러 관련 함수
          *
-         * @param i
+         * @param dataIndex
          * @param brush
          * @returns {*}
          */
@@ -14208,7 +14195,7 @@ jui.define("chart.brush.column", [], function() {
 jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, series, height, bar_width;
+		var g, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
@@ -14265,7 +14252,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			series = chart.series();
 			height = axis.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
@@ -14543,7 +14529,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
-            var series = chart.series(brush.target[index]),
+            var series = axis.series[brush.target[index]],
                 radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
             return chart.svg.circle({
@@ -14600,7 +14586,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
             for (var j = 0; j < brush.target.length; j++) {
                 var k = brush.target[j],
-                    t = chart.series(k);
+                    t = chart.get("series", k);
 
                 target[t.type] = data[k];
             }
@@ -14690,12 +14676,14 @@ jui.define("chart.brush.ohlc", [], function() {
     var OHLCBrush = function(chart, axis, brush) {
         var g;
 
-        function getTargets(chart) {
+        function getTargetData(data) {
             var target = {};
 
             for (var j = 0; j < brush.target.length; j++) {
-                var t = chart.series(brush.target[j]);
-                target[t.type] = t;
+                var k = brush.target[j],
+                    t = chart.get("series", k);
+
+                target[t.type] = data[k];
             }
 
             return target;
@@ -14706,16 +14694,16 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.draw = function() {
-            var targets = getTargets(chart);
-
             this.eachData(function(i, data) {
-                var startX = axis.x(i);
+                var data = getTargetData(data),
+                    startX = axis.x(i);
 
-                var open = targets.open.data[i],
-                    close = targets.close.data[i],
-                    low =  targets.low.data[i],
-                    high = targets.high.data[i],
-                    color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
+                var open = data.open,
+                    close = data.close,
+                    low = data.low,
+                    high = data.high;
+
+                var color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
 
                 var lowHigh = chart.svg.line({
                     x1: startX,
@@ -15283,7 +15271,7 @@ jui.define("chart.brush.scatter", [], function() {
         this.createScatter = function(pos, index) {
             var self = this;
             var elem = null,
-                target = this.chart.series(this.brush.target[index]),
+                target = this.chart.get("series", this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
@@ -15388,8 +15376,8 @@ jui.define("chart.brush.scatterpath", [], function() {
         this.drawScatter = function(points) {
             var width = height = this.brush.size;
 
-            var g = this.chart.svg.group();
-            var path = this.chart.svg.path({
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.path({
                 fill : this.color(0),
                 stroke : this.color(0),
                 "stroke-width" : this.brush.strokeWidth
@@ -15397,10 +15385,8 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var tpl = path.getSymbolTemplate(width, height);
 
-            var series = this.chart.series();
-
             for(var i = 0; i < points.length; i++) {
-                var target = series[this.brush.target[i]],
+                var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
               
                 for(var j = 0; j < points[i].x.length; j++) {
@@ -16901,7 +16887,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
-                var t = chart.series(obj.dataKey),
+                var t = chart.get("series", obj.dataKey),
                     k = obj.dataKey,
                     d = (obj.data != null) ? obj.data[k] : null;
 
@@ -16920,7 +16906,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
-                        t = chart.series(key),
+                        t = chart.get("series", key),
                         x = padding,
                         y = (textY * i) + (padding * 2),
                         d = (obj.data != null) ? obj.data[key] : null;
@@ -17146,7 +17132,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			
 			for(var i = 0; i < count; i++) {
                 var target = brush.target[i],
-                    text = chart.series(target).text || target;
+                    text = chart.get("series", target).text || target;
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),

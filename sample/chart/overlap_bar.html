@@ -23,7 +23,7 @@
                     { quarter : "4Q", samsung : 260, apple : 470, google : 350, facebook: 340 }
                 ],
                 y : {
-                    target : "quarter",
+                    domain : "quarter",
                     line : true
                 },
                 x : {
@@ -34,7 +34,7 @@
                     format : function(d) {
                         return "$" + d + "B";
                     },
-                    target : function(d) { return 500; }
+                    domain : function(d) { return 500; }
                 }
             },
             brush : {
@@ -44,8 +44,8 @@
                 outerPadding : 20
             },
             widget : [
-                { type : "title", text : "Bar Sample", position: "bottom", align: "start" },
-                { type : "tooltip", position: "right" },
+                { type : "title", text : "Bar Sample", orient: "bottom", align: "start" },
+                { type : "tooltip", orient: "right" },
                 { type : "legend", align: "end" }
             ]
         });

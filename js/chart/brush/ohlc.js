@@ -3,12 +3,14 @@ jui.define("chart.brush.ohlc", [], function() {
     var OHLCBrush = function(chart, axis, brush) {
         var g;
 
-        function getTargets(chart) {
+        function getTargetData(data) {
             var target = {};
 
             for (var j = 0; j < brush.target.length; j++) {
-                var t = chart.series(brush.target[j]);
-                target[t.type] = t;
+                var k = brush.target[j],
+                    t = chart.get("series", k);
+
+                target[t.type] = data[k];
             }
 
             return target;
@@ -19,16 +21,16 @@ jui.define("chart.brush.ohlc", [], function() {
         }
 
         this.draw = function() {
-            var targets = getTargets(chart);
-
             this.eachData(function(i, data) {
-                var startX = axis.x(i);
+                var data = getTargetData(data),
+                    startX = axis.x(i);
 
-                var open = targets.open.data[i],
-                    close = targets.close.data[i],
-                    low =  targets.low.data[i],
-                    high = targets.high.data[i],
-                    color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
+                var open = data.open,
+                    close = data.close,
+                    low = data.low,
+                    high = data.high;
+
+                var color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
 
                 var lowHigh = chart.svg.line({
                     x1: startX,

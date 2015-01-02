@@ -4,7 +4,7 @@ jui.define("chart.brush.scatter", [], function() {
         this.createScatter = function(pos, index) {
             var self = this;
             var elem = null,
-                target = this.chart.series(this.brush.target[index]),
+                target = this.chart.get("series", this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 

@@ -39,7 +39,9 @@
                 y :
                 {
                     type : 'range',
-                    target : [ "apple", "ms", "oracle" ],
+                    domain : function(d) {
+                        return Math.max(d.apple, d.ms, d.oracle);
+                    },
                     step : 10
                 },
                 //area : { x : 0, y : 0, width : '100%', height : '100%' },

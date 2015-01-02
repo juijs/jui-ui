@@ -46,7 +46,9 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "name2" ],
+                    domain : function(d) {
+                        return Math.max(d.name, d.name2);
+                    },
                     step : 10
                 },
                 data : data

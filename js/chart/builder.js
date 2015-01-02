@@ -574,7 +574,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var obj = {
                 axis: _axis,
                 brush: _brush,
-                widget: _widget
+                widget: _widget,
+                series: _series
             };
 
             if(obj[type][key]) {
@@ -613,23 +614,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * series 객체 반환
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.series = function(key) {
-            if(_series[key]) {
-                return _series[key];
-            }
-
-            return _series;
-        }
-
-        /**
          * 브러쉬 컬러 관련 함수
          *
-         * @param i
+         * @param dataIndex
          * @param brush
          * @returns {*}
          */

@@ -4,7 +4,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
-            var series = chart.series(brush.target[index]),
+            var series = axis.series[brush.target[index]],
                 radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
 
             return chart.svg.circle({

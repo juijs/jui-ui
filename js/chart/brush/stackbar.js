@@ -1,7 +1,7 @@
 jui.define("chart.brush.stackbar", [], function() {
 
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, series, height, bar_width;
+		var g, height, bar_width;
 
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
@@ -58,7 +58,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			series = chart.series();
 			height = axis.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}

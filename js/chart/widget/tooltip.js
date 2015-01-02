@@ -29,7 +29,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
-                var t = chart.series(obj.dataKey),
+                var t = chart.get("series", obj.dataKey),
                     k = obj.dataKey,
                     d = (obj.data != null) ? obj.data[k] : null;
 
@@ -48,7 +48,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
-                        t = chart.series(key),
+                        t = chart.get("series", key),
                         x = padding,
                         y = (textY * i) + (padding * 2),
                         d = (obj.data != null) ? obj.data[key] : null;

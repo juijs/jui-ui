@@ -25,14 +25,16 @@
                     { name : 2, value : 5, domain: "week4" },
                 ],
                 x : {
-                    target : "domain",
+                    domain : "domain",
                     line : true,
                     hide : true
                 },
                 y :
                 {
                     type : 'range',
-                    target : [ "name", "value" ],
+                    domain : function(d) {
+                        return Math.max(d.name, d.value)
+                    },
                     step : 10,
                     hide : true
                 }

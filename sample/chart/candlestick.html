@@ -47,7 +47,7 @@
                 buffer : 10,
                 x : {
                     type : "block",  // default type is block
-                    target : 'date',
+                    domain : 'date',
                     textRotate : function(chart, grid) { console.log(this); return -20; },
                     format: function(d) {
                         return time.format(d, "MM-dd");

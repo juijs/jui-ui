@@ -34,7 +34,7 @@
             padding : {left : 100, right : 150 },
             axis : [{
                 data : dataSource,
-                x : { target : "month", line : true },
+                x : { domain : "month", line : true },
                 y : { type : 'range', domain: [0, 300], step : 6, format : function(value) { return value + " mm"} }
             },{
                 data : dataSource,

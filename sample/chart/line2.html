@@ -31,7 +31,9 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value" ],
+                    domain : function(d) {
+                        return Math.max(d.name, d.value);
+                    },
                     step : 10
                 }
             },{
@@ -43,7 +45,7 @@
                 y : {
                     orient : 'right',
                     type : "range",
-                    target : function(data) {
+                    domain : function(data) {
                         return data.name + data.value + 10;
                     },
                     step : 10

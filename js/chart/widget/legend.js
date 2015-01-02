@@ -51,7 +51,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			
 			for(var i = 0; i < count; i++) {
                 var target = brush.target[i],
-                    text = chart.series(target).text || target;
+                    text = chart.get("series", target).text || target;
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),

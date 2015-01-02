@@ -8,7 +8,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
             for (var j = 0; j < brush.target.length; j++) {
                 var k = brush.target[j],
-                    t = chart.series(k);
+                    t = chart.get("series", k);
 
                 target[t.type] = data[k];
             }

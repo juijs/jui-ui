@@ -31,7 +31,9 @@
                     },
                     x : {
                         type : 'range',
-                        domain : function(chart, grid, d) { return [Math.max(d.name, d.value), Math.min(d.name, d.value)] ; },
+                        domain : function(d) {
+                            return [ Math.max(d.name, d.value), Math.min(d.name, d.value) ] ;
+                        },
                         step : 10
                     }
                 }
