@@ -10734,10 +10734,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.series = function(key) {
-            var axis = this.get("axis", _options.axisIndex);
-
-            if(axis.series && axis.series[key]) {
-                return _.extend(_series[key], axis.series[key]);
+            if(_series[key]) {
+                return _series[key];
             }
 
             return _series;
@@ -13718,19 +13716,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {Array}
          */
         this.getXY = function(isCheckMinMax) {
-            var xy = [];
-            isCheckMinMax = _.typeCheck("undefined", isCheckMinMax) ? true : false;
-
-            var series = {};
-
-            if (isCheckMinMax) {
-                series = $.extend(true, this.chart.series(), this.axis.series);
-            }
+            var xy = [],
+                series = this.axis.series;
 
             this.eachData(function(i, data) {
                 var startX = this.axis.x(i);
 
-                for (var j = 0; j < this.brush.target.length; j++) {
+                for(var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
                         value = data[key];
 
@@ -13748,65 +13740,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     xy[j].y.push(this.axis.y(value));
                     xy[j].value.push(value);
 
-                    if (isCheckMinMax) {
+                    if(isCheckMinMax !== false) {
                         xy[j].min.push(value == series[key].min);
                         xy[j].max.push(value == series[key].max);
                     }
-
                 }
             });
-
-            return xy;
-        }
-
-        /**
-         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
-         *
-         * @param brush
-         * @param chart
-         * @returns {Array}
-         */
-        this.getCachedXY = function(isCheckMinMax) {
-            var xy = [];
-
-            var cached = {};
-
-            this.eachData(function(i, data) {
-                var startX = this.axis.x(i);
-
-                for (var j = 0; j < this.brush.target.length; j++) {
-                    var key = this.brush.target[j],
-                        value = data[key];
-
-                    if (!xy[j]) {
-                        xy[j] = {
-                            x: [],
-                            y: [],
-                            value: [],
-                            min: [],
-                            max: []
-                        };
-                    }
-
-                    var xValue = startX
-                    var yValue = this.axis.y(value);
-
-                    var cachedkey = key + "-" +  xValue + "-" + yValue;
-
-                    if (cached[cachedkey]) {
-                        continue;
-                    } else {
-                        cached[cachedkey] = true;
-                    }
-
-                    xy[j].x.push(xValue);
-                    xy[j].y.push(yValue);
-                    xy[j].value.push(value);
-
-                }
-            });
-
-            cached = null;
 
             return xy;
         }
@@ -13819,14 +13758,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-
-        this.getStackXY = function() {
-            var xy = this.getXY();
+        this.getStackXY = function(isCheckMinMax) {
+            var xy = this.getXY(isCheckMinMax);
 
             this.eachData(function(i, data) {
                 var valueSum = 0;
 
-                for (var j = 0; j < this.brush.target.length; j++) {
+                for(var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
                         value = data[key];
 
@@ -13837,6 +13775,55 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     xy[j].y[i] = this.axis.y(value + valueSum);
                 }
             });
+
+            return xy;
+        }
+
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
+        this.getCachedXY = function() {
+            var xy = [],
+                cached = {};
+
+            this.eachData(function(i, data) {
+                var startX = this.axis.x(i);
+
+                for(var j = 0; j < this.brush.target.length; j++) {
+                    var key = this.brush.target[j],
+                        value = data[key];
+
+                    if(!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: [],
+                            value: [],
+                            min: [],
+                            max: []
+                        };
+                    }
+
+                    var xValue = startX,
+                        yValue = this.axis.y(value),
+                        cachedkey = key + "-" +  xValue + "-" + yValue;
+
+                    if(cached[cachedkey]) {
+                        continue;
+                    } else {
+                        cached[cachedkey] = true;
+                    }
+
+                    xy[j].x.push(xValue);
+                    xy[j].y.push(yValue);
+                    xy[j].value.push(value);
+                }
+            });
+
+            cached = null;
 
             return xy;
         }

@@ -619,10 +619,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @returns {*}
          */
         this.series = function(key) {
-            var axis = this.get("axis", _options.axisIndex);
-
-            if(axis.series && axis.series[key]) {
-                return _.extend(_series[key], axis.series[key]);
+            if(_series[key]) {
+                return _series[key];
             }
 
             return _series;
