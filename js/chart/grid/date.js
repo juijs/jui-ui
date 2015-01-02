@@ -1,7 +1,9 @@
-jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
+jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
+		var step = [];
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -156,15 +158,59 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 
+		/**
+		 * date grid 의 domain 설정
+		 *
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
+		 *
+		 */
+		this.initDomain = function() {
+
+			var min = this.grid.min || undefined,
+				max = this.grid.max || undefined;
+			var data = this.data();
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				value_list.push(+data[0][field]);
+				value_list.push(+data[data.length-1][field]);
+			} else if (_.typeCheck("function", this.grid.domain)) {
+				var func = this.grid.domain;
+				value_list = func(this.chart, this.grid);
+			} else {
+				value_list = this.grid.domain;
+			}
+
+			if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
+			if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
+
+			this.grid.max = max;
+			this.grid.min = min;
+			domain = [this.grid.min, this.grid.max];
+			step = this.grid.step;
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+			if (_.typeCheck("function", step)) {
+				this.grid.step = step(this.chart, this.grid, domain);
+			}
+
+			return domain;
+		}
+
 		this.drawBefore = function() {
-			grid = this.setDateDomain(chart, grid);
+			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
+			this.scale = UtilScale.time().domain(domain).rangeRound(range);
 
-			if (grid.realtime) {
+
+
+			if (this.grid.realtime) {
 				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
 			} else {
 				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
@@ -197,6 +243,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 	DateGrid.setup = function() {
 		return {
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			unit: null,
+			reverse: false,
+			key: null,
 			realtime: false
 		};
 	}

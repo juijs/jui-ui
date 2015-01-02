@@ -29,7 +29,9 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value", "test" ],
+                    domain : function(chart, grid, data) {
+                        return Math.max(data.name, data.value, data.test);
+                    },
                     step : 10
                 }
             }],

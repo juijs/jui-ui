@@ -1,7 +1,8 @@
-jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
+jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
 	var BlockGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
 
 		this.top = function(chart, g, scale) {
 			var full_height = chart.area('height');
@@ -195,14 +196,52 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
+		/**
+		 * block,radar grid 에 대한 domain 설정
+		 *
+		 */
+		this.initDomain = function() {
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				var data = this.data();
+
+				if (this.grid.reverse) {
+					var start = data.length - 1,
+						end = 0,
+						step = -1;
+				} else {
+					var start = 0,
+						end = data.length - 1,
+						step = 1;
+				}
+
+				for (var i = start; ((this.grid.reverse) ? i >= end : i <=end); i += step) {
+					domain.push(data[i][field]);
+				}
+
+				//grid.domain = domain;
+			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
+				domain = this.grid.domain(this.chart, this.grid);
+			} else {
+				domain = this.grid.domain;
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+		}
+
 		this.drawBefore = function() {
+			this.initDomain();
+
 			grid.type = grid.type || "block";
-			grid = this.setBlockDomain(chart, grid);
 
 			var obj = this.getGridSize(chart, orient, grid);
 
 			// scale 설정
-			this.scale = UtilScale.ordinal().domain(grid.domain);
+			this.scale = UtilScale.ordinal().domain(domain);
 			var range = [obj.start, obj.end];
 
 			if (grid.full) {
@@ -231,6 +270,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	BlockGrid.setup = function() {
 		return {
+			domain: null,
+			reverse: false,
 			max: 10,
 			full: false
 		};

@@ -8,7 +8,7 @@
 </head>
 <body class="jui">
 
-<div id="chart" style="display:none;"></div>
+<div id="chart" ></div>
 <div><canvas id="chartCanvas"></canvas></div>
 <script id="tpl_tooltip" type="text/template">
     <div class="tooltip tooltip-top tooltip-black">
@@ -31,7 +31,7 @@
         }
         
         var data = [];
-        for(var i = 0; i < 30000; i++) {
+        for(var i = 0; i < 50000; i++) {
             data.push({
                 date: time.add(start, time.seconds, getTime()),
                 name: getNumber(),
@@ -41,9 +41,9 @@
         }
 
         function changeData(data) {
-            data = data.slice(30000);
+            data = data.slice(50000);
 
-            for(var i = 0; i < 30000; i++) {
+            for(var i = 0; i < 50000; i++) {
                 data.push({
                     date: time.add(start, time.seconds, getTime()),
                     name: getNumber(),
@@ -62,6 +62,7 @@
             theme : "jennifer",
             axis : {
                 data : data,
+                buffer: 3000000,
                 x : {
                     type : "date",  // default type is block
                     domain : [ start, end ],
@@ -72,7 +73,9 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value", "test" ],
+                    domain : function(chart, grid, data) {
+                        return Math.max(data.name, data.value, data.test);
+                    },
                     step : 10,
                     line : true
                 }
@@ -84,24 +87,25 @@
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name", size : 5, strokeWidth : 2 ,
+                target : "name", size : 3,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",size : 5,strokeWidth : 2 ,
+                target : "value",size : 3,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",size : 5,strokeWidth : 2 ,
+                target : "test",size : 3,
                 colors : [ theme.colors[2] ]
             }]
         });
 
-        setInterval(function() {
+        var tim = setInterval(function() {
             c.update(data = changeData(data));
             //c.render();
-            c.svg.exportCanvas($("#chartCanvas")[0]);
-        }, 1000);
+            //c.svg.exportCanvas($("#chartCanvas")[0]);
+
+        }, 2000);
 
 
 	})

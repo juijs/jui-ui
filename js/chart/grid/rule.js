@@ -2,6 +2,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	var RuleGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
 
 		this.top = function(chart, g) {
 			var height = chart.area('height'),
@@ -183,11 +184,92 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
+		/**
+		 * range grid 의 domain 설정
+		 *
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
+		 *
+		 */
+		this.initDomain = function() {
+
+			var min = this.grid.min || 0,
+				max = this.grid.max || 0,
+				data = this.data();
+			var value_list = [];
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+
+				for (var index = 0, len = data.length; index < len; index++) {
+
+					var value = data[index][field];
+
+					if (_.typeCheck("array", value)) {
+						for(var j = 0; j < value.length; j++) {
+							value_list.push(value[j]);
+						}
+					} else {
+						value_list.push(value);
+					}
+
+				}
+			} else if (_.typeCheck("function", this.grid.domain)) {
+				for (var index = 0, len = data.length; index < len; index++) {
+					value_list.push(this.grid.domain(this.chart, this.grid, data[index]));
+				}
+			} else {
+				value_list = grid.domain;
+			}
+
+			var tempMin = Math.min.apply(Math, value_list);
+			var tempMax = Math.max.apply(Math, value_list);
+
+			if (min > tempMin) min = tempMin;
+			if (max < tempMax) max = tempMax;
+
+			this.grid.max = max;
+			this.grid.min = min;
+
+			var unit;
+
+			if (_.typeCheck("function", this.grid.unit)) {
+				unit = this.grid.unit(chart, grid);
+			} else if (_.typeCheck("number", this.grid.unit)) {
+				unit = this.grid.unit;
+			} else {
+				unit = Math.ceil((max - min) / this.grid.step);
+			}
+
+			var start = 0;
+
+			while (start < max) {
+				start += unit;
+			}
+
+			var end = 0;
+			while (end > min) {
+				end -= unit;
+			}
+
+			if (unit == 0) {
+				domain = [0, 0];
+			} else {
+				domain = [end, start];
+				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+			return domain;
+		}
+
 		this.drawBefore = function() {
-			grid = this.setRangeDomain(chart, grid);
+			initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid);
-			this.scale = UtilScale.linear().domain(grid.domain);
+			this.scale = UtilScale.linear().domain(domain);
 
 			if (orient == "left" || orient == "right") {
 				this.scale.range([obj.end, obj.start]);
@@ -198,12 +280,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
-			this.step = grid.step;
-			this.nice = grid.nice;
+			this.step = this.grid.step;
+			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
-			this.hideZero = grid.hideZero;
-			this.center = grid.center;
+			this.hideZero = this.grid.hideZero;
+			this.center = this.grid.center;
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
@@ -218,6 +300,13 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	RuleGrid.setup = function() {
 		return {
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			unit: null,
+			reverse: false,
+			key: null,
 			hideZero: false,
 			hideText: false,
 			nice: false,

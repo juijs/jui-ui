@@ -148,7 +148,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function drawBefore(self) {
-            _axis = _.deepClone(_options.axis, { data : true });
+            _axis = _.deepClone(_options.axis, { data : true, origin : true });
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);

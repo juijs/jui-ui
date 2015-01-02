@@ -456,10 +456,10 @@
             emit = emit  || {};
 
             if(this.typeCheck("array", obj )) {
-                value = [];
+                value = new Array(obj.length);
 
                 for(var i = 0, len = obj.length; i < len; i++) {
-                    value[i] = this.deepClone(obj[i]);
+                    value[i] = this.deepClone(obj[i], emit);
                 }
             } else if(this.typeCheck("date", obj)) {
                 value = obj;
@@ -470,7 +470,7 @@
                     if (emit[key]) {
                         value[key] = obj[key];
                     }  else {
-                        value[key] = this.deepClone(obj[key]);
+                        value[key] = this.deepClone(obj[key], emit);
                     }
                 }
             } else {

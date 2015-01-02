@@ -456,10 +456,10 @@
             emit = emit  || {};
 
             if(this.typeCheck("array", obj )) {
-                value = [];
+                value = new Array(obj.length);
 
                 for(var i = 0, len = obj.length; i < len; i++) {
-                    value[i] = this.deepClone(obj[i]);
+                    value[i] = this.deepClone(obj[i], emit);
                 }
             } else if(this.typeCheck("date", obj)) {
                 value = obj;
@@ -470,7 +470,7 @@
                     if (emit[key]) {
                         value[key] = obj[key];
                     }  else {
-                        value[key] = this.deepClone(obj[key]);
+                        value[key] = this.deepClone(obj[key], emit);
                     }
                 }
             } else {
@@ -557,6 +557,7 @@
 					return (typeof(value) == "function");
 				}
 				else if (type == "object") {
+					// typeCheck에 정의된 타입일 경우에는 object 체크시 false를 반환 (date, array, null)
 					return (
 						typeof(value) == "object" &&
 						value !== null &&
@@ -3834,7 +3835,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         function drawBefore(self) {
-            _axis = _.deepClone(_options.axis, { data : true });
+            _axis = _.deepClone(_options.axis, { data : true, origin : true });
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -5259,166 +5260,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
-		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *  
-		 */
-		this.setBlockDomain = function(chart, grid) {
-			if (grid.type == "radar" || grid.type == "block") {
-				if (grid.target && !grid.domain) {
-					var domain = [],
-						data = this.data();
-					
-                    if (grid.reverse) {
-                        var start = data.length - 1,
-							end = 0,
-							step = -1;
-                    } else {
-                        var start = 0,
-							end = data.length - 1,
-							step = 1;
-                    }
-					
-					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
-						domain.push(data[i][grid.target]);
-					}
 
-					grid.domain = domain;
-				}
 
-                if (grid.reverse) {
-                    grid.domain.reverse();
-                }
-
-			}
-			
-			return grid; 			
-		}
-		
-		/**
-		 * range grid 의 domain 설정 
-		 * 
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
-		 * 
-		 */
-		this.setRangeDomain = function(chart, grid) {
-			if (_.typeCheck(["string", "function"], grid.target)) {
-				grid.target = [grid.target];
-			}
-
-			if (grid.target && grid.target.length && !grid.domain) {
-				var min = grid.min || 0,
-					max = grid.max || 0,
-					data = this.data();
-				var value_list = [];
-
-				for (var i = 0; i < grid.target.length; i++) {
-					var s = grid.target[i];
-
-					if (_.typeCheck("function", s)) {
-						for (var index = 0; index < data.length; index++) {
-							var row = data[index];
-
-							var value = +s.call(chart, row);
-
-							value_list.push(value);
-						}
-					} else {
-						for (var index = 0; index < data.length; index++) {
-
-							var value = data[index][s];
-
-							if (_.typeCheck("array", value)) {
-								for(var j = 0; j < value.length; j++) {
-									value_list.push(value[j]);
-								}
-							} else {
-								value_list.push(value);
-							}
-
-						}
-					}
-
-				}
-
-				var tempMin = Math.min.apply(Math, value_list);
-				var tempMax = Math.max.apply(Math, value_list);
-
-				if (min > tempMin) min = tempMin;
-				if (max < tempMax) max = tempMax;
-				
-				grid.max = max;
-				grid.min = min;
-
-				var unit = grid.unit || Math.ceil((max - min) / grid.step),
-					start = 0;
-
-				while (start < max) {
-					start += unit;
-				}
-
-				var end = 0;
-				while (end > min) {
-					end -= unit;
-				}
-
-				if (unit == 0) {
-					grid.domain = [0, 0];
-				} else {
-					grid.domain = [end, start];					
-					grid.step = Math.abs(start / unit) + Math.abs(end / unit);
-					
-				}
-
-                if (grid.reverse) {
-                    grid.domain.reverse();
-                }
-			}
-			
-			return grid; 
-		}
-		
-		/**
-		 * date grid 의 domain 설정 
-		 * 
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
-		 * 
-		 */
-		this.setDateDomain = function(chart, grid) {
-			if (_.typeCheck(["string", "function"], grid.target)) {
-				grid.target = [grid.target];
-			}
-
-			if (grid.target && grid.target.length) {
-				var min = grid.min || undefined,
-					max = grid.max || undefined;
-				var data = this.data();
-
-				var value_list = [] ;
-				for (var i = 0; i < grid.target.length; i++) {
-					var s = grid.target[i];
-					
-					for(var index = 0; index < data.length; index++) {
-						var value = +new Date(data[index][s]);
-						value_list.push(value);
-					}
-				}
-
-				if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
-				if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
-
-				grid.max = max;
-				grid.min = min;
-				grid.domain = [grid.min, grid.max];
-
-			}
-
-            if (grid.reverse) {
-                grid.domain.reverse();
-            }
-			
-			return grid; 
-		}		
 		
 		/**
 		 * scale wrapper 
@@ -5616,18 +5459,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 	CoreGrid.setup = function() {
 		return {
-			target: null,
 			extend:	null,
 			dist: 0,
 			orient: null,
-			domain: null,
-			step: 10,
-			min: 0,
-			max: 0,
-			reverse: false,
-			key: null,
 			hide: false,
-			unit: 0,
 			color: null,
 			title: null,
 			line: false,
@@ -5638,10 +5473,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 	return CoreGrid;
 }, "chart.draw"); 
-jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
+jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
 	var BlockGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
 
 		this.top = function(chart, g, scale) {
 			var full_height = chart.area('height');
@@ -5835,14 +5671,52 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
+		/**
+		 * block,radar grid 에 대한 domain 설정
+		 *
+		 */
+		this.initDomain = function() {
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				var data = this.data();
+
+				if (this.grid.reverse) {
+					var start = data.length - 1,
+						end = 0,
+						step = -1;
+				} else {
+					var start = 0,
+						end = data.length - 1,
+						step = 1;
+				}
+
+				for (var i = start; ((this.grid.reverse) ? i >= end : i <=end); i += step) {
+					domain.push(data[i][field]);
+				}
+
+				//grid.domain = domain;
+			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
+				domain = this.grid.domain(this.chart, this.grid);
+			} else {
+				domain = this.grid.domain;
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+		}
+
 		this.drawBefore = function() {
+			this.initDomain();
+
 			grid.type = grid.type || "block";
-			grid = this.setBlockDomain(chart, grid);
 
 			var obj = this.getGridSize(chart, orient, grid);
 
 			// scale 설정
-			this.scale = UtilScale.ordinal().domain(grid.domain);
+			this.scale = UtilScale.ordinal().domain(domain);
 			var range = [obj.start, obj.end];
 
 			if (grid.full) {
@@ -5871,6 +5745,8 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 
 	BlockGrid.setup = function() {
 		return {
+			domain: null,
+			reverse: false,
 			max: 10,
 			full: false
 		};
@@ -5879,10 +5755,12 @@ jui.define("chart.grid.block", [ "util.scale" ], function(UtilScale) {
 	return BlockGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, UtilScale) {
+jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
+		var step = [];
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -6037,15 +5915,59 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 		}
 
 
+		/**
+		 * date grid 의 domain 설정
+		 *
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
+		 *
+		 */
+		this.initDomain = function() {
+
+			var min = this.grid.min || undefined,
+				max = this.grid.max || undefined;
+			var data = this.data();
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				value_list.push(+data[0][field]);
+				value_list.push(+data[data.length-1][field]);
+			} else if (_.typeCheck("function", this.grid.domain)) {
+				var func = this.grid.domain;
+				value_list = func(this.chart, this.grid);
+			} else {
+				value_list = this.grid.domain;
+			}
+
+			if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
+			if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
+
+			this.grid.max = max;
+			this.grid.min = min;
+			domain = [this.grid.min, this.grid.max];
+			step = this.grid.step;
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+			if (_.typeCheck("function", step)) {
+				this.grid.step = step(this.chart, this.grid, domain);
+			}
+
+			return domain;
+		}
+
 		this.drawBefore = function() {
-			grid = this.setDateDomain(chart, grid);
+			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(grid.domain).rangeRound(range);
+			this.scale = UtilScale.time().domain(domain).rangeRound(range);
 
-			if (grid.realtime) {
+
+
+			if (this.grid.realtime) {
 				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
 			} else {
 				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
@@ -6078,6 +6000,13 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 
 	DateGrid.setup = function() {
 		return {
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			unit: null,
+			reverse: false,
+			key: null,
 			realtime: false
 		};
 	}
@@ -6085,11 +6014,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale" ], function(UtilTime, 
 	return DateGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.radar", [ "util.math" ], function(math) {
+jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	var RadarGrid = function(chart, axis, grid) {
 		var self = this,
 			position = [];
+		var domain = [] ;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -6178,8 +6108,46 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             }
         }
 
+
+		/**
+		 * block,radar grid 에 대한 domain 설정
+		 *
+		 */
+		this.initDomain = function() {
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				var data = this.data();
+
+				if (this.grid.reverse) {
+					var start = data.length - 1,
+						end = 0,
+						step = -1;
+				} else {
+					var start = 0,
+						end = data.length - 1,
+						step = 1;
+				}
+
+				for (var i = start; ((this.grid.reverse) ? i >= end : i <=end); i += step) {
+					domain.push(data[i][field]);
+				}
+
+				//grid.domain = domain;
+			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
+				domain = this.grid.domain(this.chart, this.grid);
+			} else {
+				domain = this.grid.domain;
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+		}
+
 		this.drawBefore = function() {
-			grid = this.setBlockDomain(chart, grid);
+			this.initDomain();
 		}
 
 		this.draw = function() {
@@ -6197,8 +6165,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			var startY = -w,
 				startX = 0,
-				count = grid.domain.length,
-				step = grid.step,
+				count = domain.length,
+				step = this.grid.step,
 				unit = 2 * Math.PI / count,
 				h = Math.abs(startY) / step;
 
@@ -6276,26 +6244,26 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			// area split line
 			startY = -w;
 			var stepBase = 0,
-				stepValue = grid.max / grid.step;
+				stepValue = this.grid.max / this.grid.step;
 
 			for (var i = 0; i < step; i++) {
-				if (i == 0 && grid.extra) {
+				if (i == 0 && this.grid.extra) {
 					startY += h;
 					continue;
 				}
 
-				if (grid.shape == "circle") {
+				if (this.grid.shape == "circle") {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
 
-				if (!grid.hideText) {
+				if (!this.grid.hideText) {
 					root.append(chart.text({
 						x : centerX,
 						y : centerY + (startY + h - 5),
 						fill : chart.theme("gridFontColor")
-					}, (grid.max - stepBase) + ""))
+					}, (this.grid.max - stepBase) + ""))
 				}
 
 				startY += h;
@@ -6303,7 +6271,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 			
 			// hide
-			if (grid.hide) {
+			if (this.grid.hide) {
 				root.attr({ display : "none" })
 			}			
 
@@ -6316,6 +6284,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	RadarGrid.setup = function() {
 		return {
+			domain: null,
+			reverse: false,
 			max: 100,
 			line: true,
 			hideText: false,
@@ -6327,10 +6297,11 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 	return RadarGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
+jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
 	var RangeGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -6510,11 +6481,106 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
+
+		/**
+		 * range grid 의 domain 설정
+		 *
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
+		 *
+		 */
+		this.initDomain = function() {
+
+			var min = this.grid.min || 0,
+				max = this.grid.max || 0,
+				data = this.data();
+			var value_list = [];
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+
+				value_list = new Array(data.length);
+				for (var index = 0, len = data.length; index < len; index++) {
+
+					var value = data[index][field];
+
+					if (_.typeCheck("array", value)) {
+						value_list[index] = Math.max(value);
+						value_list.push(Math.min(value));
+					} else {
+						value_list[index]  = value;
+					}
+
+				}
+			} else if (_.typeCheck("function", this.grid.domain)) {
+				value_list = new Array(data.length);
+
+				for (var index = 0, len = data.length; index < len; index++) {
+
+					var value = this.grid.domain(this.chart, this.grid, data[index]);
+
+					if (_.typeCheck("array", value)) {
+
+						value_list[index] = Math.max.apply(Math, value);
+						value_list.push(Math.min.apply(Math, value));
+					} else {
+						value_list[index]  = value;
+					}
+				}
+			} else {
+				value_list = grid.domain;
+			}
+
+			var tempMin = Math.min.apply(Math, value_list);
+			var tempMax = Math.max.apply(Math, value_list);
+
+			if (min > tempMin) min = tempMin;
+			if (max < tempMax) max = tempMax;
+
+			this.grid.max = max;
+			this.grid.min = min;
+
+			var unit;
+
+			if (_.typeCheck("function", this.grid.unit)) {
+				unit = this.grid.unit(chart, grid);
+			} else if (_.typeCheck("number", this.grid.unit)) {
+				unit = this.grid.unit;
+			} else {
+				unit = Math.ceil((max - min) / this.grid.step);
+			}
+
+			if (unit == 0) {
+				domain = [0, 0];
+			} else {
+
+				var start = 0;
+
+				while (start < max) {
+					start += unit;
+				}
+
+				var end = 0;
+				while (end > min) {
+					end -= unit;
+				}
+
+				domain = [end, start];
+				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+			return domain;
+		}
+
 		this.drawBefore = function() {
-			grid = this.setRangeDomain(chart, grid);
+			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid);
-			this.scale = UtilScale.linear().domain(grid.domain);
+
+			this.scale = UtilScale.linear().domain(domain);
 
 			if (orient == "left" || orient == "right") {
 				this.scale.range([obj.end, obj.start]);
@@ -6525,8 +6591,8 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
-			this.step = grid.step;
-			this.nice = grid.nice;
+			this.step = this.grid.step;
+			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
 
@@ -6544,6 +6610,13 @@ jui.define("chart.grid.range", [ "util.scale" ], function(UtilScale) {
 
 	RangeGrid.setup = function() {
 		return {
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			unit: null,
+			reverse: false,
+			key: null,
 			hideText: false,
 			nice: false
 		};
@@ -6556,6 +6629,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	var RuleGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
+		var domain = [];
 
 		this.top = function(chart, g) {
 			var height = chart.area('height'),
@@ -6737,11 +6811,92 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			}
 		}
 
+		/**
+		 * range grid 의 domain 설정
+		 *
+		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
+		 *
+		 */
+		this.initDomain = function() {
+
+			var min = this.grid.min || 0,
+				max = this.grid.max || 0,
+				data = this.data();
+			var value_list = [];
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+
+				for (var index = 0, len = data.length; index < len; index++) {
+
+					var value = data[index][field];
+
+					if (_.typeCheck("array", value)) {
+						for(var j = 0; j < value.length; j++) {
+							value_list.push(value[j]);
+						}
+					} else {
+						value_list.push(value);
+					}
+
+				}
+			} else if (_.typeCheck("function", this.grid.domain)) {
+				for (var index = 0, len = data.length; index < len; index++) {
+					value_list.push(this.grid.domain(this.chart, this.grid, data[index]));
+				}
+			} else {
+				value_list = grid.domain;
+			}
+
+			var tempMin = Math.min.apply(Math, value_list);
+			var tempMax = Math.max.apply(Math, value_list);
+
+			if (min > tempMin) min = tempMin;
+			if (max < tempMax) max = tempMax;
+
+			this.grid.max = max;
+			this.grid.min = min;
+
+			var unit;
+
+			if (_.typeCheck("function", this.grid.unit)) {
+				unit = this.grid.unit(chart, grid);
+			} else if (_.typeCheck("number", this.grid.unit)) {
+				unit = this.grid.unit;
+			} else {
+				unit = Math.ceil((max - min) / this.grid.step);
+			}
+
+			var start = 0;
+
+			while (start < max) {
+				start += unit;
+			}
+
+			var end = 0;
+			while (end > min) {
+				end -= unit;
+			}
+
+			if (unit == 0) {
+				domain = [0, 0];
+			} else {
+				domain = [end, start];
+				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+			return domain;
+		}
+
 		this.drawBefore = function() {
-			grid = this.setRangeDomain(chart, grid);
+			initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid);
-			this.scale = UtilScale.linear().domain(grid.domain);
+			this.scale = UtilScale.linear().domain(domain);
 
 			if (orient == "left" || orient == "right") {
 				this.scale.range([obj.end, obj.start]);
@@ -6752,12 +6907,12 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
-			this.step = grid.step;
-			this.nice = grid.nice;
+			this.step = this.grid.step;
+			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 			this.bar = 6;
-			this.hideZero = grid.hideZero;
-			this.center = grid.center;
+			this.hideZero = this.grid.hideZero;
+			this.center = this.grid.center;
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
@@ -6772,6 +6927,13 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 
 	RuleGrid.setup = function() {
 		return {
+			domain: null,
+			step: 10,
+			min: 0,
+			max: 0,
+			unit: null,
+			reverse: false,
+			key: null,
 			hideZero: false,
 			hideText: false,
 			nice: false,

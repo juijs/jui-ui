@@ -1,8 +1,9 @@
-jui.define("chart.grid.radar", [ "util.math" ], function(math) {
+jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	var RadarGrid = function(chart, axis, grid) {
 		var self = this,
 			position = [];
+		var domain = [] ;
 
 		function drawCircle(chart, root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -91,8 +92,46 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
             }
         }
 
+
+		/**
+		 * block,radar grid 에 대한 domain 설정
+		 *
+		 */
+		this.initDomain = function() {
+
+			if (_.typeCheck("string", this.grid.domain)) {
+				var field = this.grid.domain;
+				var data = this.data();
+
+				if (this.grid.reverse) {
+					var start = data.length - 1,
+						end = 0,
+						step = -1;
+				} else {
+					var start = 0,
+						end = data.length - 1,
+						step = 1;
+				}
+
+				for (var i = start; ((this.grid.reverse) ? i >= end : i <=end); i += step) {
+					domain.push(data[i][field]);
+				}
+
+				//grid.domain = domain;
+			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
+				domain = this.grid.domain(this.chart, this.grid);
+			} else {
+				domain = this.grid.domain;
+			}
+
+			if (this.grid.reverse) {
+				domain.reverse();
+			}
+
+		}
+
 		this.drawBefore = function() {
-			grid = this.setBlockDomain(chart, grid);
+			this.initDomain();
 		}
 
 		this.draw = function() {
@@ -110,8 +149,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 			var startY = -w,
 				startX = 0,
-				count = grid.domain.length,
-				step = grid.step,
+				count = domain.length,
+				step = this.grid.step,
 				unit = 2 * Math.PI / count,
 				h = Math.abs(startY) / step;
 
@@ -189,26 +228,26 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			// area split line
 			startY = -w;
 			var stepBase = 0,
-				stepValue = grid.max / grid.step;
+				stepValue = this.grid.max / this.grid.step;
 
 			for (var i = 0; i < step; i++) {
-				if (i == 0 && grid.extra) {
+				if (i == 0 && this.grid.extra) {
 					startY += h;
 					continue;
 				}
 
-				if (grid.shape == "circle") {
+				if (this.grid.shape == "circle") {
 					drawCircle(chart, root, centerX, centerY, 0, startY, count);
 				} else {
 					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
 				}
 
-				if (!grid.hideText) {
+				if (!this.grid.hideText) {
 					root.append(chart.text({
 						x : centerX,
 						y : centerY + (startY + h - 5),
 						fill : chart.theme("gridFontColor")
-					}, (grid.max - stepBase) + ""))
+					}, (this.grid.max - stepBase) + ""))
 				}
 
 				startY += h;
@@ -216,7 +255,7 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 			}
 			
 			// hide
-			if (grid.hide) {
+			if (this.grid.hide) {
 				root.attr({ display : "none" })
 			}			
 
@@ -229,6 +268,8 @@ jui.define("chart.grid.radar", [ "util.math" ], function(math) {
 
 	RadarGrid.setup = function() {
 		return {
+			domain: null,
+			reverse: false,
 			max: 100,
 			line: true,
 			hideText: false,

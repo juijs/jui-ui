@@ -5,166 +5,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
-		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *  
-		 */
-		this.setBlockDomain = function(chart, grid) {
-			if (grid.type == "radar" || grid.type == "block") {
-				if (grid.target && !grid.domain) {
-					var domain = [],
-						data = this.data();
-					
-                    if (grid.reverse) {
-                        var start = data.length - 1,
-							end = 0,
-							step = -1;
-                    } else {
-                        var start = 0,
-							end = data.length - 1,
-							step = 1;
-                    }
-					
-					for (var i = start; ((grid.reverse) ? i >= end : i <=end); i += step) {
-						domain.push(data[i][grid.target]);
-					}
 
-					grid.domain = domain;
-				}
 
-                if (grid.reverse) {
-                    grid.domain.reverse();
-                }
-
-			}
-			
-			return grid; 			
-		}
-		
-		/**
-		 * range grid 의 domain 설정 
-		 * 
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
-		 * 
-		 */
-		this.setRangeDomain = function(chart, grid) {
-			if (_.typeCheck(["string", "function"], grid.target)) {
-				grid.target = [grid.target];
-			}
-
-			if (grid.target && grid.target.length && !grid.domain) {
-				var min = grid.min || 0,
-					max = grid.max || 0,
-					data = this.data();
-				var value_list = [];
-
-				for (var i = 0; i < grid.target.length; i++) {
-					var s = grid.target[i];
-
-					if (_.typeCheck("function", s)) {
-						for (var index = 0; index < data.length; index++) {
-							var row = data[index];
-
-							var value = +s.call(chart, row);
-
-							value_list.push(value);
-						}
-					} else {
-						for (var index = 0; index < data.length; index++) {
-
-							var value = data[index][s];
-
-							if (_.typeCheck("array", value)) {
-								for(var j = 0; j < value.length; j++) {
-									value_list.push(value[j]);
-								}
-							} else {
-								value_list.push(value);
-							}
-
-						}
-					}
-
-				}
-
-				var tempMin = Math.min.apply(Math, value_list);
-				var tempMax = Math.max.apply(Math, value_list);
-
-				if (min > tempMin) min = tempMin;
-				if (max < tempMax) max = tempMax;
-				
-				grid.max = max;
-				grid.min = min;
-
-				var unit = grid.unit || Math.ceil((max - min) / grid.step),
-					start = 0;
-
-				while (start < max) {
-					start += unit;
-				}
-
-				var end = 0;
-				while (end > min) {
-					end -= unit;
-				}
-
-				if (unit == 0) {
-					grid.domain = [0, 0];
-				} else {
-					grid.domain = [end, start];					
-					grid.step = Math.abs(start / unit) + Math.abs(end / unit);
-					
-				}
-
-                if (grid.reverse) {
-                    grid.domain.reverse();
-                }
-			}
-			
-			return grid; 
-		}
-		
-		/**
-		 * date grid 의 domain 설정 
-		 * 
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성 
-		 * 
-		 */
-		this.setDateDomain = function(chart, grid) {
-			if (_.typeCheck(["string", "function"], grid.target)) {
-				grid.target = [grid.target];
-			}
-
-			if (grid.target && grid.target.length) {
-				var min = grid.min || undefined,
-					max = grid.max || undefined;
-				var data = this.data();
-
-				var value_list = [] ;
-				for (var i = 0; i < grid.target.length; i++) {
-					var s = grid.target[i];
-					
-					for(var index = 0; index < data.length; index++) {
-						var value = +new Date(data[index][s]);
-						value_list.push(value);
-					}
-				}
-
-				if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
-				if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
-
-				grid.max = max;
-				grid.min = min;
-				grid.domain = [grid.min, grid.max];
-
-			}
-
-            if (grid.reverse) {
-                grid.domain.reverse();
-            }
-			
-			return grid; 
-		}		
 		
 		/**
 		 * scale wrapper 
@@ -362,18 +204,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 	CoreGrid.setup = function() {
 		return {
-			target: null,
 			extend:	null,
 			dist: 0,
 			orient: null,
-			domain: null,
-			step: 10,
-			min: 0,
-			max: 0,
-			reverse: false,
-			key: null,
 			hide: false,
-			unit: 0,
 			color: null,
 			title: null,
 			line: false,
