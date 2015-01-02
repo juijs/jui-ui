@@ -36,7 +36,7 @@
                 axis : {
                     x : {
                         type : "date",  // default type is block 
-                        target : "value",
+                        domain : "value",
                         step : [time.hours, 1],
                         format : "hh:mm",
                         key: "value",
@@ -44,8 +44,11 @@
                     },
                     y : { 
                         type : 'range', 
-                        target : ["name", "name2"], 
-                        step : 10
+                        domain : function(d) {
+                            return [d.name, d.name2];
+                        },
+                        step : 10,
+                        unit : 60
                     },
                     data : data
                 },

@@ -32,8 +32,8 @@
                 x : {
                     type : 'range',
                     reverse : true, 
-                    target : function(data) {
-                        return data.name + data.value + data.test;
+                    domain : function(data) {
+                        return [data.name + data.value + data.test, 0];
                     },
                     hide : true
                 }

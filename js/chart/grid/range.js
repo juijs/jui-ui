@@ -191,8 +191,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		 */
 		this.initDomain = function() {
 
-			var min = this.grid.min || 0,
-				max = this.grid.max || 0,
+			var min = this.grid.min || undefined,
+				max = this.grid.max || undefined,
 				data = this.data();
 			var value_list = [];
 
@@ -234,8 +234,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			var tempMin = Math.min.apply(Math, value_list);
 			var tempMax = Math.max.apply(Math, value_list);
 
-			if (min > tempMin) min = tempMin;
-			if (max < tempMax) max = tempMax;
+			if (typeof min == 'undefined') min = tempMin;
+			if (typeof max == 'undefined') max = tempMax;
 
 			this.grid.max = max;
 			this.grid.min = min;
@@ -260,13 +260,14 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 					start += unit;
 				}
 
-				var end = 0;
+				var end = start;
 				while (end > min) {
 					end -= unit;
 				}
 
 				domain = [end, start];
-				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+
+				//this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
 			}
 
 			if (this.grid.reverse) {

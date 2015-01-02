@@ -24,8 +24,8 @@
                 },
                 y : {
                     type : 'range',
-                    target : function(data) {
-                        return data.name + data.value + data.test + 10;
+                    domain : function(data) {
+                        return [data.name + data.value + data.test + 10, 0];
                     },
                     step : 10
                 },

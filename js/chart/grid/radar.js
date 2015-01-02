@@ -209,7 +209,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 						y : ty,
 						"text-anchor" : talign,
 						fill : chart.theme("gridFontColor")
-					}, grid.domain[i]))
+					}, domain[i]))
 				}
 				
 				var obj = math.rotate(startX, startY, unit);
@@ -271,6 +271,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 			domain: null,
 			reverse: false,
 			max: 100,
+            step : 10,
 			line: true,
 			hideText: false,
 			extra: false,

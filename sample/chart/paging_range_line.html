@@ -38,14 +38,14 @@
                 x : {
                     type : "date",  // default type is block
                     //domain : [ start, end ],
-                    target : "value",
+                    domain : "value",
                     step : [ time.hours, 1 ],
                     format : "hh:mm",
                     key: "value"
                 },
                 y : {
                     type : 'range',
-                    target : ["name"],
+                    domain : "name",
                     unit : 100,
                     line : true
                 }

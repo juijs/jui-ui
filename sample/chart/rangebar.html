@@ -25,7 +25,9 @@
                 },
                 x : {
                     type : 'range',
-                    target: ['name', 'value'],
+                    domain: function(d) {
+                        return d.name.concat(d.value);
+                    },
                     step : 10,
                     line : true
                 },

@@ -170,13 +170,26 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				max = this.grid.max || undefined;
 			var data = this.data();
 
+            var value_list = [] ;
+
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
 				value_list.push(+data[0][field]);
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
-				var func = this.grid.domain;
-				value_list = func.call(this.chart);
+                for (var index = 0, len = data.length; index < len; index++) {
+
+                    var value = this.grid.domain.call(this.chart, data[index]);
+
+                    if (_.typeCheck("array", value)) {
+                        value_list[index] = Math.max.apply(Math, value);
+                        value_list.push(Math.min.apply(Math, value));
+                    } else {
+                        value_list[index]  = value;
+                    }
+                }
+
+
 			} else {
 				value_list = this.grid.domain;
 			}

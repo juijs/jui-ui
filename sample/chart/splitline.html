@@ -25,7 +25,7 @@
                 y :
                 {
                     type : 'range',
-                    target : [ "name", "value" ],
+                    domain : function(d) { return [d.name, d.value]; },
                     step : 10
                 },
                 data : [

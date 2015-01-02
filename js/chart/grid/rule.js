@@ -1,4 +1,4 @@
-jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
+jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
 	var RuleGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
@@ -190,95 +190,97 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
 		 *
 		 */
-		this.initDomain = function() {
+        this.initDomain = function() {
 
-			var min = this.grid.min || 0,
-				max = this.grid.max || 0,
-				data = this.data();
-			var value_list = [];
+            var min = this.grid.min || undefined,
+                max = this.grid.max || undefined,
+                data = this.data();
+            var value_list = [];
 
-			if (_.typeCheck("string", this.grid.domain)) {
-				var field = this.grid.domain;
+            if (_.typeCheck("string", this.grid.domain)) {
+                var field = this.grid.domain;
 
-				value_list = new Array(data.length);
-				for (var index = 0, len = data.length; index < len; index++) {
+                value_list = new Array(data.length);
+                for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = data[index][field];
+                    var value = data[index][field];
 
-					if (_.typeCheck("array", value)) {
-						value_list[index] = Math.max(value);
-						value_list.push(Math.min(value));
-					} else {
-						value_list[index]  = value;
-					}
+                    if (_.typeCheck("array", value)) {
+                        value_list[index] = Math.max(value);
+                        value_list.push(Math.min(value));
+                    } else {
+                        value_list[index]  = value;
+                    }
 
-				}
-			} else if (_.typeCheck("function", this.grid.domain)) {
-				value_list = new Array(data.length);
+                }
+            } else if (_.typeCheck("function", this.grid.domain)) {
+                value_list = new Array(data.length);
 
-				for (var index = 0, len = data.length; index < len; index++) {
+                for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = this.grid.domain.call(this.chart, data[index]);
+                    var value = this.grid.domain.call(this.chart, data[index]);
 
-					if (_.typeCheck("array", value)) {
+                    if (_.typeCheck("array", value)) {
 
-						value_list[index] = Math.max.apply(Math, value);
-						value_list.push(Math.min.apply(Math, value));
-					} else {
-						value_list[index]  = value;
-					}
-				}
-			} else {
-				value_list = grid.domain;
-			}
+                        value_list[index] = Math.max.apply(Math, value);
+                        value_list.push(Math.min.apply(Math, value));
+                    } else {
+                        value_list[index]  = value;
+                    }
+                }
+            } else {
+                value_list = grid.domain;
+            }
 
-			var tempMin = Math.min.apply(Math, value_list);
-			var tempMax = Math.max.apply(Math, value_list);
+            var tempMin = Math.min.apply(Math, value_list);
+            var tempMax = Math.max.apply(Math, value_list);
 
-			if (min > tempMin) min = tempMin;
-			if (max < tempMax) max = tempMax;
+            if (typeof min == 'undefined') min = tempMin;
+            if (typeof max == 'undefined') max = tempMax;
 
-			this.grid.max = max;
-			this.grid.min = min;
+            this.grid.max = max;
+            this.grid.min = min;
 
-			var unit;
+            var unit;
 
-			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit.call(this.chart, this.grid);
-			} else if (_.typeCheck("number", this.grid.unit)) {
-				unit = this.grid.unit;
-			} else {
-				unit = Math.ceil((max - min) / this.grid.step);
-			}
+            if (_.typeCheck("function", this.grid.unit)) {
+                unit = this.grid.unit.call(this.chart, this.grid);
+            } else if (_.typeCheck("number", this.grid.unit)) {
+                unit = this.grid.unit;
+            } else {
+                unit = Math.ceil((max - min) / this.grid.step);
+            }
 
-			if (unit == 0) {
-				domain = [0, 0];
-			} else {
+            if (unit == 0) {
+                domain = [0, 0];
+            } else {
 
-				var start = 0;
+                var start = 0;
 
-				while (start < max) {
-					start += unit;
-				}
+                while (start < max) {
+                    start += unit;
+                }
 
-				var end = 0;
-				while (end > min) {
-					end -= unit;
-				}
+                var end = start;
+                while (end > min) {
+                    end -= unit;
+                }
 
-				domain = [end, start];
-				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
-			}
+                domain = [end, start];
+                console.log(min, max);
 
-			if (this.grid.reverse) {
-				domain.reverse();
-			}
+                //this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+            }
 
-			return domain;
-		}
+            if (this.grid.reverse) {
+                domain.reverse();
+            }
+
+            return domain;
+        }
 
 		this.drawBefore = function() {
-			initDomain();
+			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid);
 			this.scale = UtilScale.linear().domain(domain);

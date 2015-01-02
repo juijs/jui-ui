@@ -40,7 +40,7 @@
                 {
                     type : 'range',
                     domain : function(d) {
-                        return Math.max(d.apple, d.ms, d.oracle);
+                        return [d.apple, d.ms, d.oracle];
                     },
                     step : 10
                 },
@@ -63,10 +63,7 @@
                 {
                     type : "tooltip"
                 }
-            ],
-            style : {
-                "gridFontColor": "red"
-            }
+            ]
         });
 	})
 </script>

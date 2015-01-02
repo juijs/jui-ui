@@ -96,7 +96,9 @@
                 },
                 y : {
                     type : "range",
-                    target: [ "open", "high", "low", "close" ],
+                    domain : function(d) {
+                        return [d.open, d.high, d.low, d.close];
+                    },
                     step: 5,
                     line : true
                 },

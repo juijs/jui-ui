@@ -25,8 +25,11 @@
                 },
                 y : {
                     type : 'range',
-                    target : [ "name", "value" ],
-                    step : 10
+                    domain :  function(d) {
+                        return [d.name, d.value];
+                    },
+                    step : 10,
+                    unit : 10
                 },
                 data : [
                     { name : 3, value : 8 },

@@ -25,14 +25,14 @@
                 y :
                 {
                     type : 'range',
-                    target : [ "name", "value" ],
+                    domain : function(d) { return [d.name, d.value]; },
                     step : 10
                 },
                 data : [
                     { name : 2, value : 15 },
                     { name : -15, value : 6 },
                     { name : 8, value : 10 },
-                    { name : 18, value : 5 },
+                    { name : 18, value : 5 }
                 ]
 
             },

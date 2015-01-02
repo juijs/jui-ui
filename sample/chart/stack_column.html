@@ -23,9 +23,10 @@
                 },
                 y : {
                     type : 'range',
-                    target : function(data) {
-                        return data.name + data.value + data.test;
+                    domain : function(data) {
+                        return [data.name + data.value + data.test, 0];
                     },
+                    unit : 10,
                     line : true
                 },
                 data : [

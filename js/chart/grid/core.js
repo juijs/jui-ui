@@ -211,6 +211,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			color: null,
 			title: null,
 			line: false,
+            subline : 0,
+            baseline : true,
 			format: null,
 			textRotate : null
 		};

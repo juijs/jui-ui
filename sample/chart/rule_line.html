@@ -31,19 +31,23 @@
 			var c = chart("#chart", {
 				width: 400,
 				height : 400,
-				data : data,
-				grid : {
-					
+
+				axis : {
+                    data : data,
 					y : { 
-            type : 'rule', 
-            target : ["name","name2"], 
-            unit : 100,
-            hideZero : true,
-            center : true 
-          },
+                        type : 'rule',
+                        domain : function(d) {
+                            return [d.name, d.name2];
+                        },
+                        unit  : 100,
+                        hideZero : true,
+                        center : true
+                      },
 					x : { 
-						type : 'rule', 
-						target : ["name","name2"], 
+						type : 'rule',
+                        domain : function(d) {
+                            return [d.name, d.name2];
+                        },
 						unit : 100,
 						key : "name2",
 						hideZero : true,
