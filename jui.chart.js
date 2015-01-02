@@ -5697,7 +5697,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 				//grid.domain = domain;
 			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
-				domain = this.grid.domain(this.chart, this.grid);
+				domain = this.grid.domain();
 			} else {
 				domain = this.grid.domain;
 			}
@@ -5933,7 +5933,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var func = this.grid.domain;
-				value_list = func(this.chart, this.grid);
+				value_list = func();
 			} else {
 				value_list = this.grid.domain;
 			}
@@ -6516,7 +6516,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = this.grid.domain(this.chart, this.grid, data[index]);
+					var value = this.grid.domain(data[index]);
 
 					if (_.typeCheck("array", value)) {
 
@@ -6827,22 +6827,33 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
 
+				value_list = new Array(data.length);
 				for (var index = 0, len = data.length; index < len; index++) {
 
 					var value = data[index][field];
 
 					if (_.typeCheck("array", value)) {
-						for(var j = 0; j < value.length; j++) {
-							value_list.push(value[j]);
-						}
+						value_list[index] = Math.max(value);
+						value_list.push(Math.min(value));
 					} else {
-						value_list.push(value);
+						value_list[index]  = value;
 					}
 
 				}
 			} else if (_.typeCheck("function", this.grid.domain)) {
+				value_list = new Array(data.length);
+
 				for (var index = 0, len = data.length; index < len; index++) {
-					value_list.push(this.grid.domain(this.chart, this.grid, data[index]));
+
+					var value = this.grid.domain(data[index]);
+
+					if (_.typeCheck("array", value)) {
+
+						value_list[index] = Math.max.apply(Math, value);
+						value_list.push(Math.min.apply(Math, value));
+					} else {
+						value_list[index]  = value;
+					}
 				}
 			} else {
 				value_list = grid.domain;
@@ -6867,20 +6878,21 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 				unit = Math.ceil((max - min) / this.grid.step);
 			}
 
-			var start = 0;
-
-			while (start < max) {
-				start += unit;
-			}
-
-			var end = 0;
-			while (end > min) {
-				end -= unit;
-			}
-
 			if (unit == 0) {
 				domain = [0, 0];
 			} else {
+
+				var start = 0;
+
+				while (start < max) {
+					start += unit;
+				}
+
+				var end = 0;
+				while (end > min) {
+					end -= unit;
+				}
+
 				domain = [end, start];
 				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
 			}

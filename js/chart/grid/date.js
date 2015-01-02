@@ -176,7 +176,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var func = this.grid.domain;
-				value_list = func(this.chart, this.grid);
+				value_list = func();
 			} else {
 				value_list = this.grid.domain;
 			}

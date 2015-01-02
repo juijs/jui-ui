@@ -217,7 +217,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				for (var index = 0, len = data.length; index < len; index++) {
 
-					var value = this.grid.domain(this.chart, this.grid, data[index]);
+					var value = this.grid.domain(data[index]);
 
 					if (_.typeCheck("array", value)) {
 

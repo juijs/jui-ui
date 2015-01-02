@@ -222,7 +222,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 				//grid.domain = domain;
 			} else if (_.typeCheck("function", this.grid.domain)) {	// block 은 배열을 통째로 리턴함
-				domain = this.grid.domain(this.chart, this.grid);
+				domain = this.grid.domain();
 			} else {
 				domain = this.grid.domain;
 			}
