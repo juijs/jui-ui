@@ -243,7 +243,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit.call(this.chart, grid);
+				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {

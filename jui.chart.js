@@ -5951,7 +5951,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			}
 
 			if (_.typeCheck("function", step)) {
-				this.grid.step = step(this.chart, this.grid, domain);
+				this.grid.step = step.call(this.chart, domain);
 			}
 
 			return domain;
@@ -6542,7 +6542,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit.call(this.chart, grid);
+				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
@@ -6871,7 +6871,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit.call(this.chart);
+				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
@@ -7327,6 +7327,58 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
                 }
             });
+
+            return xy;
+        }
+
+        /**
+         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
+         *
+         * @param brush
+         * @param chart
+         * @returns {Array}
+         */
+        this.getCachedXY = function(isCheckMinMax) {
+            var xy = [];
+
+            var cached = {};
+
+            this.eachData(function(i, data) {
+                var startX = this.axis.x(i);
+
+                for (var j = 0; j < this.brush.target.length; j++) {
+                    var key = this.brush.target[j],
+                        value = data[key];
+
+                    if (!xy[j]) {
+                        xy[j] = {
+                            x: [],
+                            y: [],
+                            value: [],
+                            min: [],
+                            max: []
+                        };
+                    }
+
+                    var xValue = startX
+                    var yValue = this.axis.y(value);
+
+                    var cachedkey = key + "-" +  xValue + "-" + yValue;
+
+                    if (cached[cachedkey]) {
+                        continue;
+                    } else {
+                        cached[cachedkey] = true;
+                    }
+
+                    xy[j].x.push(xValue);
+                    xy[j].y.push(yValue);
+                    xy[j].value.push(value);
+
+                }
+            });
+
+            cached = null;
 
             return xy;
         }
@@ -8948,7 +9000,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.draw = function() {
-            return this.drawScatter(this.getXY(false));
+            return this.drawScatter(this.getCachedXY(false));
         }
 	}
 

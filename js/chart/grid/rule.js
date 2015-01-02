@@ -244,7 +244,7 @@ jui.define("chart.grid.rule", [ "util.scale" ], function(UtilScale) {
 			var unit;
 
 			if (_.typeCheck("function", this.grid.unit)) {
-				unit = this.grid.unit.call(this.chart);
+				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {

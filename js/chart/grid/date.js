@@ -194,7 +194,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			}
 
 			if (_.typeCheck("function", step)) {
-				this.grid.step = step(this.chart, this.grid, domain);
+				this.grid.step = step.call(this.chart, domain);
 			}
 
 			return domain;

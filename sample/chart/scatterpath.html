@@ -31,7 +31,7 @@
         }
         
         var data = [];
-        for(var i = 0; i < 50000; i++) {
+        for(var i = 0; i < 30000; i++) {
             data.push({
                 date: time.add(start, time.seconds, getTime()),
                 name: getNumber(),
@@ -41,9 +41,9 @@
         }
 
         function changeData(data) {
-            data = data.slice(50000);
+            data = data.slice(30000);
 
-            for(var i = 0; i < 50000; i++) {
+            for(var i = 0; i < 30000; i++) {
                 data.push({
                     date: time.add(start, time.seconds, getTime()),
                     name: getNumber(),
@@ -73,7 +73,7 @@
                 },
                 y : {
                     type : 'range',
-                    domain : function(chart, grid, data) {
+                    domain : function(data) {
                         return Math.max(data.name, data.value, data.test);
                     },
                     step : 10,
@@ -105,7 +105,7 @@
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 
-        }, 2000);
+        }, 1000);
 
 
 	})
