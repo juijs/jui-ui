@@ -43,12 +43,15 @@
                 test : { text : "ê°’" }
             },
             brush : [{
-                type : 'stackarea'
+                type : 'stackarea',
+                target : [ "name", "value" ]
             }, {
-                type : "stackline"
+                type : "stackline",
+                target : [ "name", "value" ]
             }, {
                 type : "stackscatter",
                 symbol : "circle",
+                target : [ "name", "value" ],
                 size: 8
             }],
 
