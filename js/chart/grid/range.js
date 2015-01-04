@@ -215,6 +215,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				value_list = new Array(data.length);
 
+                var isCheck = false;
 				for (var index = 0, len = data.length; index < len; index++) {
 
 					var value = this.grid.domain.call(this.chart, data[index]);
@@ -225,6 +226,12 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 						value_list.push(Math.min.apply(Math, value));
 					} else {
 						value_list[index]  = value;
+
+                        if (!isCheck) {
+                            value_list.push(0);
+                            isCheck = true;
+                        }
+
 					}
 				}
 			} else {
@@ -249,6 +256,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
 				unit = Math.ceil((max - min) / this.grid.step);
 			}
+
+            console.log(value_list);
 
 			if (unit == 0) {
 				domain = [0, 0];

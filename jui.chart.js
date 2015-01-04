@@ -3788,52 +3788,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _tempData = [] ;
         }
 
-        function setMaxValue(axis) {
-            if(!axis.data) return;
-
-            var _seriesList = {},
-                _data = axis.data;
-
-            // 시리즈 데이터 구성
-            for(var i = 0, len = _data.length; i < len; i++) {
-                var row = _data[i];
-
-                for(var key in row) {
-                    var obj = _seriesList[key] || { data : [] },
-                        value = row[key],
-                        range = null;
-
-                    if(_.typeCheck("undefined", obj.data)) {
-                        obj.data = [];
-                    }
-
-                    obj.data.push(value);
-
-                    if(value instanceof Array) {
-                        range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
-                    } else {
-                        range = { max : +value, min : +value }
-                    }
-
-                    obj.min = _.typeCheck("undefined", obj.min) ? 0 : obj.min;
-                    obj.max = _.typeCheck("undefined", obj.max) ? 0 : obj.max;
-
-                    if (range.min < obj.min) {
-                        obj.min = range.min;
-                    }
-
-                    if (range.max > obj.max) {
-                        obj.max = range.max;
-                    }
-
-                    // 시리즈 데이터 설정
-                    _seriesList[key] = obj;
-                }
-            }
-
-            axis.series = _seriesList;
-        }
-
         function drawBefore(self) {
             _axis = _.deepClone(_options.axis, { data : true, origin : true });
             _series = _.deepClone(_options.series);
@@ -3939,8 +3893,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 restorePanel();
 
-                // 시리즈 구하기
-                setMaxValue(axis);
             }
         }
 
@@ -5271,7 +5223,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			
 			function new_scale(i) {
 				if (key) {
-					i = self.data(i)[key];
+					i = self.data(i, key);
 				}
 				
 				return old_scale(i);
@@ -5362,11 +5314,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
-				if(!_.typeCheck("undefined", field)) {
-					return this.axis.data[index][field];
-				}
-
-				return this.axis.data[index]
+                return this.axis.data[index][field] || this.axis.data[index];
 			}
 
 			return this.axis.data || [];
@@ -6515,6 +6463,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				value_list = new Array(data.length);
 
+                var isCheck = false;
 				for (var index = 0, len = data.length; index < len; index++) {
 
 					var value = this.grid.domain.call(this.chart, data[index]);
@@ -6525,6 +6474,12 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 						value_list.push(Math.min.apply(Math, value));
 					} else {
 						value_list[index]  = value;
+
+                        if (!isCheck) {
+                            value_list.push(0);
+                            isCheck = true;
+                        }
+
 					}
 				}
 			} else {
@@ -6549,6 +6504,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
 				unit = Math.ceil((max - min) / this.grid.step);
 			}
+
+            console.log(value_list);
 
 			if (unit == 0) {
 				domain = [0, 0];
@@ -7295,7 +7252,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [],
-                series = this.axis.series;
+                series = {};
+
+            if (isCheckMinMax !== false) {
+              series  = setMaxValue(this.axis, this.brush.target);
+            }
+
+
 
             this.eachData(function(i, data) {
                 var startX = this.axis.x(i);
@@ -7355,6 +7318,40 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             });
 
             return xy;
+        }
+
+        function setMaxValue(axis, target) {
+            if(!axis.data) return;
+            axis.series = axis.series || {};
+
+            var _seriesList = {},
+                _data = axis.data;
+
+            var targetList = {};
+
+            for(var i = 0; i < target.length; i++) {
+                if (!axis.series[target[i]]) {
+                    targetList[target[i]] = [];
+                }
+            }
+
+            // 시리즈 데이터 구성
+            for(var i = 0, len = _data.length; i < len; i++) {
+                var row = _data[i];
+
+                for(var k in targetList) {
+                    targetList[k].push(row[k]);
+                }
+            }
+
+            for(var key in targetList) {
+                axis.series[key] = {
+                    min : Math.min.apply(Math, targetList[key]),
+                    max : Math.max.apply(Math, targetList[key])
+                }
+            }
+
+            return axis.series;
         }
 
         /**

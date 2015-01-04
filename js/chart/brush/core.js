@@ -114,7 +114,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [],
-                series = this.axis.series;
+                series = {};
+
+            if (isCheckMinMax !== false) {
+              series  = setMaxValue(this.axis, this.brush.target);
+            }
+
+
 
             this.eachData(function(i, data) {
                 var startX = this.axis.x(i);
@@ -174,6 +180,40 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             });
 
             return xy;
+        }
+
+        function setMaxValue(axis, target) {
+            if(!axis.data) return;
+            axis.series = axis.series || {};
+
+            var _seriesList = {},
+                _data = axis.data;
+
+            var targetList = {};
+
+            for(var i = 0; i < target.length; i++) {
+                if (!axis.series[target[i]]) {
+                    targetList[target[i]] = [];
+                }
+            }
+
+            // 시리즈 데이터 구성
+            for(var i = 0, len = _data.length; i < len; i++) {
+                var row = _data[i];
+
+                for(var k in targetList) {
+                    targetList[k].push(row[k]);
+                }
+            }
+
+            for(var key in targetList) {
+                axis.series[key] = {
+                    min : Math.min.apply(Math, targetList[key]),
+                    max : Math.max.apply(Math, targetList[key])
+                }
+            }
+
+            return axis.series;
         }
 
         /**

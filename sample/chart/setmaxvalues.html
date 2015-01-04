@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready(["chart.builder"], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            axis : {
+                data : [
+                    { quarter : "1Q", sales : 2100, profit : 1800 },
+                    { quarter : "2Q", sales : 6000, profit : 4400 },
+                    { quarter : "3Q", sales : 8300, profit : 6700 },
+                    { quarter : "4Q", sales : 5200, profit : 4800 }
+                ],
+                x : {
+                    type : "block",
+                    domain : "quarter",
+                    line : true
+                },
+                y : {
+                    type : "range",
+                    domain : function(d) { return 10000; },
+                    unit : 1000,
+                    step : 5,
+                    line : true
+                }
+            },
+            brush : {
+                type : "bubble",
+                target : [ "sales", "profit" ]
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

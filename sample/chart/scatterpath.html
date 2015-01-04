@@ -73,9 +73,7 @@
                 },
                 y : {
                     type : 'range',
-                    domain : function(data) {
-                        return [data.name, data.value, data.test];
-                    },
+                    domain : [0, 2200],
                     step : 10,
                     line : true
                 }
@@ -101,7 +99,7 @@
         });
 
         var tim = setInterval(function() {
-            c.update(data = changeData(data));
+            c.update(data);
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 

@@ -101,52 +101,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _tempData = [] ;
         }
 
-        function setMaxValue(axis) {
-            if(!axis.data) return;
-
-            var _seriesList = {},
-                _data = axis.data;
-
-            // 시리즈 데이터 구성
-            for(var i = 0, len = _data.length; i < len; i++) {
-                var row = _data[i];
-
-                for(var key in row) {
-                    var obj = _seriesList[key] || { data : [] },
-                        value = row[key],
-                        range = null;
-
-                    if(_.typeCheck("undefined", obj.data)) {
-                        obj.data = [];
-                    }
-
-                    obj.data.push(value);
-
-                    if(value instanceof Array) {
-                        range = { max : Math.max.apply(Math, value), min : Math.min.apply(Math, value) }
-                    } else {
-                        range = { max : +value, min : +value }
-                    }
-
-                    obj.min = _.typeCheck("undefined", obj.min) ? 0 : obj.min;
-                    obj.max = _.typeCheck("undefined", obj.max) ? 0 : obj.max;
-
-                    if (range.min < obj.min) {
-                        obj.min = range.min;
-                    }
-
-                    if (range.max > obj.max) {
-                        obj.max = range.max;
-                    }
-
-                    // 시리즈 데이터 설정
-                    _seriesList[key] = obj;
-                }
-            }
-
-            axis.series = _seriesList;
-        }
-
         function drawBefore(self) {
             _axis = _.deepClone(_options.axis, { data : true, origin : true });
             _series = _.deepClone(_options.series);
@@ -252,8 +206,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 restorePanel();
 
-                // 시리즈 구하기
-                setMaxValue(axis);
             }
         }
 

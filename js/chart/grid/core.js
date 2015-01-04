@@ -31,7 +31,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			
 			function new_scale(i) {
 				if (key) {
-					i = self.data(i)[key];
+					i = self.data(i, key);
 				}
 				
 				return old_scale(i);
@@ -122,11 +122,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
-				if(!_.typeCheck("undefined", field)) {
-					return this.axis.data[index][field];
-				}
-
-				return this.axis.data[index]
+                return this.axis.data[index][field] || this.axis.data[index];
 			}
 
 			return this.axis.data || [];
