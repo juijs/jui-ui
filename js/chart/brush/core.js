@@ -144,7 +144,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         this.getXY = function(isCheckMinMax, isCached) {
             var xy = [],
                 cached = {},
-                series = {};
+                series = {},
+                length = this.listData().length;
 
             if(isCheckMinMax !== false) {
                 series  = getMinMaxValue(this.axis.data, this.brush.target);
@@ -164,7 +165,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                             y: [],
                             value: [],
                             min: [],
-                            max: []
+                            max: [],
+                            length: length
                         };
                     }
 
@@ -200,8 +202,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-        this.getStackXY = function(isCheckMinMax) {
-            var xy = this.getXY(isCheckMinMax);
+        this.getStackXY = function(isCheckMinMax, isCached) {
+            var xy = this.getXY(isCheckMinMax, isCached);
 
             this.eachData(function(i, data) {
                 var valueSum = 0;

@@ -13708,7 +13708,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         this.getXY = function(isCheckMinMax, isCached) {
             var xy = [],
                 cached = {},
-                series = {};
+                series = {},
+                length = this.listData().length;
 
             if(isCheckMinMax !== false) {
                 series  = getMinMaxValue(this.axis.data, this.brush.target);
@@ -13728,7 +13729,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                             y: [],
                             value: [],
                             min: [],
-                            max: []
+                            max: [],
+                            length: length
                         };
                     }
 
@@ -13764,8 +13766,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-        this.getStackXY = function(isCheckMinMax) {
-            var xy = this.getXY(isCheckMinMax);
+        this.getStackXY = function(isCheckMinMax, isCached) {
+            var xy = this.getXY(isCheckMinMax, isCached);
 
             this.eachData(function(i, data) {
                 var valueSum = 0;
@@ -14500,8 +14502,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
-            var series = axis.series[brush.target[index]],
-                radius = self.getScaleValue(pos.value, series.min, series.max, brush.min, brush.max);
+            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max);
 
             return chart.svg.circle({
                 cx: pos.x,
@@ -14520,7 +14521,7 @@ jui.define("chart.brush.bubble", [], function() {
             });
 
             for(var i = 0; i < points.length; i++) {
-                for(var j = 0; j < points[i].x.length; j++) {
+                for(var j = 0; j < points[i].length; j++) {
                     var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);
@@ -15309,7 +15310,7 @@ jui.define("chart.brush.scatter", [], function() {
             var g = this.chart.svg.group();
 
             for(var i = 0; i < points.length; i++) {
-                for(var j = 0; j < points[i].x.length; j++) {
+                for(var j = 0; j < points[i].length; j++) {
                     var p = this.createScatter({
                         x: points[i].x[j],
                         y: points[i].y[j],
@@ -15760,7 +15761,7 @@ jui.define("chart.brush.area", [], function() {
             var g = this.chart.svg.group(),
                 maxY = this.axis.y(this.axis.y.min());
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k),
                     xList = path[k].x;
 
