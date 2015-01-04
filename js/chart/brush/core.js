@@ -215,6 +215,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     }
 
                     xy[j].y[i] = this.axis.y(value + valueSum);
+
                 }
             });
 

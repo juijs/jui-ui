@@ -25,8 +25,9 @@
                 },
                 y : {
                     type : 'range',
-                    domain : [ 0, 10 ],
-                    step : 10
+                    domain : function(d) { return d.name + d.value + d.test; },
+                    unit : 4,
+                    step : 4
                 },
                 data : [
                     { name : 2, value : 5, test : 3 },
@@ -43,15 +44,12 @@
                 test : { text : "ê°’" }
             },
             brush : [{
-                type : 'stackarea',
-                target : [ "name", "value" ]
+                type : 'stackarea'
             }, {
-                type : "stackline",
-                target : [ "name", "value" ]
+                type : "stackline"
             }, {
                 type : "stackscatter",
                 symbol : "circle",
-                target : [ "name", "value" ],
                 size: 8
             }],
 

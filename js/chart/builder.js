@@ -228,7 +228,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         var target = [];
 
                         if(_axis[axisIndex]) {
-                            for(var key in _axis[axisIndex].series) {
+                            for(var key in _axis[axisIndex].data[0]) {
                                 target.push(key);
                             }
                         }
