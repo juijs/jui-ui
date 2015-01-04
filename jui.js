@@ -12933,8 +12933,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				unit = Math.ceil((max - min) / this.grid.step);
 			}
 
-            console.log(value_list);
-
 			if (unit == 0) {
 				domain = [0, 0];
 			} else {
