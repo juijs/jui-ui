@@ -1,6 +1,35 @@
 jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 	var CoreBrush = function() {
 
+        function getMinMaxValue(data, target) {
+            var seriesList = {},
+                targetList = {};
+
+            for(var i = 0; i < target.length; i++) {
+                if (!seriesList[target[i]]) {
+                    targetList[target[i]] = [];
+                }
+            }
+
+            // 시리즈 데이터 구성
+            for(var i = 0, len = data.length; i < len; i++) {
+                var row = data[i];
+
+                for(var k in targetList) {
+                    targetList[k].push(row[k]);
+                }
+            }
+
+            for(var key in targetList) {
+                seriesList[key] = {
+                    min : Math.min.apply(Math, targetList[key]),
+                    max : Math.max.apply(Math, targetList[key])
+                }
+            }
+
+            return seriesList;
+        }
+
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -112,24 +141,24 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-        this.getXY = function(isCheckMinMax) {
+        this.getXY = function(isCheckMinMax, isCached) {
             var xy = [],
+                cached = {},
                 series = {};
 
-            if (isCheckMinMax !== false) {
-              series  = setMaxValue(this.axis, this.brush.target);
+            if(isCheckMinMax !== false) {
+                series  = getMinMaxValue(this.axis.data, this.brush.target);
             }
-
-
 
             this.eachData(function(i, data) {
                 var startX = this.axis.x(i);
 
                 for(var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
-                        value = data[key];
+                        value = data[key],
+                        startY = this.axis.y(value);
 
-                    if (!xy[j]) {
+                    if(!xy[j]) {
                         xy[j] = {
                             x: [],
                             y: [],
@@ -137,6 +166,16 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                             min: [],
                             max: []
                         };
+                    }
+
+                    if(isCached) {
+                        var cachedkey = key + "-" + startX + "-" + startY;
+
+                        if (cached[cachedkey]) {
+                            continue;
+                        } else {
+                            cached[cachedkey] = true;
+                        }
                     }
 
                     xy[j].x.push(startX);
@@ -178,89 +217,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     xy[j].y[i] = this.axis.y(value + valueSum);
                 }
             });
-
-            return xy;
-        }
-
-        function setMaxValue(axis, target) {
-            if(!axis.data) return;
-            axis.series = axis.series || {};
-
-            var _seriesList = {},
-                _data = axis.data;
-
-            var targetList = {};
-
-            for(var i = 0; i < target.length; i++) {
-                if (!axis.series[target[i]]) {
-                    targetList[target[i]] = [];
-                }
-            }
-
-            // 시리즈 데이터 구성
-            for(var i = 0, len = _data.length; i < len; i++) {
-                var row = _data[i];
-
-                for(var k in targetList) {
-                    targetList[k].push(row[k]);
-                }
-            }
-
-            for(var key in targetList) {
-                axis.series[key] = {
-                    min : Math.min.apply(Math, targetList[key]),
-                    max : Math.max.apply(Math, targetList[key])
-                }
-            }
-
-            return axis.series;
-        }
-
-        /**
-         * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
-         *
-         * @param brush
-         * @param chart
-         * @returns {Array}
-         */
-        this.getCachedXY = function() {
-            var xy = [],
-                cached = {};
-
-            this.eachData(function(i, data) {
-                var startX = this.axis.x(i);
-
-                for(var j = 0; j < this.brush.target.length; j++) {
-                    var key = this.brush.target[j],
-                        value = data[key];
-
-                    if(!xy[j]) {
-                        xy[j] = {
-                            x: [],
-                            y: [],
-                            value: [],
-                            min: [],
-                            max: []
-                        };
-                    }
-
-                    var xValue = startX,
-                        yValue = this.axis.y(value),
-                        cachedkey = key + "-" +  xValue + "-" + yValue;
-
-                    if(cached[cachedkey]) {
-                        continue;
-                    } else {
-                        cached[cachedkey] = true;
-                    }
-
-                    xy[j].x.push(xValue);
-                    xy[j].y.push(yValue);
-                    xy[j].value.push(value);
-                }
-            });
-
-            cached = null;
 
             return xy;
         }

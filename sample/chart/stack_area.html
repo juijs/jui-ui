@@ -25,9 +25,7 @@
                 },
                 y : {
                     type : 'range',
-                    domain : function(data) {
-                        return [data.name + data.value + data.test + 10, 0];
-                    },
+                    domain : [ 0, 10 ],
                     step : 10
                 },
                 data : [

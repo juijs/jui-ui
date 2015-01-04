@@ -30,7 +30,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.draw = function() {
-            return this.drawScatter(this.getCachedXY(false));
+            return this.drawScatter(this.getXY(false, true));
         }
 	}
 
