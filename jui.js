@@ -12950,7 +12950,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				domain = [end, start];
 
-				//this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+				this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
 			}
 
 			if (this.grid.reverse) {
