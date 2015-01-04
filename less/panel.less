@@ -54,35 +54,57 @@
   // Panel Customizing (Table)
   // --------------------------------------------------
   .panel {
-    > .table-classic, 
-    > .xtable > .table-classic,
-	> .body.fit .table-classic,
-	> .body.fit .xtable > .table-classic {
+    > .table-classic,
+    > .xtable > .table-classic {
       > thead {
-        th:first-child { 
-          .border-top-left-radius(0px); 
+        th:first-child {
+          .border-top-left-radius(0px);
         }
         th:last-child {
           .border-top-right-radius(0px);
         }
       }
-      
+
       .border-bottom-radius(5px);
     }
+  }
 
-	> .body.fit .xtable {
-	  margin-left: -1px;
+  .panel {
+	> .body.fit .table-classic,
+	> .body.fit .xtable > .table-classic {
+	  tr {
+		> th:first-child {
+		  .border-top-left-radius(0px);
+		  border-left-width: 0px;
+		}
+		> th:last-child {
+		  .border-top-right-radius(0px);
+		  border-right-width: 0px;
+		}
+
+		> td:first-child {
+		  border-left-width: 0px;
+		}
+		> td:last-child {
+		  border-right-width: 0px;
+		}
+	  }
 	}
   }
 
 
   // Panel Customizing (Tab)
   // --------------------------------------------------
-  .panel > .head > .tab {
+  .panel > .head > .tab,
+  .panel > .foot > .tab {
 	display: inline-block;
 	margin: 0px 0px 0px -10px;
 	padding-left: 0px;
 	line-height: normal;
+  }
+
+  .panel > .foot > .tab {
+	margin-top: -5px;
   }
 
 	
