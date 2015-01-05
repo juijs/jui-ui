@@ -16,7 +16,7 @@ jui.define("util.svg.element", [], function() {
 
             // 기본 속성 설정
             this.attr(attr);
-        }
+        };
         
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
@@ -27,7 +27,7 @@ jui.define("util.svg.element", [], function() {
             }
 
             return this.childrens;
-        }
+        };
 
         this.get = function(index) {
             if(this.childrens[index]) {
@@ -717,13 +717,17 @@ jui.define("util.svg",
                 return { width : 0, height : 0 };
             }
 
-        	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
+            var el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            el.setAttributeNS(null, "x", -200);
+            el.setAttributeNS(null, "y", -200);
+            el.appendChild(document.createTextNode(text));
 
-        	root.element.appendChild(el.element);
-        	var rect = el.element.getBoundingClientRect();
-        	$(el.element).remove();
-            $(root.element).find(".dummy").remove();
-        	
+
+        	root.element.appendChild(el);
+        	var rect = el.getBoundingClientRect();
+
+            root.element.removeChild(el);
+
         	return { width : rect.width, height : rect.height }; 
         }
 
