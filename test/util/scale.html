@@ -49,17 +49,6 @@ jui.ready([ "util.math", "util.time", "util.scale" ], function(math, time, scale
     /**/
     QUnit.test( "scale.linear test", function(assert) {
 
-        // performance test
-        scale1 = scale.linear().domain([0, 10000000]).range([0, 10000000]);
-        var start = +new Date();
-        for(var i = 0; i < 10000000; i++) {
-            scale1(i);
-        }
-
-        var end = +new Date();
-
-        console.log(end - start);
-
     	var domain = [0, 100];
     	var range = [0, 300];
     	scale = scale.linear().domain(domain).range(range);
