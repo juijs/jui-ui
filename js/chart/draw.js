@@ -26,8 +26,13 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
-                if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
-                    obj.translate(this.chart.area("x"), this.chart.area("y"));
+                if(_.typeCheck("object", this.brush)) {
+                    obj.attr({ "class": "brush brush-" + this.brush.type });
+                    obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
+                } else if(_.typeCheck("object", this.widget)) {
+                    obj.attr({ "class": "widget widget-" + this.widget.type });
+                } else if(_.typeCheck("object", this.grid)) {
+                    obj.root.attr({ "class": "grid grid-" + this.grid.type });
                 }
             }
 
