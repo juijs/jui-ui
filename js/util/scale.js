@@ -125,7 +125,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
-					if (_domain[i] == t) {
+					if (typeof t == 'string' && _domain[i] === t) {
 						index = i;
 						break;
 					}

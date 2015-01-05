@@ -195,6 +195,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				max = this.grid.max || undefined,
 				data = this.data();
 			var value_list = [];
+			var isArray = false;
 
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
@@ -209,6 +210,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 						value_list.push(Math.min(value));
 					} else {
 						value_list[index]  = value;
+						value_list.push(0);
 					}
 
 				}
@@ -236,13 +238,19 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				}
 			} else {
 				value_list = grid.domain;
+				isArray = true;
 			}
 
 			var tempMin = Math.min.apply(Math, value_list);
 			var tempMax = Math.max.apply(Math, value_list);
 
-			if (typeof min == 'undefined') min = tempMin;
-			if (typeof max == 'undefined') max = tempMax;
+			if (isArray) {
+				min = tempMin;
+				max = tempMax;
+			} else {
+				if (typeof min == 'undefined' || min > tempMin) min = tempMin;
+				if (typeof max == 'undefined' || max < tempMax) max = tempMax;
+			}
 
 			this.grid.max = max;
 			this.grid.min = min;
@@ -274,7 +282,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				domain = [end, start];
 
-				//this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+				this.grid.step = (Math.abs(end - start) / unit);
 			}
 
 			if (this.grid.reverse) {

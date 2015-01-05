@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div id="container" style="margin-left: 50px; max-height: 300px; overflow: auto;">
+<div id="container" style="margin-left: 50px; overflow: auto;">
     <div id="chart" style="margin-left: 0px;"></div>
 </div>
 
@@ -46,10 +46,8 @@
                 },
                 y : {
                     type : 'range',
-                    domain : function(d) {
-                        return Math.max(d.name, d.name2);
-                    },
-                    step : 10
+                    domain : [0, 700],
+                    step : 5
                 },
                 data : data
             },

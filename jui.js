@@ -1989,7 +1989,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
-					if (_domain[i] == t) {
+					if (typeof t == 'string' && _domain[i] === t) {
 						index = i;
 						break;
 					}
@@ -12871,6 +12871,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				max = this.grid.max || undefined,
 				data = this.data();
 			var value_list = [];
+			var isArray = false;
 
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
@@ -12885,6 +12886,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 						value_list.push(Math.min(value));
 					} else {
 						value_list[index]  = value;
+						value_list.push(0);
 					}
 
 				}
@@ -12912,13 +12914,19 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				}
 			} else {
 				value_list = grid.domain;
+				isArray = true;
 			}
 
 			var tempMin = Math.min.apply(Math, value_list);
 			var tempMax = Math.max.apply(Math, value_list);
 
-			if (typeof min == 'undefined') min = tempMin;
-			if (typeof max == 'undefined') max = tempMax;
+			if (isArray) {
+				min = tempMin;
+				max = tempMax;
+			} else {
+				if (typeof min == 'undefined' || min > tempMin) min = tempMin;
+				if (typeof max == 'undefined' || max < tempMax) max = tempMax;
+			}
 
 			this.grid.max = max;
 			this.grid.min = min;
@@ -12950,7 +12958,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				domain = [end, start];
 
-				//this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
+				this.grid.step = (Math.abs(end - start) / unit);
 			}
 
 			if (this.grid.reverse) {
@@ -17674,6 +17682,20 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
+            var axis_domain = target;
+            if (_.typeCheck("array", target )) {
+                axis_domain = (function(target) {
+                    return function(d) {
+                        var arr = [];
+                        for(var i = 0; i < target.length ;i++) {
+                            arr.push(d[target[i]]);
+                        }
+
+                        return arr;
+                    }
+                })(target);
+            }
+
             this.chart = builder(this.selector, _.extend({
                 axis : {
                     x : {
@@ -17687,7 +17709,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                     },
                     y : {
                         type : "range",
-                        target : (opts.axis.target != null) ? opts.axis.target : target,
+                        domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
                         line : opts.axis.yline
                     },
@@ -17768,7 +17790,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
             // grid (custom)
             axis : {
-                target : null,
+                domain : null,
                 format : "hh:mm",
                 key : "time",
                 xstep : 1, // x축 분 간격
