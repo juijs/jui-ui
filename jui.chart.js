@@ -3844,7 +3844,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 // 그리드 별 위치 선정하기
                 if(axis[k].orient == "left") {
-                    elem.root.translate(_area.x - axis[k].dist, _area.y);
+                    elem.root.translate(_area.x + chart.area("x") - axis[k].dist, _area.y);
                 } else if(axis[k].orient == "right") {
                     elem.root.translate(_area.x + chart.area("x2") + axis[k].dist, _area.y);
                 } else if(axis[k].orient == "bottom") {
