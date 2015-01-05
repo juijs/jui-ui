@@ -6616,9 +6616,7 @@
   border-bottom-left-radius: 0px;
 }
 .jui .panel > .table-classic,
-.jui .panel > .xtable > .table-classic,
-.jui .panel > .body.fit .table-classic,
-.jui .panel > .body.fit .xtable > .table-classic {
+.jui .panel > .xtable > .table-classic {
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
@@ -6627,29 +6625,48 @@
   border-bottom-left-radius: 5px;
 }
 .jui .panel > .table-classic > thead th:first-child,
-.jui .panel > .xtable > .table-classic > thead th:first-child,
-.jui .panel > .body.fit .table-classic > thead th:first-child,
-.jui .panel > .body.fit .xtable > .table-classic > thead th:first-child {
+.jui .panel > .xtable > .table-classic > thead th:first-child {
   -webkit-border-top-left-radius: 0px;
   -moz-border-radius-topleft: 0px;
   border-top-left-radius: 0px;
 }
 .jui .panel > .table-classic > thead th:last-child,
-.jui .panel > .xtable > .table-classic > thead th:last-child,
-.jui .panel > .body.fit .table-classic > thead th:last-child,
-.jui .panel > .body.fit .xtable > .table-classic > thead th:last-child {
+.jui .panel > .xtable > .table-classic > thead th:last-child {
   -webkit-border-top-right-radius: 0px;
   -moz-border-radius-topright: 0px;
   border-top-right-radius: 0px;
 }
-.jui .panel > .body.fit .xtable {
-  margin-left: -1px;
+.jui .panel > .body.fit .table-classic tr > th:first-child,
+.jui .panel > .body.fit .xtable > .table-classic tr > th:first-child {
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+  border-left-width: 0px;
 }
-.jui .panel > .head > .tab {
+.jui .panel > .body.fit .table-classic tr > th:last-child,
+.jui .panel > .body.fit .xtable > .table-classic tr > th:last-child {
+  -webkit-border-top-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  border-top-right-radius: 0px;
+  border-right-width: 0px;
+}
+.jui .panel > .body.fit .table-classic tr > td:first-child,
+.jui .panel > .body.fit .xtable > .table-classic tr > td:first-child {
+  border-left-width: 0px;
+}
+.jui .panel > .body.fit .table-classic tr > td:last-child,
+.jui .panel > .body.fit .xtable > .table-classic tr > td:last-child {
+  border-right-width: 0px;
+}
+.jui .panel > .head > .tab,
+.jui .panel > .foot > .tab {
   display: inline-block;
   margin: 0px 0px 0px -10px;
   padding-left: 0px;
   line-height: normal;
+}
+.jui .panel > .foot > .tab {
+  margin-top: -5px;
 }
 .jui .panel-close > .head {
   -webkit-border-bottom-right-radius: 5px;

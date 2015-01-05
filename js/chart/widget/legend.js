@@ -57,9 +57,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     width = Math.min(rect.width, rect.height),
                     height = width;
 								 
-				var group = chart.svg.group({
-					"class" : "legend icon"
-				});
+				var group = chart.svg.group();
 				
 				group.append(chart.svg.rect({
 					x: 0, 
@@ -109,9 +107,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 		}        
         
         this.draw = function() {
-            var group = chart.svg.group({
-                "class" : "widget legend"
-            });
+            var group = chart.svg.group();
             
             var x = 0, y = 0,
                 total_width = 0, total_height = 0,

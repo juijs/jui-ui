@@ -48,6 +48,20 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             var opts = this.options,
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
+            var axis_domain = target;
+            if (_.typeCheck("array", target )) {
+                axis_domain = (function(target) {
+                    return function(d) {
+                        var arr = [];
+                        for(var i = 0; i < target.length ;i++) {
+                            arr.push(d[target[i]]);
+                        }
+
+                        return arr;
+                    }
+                })(target);
+            }
+
             this.chart = builder(this.selector, _.extend({
                 axis : {
                     x : {
@@ -61,7 +75,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                     },
                     y : {
                         type : "range",
-                        target : (opts.axis.target != null) ? opts.axis.target : target,
+                        domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
                         line : opts.axis.yline
                     },
@@ -142,7 +156,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
             // grid (custom)
             axis : {
-                target : null,
+                domain : null,
                 format : "hh:mm",
                 key : "time",
                 xstep : 1, // x축 분 간격

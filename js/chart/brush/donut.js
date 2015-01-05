@@ -4,29 +4,21 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
-		    
-		    hasCircle = hasCircle || false; 
-		    
-		    var dist = Math.abs(outerRadius - innerRadius);
-		    
-			var g = this.chart.svg.group({
-				"class" : "donut"
-			});
+		    hasCircle = hasCircle || false;
 
-			var path = this.chart.svg.path(attr);
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+				dist = Math.abs(outerRadius - innerRadius);
 
 			// 바깥 지름 부터 그림
-			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+			
+			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				startInnerX = innerCircle.x,
+				startInnerY = innerCircle.y;
 
-			var startX = obj.x;
-			var startY = obj.y;
-			
-			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle));
-			
-			var startInnerX = innerCircle.x;
-			var startInnerY = innerCircle.y;
-			
-			
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
@@ -53,7 +45,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 			g.append(path);
 
-            if (hasCircle) {
+            if(hasCircle) {
                 var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle)),
 					cX = centerCircle.x,
 					cY = centerCircle.y,
@@ -86,7 +78,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
                 height = this.chart.area('height'),
                 min = width;
 
-            if (height < min) {
+            if(height < min) {
                 min = height;
             }
 
@@ -101,9 +93,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var group = this.chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = this.chart.svg.group();
 
 			var target = this.brush.target,
 				data = this.getData(0);
@@ -112,11 +102,11 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				startAngle = 0,
 				max = 0;
 
-			for (var i = 0; i < target.length; i++) {
+			for(var i = 0; i < target.length; i++) {
 				max += data[target[i]];
 			}
 
-			for (var i = 0; i < target.length; i++) {
+			for(var i = 0; i < target.length; i++) {
 				var value = data[target[i]],
 					endAngle = all * (value / max);
 

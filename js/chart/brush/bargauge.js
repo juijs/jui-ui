@@ -21,9 +21,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 x = obj.x,
                 y = obj.y;
 
-			var group = chart.svg.group({
-				"class" : "brush bar gauge"
-			});
+			var group = chart.svg.group();
 
 			if (brush.split) {
 				var max = width;

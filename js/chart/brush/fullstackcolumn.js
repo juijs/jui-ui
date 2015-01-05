@@ -11,7 +11,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		}
 
 		this.draw = function() {
-			var chart_height = chart.area('height');
+			var chart_height = chart.area("height");
 
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();

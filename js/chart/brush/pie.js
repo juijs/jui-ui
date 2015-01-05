@@ -4,16 +4,12 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
-			var g = chart.svg.group({
-				"class" : "pie"
-			});
-
-			var path = chart.svg.path(attr);
+			var g = chart.svg.group(),
+				path = chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
-			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
-
-			var startX = obj.x,
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
                 startY = obj.y;
 			
 			// 시작 하는 위치로 옮김
@@ -91,9 +87,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = chart.svg.group();
 
 			this.eachData(function(i, data) {
 				this.drawUnit(i, data, group);

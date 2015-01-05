@@ -3,9 +3,7 @@ jui.define("chart.brush.path", [], function() {
 	var PathBrush = function(chart, axis, brush) {
 
 		this.draw = function() {
-			var g = chart.svg.group({
-				"class" : "brush path"
-			});
+			var g = chart.svg.group();
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var color = this.color(ti);

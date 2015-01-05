@@ -712,11 +712,17 @@ jui.define("util.svg",
         }
         
         this.getTextRect = function(text) {
+
+            if (text == "") {
+                return { width : 0, height : 0 };
+            }
+
         	var el = this.text({ 'class' : 'dummy', x : -100, y : -100 }, text);
 
         	root.element.appendChild(el.element);
         	var rect = el.element.getBoundingClientRect();
         	$(el.element).remove();
+            $(root.element).find(".dummy").remove();
         	
         	return { width : rect.width, height : rect.height }; 
         }

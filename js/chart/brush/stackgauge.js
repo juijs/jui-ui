@@ -9,8 +9,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					return {
 						x : 0,
 						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
+						width : chart.area("width"),
+						height : chart.area("height")
 					};
 				}
 			}
@@ -33,9 +33,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = chart.svg.group();
 			
 			this.eachData(function(i, data) {
 				var rate = (data[brush.target] - brush.min) / (brush.max - brush.min),

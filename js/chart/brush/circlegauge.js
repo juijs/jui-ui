@@ -6,7 +6,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 		this.drawBefore = function() {
             var axis = axis || {};
 
-            if (!axis.c) {
+            if(!axis.c) {
                 axis.c = function() {
                     return {
                         x : 0,
@@ -24,7 +24,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 y = obj.y,
                 min = width;
 
-            if (height < min) {
+            if(height < min) {
                 min = height;
             }
 
@@ -37,9 +37,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 		this.draw = function() {
             var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
-			var group = chart.svg.group({
-				"class" : "brush circle gauge"
-			});
+			var group = chart.svg.group();
 
             group.append(chart.svg.circle({
                 cx : centerX,
