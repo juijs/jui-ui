@@ -154,11 +154,8 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				unit = 2 * Math.PI / count,
 				h = Math.abs(startY) / step;
 
-			var g = chart.svg.group({
-				"class" : "grid radar"
-			});
-
-			var root = chart.svg.group();
+			var g = chart.svg.group(),
+				root = chart.svg.group();
 
 			g.append(root);
 

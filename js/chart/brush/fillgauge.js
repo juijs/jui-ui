@@ -93,7 +93,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 		
 		this.draw = function() {
 			var group = chart.svg.group({
-				"class" : "brush fill gauge",
 				opacity : 0.8
 			});
 

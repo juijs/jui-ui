@@ -5,9 +5,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
-
-
-		
 		/**
 		 * scale wrapper 
 		 * 
@@ -134,9 +131,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 */		
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
-			var root = chart.svg.group({
-				"class" : [ "grid", cls ].join(" ")
-			});
+			var root = chart.svg.group();
 
 			// render axis
 			this[orient].call(this, chart, root);

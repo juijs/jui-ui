@@ -5,21 +5,21 @@ jui.define("chart.widget.title", [], function() {
 
         this.drawBefore = function() {
             if (widget.orient == "bottom") {
-                y = chart.area('y2') + chart.padding("bottom") - 20;
+                y = chart.area("y2") + chart.padding("bottom") - 20;
             } else if (widget.orient == "top") {
                 y = 20;
             } else {
-                y = chart.area('y') + chart.area('height') / 2
+                y = chart.area("y") + chart.area("height") / 2
             }
 
             if (widget.align == "center") {
-                x = chart.area('x') + chart.area('width')/2;
+                x = chart.area("x") + chart.area("width") / 2;
                 anchor = "middle";
             } else if (widget.align == "start") {
-                x = chart.area('x');
+                x = chart.area("x");
                 anchor = "start";
             } else {
-                x = chart.area('x2');
+                x = chart.area("x2");
                 anchor = "end";
             }
         }
@@ -41,9 +41,9 @@ jui.define("chart.widget.title", [], function() {
             }, widget.text);
 
             if (widget.orient == "center") {
-                if (widget.align == 'start') {
+                if (widget.align == "start") {
                     text.rotate(-90, x + widget.dx + half_text_width, y + widget.dy + half_text_height)
-                } else if (widget.align == 'end') {
+                } else if (widget.align == "end") {
                     text.rotate(90, x + widget.dx - half_text_width, y + widget.dy + half_text_height)
                 }
             }
@@ -58,8 +58,7 @@ jui.define("chart.widget.title", [], function() {
             align: "center", // or start, end
             text: "",
             dx: 0,
-            dy: 0,
-            type: "title"
+            dy: 0
         }
     }
 

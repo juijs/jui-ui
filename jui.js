@@ -3304,7 +3304,6 @@ jui.define("util.svg",
         	root.element.appendChild(el.element);
         	var rect = el.element.getBoundingClientRect();
         	$(el.element).remove();
-
             $(root.element).find(".dummy").remove();
         	
         	return { width : rect.width, height : rect.height }; 
@@ -10076,19 +10075,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.render = function() {
-            if (!_.typeCheck("function", this.draw)) {
+            if(!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
             // Call drawBefore method (All)
-            if (_.typeCheck("function", this.drawBefore)) {
+            if(_.typeCheck("function", this.drawBefore)) {
                 this.drawBefore();
             }
 
             // Call draw method (All)
 			var obj = this.draw();
 
-            if (!_.typeCheck("object", obj)) {
+            if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정
@@ -10598,7 +10597,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // UI 바인딩 설정
-            if(_options.bind) {
+            if(_.typeCheck("object", _options.bind)) {
                 self.bindUI(_options.bind);
             }
 
@@ -10823,13 +10822,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         this.bindUI = function(uiObj) {
             var self = this;
 
-            if (uiObj.module.type == "uix.table") {
+            if(uiObj.module.type == "uix.table") {
                 uiObj.callAfter("update", updateTable);
                 uiObj.callAfter("sort", updateTable);
                 uiObj.callAfter("append", updateTable);
                 uiObj.callAfter("insert", updateTable);
                 uiObj.callAfter("remove", updateTable);
-            } else if (uiObj.module.type == "uix.xtable") {
+            } else if(uiObj.module.type == "uix.xtable") {
                 uiObj.callAfter("update", updateXTable);
                 uiObj.callAfter("sort", updateXTable);
             }
@@ -10904,7 +10903,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var axis = _options.axis[_options.axisIndex];
             if(!axis) return;
 
-            if (data) {
+            if(data) {
                 axis.origin = data;
             } else {
                 axis.origin = axis.data || [];
@@ -11632,9 +11631,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
-
-
-		
 		/**
 		 * scale wrapper 
 		 * 
@@ -11761,9 +11757,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 */		
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
-			var root = chart.svg.group({
-				"class" : [ "grid", cls ].join(" ")
-			});
+			var root = chart.svg.group();
 
 			// render axis
 			this[orient].call(this, chart, root);
@@ -12553,11 +12547,8 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				unit = 2 * Math.PI / count,
 				h = Math.abs(startY) / step;
 
-			var g = chart.svg.group({
-				"class" : "grid radar"
-			});
-
-			var root = chart.svg.group();
+			var g = chart.svg.group(),
+				root = chart.svg.group();
 
 			g.append(root);
 
@@ -14450,7 +14441,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		}
 
 		this.draw = function() {
-			var chart_height = chart.area('height');
+			var chart_height = chart.area("height");
 
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
@@ -14739,29 +14730,21 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
-		    
-		    hasCircle = hasCircle || false; 
-		    
-		    var dist = Math.abs(outerRadius - innerRadius);
-		    
-			var g = this.chart.svg.group({
-				"class" : "donut"
-			});
+		    hasCircle = hasCircle || false;
 
-			var path = this.chart.svg.path(attr);
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+				dist = Math.abs(outerRadius - innerRadius);
 
 			// 바깥 지름 부터 그림
-			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+			
+			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				startInnerX = innerCircle.x,
+				startInnerY = innerCircle.y;
 
-			var startX = obj.x;
-			var startY = obj.y;
-			
-			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle));
-			
-			var startInnerX = innerCircle.x;
-			var startInnerY = innerCircle.y;
-			
-			
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
@@ -14788,7 +14771,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 			g.append(path);
 
-            if (hasCircle) {
+            if(hasCircle) {
                 var centerCircle = math.rotate(0, -innerRadius - dist/2, math.radian(startAngle)),
 					cX = centerCircle.x,
 					cY = centerCircle.y,
@@ -14821,7 +14804,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
                 height = this.chart.area('height'),
                 min = width;
 
-            if (height < min) {
+            if(height < min) {
                 min = height;
             }
 
@@ -14836,9 +14819,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
         }
 
 		this.draw = function() {
-			var group = this.chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = this.chart.svg.group();
 
 			var target = this.brush.target,
 				data = this.getData(0);
@@ -14847,11 +14828,11 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				startAngle = 0,
 				max = 0;
 
-			for (var i = 0; i < target.length; i++) {
+			for(var i = 0; i < target.length; i++) {
 				max += data[target[i]];
 			}
 
-			for (var i = 0; i < target.length; i++) {
+			for(var i = 0; i < target.length; i++) {
 				var value = data[target[i]],
 					endAngle = all * (value / max);
 
@@ -15106,9 +15087,7 @@ jui.define("chart.brush.path", [], function() {
 	var PathBrush = function(chart, axis, brush) {
 
 		this.draw = function() {
-			var g = chart.svg.group({
-				"class" : "brush path"
-			});
+			var g = chart.svg.group();
 			
 			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
 				var color = this.color(ti);
@@ -15150,16 +15129,12 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
-			var g = chart.svg.group({
-				"class" : "pie"
-			});
-
-			var path = chart.svg.path(attr);
+			var g = chart.svg.group(),
+				path = chart.svg.path(attr);
 
 			// 바깥 지름 부터 그림
-			var obj = math.rotate(0, -outerRadius, math.radian(startAngle));
-
-			var startX = obj.x,
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
                 startY = obj.y;
 			
 			// 시작 하는 위치로 옮김
@@ -15237,9 +15212,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = chart.svg.group();
 
 			this.eachData(function(i, data) {
 				this.drawUnit(i, data, group);
@@ -15425,9 +15398,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 x = obj.x,
                 y = obj.y;
 
-			var group = chart.svg.group({
-				"class" : "brush bar gauge"
-			});
+			var group = chart.svg.group();
 
 			if (brush.split) {
 				var max = width;
@@ -15529,7 +15500,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 		this.drawBefore = function() {
             var axis = axis || {};
 
-            if (!axis.c) {
+            if(!axis.c) {
                 axis.c = function() {
                     return {
                         x : 0,
@@ -15547,7 +15518,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 y = obj.y,
                 min = width;
 
-            if (height < min) {
+            if(height < min) {
                 min = height;
             }
 
@@ -15560,9 +15531,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 		this.draw = function() {
             var rate = (brush.value - brush.min) / (brush.max - brush.min);
 
-			var group = chart.svg.group({
-				"class" : "brush circle gauge"
-			});
+			var group = chart.svg.group();
 
             group.append(chart.svg.circle({
                 cx : centerX,
@@ -15692,7 +15661,6 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
 		
 		this.draw = function() {
 			var group = chart.svg.group({
-				"class" : "brush fill gauge",
 				opacity : 0.8
 			});
 
@@ -15902,9 +15870,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         function createArrow(startAngle, endAngle) {
-			var g = chart.svg.group({
-				"class" : "gauge block"
-			}).translate(centerX, centerY);
+			var g = chart.svg.group().translate(centerX, centerY);
 
 			// 바깥 지름 부터 그림
 			var startX = 0;
@@ -16101,9 +16067,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
         }
 
 		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = chart.svg.group();
 
 			var rate = (brush.value - brush.min) / (brush.max - brush.min),
                 currentAngle = (brush.endAngle) * rate;
@@ -16159,8 +16123,8 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 					return {
 						x : 0,
 						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
+						width : chart.area("width"),
+						height : chart.area("height")
 					};
 				}
 			}
@@ -16183,9 +16147,7 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush donut"
-			});
+			var group = chart.svg.group();
 			
 			this.eachData(function(i, data) {
 				var rate = (data[brush.target] - brush.min) / (brush.max - brush.min),
@@ -16720,7 +16682,7 @@ jui.define("chart.brush.pin", [], function() {
                     x1: size / 2,
                     y1: 0,
                     x2: size / 2,
-                    y2: chart.area('height')
+                    y2: chart.area("height")
                 }).translate(x, 0);
             });
 
@@ -17006,21 +16968,21 @@ jui.define("chart.widget.title", [], function() {
 
         this.drawBefore = function() {
             if (widget.orient == "bottom") {
-                y = chart.area('y2') + chart.padding("bottom") - 20;
+                y = chart.area("y2") + chart.padding("bottom") - 20;
             } else if (widget.orient == "top") {
                 y = 20;
             } else {
-                y = chart.area('y') + chart.area('height') / 2
+                y = chart.area("y") + chart.area("height") / 2
             }
 
             if (widget.align == "center") {
-                x = chart.area('x') + chart.area('width')/2;
+                x = chart.area("x") + chart.area("width") / 2;
                 anchor = "middle";
             } else if (widget.align == "start") {
-                x = chart.area('x');
+                x = chart.area("x");
                 anchor = "start";
             } else {
-                x = chart.area('x2');
+                x = chart.area("x2");
                 anchor = "end";
             }
         }
@@ -17042,9 +17004,9 @@ jui.define("chart.widget.title", [], function() {
             }, widget.text);
 
             if (widget.orient == "center") {
-                if (widget.align == 'start') {
+                if (widget.align == "start") {
                     text.rotate(-90, x + widget.dx + half_text_width, y + widget.dy + half_text_height)
-                } else if (widget.align == 'end') {
+                } else if (widget.align == "end") {
                     text.rotate(90, x + widget.dx - half_text_width, y + widget.dy + half_text_height)
                 }
             }
@@ -17059,8 +17021,7 @@ jui.define("chart.widget.title", [], function() {
             align: "center", // or start, end
             text: "",
             dx: 0,
-            dy: 0,
-            type: "title"
+            dy: 0
         }
     }
 
@@ -17125,9 +17086,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     width = Math.min(rect.width, rect.height),
                     height = width;
 								 
-				var group = chart.svg.group({
-					"class" : "legend icon"
-				});
+				var group = chart.svg.group();
 				
 				group.append(chart.svg.rect({
 					x: 0, 
@@ -17177,9 +17136,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 		}        
         
         this.draw = function() {
-            var group = chart.svg.group({
-                "class" : "widget legend"
-            });
+            var group = chart.svg.group();
             
             var x = 0, y = 0,
                 total_width = 0, total_height = 0,
@@ -17474,7 +17431,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         });
 
                         chart.svg.path({
-                            d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5   l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
+                            d: "M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M16.9,15.5l-1.4,1.4L12,13.4l-3.5,3.5 l-1.4-1.4l3.5-3.5L7.1,8.5l1.4-1.4l3.5,3.5l3.5-3.5l1.4,1.4L13.4,12L16.9,15.5z",
                             fill: chart.theme("zoomFocusColor")
                         }).translate(cw - r, -r);
                     }).on("click", function(e) {

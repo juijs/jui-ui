@@ -65,9 +65,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
         function createArrow(startAngle, endAngle) {
-			var g = chart.svg.group({
-				"class" : "gauge block"
-			}).translate(centerX, centerY);
+			var g = chart.svg.group().translate(centerX, centerY);
 
 			// 바깥 지름 부터 그림
 			var startX = 0;

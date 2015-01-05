@@ -11,19 +11,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.render = function() {
-            if (!_.typeCheck("function", this.draw)) {
+            if(!_.typeCheck("function", this.draw)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
             }
 
             // Call drawBefore method (All)
-            if (_.typeCheck("function", this.drawBefore)) {
+            if(_.typeCheck("function", this.drawBefore)) {
                 this.drawBefore();
             }
 
             // Call draw method (All)
 			var obj = this.draw();
 
-            if (!_.typeCheck("object", obj)) {
+            if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
                 if(this.brush) { // 브러쉬일 경우, 기본 좌표 설정

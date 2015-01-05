@@ -476,7 +476,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             // UI 바인딩 설정
-            if(_options.bind) {
+            if(_.typeCheck("object", _options.bind)) {
                 self.bindUI(_options.bind);
             }
 
@@ -701,13 +701,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         this.bindUI = function(uiObj) {
             var self = this;
 
-            if (uiObj.module.type == "uix.table") {
+            if(uiObj.module.type == "uix.table") {
                 uiObj.callAfter("update", updateTable);
                 uiObj.callAfter("sort", updateTable);
                 uiObj.callAfter("append", updateTable);
                 uiObj.callAfter("insert", updateTable);
                 uiObj.callAfter("remove", updateTable);
-            } else if (uiObj.module.type == "uix.xtable") {
+            } else if(uiObj.module.type == "uix.xtable") {
                 uiObj.callAfter("update", updateXTable);
                 uiObj.callAfter("sort", updateXTable);
             }
@@ -782,7 +782,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             var axis = _options.axis[_options.axisIndex];
             if(!axis) return;
 
-            if (data) {
+            if(data) {
                 axis.origin = data;
             } else {
                 axis.origin = axis.data || [];
