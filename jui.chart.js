@@ -6037,7 +6037,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
         function scale(obj) {
             var max = grid.max;
-            var domain = grid.domain;
 
             var dx = chart.padding('left');
             var dy = chart.padding('top');
@@ -6056,12 +6055,9 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
                 var o = math.rotate(x, y, unit * index);
 
-                x = o.x;
-                y = o.y;
-
                 return {
-                    x : dx + cx + x,
-                    y : dy + cy + y
+                    x : dx + cx + o.x,
+                    y : dy + cy + o.y
                 }
             }
         }
