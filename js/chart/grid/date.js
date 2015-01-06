@@ -162,7 +162,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             var self = this;
 
             function new_scale(i) {
-                if (_.typeCheck("date", i)) return old_scale(i);
+                if (_.typeCheck("date", i)) return old_scale(+i);
                 return old_scale(self.axis.data[i][key]);
             }
 
