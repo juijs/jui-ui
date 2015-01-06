@@ -15,7 +15,7 @@
 
         function getTodayData() {
             var start = new Date(2014, 10, 7),
-                    end = time.add(start, time.hours, 23);
+                end = time.add(start, time.hours, 23);
 
             var data = [],
                     value = 240;
@@ -34,6 +34,9 @@
                 data: data
             };
         }
+
+        var now = new Date(2014, 10, 7);
+        now.setHours(10);
 
         chart("#chart", {
             width: 800,
@@ -56,10 +59,16 @@
                 data : today.data,
                 buffer: today.data.length
             },
-            brush : {
+            brush : [{
                 type : "splitline",
-                split : 500
-            },
+                split : 60 * 6
+            }, {
+                type : "pin",
+                split : 60 * 6,
+                format : function(d) {
+                    return time.format(d, "hh:mm");
+                }
+            }],
             widget : {
                 type : "title",
                 text : "Line Sample"

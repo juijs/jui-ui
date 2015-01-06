@@ -4785,6 +4785,8 @@ jui.define("chart.theme.jennifer", [], function() {
         focusBorderWidth : 1,
         focusBackgroundColor : "#FF7800",
         focusBackgroundOpacity : 0.1,
+        pinFontColor : "#FF7800",
+        pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
 
@@ -4902,6 +4904,8 @@ jui.define("chart.theme.gradient", [], function() {
         focusBorderWidth : 1,
         focusBackgroundColor : "#FF7800",
         focusBackgroundOpacity : 0.1,
+        pinFontColor : "#FF7800",
+        pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
 
@@ -5017,6 +5021,8 @@ jui.define("chart.theme.dark", [], function() {
         focusBorderWidth : 1,
         focusBackgroundColor : "#FF7800",
         focusBackgroundOpacity : 0.1,
+        pinFontColor : "#FF7800",
+        pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
 
@@ -5128,6 +5134,8 @@ jui.define("chart.theme.pastel", [], function() {
 		focusBorderWidth : 1,
 		focusBackgroundColor : "#FF7800",
 		focusBackgroundOpacity : 0.1,
+		pinFontColor : "#FF7800",
+		pinFontSize : "10px",
 		pinBorderColor : "#FF7800",
 		pinBorderWidth : 0.7,
 
@@ -10188,15 +10196,23 @@ jui.define("chart.brush.focus", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.pin", [], function() {
     var PinBrush = function(chart, axis, brush) {
-        var g;
-        var size = 6;
+        var self = this, g,
+            size = 6;
 
         this.draw = function() {
             var color = chart.theme("pinBorderColor"),
                 width = chart.theme("pinBorderWidth");
 
             g = chart.svg.group({}, function() {
-                var x = axis.x(brush.split) - (size / 2);
+                var d = axis.x(brush.split),
+                    x = d - (size / 2),
+                    value = brush.format(axis.x.invert(d));
+
+                chart.text({
+                    "text-anchor": "middle",
+                    "font-size": chart.theme("pinFontSize"),
+                    "fill": chart.theme("pinFontColor")
+                }, value).translate(x, -4);
 
                 chart.svg.polygon({
                     fill: color
@@ -10222,7 +10238,9 @@ jui.define("chart.brush.pin", [], function() {
 
     PinBrush.setup = function() {
         return {
-            split: 0
+            split: 0,
+            showValue: false,
+            format: null
         };
     }
 

@@ -81,6 +81,8 @@ jui.define("chart.theme.pastel", [], function() {
 		focusBorderWidth : 1,
 		focusBackgroundColor : "#FF7800",
 		focusBackgroundOpacity : 0.1,
+		pinFontColor : "#FF7800",
+		pinFontSize : "10px",
 		pinBorderColor : "#FF7800",
 		pinBorderWidth : 0.7,
 
