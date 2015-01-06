@@ -60,11 +60,16 @@
                 buffer: today.data.length
             },
             brush : [{
+                type : "splitarea",
+                target : [ "value" ],
+                split : now
+            }, {
                 type : "splitline",
-                split : 60 * 6
+                target : [ "value" ],
+                split : now
             }, {
                 type : "pin",
-                split : 60 * 6,
+                split : now,
                 format : function(d) {
                     return time.format(d, "hh:mm");
                 }

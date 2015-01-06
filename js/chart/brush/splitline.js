@@ -1,7 +1,6 @@
 jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
 	var SplitLineBrush = function() {
-
         this.createLine = function(pos, index) {
             var opts = {
                 stroke: this.color(index),
@@ -25,16 +24,19 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             }
 
             for(var i = 0; i < x.length - 1; i++) {
-                if(i == split) {
-                    var color = this.chart.theme("lineSplitBorderColor"),
-                        opacity = this.chart.theme("lineSplitBorderOpacity");
+                if(g.childrens.length == 0) {
+                    if ((_.typeCheck("integer", split) && i == split) ||
+                        (_.typeCheck("date", split) && this.axis.x.invert(x[i]).getTime() >= split.getTime())) {
+                        var color = this.chart.theme("lineSplitBorderColor"),
+                            opacity = this.chart.theme("lineSplitBorderOpacity");
 
-                    g.append(p);
+                        g.append(p);
 
-                    opts["stroke"] = (color != null) ? color : opts["stroke"];
-                    opts["stroke-opacity"] = opacity;
+                        opts["stroke"] = (color != null) ? color : opts["stroke"];
+                        opts["stroke-opacity"] = opacity;
 
-                    p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
+                        p = this.chart.svg.path(opts).MoveTo(x[i], y[i]);
+                    }
                 }
 
                 if(symbol == "step") {
@@ -59,7 +61,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
         this.drawLine = function(path) {
             var g = this.chart.svg.group();
 
-            for (var k = 0; k < path.length; k++) {
+            for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
 
                 this.addEvent(p, null, k);

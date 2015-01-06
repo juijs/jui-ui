@@ -18,6 +18,16 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
                 var line = this.createLine(path[k], k),
                     xList = path[k].x;
 
+                // 날짜일 경우, 해당 인덱스를 구해야 함
+                if(_.typeCheck("date", split)) {
+                    for(var i = 0; i < xList.length - 1; i++) {
+                        if(this.axis.x.invert(xList[i]).getTime() >= split.getTime()) {
+                            split = i;
+                            break;
+                        }
+                    }
+                }
+
                 line.each(function(i, p) {
                     if(i == 0) {
                         split = (split != null) ? split : xList.length - 1;
