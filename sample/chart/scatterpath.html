@@ -19,7 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
-        var maxValue = 30000;
+        var maxValue = 3000;
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -60,8 +60,8 @@
 
 
          var c = chart("#chart", {
-            width: 800,
-            height : 800,
+            width: 400,
+            height : 300,
             theme : "jennifer",
             axis : {
                 data : data,
@@ -76,7 +76,7 @@
                 },
                 y : {
                     type : 'range',
-                    domain : [0, 2200],
+                    domain : [0, 2000],
                     step : 10,
                     line : true
                 }
