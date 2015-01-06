@@ -360,132 +360,71 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _isClamp = false;
             var _cache = {};
 
+			var roundFunction = null;
+			var numberFunction = null;
+
+			var domainMin = null;
+			var domainMax = null;
+
+			var rangeMin = null;
+			var rangeMax = null;
+
+			var distDomain = null;
+			var distRange = null;
+
 			function func(x) {
 
-                var key = x + "";
-                if (typeof _cache[key] != 'undefined') {
-                    return _cache[key];
-                }
+				var key = x + '';
 
-				var index = -1;
-				var target;
-
-				for (var i = 0, len = _domain.length; i < len; i++) {
-
-                    if (i == len - 1) {
-                      if (x == _domain[i]) {
-                        index = i;
-                        break;
-                      }
-					} else {
-						if (_domain[i] < _domain[i + 1]) {
-							if (x >= _domain[i] && x < _domain[i + 1]) {
-								index = i;
-								break;
-							}
-						} else if (_domain[i] >= _domain[i + 1]) {
-							if (x <= _domain[i] && _domain[i + 1] < x) {
-								index = i;
-								break;
-							}
-						}
-					}
-
+				if (typeof _cache[key] != 'undefined') {
+					return _cache[key];
 				}
 
-				if (!_range) {
-					if (index == 0) {
-                        _cache[key] = 0;
-						return 0;
-					} else if (index == -1) {
-                        _cache[key] = 1;
-						return 1;
-					} else {
-						var min = _domain[index - 1];
-						var max = _domain[index];
+				var max = func.max();
+				var min = func.min();
 
-						var pos = (x - min) / (max - min);
-                        _cache[key] = pos;
-						return pos;
+				if (domainMax < x) {
+					if (_isClamp) {
+						_cache[key] = domainMax;
+						return domainMax;
 					}
+
+					_cache[key] = _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
+					return _cache[key];
+				} else if (domainMin > x) {
+					if (_isClamp) {
+						_cache[key] = domainMin;
+						return domainMin;
+					}
+
+					_cache[key] = _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
+					return _cache[key];
 				} else {
+					var pos = (x - domainMin) / (distDomain);
 
-          // 최대 최소 체크
-					if (_domain.length - 1 == index) {
-						return _range[index];
-					} else if (index == -1) {    // 값의 범위를 넘어갔을 때 
-					  
-					  var max = func.max();
-					  var min = func.min();
-					  
-					  if (max < x) {
-					    
-                        if (_isClamp) {
-                            _cache[key] = max;
-                            return max;
-                        }
-					    
-					    var last = _domain[_domain.length -1];
-					    var last2 = _domain[_domain.length -2];
-					    
-					    var rlast = _range[_range.length -1];
-					    var rlast2 = _range[_range.length -2];
-					    
-					    var distLast = Math.abs(last - last2);
-					    var distRLast = Math.abs(rlast - rlast2);
+					var scale = _isRound ?  roundFunction : numberFunction ;
 
-                        _cache[key] = rlast + Math.abs(x - max) * distRLast / distLast;
-					    return _cache[key];
-					    
-					  } else if (min > x) {
-					    
-					    if (_isClamp) {
-                            _cache[key] = min;
-                            return min;
-                        }
-					    
-                          var first = _domain[0];
-                          var first2 = _domain[1];
-
-                          var rfirst = _range[0];
-                          var rfirst2 = _range[1];
-
-                          var distFirst = Math.abs(first - first2);
-                          var distRFirst = Math.abs(rfirst - rfirst2);
-
-                          _cache[key] = rfirst - Math.abs(x - min) * distRFirst / distFirst;
-                          return _cache[key];
-					  }
-					  
-						_cache[key] = _range[_range.length - 1];
-						return _cache[key];
-					} else {
-
-						var min = _domain[index];
-						var max = _domain[index+1];
-
-						var minR = _range[index]; 
-						var maxR = _range[index + 1];
-
-						var pos = (x - min) / (max - min);
-
-						var scale = _isRound ? math.interpolateRound(minR, maxR) : math.interpolateNumber(minR, maxR);
-
-                        _cache[key] = scale(pos);
-						return _cache[key];
-
-					}
+					_cache[key] = scale(pos);
+					return _cache[key];
 				}
 
 			}
 
 
 			func.min = function() {
-				return Math.min(_domain[0], _domain[_domain.length - 1]);
+				return Math.min.apply(Math, _domain);
 			}
 
 			func.max = function() {
-				return Math.max(_domain[0], _domain[_domain.length - 1]);
+				return Math.max.apply(Math, _domain);
+			}
+
+			func.rangeMin = function() {
+				return Math.min.apply(Math, _range);
+			}
+
+			func.rangeMax = function() {
+				return Math.max.apply(Math, _range);
 			}
 
 			func.rate = function(value, max) {
@@ -506,6 +445,11 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					_domain[i] = values[i];
 				}
 
+				domainMin = func.min();
+				domainMax = func.max();
+
+				distDomain = Math.abs(domainMax - domainMin);
+
 				return this;
 			}
 
@@ -518,6 +462,14 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				for (var i = 0; i < values.length; i++) {
 					_range[i] = values[i];
 				}
+
+				roundFunction = math.interpolateRound(_range[0], _range[1]);
+				numberFunction = math.interpolateNumber(_range[0], _range[1]);
+
+				rangeMin = func.rangeMin();
+				rangeMax = func.rangeMax();
+
+				distRange = Math.abs(rangeMax - rangeMin);
 
 				return this;
 			}
@@ -535,11 +487,11 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			func.ticks = function(count, isNice, intNumber) {
 				intNumber = intNumber || 10000;
-				
+
 				if (_domain[0] == 0 && _domain[1] == 0) {
 					return [];
 				}
-				
+
 				var obj = math.nice(_domain[0], _domain[1], count || 10, isNice || false);
 
 				var arr = [];

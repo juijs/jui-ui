@@ -109,9 +109,7 @@ jui.define("util.svg.element", [], function() {
 
             for(var k in attr) {
                 this.attributes[k] = attr[k];
-            }
 
-            for(var k in this.attributes) {
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, this.attributes[k]);
                 } else {
@@ -418,8 +416,8 @@ jui.define("util.svg.element.path", [], function() { // path
          * 심볼 추가 하기 (튜닝)
          */
         this.template = function(cx, cy, tpl) {
-            ordersString += " M" + (cx) + "," + (cy) + tpl;
-            //orders.push(" M" + (cx) + "," + (cy) + tpl);
+            //ordersString += " M" + (cx) + "," + (cy) + tpl;
+            orders.push(" M" + (cx) + "," + (cy) + tpl);
         }
 
         /**
@@ -533,7 +531,8 @@ jui.define("util.svg",
         }
 
         function appendAll(target) {
-            for(var i = 0; i < target.childrens.length; i++) {
+            var len = target.childrens.length;
+            for(var i = 0; i < len; i++) {
                 var child = target.childrens[i];
 
                 if(child) {

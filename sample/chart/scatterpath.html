@@ -19,6 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
+        var maxValue = 30000;
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -31,7 +32,8 @@
         }
         
         var data = [];
-        for(var i = 0; i < 30000; i++) {
+        var index = maxValue;
+        while(index--) {
             data.push({
                 date: time.add(start, time.seconds, getTime()),
                 name: getNumber(),
@@ -41,9 +43,10 @@
         }
 
         function changeData(data) {
-            data = data.slice(30000);
+            data = data.slice(maxValue);
 
-            for(var i = 0; i < 30000; i++) {
+            var index = maxValue;
+            while(index--) {
                 data.push({
                     date: time.add(start, time.seconds, getTime()),
                     name: getNumber(),
@@ -99,7 +102,7 @@
         });
 
         var tim = setInterval(function() {
-            c.update(data);
+            c.update(data = changeData(data));
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 
