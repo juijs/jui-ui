@@ -201,8 +201,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				var field = this.grid.domain;
 
 				value_list = new Array(data.length);
-				for (var index = 0, len = data.length; index < len; index++) {
-
+				var index = data.length;
+				while(index--) {
 					var value = data[index][field];
 
 					if (_.typeCheck("array", value)) {
@@ -212,13 +212,13 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 						value_list[index]  = value;
 						value_list.push(0);
 					}
-
 				}
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				value_list = new Array(data.length);
 
                 var isCheck = false;
-				for (var index = 0, len = data.length; index < len; index++) {
+				var index = data.length;
+				while(index--) {
 
 					var value = this.grid.domain.call(this.chart, data[index]);
 

@@ -25,16 +25,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		this.wrapper = function(chart, scale, key) {
 			var old_scale = scale;
 			var self = this;
-			
+
 			function new_scale(i) {
-				if (key) {
-					i = self.data(i, key);
-				}
-				
-				return old_scale(i);
+				return old_scale(self.axis.data[i][key]);
 			}
 
-			new_scale.update = function(obj) {
+			new_scale.update = old_scale.update = function(obj) {
 				self.grid = $.extend(self.grid, obj);
 			}
 
@@ -49,7 +45,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			new_scale.max = function() {
 				return old_scale.max.apply(old_scale, arguments);
 			}
-			
+
+			new_scale.rangeMin = function() {
+				return old_scale.rangeMin.apply(old_scale, arguments);
+			}
+
+			new_scale.rangeMax = function() {
+				return old_scale.rangeMax.apply(old_scale, arguments);
+			}
+
 			new_scale.min = function() {
 				return old_scale.min.apply(old_scale, arguments);
 			}
@@ -70,10 +74,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				return old_scale.clamp.apply(old_scale, arguments);
 			}
 			
-			new_scale.key = key;
-			new_scale.type = self.grid.type;
-			
-			return new_scale;
+			return (key) ? new_scale : old_scale;
 		}
 		
 		/**

@@ -123,8 +123,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
-            for(var i = 0; i < list.length; i++) {
-                callback.apply(this, [ i, list[i] ]);
+
+            for(var index = 0, len = list.length; index < len; index++) {
+                callback.call(this, index, list[index]);
             }
         }
         this.listData = function() {
@@ -137,13 +138,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         /**
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
-         * @param brush
-         * @param chart
+         * @param boolean isCheckMinMax
          * @returns {Array}
          */
-        this.getXY = function(isCheckMinMax, isCached) {
+        this.getXY = function(isCheckMinMax) {
             var xy = [],
-                cached = {},
                 series = {},
                 length = this.listData().length;
 
@@ -151,7 +150,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 series  = getMinMaxValue(this.axis.data, this.brush.target);
             }
 
-            this.eachData(function(i, data) {
+            var i = length;
+
+            while(i--) {
+                var data = this.axis.data[i];
                 var startX = this.axis.x(i);
 
                 for(var j = 0; j < this.brush.target.length; j++) {
@@ -161,35 +163,25 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
                     if(!xy[j]) {
                         xy[j] = {
-                            x: [],
-                            y: [],
-                            value: [],
+                            x: new Array(length),
+                            y: new Array(length),
+                            value: new Array(length),
                             min: [],
                             max: [],
                             length: length
                         };
                     }
 
-                    if(isCached) {
-                        var cachedkey = key + "-" + startX + "-" + startY;
-
-                        if (cached[cachedkey]) {
-                            continue;
-                        } else {
-                            cached[cachedkey] = true;
-                        }
-                    }
-
-                    xy[j].x.push(startX);
-                    xy[j].y.push(this.axis.y(value));
-                    xy[j].value.push(value);
+                    xy[j].x[i] = startX;
+                    xy[j].y[i] = this.axis.y(value);
+                    xy[j].value[i] = value;
 
                     if(isCheckMinMax !== false) {
                         xy[j].min.push(value == series[key].min);
                         xy[j].max.push(value == series[key].max);
                     }
                 }
-            });
+            }
 
             return xy;
         }

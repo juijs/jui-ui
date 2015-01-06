@@ -177,7 +177,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				value_list.push(+data[0][field]);
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
-                for (var index = 0, len = data.length; index < len; index++) {
+				var index = data.length;
+				while(index--) {
 
                     var value = this.grid.domain.call(this.chart, data[index]);
 

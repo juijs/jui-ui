@@ -4,12 +4,16 @@ jui.define("chart.brush.scatterpath", [], function() {
 
         this.drawScatter = function(points) {
             var width = height = this.brush.size;
+            var unit = 5000;
+            var color = this.color(0);
+            var strokeWidth = this.brush.strokeWidth;
 
-            var g = this.chart.svg.group(),
-                path = this.chart.svg.path({
-                fill : this.color(0),
-                stroke : this.color(0),
-                "stroke-width" : this.brush.strokeWidth
+            var g = this.chart.svg.group();
+
+            var path = this.chart.svg.path({
+                fill : color,
+                stroke : color,
+                "stroke-width" : strokeWidth
             });
 
             var tpl = path.getSymbolTemplate(width, height);
@@ -17,14 +21,18 @@ jui.define("chart.brush.scatterpath", [], function() {
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
-              
-                for(var j = 0; j < points[i].x.length; j++) {
+
+                var j = points[i].x.length;
+
+                while(j--) {
                     //path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
                     path.template(points[i].x[j], points[i].y[j], tpl[symbol]);
                 }
             }
 
             g.append(path);
+
+
 
             return g;
         }
