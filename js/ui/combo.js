@@ -24,11 +24,13 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/**
-	 * @class ui.combo
+	 *
 	 * Combo Class
 	 *
+	 * 		@example
 	 * 		var combo = ui.combo("#root");
 	 *
+	 * @class ui.combo
 	 * @extends core
 	 * @requires jquery
 	 * @requires util.base
