@@ -153,6 +153,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var i = length;
 
             while(i--) {
+
                 var data = this.axis.data[i];
                 var startX = this.axis.x(i);
 

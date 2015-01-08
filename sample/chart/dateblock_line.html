@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.chart.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+        var today = getTodayData();
+
+        function getTodayData() {
+            var data = [],
+                    value = 240;
+
+            for(var i = 0; i < 60 * 23; i++) {
+                if(value < 60 * 8) {
+                    value += 1;
+                }
+
+                data.push({ value: value })
+            }
+
+            return {
+                start: start,
+                end: end,
+                data: data
+            };
+        }
+
+        var now = new Date(2014, 10, 7);
+        now.setHours(10);
+
+        chart("#chart", {
+            width: 800,
+            height: 400,
+            axis : {
+                x : {
+                    type : "date",
+                    domain : [ today.start, today.end ],
+                    step : [ time.hours, 1 ],
+                    format : "HH",
+                    key: "time"
+                },
+                y : {
+                    type : "range",
+                    step : 10,
+                    domain : function(d) {
+                        return [0, 600];
+                    }
+                },
+                data : today.data,
+                buffer: today.data.length
+            },
+            brush : [{
+                type : "splitarea",
+                target : [ "value" ],
+                split : now
+            }, {
+                type : "splitline",
+                target : [ "value" ],
+                split : now
+            }, {
+                type : "pin",
+                split : now,
+                format : function(d) {
+                    return time.format(d, "hh:mm");
+                }
+            }],
+            widget : {
+                type : "title",
+                text : "Line Sample"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

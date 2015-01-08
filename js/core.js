@@ -321,8 +321,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/** 
-	 * 각각의 UI별 공통 메소드 (메모리 공유)
+	 * @class core
+     * 각각의 UI별 공통 메소드 (메모리 공유)
 	 * 예를 들어 테이블 UI 객체일 경우에 해당되는 모든 요소는 UI 객체에 공유된다.
+     * @alias UICore
+     *
 	 */
 	var UICore = function() {
         var vo = null;
@@ -350,11 +353,22 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             return result;
         }
 
+        /**
+         * @method on
+         * 이벤트를 리스너에 등록한다.
+         * @param {String} type 이벤트 이름
+         * @param {Function} callback 실행할 콜백 함수
+         */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
             this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
         }
 
+        /**
+         * @method off
+         * 등록된 이벤트를 삭제한다.
+         * @param {String} type 이벤트 이름
+         */
         this.off = function(type) {
             var event = [];
 
@@ -370,14 +384,30 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             this.event = event;
         }
 
+        /**
+         * @method addEvent
+         * 커스텀 이벤트 등록
+         */
         this.addEvent = function() {
             this.listen.add(arguments);
         }
 
+        /**
+         * @method addTrigger
+         * 트리거 등록
+         * @param selector
+         * @param type
+         */
         this.addTrigger = function(selector, type) {
             this.listen.trigger(selector, type);
         }
 
+        /**
+         * @method addValid
+         * Validation 추가
+         * @param name
+         * @param params
+         */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
@@ -462,10 +492,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method setTpl
+         * tpl 을 설정한다.
+         * @param {String} name tpl 이름
+         * @param {String} html tpl string
+         */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
         }
 
+        /**
+         * @deprecated
+         */
         this.setVo = function() { // @Deprecated
             if(!this.options.vo) return;
 
@@ -475,6 +514,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             this.bind = vo;
         }
 
+        /**
+         * @method setOption
+         * 옵션을 설정한다.
+         * @param key
+         * @param value
+         */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
                 for(var k in key) {
@@ -485,6 +530,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method destroy
+         * 생성된 객체를 메모리에서 삭제한다.
+         */
         this.destroy = function() {
             if(!this.__proto__) return;
 

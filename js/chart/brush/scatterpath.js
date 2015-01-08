@@ -3,8 +3,9 @@ jui.define("chart.brush.scatterpath", [], function() {
 	var ScatterPathBrush = function() {
 
         this.drawScatter = function(points) {
+            //"use asm";
             var width = height = this.brush.size;
-            var unit = 5000;
+            var unit = 30000;
             var color = this.color(0);
             var strokeWidth = this.brush.strokeWidth;
 
@@ -26,7 +27,7 @@ jui.define("chart.brush.scatterpath", [], function() {
 
                 while(j--) {
                     //path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
-                    path.template(points[i].x[j], points[i].y[j], tpl[symbol]);
+                    path.template(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
                 }
             }
 

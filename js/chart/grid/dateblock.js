@@ -1,9 +1,10 @@
-jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
+jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
 		var domain = [];
 		var step = [];
+		var unit = 0;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -157,23 +158,26 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			}
 		}
 
-        this.wrapper = function(chart, scale, key) {
-            var old_scale = scale;
-            var self = this;
+		this.wrapper = function(chart, scale, key) {
+			var old_scale = scale;
+			var self = this;
 
-            function new_scale(i) {
-                if (_.typeCheck("date", i)) return old_scale(+i);
+			function new_scale(i) {
+				if (_.typeCheck("date", i)) return old_scale(+i);
 				var str = self.axis.data[i][key];
-                return old_scale(_.typeCheck("string", str) ? +new Date(str) : +str);
-            }
+				return old_scale(_.typeCheck("string", str) ? +new Date(str) : +str);
+			}
 
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
-            }
+			old_scale.update = function(obj) {
+				self.grid = $.extend(self.grid, obj);
+			}
 
-            return (key) ? $.extend(new_scale, old_scale) : old_scale;
-        }
-        
+			new_scale.rangeBand = old_scale.rangeBand = function() {
+				return unit;
+			}
+
+			return (key) ? $.extend(new_scale, old_scale) : old_scale;
+		}
 
 		/**
 		 * date grid 의 domain 설정
@@ -200,10 +204,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
                     var value = this.grid.domain.call(this.chart, data[index]);
 
                     if (_.typeCheck("array", value)) {
-                        value_list[index] = Math.max.apply(Math, value);
-                        value_list.push(Math.min.apply(Math, value));
+                        value_list[index] = +Math.max.apply(Math, value);
+                        value_list.push(+Math.min.apply(Math, value));
                     } else {
-                        value_list[index]  = value;
+                        value_list[index]  = +value;
                     }
                 }
 
@@ -218,14 +222,17 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			this.grid.max = max;
 			this.grid.min = min;
 			domain = [this.grid.min, this.grid.max];
-			step = this.grid.step;
+
+			if (_.typeCheck("function", this.grid.step)) {
+				step = step.call(this.chart, domain);
+			} else {
+				step = this.axis.data.length - 1;
+			}
+
+			unit = Math.floor(Math.abs(domain[0] - domain[1]) / (step || 1));
 
 			if (this.grid.reverse) {
 				domain.reverse();
-			}
-
-			if (_.typeCheck("function", step)) {
-				this.grid.step = step.call(this.chart, domain);
 			}
 
 			return domain;
@@ -237,14 +244,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).rangeRound(range);
-
-
+			var time = UtilScale.time().domain(domain).rangeRound(range);
 
 			if (this.grid.realtime) {
-				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
+				this.ticks = time.realTicks(step[0], step[1]);
 			} else {
-				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
+				this.ticks = time.ticks(step[0], step[1]);
 			}
 
 			if ( typeof grid.format == "string") {
@@ -265,6 +270,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
+
+			this.scale = $.extend((function(i) {
+				return time(i * unit);
+			}), time);
+
 		}
 
 		this.draw = function() {
@@ -278,6 +288,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			step: 10,
 			min: 0,
 			max: 0,
+			full : false,
 			unit: null,
 			reverse: false,
 			key: null,

@@ -114,16 +114,20 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			}
 		}
 	}
-	
+
+	/**
+	 * @class ui.button
+	 * implements checkbox, radio button
+	 * @extends core
+	 * @alias Button
+	 *
+	 */
 	var UI = function() {
 		var ui_list = {};
 
-
 		/**
-		 * Public Methods
-		 * 
+		 * @constructor
 		 */
-
 		this.init = function() {
             var self = this, opts = this.options;
 			
@@ -137,7 +141,12 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 				ui_list[opts.type].init();
 			}
 		}
-		
+
+		/**
+		 * @method setIndex
+		 * check button by index
+		 * @param {Array} indexList  index list for button check
+		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
 
@@ -147,6 +156,11 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
             this.emit("change", [ btn.data ]);
 		}
 
+		/**
+		 * @method setValue
+		 * check button by value
+		 * @param valueList value list for button check
+		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
 
@@ -155,11 +169,22 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
             this.emit("change", [ btn.data ]);
 		}
-		
+
+		/**
+		 * @method getData
+		 * get data
+		 * @return {Array}
+		 */
 		this.getData = function() {
 			return ui_list[this.options.type].data;
 		}
-		
+
+		/**
+		 * @method getValue
+		 * get selected value list
+		 * @return {Array}  return value list if it is check button
+		 * @return {Object}  return one value if it is radio button
+		 */
 		this.getValue = function() {
             var data = this.getData();
 
@@ -176,6 +201,10 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			return data.value;
 		}
 
+		/**
+		 * @method reload
+		 * reload button data
+		 */
 		this.reload = function() {
 			ui_list[this.options.type]._setting("init");
 		}
@@ -183,8 +212,22 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+			/**
+			 * @cfg {String} [type="radio"]
+			 * button type
+			 */
 			type: "radio",
+
+			/**
+			 * @cfg
+			 * selected index
+			 */
 			index: 0,
+
+			/**
+			 * @cfg
+			 * selected value
+			 */
 			value: ""
         }
     }
