@@ -850,7 +850,7 @@
 
 	/**
 	 * Global Object
-	 * 
+	 * @class jui
 	 */
 	exports.jui = {
 		
