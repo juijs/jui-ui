@@ -373,19 +373,32 @@
 	
 	/**
 	 * Public Utility Classes
-	 * 
+	 * @class util.base
+	 * @singleton
 	 */
 	var utility = global["util.base"] = {
-			
-		//-- Properties
+
+		/**
+		 * @property
+		 * check browser agent
+		 */
 		browser: {
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
+		/**
+		 * @property
+		 * check touch device
+		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 				
 		//-- Functions
+		/**
+		 * @method scrollWidth
+		 * returns scroll width for body
+		 * @rerturn {Number}
+		 */
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
 
@@ -398,6 +411,12 @@
 
 			return (isJUI) ? 10 : (w1 - w2);
 		},
+		/**
+		 * @method inherit
+		 * implements inherit for object
+		 * @param {Function} ctor
+		 * @param {Function} superCtor
+		 */
 		inherit: function(ctor, superCtor) {
 			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
 
@@ -406,6 +425,14 @@
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
 		},
+		/**
+		 * @method extend
+		 * implements object extend
+		 * @param origin
+		 * @param add
+		 * @param skip
+		 * @rerturn {Object}
+		 */
 		extend: function(origin, add, skip) {
 			if(!this.typeCheck("object", origin)) origin = {};
 			if(!this.typeCheck("object", add)) return origin;
@@ -432,6 +459,11 @@
 
 			return origin;
 		},
+		/**
+		 * convert px to integer
+		 * @param {String or Number} px
+		 * @rerturn {Number}
+		 */
 		pxToInt: function(px) {
 			if(typeof(px) == "string" && px.indexOf("px") != -1) {
 				return parseInt(px.split("px").join(""));
@@ -439,6 +471,13 @@
 
 			return px;
 		},
+
+		/**
+		 * @method clone
+		 * implements object clone
+		 * @param obj
+		 * @rerturn {Array}
+		 */
 		clone: function(obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
 
@@ -451,6 +490,13 @@
 
 	        return clone;
 		},
+		/**
+		 * @method deepClone
+		 * implements object deep clone
+		 * @param obj
+		 * @param emit
+		 * @rerturn {*}
+		 */
         deepClone: function(obj, emit) {
             var value = null;
             emit = emit  || {};
@@ -479,9 +525,23 @@
 
             return value ;
         },
+		/**
+		 * @method sort
+		 * use QuickSort
+		 * @param {Array} array
+		 * @rerturn {QuickSort}
+		 */
 		sort: function(array) {
 			return new QuickSort(array);
 		},
+		/**
+		 * @method runtime
+		 *
+		 * caculate callback runtime
+		 *
+		 * @param {String} name
+		 * @param {Function} callback
+		 */
 		runtime: function(name, callback) {
 			var nStart = new Date().getTime();
 			callback();
@@ -489,10 +549,22 @@
 
 			console.log(name + " : " + (nEnd - nStart) + "ms");
 		},
+		/**
+		 * @method template
+		 * parsing template string
+		 * @param html
+		 * @param obj
+		 */
 		template: function(html, obj) {
 			if(!obj) return template(html);
 			else return template(html, obj);
 		},
+		/**
+		 * @method resize
+		 * add event in window resize event
+		 * @param {Function} callback
+		 * @param {Number} ms delay time 
+		 */
 		resize: function(callback, ms) {
 			var after_resize = (function(){
 				var timer = 0;
@@ -510,6 +582,13 @@
 		index: function() {
 			return new IndexParser();
 		},
+		/**
+		 * @method chunk 
+		 * split array by length
+		 * @param {Array} arr
+		 * @param {Number} len
+		 * @rerturn {Array}
+		 */
 		chunk: function(arr, len) {
 		  var chunks = [],
 		      i = 0,
@@ -521,6 +600,13 @@
 
 		  return chunks;
 		},
+		/**
+		 * @method typeCheck
+		 * check javascript type
+		 * @param {String} t  type string
+		 * @param {Object} v value object
+		 * @returns {*}
+		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {
 
@@ -709,6 +795,20 @@
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
+		/**
+		 * @method dateFormat
+		 *
+		 * implements date format function
+		 *
+		 * yyyy : 4 digits year
+		 * yy : 2 digits year
+		 * y : 1 digit year
+		 *
+		 * @param {Date} date
+		 * @param {String} format   date format string
+		 * @param utc
+		 * @return {string}
+		 */
         dateFormat: function(date, format, utc) {
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -850,7 +950,7 @@
 
 	/**
 	 * Global Object
-	 * 
+	 * @class jui
 	 */
 	exports.jui = {
 		
@@ -998,7 +1098,7 @@
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
          *
          * @param name 가져온 클래스 또는 객체의 이름
-         * @returns {*}
+         * @rerturn {*}
          */
         include: function(name) {
             if(!utility.typeCheck("string", name)) {
@@ -1023,7 +1123,7 @@
         /**
          * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
          *
-         * @returns {Array}
+         * @rerturn {Array}
          */
         includeAll: function() {
             var result = [];
@@ -1039,7 +1139,7 @@
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
          * @param logUrl
-         * @returns {Window}
+         * @rerturn {Window}
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
@@ -1387,8 +1487,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/** 
-	 * 각각의 UI별 공통 메소드 (메모리 공유)
+	 * @class core
+     * 각각의 UI별 공통 메소드 (메모리 공유)
 	 * 예를 들어 테이블 UI 객체일 경우에 해당되는 모든 요소는 UI 객체에 공유된다.
+     * @alias UICore
+     *
 	 */
 	var UICore = function() {
         var vo = null;
@@ -1416,11 +1519,22 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             return result;
         }
 
+        /**
+         * @method on
+         * 이벤트를 리스너에 등록한다.
+         * @param {String} type 이벤트 이름
+         * @param {Function} callback 실행할 콜백 함수
+         */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
             this.event.push({ type: type.toLowerCase(), callback: callback, unique: false  });
         }
 
+        /**
+         * @method off
+         * 등록된 이벤트를 삭제한다.
+         * @param {String} type 이벤트 이름
+         */
         this.off = function(type) {
             var event = [];
 
@@ -1436,14 +1550,30 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             this.event = event;
         }
 
+        /**
+         * @method addEvent
+         * 커스텀 이벤트 등록
+         */
         this.addEvent = function() {
             this.listen.add(arguments);
         }
 
+        /**
+         * @method addTrigger
+         * 트리거 등록
+         * @param selector
+         * @param type
+         */
         this.addTrigger = function(selector, type) {
             this.listen.trigger(selector, type);
         }
 
+        /**
+         * @method addValid
+         * Validation 추가
+         * @param name
+         * @param params
+         */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
@@ -1528,10 +1658,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method setTpl
+         * tpl 을 설정한다.
+         * @param {String} name tpl 이름
+         * @param {String} html tpl string
+         */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
         }
 
+        /**
+         * @deprecated
+         */
         this.setVo = function() { // @Deprecated
             if(!this.options.vo) return;
 
@@ -1541,6 +1680,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             this.bind = vo;
         }
 
+        /**
+         * @method setOption
+         * 옵션을 설정한다.
+         * @param key
+         * @param value
+         */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
                 for(var k in key) {
@@ -1551,6 +1696,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method destroy
+         * 생성된 객체를 메모리에서 삭제한다.
+         */
         this.destroy = function() {
             if(!this.__proto__) return;
 
@@ -1665,8 +1814,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 jui.define("util.math", [], function() {
 
 	/**
-	 * math 객체 
-	 *  
+	 * math utility
+	 * @class util.math
+	 * @singleton
 	 */
 	var self = {
 		// 2d rotate
@@ -1865,8 +2015,9 @@ jui.define("util.time", [ "util.base" ], function(_) {
 jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 	/**
-	 * 범위(scale)에 대한 계산 
-	 * 
+	 * scale utility
+	 * @class util.scale
+	 * @singleton
 	 */
 	var self = {
 
@@ -2384,8 +2535,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 jui.define("util.color", [], function() {
 
 	/**
-	 * color 객체 
-	 *  
+	 * color parser for chart
+	 * @class util.color
+	 * @singleton
 	 */
 	var self = {
 		
@@ -2533,6 +2685,11 @@ jui.define("util.color", [], function() {
 });
 
 jui.define("util.svg.element", [], function() {
+    /**
+     * @class util.svg.element
+     * Create SVG Element
+     * @constructor
+     */
     var Element = function() {
 
         /**
@@ -2750,6 +2907,15 @@ jui.define("util.svg.element", [], function() {
 });
 
 jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+
+    /**
+     * @class util.svg.element.transform
+     *
+     * implement Transform Element
+     *
+     * @extends util.svg.element
+     * @constructor
+     */
     var TransElement = function() {
         var orders = {};
 
@@ -3010,6 +3176,14 @@ jui.define("util.svg",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
+    /**
+     * @class util.svg
+     *
+     * @param {jQuery/Element} rootElem
+     * @param {Object} rootAttr
+     * @constructor
+     * @alias SVG
+     */
     var SVG = function(rootElem, rootAttr) {
         var self = this,
             root = null,
@@ -5618,7 +5792,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
+		var orient = this.grid.orient;
 		var domain = [];
 		var step = [];
 
@@ -5912,6 +6086,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		var domain = [];
 		var step = [];
 		var unit = 0;
+		var half_unit;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -6038,7 +6213,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var ticks = this.ticks,
 				values = this.values,
 				bar = this.bar;
-			
+
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = this.format(ticks[i], i);
 
@@ -6065,6 +6240,20 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			}
 		}
 
+		this.wrapper = function(chart, scale, key) {
+			var old_scale = scale;
+			var self = this;
+
+			old_scale.update = function(obj) {
+				self.grid = $.extend(self.grid, obj);
+			}
+
+			old_scale.rangeBand = function() {
+				return unit;
+			}
+
+			return old_scale;
+		}
 
 		/**
 		 * date grid 의 domain 설정
@@ -6113,10 +6302,8 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			if (_.typeCheck("function", this.grid.step)) {
 				step = step.call(this.chart, domain);
 			} else {
-				step = this.axis.data.length-1;
+				step = this.grid.step;
 			}
-
-			unit = Math.floor(Math.abs(domain[0] - domain[1]) / (step || 1));
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -6126,12 +6313,23 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		}
 
 		this.drawBefore = function() {
+
+			console.log('aaa');
+
+			var self = this;
 			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
+			console.log(domain, range, step);
+
 			var time = UtilScale.time().domain(domain).rangeRound(range);
+
+
+			unit = Math.abs(range[0] - range[1])/(this.grid.full ? this.axis.data.length- 1 : this.axis.data.length);
+			half_unit = unit/2;
+
 
 			if (this.grid.realtime) {
 				this.ticks = time.realTicks(step[0], step[1]);
@@ -6155,17 +6353,21 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
-				this.values[i] = this.scale(this.ticks[i]);
+				this.values[i] = time(this.ticks[i]);
 			}
 
+			console.log(this.ticks, this.values);
+
+			var value = (self.grid.full ? 0 : half_unit);
+
 			this.scale = $.extend((function(i) {
-				return time(i * unit);
+				return  i * unit + value;
 			}), time);
 
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "date", grid);
+			return this.drawGrid(chart, orient, "dateblock", grid);
 		}
 	}
 
@@ -6176,6 +6378,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			min: 0,
 			max: 0,
 			unit: null,
+			full : false,
 			reverse: false,
 			key: null,
 			realtime: false
@@ -6650,10 +6853,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
             var old_scale = scale;
             var self = this;
 
-			console.log(key);
-
             function new_scale(i) {
-				console.log(i, self.axis.data[i]);
                 return old_scale(self.axis.data[i][key]);
             }
 

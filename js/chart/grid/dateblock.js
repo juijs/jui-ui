@@ -5,6 +5,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		var domain = [];
 		var step = [];
 		var unit = 0;
+		var half_unit;
 
 		this.top = function(chart, g) {
 			if (!grid.line) {
@@ -131,7 +132,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var ticks = this.ticks,
 				values = this.values,
 				bar = this.bar;
-			
+
 			for (var i = 0; i < ticks.length; i++) {
 				var domain = this.format(ticks[i], i);
 
@@ -162,21 +163,15 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var old_scale = scale;
 			var self = this;
 
-			function new_scale(i) {
-				if (_.typeCheck("date", i)) return old_scale(+i);
-				var str = self.axis.data[i][key];
-				return old_scale(_.typeCheck("string", str) ? +new Date(str) : +str);
-			}
-
 			old_scale.update = function(obj) {
 				self.grid = $.extend(self.grid, obj);
 			}
 
-			new_scale.rangeBand = old_scale.rangeBand = function() {
+			old_scale.rangeBand = function() {
 				return unit;
 			}
 
-			return (key) ? $.extend(new_scale, old_scale) : old_scale;
+			return old_scale;
 		}
 
 		/**
@@ -226,10 +221,8 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			if (_.typeCheck("function", this.grid.step)) {
 				step = step.call(this.chart, domain);
 			} else {
-				step = this.axis.data.length - 1;
+				step = this.grid.step;
 			}
-
-			unit = Math.floor(Math.abs(domain[0] - domain[1]) / (step || 1));
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -239,12 +232,23 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		}
 
 		this.drawBefore = function() {
+
+			console.log('aaa');
+
+			var self = this;
 			this.initDomain();
 
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
+			console.log(domain, range, step);
+
 			var time = UtilScale.time().domain(domain).rangeRound(range);
+
+
+			unit = Math.abs(range[0] - range[1])/(this.grid.full ? this.axis.data.length- 1 : this.axis.data.length);
+			half_unit = unit/2;
+
 
 			if (this.grid.realtime) {
 				this.ticks = time.realTicks(step[0], step[1]);
@@ -268,17 +272,21 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			this.values = [];
 
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
-				this.values[i] = this.scale(this.ticks[i]);
+				this.values[i] = time(this.ticks[i]);
 			}
 
+			console.log(this.ticks, this.values);
+
+			var value = (self.grid.full ? 0 : half_unit);
+
 			this.scale = $.extend((function(i) {
-				return time(i * unit);
+				return  i * unit + value;
 			}), time);
 
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "date", grid);
+			return this.drawGrid(chart, orient, "dateblock", grid);
 		}
 	}
 
@@ -288,8 +296,8 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			step: 10,
 			min: 0,
 			max: 0,
-			full : false,
 			unit: null,
+			full : false,
 			reverse: false,
 			key: null,
 			realtime: false
