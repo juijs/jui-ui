@@ -3,6 +3,7 @@ jui.define("util.color", [], function() {
 	/**
 	 * color parser for chart
 	 * @class util.color
+	 * @singleton
 	 */
 	var self = {
 		

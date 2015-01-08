@@ -476,6 +476,14 @@ jui.define("util.svg",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
+    /**
+     * @class util.svg
+     *
+     * @param {jQuery/Element} rootElem
+     * @param {Object} rootAttr
+     * @constructor
+     * @alias SVG
+     */
     var SVG = function(rootElem, rootAttr) {
         var self = this,
             root = null,

@@ -1,8 +1,9 @@
 jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 	/**
-	 * 범위(scale)에 대한 계산 
-	 * 
+	 * scale utility
+	 * @class util.scale
+	 * @singleton
 	 */
 	var self = {
 

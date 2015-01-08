@@ -1,8 +1,9 @@
 jui.define("util.math", [], function() {
 
 	/**
-	 * math 객체 
-	 *  
+	 * math utility
+	 * @class util.math
+	 * @singleton
 	 */
 	var self = {
 		// 2d rotate
