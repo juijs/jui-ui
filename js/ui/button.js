@@ -54,6 +54,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 				 * Fire when element is clicked on.
 				 * @param {Data} data clicked data
 				 * @param {EventObject} e The event object
+				 * @preventable
 				 */
                 self.ui.emit("click", [ self.data, e ]);
 
@@ -63,6 +64,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 				 * Fire when element is changed.
 				 * @param {Data} data changed data
 				 * @param {EventObject} e The event object
+				 * @preventable
 				 */
 				self.ui.emit("change", [ self.data, e ]);
 
