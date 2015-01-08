@@ -49,7 +49,21 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
 				self._setting("event", e);
 
+				/**
+				 * @event click
+				 * Fire when element is clicked on.
+				 * @param {Data} data clicked data
+				 * @param {EventObject} e The event object
+				 */
                 self.ui.emit("click", [ self.data, e ]);
+
+
+				/**
+				 * @event change
+				 * Fire when element is changed.
+				 * @param {Data} data changed data
+				 * @param {EventObject} e The event object
+				 */
 				self.ui.emit("change", [ self.data, e ]);
 
 				e.preventDefault();
@@ -69,6 +83,14 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		this.options = $.extend({ index: [], value: [] }, this.options);
 
 		// Private
+		/**
+		 * @private
+		 * @method _setting
+		 * @param type
+		 * @param e
+		 * @param order
+		 * @private
+		 */
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
