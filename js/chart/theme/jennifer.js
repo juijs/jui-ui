@@ -1,3 +1,8 @@
+/**
+ * @class chart.theme.jennifer
+ * Jennifer Theme
+ * @singleton
+ */
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
         "#7977C2",
@@ -23,7 +28,9 @@ jui.define("chart.theme.jennifer", [], function() {
     ];
 
     return {
-        // common styles
+        /**
+         * Chart Background Color
+         */
     	backgroundColor : "white",
     	fontSize : "11px",
     	fontColor : "#333333",
