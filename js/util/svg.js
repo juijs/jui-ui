@@ -221,6 +221,15 @@ jui.define("util.svg.element", [], function() {
 });
 
 jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+
+    /**
+     * @class util.svg.element.transform
+     *
+     * implement Transform Element
+     *
+     * @extends util.svg.element
+     * @constructor
+     */
     var TransElement = function() {
         var orders = {};
 
