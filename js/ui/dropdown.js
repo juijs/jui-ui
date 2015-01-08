@@ -45,12 +45,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			}
 		});
 	});
-	
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+
+    /**
+     * @class ui.dropdown
+     * implements dropdown menu
+     * @extends core
+     * @alias DropDown
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var ui_list = null, index = -1;
 		

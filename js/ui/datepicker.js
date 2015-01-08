@@ -1,7 +1,12 @@
 jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
-     * UI Class
+     * @class ui.datepicker
+     * implements date picker
+     * @extends core
+     * @alias DatePicker
+     * @requires jquery
+     * @requires util.base
      *
      */
     var UI = function() {

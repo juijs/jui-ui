@@ -22,11 +22,16 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		
 		win_width = $(window).width();
 	}, 300);
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.modal
+     * implements modal window
+     * @extends core
+     * @alias Modal
+     * @requires jquery
+     * @requires util.base
+     *
+     */
 	var UI = function() {
 		var $modal = null, $clone = null;
 		var uiObj = null, uiTarget = null;

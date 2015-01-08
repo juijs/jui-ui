@@ -1,7 +1,13 @@
 jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
-	 * UI Class
+	 * @class uix.autocomplete
+     * 
+     * Auto Complete
+     * 
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
 	 * 
 	 */
 	var UI = function() {

@@ -1,5 +1,14 @@
 jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
-	
+
+    /**
+     * @class ui.layout
+     * implements layout
+     * @extends core
+     * @alias Layout
+     * @requires jquery
+     * @requires util.base
+     *
+     */
 	var UI = function() {
 		var ui_layout = null, 
 			ui_options = {}, 
