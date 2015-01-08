@@ -396,7 +396,7 @@
 		/**
 		 * @method scrollWidth
 		 * returns scroll width for body
-		 * @returns {Number}
+		 * @rerturn {Number}
 		 */
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
@@ -430,7 +430,7 @@
 		 * @param origin
 		 * @param add
 		 * @param skip
-		 * @returns {Object}
+		 * @rerturn {Object}
 		 */
 		extend: function(origin, add, skip) {
 			if(!this.typeCheck("object", origin)) origin = {};
@@ -458,6 +458,11 @@
 
 			return origin;
 		},
+		/**
+		 * convert px to integer
+		 * @param {String or Number} px
+		 * @rerturn {Number}
+		 */
 		pxToInt: function(px) {
 			if(typeof(px) == "string" && px.indexOf("px") != -1) {
 				return parseInt(px.split("px").join(""));
@@ -465,6 +470,13 @@
 
 			return px;
 		},
+
+		/**
+		 * @method clone
+		 * implements object clone
+		 * @param obj
+		 * @rerturn {Array}
+		 */
 		clone: function(obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
 
@@ -477,6 +489,13 @@
 
 	        return clone;
 		},
+		/**
+		 * @method deepClone
+		 * implements object deep clone
+		 * @param obj
+		 * @param emit
+		 * @rerturn {*}
+		 */
         deepClone: function(obj, emit) {
             var value = null;
             emit = emit  || {};
@@ -505,9 +524,23 @@
 
             return value ;
         },
+		/**
+		 * @method sort
+		 * use QuickSort
+		 * @param {Array} array
+		 * @rerturn {QuickSort}
+		 */
 		sort: function(array) {
 			return new QuickSort(array);
 		},
+		/**
+		 * @method runtime
+		 *
+		 * caculate callback runtime
+		 *
+		 * @param {String} name
+		 * @param {Function} callback
+		 */
 		runtime: function(name, callback) {
 			var nStart = new Date().getTime();
 			callback();
@@ -515,10 +548,22 @@
 
 			console.log(name + " : " + (nEnd - nStart) + "ms");
 		},
+		/**
+		 * @method template
+		 * parsing template string
+		 * @param html
+		 * @param obj
+		 */
 		template: function(html, obj) {
 			if(!obj) return template(html);
 			else return template(html, obj);
 		},
+		/**
+		 * @method resize
+		 * add event in window resize event
+		 * @param {Function} callback
+		 * @param {Number} ms delay time 
+		 */
 		resize: function(callback, ms) {
 			var after_resize = (function(){
 				var timer = 0;
@@ -536,6 +581,13 @@
 		index: function() {
 			return new IndexParser();
 		},
+		/**
+		 * @method chunk 
+		 * split array by length
+		 * @param {Array} arr
+		 * @param {Number} len
+		 * @rerturn {Array}
+		 */
 		chunk: function(arr, len) {
 		  var chunks = [],
 		      i = 0,
@@ -547,6 +599,13 @@
 
 		  return chunks;
 		},
+		/**
+		 * @method typeCheck
+		 * check javascript type
+		 * @param {String} t  type string
+		 * @param {Object} v value object
+		 * @returns {*}
+		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {
 
@@ -735,6 +794,20 @@
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
+		/**
+		 * @method dateFormat
+		 *
+		 * implements date format function
+		 *
+		 * yyyy : 4 digits year
+		 * yy : 2 digits year
+		 * y : 1 digit year
+		 *
+		 * @param {Date} date
+		 * @param {String} format   date format string
+		 * @param utc
+		 * @return {string}
+		 */
         dateFormat: function(date, format, utc) {
             var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1024,7 +1097,7 @@
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
          *
          * @param name 가져온 클래스 또는 객체의 이름
-         * @returns {*}
+         * @rerturn {*}
          */
         include: function(name) {
             if(!utility.typeCheck("string", name)) {
@@ -1049,7 +1122,7 @@
         /**
          * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
          *
-         * @returns {Array}
+         * @rerturn {Array}
          */
         includeAll: function() {
             var result = [];
@@ -1065,7 +1138,7 @@
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
          * @param logUrl
-         * @returns {Window}
+         * @rerturn {Window}
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
