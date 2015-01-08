@@ -1,4 +1,9 @@
 jui.define("util.svg.element", [], function() {
+    /**
+     * @class util.svg.element
+     * Create SVG Element
+     * @constructor
+     */
     var Element = function() {
 
         /**
