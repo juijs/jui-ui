@@ -5,6 +5,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
      * 
      * Auto Complete
      * 
+     * @extends core
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown

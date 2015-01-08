@@ -1,9 +1,13 @@
 jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.tooltip
+     * implements tooltip
+     * @extends core
+     * @alias Tooltip
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var $tooltip = null;
 		var pos = {}, title = "", delay = null;

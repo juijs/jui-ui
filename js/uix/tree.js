@@ -1,4 +1,12 @@
 jui.define("uix.tree.node", [ "jquery" ], function($) {
+    /**
+     * @class uix.tree.node
+     * implements Tree's Node
+     * @extends core
+     * @alias TreeNode
+     * @requires jquery
+     *
+     */
     var Node = function(data, tplFunc) {
         var self = this;
 
@@ -203,6 +211,16 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
 
 jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
+    /**
+     * @class uix.tree.base
+     * implements Tree Base
+     * @extends core
+     * @alias TreeBase
+     * @requires jquery
+     * @requires util.base
+     * @requires uix.tree.node
+     *
+     */
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -467,10 +485,15 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
 jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
-	/**
-	 * UI Main Class
-	 * 
-	 */
+    /**
+     * @class uix.tree
+     * implements Tree Component
+     * @extends core
+     * @alias Tree
+     * @requires util.base
+     * @requires uix.tree.base
+     *
+     */
 	var UI = function() {
 		var dragIndex = { start: null, end: null },
             nodeIndex = null,

@@ -2,7 +2,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
     /**
-     * UI Class
+     * @class ui.notify
+     * implements notify layer
+     * @extends core
+     * @alias Notify
+     * @requires jquery
      *
      */
     var UI = function() {

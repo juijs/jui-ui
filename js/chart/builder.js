@@ -24,7 +24,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
     }, 300);
 
     /**
-     * Chart Builder 구현
+     * @class chart.builder
+     * implements chart builder
+     * @extends core
+     * @alias ChartBuilder
+     * @requires util.base
+     * @requires util.svg
+     * @requires util.color
+     * @requires jquery
      *
      */
     var UI = function() {

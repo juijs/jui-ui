@@ -1,4 +1,12 @@
 jui.define("uix.table.column", [ "jquery" ], function($) {
+    /**
+     * @class uix.table.column
+     * implements Table's Column Component
+     * @extends core
+     * @alias TableColumn
+     * @requires jquery
+     *
+     */
     var Column = function(index) {
         this.element = null;
         this.order = "asc";
@@ -30,6 +38,14 @@ jui.define("uix.table.column", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.row", [ "jquery" ], function($) {
+    /**
+     * @class uix.table.row
+     * implements Table's Row Component
+     * @extends core
+     * @alias TableRow
+     * @requires jquery
+     *
+     */    
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -270,6 +286,17 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
+    /**
+     * @class uix.table.base
+     * implements Table Base
+     * @extends core
+     * @alias TableBase
+     * @requires jquery
+     * @requires util.base
+     * @requires uix.table.column
+     * @requires uix.table.row
+     *
+     */
     var Base = function(handler, fields) {
         var self = this;
 
@@ -794,11 +821,18 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 	}, 1000);
 
-	
-	/**
-	 * UI Main Class
-	 * 
-	 */
+
+    /**
+     * @class uix.table
+     * implements Table Component
+     * @extends core
+     * @alias Table
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
+     * @requires uix.table.base
+     *
+     */
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
 		var rowIndex = null, checkedList = {};

@@ -16,11 +16,17 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			}
 		}
 	}, 1000);
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.xtable
+     * implements XTable for Large Data
+     * @extends core
+     * @alias XTable
+     * @requires util.base
+     * @requires ui.modal
+     * @requires uix.table
+     *
+     */
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;

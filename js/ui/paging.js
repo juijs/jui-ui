@@ -1,9 +1,13 @@
 jui.defineUI("ui.paging", [ "jquery" ], function($) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.paging
+     * implements pagination
+     * @extends core
+     * @alias Paging
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
 		var $main = null;

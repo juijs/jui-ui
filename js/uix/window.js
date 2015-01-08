@@ -1,9 +1,15 @@
 jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.window
+     * implements Window Component
+     * @extends core
+     * @alias Window
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.modal
+     *
+     */
 	var UI = function() {
 		var z_index = 2000,
 			target = null,

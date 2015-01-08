@@ -1,9 +1,15 @@
 jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.tab
+     * implements tab controller
+     * @extends core
+     * @alias Tab
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
+     *
+     */
 	var UI = function() {
 		var ui_menu = null,
 			$anchor = null;

@@ -1,9 +1,13 @@
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
-	/**
-	 * 그리기 Base 클래스
-	 * 
-	 * 
-	 */
+    /**
+     * @class chart.draw
+     * Base Draw Class
+     * @extends core
+     * @alias Draw
+     * @requires util.base
+     * @requires jquery
+     *
+     */
 	var Draw = function() {
 
 		/**
