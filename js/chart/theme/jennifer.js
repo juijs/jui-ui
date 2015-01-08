@@ -28,18 +28,23 @@ jui.define("chart.theme.jennifer", [], function() {
     ];
 
     return {
-        /**
-         * Chart Background Color
-         */
+        /** Chart Background Color */
     	backgroundColor : "white",
+        /** Base Font Size */
     	fontSize : "11px",
+        /** Base Font Color  */
     	fontColor : "#333333",
+        /** Base Font Family */
 		fontFamily : "arial,Tahoma,verdana",
+        /** Color List  */
         colors : themeColors,
 
         // grid styles
+        /** Grid Font Color */
     	gridFontColor : "#333333",
+        /** Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
+        /** */
         gridBorderColor : "#ebebeb",
     	gridBorderWidth : 1,
         gridBorderDashArray : "none",
