@@ -1,8 +1,8 @@
 jui.define("util.color", [], function() {
 
 	/**
-	 * color 객체 
-	 *  
+	 * color parser for chart
+	 * @class util.color
 	 */
 	var self = {
 		

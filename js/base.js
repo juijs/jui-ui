@@ -373,7 +373,7 @@
 	
 	/**
 	 * Public Utility Classes
-	 * 
+	 * @class util.base
 	 */
 	var utility = global["util.base"] = {
 			
