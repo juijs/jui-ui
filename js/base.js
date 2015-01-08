@@ -376,16 +376,28 @@
 	 * @class util.base
 	 */
 	var utility = global["util.base"] = {
-			
-		//-- Properties
+
+		/**
+		 * @property
+		 * check browser agent
+		 */
 		browser: {
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
+		/**
+		 * @property
+		 * check touch device
+		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 				
 		//-- Functions
+		/**
+		 * @method scrollWidth
+		 * returns scroll width for body
+		 * @returns {Number}
+		 */
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
 
@@ -398,6 +410,12 @@
 
 			return (isJUI) ? 10 : (w1 - w2);
 		},
+		/**
+		 * @method inherit
+		 * implements inherit for object
+		 * @param {Function} ctor
+		 * @param {Function} superCtor
+		 */
 		inherit: function(ctor, superCtor) {
 			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
 
@@ -406,6 +424,14 @@
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
 		},
+		/**
+		 * @method extend
+		 * implements object extend
+		 * @param origin
+		 * @param add
+		 * @param skip
+		 * @returns {Object}
+		 */
 		extend: function(origin, add, skip) {
 			if(!this.typeCheck("object", origin)) origin = {};
 			if(!this.typeCheck("object", add)) return origin;
