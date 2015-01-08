@@ -24,12 +24,33 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/**
-	 * UI Class
-	 * 
+	 * @class ui.combo
+	 * Combo Class
+	 * @extends core
+	 * @requires jquery
+	 * @requires util.base
+	 * 		@example
+	 * 		var combo = ui.combo("#root");
 	 */
 	var UI = function() {
 		var ui_list = null, ui_data = null;
 		var index = -1;
+
+		/**
+		 * @event click
+		 * Fire when element is clicked on.
+		 * @param {Data} data clicked data
+		 * @param {EventObject} e The event object
+		 * @preventable
+		 */
+
+		/**
+		 * @event change
+		 * Fire when element is changed.
+		 * @param {Data} data changed data
+		 * @param {EventObject} e The event object
+		 * @preventable
+		 */
 					
 		/**
 		 * Private Methods
