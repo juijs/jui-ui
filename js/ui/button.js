@@ -129,6 +129,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 	 * implements checkbox, radio button
 	 * @extends core
 	 * @alias Button
+	 * @requires jquery
+	 * @requires util.base
 	 *
 	 */
 	var UI = function() {
