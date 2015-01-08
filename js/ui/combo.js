@@ -29,8 +29,8 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	 * @extends core
 	 * @requires jquery
 	 * @requires util.base
-	 * 		@example
-	 * 		var combo = ui.combo("#root");
+	 * @example
+	 * 	var combo = ui.combo("#root");
 	 */
 	var UI = function() {
 		var ui_list = null, ui_data = null;
@@ -255,7 +255,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			//  Key up/down event
 			setEventKeydown(this);
 		}
-		
+
+		/**
+		 * @method setIndex
+		 * set selected index
+		 * @param {Number} index
+		 */
 		this.setIndex = function(index) {
 			load("index", index);
 			this.emit("change", [ ui_data ]);
