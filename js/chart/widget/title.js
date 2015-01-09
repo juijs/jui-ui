@@ -1,5 +1,12 @@
 jui.define("chart.widget.title", [], function() {
 
+    /**
+     * @class chart.widget.title
+     * implements title widget
+     * @extends chart.widget.core
+     * @alias TitleWidget
+     *
+     */
     var TitleWidget = function(chart, axis, widget) {
         var x = 0, y = 0, anchor = "middle";
 

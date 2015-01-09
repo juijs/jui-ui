@@ -1,4 +1,12 @@
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
+    /**
+     * @class chart.widget.tooltip
+     * implements tooltip widget
+     * @extends chart.widget.core
+     * @alias TooltipWidget
+     * @requires jquery
+     *
+     */
     var TooltipWidget = function(chart, axis, widget) {
         var self = this;
         var g, text, rect;

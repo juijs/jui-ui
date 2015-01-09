@@ -1,5 +1,15 @@
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
+
+    /**
+     * @class chart.widget.core
+     * implements core widget
+     * @extends chart.draw
+     * @alias CoreWidget
+     * @requires util.base
+     * @requires jquery
+     *
+     */
 	var CoreWidget = function() {
         function getBrushIndex(brush) {
             var list = [ 0 ];

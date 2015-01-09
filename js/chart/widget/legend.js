@@ -1,5 +1,13 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.widget.legend
+     * implements legend widget
+     * @extends chart.widget.core
+     * @alias LegendWidget
+     * @requires util.base
+     *
+     */
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
 

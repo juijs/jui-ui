@@ -44,9 +44,11 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridFontColor : "#333333",
         /** Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
-        /** */
+        /** Grid Border Color */
         gridBorderColor : "#ebebeb",
+        /** Grid Border Width */
     	gridBorderWidth : 1,
+        /** Grid Border Dash Array */
         gridBorderDashArray : "none",
 		gridAxisBorderColor : "#ebebeb",
 		gridAxisBorderWidth : 1,

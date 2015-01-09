@@ -1,5 +1,13 @@
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
+    /**
+     * @class chart.widget.scroll
+     * implements scroll widget
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     *
+     */
     var ScrollWidget = function(chart, axis, widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
