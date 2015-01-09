@@ -1,26 +1,28 @@
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
-	 * Grid Core 객체 
-	 * 
+	 * @class chart.grid.core
+     * Grid Core 객체 
+	 * @extends chart.draw 
 	 */
 	var CoreGrid = function() {
 
 		/**
-		 * scale wrapper 
+		 * @method wrapper  
+         * scale wrapper 
 		 * 
 		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
 		 * 
 		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
 		 * 
-		 * ex) 
+		 *  @example
+		 *  // 그리드 속성에 키가 없을 때 
+		 *  scale(0);		// 0 인덱스에 대한 값  (block, radar)
 		 * 
-		 * // 그리드 속성에 키가 없을 때 
-		 * scale(0);		// 0 인덱스에 대한 값  (block, radar)
-		 * 
-		 * // grid 속성에 key 가 있을 때  
-		 * grid { key : "field" }
-		 * scale(0)			// field 값으로 scale 설정 (range, date)
-		 * 
+		 *  // grid 속성에 key 가 있을 때  
+		 *  grid { key : "field" }
+		 *  scale(0)			// field 값으로 scale 설정 (range, date)
+         *
+		 * @protected 
 		 */
 		this.wrapper = function(chart, scale, key) {
             var self = this;
