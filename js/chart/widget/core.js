@@ -112,7 +112,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
              */
             brush: 0,
             /**
-             * @cfg {Boolean} [render=false] check whether redraw widget
+             * @cfg {Boolean} [render=false] check whether widget redraw
              */            
             render: false,
             /**
