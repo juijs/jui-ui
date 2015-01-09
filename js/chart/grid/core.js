@@ -181,8 +181,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	CoreGrid.setup = function() {
 		return {
             /**
-             * @cfg Number/null
-             * extend grid's option
+             * @cfg {Number} [extend=null] extend grid's option
              */
 			extend:	null,
             /**
