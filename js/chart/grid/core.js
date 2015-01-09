@@ -2,7 +2,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * @class chart.grid.core
      * Grid Core 객체 
-	 * @extends chart.draw 
+	 * @extends chart.draw
+     * @abstract
 	 */
 	var CoreGrid = function() {
 
