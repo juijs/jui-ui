@@ -15,12 +15,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
 		 * 
 		 *  @example
-		 *  // 그리드 속성에 키가 없을 때 
-		 *  scale(0);		// 0 인덱스에 대한 값  (block, radar)
-		 * 
-		 *  // grid 속성에 key 가 있을 때  
-		 *  grid { key : "field" }
-		 *  scale(0)			// field 값으로 scale 설정 (range, date)
+		 *      // 그리드 속성에 키가 없을 때
+		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
+		 *      // grid 속성에 key 가 있을 때
+		 *      grid { key : "field" }
+		 *      scale(0)			// field 값으로 scale 설정 (range, date)
          *
 		 * @protected 
 		 */
@@ -35,8 +34,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		/**
+         * @method axisLine  
 		 * theme 이 적용된  axis line 리턴
-		 * 
+		 * @param {ChartBuilder} chart 
+         * @param {Object} attr  
 		 */
 		this.axisLine = function(chart, attr) {
 			return chart.svg.line($.extend({
@@ -51,8 +52,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * theme 이 적용된  line 리턴 
-		 * 
+		 * @method line 
+         * theme 이 적용된  line 리턴
+         * @protected 
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
 		 */
 		this.line = function(chart, attr) {
 			return chart.svg.line($.extend({
@@ -75,7 +79,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
 		}
 
-		this.data = function(index, field) {
+        /**
+         * @method data
+         * get data for axis
+         * @protected
+         * @param {Number} index
+         * @param {String} field
+         */
+        this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
                 return this.axis.data[index][field] || this.axis.data[index];
 			}
@@ -83,10 +94,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			return this.axis.data || [];
 		}
 
-		/**
-		 * grid 그리기  
-		 * 
-		 */		
+        /**
+         * @method drawGrid
+         * draw base grid structure
+         * @protected
+         * @param {ChartBuilder} chart
+         * @param {String} orient
+         * @param {String} cls 
+         * @param {Grid} grid 
+         */		
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group();
@@ -108,6 +124,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			};
 		}
 
+        /**
+         * @method getTextRotate
+         * implement text rotate in grid text
+         * @protected
+         * @param {SVGElement} textElement
+         */
 		this.getTextRotate = function(textElement) {
 			var rotate = this.grid.textRotate;
 
@@ -128,12 +150,17 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * grid 의 실제 위치와 size 를 구함
+		 * @method getGridSize
+         *  
+         * get real size of grid 
 		 *
 		 * @param chart
 		 * @param orient
 		 * @param grid
-		 * @returns {{start: number, size: *}}
+		 * @returns {Object} 
+         * @returns {Number} start
+         * @returns {Number} size 
+         * @returns {Number} end
 		 */
 		this.getGridSize = function(chart, orient, grid) {
 			var width = chart.area('width'),
@@ -153,7 +180,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 	CoreGrid.setup = function() {
 		return {
+            /**
+             * @cfg
+             * extend grid's option
+             */
 			extend:	null,
+            /**
+             * @cfg
+             * grid line distance
+             */
 			dist: 0,
 			orient: null,
 			hide: false,
