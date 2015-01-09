@@ -98,7 +98,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @method drawGrid
          * draw base grid structure
          * @protected
-         * @param {ChartBuilder} chart
+         * @param {chart.builder} chart
          * @param {String} orient
          * @param {String} cls 
          * @param {Grid} grid 
@@ -181,7 +181,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	CoreGrid.setup = function() {
 		return {
             /**
-             * @cfg
+             * @cfg Number/null
              * extend grid's option
              */
 			extend:	null,
