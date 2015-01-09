@@ -107,8 +107,17 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreWidget.setup = function() {
         return {
+            /**
+             * @cfg {Number} [brush=0] selected brush index  
+             */
             brush: 0,
+            /**
+             * @cfg {Boolean} [render=false] check whether redraw widget
+             */            
             render: false,
+            /**
+             * @cfg {Number} [index=0] current widget index
+             */
             index: 0
         }
     }

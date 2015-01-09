@@ -143,7 +143,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     CrossWidget.setup = function() {
         return {
+            /**
+             * @cfg {Function} [xFormat=null] callback function for x format
+             */            
             xFormat: null,
+            /**
+             * @cfg {Function} [yFormat=null] callback function for y format
+             */
             yFormat: null
         };
     }
