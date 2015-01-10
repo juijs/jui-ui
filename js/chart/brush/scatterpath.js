@@ -4,14 +4,12 @@ jui.define("chart.brush.scatterpath", [], function() {
 
         this.drawScatter = function(points) {
             //"use asm";
-            var width = height = this.brush.size;
-            var unit = 30000;
-            var color = this.color(0);
-            var strokeWidth = this.brush.strokeWidth;
+            var width = height = this.brush.size,
+                color = this.color(0),
+                strokeWidth = this.brush.strokeWidth;
 
-            var g = this.chart.svg.group();
-
-            var path = this.chart.svg.path({
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.path({
                 fill : color,
                 stroke : color,
                 "stroke-width" : strokeWidth
@@ -39,7 +37,7 @@ jui.define("chart.brush.scatterpath", [], function() {
         }
 
         this.draw = function() {
-            return this.drawScatter(this.getXY(false, true));
+            return this.drawScatter(this.getXY(false));
         }
 	}
 

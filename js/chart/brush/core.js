@@ -144,18 +144,16 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         this.getXY = function(isCheckMinMax) {
             var xy = [],
                 series = {},
-                length = this.listData().length;
+                length = this.listData().length,
+                i = length;
 
             if(isCheckMinMax !== false) {
-                series  = getMinMaxValue(this.axis.data, this.brush.target);
+                series = getMinMaxValue(this.axis.data, this.brush.target);
             }
 
-            var i = length;
-
             while(i--) {
-
-                var data = this.axis.data[i];
-                var startX = this.axis.x(i);
+                var data = this.axis.data[i],
+                    startX = this.axis.x(i);
 
                 for(var j = 0; j < this.brush.target.length; j++) {
                     var key = this.brush.target[j],
@@ -174,12 +172,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     }
 
                     xy[j].x[i] = startX;
-                    xy[j].y[i] = this.axis.y(value);
+                    xy[j].y[i] = startY;
                     xy[j].value[i] = value;
 
                     if(isCheckMinMax !== false) {
-                        xy[j].min.push(value == series[key].min);
-                        xy[j].max.push(value == series[key].max);
+                        xy[j].min[i] = (value == series[key].min);
+                        xy[j].max[i] = (value == series[key].max);
                     }
                 }
             }
@@ -195,8 +193,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param chart
          * @returns {Array}
          */
-        this.getStackXY = function(isCheckMinMax, isCached) {
-            var xy = this.getXY(isCheckMinMax, isCached);
+        this.getStackXY = function(isCheckMinMax) {
+            var xy = this.getXY(isCheckMinMax);
 
             this.eachData(function(i, data) {
                 var valueSum = 0;
@@ -210,7 +208,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     }
 
                     xy[j].y[i] = this.axis.y(value + valueSum);
-
                 }
             });
 
