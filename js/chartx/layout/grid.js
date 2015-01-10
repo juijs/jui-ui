@@ -1,19 +1,19 @@
-jui.define("chartx.layout.grid", [], function() {
+jui.define("chartx.layout.grid", [ ], function() {
 
     var GridLayout = function(config) {
 
-        var x = config.x;
-        var y = config.y;
         var width = config.width;
         var height = config.height;
         var rows = config.rows || 1;
         var columns = config.columns || 1;
         var hgap = config.hgap || 0;
         var vgap = config.vgap || 0;
+
+        var unitWidth = Math.floor((width - ((columns - 1) * vgap)) / columns);
+        var unitHeight = Math.floor((height - ((rows - 1) * hgap)) / rows);
         
         this.render = function(charts) {
-            var unitWidth = Math.floor((width - ((columns - 1) * vgap)) / columns);
-            var unitHeight = Math.floor((height - ((rows - 1) * hgap)) / rows);
+
 
             for(var i = 0, len = charts.length; i < len; i++) {
                 var tempColumn = i % columns;
@@ -30,14 +30,11 @@ jui.define("chartx.layout.grid", [], function() {
                     tempY = (hgap + unitHeight) * tempRow;
                 }
                 
-                charts[i].x = tempX;
-                charts[i].y = tempY;
-                charts[i].width = unitWidth;
-                charts[i].height = unitHeight;
+                this.setBounds(charts[i], tempX, tempY, unitWidth, unitHeight);
             }
         }
     }
 
     return GridLayout;
 
-})
+}, "chartx.layout.core")
