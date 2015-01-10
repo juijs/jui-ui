@@ -1,7 +1,7 @@
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
-		var orient = this.grid.orient;
+		var orient = grid.orient;
 		var domain = [];
 		var step = [];
 

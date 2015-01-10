@@ -227,15 +227,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart.brush." + draws[i].type),
-                        axisIndex = draws[i].axis || _options.axisIndex;
+                    var Obj = jui.include("chart.brush." + draws[i].type);
+
+                    // 브러쉬 기본 옵션과 사용자 옵션을 합침
+                    jui.defineOptions(Obj, draws[i]);
+                    var axis = _axis[draws[i].axis];
 
                     // 타겟 프로퍼티 설정
                     if(!draws[i].target) {
                         var target = [];
 
-                        if(_axis[axisIndex]) {
-                            for(var key in _axis[axisIndex].data[0]) {
+                        if(axis) {
+                            for(var key in axis.data[0]) {
                                 target.push(key);
                             }
                         }
@@ -248,19 +251,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
-                    // 브러쉬 기본 옵션과 사용자 옵션을 합침
-                    jui.defineOptions(Obj, draws[i]);
-
                     // 브러쉬 기본 프로퍼티 정의
-                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
+                    var draw = new Obj(self, axis, draws[i]);
+
                     draw.chart = self;
-                    draw.axis = _axis[axisIndex];
+                    draw.axis = axis;
                     draw.brush = draws[i];
 
                     // 브러쉬 렌더링
-                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+                    if(axis) saveData(axis.data);
                     draw.render();
-                    if(_axis[axisIndex]) restoreData();
+                    if(axis) restoreData();
                 }
             }
         }
@@ -270,19 +271,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart.widget." + draws[i].type),
-                        axisIndex = _options.axisIndex;
+                    var Obj = jui.include("chart.widget." + draws[i].type);
+
+                    // 위젯 기본 옵션과 사용자 옵션을 합침
+                    jui.defineOptions(Obj, draws[i]);
+                    var axis = _axis[draws[i].axis];
 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
 
-                    // 위젯 기본 옵션과 사용자 옵션을 합침
-                    jui.defineOptions(Obj, draws[i]);
-
                     // 위젯 기본 프로퍼티 정의
-                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
+                    var draw = new Obj(self, axis, draws[i]);
                     draw.chart = self;
-                    draw.axis = _axis[axisIndex];
+                    draw.axis = axis;
                     draw.widget = draws[i];
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
@@ -291,14 +292,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         return;
                     }
 
-                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+                    if(axis) saveData(axis.data);
 
                     var elem = draw.render();
                     if(!draw.isRender()) {
                         self.svg.autoRender(elem, false);
                     }
 
-                    if(_axis[axisIndex]) restoreData();
+                    if(axis) restoreData();
                 }
             }
         }
@@ -457,6 +458,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return createGradient(self, parsedColor, color);
         }
 
+        function getBaseAxis() {
+            var axisArr = [];
+
+            for(var i = 0; i < _options.baseAxis.length; i++) {
+                var axis = _options.axis[_options.baseAxis[i]];
+
+                if(axis) {
+                    axisArr.push(axis);
+                }
+            }
+
+            return axisArr;
+        }
+
+        function existBaseAxis() {
+            var exist = false;
+
+            for(var i = 0; i < _options.baseAxis.length; i++) {
+                var axis = _options.axis[_options.baseAxis[i]];
+
+                if(axis) {
+                    exist = true;
+                    break;
+                }
+            }
+
+            return exist;
+        }
+
         function setThemeStyle(theme, options) {
             if(_.typeCheck("string", theme)) {
                 _theme = _.extend(jui.include("chart.theme." + theme), options);
@@ -487,6 +517,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 self.bindUI(_options.bind);
             }
 
+            // Draw 옵션 설정
             if(!_.typeCheck("array", _options.axis)) {
                 _options.axis = [ _options.axis ];
             }
@@ -497,6 +528,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
+            }
+
+            // Axis 인덱스 설정;
+            if(!_.typeCheck("array", _options.baseAxis)) {
+                _options.baseAxis = [ _options.baseAxis ];
             }
         }
 
@@ -514,7 +550,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 차트 기본 렌더링
-            if(_options.axis[_options.axisIndex]) {
+            if(existBaseAxis()) {
                 this.update();
             } else {
                 this.render();
@@ -786,105 +822,121 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {array} data
          */
         this.update = function(data) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            if(data) {
-                axis.origin = data;
-            } else {
-                axis.origin = axis.data || [];
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
+
+                if (data) {
+                    axis.origin = data;
+                } else {
+                    axis.origin = axis.data || [];
+                }
+
+                axis.buffer = axis.buffer || 10000;
+                axis.shift = axis.shift || 1;
+                axis.page = 1;
+                axis.start = 0;
+                axis.end = 0;
             }
 
-            axis.buffer = axis.buffer || 10000;
-            axis.shift = axis.shift || 1;
-            axis.page = 1;
-            axis.start = 0;
-            axis.end = 0;
-
-            this.page(axis.page);
+            this.page(1);
         }
 
         this.page = function(pNo) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                maxPage = Math.ceil(dataList.length / limit);
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            // 최소 & 최대 페이지 설정
-            if(pNo < 1) {
-                axis.page = 1;
-            } else {
-                axis.page = (pNo > maxPage) ? maxPage : pNo;
-            }
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    maxPage = Math.ceil(dataList.length / limit);
 
-            axis.start = (axis.page - 1) * limit, axis.end = axis.start + limit;
+                // 최소 & 최대 페이지 설정
+                if(pNo < 1) {
+                    axis.page = 1;
+                } else {
+                    axis.page = (pNo > maxPage) ? maxPage : pNo;
+                }
 
-            // 마지막 페이지 처리
-            if(axis.end > dataList.length) {
-                axis.start = dataList.length - limit;
-                axis.end = dataList.length;
-            }
+                axis.start = (axis.page - 1) * limit, axis.end = axis.start + limit;
 
-            if(axis.end <= dataList.length) {
-                axis.start = (axis.start < 0) ? 0 : axis.start;
-                axis.data = dataList.slice(axis.start, axis.end);
+                // 마지막 페이지 처리
+                if(axis.end > dataList.length) {
+                    axis.start = dataList.length - limit;
+                    axis.end = dataList.length;
+                }
 
-                if(this.isRender()) this.render();
-                if(dataList.length > 0) axis.page++;
+                if(axis.end <= dataList.length) {
+                    axis.start = (axis.start < 0) ? 0 : axis.start;
+                    axis.data = dataList.slice(axis.start, axis.end);
+
+                    if (this.isRender()) this.render();
+                    if (dataList.length > 0) axis.page++;
+                }
             }
         }
 
         this.next = function() {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                step = axis.shift;
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            axis.start += step;
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    step = axis.shift;
 
-            var isLimit = (axis.start + limit > dataList.length);
+                axis.start += step;
 
-            axis.end = (isLimit) ? dataList.length : axis.start + limit;
-            axis.start = (isLimit) ? dataList.length - limit : axis.start;
-            axis.start = (axis.start < 0) ? 0 : axis.start;
-            axis.data = dataList.slice(axis.start, axis.end);
+                var isLimit = (axis.start + limit > dataList.length);
 
-            if(this.isRender()) this.render();
+                axis.end = (isLimit) ? dataList.length : axis.start + limit;
+                axis.start = (isLimit) ? dataList.length - limit : axis.start;
+                axis.start = (axis.start < 0) ? 0 : axis.start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         this.prev = function() {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                step = axis.shift;
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            axis.start -= step;
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    step = axis.shift;
 
-            var isLimit = (axis.start < 0);
+                axis.start -= step;
 
-            axis.end = (isLimit) ? limit : axis.start + limit;
-            axis.start = (isLimit) ? 0 : axis.start;
-            axis.data = dataList.slice(axis.start, axis.end);
+                var isLimit = (axis.start < 0);
 
-            if(this.isRender()) this.render();
+                axis.end = (isLimit) ? limit : axis.start + limit;
+                axis.start = (isLimit) ? 0 : axis.start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         this.zoom = function(start, end) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis || start == end) return;
+            if(start == end) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin;
-            axis.end = (end > dataList.length) ? dataList.length : end;
-            axis.start = (start < 0) ? 0 : start;
-            axis.data = dataList.slice(axis.start, axis.end);
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            if(this.isRender()) this.render();
+                var dataList = axis.origin;
+                axis.end = (end > dataList.length) ? dataList.length : end;
+                axis.start = (start < 0) ? 0 : start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         /**
@@ -957,15 +1009,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.updateWidget = function(index, widget) {
             _.extend(_options.widget[index], widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
 
 
@@ -1035,7 +1087,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             brush: [],
             widget: [],
             axis: [],
-            axisIndex: 0,
+            baseAxis: 0,
             bind: null,
             format: null,
             render: true,

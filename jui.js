@@ -4374,7 +4374,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
-     * UI Class
+     * @class ui.datepicker
+     * implements date picker
+     * @extends core
+     * @alias DatePicker
+     * @requires jquery
+     * @requires util.base
      *
      */
     var UI = function() {
@@ -4730,12 +4735,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			}
 		});
 	});
-	
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+
+    /**
+     * @class ui.dropdown
+     * implements dropdown menu
+     * @extends core
+     * @alias DropDown
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var ui_list = null, index = -1;
 		
@@ -4986,11 +4995,16 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		
 		win_width = $(window).width();
 	}, 300);
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.modal
+     * implements modal window
+     * @extends core
+     * @alias Modal
+     * @requires jquery
+     * @requires util.base
+     *
+     */
 	var UI = function() {
 		var $modal = null, $clone = null;
 		var uiObj = null, uiTarget = null;
@@ -5170,7 +5184,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 
     /**
-     * UI Class
+     * @class ui.notify
+     * implements notify layer
+     * @extends core
+     * @alias Notify
+     * @requires jquery
      *
      */
     var UI = function() {
@@ -5300,11 +5318,15 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     return UI;
 });
 jui.defineUI("ui.paging", [ "jquery" ], function($) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.paging
+     * implements pagination
+     * @extends core
+     * @alias Paging
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
 		var $main = null;
@@ -5440,11 +5462,15 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 	return UI;
 });
 jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class ui.tooltip
+     * implements tooltip
+     * @extends core
+     * @alias Tooltip
+     * @requires jquery
+     *
+     */
 	var UI = function() {
 		var $tooltip = null;
 		var pos = {}, title = "", delay = null;
@@ -5603,7 +5629,16 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	return UI;
 });
 jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
-	
+
+    /**
+     * @class ui.layout
+     * implements layout
+     * @extends core
+     * @alias Layout
+     * @requires jquery
+     * @requires util.base
+     *
+     */
 	var UI = function() {
 		var ui_layout = null, 
 			ui_options = {}, 
@@ -6090,7 +6125,14 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
-	 * UI Class
+	 * @class uix.autocomplete
+     * 
+     * Auto Complete
+     * 
+     * @extends core
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
 	 * 
 	 */
 	var UI = function() {
@@ -6198,11 +6240,17 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	return UI;
 });
 jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.tab
+     * implements tab controller
+     * @extends core
+     * @alias Tab
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
+     *
+     */
 	var UI = function() {
 		var ui_menu = null,
 			$anchor = null;
@@ -6529,6 +6577,14 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 	return UI;
 });
 jui.define("uix.table.column", [ "jquery" ], function($) {
+    /**
+     * @class uix.table.column
+     * implements Table's Column Component
+     * @extends core
+     * @alias TableColumn
+     * @requires jquery
+     *
+     */
     var Column = function(index) {
         this.element = null;
         this.order = "asc";
@@ -6560,6 +6616,14 @@ jui.define("uix.table.column", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.row", [ "jquery" ], function($) {
+    /**
+     * @class uix.table.row
+     * implements Table's Row Component
+     * @extends core
+     * @alias TableRow
+     * @requires jquery
+     *
+     */    
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -6800,6 +6864,17 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
+    /**
+     * @class uix.table.base
+     * implements Table Base
+     * @extends core
+     * @alias TableBase
+     * @requires jquery
+     * @requires util.base
+     * @requires uix.table.column
+     * @requires uix.table.row
+     *
+     */
     var Base = function(handler, fields) {
         var self = this;
 
@@ -7324,11 +7399,18 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 	}, 1000);
 
-	
-	/**
-	 * UI Main Class
-	 * 
-	 */
+
+    /**
+     * @class uix.table
+     * implements Table Component
+     * @extends core
+     * @alias Table
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.dropdown
+     * @requires uix.table.base
+     *
+     */
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
 		var rowIndex = null, checkedList = {};
@@ -8407,6 +8489,14 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 	return UI;
 });
 jui.define("uix.tree.node", [ "jquery" ], function($) {
+    /**
+     * @class uix.tree.node
+     * implements Tree's Node
+     * @extends core
+     * @alias TreeNode
+     * @requires jquery
+     *
+     */
     var Node = function(data, tplFunc) {
         var self = this;
 
@@ -8611,6 +8701,16 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
 
 jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
+    /**
+     * @class uix.tree.base
+     * implements Tree Base
+     * @extends core
+     * @alias TreeBase
+     * @requires jquery
+     * @requires util.base
+     * @requires uix.tree.node
+     *
+     */
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -8875,10 +8975,15 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
 jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
-	/**
-	 * UI Main Class
-	 * 
-	 */
+    /**
+     * @class uix.tree
+     * implements Tree Component
+     * @extends core
+     * @alias Tree
+     * @requires util.base
+     * @requires uix.tree.base
+     *
+     */
 	var UI = function() {
 		var dragIndex = { start: null, end: null },
             nodeIndex = null,
@@ -9322,11 +9427,17 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 	return UI;
 });
 jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _, modal) {
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.window
+     * implements Window Component
+     * @extends core
+     * @alias Window
+     * @requires jquery
+     * @requires util.base
+     * @requires ui.modal
+     *
+     */
 	var UI = function() {
 		var z_index = 2000,
 			target = null,
@@ -9540,11 +9651,17 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			}
 		}
 	}, 1000);
-	
-	/**
-	 * UI Class
-	 * 
-	 */
+
+    /**
+     * @class uix.xtable
+     * implements XTable for Large Data
+     * @extends core
+     * @alias XTable
+     * @requires util.base
+     * @requires ui.modal
+     * @requires uix.table
+     *
+     */
 	var UI = function() {
 		var head = null, body = null;
 		var rows = [], o_rows = null;
@@ -10291,11 +10408,15 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 	return UI;
 });
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
-	/**
-	 * 그리기 Base 클래스
-	 * 
-	 * 
-	 */
+    /**
+     * @class chart.draw
+     * Base Draw Class
+     * @extends core
+     * @alias Draw
+     * @requires util.base
+     * @requires jquery
+     *
+     */
 	var Draw = function() {
 
 		/**
@@ -10378,7 +10499,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
     }, 300);
 
     /**
-     * Chart Builder 구현
+     * @class chart.builder
+     * implements chart builder
+     * @extends core
+     * @alias ChartBuilder
+     * @requires util.base
+     * @requires util.svg
+     * @requires util.color
+     * @requires jquery
      *
      */
     var UI = function() {
@@ -10574,15 +10702,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart.brush." + draws[i].type),
-                        axisIndex = draws[i].axis || _options.axisIndex;
+                    var Obj = jui.include("chart.brush." + draws[i].type);
+
+                    // 브러쉬 기본 옵션과 사용자 옵션을 합침
+                    jui.defineOptions(Obj, draws[i]);
+                    var axis = _axis[draws[i].axis];
 
                     // 타겟 프로퍼티 설정
                     if(!draws[i].target) {
                         var target = [];
 
-                        if(_axis[axisIndex]) {
-                            for(var key in _axis[axisIndex].data[0]) {
+                        if(axis) {
+                            for(var key in axis.data[0]) {
                                 target.push(key);
                             }
                         }
@@ -10595,19 +10726,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
 
-                    // 브러쉬 기본 옵션과 사용자 옵션을 합침
-                    jui.defineOptions(Obj, draws[i]);
-
                     // 브러쉬 기본 프로퍼티 정의
-                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
+                    var draw = new Obj(self, axis, draws[i]);
+
                     draw.chart = self;
-                    draw.axis = _axis[axisIndex];
+                    draw.axis = axis;
                     draw.brush = draws[i];
 
                     // 브러쉬 렌더링
-                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+                    if(axis) saveData(axis.data);
                     draw.render();
-                    if(_axis[axisIndex]) restoreData();
+                    if(axis) restoreData();
                 }
             }
         }
@@ -10617,19 +10746,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(draws != null) {
                 for(var i = 0; i < draws.length; i++) {
-                    var Obj = jui.include("chart.widget." + draws[i].type),
-                        axisIndex = _options.axisIndex;
+                    var Obj = jui.include("chart.widget." + draws[i].type);
+
+                    // 위젯 기본 옵션과 사용자 옵션을 합침
+                    jui.defineOptions(Obj, draws[i]);
+                    var axis = _axis[draws[i].axis];
 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
 
-                    // 위젯 기본 옵션과 사용자 옵션을 합침
-                    jui.defineOptions(Obj, draws[i]);
-
                     // 위젯 기본 프로퍼티 정의
-                    var draw = new Obj(self, _axis[axisIndex], draws[i]);
+                    var draw = new Obj(self, axis, draws[i]);
                     draw.chart = self;
-                    draw.axis = _axis[axisIndex];
+                    draw.axis = axis;
                     draw.widget = draws[i];
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
@@ -10638,14 +10767,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         return;
                     }
 
-                    if(_axis[axisIndex]) saveData(_options.axis[axisIndex].data);
+                    if(axis) saveData(axis.data);
 
                     var elem = draw.render();
                     if(!draw.isRender()) {
                         self.svg.autoRender(elem, false);
                     }
 
-                    if(_axis[axisIndex]) restoreData();
+                    if(axis) restoreData();
                 }
             }
         }
@@ -10804,6 +10933,35 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return createGradient(self, parsedColor, color);
         }
 
+        function getBaseAxis() {
+            var axisArr = [];
+
+            for(var i = 0; i < _options.baseAxis.length; i++) {
+                var axis = _options.axis[_options.baseAxis[i]];
+
+                if(axis) {
+                    axisArr.push(axis);
+                }
+            }
+
+            return axisArr;
+        }
+
+        function existBaseAxis() {
+            var exist = false;
+
+            for(var i = 0; i < _options.baseAxis.length; i++) {
+                var axis = _options.axis[_options.baseAxis[i]];
+
+                if(axis) {
+                    exist = true;
+                    break;
+                }
+            }
+
+            return exist;
+        }
+
         function setThemeStyle(theme, options) {
             if(_.typeCheck("string", theme)) {
                 _theme = _.extend(jui.include("chart.theme." + theme), options);
@@ -10834,6 +10992,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 self.bindUI(_options.bind);
             }
 
+            // Draw 옵션 설정
             if(!_.typeCheck("array", _options.axis)) {
                 _options.axis = [ _options.axis ];
             }
@@ -10844,6 +11003,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
+            }
+
+            // Axis 인덱스 설정;
+            if(!_.typeCheck("array", _options.baseAxis)) {
+                _options.baseAxis = [ _options.baseAxis ];
             }
         }
 
@@ -10861,7 +11025,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 차트 기본 렌더링
-            if(_options.axis[_options.axisIndex]) {
+            if(existBaseAxis()) {
                 this.update();
             } else {
                 this.render();
@@ -11133,105 +11297,121 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
          * @param {array} data
          */
         this.update = function(data) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            if(data) {
-                axis.origin = data;
-            } else {
-                axis.origin = axis.data || [];
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
+
+                if (data) {
+                    axis.origin = data;
+                } else {
+                    axis.origin = axis.data || [];
+                }
+
+                axis.buffer = axis.buffer || 10000;
+                axis.shift = axis.shift || 1;
+                axis.page = 1;
+                axis.start = 0;
+                axis.end = 0;
             }
 
-            axis.buffer = axis.buffer || 10000;
-            axis.shift = axis.shift || 1;
-            axis.page = 1;
-            axis.start = 0;
-            axis.end = 0;
-
-            this.page(axis.page);
+            this.page(1);
         }
 
         this.page = function(pNo) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                maxPage = Math.ceil(dataList.length / limit);
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            // 최소 & 최대 페이지 설정
-            if(pNo < 1) {
-                axis.page = 1;
-            } else {
-                axis.page = (pNo > maxPage) ? maxPage : pNo;
-            }
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    maxPage = Math.ceil(dataList.length / limit);
 
-            axis.start = (axis.page - 1) * limit, axis.end = axis.start + limit;
+                // 최소 & 최대 페이지 설정
+                if(pNo < 1) {
+                    axis.page = 1;
+                } else {
+                    axis.page = (pNo > maxPage) ? maxPage : pNo;
+                }
 
-            // 마지막 페이지 처리
-            if(axis.end > dataList.length) {
-                axis.start = dataList.length - limit;
-                axis.end = dataList.length;
-            }
+                axis.start = (axis.page - 1) * limit, axis.end = axis.start + limit;
 
-            if(axis.end <= dataList.length) {
-                axis.start = (axis.start < 0) ? 0 : axis.start;
-                axis.data = dataList.slice(axis.start, axis.end);
+                // 마지막 페이지 처리
+                if(axis.end > dataList.length) {
+                    axis.start = dataList.length - limit;
+                    axis.end = dataList.length;
+                }
 
-                if(this.isRender()) this.render();
-                if(dataList.length > 0) axis.page++;
+                if(axis.end <= dataList.length) {
+                    axis.start = (axis.start < 0) ? 0 : axis.start;
+                    axis.data = dataList.slice(axis.start, axis.end);
+
+                    if (this.isRender()) this.render();
+                    if (dataList.length > 0) axis.page++;
+                }
             }
         }
 
         this.next = function() {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                step = axis.shift;
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            axis.start += step;
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    step = axis.shift;
 
-            var isLimit = (axis.start + limit > dataList.length);
+                axis.start += step;
 
-            axis.end = (isLimit) ? dataList.length : axis.start + limit;
-            axis.start = (isLimit) ? dataList.length - limit : axis.start;
-            axis.start = (axis.start < 0) ? 0 : axis.start;
-            axis.data = dataList.slice(axis.start, axis.end);
+                var isLimit = (axis.start + limit > dataList.length);
 
-            if(this.isRender()) this.render();
+                axis.end = (isLimit) ? dataList.length : axis.start + limit;
+                axis.start = (isLimit) ? dataList.length - limit : axis.start;
+                axis.start = (axis.start < 0) ? 0 : axis.start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         this.prev = function() {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin,
-                limit = axis.buffer,
-                step = axis.shift;
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            axis.start -= step;
+                var dataList = axis.origin,
+                    limit = axis.buffer,
+                    step = axis.shift;
 
-            var isLimit = (axis.start < 0);
+                axis.start -= step;
 
-            axis.end = (isLimit) ? limit : axis.start + limit;
-            axis.start = (isLimit) ? 0 : axis.start;
-            axis.data = dataList.slice(axis.start, axis.end);
+                var isLimit = (axis.start < 0);
 
-            if(this.isRender()) this.render();
+                axis.end = (isLimit) ? limit : axis.start + limit;
+                axis.start = (isLimit) ? 0 : axis.start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         this.zoom = function(start, end) {
-            var axis = _options.axis[_options.axisIndex];
-            if(!axis || start == end) return;
+            if(start == end) return;
+            var axisList = getBaseAxis();
 
-            var dataList = axis.origin;
-            axis.end = (end > dataList.length) ? dataList.length : end;
-            axis.start = (start < 0) ? 0 : start;
-            axis.data = dataList.slice(axis.start, axis.end);
+            for(var i = 0; i < axisList.length; i++) {
+                var axis = axisList[i];
 
-            if(this.isRender()) this.render();
+                var dataList = axis.origin;
+                axis.end = (end > dataList.length) ? dataList.length : end;
+                axis.start = (start < 0) ? 0 : start;
+                axis.data = dataList.slice(axis.start, axis.end);
+
+                if(this.isRender()) this.render();
+            }
         }
 
         /**
@@ -11304,15 +11484,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         this.addWidget = function(widget) {
             _options.widget.push(widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
         this.updateWidget = function(index, widget) {
             _.extend(_options.widget[index], widget);
-            if(this.isRender()) this.render(true);
+            if(this.isRender()) this.render();
         }
 
 
@@ -11382,7 +11562,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             brush: [],
             widget: [],
             axis: [],
-            axisIndex: 0,
+            baseAxis: 0,
             bind: null,
             format: null,
             render: true,
@@ -11396,6 +11576,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
     return UI;
 });
 
+/**
+ * @class chart.theme.jennifer
+ * Jennifer Theme
+ * @singleton
+ */
 jui.define("chart.theme.jennifer", [], function() {
     var themeColors = [
         "#7977C2",
@@ -11421,77 +11606,141 @@ jui.define("chart.theme.jennifer", [], function() {
     ];
 
     return {
-        // common styles
+        /** Chart Background Color */
     	backgroundColor : "white",
+        /** Base Font Size */
     	fontSize : "11px",
+        /** Base Font Color  */
     	fontColor : "#333333",
+        /** Base Font Family */
 		fontFamily : "arial,Tahoma,verdana",
+        /** Color List  */
         colors : themeColors,
 
         // grid styles
+        /** Grid Font Color */
     	gridFontColor : "#333333",
+        /** Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
+        /** Grid Border Color */
         gridBorderColor : "#ebebeb",
+        /** Grid Border Width */
     	gridBorderWidth : 1,
+        /** Grid Border Dash Array */
         gridBorderDashArray : "none",
+        /** */
 		gridAxisBorderColor : "#ebebeb",
+        /** */
 		gridAxisBorderWidth : 1,
+        /** */
     	gridActiveBorderColor : "#ff7800",
+        /** */
     	gridActiveBorderWidth: 1,
 
         // brush styles
+        /** */
         tooltipPointRadius : 5, // common
+        /** */
         tooltipPointBorderWidth : 1, // common
+        /** */        
         tooltipPointFontWeight : "bold", // common
+        /** */
         barBorderColor : "none",
+        /** */        
         barBorderWidth : 0,
+        /** */
         barBorderOpacity : 0,
+        /** */        
         barActiveBackgroundColor : "#06d9b6",
+        /** */
         barCircleBorderColor : "white",
+        /** */
         barDisableBackgroundOpacity : 0.5,
+        /** */        
     	gaugeBackgroundColor : "#ececec",
+        /** */        
         gaugeArrowColor : "#666666",
+        /** */        
         gaugeFontColor : "#666666",
+        /** */        
     	pieBorderColor : "white",
+        /** */        
         pieBorderWidth : 1,
+        /** */
         donutBorderColor : "white",
+        /** */
         donutBorderWidth : 1,
+        /** */
     	areaBackgroundOpacity : 0.5,
+        /** */
         areaSplitBackgroundColor : "#929292",
+        /** */
         bubbleBackgroundOpacity : 0.5,
+        /** */
         bubbleBorderWidth : 1,
+        /** */
         candlestickBorderColor : "black",
+        /** */
         candlestickBackgroundColor : "white",
+        /** */
         candlestickInvertBorderColor : "red",
+        /** */
         candlestickInvertBackgroundColor : "red",
+        /** */
         ohlcBorderColor : "black",
+        /** */
         ohlcInvertBorderColor : "red",
+        /** */
         ohlcBorderRadius : 5,
+        /** */
         lineBorderWidth : 2,
+        /** */
         lineDisableBorderOpacity : 0.3,
+        /** */
         lineCircleBorderColor : "white",
+        /** */
         lineSplitBorderColor : null,
+        /** */
         lineSplitBorderOpacity : 0.5,
+        /** */
         pathBackgroundOpacity : 0.5,
+        /** */
         pathBorderWidth : 1,
+        /** */
         scatterBorderColor : "white",
+        /** */
         scatterBorderWidth : 1,
+        /** */
         scatterHoverColor : "white",
+        /** */
         waterfallBackgroundColor : "#87BB66",
+        /** */
         waterfallInvertBackgroundColor : "#FF7800",
+        /** */
         waterfallEdgeBackgroundColor : "#7BBAE7",
+        /** */
         waterfallLineColor : "#a9a9a9",
+        /** */
         waterfallLineDashArray : "0.9",
+        /** */
         focusBorderColor : "#FF7800",
+        /** */
         focusBorderWidth : 1,
+        /** */
         focusBackgroundColor : "#FF7800",
+        /** */
         focusBackgroundOpacity : 0.1,
+        /** */
         pinFontColor : "#FF7800",
+        /** */
         pinFontSize : "10px",
+        /** */
         pinBorderColor : "#FF7800",
+        /** */
         pinBorderWidth : 0.7,
-
+        /** */
         // widget styles
+
         titleFontColor : "#333",
         titleFontSize : "13px",
         titleFontWeight : "normal",
@@ -11867,27 +12116,29 @@ jui.define("chart.theme.pastel", [], function() {
 }); 
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
-	 * Grid Core 객체 
-	 * 
+	 * @class chart.grid.core
+     * Grid Core 객체 
+	 * @extends chart.draw
+     * @abstract
 	 */
 	var CoreGrid = function() {
 
 		/**
-		 * scale wrapper 
+		 * @method wrapper  
+         * scale wrapper 
 		 * 
 		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
 		 * 
 		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
 		 * 
-		 * ex) 
-		 * 
-		 * // 그리드 속성에 키가 없을 때 
-		 * scale(0);		// 0 인덱스에 대한 값  (block, radar)
-		 * 
-		 * // grid 속성에 key 가 있을 때  
-		 * grid { key : "field" }
-		 * scale(0)			// field 값으로 scale 설정 (range, date)
-		 * 
+		 *  @example
+		 *      // 그리드 속성에 키가 없을 때
+		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
+		 *      // grid 속성에 key 가 있을 때
+		 *      grid { key : "field" }
+		 *      scale(0)			// field 값으로 scale 설정 (range, date)
+         *
+		 * @protected 
 		 */
 		this.wrapper = function(chart, scale, key) {
             var self = this;
@@ -11900,8 +12151,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		/**
+         * @method axisLine  
 		 * theme 이 적용된  axis line 리턴
-		 * 
+		 * @param {ChartBuilder} chart 
+         * @param {Object} attr  
 		 */
 		this.axisLine = function(chart, attr) {
 			return chart.svg.line($.extend({
@@ -11916,8 +12169,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * theme 이 적용된  line 리턴 
-		 * 
+		 * @method line 
+         * theme 이 적용된  line 리턴
+         * @protected 
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
 		 */
 		this.line = function(chart, attr) {
 			return chart.svg.line($.extend({
@@ -11940,7 +12196,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme(theme);
 		}
 
-		this.data = function(index, field) {
+        /**
+         * @method data
+         * get data for axis
+         * @protected
+         * @param {Number} index
+         * @param {String} field
+         */
+        this.data = function(index, field) {
 			if(this.axis.data && this.axis.data[index]) {
                 return this.axis.data[index][field] || this.axis.data[index];
 			}
@@ -11948,10 +12211,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			return this.axis.data || [];
 		}
 
-		/**
-		 * grid 그리기  
-		 * 
-		 */		
+        /**
+         * @method drawGrid
+         * draw base grid structure
+         * @protected
+         * @param {chart.builder} chart
+         * @param {String} orient
+         * @param {String} cls 
+         * @param {Grid} grid 
+         */		
 		this.drawGrid = function(chart, orient, cls, grid) {
 			// create group
 			var root = chart.svg.group();
@@ -11973,6 +12241,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			};
 		}
 
+        /**
+         * @method getTextRotate
+         * implement text rotate in grid text
+         * @protected
+         * @param {SVGElement} textElement
+         */
 		this.getTextRotate = function(textElement) {
 			var rotate = this.grid.textRotate;
 
@@ -11993,12 +12267,17 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * grid 의 실제 위치와 size 를 구함
+		 * @method getGridSize
+         *  
+         * get real size of grid 
 		 *
 		 * @param chart
 		 * @param orient
 		 * @param grid
-		 * @returns {{start: number, size: *}}
+		 * @returns {Object} 
+         * @returns {Number} start
+         * @returns {Number} size 
+         * @returns {Number} end
 		 */
 		this.getGridSize = function(chart, orient, grid) {
 			var width = chart.area('width'),
@@ -12018,7 +12297,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 	CoreGrid.setup = function() {
 		return {
+            /**
+             * @cfg {Number} [extend=null] extend grid's option
+             */
 			extend:	null,
+            /**
+             * @cfg
+             * grid line distance
+             */
 			dist: 0,
 			orient: null,
 			hide: false,
@@ -12319,7 +12605,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	var DateGrid = function(chart, axis, grid) {
-		var orient = this.grid.orient;
+		var orient = grid.orient;
 		var domain = [];
 		var step = [];
 
@@ -17273,6 +17559,16 @@ jui.define("chart.brush.pin", [], function() {
 }, "chart.brush.core");
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
+
+    /**
+     * @class chart.widget.core
+     * implements core widget
+     * @extends chart.draw
+     * @alias CoreWidget
+     * @requires util.base
+     * @requires jquery
+     *
+     */
 	var CoreWidget = function() {
         function getBrushIndex(brush) {
             var list = [ 0 ];
@@ -17370,8 +17666,18 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreWidget.setup = function() {
         return {
+            axis: 0,
+            /**
+             * @cfg {Number} [brush=0] selected brush index  
+             */
             brush: 0,
+            /**
+             * @cfg {Boolean} [render=false] check whether widget redraw
+             */            
             render: false,
+            /**
+             * @cfg {Number} [index=0] current widget index
+             */
             index: 0
         }
     }
@@ -17379,6 +17685,14 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 	return CoreWidget;
 }, "chart.draw"); 
 jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
+    /**
+     * @class chart.widget.tooltip
+     * implements tooltip widget
+     * @extends chart.widget.core
+     * @alias TooltipWidget
+     * @requires jquery
+     *
+     */
     var TooltipWidget = function(chart, axis, widget) {
         var self = this;
         var g, text, rect;
@@ -17536,6 +17850,13 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 }, "chart.widget.core");
 jui.define("chart.widget.title", [], function() {
 
+    /**
+     * @class chart.widget.title
+     * implements title widget
+     * @extends chart.widget.core
+     * @alias TitleWidget
+     *
+     */
     var TitleWidget = function(chart, axis, widget) {
         var x = 0, y = 0, anchor = "middle";
 
@@ -17602,6 +17923,14 @@ jui.define("chart.widget.title", [], function() {
 }, "chart.widget.core");
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.widget.legend
+     * implements legend widget
+     * @extends chart.widget.core
+     * @alias LegendWidget
+     * @requires util.base
+     *
+     */
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
 
@@ -17787,6 +18116,14 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 
+    /**
+     * @class chart.widget.scroll
+     * implements scroll widget
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     *
+     */
     var ScrollWidget = function(chart, axis, widget) {
         var thumbWidth = 0,
             thumbLeft = 0,
@@ -17893,6 +18230,14 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.widget.zoom
+     * implements zoom widget
+     * @extends chart.widget.core
+     * @alias ZoomWidget
+     * @requires util.base
+     *
+     */
     var ZoomWidget = function(chart, axis, widget) {
         var count, tick;
 
@@ -18028,6 +18373,15 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
+
+    /**
+     * @class chart.widget.cross
+     * implements cross widget
+     * @extends chart.widget.core
+     * @alias CoreWidget
+     * @requires util.base
+     *
+     */
     var CrossWidget = function(chart, axis, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
@@ -18162,7 +18516,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     CrossWidget.setup = function() {
         return {
+            /**
+             * @cfg {Function} [xFormat=null] callback function for x format
+             */            
             xFormat: null,
+            /**
+             * @cfg {Function} [yFormat=null] callback function for y format
+             */
             yFormat: null
         };
     }
