@@ -59,9 +59,8 @@ jui.defineUI("chartx.layout", ["util.svg", "chart.builder"], function(SVG, Chart
         this.render = function() {
 
             // caculate layout size
-            var size = svg.size();
-            var width = size.width;
-            var height = size.height;
+            // TODO : svg get bounds
+            var size = svg.getBounds();
 
             var layoutObject = this.options.name;
             
@@ -69,12 +68,7 @@ jui.defineUI("chartx.layout", ["util.svg", "chart.builder"], function(SVG, Chart
                 layoutObject = { name : layoutObject };
             }
             
-            layoutObject = $.extend({
-                x : this.options.x,
-                y : this.options.y,
-                width : width,
-                height : height
-            }, layoutObject);
+            layoutObject = $.extend(size, layoutObject);
             
             var Layout = jui.include("chartx.layout." + layoutObject.name);
             new Layout(layoutObject).render(this.options.charts);
