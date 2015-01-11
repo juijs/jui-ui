@@ -18174,7 +18174,6 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
      *
      */
     var ZoomWidget = function(chart, axis, widget) {
-        var count, tick;
 
         function setDragEvent(self, thumb, bg) {
             var isMove = false,
@@ -18182,7 +18181,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 thumbWidth = 0;
 
             self.on("chart.mousedown", function(e) {
-                if(isMove || axis.start > 0) return;
+                if(isMove) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
@@ -18216,9 +18215,10 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 isMove = false;
                 if(thumbWidth == 0) return;
 
-                var x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left");
-                var start = Math.floor(x / tick),
-                    end = Math.ceil((x + Math.abs(thumbWidth)) / tick);
+                var tick = chart.area("width") / (axis.end - axis.start),
+                    x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left"),
+                    start = Math.floor(x / tick) + axis.start,
+                    end = Math.ceil((x + Math.abs(thumbWidth)) / tick) + axis.start;
 
                 // 차트 줌
                 if(start < end) {
@@ -18243,11 +18243,6 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     width: 0
                 });
             }
-        }
-
-        this.drawBefore = function() {
-            count = (axis.data.length < axis.buffer && axis.data.length > 0) ? axis.data.length : axis.buffer;
-            tick = chart.area("width") / count;
         }
 
         this.draw = function() {
