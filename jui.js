@@ -1840,18 +1840,19 @@ jui.define("util.math", [], function() {
 
 		// 중간값 계산 하기 
 		interpolateNumber : function(a, b) {
+            var dist = (b - a);
 			return function(t) {
-				return a + (b - a) * t;
+				return a + dist * t;
 			}
 		},
 
 		// 중간값 round 해서 계산하기
 		interpolateRound : function(a, b) {
-			var f = this.interpolateNumber(a, b);
 
-			return function(t) {
-				return Math.round(f(t));
-			}
+            var dist = (b - a);
+            return function(t) {
+                return Math.round(a + dist * t);
+            }
 		},
 
 		/**
@@ -2387,45 +2388,34 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var distDomain = null;
 			var distRange = null;
+            
+            var callFunction = null; 
 
 			function func(x) {
 
-				var key = x + '';
-
-				if (typeof _cache[key] != 'undefined') {
-					return _cache[key];
-				}
-
-				var max = func.max();
-				var min = func.min();
-
 				if (domainMax < x) {
 					if (_isClamp) {
-						_cache[key] = domainMax;
 						return domainMax;
 					}
 
-					_cache[key] = _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
-					return _cache[key];
+					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
-						_cache[key] = domainMin;
 						return domainMin;
 					}
 
-					_cache[key] = _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
-					return _cache[key];
+					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
 				} else {
 					var pos = (x - domainMin) / (distDomain);
 
-					var scale = _isRound ?  roundFunction : numberFunction ;
-
-					_cache[key] = scale(pos);
-					return _cache[key];
+					return callFunction(pos);
 				}
 
 			}
 
+            func.cache = function() {
+                return _cache;
+            }
 
 			func.min = function() {
 				return Math.min.apply(Math, _domain);
@@ -2486,12 +2476,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				rangeMax = func.rangeMax();
 
 				distRange = Math.abs(rangeMax - rangeMin);
+                
+                callFunction = _isRound ? roundFunction : numberFunction;
 
 				return this;
 			}
 
 			func.rangeRound = function(values) {
 				_isRound = true;
+                
 				return func.range(values);
 			}
 
@@ -2703,7 +2696,6 @@ jui.define("util.svg.element", [], function() {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
             this.parent = null;
-            this.attributes = {};
             this.styles = {};
 
             // 기본 속성 설정
@@ -2800,12 +2792,10 @@ jui.define("util.svg.element", [], function() {
             }
 
             for(var k in attr) {
-                this.attributes[k] = attr[k];
-
                 if(k.indexOf("xlink:") != -1) {
-                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, this.attributes[k]);
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, this.attributes[k]);
+                    this.element.setAttributeNS(null, k, attr[k]);
                 }
             }
 
@@ -3117,8 +3107,8 @@ jui.define("util.svg.element.path", [], function() { // path
          * 심볼 추가 하기 (튜닝)
          */
         this.template = function(cx, cy, tpl) {
-            //ordersString += " M" + (cx) + "," + (cy) + tpl;
-            orders.push(" M" + (cx) + "," + (cy) + tpl);
+            ordersString += " M" + (cx) + "," + (cy) + tpl;
+            //orders.push([" M" , (cx) , "," , (cy) , tpl].join(""));
         }
 
         /**
@@ -12680,9 +12670,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             var self = this;
 
             function new_scale(i) {
-                if (_.typeCheck("date", i)) return old_scale(+i);
-				var str = self.axis.data[i][key];
-                return old_scale(_.typeCheck("string", str) ? +new Date(str) : +str);
+                if (typeof i == 'number') {
+                    return old_scale(self.axis.data[i][key]);
+                } else {
+                    return old_scale(+i);
+                }
             }
 
             old_scale.update = function(obj) {
@@ -12755,7 +12747,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).rangeRound(range);
+			this.scale = UtilScale.time().domain(domain).range(range);
 
 
 
@@ -13498,6 +13490,9 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				ticks = this.ticks,
 				values = this.values,
 				bar = this.bar;
+            
+            var activeBorderColor = this.color("gridActiveBorderColor");
+            var borderColor = this.color("gridBorderColor");
 
 			for (var i = 0; i < ticks.length; i++) {
 
@@ -13515,7 +13510,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? chart.area('width') : -bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : isZero ? activeBorderColor : borderColor,
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 
@@ -14464,31 +14459,35 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var xy = [],
                 series = {},
                 length = this.listData().length,
-                i = length;
+                i = length,
+                targetLength = this.brush.target.length;
 
             if(isCheckMinMax !== false) {
                 series = getMinMaxValue(this.axis.data, this.brush.target);
             }
 
+            for(var j = 0; j < targetLength; j++) {
+                xy[j] = {
+                    x: new Float32Array(length),
+                    y: new Float32Array(length),
+                    value: new Array(length),
+                    min: [],
+                    max: []
+                };
+            }
+            
+            var axisData = this.axis.data;
+            var x = this.axis.x;
+            var y = this.axis.y;
+            
             while(i--) {
-                var data = this.axis.data[i],
-                    startX = this.axis.x(i);
+                var data = axisData[i],
+                    startX = x(i);
 
-                for(var j = 0; j < this.brush.target.length; j++) {
+                for(var j = 0; j < targetLength ; j++) {
                     var key = this.brush.target[j],
                         value = data[key],
-                        startY = this.axis.y(value);
-
-                    if(!xy[j]) {
-                        xy[j] = {
-                            x: new Array(length),
-                            y: new Array(length),
-                            value: new Array(length),
-                            min: [],
-                            max: [],
-                            length: length
-                        };
-                    }
+                        startY = y(value);
 
                     xy[j].x[i] = startX;
                     xy[j].y[i] = startY;
@@ -14499,6 +14498,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         xy[j].max[i] = (value == series[key].max);
                     }
                 }
+
             }
 
             return xy;

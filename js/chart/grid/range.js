@@ -104,6 +104,9 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				ticks = this.ticks,
 				values = this.values,
 				bar = this.bar;
+            
+            var activeBorderColor = this.color("gridActiveBorderColor");
+            var borderColor = this.color("gridBorderColor");
 
 			for (var i = 0; i < ticks.length; i++) {
 
@@ -121,7 +124,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				axis.append(this.line(chart, {
 					x2 : (grid.line) ? chart.area('width') : -bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : isZero ? activeBorderColor : borderColor,
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
 

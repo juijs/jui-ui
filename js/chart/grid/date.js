@@ -162,9 +162,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             var self = this;
 
             function new_scale(i) {
-                if (_.typeCheck("date", i)) return old_scale(+i);
-				var str = self.axis.data[i][key];
-                return old_scale(_.typeCheck("string", str) ? +new Date(str) : +str);
+                if (typeof i == 'number') {
+                    return old_scale(self.axis.data[i][key]);
+                } else {
+                    return old_scale(+i);
+                }
             }
 
             old_scale.update = function(obj) {
@@ -237,7 +239,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(chart, orient, grid),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).rangeRound(range);
+			this.scale = UtilScale.time().domain(domain).range(range);
 
 
 

@@ -8,7 +8,7 @@
 </head>
 <body class="jui">
 
-<div id="chart" ></div>
+<div id="chart" style="transform: translate3d(0, 0, 0);" ></div>
 <div><canvas id="chartCanvas"></canvas></div>
 <script id="tpl_tooltip" type="text/template">
     <div class="tooltip tooltip-top tooltip-black">
@@ -19,7 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
-        var maxValue = 3000;
+        var maxValue = 30000;
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -35,7 +35,7 @@
         var index = maxValue;
         while(index--) {
             data.push({
-                date: time.add(start, time.seconds, getTime()),
+                date: +time.add(start, time.seconds, getTime()),
                 name: getNumber(),
                 value : getNumber(),
                 test : getNumber()
@@ -48,7 +48,7 @@
             var index = maxValue;
             while(index--) {
                 data.push({
-                    date: time.add(start, time.seconds, getTime()),
+                    date: +time.add(start, time.seconds, getTime()),
                     name: getNumber(),
                     value : getNumber(),
                     test : getNumber()
@@ -60,8 +60,8 @@
 
 
          var c = chart("#chart", {
-            width: 400,
-            height : 300,
+            width: 800,
+            height : 800,
             theme : "jennifer",
             axis : {
                 data : data,
@@ -102,7 +102,7 @@
         });
 
         var tim = setInterval(function() {
-            c.update(data = changeData(data));
+            c.get('axis', 0).update(data /* = changeData(data)*/);
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 

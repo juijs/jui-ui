@@ -372,45 +372,34 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var distDomain = null;
 			var distRange = null;
+            
+            var callFunction = null; 
 
 			function func(x) {
 
-				var key = x + '';
-
-				if (typeof _cache[key] != 'undefined') {
-					return _cache[key];
-				}
-
-				var max = func.max();
-				var min = func.min();
-
 				if (domainMax < x) {
 					if (_isClamp) {
-						_cache[key] = domainMax;
 						return domainMax;
 					}
 
-					_cache[key] = _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
-					return _cache[key];
+					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
-						_cache[key] = domainMin;
 						return domainMin;
 					}
 
-					_cache[key] = _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
-					return _cache[key];
+					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
 				} else {
 					var pos = (x - domainMin) / (distDomain);
 
-					var scale = _isRound ?  roundFunction : numberFunction ;
-
-					_cache[key] = scale(pos);
-					return _cache[key];
+					return callFunction(pos);
 				}
 
 			}
 
+            func.cache = function() {
+                return _cache;
+            }
 
 			func.min = function() {
 				return Math.min.apply(Math, _domain);
@@ -471,12 +460,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				rangeMax = func.rangeMax();
 
 				distRange = Math.abs(rangeMax - rangeMin);
+                
+                callFunction = _isRound ? roundFunction : numberFunction;
 
 				return this;
 			}
 
 			func.rangeRound = function(values) {
 				_isRound = true;
+                
 				return func.range(values);
 			}
 

@@ -26,18 +26,19 @@ jui.define("util.math", [], function() {
 
 		// 중간값 계산 하기 
 		interpolateNumber : function(a, b) {
+            var dist = (b - a);
 			return function(t) {
-				return a + (b - a) * t;
+				return a + dist * t;
 			}
 		},
 
 		// 중간값 round 해서 계산하기
 		interpolateRound : function(a, b) {
-			var f = this.interpolateNumber(a, b);
 
-			return function(t) {
-				return Math.round(f(t));
-			}
+            var dist = (b - a);
+            return function(t) {
+                return Math.round(a + dist * t);
+            }
 		},
 
 		/**

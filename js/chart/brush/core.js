@@ -145,31 +145,35 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var xy = [],
                 series = {},
                 length = this.listData().length,
-                i = length;
+                i = length,
+                targetLength = this.brush.target.length;
 
             if(isCheckMinMax !== false) {
                 series = getMinMaxValue(this.axis.data, this.brush.target);
             }
 
+            for(var j = 0; j < targetLength; j++) {
+                xy[j] = {
+                    x: new Float32Array(length),
+                    y: new Float32Array(length),
+                    value: new Array(length),
+                    min: [],
+                    max: []
+                };
+            }
+            
+            var axisData = this.axis.data;
+            var x = this.axis.x;
+            var y = this.axis.y;
+            
             while(i--) {
-                var data = this.axis.data[i],
-                    startX = this.axis.x(i);
+                var data = axisData[i],
+                    startX = x(i);
 
-                for(var j = 0; j < this.brush.target.length; j++) {
+                for(var j = 0; j < targetLength ; j++) {
                     var key = this.brush.target[j],
                         value = data[key],
-                        startY = this.axis.y(value);
-
-                    if(!xy[j]) {
-                        xy[j] = {
-                            x: new Array(length),
-                            y: new Array(length),
-                            value: new Array(length),
-                            min: [],
-                            max: [],
-                            length: length
-                        };
-                    }
+                        startY = y(value);
 
                     xy[j].x[i] = startX;
                     xy[j].y[i] = startY;
@@ -180,6 +184,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         xy[j].max[i] = (value == series[key].max);
                     }
                 }
+
             }
 
             return xy;

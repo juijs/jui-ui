@@ -16,7 +16,6 @@ jui.define("util.svg.element", [], function() {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
             this.childrens = [];
             this.parent = null;
-            this.attributes = {};
             this.styles = {};
 
             // 기본 속성 설정
@@ -113,12 +112,10 @@ jui.define("util.svg.element", [], function() {
             }
 
             for(var k in attr) {
-                this.attributes[k] = attr[k];
-
                 if(k.indexOf("xlink:") != -1) {
-                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, this.attributes[k]);
+                    this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, this.attributes[k]);
+                    this.element.setAttributeNS(null, k, attr[k]);
                 }
             }
 
@@ -430,8 +427,8 @@ jui.define("util.svg.element.path", [], function() { // path
          * 심볼 추가 하기 (튜닝)
          */
         this.template = function(cx, cy, tpl) {
-            //ordersString += " M" + (cx) + "," + (cy) + tpl;
-            orders.push(" M" + (cx) + "," + (cy) + tpl);
+            ordersString += " M" + (cx) + "," + (cy) + tpl;
+            //orders.push([" M" , (cx) , "," , (cy) , tpl].join(""));
         }
 
         /**
