@@ -30,6 +30,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return seriesList;
         }
 
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "brush brush-" + this.brush.type });
+            obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
+        }
+
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *

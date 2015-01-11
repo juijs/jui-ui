@@ -23,6 +23,10 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return list;
         }
 
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "widget widget-" + this.widget.type });
+        }
+
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
 
