@@ -1,6 +1,7 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
+        var self = this;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
@@ -16,8 +17,6 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.setActiveEvent = function(elem) {
-            var self = this;
-
             elem.on(this.brush.activeEvent, function(e) {
                 self.setActiveEffect(elem);
             });
@@ -124,6 +123,20 @@ jui.define("chart.brush.line", [], function() {
 
         this.draw = function() {
             return this.drawLine(this.getXY());
+        }
+
+        this.drawAnimate = function() {
+            var area = this.chart.area();
+
+            return [ this.chart.svg.animateTransform({
+                attributeName: "transform",
+                type: "translate",
+                from: area.x + " " + area.height,
+                to: area.x + " " + area.y,
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
+            }) ];
         }
 	}
 

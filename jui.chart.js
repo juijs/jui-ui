@@ -3793,6 +3793,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             // Call draw method (All)
 			var obj = this.draw();
 
+            // Call drawAnimate method (All)
+            if(_.typeCheck("function", this.drawAnimate)) {
+                var list = this.drawAnimate();
+
+                if(!_.typeCheck("array", list)) {
+                    list = [ list ];
+                }
+
+                for(var i = 0; i < list.length; i++) {
+                    obj.append(list[i]);
+                }
+            }
+
             if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
@@ -9027,6 +9040,7 @@ jui.define("chart.brush.equalizer", [], function() {
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
+        var self = this;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
@@ -9042,8 +9056,6 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.setActiveEvent = function(elem) {
-            var self = this;
-
             elem.on(this.brush.activeEvent, function(e) {
                 self.setActiveEffect(elem);
             });
@@ -9150,6 +9162,20 @@ jui.define("chart.brush.line", [], function() {
 
         this.draw = function() {
             return this.drawLine(this.getXY());
+        }
+
+        this.drawAnimate = function() {
+            var area = this.chart.area();
+
+            return [ this.chart.svg.animateTransform({
+                attributeName: "transform",
+                type: "translate",
+                from: area.x + " " + area.height,
+                to: area.x + " " + area.y,
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
+            }) ];
         }
 	}
 
@@ -9399,6 +9425,20 @@ jui.define("chart.brush.scatter", [], function() {
 
         this.draw = function() {
             return this.drawScatter(this.getXY());
+        }
+
+        this.drawAnimate = function() {
+            var area = this.chart.area();
+
+            return this.chart.svg.animateTransform({
+                attributeName: "transform",
+                type: "translate",
+                from: area.x + " " + area.height,
+                to: area.x + " " + area.y,
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
+            });
         }
     }
 

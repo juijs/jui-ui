@@ -91,6 +91,20 @@ jui.define("chart.brush.scatter", [], function() {
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+
+        this.drawAnimate = function() {
+            var area = this.chart.area();
+
+            return this.chart.svg.animateTransform({
+                attributeName: "transform",
+                type: "translate",
+                from: area.x + " " + area.height,
+                to: area.x + " " + area.y,
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
+            });
+        }
     }
 
     ScatterBrush.setup = function() {

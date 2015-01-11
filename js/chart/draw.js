@@ -27,6 +27,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             // Call draw method (All)
 			var obj = this.draw();
 
+            // Call drawAnimate method (All)
+            if(_.typeCheck("function", this.drawAnimate)) {
+                var list = this.drawAnimate();
+
+                if(!_.typeCheck("array", list)) {
+                    list = [ list ];
+                }
+
+                for(var i = 0; i < list.length; i++) {
+                    obj.append(list[i]);
+                }
+            }
+
             if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
