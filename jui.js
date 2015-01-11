@@ -10425,8 +10425,8 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 */
 		this.render = function() {
-            if(!_.typeCheck("function", this.draw)) {
-                throw new Error("JUI_CRITICAL_ERR: 'draw' method must be implemented");
+            if(!_.typeCheck("function", this.draw) || !_.typeCheck("function", this.drawAfter)) {
+                throw new Error("JUI_CRITICAL_ERR: 'draw & drawAfter' method must be implemented");
             }
 
             // Call drawBefore method (All)
@@ -10453,14 +10453,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             if(!_.typeCheck("object", obj)) {
                 throw new Error("JUI_CRITICAL_ERR: 'draw' method should return the object");
             } else {
-                if(_.typeCheck("object", this.brush)) {
-                    obj.attr({ "class": "brush brush-" + this.brush.type });
-                    obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
-                } else if(_.typeCheck("object", this.widget)) {
-                    obj.attr({ "class": "widget widget-" + this.widget.type });
-                } else if(_.typeCheck("object", this.grid)) {
-                    obj.root.attr({ "class": "grid grid-" + this.grid.type });
-                }
+                this.drawAfter(obj);
             }
 
             return obj;
@@ -12036,6 +12029,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
      * @abstract
 	 */
 	var CoreGrid = function() {
+
+		this.drawAfter = function(obj) {
+			obj.root.attr({ "class": "grid grid-" + this.grid.type});
+		}
 
 		/**
 		 * @method wrapper  
@@ -14349,6 +14346,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return seriesList;
         }
 
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "brush brush-" + this.brush.type });
+            obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
+        }
+
         /**
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
@@ -15816,6 +15818,13 @@ jui.define("chart.brush.line", [], function() {
                 type: "translate",
                 from: area.x + " " + area.height,
                 to: area.x + " " + area.y,
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
+            }), this.chart.svg.animate({
+                attributeName: "opacity",
+                from: "0",
+                to: "1",
                 begin: "0s" ,
                 dur: "0.4s",
                 repeatCount: "1"
@@ -17516,6 +17525,10 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             return list;
+        }
+
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 
         this.balloonPoints = function(type, w, h, anchor) {

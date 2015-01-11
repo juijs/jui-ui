@@ -7,6 +7,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
+		this.drawAfter = function(obj) {
+			obj.root.attr({ "class": "grid grid-" + this.grid.type});
+		}
+
 		/**
 		 * @method wrapper  
          * scale wrapper 

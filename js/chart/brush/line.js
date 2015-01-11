@@ -136,6 +136,13 @@ jui.define("chart.brush.line", [], function() {
                 begin: "0s" ,
                 dur: "0.4s",
                 repeatCount: "1"
+            }), this.chart.svg.animate({
+                attributeName: "opacity",
+                from: "0",
+                to: "1",
+                begin: "0s" ,
+                dur: "0.4s",
+                repeatCount: "1"
             }) ];
         }
 	}

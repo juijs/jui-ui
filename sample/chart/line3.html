@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    var data = [
+        { apple : 26.1, ms : 24.86, oracle : 22.08 },
+        { apple : 43.83, ms : 27.14, oracle : 30.15 },
+        { apple : 55.03, ms : 24, oracle : 36.88 },
+        { apple : 72.95, ms : 25.39, oracle : 32.78 }
+    ];
+
+    var data2 = [
+        { apple : 55.03, ms : 24, oracle : 36.88 },
+        { apple : 72.95, ms : 25.39, oracle : 32.78 },
+        { apple : 43.83, ms : 27.14, oracle : 30.15 },
+        { apple : 55.03, ms : 24, oracle : 36.88 }
+    ];
+
+    jui.ready([ "chart.builder" ], function(chart) {
+        c = chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            padding : 50,
+            axis : {
+                x : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    line : true,
+                    orient : "left"
+                },
+                y :
+                {
+                    type : 'range',
+                    domain : function(d) {
+                        return [d.apple, d.ms, d.oracle];
+                    },
+                    step : 10,
+                    orient : "bottom"
+                },
+                //area : { x : 0, y : 0, width : '100%', height : '100%' },
+                data : data
+            },
+            brush : [
+                {
+                    type : 'line',
+                    display : 'max',
+                    activeEvent : "click",
+                    active: "ms"
+                }
+            ],
+            widget : [
+                {
+                    type : "title",
+                    text : "text",
+                    render : true
+                },
+                {
+                    type : "tooltip"
+                }
+            ]
+        });
+	})
+</script>
+
+
+</body>
+</html>
