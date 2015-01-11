@@ -648,7 +648,8 @@
 						typeof(value) == "object" &&
 						value !== null &&
 						!(value instanceof Array) &&
-						!(value instanceof Date)
+						!(value instanceof Date) &&
+						!(value instanceof RegExp)
 					);
 				}
 
@@ -1157,7 +1158,7 @@
 
 		setup: function(options) {
 			if(utility.typeCheck("object", options)) {
-				globalOpts = $.extend(globalOpts, options);
+				globalOpts = utility.extend(globalOpts, options);
 			}
 
 			return globalOpts;

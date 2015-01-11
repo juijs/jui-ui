@@ -57,20 +57,6 @@
                 size : 10,
                 target : [ "name", "name2" ]
             }],
-            widget : [
-                { type : 'title', text : 'Cross Widget Sample' },
-                {
-                    type : 'cross',
-                    yFormat : function(d) {
-                        return Math.round(d);
-                    },
-                    xFormat : function(d) {
-                        return _.dateFormat(d, "hh:mm");
-                    },
-                    brush : 1
-                },
-                { type : 'tooltip' }
-            ],
             style : {
                 scatterBorderWidth: 2,
                 crossBalloonBackgroundColor: "red"

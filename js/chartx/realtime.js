@@ -1,7 +1,8 @@
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     var UI = function() {
-        var interval = null,
+        var axis = null,
+            interval = null,
             dataList = [];
 
         function runningChart(self) {
@@ -16,12 +17,11 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }
 
-            self.chart.updateAxis(0, {
-                x: {
-                    domain: domain
-                },
-                data: dataList
+            axis.set("x", {
+                domain: domain
             });
+
+            axis.update(dataList);
         }
 
         function initDomain(self) {
@@ -33,7 +33,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "interval", "period" ];
+                excepts = [ "interval", "period", "axis" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -49,7 +49,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
             var axis_domain = target;
-            if (_.typeCheck("array", target )) {
+
+            if(_.typeCheck("array", target )) {
                 axis_domain = (function(target) {
                     return function(d) {
                         var arr = [];
@@ -83,23 +84,26 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }, getOptions(this)));
 
-            // 초기값 세팅
+            // 기본 엑시스 설정
+            axis = this.chart.get("axis", 0);
+
+            // 초기값 설정
             if(opts.axis.data.length > 0) {
                 this.update(opts.axis.data);
             }
 
-            // 그리드 러닝
+            // 리얼타임 그리드 시작
             this.start();
         }
 
         this.update = function(data) {
             dataList = data;
-            this.chart.update(dataList);
+            axis.update(dataList);
         }
 
         this.clear = function() {
             dataList = [];
-            this.chart.update([]);
+            axis.update([]);
         }
 
         this.reset = function() {

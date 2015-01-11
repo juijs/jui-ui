@@ -58,7 +58,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                     start += 1;
                 }
 
-                chart.zoom(start, start + bufferCount);
+                axis.zoom(start, start + bufferCount);
 
                 // 차트 렌더링이 활성화되지 않았을 경우
                 if(!chart.isRender()) {

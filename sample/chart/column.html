@@ -70,7 +70,7 @@
             interpolate : /<\?=([\s\S]+?)\?>/g,
             escape : /<\?-([\s\S]+?)\?>/g
         },
-        logUrl: "../../tool/debug.html"
+        logUrl: "../../tool/debug22.html"
     });
 
     jui.ready([ "chart.builder", "uix.table" ], function(chart, table) {
@@ -160,11 +160,11 @@
         });
 
         c2[0].updateBrush(0, { target: "name" });
-        c2[0].update(data);
+        c2[0].get("axis", 0).update(data);
         c2[0].render();
 
         c2[1].updateBrush(0, { target: "value" });
-        c2[1].update(data);
+        c2[1].get("axis", 0).update(data);
         c2[1].render();
 
         table = table("#table", {

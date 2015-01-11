@@ -648,7 +648,8 @@
 						typeof(value) == "object" &&
 						value !== null &&
 						!(value instanceof Array) &&
-						!(value instanceof Date)
+						!(value instanceof Date) &&
+						!(value instanceof RegExp)
 					);
 				}
 
@@ -1157,7 +1158,7 @@
 
 		setup: function(options) {
 			if(utility.typeCheck("object", options)) {
-				globalOpts = $.extend(globalOpts, options);
+				globalOpts = utility.extend(globalOpts, options);
 			}
 
 			return globalOpts;
@@ -3829,7 +3830,144 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" ], function($, _, SVGUtil, ColorUtil) {
+jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
+
+    var Axis = function(chart, axis) {
+        var self = this;
+
+        function page(pNo) {
+            var dataList = self.origin,
+                limit = self.buffer,
+                maxPage = Math.ceil(dataList.length / limit);
+
+            // 최소 & 최대 페이지 설정
+            if(pNo < 1) {
+                self.page = 1;
+            } else {
+                self.page = (pNo > maxPage) ? maxPage : pNo;
+            }
+
+            self.start = (self.page - 1) * limit, self.end = self.start + limit;
+
+            // 마지막 페이지 처리
+            if(self.end > dataList.length) {
+                self.start = dataList.length - limit;
+                self.end = dataList.length;
+            }
+
+            if(self.end <= dataList.length) {
+                self.start = (self.start < 0) ? 0 : self.start;
+                self.data = dataList.slice(self.start, self.end);
+
+                if(dataList.length > 0) self.page++;
+            }
+        }
+
+        function init() {
+            _.extend(self, axis);
+
+            // 엑시스 영역 설정
+            self.area = _.extend(self.area, {
+                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+            }, true);
+
+            // 원본 데이터 설정
+            self.origin = self.data;
+
+            page(1);
+        }
+
+        this.update = function(data) {
+            this.origin = data;
+            this.page = 1;
+            this.start = 0;
+            this.end = 0;
+
+            this.screen(1);
+        }
+
+        this.screen = function(pNo) {
+            page(pNo);
+
+            if(this.end <= this.origin.length) {
+                if(chart.isRender()) chart.render();
+            }
+        }
+
+        this.next = function() {
+            var dataList = this.origin,
+                limit = this.buffer,
+                step = this.shift;
+
+            this.start += step;
+
+            var isLimit = (this.start + limit > dataList.length);
+
+            this.end = (isLimit) ? dataList.length : this.start + limit;
+            this.start = (isLimit) ? dataList.length - limit : this.start;
+            this.start = (this.start < 0) ? 0 : this.start;
+            this.data = dataList.slice(this.start, this.end);
+
+            if(chart.isRender()) chart.render();
+        }
+
+        this.prev = function() {
+            var dataList = this.origin,
+                limit = this.buffer,
+                step = this.shift;
+
+            this.start -= step;
+
+            var isLimit = (axis.start < 0);
+
+            this.end = (isLimit) ? limit : this.start + limit;
+            this.start = (isLimit) ? 0 : this.start;
+            this.data = dataList.slice(this.start, this.end);
+
+            if(chart.isRender()) chart.render();
+        }
+
+        this.zoom = function(start, end) {
+            if(start == end) return;
+
+            var dataList = this.origin;
+            this.end = (end > dataList.length) ? dataList.length : end;
+            this.start = (start < 0) ? 0 : start;
+            this.data = dataList.slice(this.start, this.end);
+
+            if(chart.isRender()) chart.render();
+        }
+
+        // 빌더에서 동적 생성하는 메소드
+        this.x = function() {}
+        this.y = function() {}
+        this.c = function() {}
+        this.set = function() {}
+
+        init();
+    }
+
+    Axis.setup = function() {
+        return {
+            x: null,
+            y: null,
+            c: null,
+            data: [],
+            origin: [],
+            area: {},
+            buffer: 10000,
+            shift: 1,
+            page: 1,
+            start: 0,
+            end: 0
+        }
+    }
+
+    return Axis;
+});
+
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
+    function($, _, SVGUtil, ColorUtil, Axis) {
 
     /**
      * Common Logic
@@ -3866,7 +4004,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
      *
      */
     var UI = function() {
-        var _data = [], _tempData = [];
         var _axis = [], _brush = [], _widget = [];
         var _padding, _series, _area, _panel, _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
@@ -3929,18 +4066,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             _panel = null;
         }
 
-        function saveData(data) {
-            _tempData = _data;
-            _data = data;
-        }
-
-        function restoreData() {
-            _data = _tempData;
-            _tempData = [] ;
-        }
-
         function drawBefore(self) {
-            _axis = _.deepClone(_options.axis, { data : true, origin : true });
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -3973,7 +4099,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
         function drawAxis(self) {
 
-            function drawAxisType(axis, k, chart) {
+            function drawGridType(axis, k) {
+                if(!_.typeCheck("object", axis[k])) return null;
+
+                // 축 위치 설정
+                axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
                 // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
@@ -3986,8 +4116,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 jui.defineOptions(Grid, axis[k]);
 
                 // 엑시스 기본 프로퍼티 정의
-                var obj = new Grid(chart, axis, axis[k]);
-                obj.chart = chart;
+                var obj = new Grid(self, axis, axis[k]);
+                obj.chart = self;
                 obj.axis = axis;
                 obj.grid = axis[k];
 
@@ -3995,13 +4125,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                 // 그리드 별 위치 선정하기
                 if(axis[k].orient == "left") {
-                    elem.root.translate(_area.x + chart.area("x") - axis[k].dist, _area.y);
+                    elem.root.translate(_area.x + self.area("x") - axis[k].dist, _area.y);
                 } else if(axis[k].orient == "right") {
-                    elem.root.translate(_area.x + chart.area("x2") + axis[k].dist, _area.y);
+                    elem.root.translate(_area.x + self.area("x2") + axis[k].dist, _area.y);
                 } else if(axis[k].orient == "bottom") {
-                    elem.root.translate(_area.x , _area.y + chart.area("y2") + axis[k].dist);
+                    elem.root.translate(_area.x , _area.y + self.area("y2") + axis[k].dist);
                 } else if(axis[k].orient == "top") {
-                    elem.root.translate(_area.x , _area.y + chart.area("y") - axis[k].dist);
+                    elem.root.translate(_area.x , _area.y + self.area("y") - axis[k].dist);
                 } else {
                     // custom
                     if(elem.root) elem.root.translate(_area.x, _area.y);
@@ -4010,40 +4140,29 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                 return elem.scale;
             }
 
-            for(var key in _axis) {
-                var axis = _axis[key];
+            // 엑시스 리스트 얻어오기
+            var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
-                if(!axis) continue;
+            for(var key in axisList) {
+                jui.defineOptions(Axis, axisList[key]);
 
-                // 엑시스 영역 설정
-                axis.area = _.extend(axis.area, {
-                    x: 0, y: 0 , width: _area.width, height: _area.height
-                }, true);
-
-                savePanel(caculatePanel(axis.area));
-
-                if(_.typeCheck("array", axis.data))
-                    saveData(axis.data);
-
-                if(_.typeCheck("object", axis.x)) {
-                    axis.x.orient = axis.x.orient || "bottom"
-                    axis.x = drawAxisType(axis, "x", self);
+                if(!_axis[key]) {
+                    _axis[key] = new Axis(self, axisList[key]);
+                    _axis[key].set = function(type, options) {
+                        _.extend(_options.axis[key][type], options);
+                        if(self.isRender()) self.render();
+                    }
+                } else {
+                    _axis[key].x = axisList[key].x;
+                    _axis[key].y = axisList[key].y;
+                    _axis[key].c = axisList[key].c;
                 }
 
-                if(_.typeCheck("object", axis.y)) {
-                    axis.y.orient = axis.y.orient || "left";
-                    axis.y = drawAxisType(axis, "y", self);
-                }
-
-                if(_.typeCheck("object", axis.c)) {
-                    axis.c = drawAxisType(axis, "c", self);
-                }
-
-                if(_.typeCheck("array", axis.data))
-                    restoreData();
-
+                savePanel(caculatePanel(_axis[key].area));
+                _axis[key].x = drawGridType(_axis[key], "x");
+                _axis[key].y = drawGridType(_axis[key], "y");
+                _axis[key].c = drawGridType(_axis[key], "c");
                 restorePanel();
-
             }
         }
 
@@ -4084,15 +4203,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, axis, draws[i]);
-
                     draw.chart = self;
                     draw.axis = axis;
                     draw.brush = draws[i];
 
                     // 브러쉬 렌더링
-                    if(axis) saveData(axis.data);
                     draw.render();
-                    if(axis) restoreData();
                 }
             }
         }
@@ -4106,15 +4222,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
                     // 위젯 기본 옵션과 사용자 옵션을 합침
                     jui.defineOptions(Obj, draws[i]);
-                    var axis = _axis[draws[i].axis];
 
                     // 위젯 인덱스 설정
                     draws[i].index = i;
 
                     // 위젯 기본 프로퍼티 정의
-                    var draw = new Obj(self, axis, draws[i]);
+                    var brush = _brush[_.typeCheck("array", draws[i].brush) ? draws[i].brush[0] : draws[i].brush],
+                        draw = new Obj(self, _axis[brush.axis], draws[i]);
+
                     draw.chart = self;
-                    draw.axis = axis;
+                    draw.axis = _axis[brush.axis];
                     draw.widget = draws[i];
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
@@ -4123,14 +4240,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
                         return;
                     }
 
-                    if(axis) saveData(axis.data);
-
                     var elem = draw.render();
                     if(!draw.isRender()) {
                         self.svg.autoRender(elem, false);
                     }
-
-                    if(axis) restoreData();
                 }
             }
         }
@@ -4289,35 +4402,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             return createGradient(self, parsedColor, color);
         }
 
-        function getBaseAxis() {
-            var axisArr = [];
-
-            for(var i = 0; i < _options.baseAxis.length; i++) {
-                var axis = _options.axis[_options.baseAxis[i]];
-
-                if(axis) {
-                    axisArr.push(axis);
-                }
-            }
-
-            return axisArr;
-        }
-
-        function existBaseAxis() {
-            var exist = false;
-
-            for(var i = 0; i < _options.baseAxis.length; i++) {
-                var axis = _options.axis[_options.baseAxis[i]];
-
-                if(axis) {
-                    exist = true;
-                    break;
-                }
-            }
-
-            return exist;
-        }
-
         function setThemeStyle(theme, options) {
             if(_.typeCheck("string", theme)) {
                 _theme = _.extend(jui.include("chart.theme." + theme), options);
@@ -4381,11 +4465,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             });
 
             // 차트 기본 렌더링
-            if(existBaseAxis()) {
-                this.update();
-            } else {
-                this.render();
-            }
+            this.render();
 
             // 차트 이벤트 설정
             setChartEvent(this);
@@ -4648,182 +4728,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
         }
 
         /**
-         * data 업데이트 후 차트 다시 생성
-         *
-         * @param {array} data
-         */
-        this.update = function(data) {
-            var axisList = getBaseAxis();
-
-            for(var i = 0; i < axisList.length; i++) {
-                var axis = axisList[i];
-
-                if (data) {
-                    axis.origin = data;
-                } else {
-                    axis.origin = axis.data || [];
-                }
-
-                axis.buffer = axis.buffer || 10000;
-                axis.shift = axis.shift || 1;
-                axis.page = 1;
-                axis.start = 0;
-                axis.end = 0;
-            }
-
-            this.page(1);
-        }
-
-        this.page = function(pNo) {
-            var axisList = getBaseAxis();
-
-            for(var i = 0; i < axisList.length; i++) {
-                var axis = axisList[i];
-
-                var dataList = axis.origin,
-                    limit = axis.buffer,
-                    maxPage = Math.ceil(dataList.length / limit);
-
-                // 최소 & 최대 페이지 설정
-                if(pNo < 1) {
-                    axis.page = 1;
-                } else {
-                    axis.page = (pNo > maxPage) ? maxPage : pNo;
-                }
-
-                axis.start = (axis.page - 1) * limit, axis.end = axis.start + limit;
-
-                // 마지막 페이지 처리
-                if(axis.end > dataList.length) {
-                    axis.start = dataList.length - limit;
-                    axis.end = dataList.length;
-                }
-
-                if(axis.end <= dataList.length) {
-                    axis.start = (axis.start < 0) ? 0 : axis.start;
-                    axis.data = dataList.slice(axis.start, axis.end);
-
-                    if (this.isRender()) this.render();
-                    if (dataList.length > 0) axis.page++;
-                }
-            }
-        }
-
-        this.next = function() {
-            var axisList = getBaseAxis();
-
-            for(var i = 0; i < axisList.length; i++) {
-                var axis = axisList[i];
-
-                var dataList = axis.origin,
-                    limit = axis.buffer,
-                    step = axis.shift;
-
-                axis.start += step;
-
-                var isLimit = (axis.start + limit > dataList.length);
-
-                axis.end = (isLimit) ? dataList.length : axis.start + limit;
-                axis.start = (isLimit) ? dataList.length - limit : axis.start;
-                axis.start = (axis.start < 0) ? 0 : axis.start;
-                axis.data = dataList.slice(axis.start, axis.end);
-
-                if(this.isRender()) this.render();
-            }
-        }
-
-        this.prev = function() {
-            var axisList = getBaseAxis();
-
-            for(var i = 0; i < axisList.length; i++) {
-                var axis = axisList[i];
-
-                var dataList = axis.origin,
-                    limit = axis.buffer,
-                    step = axis.shift;
-
-                axis.start -= step;
-
-                var isLimit = (axis.start < 0);
-
-                axis.end = (isLimit) ? limit : axis.start + limit;
-                axis.start = (isLimit) ? 0 : axis.start;
-                axis.data = dataList.slice(axis.start, axis.end);
-
-                if(this.isRender()) this.render();
-            }
-        }
-
-        this.zoom = function(start, end) {
-            if(start == end) return;
-            var axisList = getBaseAxis();
-
-            for(var i = 0; i < axisList.length; i++) {
-                var axis = axisList[i];
-
-                var dataList = axis.origin;
-                axis.end = (end > dataList.length) ? dataList.length : end;
-                axis.start = (start < 0) ? 0 : start;
-                axis.data = dataList.slice(axis.start, axis.end);
-
-                if(this.isRender()) this.render();
-            }
-        }
-
-        /**
-         * chart CSV 데이터 갱신 후 렌더링
-         *
-         * @param csv
-         */
-        this.setCsv = function(csv) {
-            var chartFields = [],
-                csvFields = _options.csv,
-                csvNumber = _options.csvNumber;
-
-            for(var key in _series) {
-                chartFields.push(key);
-            }
-
-            if(chartFields.length == 0 && !csvFields)
-                return;
-
-            var fields = _.getCsvFields(chartFields, csvFields),
-                csvNumber = (csvNumber) ? _.getCsvFields(fields, csvNumber) : null;
-
-            this.update(_.csvToData(fields, csv, csvNumber));
-        }
-
-        /**
-         * chart CSV 파일 데이터 설정
-         *
-         * @param file
-         */
-        this.setCsvFile = function(file) {
-            var self = this;
-
-            _.fileToCsv(file, function(csv) {
-                self.setCsv(csv);
-            });
-        }
-
-
-        /**
-         * Brush & Widget & Axis 관련 메소드
+         * Brush & Widget 관련 메소드
          *
          */
-
-        this.addAxis = function(axis) {
-            _options.axis.push(axis);
-            if(this.isRender()) this.render();
-        }
-        this.removeAxis = function(index) {
-            _options.axis.splice(index, 1);
-            if(this.isRender()) this.render();
-        }
-        this.updateAxis = function(index, axis) {
-            _.extend(_options.axis[index], axis);
-            if(this.isRender()) this.render();
-        }
 
         this.addBrush = function(brush) {
             _options.brush.push(brush);
@@ -4918,14 +4825,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             brush: [],
             widget: [],
             axis: [],
-            baseAxis: 0,
             bind: null,
             format: null,
-            render: true,
-
-            // csv
-            csv: null,
-            csvNumber: null
+            render: true
         }
     }
 
@@ -10921,7 +10823,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var CoreWidget = function() {
-        function getBrushIndex(brush) {
+        function getIndexArray(brush) {
             var list = [ 0 ];
 
             if(_.typeCheck("array", brush)) {
@@ -10978,7 +10880,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
         this.eachBrush = function(callback) {
             if(!_.typeCheck("function", callback)) return;
-            var list = getBrushIndex(this.widget.brush);
+            var list = getIndexArray(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
                 callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
@@ -10986,7 +10888,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.listBrush = function() {
-            var list = getBrushIndex(this.widget.brush),
+            var list = getIndexArray(this.widget.brush),
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
@@ -11001,7 +10903,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.existBrush = function(index) {
-            var list = getBrushIndex(this.widget.brush);
+            var list = getIndexArray(this.widget.brush);
 
             return ($.inArray(index, list) == -1) ? false : true;
         }
@@ -11017,7 +10919,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreWidget.setup = function() {
         return {
-            axis: 0,
             /**
              * @cfg {Number} [brush=0] selected brush index  
              */
@@ -11525,7 +11426,7 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                     start += 1;
                 }
 
-                chart.zoom(start, start + bufferCount);
+                axis.zoom(start, start + bufferCount);
 
                 // 차트 렌더링이 활성화되지 않았을 경우
                 if(!chart.isRender()) {
@@ -11638,7 +11539,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 // 차트 줌
                 if(start < end) {
-                    chart.zoom(start, end);
+                    axis.zoom(start, end);
                     bg.attr({ "visibility": "visible" });
 
                     // 차트 렌더링이 활성화되지 않았을 경우
@@ -11705,7 +11606,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         }).translate(cw - r, -r);
                     }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
-                        chart.page(1);
+                        axis.screen(1);
 
                         // 차트 렌더링이 활성화되지 않았을 경우
                         if(!chart.isRender()) {
@@ -11883,7 +11784,8 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     var UI = function() {
-        var interval = null,
+        var axis = null,
+            interval = null,
             dataList = [];
 
         function runningChart(self) {
@@ -11898,12 +11800,11 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }
 
-            self.chart.updateAxis(0, {
-                x: {
-                    domain: domain
-                },
-                data: dataList
+            axis.set("x", {
+                domain: domain
             });
+
+            axis.update(dataList);
         }
 
         function initDomain(self) {
@@ -11915,7 +11816,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
         function getOptions(self) {
             var options = {},
-                excepts = [ "interval", "period" ];
+                excepts = [ "interval", "period", "axis" ];
 
             for(var key in self.options) {
                 if($.inArray(key, excepts) == -1) {
@@ -11931,7 +11832,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 target = (_.typeCheck("array", opts.brush)) ? opts.brush[0].target : opts.brush.target;
 
             var axis_domain = target;
-            if (_.typeCheck("array", target )) {
+
+            if(_.typeCheck("array", target )) {
                 axis_domain = (function(target) {
                     return function(d) {
                         var arr = [];
@@ -11965,23 +11867,26 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }, getOptions(this)));
 
-            // 초기값 세팅
+            // 기본 엑시스 설정
+            axis = this.chart.get("axis", 0);
+
+            // 초기값 설정
             if(opts.axis.data.length > 0) {
                 this.update(opts.axis.data);
             }
 
-            // 그리드 러닝
+            // 리얼타임 그리드 시작
             this.start();
         }
 
         this.update = function(data) {
             dataList = data;
-            this.chart.update(dataList);
+            axis.update(dataList);
         }
 
         this.clear = function() {
             dataList = [];
-            this.chart.update([]);
+            axis.update([]);
         }
 
         this.reset = function() {

@@ -57,7 +57,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 // 차트 줌
                 if(start < end) {
-                    chart.zoom(start, end);
+                    axis.zoom(start, end);
                     bg.attr({ "visibility": "visible" });
 
                     // 차트 렌더링이 활성화되지 않았을 경우
@@ -124,7 +124,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         }).translate(cw - r, -r);
                     }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
-                        chart.page(1);
+                        axis.screen(1);
 
                         // 차트 렌더링이 활성화되지 않았을 경우
                         if(!chart.isRender()) {

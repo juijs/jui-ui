@@ -11,7 +11,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var CoreWidget = function() {
-        function getBrushIndex(brush) {
+        function getIndexArray(brush) {
             var list = [ 0 ];
 
             if(_.typeCheck("array", brush)) {
@@ -68,7 +68,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
         this.eachBrush = function(callback) {
             if(!_.typeCheck("function", callback)) return;
-            var list = getBrushIndex(this.widget.brush);
+            var list = getIndexArray(this.widget.brush);
 
             for(var i = 0; i < list.length; i++) {
                 callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
@@ -76,7 +76,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.listBrush = function() {
-            var list = getBrushIndex(this.widget.brush),
+            var list = getIndexArray(this.widget.brush),
                 result = [];
 
             for(var i = 0; i < list.length; i++) {
@@ -91,7 +91,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.existBrush = function(index) {
-            var list = getBrushIndex(this.widget.brush);
+            var list = getIndexArray(this.widget.brush);
 
             return ($.inArray(index, list) == -1) ? false : true;
         }
@@ -107,7 +107,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreWidget.setup = function() {
         return {
-            axis: 0,
             /**
              * @cfg {Number} [brush=0] selected brush index  
              */
