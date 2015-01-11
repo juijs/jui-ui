@@ -3832,7 +3832,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
 jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
-    var Axis = function(chart, axis) {
+    var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
 
         function page(pNo) {
@@ -3864,7 +3864,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function init() {
-            _.extend(self, axis);
+            _.extend(self, cloneAxis);
 
             // 엑시스 영역 설정
             self.area = _.extend(self.area, {
@@ -3875,6 +3875,11 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             self.origin = self.data;
 
             page(1);
+        }
+
+        this.updateGrid = function(type, grid) {
+            _.extend(originAxis[type], grid);
+            if(chart.isRender()) chart.render();
         }
 
         this.update = function(data) {
@@ -3918,7 +3923,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             this.start -= step;
 
-            var isLimit = (axis.start < 0);
+            var isLimit = (this.start < 0);
 
             this.end = (isLimit) ? limit : this.start + limit;
             this.start = (isLimit) ? 0 : this.start;
@@ -3938,11 +3943,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
-        // 빌더에서 동적 생성하는 메소드
-        this.x = function() {}
-        this.y = function() {}
-        this.c = function() {}
-        this.set = function() {}
+        this.x = function(value) {}
+        this.y = function(value) {}
+        this.c = function(value) {}
 
         init();
     }
@@ -4147,11 +4150,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 jui.defineOptions(Axis, axisList[key]);
 
                 if(!_axis[key]) {
-                    _axis[key] = new Axis(self, axisList[key]);
-                    _axis[key].set = function(type, options) {
-                        _.extend(_options.axis[key][type], options);
-                        if(self.isRender()) self.render();
-                    }
+                    _axis[key] = new Axis(self, _options.axis[key], axisList[key]);
                 } else {
                     _axis[key].x = axisList[key].x;
                     _axis[key].y = axisList[key].y;
@@ -11800,7 +11799,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }
 
-            axis.set("x", {
+            axis.updateGrid("x", {
                 domain: domain
             });
 

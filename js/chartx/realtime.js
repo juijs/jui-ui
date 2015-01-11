@@ -17,7 +17,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 }
             }
 
-            axis.set("x", {
+            axis.updateGrid("x", {
                 domain: domain
             });
 

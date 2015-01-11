@@ -179,11 +179,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 jui.defineOptions(Axis, axisList[key]);
 
                 if(!_axis[key]) {
-                    _axis[key] = new Axis(self, axisList[key]);
-                    _axis[key].set = function(type, options) {
-                        _.extend(_options.axis[key][type], options);
-                        if(self.isRender()) self.render();
-                    }
+                    _axis[key] = new Axis(self, _options.axis[key], axisList[key]);
                 } else {
                     _axis[key].x = axisList[key].x;
                     _axis[key].y = axisList[key].y;
