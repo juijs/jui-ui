@@ -31,6 +31,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawAfter = function(obj) {
+            if(this.brush.clip === true) {
+                obj.attr({ "clip-path" : "url(#" + this.chart.clipId + ")" });
+            }
+
             obj.attr({ "class": "brush brush-" + this.brush.type });
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
         }
@@ -342,7 +346,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             target: null,
             colors: null,
             axis: 0,
-            index: null
+            index: null,
+            clip: true
         }
     }
 

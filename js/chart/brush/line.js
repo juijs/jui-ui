@@ -126,16 +126,33 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
+            var svg = this.chart.svg,
+                width = this.axis.area.width;
+
             root.append(
-                this.chart.svg.animate({
+                svg.animate({
                     attributeName: "opacity",
                     from: "0",
                     to: "1",
                     begin: "0s" ,
-                    dur: "1s",
-                    repeatCount: "1"
+                    dur: "1.5s",
+                    repeatCount: "1",
+                    fill: "freeze"
                 })
             );
+
+            root.each(function(i, elem) {
+                elem.append(svg.animateTransform({
+                    attributeName: "transform",
+                    type: "translate",
+                    from: (-width) + " 0",
+                    to: "0 0",
+                    begin: "0s" ,
+                    dur: "0.75s",
+                    repeatCount: "1",
+                    fill: "freeze"
+                }));
+            });
         }
 	}
 

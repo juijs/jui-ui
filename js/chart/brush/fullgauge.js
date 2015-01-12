@@ -114,7 +114,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			startAngle: 0,
 			endAngle: 300,
 			text: "",
-			unitText: ""
+			unitText: "",
+			clip: false
 		};
 	}
 

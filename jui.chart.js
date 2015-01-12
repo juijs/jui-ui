@@ -7724,6 +7724,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawAfter = function(obj) {
+            if(this.brush.clip === true) {
+                obj.attr({ "clip-path" : "url(#" + this.chart.clipId + ")" });
+            }
+
             obj.attr({ "class": "brush brush-" + this.brush.type });
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
         }
@@ -8035,7 +8039,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             target: null,
             colors: null,
             axis: 0,
-            index: null
+            index: null,
+            clip: true
         }
     }
 
@@ -8649,9 +8654,7 @@ jui.define("chart.brush.bubble", [], function() {
         }
 
         this.drawBubble = function(chart, brush, points) {
-            var g = chart.svg.group({
-                "clip-path" : "url(#" + chart.clipId + ")"
-            });
+            var g = chart.svg.group();
             
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
@@ -9224,16 +9227,33 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
+            var svg = this.chart.svg,
+                width = this.axis.area.width;
+
             root.append(
-                this.chart.svg.animate({
+                svg.animate({
                     attributeName: "opacity",
                     from: "0",
                     to: "1",
                     begin: "0s" ,
-                    dur: "1s",
-                    repeatCount: "1"
+                    dur: "1.5s",
+                    repeatCount: "1",
+                    fill: "freeze"
                 })
             );
+
+            root.each(function(i, elem) {
+                elem.append(svg.animateTransform({
+                    attributeName: "transform",
+                    type: "translate",
+                    from: (-width) + " 0",
+                    to: "0 0",
+                    begin: "0s" ,
+                    dur: "0.75s",
+                    repeatCount: "1",
+                    fill: "freeze"
+                }));
+            });
         }
 	}
 
@@ -9503,7 +9523,8 @@ jui.define("chart.brush.scatter", [], function() {
     ScatterBrush.setup = function() {
         return {
             symbol: "circle", // or triangle, rectangle, cross
-            size: 7
+            size: 7,
+            clip: false
         };
     }
 
@@ -10297,7 +10318,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			startAngle: 0,
 			endAngle: 300,
 			text: "",
-			unitText: ""
+			unitText: "",
+			clip: false
 		};
 	}
 
