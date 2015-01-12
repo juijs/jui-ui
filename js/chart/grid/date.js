@@ -169,10 +169,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
                 }
             }
 
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
-            }
-
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
         

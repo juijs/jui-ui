@@ -125,12 +125,12 @@ jui.define("chart.brush.line", [], function() {
             return this.drawLine(this.getXY());
         }
 
-        this.drawAnimate = function() {
+        this.drawAnimate = function(root) {
             var area = this.chart.area();
 
             return [ this.chart.svg.animateTransform({
                 attributeName: "transform",
-                type: "translate",
+                type: "scale",
                 from: area.x + " " + area.height,
                 to: area.x + " " + area.y,
                 begin: "0s" ,

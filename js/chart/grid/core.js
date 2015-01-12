@@ -29,12 +29,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @protected 
 		 */
 		this.wrapper = function(chart, scale, key) {
-            var self = this;
-
-			scale.update = function(obj) {
-				self.grid = $.extend(self.grid, obj);
-			}
-			
 			return scale;
 		}
 		

@@ -2697,6 +2697,7 @@ jui.define("util.svg.element", [], function() {
             this.childrens = [];
             this.parent = null;
             this.styles = {};
+            this.attributes = {};
 
             // 기본 속성 설정
             this.attr(attr);
@@ -2788,10 +2789,11 @@ jui.define("util.svg.element", [], function() {
 
         this.attr = function(attr) {
             if(typeof attr == "string") {
-                return this.element.getAttribute(attr);
+                return this.attributes[attr];
             }
 
             for(var k in attr) {
+                this.attributes[k] = attr[k];
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
@@ -2809,8 +2811,8 @@ jui.define("util.svg.element", [], function() {
                 this.styles[k] = css[k];
             }
 
-            for(var k in this.styles) {
-                list.push(k + ":" + this.styles[k]);
+            for(var k in css) {
+                list.push(k + ":" + css[k]);
             }
 
             this.attr({ style: list.join(";") });
@@ -3078,6 +3080,14 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
+        this.d = function() {
+            if (ordersString.length > 0) {
+                return ordersString;
+            } else {
+                return orders.join(" ");
+            }
+        }
+
         /**
          * 심볼 템플릿
          *
@@ -3156,6 +3166,10 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
+        }
+
+        this.points = function() {
+            return orders.join(" ");
         }
     }
 
@@ -3785,7 +3799,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var list = this.drawAnimate();
+                var list = this.drawAnimate(obj);
 
                 if(!_.typeCheck("array", list)) {
                     list = [ list ];
@@ -4104,6 +4118,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 // 축 위치 설정
                 axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
+                if (k == 'c') {
+                    axis[k].orient = 'custom';
+                }
+
                 // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
                     _.extend(axis[k], _options.axis[axis[k].extend][k], true);
@@ -4133,7 +4151,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     elem.root.translate(_area.x , _area.y + self.area("y") - axis[k].dist);
                 } else {
                     // custom
-                    if(elem.root) elem.root.translate(_area.x, _area.y);
+                    if(elem.root) elem.root.translate(_area.x + self.area("x"), _area.y + self.area('y'));
                 }
 
                 return elem.scale;
@@ -5398,12 +5416,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @protected 
 		 */
 		this.wrapper = function(chart, scale, key) {
-            var self = this;
-
-			scale.update = function(obj) {
-				self.grid = $.extend(self.grid, obj);
-			}
-			
 			return scale;
 		}
 		
@@ -6030,10 +6042,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
                 }
             }
 
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
-            }
-
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
         
@@ -6315,10 +6323,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		this.wrapper = function(chart, scale, key) {
 			var old_scale = scale;
 			var self = this;
-
-			old_scale.update = function(obj) {
-				self.grid = $.extend(self.grid, obj);
-			}
 
 			old_scale.rangeBand = function() {
 				return unit;
@@ -6932,10 +6936,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
                 return old_scale(self.axis.data[i][key]);
             }
 
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
-            }
-
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
 
@@ -7525,94 +7525,70 @@ jui.define("chart.grid.panel", [  ], function() {
 jui.define("chart.grid.table", [  ], function() {
 
     var TableGrid = function(chart, axis, grid) {
-        var start, size, rowUnit, columnUnit, outerPadding, row, column ;
+        var orient = grid.orient;
+        var rowUnit, columnUnit, outerPadding, row, column ;
 
-        function getValue(value, max) {
-            if (typeof value == 'string' && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
+        this.custom = function(chart, g) {
+            for(var r = 0; r < row; r++) {
+                for (var c = 0; c < column; c++) {
+                    var index = r * columnUnit + c;
 
-            return value;
-        }
+                    var obj = this.scale(index);
 
-        function getArrayValue (value, chart) {
-            var start;
+                    obj.x -= axis.area.x;
+                    obj.y -= axis.area.y;
 
-            if (typeof value == 'number') {
-                start = [value, value];
-            } else if (typeof value == 'string') {
+                    var rect = chart.svg.rect($.extend(obj, {
+                        fill : 'white',
+                        stroke : "white"
+                    }));
 
-                if (value.indexOf("%") > -1) {
-                    start = [getValue(value, chart.area('width')), getValue(value,  chart.area('height'))]
-                } else {
-                    start = [parseFloat(value), parseFloat(value)]
+                    g.append(rect);
                 }
-
-            } else if (value instanceof Array) {
-                for(var i = 0; i < value.length; i++) {
-                    if (i == 0) {
-                        value[i] = getValue(value[i], chart.area('width'));
-                    } else if (i == 1) {
-                        value[i] = getValue(value[i], chart.area('height'));
-                    }
-                }
-
-                start = value;
             }
-
-            return start;
         }
 
         this.drawBefore = function() {
-            start = [ 0, 0 ];
 
-            if (grid.start !== null) {
-                start = getArrayValue(grid.start, chart);
-            }
+            row = grid.rows;
+            column = grid.columns;
 
-            size = [chart.area('width'), chart.area('height')];
-            if (grid.size != null) {
-                size = getArrayValue(grid.size, chart);
-            }
-
-            row = grid.row;
-            column = grid.column;
-
-            columnUnit = size[0] / column;
-            rowUnit = size[1] / row;
+            columnUnit = axis.area.width / column;
+            rowUnit = axis.area.height / row;
 
             outerPadding = grid.outerPadding;
-        }
 
-        this.scale = function(chart) {
-            return function(i) {
+            // create scale
+            this.scale = (function(axis) {
+                return function(i) {
 
-                var r = Math.floor(i  / column) ;
-                var c = i % column;
+                    var r = Math.floor(i  / column) ;
+                    var c = i % column;
 
-                var x = c * columnUnit;
-                var y = r * rowUnit;
+                    var x = c * columnUnit;
+                    var y = r * rowUnit;
 
-                return {
-                    x : x - outerPadding,
-                    y : y - outerPadding,
-                    width : columnUnit - outerPadding*2,
-                    height : rowUnit - outerPadding*2
+                    var padding = ((column == 0) ? -outerPadding : 0);
+
+                    return {
+                        x : axis.area.x + x +  padding,
+                        y : axis.area.y + y + padding,
+                        width : columnUnit + padding*2,
+                        height : rowUnit + padding *2
+                    }
                 }
-            }
+            })(axis);
         }
 
         this.draw = function() {
-            return {
-                scale : this.scale(chart)
-            };
+            return this.drawGrid(chart, orient, "table", grid);
         }
     }
 
     TableGrid.setup = function() {
         return {
-            row: 1,
-            column: 1,
+            rows: 1,
+            columns: 1,
             outerPadding: 1
         };
     }
@@ -8837,7 +8813,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
 				startX = obj.x,
 				startY = obj.y;
-			
+
 			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
 				startInnerX = innerCircle.x,
 				startInnerY = innerCircle.y;
@@ -9166,12 +9142,12 @@ jui.define("chart.brush.line", [], function() {
             return this.drawLine(this.getXY());
         }
 
-        this.drawAnimate = function() {
+        this.drawAnimate = function(root) {
             var area = this.chart.area();
 
             return [ this.chart.svg.animateTransform({
                 attributeName: "transform",
-                type: "translate",
+                type: "scale",
                 from: area.x + " " + area.height,
                 to: area.x + " " + area.y,
                 begin: "0s" ,
@@ -10151,23 +10127,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					y : 10,
 					"text-anchor" : "middle",
 					"font-family" : chart.theme("fontFamily"),
-					"font-size" : "3.5em",
+					"font-size" : "1.5em",
 					"font-weight" : 1000,
 					"fill" : self.color(0)
-				}, value + ""));
+				}, value + brush.unitText));
 			}
-			
-			if (brush.unitText != "") {
-				g.append(chart.text({
-					x : 0,
-					y : 40,
-					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
-					"font-size" : "2em",
-					"font-weight" : 500,
-					"fill" : chart.theme("gaugeFontColor")
-				}, brush.unitText));
-			}
+
 
 			return g;
 		}
@@ -10186,35 +10151,32 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				}
 			}
 
-			var obj = axis.c(),
-				width = obj.width,
-				height = obj.height,
-				x = obj.x,
-				y = obj.y,
-				min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			w = min / 2;
-			centerX = width / 2 + x;
-			centerY = height / 2 + y;
-            outerRadius = w;
-            innerRadius = outerRadius - brush.size;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group();
+		this.drawUnit = function(index, data, group) {
+			var obj = axis.c(index);
+			var value = data[this.brush.target];
+			var max = data[this.brush.max];
+			var min = data[this.brush.min];
 
-			var rate = (brush.value - brush.min) / (brush.max - brush.min),
-                currentAngle = (brush.endAngle) * rate;
-			
+			var rate = (value - min) / (max - min),
+				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
+
 			if (brush.endAngle >= 360) {
-                brush.endAngle = 359.99999;
+				brush.endAngle = 359.99999;
 			}
-			
-			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
+
+			// center
+			w = Math.min(width, height) / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w;
+			innerRadius = outerRadius - brush.size;
+
+			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
 				fill : chart.theme("gaugeBackgroundColor")
 			});
 
@@ -10226,11 +10188,22 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 			group.append(g);
 
-            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
-            g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);
+			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
+			g = createText(brush.startAngle, brush.endAngle, min, max, value);
+			group.append(g);
 
-            return group;
+			return group;
+		}
+
+		this.draw = function() {
+			var group = chart.svg.group();
+
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
+			});
+
+			return group;
+
 		}
 	}
 

@@ -163,10 +163,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var old_scale = scale;
 			var self = this;
 
-			old_scale.update = function(obj) {
-				self.grid = $.extend(self.grid, obj);
-			}
-
 			old_scale.rangeBand = function() {
 				return unit;
 			}

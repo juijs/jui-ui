@@ -29,7 +29,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var list = this.drawAnimate();
+                var list = this.drawAnimate(obj);
 
                 if(!_.typeCheck("array", list)) {
                     list = [ list ];

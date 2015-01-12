@@ -193,10 +193,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
                 return old_scale(self.axis.data[i][key]);
             }
 
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
-            }
-
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
 

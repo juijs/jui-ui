@@ -137,6 +137,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 // 축 위치 설정
                 axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
+                if (k == 'c') {
+                    axis[k].orient = 'custom';
+                }
+
                 // 다른 그리드 옵션을 사용함
                 if(_.typeCheck("integer", axis[k].extend)) {
                     _.extend(axis[k], _options.axis[axis[k].extend][k], true);
@@ -166,7 +170,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     elem.root.translate(_area.x , _area.y + self.area("y") - axis[k].dist);
                 } else {
                     // custom
-                    if(elem.root) elem.root.translate(_area.x, _area.y);
+                    if(elem.root) elem.root.translate(_area.x + self.area("x"), _area.y + self.area('y'));
                 }
 
                 return elem.scale;

@@ -1,94 +1,70 @@
 jui.define("chart.grid.table", [  ], function() {
 
     var TableGrid = function(chart, axis, grid) {
-        var start, size, rowUnit, columnUnit, outerPadding, row, column ;
+        var orient = grid.orient;
+        var rowUnit, columnUnit, outerPadding, row, column ;
 
-        function getValue(value, max) {
-            if (typeof value == 'string' && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
+        this.custom = function(chart, g) {
+            for(var r = 0; r < row; r++) {
+                for (var c = 0; c < column; c++) {
+                    var index = r * columnUnit + c;
 
-            return value;
-        }
+                    var obj = this.scale(index);
 
-        function getArrayValue (value, chart) {
-            var start;
+                    obj.x -= axis.area.x;
+                    obj.y -= axis.area.y;
 
-            if (typeof value == 'number') {
-                start = [value, value];
-            } else if (typeof value == 'string') {
+                    var rect = chart.svg.rect($.extend(obj, {
+                        fill : 'white',
+                        stroke : "white"
+                    }));
 
-                if (value.indexOf("%") > -1) {
-                    start = [getValue(value, chart.area('width')), getValue(value,  chart.area('height'))]
-                } else {
-                    start = [parseFloat(value), parseFloat(value)]
+                    g.append(rect);
                 }
-
-            } else if (value instanceof Array) {
-                for(var i = 0; i < value.length; i++) {
-                    if (i == 0) {
-                        value[i] = getValue(value[i], chart.area('width'));
-                    } else if (i == 1) {
-                        value[i] = getValue(value[i], chart.area('height'));
-                    }
-                }
-
-                start = value;
             }
-
-            return start;
         }
 
         this.drawBefore = function() {
-            start = [ 0, 0 ];
 
-            if (grid.start !== null) {
-                start = getArrayValue(grid.start, chart);
-            }
+            row = grid.rows;
+            column = grid.columns;
 
-            size = [chart.area('width'), chart.area('height')];
-            if (grid.size != null) {
-                size = getArrayValue(grid.size, chart);
-            }
-
-            row = grid.row;
-            column = grid.column;
-
-            columnUnit = size[0] / column;
-            rowUnit = size[1] / row;
+            columnUnit = axis.area.width / column;
+            rowUnit = axis.area.height / row;
 
             outerPadding = grid.outerPadding;
-        }
 
-        this.scale = function(chart) {
-            return function(i) {
+            // create scale
+            this.scale = (function(axis) {
+                return function(i) {
 
-                var r = Math.floor(i  / column) ;
-                var c = i % column;
+                    var r = Math.floor(i  / column) ;
+                    var c = i % column;
 
-                var x = c * columnUnit;
-                var y = r * rowUnit;
+                    var x = c * columnUnit;
+                    var y = r * rowUnit;
 
-                return {
-                    x : x - outerPadding,
-                    y : y - outerPadding,
-                    width : columnUnit - outerPadding*2,
-                    height : rowUnit - outerPadding*2
+                    var padding = ((column == 0) ? -outerPadding : 0);
+
+                    return {
+                        x : axis.area.x + x +  padding,
+                        y : axis.area.y + y + padding,
+                        width : columnUnit + padding*2,
+                        height : rowUnit + padding *2
+                    }
                 }
-            }
+            })(axis);
         }
 
         this.draw = function() {
-            return {
-                scale : this.scale(chart)
-            };
+            return this.drawGrid(chart, orient, "table", grid);
         }
     }
 
     TableGrid.setup = function() {
         return {
-            row: 1,
-            column: 1,
+            rows: 1,
+            columns: 1,
             outerPadding: 1
         };
     }

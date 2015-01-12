@@ -1,5 +1,13 @@
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
+	/**
+	 * @class chart.brush.fullgage
+	 * implements full gauge brush
+	 * @param chart
+	 * @param axis
+	 * @param brush
+	 * @constructor
+	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
@@ -17,23 +25,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					y : 10,
 					"text-anchor" : "middle",
 					"font-family" : chart.theme("fontFamily"),
-					"font-size" : "3.5em",
+					"font-size" : "1.5em",
 					"font-weight" : 1000,
 					"fill" : self.color(0)
-				}, value + ""));
+				}, value + brush.unitText));
 			}
-			
-			if (brush.unitText != "") {
-				g.append(chart.text({
-					x : 0,
-					y : 40,
-					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
-					"font-size" : "2em",
-					"font-weight" : 500,
-					"fill" : chart.theme("gaugeFontColor")
-				}, brush.unitText));
-			}
+
 
 			return g;
 		}
@@ -52,35 +49,32 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				}
 			}
 
-			var obj = axis.c(),
-				width = obj.width,
-				height = obj.height,
-				x = obj.x,
-				y = obj.y,
-				min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			w = min / 2;
-			centerX = width / 2 + x;
-			centerY = height / 2 + y;
-            outerRadius = w;
-            innerRadius = outerRadius - brush.size;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group();
+		this.drawUnit = function(index, data, group) {
+			var obj = axis.c(index);
+			var value = data[this.brush.target];
+			var max = data[this.brush.max];
+			var min = data[this.brush.min];
 
-			var rate = (brush.value - brush.min) / (brush.max - brush.min),
-                currentAngle = (brush.endAngle) * rate;
-			
+			var rate = (value - min) / (max - min),
+				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
+
 			if (brush.endAngle >= 360) {
-                brush.endAngle = 359.99999;
+				brush.endAngle = 359.99999;
 			}
-			
-			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+
+			var width = obj.width, height = obj.height;
+			var x = obj.x, y = obj.y;
+
+			// center
+			w = Math.min(width, height) / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w;
+			innerRadius = outerRadius - brush.size;
+
+			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
 				fill : chart.theme("gaugeBackgroundColor")
 			});
 
@@ -92,11 +86,22 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 			group.append(g);
 
-            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
-            g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);
+			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
+			g = createText(brush.startAngle, brush.endAngle, min, max, value);
+			group.append(g);
 
-            return group;
+			return group;
+		}
+
+		this.draw = function() {
+			var group = chart.svg.group();
+
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
+			});
+
+			return group;
+
 		}
 	}
 

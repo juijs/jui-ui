@@ -14,7 +14,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
 				startX = obj.x,
 				startY = obj.y;
-			
+
 			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
 				startInnerX = innerCircle.x,
 				startInnerY = innerCircle.y;

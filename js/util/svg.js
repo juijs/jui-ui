@@ -17,6 +17,7 @@ jui.define("util.svg.element", [], function() {
             this.childrens = [];
             this.parent = null;
             this.styles = {};
+            this.attributes = {};
 
             // 기본 속성 설정
             this.attr(attr);
@@ -108,10 +109,11 @@ jui.define("util.svg.element", [], function() {
 
         this.attr = function(attr) {
             if(typeof attr == "string") {
-                return this.element.getAttribute(attr);
+                return this.attributes[attr];
             }
 
             for(var k in attr) {
+                this.attributes[k] = attr[k];
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
@@ -129,8 +131,8 @@ jui.define("util.svg.element", [], function() {
                 this.styles[k] = css[k];
             }
 
-            for(var k in this.styles) {
-                list.push(k + ":" + this.styles[k]);
+            for(var k in css) {
+                list.push(k + ":" + css[k]);
             }
 
             this.attr({ style: list.join(";") });
@@ -398,6 +400,14 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
+        this.d = function() {
+            if (ordersString.length > 0) {
+                return ordersString;
+            } else {
+                return orders.join(" ");
+            }
+        }
+
         /**
          * 심볼 템플릿
          *
@@ -476,6 +486,10 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
+        }
+
+        this.points = function() {
+            return orders.join(" ");
         }
     }
 

@@ -26,10 +26,18 @@
         { date: "", value: 0, value2: 0 }
     ];
 
+    var dataSource2 = [
+        { title : 'Overall Visits', value : 292, max : 300, min : 0, unit : "k" },
+        { title : 'Overall Visits', value : 192, max : 300, min : 0 },
+        { title : 'Overall Visits', value : 192, max : 300, min : 0 },
+        { title : 'Overall Visits', value : 192, max : 300, min : 0 }
+    ]
+
     jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
 
         c = chart("#chart", {
             theme : "gradient",
+            width : 800,
             height : 500,
             format : function(d) {
                 if(typeof(d) == "number")
@@ -51,6 +59,15 @@
                 },
                 area : { height : "60%" },
                 data : dataSource
+            },{
+                c : {
+                    type : "table",
+                    rows : 1,
+                    columns : 4,
+                    outerPadding: 10
+                },
+                data : dataSource2,
+                area : { height : '30%', y : '75%'}
             }],
             series : {
                 value : {
@@ -70,7 +87,16 @@
                 target : [ "value", "value2" ],
                 symbol : "curve",
                 axis : 0
-            }],
+            }, {
+                type : 'fullgauge',
+                target : 'value',
+                max : 'max',
+                min : 'min',
+                axis : 1,
+                size : 10,
+                text : true,
+                unitText : "KB"
+            } ],
             widget : [{
                 type : "title",
                 text : "AUDIENCE",
