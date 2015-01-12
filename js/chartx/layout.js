@@ -4,10 +4,9 @@ jui.defineUI("chartx.layout", ["util.svg", "chart.builder"], function(SVG, Chart
      * @class chartx.layout
      * implements layout form many charts 
      * 
-     * @sxample 
-     *      
+     *      @example
      *      var ChartLayout = jui.include("chartx.layout");
-     *      new ChartLayout({
+     *      new ChartLayout("#div", {
      *          width : "100%",
      *          height : "100%",
                 layout : "table",
