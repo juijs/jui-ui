@@ -14092,74 +14092,81 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 jui.define("chart.grid.panel", [  ], function() {
 
+    /**
+     * @class chart.grid.panel
+     *
+     * implements default panel grid
+     *
+     * @param {ChartBuilder} chart
+     * @param {Axis} axis
+     * @param {Object} grid
+     */
     var PanelGrid = function(chart, axis, grid) {
-        var start, size;
 
-        function getValue(value, max) {
-            if (typeof value == 'string' && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
+        var orient = grid.orient;
 
-            return value;
+        /**
+         * @method custom
+         *
+         * draw sample panel area
+         *
+         * @param {ChartBuilder} chart
+         * @param {SVGElement} g
+         * @protected
+         */
+        this.custom = function(chart, g) {
+            var obj = this.scale(0);
+
+            obj.x -= axis.area.x;
+            obj.y -= axis.area.y;
+
+            var rect = chart.svg.rect($.extend(obj, {
+                fill : 'white',
+                stroke : "white"
+            }));
+
+            g.append(rect);
         }
 
-        function getArrayValue (value, chart) {
-            var start;
+        /**
+         * @method drawBefore
+         *
+         * initialize grid option before draw grid
+         *
+         */
+        this.drawBefore = function() {
 
-            if (typeof value == 'number') {
-                start = [value, value];
-            } else if (typeof value == 'string') {
+            /**
+             * @method scale
+             *
+             * get scale function
+             *
+             */
+            this.scale = (function(axis) {
+                return function(i) {
 
-                if (value.indexOf("%") > -1) {
-                    start = [getValue(value, chart.area('width')), getValue(value,  chart.area('height'))]
-                } else {
-                    start = [parseFloat(value), parseFloat(value)]
-                }
-
-            } else if (value instanceof Array) {
-
-                for(var i = 0; i < value.length; i++) {
-                    if (i == 0) {
-                        value[i] = getValue(value[i], chart.area('width'));
-                    } else if (i == 1) {
-                        value[i] = getValue(value[i], chart.area('height'));
+                    return {
+                        x : axis.area.x,
+                        y : axis.area.y,
+                        width : axis.area.width,
+                        height : axis.area.height
                     }
                 }
+            })(axis);
 
-                start = value;
-            }
-
-            return start;
         }
 
-        this.drawBefore = function() {
-            start = [0, 0];
-
-            if (grid.start !== null) {
-                start = getArrayValue(grid.start, chart);
-            }
-
-            size = [chart.area('width'), chart.area('height')];
-            if (grid.size != null) {
-                size = getArrayValue(grid.size, chart);
-            }
-        }
-
-        this.scale = function() {
-            return function() {
-                return {
-                    x : start[0],
-                    y : start[1],
-                    width : size[0],
-                    height : size[1]
-                }
-            }
-        }
-
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} scale  return scale be used in grid
+         * @returns {SVGElement} root grid root element
+         * @protected
+         */
         this.draw = function() {
-            return {
-                scale : this.scale(chart)
-            };
+            return this.drawGrid(chart, orient, "panel", grid);
         }
     }
     
@@ -14224,6 +14231,15 @@ jui.define("chart.grid.table", [  ], function() {
             })(axis);
         }
 
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} scale  return scale be used in grid
+         * @returns {SVGElement} root grid root element
+         * @protected
+         */
         this.draw = function() {
             return this.drawGrid(chart, orient, "table", grid);
         }
@@ -14231,8 +14247,11 @@ jui.define("chart.grid.table", [  ], function() {
 
     TableGrid.setup = function() {
         return {
+            /** @cfg {Number} [rows=1] row count in table  */
             rows: 1,
+            /** @cfg {Number} [column=1] column count in table  */
             columns: 1,
+            /** @cfg {Number} [outerPadding=1] padding in table  */
             outerPadding: 1
         };
     }
@@ -14242,43 +14261,84 @@ jui.define("chart.grid.table", [  ], function() {
 
 jui.define("chart.grid.overlap", [  ], function() {
 
+    /**
+     * @class chart.grid.overlap
+     *
+     * implements overlap grid be used in multiple pie or donut chart
+     *
+     * @param chart
+     * @param axis
+     * @param grid
+     * @extends chart.grid.core
+     */
     var OverlapGrid = function(chart, axis, grid) {
+        var orient = grid.orient;
         var size, widthUnit, heightUnit, width, height ;
 
-        function getXY ( i ) {
-            var x = width/2  - i * widthUnit;
-            var y = height/2 - i * heightUnit;
+        this.custom = function(chart, g) {
+            for(var i = 0, len = this.axis.data.length; i < len; i++) {
+                var obj = this.scale(i);
 
-            return { x : x , y : y }
-        }
+                obj.x -= this.axis.area.x;
+                obj.y -= this.axis.area.y;
 
-        this.drawBefore = function() {
-            size = grid.size || this.data().length ||  1;
+                var rect = chart.svg.rect($.extend(obj, {
+                    fill : 'white',
+                    stroke : "white"
+                }));
 
-            widthUnit = (chart.area('width') / 2) / size;
-            heightUnit = (chart.area('height') / 2) / size;
-
-            width = chart.area('width');
-            height = chart.area('height');
-        }
-
-        this.scale = function(chart) {
-            return function(i) {
-                var obj = getXY(size - i);
-
-                return {
-                    x : obj.x,
-                    y : obj.y,
-                    width : Math.abs(width/2 - obj.x)*2,
-                    height : Math.abs(height/2 - obj.y)*2
-                }
+                g.append(rect);
             }
         }
 
+        this.drawBefore = function() {
+            size = this.grid.count || this.axis.data.length ||  1;
+
+            widthUnit = (this.axis.area.width / 2) / size;
+            heightUnit = (this.axis.area.height / 2) / size;
+
+            width = this.axis.area.width;
+            height = this.axis.area.height;
+
+            // create scale
+            this.scale = (function(axis) {
+                return function(i) {
+
+                    var x = i * widthUnit;
+                    var y = i * heightUnit;
+
+                    var obj = { x : x , y : y };
+
+                    return {
+                        x : axis.area.x + obj.x,
+                        y : axis.area.y + obj.y,
+                        width : Math.abs(width/2 - obj.x)*2,
+                        height : Math.abs(height/2 - obj.y)*2
+                    }
+
+                }
+            })(axis);
+
+        }
+
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} scale  return scale be used in grid
+         * @returns {SVGElement} root grid root element
+         * @protected
+         */
         this.draw = function() {
+            return this.drawGrid(chart, orient, "overlap", grid);
+        }
+
+        OverlapGrid.setup = function() {
             return {
-                scale : this.scale(chart)
-            };
+                /** @cfg {Number} [size=null] divid count */
+                count : null
+            }
         }
     }
     
@@ -16754,6 +16814,14 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
+	/**
+	 * @class chart.brush.fullgage
+	 * implements full gauge brush
+	 * @param chart
+	 * @param axis
+	 * @param brush
+	 * @constructor
+	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;

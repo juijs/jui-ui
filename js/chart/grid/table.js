@@ -56,6 +56,15 @@ jui.define("chart.grid.table", [  ], function() {
             })(axis);
         }
 
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} scale  return scale be used in grid
+         * @returns {SVGElement} root grid root element
+         * @protected
+         */
         this.draw = function() {
             return this.drawGrid(chart, orient, "table", grid);
         }
@@ -63,8 +72,11 @@ jui.define("chart.grid.table", [  ], function() {
 
     TableGrid.setup = function() {
         return {
+            /** @cfg {Number} [rows=1] row count in table  */
             rows: 1,
+            /** @cfg {Number} [column=1] column count in table  */
             columns: 1,
+            /** @cfg {Number} [outerPadding=1] padding in table  */
             outerPadding: 1
         };
     }

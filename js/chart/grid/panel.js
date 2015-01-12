@@ -1,73 +1,80 @@
 jui.define("chart.grid.panel", [  ], function() {
 
+    /**
+     * @class chart.grid.panel
+     *
+     * implements default panel grid
+     *
+     * @param {ChartBuilder} chart
+     * @param {Axis} axis
+     * @param {Object} grid
+     */
     var PanelGrid = function(chart, axis, grid) {
-        var start, size;
 
-        function getValue(value, max) {
-            if (typeof value == 'string' && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
+        var orient = grid.orient;
 
-            return value;
+        /**
+         * @method custom
+         *
+         * draw sample panel area
+         *
+         * @param {ChartBuilder} chart
+         * @param {SVGElement} g
+         * @protected
+         */
+        this.custom = function(chart, g) {
+            var obj = this.scale(0);
+
+            obj.x -= axis.area.x;
+            obj.y -= axis.area.y;
+
+            var rect = chart.svg.rect($.extend(obj, {
+                fill : 'white',
+                stroke : "white"
+            }));
+
+            g.append(rect);
         }
 
-        function getArrayValue (value, chart) {
-            var start;
+        /**
+         * @method drawBefore
+         *
+         * initialize grid option before draw grid
+         *
+         */
+        this.drawBefore = function() {
 
-            if (typeof value == 'number') {
-                start = [value, value];
-            } else if (typeof value == 'string') {
+            /**
+             * @method scale
+             *
+             * get scale function
+             *
+             */
+            this.scale = (function(axis) {
+                return function(i) {
 
-                if (value.indexOf("%") > -1) {
-                    start = [getValue(value, chart.area('width')), getValue(value,  chart.area('height'))]
-                } else {
-                    start = [parseFloat(value), parseFloat(value)]
-                }
-
-            } else if (value instanceof Array) {
-
-                for(var i = 0; i < value.length; i++) {
-                    if (i == 0) {
-                        value[i] = getValue(value[i], chart.area('width'));
-                    } else if (i == 1) {
-                        value[i] = getValue(value[i], chart.area('height'));
+                    return {
+                        x : axis.area.x,
+                        y : axis.area.y,
+                        width : axis.area.width,
+                        height : axis.area.height
                     }
                 }
+            })(axis);
 
-                start = value;
-            }
-
-            return start;
         }
 
-        this.drawBefore = function() {
-            start = [0, 0];
-
-            if (grid.start !== null) {
-                start = getArrayValue(grid.start, chart);
-            }
-
-            size = [chart.area('width'), chart.area('height')];
-            if (grid.size != null) {
-                size = getArrayValue(grid.size, chart);
-            }
-        }
-
-        this.scale = function() {
-            return function() {
-                return {
-                    x : start[0],
-                    y : start[1],
-                    width : size[0],
-                    height : size[1]
-                }
-            }
-        }
-
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} scale  return scale be used in grid
+         * @returns {SVGElement} root grid root element
+         * @protected
+         */
         this.draw = function() {
-            return {
-                scale : this.scale(chart)
-            };
+            return this.drawGrid(chart, orient, "panel", grid);
         }
     }
     
