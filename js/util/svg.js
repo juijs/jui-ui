@@ -58,12 +58,14 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
-        	if(elem.parent) {
-        		elem.remove();	
-        	}
-        	
-            this.childrens.push(elem);
-            elem.parent = this;
+            if(Element.prototype.isPrototypeOf(elem)) {
+                if (elem.parent) {
+                    elem.remove();
+                }
+
+                this.childrens.push(elem);
+                elem.parent = this;
+            }
 
             return this;
         }
@@ -300,17 +302,16 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
 
 jui.define("util.svg.element.path", [], function() { // path
     var PathElement = function() {
-        var orders = [];
-        var ordersString = "";
+        var orders = [],
+            ordersString = "";
 
         function applyOrders(self) {
-            if (ordersString.length > 0) {
+            if(ordersString.length > 0) {
                 self.attr({ d: ordersString });
             } else {
                 if(orders.length == 0) return;
                 self.attr({ d: orders.join(" ") });
             }
-
         }
 
         this.moveTo = function(x, y, type) {
@@ -400,14 +401,6 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
-        this.d = function() {
-            if (ordersString.length > 0) {
-                return ordersString;
-            } else {
-                return orders.join(" ");
-            }
-        }
-
         /**
          * 심볼 템플릿
          *
@@ -487,10 +480,6 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 
             applyOrders(this);
         }
-
-        this.points = function() {
-            return orders.join(" ");
-        }
     }
 
     return PolyElement;
@@ -569,15 +558,15 @@ jui.define("util.svg",
                 var child = target.childrens[i];
 
                 if(child) {
-                    if (child.parent == target) {
+                    if(child.parent == target) {
                         target.element.appendChild(child.element);
                     }
 
-                    if (child.join) { // PathElement & PolyElement auto join
+                    if(child instanceof PathElement || child instanceof PolyElement) { // PathElement & PolyElement auto join
                         child.join();
                     }
 
-                    if (child.childrens.length > 0) {
+                    if(child.childrens.length > 0) {
                         appendAll(child);
                     }
                 }

@@ -2738,12 +2738,14 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
-        	if(elem.parent) {
-        		elem.remove();	
-        	}
-        	
-            this.childrens.push(elem);
-            elem.parent = this;
+            if(Element.prototype.isPrototypeOf(elem)) {
+                if (elem.parent) {
+                    elem.remove();
+                }
+
+                this.childrens.push(elem);
+                elem.parent = this;
+            }
 
             return this;
         }
@@ -2980,17 +2982,16 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
 
 jui.define("util.svg.element.path", [], function() { // path
     var PathElement = function() {
-        var orders = [];
-        var ordersString = "";
+        var orders = [],
+            ordersString = "";
 
         function applyOrders(self) {
-            if (ordersString.length > 0) {
+            if(ordersString.length > 0) {
                 self.attr({ d: ordersString });
             } else {
                 if(orders.length == 0) return;
                 self.attr({ d: orders.join(" ") });
             }
-
         }
 
         this.moveTo = function(x, y, type) {
@@ -3080,14 +3081,6 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
-        this.d = function() {
-            if (ordersString.length > 0) {
-                return ordersString;
-            } else {
-                return orders.join(" ");
-            }
-        }
-
         /**
          * 심볼 템플릿
          *
@@ -3167,10 +3160,6 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 
             applyOrders(this);
         }
-
-        this.points = function() {
-            return orders.join(" ");
-        }
     }
 
     return PolyElement;
@@ -3249,15 +3238,15 @@ jui.define("util.svg",
                 var child = target.childrens[i];
 
                 if(child) {
-                    if (child.parent == target) {
+                    if(child.parent == target) {
                         target.element.appendChild(child.element);
                     }
 
-                    if (child.join) { // PathElement & PolyElement auto join
+                    if(child instanceof PathElement || child instanceof PolyElement) { // PathElement & PolyElement auto join
                         child.join();
                     }
 
-                    if (child.childrens.length > 0) {
+                    if(child.childrens.length > 0) {
                         appendAll(child);
                     }
                 }
@@ -3799,15 +3788,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var list = this.drawAnimate(obj);
-
-                if(!_.typeCheck("array", list)) {
-                    list = [ list ];
-                }
-
-                for(var i = 0; i < list.length; i++) {
-                    obj.append(list[i]);
-                }
+                this.drawAnimate(obj);
             }
 
             if(!_.typeCheck("object", obj)) {
@@ -3998,6 +3979,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             for(var j = 0; j < ui_list.length; j++) {
                 if(ui_list[j].isFullSize()) {
                     ui_list[j].setSize();
+                }
+
+                if(!ui_list[j].isRender()) {
+                    ui_list[j].render(true);
                 }
             }
         }
@@ -7866,7 +7851,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     y: new Float32Array(length),
                     value: new Array(length),
                     min: [],
-                    max: []
+                    max: [],
+                    length: length
                 };
             }
             
@@ -8641,17 +8627,20 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
-            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max);
+            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
+                circle = chart.svg.group();
 
-            return chart.svg.circle({
-                cx: pos.x,
-                cy: pos.y,
-                r: radius,
-                "fill": self.color(index),
-                "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                "stroke": self.color(index),
-                "stroke-width": chart.theme("bubbleBorderWidth")
-            });
+            circle.append(
+                chart.svg.circle({
+                    r: radius,
+                    "fill": self.color(index),
+                    "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                    "stroke": self.color(index),
+                    "stroke-width": chart.theme("bubbleBorderWidth")
+                })
+            ).translate(pos.x, pos.y);
+
+            return circle;
         }
 
         this.drawBubble = function(chart, brush, points) {
@@ -8675,6 +8664,33 @@ jui.define("chart.brush.bubble", [], function() {
 
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
+        }
+
+        this.drawAnimate = function(root) {
+            root.each(function(i, elem) {
+                var c = elem.childrens[0];
+
+                c.append(chart.svg.animateTransform({
+                    attributeType: "xml",
+                    attributeName: "transform",
+                    type: "scale",
+                    from: "0",
+                    to: "1",
+                    dur: "0.7s",
+                    fill: "freeze",
+                    repeatCount: "1"
+                }));
+
+                c.append(chart.svg.animate({
+                    attributeType: "xml",
+                    attributeName: "fill-opacity",
+                    from: "0",
+                    to: chart.theme("bubbleBackgroundOpacity"),
+                    dur: "1.4s",
+                    repeatCount: "1",
+                    fill: "freeze"
+                }));
+            });
         }
 	}
 
@@ -9203,24 +9219,16 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
-            var area = this.chart.area();
-
-            return [ this.chart.svg.animateTransform({
-                attributeName: "transform",
-                type: "scale",
-                from: area.x + " " + area.height,
-                to: area.x + " " + area.y,
-                begin: "0s" ,
-                dur: "0.4s",
-                repeatCount: "1"
-            }), this.chart.svg.animate({
-                attributeName: "opacity",
-                from: "0",
-                to: "1",
-                begin: "0s" ,
-                dur: "0.4s",
-                repeatCount: "1"
-            }) ];
+            root.append(
+                this.chart.svg.animate({
+                    attributeName: "opacity",
+                    from: "0",
+                    to: "1",
+                    begin: "0s" ,
+                    dur: "1s",
+                    repeatCount: "1"
+                })
+            );
         }
 	}
 

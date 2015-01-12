@@ -4,17 +4,20 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         function createBubble(chart, brush, pos, index) {
-            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max);
+            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
+                circle = chart.svg.group();
 
-            return chart.svg.circle({
-                cx: pos.x,
-                cy: pos.y,
-                r: radius,
-                "fill": self.color(index),
-                "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                "stroke": self.color(index),
-                "stroke-width": chart.theme("bubbleBorderWidth")
-            });
+            circle.append(
+                chart.svg.circle({
+                    r: radius,
+                    "fill": self.color(index),
+                    "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                    "stroke": self.color(index),
+                    "stroke-width": chart.theme("bubbleBorderWidth")
+                })
+            ).translate(pos.x, pos.y);
+
+            return circle;
         }
 
         this.drawBubble = function(chart, brush, points) {
@@ -38,6 +41,33 @@ jui.define("chart.brush.bubble", [], function() {
 
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
+        }
+
+        this.drawAnimate = function(root) {
+            root.each(function(i, elem) {
+                var c = elem.childrens[0];
+
+                c.append(chart.svg.animateTransform({
+                    attributeType: "xml",
+                    attributeName: "transform",
+                    type: "scale",
+                    from: "0",
+                    to: "1",
+                    dur: "0.7s",
+                    fill: "freeze",
+                    repeatCount: "1"
+                }));
+
+                c.append(chart.svg.animate({
+                    attributeType: "xml",
+                    attributeName: "fill-opacity",
+                    from: "0",
+                    to: chart.theme("bubbleBackgroundOpacity"),
+                    dur: "1.4s",
+                    repeatCount: "1",
+                    fill: "freeze"
+                }));
+            });
         }
 	}
 

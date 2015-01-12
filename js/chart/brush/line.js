@@ -126,24 +126,16 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
-            var area = this.chart.area();
-
-            return [ this.chart.svg.animateTransform({
-                attributeName: "transform",
-                type: "scale",
-                from: area.x + " " + area.height,
-                to: area.x + " " + area.y,
-                begin: "0s" ,
-                dur: "0.4s",
-                repeatCount: "1"
-            }), this.chart.svg.animate({
-                attributeName: "opacity",
-                from: "0",
-                to: "1",
-                begin: "0s" ,
-                dur: "0.4s",
-                repeatCount: "1"
-            }) ];
+            root.append(
+                this.chart.svg.animate({
+                    attributeName: "opacity",
+                    from: "0",
+                    to: "1",
+                    begin: "0s" ,
+                    dur: "1s",
+                    repeatCount: "1"
+                })
+            );
         }
 	}
 

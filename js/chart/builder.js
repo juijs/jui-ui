@@ -18,6 +18,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 if(ui_list[j].isFullSize()) {
                     ui_list[j].setSize();
                 }
+
+                if(!ui_list[j].isRender()) {
+                    ui_list[j].render(true);
+                }
             }
         }
 
