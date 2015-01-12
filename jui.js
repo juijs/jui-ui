@@ -10432,7 +10432,11 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                this.drawAnimate(obj);
+                var draw = this.grid || this.brush || this.widget;
+
+                if(draw.animate === true) {
+                    this.drawAnimate(obj);
+                }
             }
 
             if(!_.typeCheck("object", obj)) {
@@ -10458,7 +10462,8 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
     Draw.setup = function() {
         return {
-            type: null
+            type: null,
+            animate: false
         }
     }
 
