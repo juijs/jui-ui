@@ -17,15 +17,21 @@
             width: 400,
             height : 400,
             theme : "jennifer",
+            axis : {
+                c : { type : 'panel'},
+                data : [
+                    { title : 'Overall Visits', value : 292, max : 300, min : 0, unit : "k" }
+                ]
+                
+            },
             brush : {
                 type : 'fullgauge',
-                value : 75,
-                startAngle : -180,
-                endAngle : 360,
-                size : 24,
-                //arrow : true,
+                target : 'value',
+                max : 'max',
+                min : 'min',
+                size : 10,
                 text : true,
-                unitText : "feeds"
+                unitText : "KB"
             }
         });
 	})

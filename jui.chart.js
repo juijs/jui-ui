@@ -7847,8 +7847,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             for(var j = 0; j < targetLength; j++) {
                 xy[j] = {
-                    x: new Float32Array(length),
-                    y: new Float32Array(length),
+                    x: new Array(length),
+                    y: new Array(length),
                     value: new Array(length),
                     min: [],
                     max: [],
@@ -8647,9 +8647,9 @@ jui.define("chart.brush.bubble", [], function() {
             var g = chart.svg.group({
                 "clip-path" : "url(#" + chart.clipId + ")"
             });
-
+            
             for(var i = 0; i < points.length; i++) {
-                for(var j = 0; j < points[i].length; j++) {
+                for(var j = 0; j < points[i].x.length; j++) {
                     var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, i);

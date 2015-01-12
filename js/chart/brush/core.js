@@ -159,8 +159,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             for(var j = 0; j < targetLength; j++) {
                 xy[j] = {
-                    x: new Float32Array(length),
-                    y: new Float32Array(length),
+                    x: new Array(length),
+                    y: new Array(length),
                     value: new Array(length),
                     min: [],
                     max: [],
