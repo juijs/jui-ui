@@ -2738,7 +2738,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.append = function(elem) {
-            if(Element.prototype.isPrototypeOf(elem)) {
+            if(elem instanceof Element) {
                 if (elem.parent) {
                     elem.remove();
                 }
