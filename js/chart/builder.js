@@ -45,13 +45,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         /**
+         * @method caculate
+         * 
          * chart 기본 영역 계산
          *
          * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
          *
          * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐
          *
-         * @param {Object} self
+         * @param {chart.builder} self
+         * @private  
          */
         function calculate(self) {
             var max = self.svg.size();
@@ -102,6 +105,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _panel = null;
         }
 
+        /**
+         * @method drawBefore 
+         * 
+         * option copy (series, brush, widget)
+         *  
+         * @param {chart.builder} self
+         * @private  
+         */
         function drawBefore(self) {
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
@@ -111,6 +122,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _hash = {};
         }
 
+        /**
+         * @method drawDefs
+         * define svg default pattern, clipPath, Symbol  
+         * @param {chart.builder} self
+         * @private
+         */
         function drawDefs(self) {
             // draw defs
             var defs = self.svg.defs();
@@ -133,6 +150,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             self.defs = defs;
         }
 
+        /**
+         * @method drawAxis 
+         * implements axis draw 
+         * @param {chart.builder} self 
+         * @private
+         */
         function drawAxis(self) {
 
             function drawGridType(axis, k) {
@@ -151,6 +174,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
+                
+                if (k == 'c' && !axis[k]) {
+                    Grid = jui.include("chart.grid.panel");
+                }
 
                 // 그리드 기본 옵션과 사용자 옵션을 합침
                 jui.defineOptions(Grid, axis[k]);
@@ -203,10 +230,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * @method drawBrush
          * brush 그리기
          *
          * brush 에 맞는 x, y 축(grid) 설정
-         *
+         * @private
          */
         function drawBrush(self) {
             var draws = _brush;
@@ -249,6 +277,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
+        /**
+         * @method drawWidget 
+         * implements widget draw 
+         *  
+         * @param {chart.builder} self
+         * @param {Boolean} isAll  whether redraw widget 
+         * @private  
+         */
         function drawWidget(self, isAll) {
             var draws = _widget;
 
@@ -284,6 +320,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
+        /**
+         * @method setChartEvent
+         * define chart custom event
+         * @param {chart.builder} self
+         * @private
+         */
         function setChartEvent(self) {
             var elem = self.svg.root,
                 isMouseOver = false;
@@ -508,9 +550,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 구성요소 반환
+         * @method get  
+         * get option's property of chart builder 
          *
-         * @param key (axis | brush | widget)
+         * @param {String} type "axis", "brush", "widget"
+         * @param {String} key  property name
          */
         this.get = function(type, key) {
             var obj = {
@@ -533,7 +577,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param key (width | height | x | y | x2 | y2)
          * @returns {*}
          */
-
         this.area = function(key) {
             if(_panel) {
                 return _.typeCheck("undefined", _panel[key]) ? _panel : _panel[key];
@@ -620,23 +663,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * @method theme
          * theme 의 요소에 대한 값 구하기
          *
-         * <code>
-         *
-         * // theme 전체 객체 얻어오기
-         * var theme = chart.theme();
-         *
-         * // 부분 속성 얻어오기
-         * var fontColor = chart.theme("fontColor");
-         *
-         * // 값 비교해서 얻어오기
-         * chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
-         *
-         *
-         * </code>
-         *
-         *
+         *      @example
+         *      // theme 전체 객체 얻어오기
+         *      var theme = chart.theme();
+         *      // 부분 속성 얻어오기
+         *      var fontColor = chart.theme("fontColor");
+         *      // 값 비교해서 얻어오기
+         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
          */
         this.theme = function(key, value, value2) {
             if(arguments.length == 0) {
