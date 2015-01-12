@@ -11246,7 +11246,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
 
             if(newTheme != null) {
                 setThemeStyle($.extend(newTheme, _options.style));
-                if(_options.render) this.render(true);
+                this.render(true);
             }
         }
 
@@ -11263,7 +11263,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color" 
             }
 
             this.svg.size(_options.width, _options.height);
-            if(_options.render) this.render(true);
+            this.render(true);
         }
 
         /**
