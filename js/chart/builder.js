@@ -45,13 +45,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         /**
+         * @method caculate
+         * 
          * chart 기본 영역 계산
          *
          * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
          *
          * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐
          *
-         * @param {Object} self
+         * @param {chart.builder} self
+         * @private  
          */
         function calculate(self) {
             var max = self.svg.size();
@@ -102,6 +105,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _panel = null;
         }
 
+        /**
+         * @method drawBefore 
+         * 
+         * option copy (series, brush, widget)
+         *  
+         * @param {chart.builder} self
+         * @private  
+         */
         function drawBefore(self) {
             _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
@@ -111,6 +122,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _hash = {};
         }
 
+        /**
+         * @method drawDefs
+         * define svg default pattern, clipPath, Symbol  
+         * @param {chart.builder} self
+         * @private
+         */
         function drawDefs(self) {
             // draw defs
             var defs = self.svg.defs();
@@ -151,6 +168,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
 
                 var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
+                
+                if (k == 'c' && !axis[k]) {
+                    Grid = jui.include("chart.grid.panel");
+                }
 
                 // 그리드 기본 옵션과 사용자 옵션을 합침
                 jui.defineOptions(Grid, axis[k]);
