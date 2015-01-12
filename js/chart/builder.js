@@ -666,7 +666,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @method theme
          * theme 의 요소에 대한 값 구하기
          *
-         *  @example
+         *      @example
          *      // theme 전체 객체 얻어오기
          *      var theme = chart.theme();
          *      // 부분 속성 얻어오기
