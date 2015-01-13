@@ -12208,7 +12208,7 @@ jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
     return {
 
         /**
-         * @method circle
+         * @property circle
          *
          * create svg element by json
          *
