@@ -401,6 +401,15 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
+        this.d = function() {
+            if(ordersString.length > 0) {
+                return ordersString;
+            } else {
+                if(orders.length == 0) return "";
+                return orders.join(" ");
+            }
+        }
+
         /**
          * 심볼 템플릿
          *
@@ -479,6 +488,11 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
+        }
+
+        this.points = function() {
+            if(orders.length == 0) return "";
+            return orders.join(" ");
         }
     }
 

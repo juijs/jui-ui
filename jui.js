@@ -3081,6 +3081,15 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
+        this.d = function() {
+            if(ordersString.length > 0) {
+                return ordersString;
+            } else {
+                if(orders.length == 0) return "";
+                return orders.join(" ");
+            }
+        }
+
         /**
          * 심볼 템플릿
          *
@@ -3159,6 +3168,11 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
+        }
+
+        this.points = function() {
+            if(orders.length == 0) return "";
+            return orders.join(" ");
         }
     }
 
@@ -15912,31 +15926,30 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawAnimate = function(root) {
             var svg = this.chart.svg,
-                width = this.axis.area.width;
-
-            root.append(
-                svg.animate({
-                    attributeName: "opacity",
-                    from: "0",
-                    to: "1",
-                    begin: "0s" ,
-                    dur: "1.5s",
-                    repeatCount: "1",
-                    fill: "freeze"
-                })
-            );
+                key = this.chart.createId();
 
             root.each(function(i, elem) {
-                elem.append(svg.animateTransform({
-                    attributeName: "transform",
-                    type: "translate",
-                    from: (-width) + " 0",
-                    to: "0 0",
-                    begin: "0s" ,
-                    dur: "0.75s",
-                    repeatCount: "1",
-                    fill: "freeze"
-                }));
+                if(elem instanceof jui.include("util.svg.element.path")) {
+                    var $dummy = $("<svg><path id='" + key + "'></path></svg>");
+                    $("body").append($dummy.find("path").attr("d", elem.d()).end());
+
+                    var len = $("#" + key)[0].getTotalLength();
+
+                    elem.attr({
+                        "stroke-dasharray" : len
+                    });
+
+                    elem.append(svg.animate({
+                        attributeName: "stroke-dashoffset",
+                        from: len,
+                        to: "0",
+                        begin: "0s",
+                        dur: "1s",
+                        repeatCount: "1"
+                    }));
+
+                    $dummy.remove();
+                }
             });
         }
 	}
@@ -16658,6 +16671,20 @@ jui.define("chart.brush.area", [], function() {
 
         this.draw = function() {
             return this.drawArea(this.getXY());
+        }
+
+        this.drawAnimate = function(root) {
+            root.append(
+                this.chart.svg.animate({
+                     attributeName: "opacity",
+                     from: "0",
+                     to: "1",
+                     begin: "0s" ,
+                     dur: "1.5s",
+                     repeatCount: "1",
+                     fill: "freeze"
+                 })
+            );
         }
     }
 

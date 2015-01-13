@@ -29,6 +29,20 @@ jui.define("chart.brush.area", [], function() {
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
+
+        this.drawAnimate = function(root) {
+            root.append(
+                this.chart.svg.animate({
+                     attributeName: "opacity",
+                     from: "0",
+                     to: "1",
+                     begin: "0s" ,
+                     dur: "1.5s",
+                     repeatCount: "1",
+                     fill: "freeze"
+                 })
+            );
+        }
     }
 
     return AreaBrush;

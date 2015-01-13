@@ -127,31 +127,30 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawAnimate = function(root) {
             var svg = this.chart.svg,
-                width = this.axis.area.width;
-
-            root.append(
-                svg.animate({
-                    attributeName: "opacity",
-                    from: "0",
-                    to: "1",
-                    begin: "0s" ,
-                    dur: "1.5s",
-                    repeatCount: "1",
-                    fill: "freeze"
-                })
-            );
+                key = this.chart.createId();
 
             root.each(function(i, elem) {
-                elem.append(svg.animateTransform({
-                    attributeName: "transform",
-                    type: "translate",
-                    from: (-width) + " 0",
-                    to: "0 0",
-                    begin: "0s" ,
-                    dur: "0.75s",
-                    repeatCount: "1",
-                    fill: "freeze"
-                }));
+                if(elem instanceof jui.include("util.svg.element.path")) {
+                    var $dummy = $("<svg><path id='" + key + "'></path></svg>");
+                    $("body").append($dummy.find("path").attr("d", elem.d()).end());
+
+                    var len = $("#" + key)[0].getTotalLength();
+
+                    elem.attr({
+                        "stroke-dasharray" : len
+                    });
+
+                    elem.append(svg.animate({
+                        attributeName: "stroke-dashoffset",
+                        from: len,
+                        to: "0",
+                        begin: "0s",
+                        dur: "1s",
+                        repeatCount: "1"
+                    }));
+
+                    $dummy.remove();
+                }
             });
         }
 	}
