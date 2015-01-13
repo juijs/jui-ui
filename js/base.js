@@ -892,6 +892,9 @@
 
             return format;
         },
+		createId: function(key) {
+			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
+		},
         btoa: Base64.encode,
         atob: Base64.decode
 	}

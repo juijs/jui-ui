@@ -300,7 +300,7 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
     return TransElement;
 }, "util.svg.element");
 
-jui.define("util.svg.element.path", [], function() { // path
+jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
     var PathElement = function() {
         var orders = [],
             ordersString = "";
@@ -401,20 +401,24 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
-        this.d = function() {
-            if(ordersString.length > 0) {
-                return ordersString;
-            } else {
-                if(orders.length == 0) return "";
-                return orders.join(" ");
-            }
+        this.length = function() {
+            var key = _.createId(),
+                d = ordersString || orders.join(" "),
+                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+
+            $("body").append($dummy.find("path").attr("d", d).end());
+
+            var length = $("#" + key)[0].getTotalLength();
+            $dummy.remove();
+
+            return length;
         }
 
         /**
          * 심볼 템플릿
          *
          */
-        this.getSymbolTemplate = function(width, height) {
+        this.template = function(width, height) {
             var r = width;
             var half_width = half_r =  width / 2;
             var half_height = height / 2;
@@ -432,15 +436,13 @@ jui.define("util.svg.element.path", [], function() { // path
             obj.rectangle = obj.rect;
 
             return obj;
-
         }
 
         /**
          * 심볼 추가 하기 (튜닝)
          */
-        this.template = function(cx, cy, tpl) {
+        this.symbol = function(cx, cy, tpl) {
             ordersString += " M" + (cx) + "," + (cy) + tpl;
-            //orders.push([" M" , (cx) , "," , (cy) , tpl].join(""));
         }
 
         /**
@@ -488,11 +490,6 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
-        }
-
-        this.points = function() {
-            if(orders.length == 0) return "";
-            return orders.join(" ");
         }
     }
 

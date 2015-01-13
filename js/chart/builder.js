@@ -133,7 +133,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var defs = self.svg.defs();
 
             // default clip path
-            self.clipId = self.createId('clip-id');
+            self.clipId = _.createId("clip-id");
 
             var clip = self.svg.clipPath({
                 id: self.clipId
@@ -142,8 +142,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             clip.append(self.svg.rect({
                 x: 0,
                 y: 0,
-                width: self.area('width'),
-                height: self.area('height')
+                width: self.area("width"),
+                height: self.area("height")
             }));
             defs.append(clip);
 
@@ -441,7 +441,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             var g = null,
-                id = self.createId("gradient");
+                id = _.createId("gradient");
 
             obj.id = id;
 
@@ -707,15 +707,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             return arguments[0];
-        }
-
-        /**
-         * chart 내에서 사용될 유일한 키 생성
-         *
-         * @param {string} key
-         */
-        this.createId = function(key) {
-            return [key || "chart-id", (+new Date), Math.round(Math.random() * 100) % 100].join("-")
         }
 
         /**

@@ -126,15 +126,11 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
-            var svg = this.chart.svg,
-                key = this.chart.createId();
+            var svg = this.chart.svg;
 
             root.each(function(i, elem) {
                 if(elem instanceof jui.include("util.svg.element.path")) {
-                    var $dummy = $("<svg><path id='" + key + "'></path></svg>");
-                    $("body").append($dummy.find("path").attr("d", elem.d()).end());
-
-                    var len = $("#" + key)[0].getTotalLength();
+                    var len = elem.length();
 
                     elem.attr({
                         "stroke-dasharray" : len
@@ -148,8 +144,6 @@ jui.define("chart.brush.line", [], function() {
                         dur: "1s",
                         repeatCount: "1"
                     }));
-
-                    $dummy.remove();
                 }
             });
         }

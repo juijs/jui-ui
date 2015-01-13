@@ -1,4 +1,4 @@
-jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
+jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
 	var FillGaugeBrush = function(chart, axis, brush) {
         var self = this;
@@ -74,7 +74,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             outerRadius = w;
-            clipId = chart.createId("fill-gauge");
+            clipId = _.createId("fill-gauge");
 
             var clip = chart.svg.clipPath({
                 id : clipId

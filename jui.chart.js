@@ -892,6 +892,9 @@
 
             return format;
         },
+		createId: function(key) {
+			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
+		},
         btoa: Base64.encode,
         atob: Base64.decode
 	}
@@ -2980,7 +2983,7 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
     return TransElement;
 }, "util.svg.element");
 
-jui.define("util.svg.element.path", [], function() { // path
+jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
     var PathElement = function() {
         var orders = [],
             ordersString = "";
@@ -3081,20 +3084,24 @@ jui.define("util.svg.element.path", [], function() { // path
             applyOrders(this);
         }
 
-        this.d = function() {
-            if(ordersString.length > 0) {
-                return ordersString;
-            } else {
-                if(orders.length == 0) return "";
-                return orders.join(" ");
-            }
+        this.length = function() {
+            var key = _.createId(),
+                d = ordersString || orders.join(" "),
+                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+
+            $("body").append($dummy.find("path").attr("d", d).end());
+
+            var length = $("#" + key)[0].getTotalLength();
+            $dummy.remove();
+
+            return length;
         }
 
         /**
          * 심볼 템플릿
          *
          */
-        this.getSymbolTemplate = function(width, height) {
+        this.template = function(width, height) {
             var r = width;
             var half_width = half_r =  width / 2;
             var half_height = height / 2;
@@ -3112,15 +3119,13 @@ jui.define("util.svg.element.path", [], function() { // path
             obj.rectangle = obj.rect;
 
             return obj;
-
         }
 
         /**
          * 심볼 추가 하기 (튜닝)
          */
-        this.template = function(cx, cy, tpl) {
+        this.symbol = function(cx, cy, tpl) {
             ordersString += " M" + (cx) + "," + (cy) + tpl;
-            //orders.push([" M" , (cx) , "," , (cy) , tpl].join(""));
         }
 
         /**
@@ -3168,11 +3173,6 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
             }
 
             applyOrders(this);
-        }
-
-        this.points = function() {
-            if(orders.length == 0) return "";
-            return orders.join(" ");
         }
     }
 
@@ -4114,7 +4114,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var defs = self.svg.defs();
 
             // default clip path
-            self.clipId = self.createId('clip-id');
+            self.clipId = _.createId("clip-id");
 
             var clip = self.svg.clipPath({
                 id: self.clipId
@@ -4123,8 +4123,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             clip.append(self.svg.rect({
                 x: 0,
                 y: 0,
-                width: self.area('width'),
-                height: self.area('height')
+                width: self.area("width"),
+                height: self.area("height")
             }));
             defs.append(clip);
 
@@ -4422,7 +4422,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             var g = null,
-                id = self.createId("gradient");
+                id = _.createId("gradient");
 
             obj.id = id;
 
@@ -4688,15 +4688,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             return arguments[0];
-        }
-
-        /**
-         * chart 내에서 사용될 유일한 키 생성
-         *
-         * @param {string} key
-         */
-        this.createId = function(key) {
-            return [key || "chart-id", (+new Date), Math.round(Math.random() * 100) % 100].join("-")
         }
 
         /**
@@ -9277,15 +9268,11 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawAnimate = function(root) {
-            var svg = this.chart.svg,
-                key = this.chart.createId();
+            var svg = this.chart.svg;
 
             root.each(function(i, elem) {
                 if(elem instanceof jui.include("util.svg.element.path")) {
-                    var $dummy = $("<svg><path id='" + key + "'></path></svg>");
-                    $("body").append($dummy.find("path").attr("d", elem.d()).end());
-
-                    var len = $("#" + key)[0].getTotalLength();
+                    var len = elem.length();
 
                     elem.attr({
                         "stroke-dasharray" : len
@@ -9299,8 +9286,6 @@ jui.define("chart.brush.line", [], function() {
                         dur: "1s",
                         repeatCount: "1"
                     }));
-
-                    $dummy.remove();
                 }
             });
         }
@@ -9596,7 +9581,7 @@ jui.define("chart.brush.scatterpath", [], function() {
                 "stroke-width" : strokeWidth
             });
 
-            var tpl = path.getSymbolTemplate(width, height);
+            var tpl = path.template(width, height);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
@@ -9605,14 +9590,11 @@ jui.define("chart.brush.scatterpath", [], function() {
                 var j = points[i].x.length;
 
                 while(j--) {
-                    //path[symbol].call(path, points[i].x[j], points[i].y[j], width, height);
-                    path.template(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
+                    path.symbol(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
                 }
             }
 
             g.append(path);
-
-
 
             return g;
         }
@@ -9823,7 +9805,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 	return CircleGaugeBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
+jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
 	var FillGaugeBrush = function(chart, axis, brush) {
         var self = this;
@@ -9899,7 +9881,7 @@ jui.define("chart.brush.fillgauge", [ "jquery" ], function($) {
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             outerRadius = w;
-            clipId = chart.createId("fill-gauge");
+            clipId = _.createId("fill-gauge");
 
             var clip = chart.svg.clipPath({
                 id : clipId
