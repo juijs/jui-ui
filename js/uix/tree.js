@@ -922,6 +922,10 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			if(index == null) return null;
 			return this.uit.getNodeAll(index);
 		}
+
+        this.activeIndex = function() {
+            return nodeIndex;
+        }
 	}
 
     UI.setup = function() {
