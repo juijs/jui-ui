@@ -4,10 +4,8 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="../../../resources/prettify/prettify.css" >
-    <script src="../../../resources/prettify/prettify.js" ></script>
 </head>
-<body onload="prettyPrint()">
+<body>
 
 <div id="chart"></div>
 
@@ -49,7 +47,8 @@
             brush : {
                 type : 'bar',
                 target : ['name', 'value'],
-                innerPadding : 2
+                innerPadding : 2,
+                colors : ['pattern-white-circle', 'pattern-white-rect']
             },
             style : {
                 barBorderWidth : 1,
@@ -59,55 +58,6 @@
         });
 	})
 </script>
-
-<pre class="prettyprint">
-    jui.ready([ "chart.builder" ], function(chart) {
-
-        chart("#chart", {
-            width: 400,
-            height : 400,
-            theme : "gradient",
-            axis : [
-                {
-                    data : [
-                        { name : 2, value : 15 },
-                        { name : -15, value : -35 },
-                        { name : 8, value : 10 },
-                        { name : 18, value : 5 }
-                    ],
-                    y : {
-                        orient : 'right',
-                        domain : [ "week1", "week2", "week3", "week4" ],
-                        color : "#22bbcc"
-                    },
-                    x : {
-                        type : 'range',
-                        domain : function(d) {
-                            return [d.name , d.value] ;
-                        },
-                        step : 10
-                    }
-                }
-
-            ],
-            widget : [
-                { type : 'title', text: "test" },
-                { type : 'legend' },
-                { type : 'tooltip', all : true }
-            ],
-            brush : {
-                type : 'bar',
-                target : ['name', 'value'],
-                innerPadding : 2
-            },
-            style : {
-                barBorderWidth : 1,
-                barBorderColor : "black",
-                barBorderOpacity : 0.3
-            }
-        });
-    })
-</pre>
 
 </body>
 </html>

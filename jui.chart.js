@@ -2836,7 +2836,7 @@ jui.define("util.svg.element", [], function() {
         	
         	return this; 
         }
-
+        
         /**
          * 엘리먼트 DOM 이벤트 메소드
          *
@@ -2899,6 +2899,49 @@ jui.define("util.svg.element", [], function() {
 
             return size;
         }
+    }
+
+    /**
+     * @method create
+     *
+     * create nested elements by json
+     * @param {Object} obj
+     * @returns {util.svg.element}
+     * @static  
+     *
+     *      @example
+     *      svg.create({
+         *          tag : "pattern", 
+         *          attr : { x : 0, y : 0, width : 20, height : 20  },
+         *          children : [
+         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 }           
+         *          ]
+         *      });      
+         *      
+         *      is equals to       
+         *            
+         *      <pattern x="0" y="0" width="20" height="20">
+         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+         *      </pattern>
+         */
+    Element.createByObject = function(obj) {
+        var el = new Element();
+        
+        el.create(obj.type, obj.attr);
+
+        if (obj.children instanceof Array) {
+            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
+                el.append(Element.createByObject(obj.children[i]));
+            }
+        }
+
+        return el;
     }
 
     return Element;
@@ -3979,8 +4022,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
     return Axis;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
-    function($, _, SVGUtil, ColorUtil, Axis) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis", "util.svg.element" ],
+    function($, _, SVGUtil, ColorUtil, Axis, SVGElement) {
 
     /**
      * Common Logic
@@ -4444,14 +4487,89 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             return "url(#" + id + ")";
         }
+        
+        function createPattern (self, obj) {
+            
+            if (typeof obj == 'string') {
 
-        function getColor(self, color) {
+                obj = obj.replace("url(#", "").replace(")", "");
+                
+                console.log(obj);
+                
+                if(_hash[obj]) {
+                    return "url(#" + obj + ")";
+                }
+                
+                // already pattern id 
+                if (obj.indexOf('pattern-') == -1) {
+                    return false
+                }
+
+                var arr = obj.split("-");
+                var method = arr.pop();
+
+                var pattern = jui.include("chart." + arr.join("."));
+                
+                if (!pattern) {
+                    return false;
+                }
+
+                var patternElement = pattern[method];
+                
+                if (typeof patternElement == 'function') {
+                    patternElement = patternElement.call(self);
+                }
+
+                if (!patternElement.attr('id')) {
+                    patternElement.attr({id : obj})
+                }
+
+                self.defs.append(patternElement);
+                
+                _hash[obj] = obj;
+                
+                return "url(#" + obj + ")";
+                
+            } else {
+                
+                obj.id = obj.id || _.createId('pattern-');
+
+                if (_hash[obj.id]) {
+                    return "url(#" + obj.id + ")"; 
+                }                
+                
+                var patternElement = SVGElement.createByObject(obj);
+                
+                self.defs.append(patternElement);
+                
+                _hash[obj.id] = obj.id;
+                
+                return "url(#" + obj.id + ")";
+            }
+            
+        }
+
+        this.getColor = function(color) {
+            var self = this;
+
             if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
             if(_.typeCheck("object", color)) {
-                return createGradient(self, color);
+                
+                if (color.type == 'pattern') {
+                    return createPattern(self, color);
+                } else {
+                    return createGradient(self, color);
+                }
+            }
+            
+            if (typeof color == 'string') {
+                var url = createPattern(self, color);
+                if (url) {
+                    return url; 
+                }
             }
 
             var parsedColor = ColorUtil.parse(color);
@@ -4624,7 +4742,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
-            return getColor(this, color);
+            return this.getColor(color);
         }
 
         /**
@@ -4660,7 +4778,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return _theme;
             } else if(arguments.length == 1) {
                 if(key.indexOf("Color") > -1 && _theme[key] != null) {
-                    return getColor(this, _theme[key]);
+                    return this.getColor(_theme[key]);
                 }
 
                 return _theme[key];
@@ -4668,7 +4786,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var val = (key) ? value : value2;
 
                 if(val.indexOf("Color") > -1 && _theme[val] != null) {
-                    return getColor(this, _theme[val]);
+                    return this.getColor(_theme[val]);
                 }
 
                 return _theme[val];
@@ -5416,6 +5534,77 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonBackgroundOpacity : 0.7
 	}
 }); 
+jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
+
+    /**
+     * @class chart.pattern.white 
+     * 
+     * pattern default sample  
+     */
+
+    function CreateCirclePattern (id, size) {
+        size = parseInt(size || 1);
+        var el = SVGElement.createByObject({
+            type : "pattern",
+            attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
+            children : [
+                { type : 'rect', attr : { width : 10, height : 10, fill : '#ffffff' }},
+                { type : 'circle', attr : { cx : size, cy : size, r : size,  fill : '#000000' }}
+            ]
+        });
+
+        return el; 
+    }
+    
+
+    return {
+
+        /**
+         * @method circle
+         *
+         * create svg element by json
+         *
+         * @return {util.svg.element}
+         */
+        circle : SVGElement.createByObject({
+            type: "pattern",
+            attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
+            children: [
+                { type: 'rect', attr: { width: 50, height: 50, fill: '#282828' }},
+                { type: 'circle', attr: { cx: 3, cy: 4.3, r: 1.8, fill: '#393939' }},
+                { type: 'circle', attr: { cx: 3, cy: 3, r: 1.8, fill: 'black' }},
+                { type: 'circle', attr: { cx: 10.5, cy: 12.5, r: 1.8, fill: '#393939' }},
+                { type: 'circle', attr: { cx: 10.5, cy: 11.3, r: 1.8, fill: 'black' }}
+            ]
+        }),
+        
+        /**
+         * @method rect
+         *
+         * create svg element by chart's svg  
+         * 
+         * @return {util.svg.element}
+         */        
+        rect : function() {
+          var chart = this;
+          return chart.svg.pattern({ width : 20, height : 20, patternUnits : "userSpaceOnUse"}, function() {
+              chart.svg.rect({ width : 20, height : 20 , fill : '#00a9f1'});
+              chart.svg.rect({ width : 20, height : 10 , fill : '#26baf4'});
+          });
+        },
+        
+        circle1 : function() { return CreateCirclePattern.call(this, 1, 1); },
+        circle2 : function() { return CreateCirclePattern.call(this, 2, 1.5); },
+        circle3 : function() { return CreateCirclePattern.call(this, 3, 2); },
+        circle4 : function() { return CreateCirclePattern.call(this, 4, 2.5); },
+        circle5 : function() { return CreateCirclePattern.call(this, 5, 3); },
+        circle6 : function() { return CreateCirclePattern.call(this, 6, 3.5); },
+        circle7 : function() { return CreateCirclePattern.call(this, 7, 4); },
+        circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); }
+    }
+    
+})
+
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * @class chart.grid.core

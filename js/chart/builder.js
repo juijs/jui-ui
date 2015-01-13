@@ -1,5 +1,5 @@
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
-    function($, _, SVGUtil, ColorUtil, Axis) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis", "util.svg.element" ],
+    function($, _, SVGUtil, ColorUtil, Axis, SVGElement) {
 
     /**
      * Common Logic
@@ -463,14 +463,89 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             return "url(#" + id + ")";
         }
+        
+        function createPattern (self, obj) {
+            
+            if (typeof obj == 'string') {
 
-        function getColor(self, color) {
+                obj = obj.replace("url(#", "").replace(")", "");
+                
+                console.log(obj);
+                
+                if(_hash[obj]) {
+                    return "url(#" + obj + ")";
+                }
+                
+                // already pattern id 
+                if (obj.indexOf('pattern-') == -1) {
+                    return false
+                }
+
+                var arr = obj.split("-");
+                var method = arr.pop();
+
+                var pattern = jui.include("chart." + arr.join("."));
+                
+                if (!pattern) {
+                    return false;
+                }
+
+                var patternElement = pattern[method];
+                
+                if (typeof patternElement == 'function') {
+                    patternElement = patternElement.call(self);
+                }
+
+                if (!patternElement.attr('id')) {
+                    patternElement.attr({id : obj})
+                }
+
+                self.defs.append(patternElement);
+                
+                _hash[obj] = obj;
+                
+                return "url(#" + obj + ")";
+                
+            } else {
+                
+                obj.id = obj.id || _.createId('pattern-');
+
+                if (_hash[obj.id]) {
+                    return "url(#" + obj.id + ")"; 
+                }                
+                
+                var patternElement = SVGElement.createByObject(obj);
+                
+                self.defs.append(patternElement);
+                
+                _hash[obj.id] = obj.id;
+                
+                return "url(#" + obj.id + ")";
+            }
+            
+        }
+
+        this.getColor = function(color) {
+            var self = this;
+
             if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
             if(_.typeCheck("object", color)) {
-                return createGradient(self, color);
+                
+                if (color.type == 'pattern') {
+                    return createPattern(self, color);
+                } else {
+                    return createGradient(self, color);
+                }
+            }
+            
+            if (typeof color == 'string') {
+                var url = createPattern(self, color);
+                if (url) {
+                    return url; 
+                }
             }
 
             var parsedColor = ColorUtil.parse(color);
@@ -643,7 +718,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
-            return getColor(this, color);
+            return this.getColor(color);
         }
 
         /**
@@ -679,7 +754,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return _theme;
             } else if(arguments.length == 1) {
                 if(key.indexOf("Color") > -1 && _theme[key] != null) {
-                    return getColor(this, _theme[key]);
+                    return this.getColor(_theme[key]);
                 }
 
                 return _theme[key];
@@ -687,7 +762,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var val = (key) ? value : value2;
 
                 if(val.indexOf("Color") > -1 && _theme[val] != null) {
-                    return getColor(this, _theme[val]);
+                    return this.getColor(_theme[val]);
                 }
 
                 return _theme[val];
