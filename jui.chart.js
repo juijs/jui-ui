@@ -9576,9 +9576,12 @@ jui.define("chart.brush.scatterpath", [], function() {
 
             var g = this.chart.svg.group(),
                 path = this.chart.svg.path({
-                fill : color,
+                fill : "none",
                 stroke : color,
-                "stroke-width" : strokeWidth
+                "stroke-width" : strokeWidth,
+                "stroke-opacity" : 1,
+                "stroke-linecap" : "butt",
+                "stroke-linejoin" :  "round"
             });
 
             var tpl = path.template(width, height);

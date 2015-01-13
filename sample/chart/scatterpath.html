@@ -19,7 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
-        var maxValue = 30000;
+        var maxValue = 300000;
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -88,21 +88,21 @@
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name", size : 3,
+                target : "name", size : 1,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",size : 3,
+                target : "value",size : 1,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",size : 3,
+                target : "test",size : 1,
                 colors : [ theme.colors[2] ]
             }]
         });
 
         var tim = setInterval(function() {
-            c.get('axis', 0).update(data /* = changeData(data)*/);
+            c.get('axis', 0).update(data = changeData(data));
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 
