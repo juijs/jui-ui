@@ -26,10 +26,10 @@
     ];
 
     var dataSource2 = [
-        { title : 'Overall Visits', value : 292, max : 300, min : 0, unit : "k" },
-        { title : 'Overall Visits', value : 192, max : 300, min : 0 },
-        { title : 'Overall Visits', value : 192, max : 300, min : 0 },
-        { title : 'Overall Visits', value : 192, max : 300, min : 0 }
+        { title : 'Overall Visits', value : 192, max : 200, min : 0, unit : "k" },
+        { title : 'New Visits', value : 66, max : 100, min : 0, unit : "%" },
+        { title : 'Mobile Visits', value : 75, max : 100, min : 0, unit : "%" },
+        { title : 'Desktop Visits', value : 25, max : 100, min : 0, unit : "%" }
     ]
 
     jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
@@ -90,13 +90,8 @@
                 animate : true
             }, {
                 type : 'fullgauge',
-                target : 'value',
-                max : 'max',
-                min : 'min',
                 axis : 1,
-                size : 10,
-                text : true,
-                unitText : "KB"
+                size : 10
             } ],
             widget : [{
                 type : "title",

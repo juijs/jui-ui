@@ -72,7 +72,8 @@ jui.define("chart.brush.bubble", [], function() {
     BubbleBrush.setup = function() {
         return {
             min: 5,
-            max: 30
+            max: 30,
+            clip: true
         };
     }
 

@@ -1,81 +1,74 @@
 jui.define("chart.brush.candlestick", [], function() {
 
-    var CandleStickBrush = function(chart, axis, brush) {
+    var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
-        function getTargetData(data) {
-            var target = {};
-
-            for (var j = 0; j < brush.target.length; j++) {
-                var k = brush.target[j],
-                    t = chart.get("series", k);
-
-                target[t.type] = data[k];
-            }
+        this.getTargetData = function(data) {
+            var target = {
+                low: data[this.brush.low],
+                high: data[this.brush.high],
+                open: data[this.brush.open],
+                close: data[this.brush.close]
+            };
 
             return target;
         }
 
         this.drawBefore = function() {
-            g = chart.svg.group();
-            width = axis.x.rangeBand();
+            g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = getTargetData(data),
-                    startX = axis.x(i),
+                var data = this.getTargetData(data),
+                    startX = this.axis.x(i),
                     r = null,
                     l = null;
 
-                var open = data.open,
-                    close = data.close,
-                    low = data.low,
-                    high = data.high;
+                if(data.open > data.close) { // 시가가 종가보다 높을 때 (Red)
+                    var y = this.axis.y(data.open);
 
-                if(open > close) { // 시가가 종가보다 높을 때 (Red)
-                    var y = axis.y(open);
-
-                    l = chart.svg.line({
+                    l = this.chart.svg.line({
                         x1: startX,
-                        y1: axis.y(high),
+                        y1: this.axis.y(data.high),
                         x2: startX,
-                        y2: axis.y(low),
-                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        y2: this.axis.y(data.low),
+                        stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
-                    r = chart.svg.rect({
+                    r = this.chart.svg.rect({
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(axis.y(close) - y),
-                        fill : chart.theme("candlestickInvertBackgroundColor"),
-                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        height : Math.abs(this.axis.y(data.close) - y),
+                        fill : this.chart.theme("candlestickInvertBackgroundColor"),
+                        stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
                 } else {
-                    var y = axis.y(close);
+                    var y = this.axis.y(data.close);
 
-                    l = chart.svg.line({
+                    l = this.chart.svg.line({
                         x1: startX,
-                        y1: axis.y(high),
+                        y1: this.axis.y(data.high),
                         x2: startX,
-                        y2: axis.y(low),
-                        stroke: chart.theme("candlestickBorderColor"),
+                        y2: this.axis.y(data.low),
+                        stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width":1
                     });
 
-                    r = chart.svg.rect({
+                    r = this.chart.svg.rect({
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(axis.y(open) - y),
-                        fill : chart.theme("candlestickBackgroundColor"),
-                        stroke: chart.theme("candlestickBorderColor"),
+                        height : Math.abs(this.axis.y(data.open) - y),
+                        fill : this.chart.theme("candlestickBackgroundColor"),
+                        stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
                     });
                 }
@@ -87,6 +80,15 @@ jui.define("chart.brush.candlestick", [], function() {
             });
 
             return g;
+        }
+    }
+
+    CandleStickBrush.setup = function() {
+        return {
+            low: "low",
+            high: "high",
+            open: "open",
+            close: "close"
         }
     }
 

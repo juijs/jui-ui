@@ -65,25 +65,24 @@
             ],
             series : {
                 l: {
-                    type: "low",
                     text: "최저"
                 },
                 h: {
-                    type: "high",
                     text: "최고"
                 },
                 o: {
-                    type: "open",
                     text: "시작"
                 },
                 c: {
-                    type: "close",
                     text: "종료"
                 }
             },
             brush : [{
                 type : "candlestick",
-                target : [ "l", "h", "o", "c" ]
+                low : "l",
+                high : "h",
+                open : "o",
+                close : "c"
             }],
             widget : [{
                 type : "scroll"

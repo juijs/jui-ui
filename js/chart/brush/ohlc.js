@@ -3,26 +3,13 @@ jui.define("chart.brush.ohlc", [], function() {
     var OHLCBrush = function(chart, axis, brush) {
         var g;
 
-        function getTargetData(data) {
-            var target = {};
-
-            for (var j = 0; j < brush.target.length; j++) {
-                var k = brush.target[j],
-                    t = chart.get("series", k);
-
-                target[t.type] = data[k];
-            }
-
-            return target;
-        }
-
         this.drawBefore = function() {
             g = chart.svg.group();
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = getTargetData(data),
+                var data = this.getTargetData(data),
                     startX = axis.x(i);
 
                 var open = data.open,
@@ -71,4 +58,4 @@ jui.define("chart.brush.ohlc", [], function() {
     }
 
     return OHLCBrush;
-}, "chart.brush.core");
+}, "chart.brush.candlestick");

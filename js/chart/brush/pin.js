@@ -1,22 +1,22 @@
 jui.define("chart.brush.pin", [], function() {
     var PinBrush = function(chart, axis, brush) {
-        var self = this, g,
-            size = 6;
+        var self = this;
 
         this.draw = function() {
-            var color = chart.theme("pinBorderColor"),
+            var size = brush.size,
+                color = chart.theme("pinBorderColor"),
                 width = chart.theme("pinBorderWidth");
 
-            g = chart.svg.group({}, function() {
+            var g = chart.svg.group({}, function() {
                 var d = axis.x(brush.split),
                     x = d - (size / 2),
-                    value = brush.format(axis.x.invert(d));
+                    value = self.format(axis.x.invert(d));
 
                 chart.text({
                     "text-anchor": "middle",
                     "font-size": chart.theme("pinFontSize"),
                     "fill": chart.theme("pinFontColor")
-                }, value).translate(x, -4);
+                }, value).translate(d, -4);
 
                 chart.svg.polygon({
                     fill: color
@@ -42,6 +42,7 @@ jui.define("chart.brush.pin", [], function() {
 
     PinBrush.setup = function() {
         return {
+            size: 6,
             split: 0,
             showValue: false,
             format: null

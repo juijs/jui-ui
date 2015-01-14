@@ -15279,7 +15279,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             colors: null,
             axis: 0,
             index: null,
-            clip: true
+            clip: false
         }
     }
 
@@ -15944,7 +15944,8 @@ jui.define("chart.brush.bubble", [], function() {
     BubbleBrush.setup = function() {
         return {
             min: 5,
-            max: 30
+            max: 30,
+            clip: true
         };
     }
 
@@ -15952,82 +15953,75 @@ jui.define("chart.brush.bubble", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.candlestick", [], function() {
 
-    var CandleStickBrush = function(chart, axis, brush) {
+    var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
-        function getTargetData(data) {
-            var target = {};
-
-            for (var j = 0; j < brush.target.length; j++) {
-                var k = brush.target[j],
-                    t = chart.get("series", k);
-
-                target[t.type] = data[k];
-            }
+        this.getTargetData = function(data) {
+            var target = {
+                low: data[this.brush.low],
+                high: data[this.brush.high],
+                open: data[this.brush.open],
+                close: data[this.brush.close]
+            };
 
             return target;
         }
 
         this.drawBefore = function() {
-            g = chart.svg.group();
-            width = axis.x.rangeBand();
+            g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
             barWidth = width * 0.7;
             barPadding = barWidth / 2;
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = getTargetData(data),
-                    startX = axis.x(i),
+                var data = this.getTargetData(data),
+                    startX = this.axis.x(i),
                     r = null,
                     l = null;
 
-                var open = data.open,
-                    close = data.close,
-                    low = data.low,
-                    high = data.high;
+                if(data.open > data.close) { // 시가가 종가보다 높을 때 (Red)
+                    var y = this.axis.y(data.open);
 
-                if(open > close) { // 시가가 종가보다 높을 때 (Red)
-                    var y = axis.y(open);
-
-                    l = chart.svg.line({
+                    l = this.chart.svg.line({
                         x1: startX,
-                        y1: axis.y(high),
+                        y1: this.axis.y(data.high),
                         x2: startX,
-                        y2: axis.y(low),
-                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        y2: this.axis.y(data.low),
+                        stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
-                    r = chart.svg.rect({
+                    r = this.chart.svg.rect({
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(axis.y(close) - y),
-                        fill : chart.theme("candlestickInvertBackgroundColor"),
-                        stroke: chart.theme("candlestickInvertBorderColor"),
+                        height : Math.abs(this.axis.y(data.close) - y),
+                        fill : this.chart.theme("candlestickInvertBackgroundColor"),
+                        stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
                 } else {
-                    var y = axis.y(close);
+                    var y = this.axis.y(data.close);
 
-                    l = chart.svg.line({
+                    l = this.chart.svg.line({
                         x1: startX,
-                        y1: axis.y(high),
+                        y1: this.axis.y(data.high),
                         x2: startX,
-                        y2: axis.y(low),
-                        stroke: chart.theme("candlestickBorderColor"),
+                        y2: this.axis.y(data.low),
+                        stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width":1
                     });
 
-                    r = chart.svg.rect({
+                    r = this.chart.svg.rect({
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(axis.y(open) - y),
-                        fill : chart.theme("candlestickBackgroundColor"),
-                        stroke: chart.theme("candlestickBorderColor"),
+                        height : Math.abs(this.axis.y(data.open) - y),
+                        fill : this.chart.theme("candlestickBackgroundColor"),
+                        stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
                     });
                 }
@@ -16042,6 +16036,15 @@ jui.define("chart.brush.candlestick", [], function() {
         }
     }
 
+    CandleStickBrush.setup = function() {
+        return {
+            low: "low",
+            high: "high",
+            open: "open",
+            close: "close"
+        }
+    }
+
     return CandleStickBrush;
 }, "chart.brush.core");
 
@@ -16050,26 +16053,13 @@ jui.define("chart.brush.ohlc", [], function() {
     var OHLCBrush = function(chart, axis, brush) {
         var g;
 
-        function getTargetData(data) {
-            var target = {};
-
-            for (var j = 0; j < brush.target.length; j++) {
-                var k = brush.target[j],
-                    t = chart.get("series", k);
-
-                target[t.type] = data[k];
-            }
-
-            return target;
-        }
-
         this.drawBefore = function() {
             g = chart.svg.group();
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = getTargetData(data),
+                var data = this.getTargetData(data),
                     startX = axis.x(i);
 
                 var open = data.open,
@@ -16118,7 +16108,7 @@ jui.define("chart.brush.ohlc", [], function() {
     }
 
     return OHLCBrush;
-}, "chart.brush.core");
+}, "chart.brush.candlestick");
 
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
@@ -17476,14 +17466,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
-		function createText(startAngle, endAngle, min, max, value) {
-			var g = chart.svg.group({
-				"class" : "gauge text"
-			});
+		function createText(value, unit) {
+			var g = chart.svg.group().translate(centerX, centerY);
 
-			g.translate(centerX, centerY);
+			if (brush.showText) {
+				var unitText = brush.unitText || unit;
 
-			if (brush.text != "") {
 				g.append(chart.svg.text({
 					x : 0,
 					y : 10,
@@ -17492,9 +17480,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					"font-size" : "1.5em",
 					"font-weight" : 1000,
 					"fill" : self.color(0)
-				}, value + brush.unitText));
+				}, value + unitText));
 			}
-
 
 			return g;
 		}
@@ -17507,19 +17494,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					return {
 						x : 0,
 						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
+						width : chart.area("width"),
+						height : chart.area("height")
 					};
 				}
 			}
-
         }
 
 		this.drawUnit = function(index, data, group) {
-			var obj = axis.c(index);
-			var value = data[this.brush.target];
-			var max = data[this.brush.max];
-			var min = data[this.brush.min];
+			var obj = axis.c(index),
+				value = (data[this.brush.target] || data.value) || 0,
+				max = (data[this.brush.max] || data.max) || 100,
+				min = (data[this.brush.min] || data.min) || 0,
+				unit = (data[this.brush.unit] || data.unit) || "";
 
 			var rate = (value - min) / (max - min),
 				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
@@ -17528,8 +17515,10 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				brush.endAngle = 359.99999;
 			}
 
-			var width = obj.width, height = obj.height;
-			var x = obj.x, y = obj.y;
+			var width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y;
 
 			// center
 			w = Math.min(width, height) / 2;
@@ -17538,23 +17527,17 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			outerRadius = w;
 			innerRadius = outerRadius - brush.size;
 
-			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
 				stroke : chart.theme("gaugeBackgroundColor"),
 				fill : 'transparent'
-			});
+			}));
 
-			group.append(g);
-
-			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
 				stroke : this.color(0),
 				fill : 'transparent'
-			});
+			}));
 
-			group.append(g);
-
-			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
-			g = createText(brush.startAngle, brush.endAngle, min, max, value);
-			group.append(g);
+			group.append(createText(value, unit));
 
 			return group;
 		}
@@ -17573,15 +17556,14 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	FullGaugeBrush.setup = function() {
 		return {
-			min: 0,
-			max: 100,
-			value: 0,
+			min: "min",
+			max: "max",
+			value: "value",
 			size: 60,
 			startAngle: 0,
 			endAngle: 300,
-			text: "",
-			unitText: "",
-			clip: false
+			showText: true,
+			unitText: ""
 		};
 	}
 
@@ -18146,23 +18128,23 @@ jui.define("chart.brush.focus", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.pin", [], function() {
     var PinBrush = function(chart, axis, brush) {
-        var self = this, g,
-            size = 6;
+        var self = this;
 
         this.draw = function() {
-            var color = chart.theme("pinBorderColor"),
+            var size = brush.size,
+                color = chart.theme("pinBorderColor"),
                 width = chart.theme("pinBorderWidth");
 
-            g = chart.svg.group({}, function() {
+            var g = chart.svg.group({}, function() {
                 var d = axis.x(brush.split),
                     x = d - (size / 2),
-                    value = brush.format(axis.x.invert(d));
+                    value = self.format(axis.x.invert(d));
 
                 chart.text({
                     "text-anchor": "middle",
                     "font-size": chart.theme("pinFontSize"),
                     "fill": chart.theme("pinFontColor")
-                }, value).translate(x, -4);
+                }, value).translate(d, -4);
 
                 chart.svg.polygon({
                     fill: color
@@ -18188,6 +18170,7 @@ jui.define("chart.brush.pin", [], function() {
 
     PinBrush.setup = function() {
         return {
+            size: 6,
             split: 0,
             showValue: false,
             format: null
