@@ -1206,7 +1206,10 @@ jui.define("util.svg",
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *      </pattern>
      *
-     * @param {Object} obj
+     * @param {Object} obj json literal
+     * @param {String} obj.type  svg element name
+     * @param {Object} obj.attr  svg element's attributes
+     * @param {Array} [obj.children=null] svg element's children
      * @static
      * @return {util.svg.element}
      *
