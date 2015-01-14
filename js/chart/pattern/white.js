@@ -1,4 +1,4 @@
-jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
+jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
     /**
      * @class chart.pattern.white 
@@ -8,7 +8,7 @@ jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
 
     function CreateCirclePattern (id, size) {
         size = parseInt(size || 1);
-        var el = SVGElement.createByObject({
+        var el = SVG.createElement({
             type : "pattern",
             attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
             children : [
@@ -30,7 +30,7 @@ jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
          *
          * @return {util.svg.element}
          */
-        circle : SVGElement.createByObject({
+        circle : SVG.createElement({
             type: "pattern",
             attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
             children: [

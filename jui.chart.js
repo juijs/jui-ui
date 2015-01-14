@@ -2901,49 +2901,6 @@ jui.define("util.svg.element", [], function() {
         }
     }
 
-    /**
-     * @method create
-     *
-     * create nested elements by json
-     * @param {Object} obj
-     * @returns {util.svg.element}
-     * @static  
-     *
-     *      @example
-     *      svg.create({
-         *          tag : "pattern", 
-         *          attr : { x : 0, y : 0, width : 20, height : 20  },
-         *          children : [
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 }           
-         *          ]
-         *      });      
-         *      
-         *      is equals to       
-         *            
-         *      <pattern x="0" y="0" width="20" height="20">
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *      </pattern>
-         */
-    Element.createByObject = function(obj) {
-        var el = new Element();
-        
-        el.create(obj.type, obj.attr);
-
-        if (obj.children instanceof Array) {
-            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
-                el.append(Element.createByObject(obj.children[i]));
-            }
-        }
-
-        return el;
-    }
-
     return Element;
 });
 
@@ -3732,6 +3689,49 @@ jui.define("util.svg",
         init();
     }
 
+    /**
+     * @method create
+     *
+     * create nested elements by json
+     * @param {Object} obj
+     * @returns {util.svg.element}
+     * @static
+     *
+     *      @example
+     *      svg.create({
+     *          tag : "pattern",
+     *          attr : { x : 0, y : 0, width : 20, height : 20  },
+     *          children : [
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 }
+     *          ]
+     *      });
+     *
+     *      is equals to
+     *
+     *      <pattern x="0" y="0" width="20" height="20">
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *      </pattern>
+     */
+    SVG.createElement = function(obj) {
+        var el = new Element();
+
+        el.create(obj.type, obj.attr);
+
+        if (obj.children instanceof Array) {
+            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
+                el.append(SVG.createElement(obj.children[i]));
+            }
+        }
+
+        return el;
+    }
+
     return SVG;
 });
 jui.define("util.svg3d", [ "util.base", "util.math", "util.svg" ], function(_, math, SVGUtil) {
@@ -4489,13 +4489,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
         
         function createPattern (self, obj) {
-            
             if (typeof obj == 'string') {
-
                 obj = obj.replace("url(#", "").replace(")", "");
-                
-                console.log(obj);
-                
+
                 if(_hash[obj]) {
                     return "url(#" + obj + ")";
                 }
@@ -4549,9 +4545,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             
         }
 
-        this.getColor = function(color) {
-            var self = this;
-
+        function createColor(self, color) {
             if(_.typeCheck("undefined", color)) {
                 return "none";
             }
@@ -4742,7 +4736,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
-            return this.getColor(color);
+            return createColor(this, color);
         }
 
         /**
@@ -4778,7 +4772,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return _theme;
             } else if(arguments.length == 1) {
                 if(key.indexOf("Color") > -1 && _theme[key] != null) {
-                    return this.getColor(_theme[key]);
+                    return createColor(this, _theme[key]);
                 }
 
                 return _theme[key];
@@ -4786,7 +4780,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var val = (key) ? value : value2;
 
                 if(val.indexOf("Color") > -1 && _theme[val] != null) {
-                    return this.getColor(_theme[val]);
+                    return createColor(this, _theme[val]);
                 }
 
                 return _theme[val];
@@ -5651,7 +5645,7 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonBackgroundOpacity : 1
     }
 });
-jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
+jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
     /**
      * @class chart.pattern.white 
@@ -5661,7 +5655,7 @@ jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
 
     function CreateCirclePattern (id, size) {
         size = parseInt(size || 1);
-        var el = SVGElement.createByObject({
+        var el = SVG.createElement({
             type : "pattern",
             attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
             children : [
@@ -5683,7 +5677,7 @@ jui.define("chart.pattern.white", ["util.svg.element"], function(SVGElement){
          *
          * @return {util.svg.element}
          */
-        circle : SVGElement.createByObject({
+        circle : SVG.createElement({
             type: "pattern",
             attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
             children: [

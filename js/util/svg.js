@@ -218,49 +218,6 @@ jui.define("util.svg.element", [], function() {
         }
     }
 
-    /**
-     * @method create
-     *
-     * create nested elements by json
-     * @param {Object} obj
-     * @returns {util.svg.element}
-     * @static  
-     *
-     *      @example
-     *      svg.create({
-         *          tag : "pattern", 
-         *          attr : { x : 0, y : 0, width : 20, height : 20  },
-         *          children : [
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
-         *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 }           
-         *          ]
-         *      });      
-         *      
-         *      is equals to       
-         *            
-         *      <pattern x="0" y="0" width="20" height="20">
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
-         *      </pattern>
-         */
-    Element.createByObject = function(obj) {
-        var el = new Element();
-        
-        el.create(obj.type, obj.attr);
-
-        if (obj.children instanceof Array) {
-            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
-                el.append(Element.createByObject(obj.children[i]));
-            }
-        }
-
-        return el;
-    }
-
     return Element;
 });
 
@@ -1047,6 +1004,49 @@ jui.define("util.svg",
         }
 
         init();
+    }
+
+    /**
+     * @method create
+     *
+     * create nested elements by json
+     * @param {Object} obj
+     * @returns {util.svg.element}
+     * @static
+     *
+     *      @example
+     *      svg.create({
+     *          tag : "pattern",
+     *          attr : { x : 0, y : 0, width : 20, height : 20  },
+     *          children : [
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 } ,
+     *              { tag : 'rect', attr : {width : 20, height : 20, fill : 'black', stroke : 'blue', 'stroke-width' : 2 }
+     *          ]
+     *      });
+     *
+     *      is equals to
+     *
+     *      <pattern x="0" y="0" width="20" height="20">
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
+     *      </pattern>
+     */
+    SVG.createElement = function(obj) {
+        var el = new Element();
+
+        el.create(obj.type, obj.attr);
+
+        if (obj.children instanceof Array) {
+            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
+                el.append(SVG.createElement(obj.children[i]));
+            }
+        }
+
+        return el;
     }
 
     return SVG;
