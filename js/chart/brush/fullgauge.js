@@ -75,13 +75,15 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			innerRadius = outerRadius - brush.size;
 
 			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
-				fill : chart.theme("gaugeBackgroundColor")
+				stroke : chart.theme("gaugeBackgroundColor"),
+				fill : 'transparent'
 			});
 
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : this.color(0)
+				stroke : this.color(0),
+				fill : 'transparent'
 			});
 
 			group.append(g);

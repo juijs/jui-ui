@@ -16142,6 +16142,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    hasCircle = hasCircle || false;
 
+			attr['stroke-width']= outerRadius - innerRadius;
+
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
 				dist = Math.abs(outerRadius - innerRadius);
@@ -16151,18 +16153,20 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				startX = obj.x,
 				startY = obj.y;
 
+			/*
 			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
 				startInnerX = innerCircle.x,
 				startInnerY = innerCircle.y;
-
+			*/
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
 			obj = math.rotate(startX, startY, math.radian(endAngle));
 
+			/*
 			// inner arc 에 대한 지점 설정 			
-			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle));
+			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle)); */
 
 			// 중심점 이동 
 			g.translate(centerX, centerY);
@@ -16170,14 +16174,16 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 			// outer arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 
+			/*
 			// 라인 긋기 
 			path.LineTo(innerCircle.x, innerCircle.y);
 
 			// inner arc 그리기 
 			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
-			
+			*/
+
 			// 패스 종료
-			path.ClosePath();
+			//path.ClosePath();
 
 			g.append(path);
 
@@ -16224,7 +16230,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
             centerY = height / 2;
             startY = -w;
             startX = 0;
-            outerRadius = Math.abs(startY);
+            outerRadius = Math.abs(startY) - this.brush.size;
             innerRadius = outerRadius - this.brush.size;
         }
 
@@ -16247,9 +16253,8 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 					endAngle = all * (value / max);
 
 				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
-					fill : this.color(i),
-					stroke : this.chart.theme("donutBorderColor"),
-					"stroke-width" : this.chart.theme("donutBorderWidth")
+					fill : 'transparent',
+					stroke : this.color(i)
 				});
 
                 this.addEvent(g, 0, i);
@@ -16557,6 +16562,15 @@ jui.define("chart.brush.path", [], function() {
 
 jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
+	/**
+	 * @class chart.brush.pie
+	 *
+	 * implements pie brush
+	 *
+	 * @param {chart.builder} chart
+	 * @param {chart.axis} axis
+	 * @param {Object} brush
+	 */
 	var PieBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
@@ -17539,13 +17553,15 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			innerRadius = outerRadius - brush.size;
 
 			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
-				fill : chart.theme("gaugeBackgroundColor")
+				stroke : chart.theme("gaugeBackgroundColor"),
+				fill : 'transparent'
 			});
 
 			group.append(g);
 
 			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : this.color(0)
+				stroke : this.color(0),
+				fill : 'transparent'
 			});
 
 			group.append(g);

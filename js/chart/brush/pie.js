@@ -1,5 +1,14 @@
 jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 
+	/**
+	 * @class chart.brush.pie
+	 *
+	 * implements pie brush
+	 *
+	 * @param {chart.builder} chart
+	 * @param {chart.axis} axis
+	 * @param {Object} brush
+	 */
 	var PieBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
