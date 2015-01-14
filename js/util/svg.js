@@ -1183,9 +1183,6 @@ jui.define("util.svg",
      * @method createElement
      *
      * create nested elements by json
-     * @param {Object} obj
-     * @return {util.svg.element}
-     * @static
      *
      *      @example
      *      SVG.createElement({
@@ -1199,14 +1196,20 @@ jui.define("util.svg",
      *          ]
      *      });
      *
-     *      is equals to
+     * is equals to
      *
+     *      @example
      *      <pattern x="0" y="0" width="20" height="20">
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *      </pattern>
+     *
+     * @param {Object} obj
+     * @static
+     * @return {util.svg.element}
+     *
      */
     SVG.createElement = function(obj) {
 
