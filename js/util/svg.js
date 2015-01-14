@@ -612,7 +612,9 @@ jui.define("util.svg",
          * if arguments.length is 2, set attribute width, height to root element
          * if arguments.length is zero, return svg size
          *
-         * @returns {Object}
+         * @return {Object}
+         * @return {Integer} width
+         * @return {Integer} height
          */
         this.size = function() {
             if(arguments.length == 2) {
@@ -759,7 +761,7 @@ jui.define("util.svg",
          *
          * convert xml string
          *
-         * @returns {String} xml
+         * @return {String} xml
          */
         this.toXml = function() {
             var text = rootElem.innerHTML;
@@ -779,7 +781,7 @@ jui.define("util.svg",
          *
          * @param {String} type  image mime type (ex - image/svg+xml)
          * @param {Function} callback
-         * @returns {String}
+         * @return {String}
          */
         this.toDataURL = function(type, callback) {
             type = type || "image/svg+xml";
@@ -820,9 +822,9 @@ jui.define("util.svg",
          * caculate real pixel size of text element
          *
          * @param text
-         * @returns {Object}
-         * @returns {Integer} width
-         * @returns {Integer} height
+         * @return {Object}
+         * @return {Integer} return.width  text element's width (px)
+         * @return {Integer} return.height text element's height(px)
          */
         this.getTextRect = function(text) {
 
@@ -857,7 +859,7 @@ jui.define("util.svg",
          * @param {String} name
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.custom = function(name, attr, callback) {
             return create(new Element(), name, attr, callback);
@@ -869,7 +871,7 @@ jui.define("util.svg",
          * return defs element
          *
          * @param {Function} callback
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.defs = function(callback) {
             return create(new Element(), "defs", null, callback);
@@ -882,7 +884,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.symbol = function(attr, callback) {
             return create(new Element(), "symbol", attr, callback);
@@ -896,7 +898,7 @@ jui.define("util.svg",
          * @alias group
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element.transform}
+         * @return {util.svg.element.transform}
          */
         this.g = this.group = function(attr, callback) {
             return create(new TransElement(), "g", attr, callback);
@@ -909,7 +911,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.marker = function(attr, callback) {
             return create(new Element(), "marker", attr, callback);
@@ -922,7 +924,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element.transform}
+         * @return {util.svg.element.transform}
          */
         this.a = function(attr, callback) {
             return create(new TransElement(), "a", attr, callback);
@@ -935,7 +937,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.switch = function(attr, callback) {
             return create(new Element(), "switch", attr, callback);
@@ -947,7 +949,7 @@ jui.define("util.svg",
          * return use element
          *
          * @param {Object} attr
-         * @returns {util.svg.element}
+         * @return {util.svg.element}
          */
         this.use = function(attr) {
             return create(new Element(), "use", attr);
@@ -960,7 +962,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element.transform}
+         * @return {util.svg.element.transform}
          */
         this.rect = function(attr, callback) {
             return create(new TransElement(), "rect", attr, callback);
@@ -973,7 +975,7 @@ jui.define("util.svg",
          *
          * @param {Object} attr
          * @param {Function} callback
-         * @returns {util.svg.element.transform}
+         * @return {util.svg.element.transform}
          */
         this.line = function(attr, callback) {
             return create(new TransElement(), "line", attr, callback);
@@ -1182,7 +1184,7 @@ jui.define("util.svg",
      *
      * create nested elements by json
      * @param {Object} obj
-     * @returns {util.svg.element}
+     * @return {util.svg.element}
      * @static
      *
      *      @example

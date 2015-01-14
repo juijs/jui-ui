@@ -43,7 +43,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
          * @param K
-         * @returns {{p1: Array, p2: Array}}
+         * @return {{p1: Array, p2: Array}}
          */
 		this.curvePoints = function(K) {
 			var p1 = [];
@@ -107,7 +107,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param maxValue
          * @param minRadius
          * @param maxRadius
-         * @returns {*}
+         * @return {*}
          */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
             var range = maxRadius - minRadius,
@@ -148,7 +148,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
          * @param boolean isCheckMinMax
-         * @returns {Array}
+         * @return {Array}
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [],
@@ -206,7 +206,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param brush
          * @param chart
-         * @returns {Array}
+         * @return {Array}
          */
         this.getStackXY = function(isCheckMinMax) {
             var xy = this.getXY(isCheckMinMax);
