@@ -1022,7 +1022,7 @@ jui.define("util.svg",
     }
 
     /**
-     * @method create
+     * @method createElement
      *
      * create nested elements by json
      * @param {Object} obj
