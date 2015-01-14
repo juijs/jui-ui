@@ -16,8 +16,6 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
 			if (brush.showText) {
-				var unitText = brush.unitText || unit;
-
 				g.append(chart.svg.text({
 					x : 0,
 					y : 10,
@@ -26,7 +24,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 					"font-size" : "1.5em",
 					"font-weight" : 1000,
 					"fill" : self.color(0)
-				}, value + unitText));
+				}, value + unit));
 			}
 
 			return g;
@@ -108,8 +106,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			size: 60,
 			startAngle: 0,
 			endAngle: 300,
-			showText: true,
-			unitText: ""
+			showText: true
 		};
 	}
 

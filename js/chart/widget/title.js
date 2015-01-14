@@ -42,7 +42,7 @@ jui.define("chart.widget.title", [], function() {
                 y : y + widget.dy,
                 "text-anchor" : anchor,
                 "font-family" : chart.theme("fontFamily"),
-                "font-size" : chart.theme("titleFontSize"),
+                "font-size" : widget.size || chart.theme("titleFontSize"),
                 "font-weight" : chart.theme("titleFontWeight"),
                 "fill" : chart.theme("titleFontColor")
             }, widget.text);
@@ -65,7 +65,8 @@ jui.define("chart.widget.title", [], function() {
             align: "center", // or start, end
             text: "",
             dx: 0,
-            dy: 0
+            dy: 0,
+            size: null
         }
     }
 

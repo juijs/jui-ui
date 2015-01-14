@@ -36,8 +36,8 @@
 
         c = chart("#chart", {
             theme : "pattern",
-            width : 800,
-            height : 500,
+            width : 940,
+            height : 400,
             format : function(d) {
                 if(typeof(d) == "number")
                     return (d / 1000) + "K";
@@ -103,7 +103,35 @@
                 text : "DETAILS",
                 align : "start",
                 dx : -35,
-                dy : 335
+                dy : 255
+            }, {
+                type : "title",
+                text : "Overall Visits",
+                align : "start",
+                dx : -10,
+                dy : 318,
+                size : 10
+            }, {
+                type : "title",
+                text : "New Visits",
+                align : "start",
+                dx : 210,
+                dy : 318,
+                size : 10
+            }, {
+                type : "title",
+                text : "Mobile Visits",
+                align : "start",
+                dx : 410,
+                dy : 318,
+                size : 10
+            }, {
+                type : "title",
+                text : "Desktop Visits",
+                align : "start",
+                dx : 615,
+                dy : 318,
+                size : 10
             }],
             style : {
                 areaBackgroundOpacity : 0.85,
