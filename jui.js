@@ -12349,14 +12349,15 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
          * 
          * @return {util.svg.element}
          */        
-        rect : function() {
-          var chart = this;
-          return chart.svg.pattern({ width : 20, height : 20, patternUnits : "userSpaceOnUse"}, function() {
-              chart.svg.rect({ width : 20, height : 20 , fill : '#00a9f1'});
-              chart.svg.rect({ width : 20, height : 10 , fill : '#26baf4'});
-          });
-        },
-        
+        rect : SVG.createElement({
+            type: "pattern",
+            attr: { id: 'pattern-white-rect', width: 20, height: 20, patternUnits: "userSpaceOnUse" },
+            children: [
+                { type: 'rect', attr: { width: 20, height: 20, fill: '#00a9f1' }},
+                { type: 'rect', attr: { width: 20, height: 10, fill: '#26baf4' }}
+            ]
+        }),
+
         circle1 : function() { return CreateCirclePattern.call(this, 1, 1); },
         circle2 : function() { return CreateCirclePattern.call(this, 2, 1.5); },
         circle3 : function() { return CreateCirclePattern.call(this, 3, 2); },
