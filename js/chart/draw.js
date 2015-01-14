@@ -31,7 +31,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             if(_.typeCheck("function", this.drawAnimate)) {
                 var draw = this.grid || this.brush || this.widget;
 
-                if(draw.animate === true) {
+                if(draw.animate !== false) {
                     this.drawAnimate(obj);
                 }
             }

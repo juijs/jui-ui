@@ -10672,7 +10672,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             if(_.typeCheck("function", this.drawAnimate)) {
                 var draw = this.grid || this.brush || this.widget;
 
-                if(draw.animate === true) {
+                if(draw.animate !== false) {
                     this.drawAnimate(obj);
                 }
             }
@@ -10889,7 +10889,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      *
      */
     var UI = function() {
-        var _axis = [], _brush = [], _widget = [];
+        var _axis = [], _brush = [], _widget = [], _defs = null;
         var _padding, _series, _area, _panel, _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
@@ -10978,25 +10978,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @private
          */
         function drawDefs(self) {
-            // draw defs
-            var defs = self.svg.defs();
-
-            // default clip path
-            self.clipId = _.createId("clip-id");
-
-            var clip = self.svg.clipPath({
-                id: self.clipId
+            _defs = self.svg.defs(function() {
+                self.svg.clipPath({
+                    id: "clip-id-" + self.timestamp
+                }, function() {
+                    self.svg.rect({
+                        x: 0,
+                        y: 0,
+                        width: self.area("width"),
+                        height: self.area("height")
+                    });
+                });
             });
-
-            clip.append(self.svg.rect({
-                x: 0,
-                y: 0,
-                width: self.area("width"),
-                height: self.area("height")
-            }));
-            defs.append(clip);
-
-            self.defs = defs;
         }
 
         /**
@@ -11296,7 +11289,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             g = SVGUtil.createElement(obj);
 
-            self.defs.append(g);
+            _defs.append(g);
 
             if(!_.typeCheck("undefined", hashKey)) {
                 _hash[hashKey] = id;
@@ -11305,8 +11298,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             return "url(#" + id + ")";
         }
         
-        function createPattern (self, obj) {
-            if (typeof obj == 'string') {
+        function createPattern(self, obj) {
+            if (_.typeCheck("string", obj)) {
                 obj = obj.replace("url(#", "").replace(")", "");
 
                 if(_hash[obj]) {
@@ -11318,8 +11311,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     return false
                 }
 
-                var arr = obj.split("-");
-                var method = arr.pop();
+                var arr = obj.split("-"),
+                    method = arr.pop();
 
                 var pattern = jui.include("chart." + arr.join("."));
                 
@@ -11337,14 +11330,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     patternElement.attr({id : obj})
                 }
 
-                self.defs.append(patternElement);
+                _defs.append(patternElement);
                 
                 _hash[obj] = obj;
                 
                 return "url(#" + obj + ")";
                 
             } else {
-                
                 obj.attr.id = obj.attr.id || _.createId('pattern-');
 
                 if (_hash[obj.attr.id]) {
@@ -11353,13 +11345,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 
                 var patternElement = SVGUtil.createElement(obj);
                 
-                self.defs.append(patternElement);
+                _defs.append(patternElement);
                 
                 _hash[obj.attr.id] = obj.attr.id;
                 
                 return "url(#" + obj.attr.id + ")";
             }
-            
         }
 
         function createColor(self, color) {
@@ -11431,11 +11422,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
-            }
-
-            // Axis 인덱스 설정;
-            if(!_.typeCheck("array", _options.baseAxis)) {
-                _options.baseAxis = [ _options.baseAxis ];
             }
         }
 
@@ -11519,7 +11505,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var color;
 
             // 테마 & 브러쉬 옵션 컬러 설정
-            if(brush.colors instanceof Array) {
+            if(_.typeCheck("array", brush.colors)) {
                 color = brush.colors[i];
 
                 if(_.typeCheck("integer", color)) {
@@ -14977,8 +14963,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawAfter = function(obj) {
-            if(this.brush.clip === true) {
-                obj.attr({ "clip-path" : "url(#" + this.chart.clipId + ")" });
+            if(this.brush.clip !== false) {
+                obj.attr({ "clip-path" : "url(#clip-id-" + this.chart.timestamp + ")" });
             }
 
             obj.attr({ "class": "brush brush-" + this.brush.type });

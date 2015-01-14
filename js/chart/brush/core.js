@@ -31,8 +31,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawAfter = function(obj) {
-            if(this.brush.clip === true) {
-                obj.attr({ "clip-path" : "url(#" + this.chart.clipId + ")" });
+            if(this.brush.clip !== false) {
+                obj.attr({ "clip-path" : "url(#clip-id-" + this.chart.timestamp + ")" });
             }
 
             obj.attr({ "class": "brush brush-" + this.brush.type });
