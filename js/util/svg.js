@@ -1030,7 +1030,7 @@ jui.define("util.svg",
      * @static
      *
      *      @example
-     *      svg.create({
+     *      SVG.createElement({
      *          tag : "pattern",
      *          attr : { x : 0, y : 0, width : 20, height : 20  },
      *          children : [
