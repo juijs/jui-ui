@@ -501,6 +501,21 @@ jui.define("util.svg",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
+
+    var element_type_list = {
+        "default" : Element,
+        "rect" : TransElement,
+        "ellipse" : TransElement,
+        "circle" : TransElement,
+        "g" : TransElement,
+        "a" : TransElement,
+        "line" : TransElement,
+        "image" : TransElement,
+        "path" : PathElement,
+        "poly" : PolyElement,
+        "polyline" : PolyElement,
+        "polygon" : PolyElement
+    };
     /**
      * @class util.svg
      *
@@ -1036,7 +1051,11 @@ jui.define("util.svg",
      *      </pattern>
      */
     SVG.createElement = function(obj) {
-        var el = new Element();
+
+        var type = obj.type.toLowerCase();
+        var ElementClass = element_type_list[type] || element_type_list["default"];
+
+        var el = new ElementClass();
 
         el.create(obj.type, obj.attr);
 

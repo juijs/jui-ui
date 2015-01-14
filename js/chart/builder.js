@@ -443,17 +443,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var g = null,
                 id = _.createId("gradient");
 
-            obj.id = id;
+            obj.attr.id = id;
 
-            if(obj.type == "linear") {
-                g = self.svg.linearGradient(obj);
-            } else if(obj.type == "radial") {
-                g = self.svg.radialGradient(obj);
-            }
-
-            for(var i = 0; i < obj.stops.length; i++) {
-                g.append(self.svg.stop(obj.stops[i]));
-            }
+            g = SVGUtil.createElement(obj);
 
             self.defs.append(g);
 
@@ -489,7 +481,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var patternElement = pattern[method];
                 
                 if (typeof patternElement == 'function') {
-                    patternElement = patternElement.call(self);
+                    patternElement = patternElement.call(patternElement);
                 }
 
                 if (!patternElement.attr('id')) {
@@ -510,7 +502,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     return "url(#" + obj.id + ")"; 
                 }                
                 
-                var patternElement = SVGElement.createByObject(obj);
+                var patternElement = SVGUtil.createElement(obj);
                 
                 self.defs.append(patternElement);
                 

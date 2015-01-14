@@ -2568,14 +2568,8 @@ jui.define("util.color", [], function() {
 			var attr = this.parseAttr(type, this.trim(matches[2]));
 			var stops = this.parseStop(this.trim(matches[3]));
 			
-			var obj = { type : type };
-			
-			for(var k in attr) {
-				obj[k] = attr[k];
-			}
-			
-			obj.stops = stops;
-			
+			var obj = { type : type + "Gradient", attr : attr, children : stops };
+
 			return obj; 
 			
 		},
@@ -2593,11 +2587,11 @@ jui.define("util.color", [], function() {
 				if (arr.length == 0) continue;
 				
 				if (arr.length == 1) {
-					stops.push({ "stop-color" : arr[0] })
+					stops.push({ type : "stop", attr : {"stop-color" : arr[0] } })
 				} else if (arr.length == 2) {
-					stops.push({ "offset" : arr[0], "stop-color" : arr[1] })
+					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1] } })
 				} else if (arr.length == 3) {
-					stops.push({ "offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] })
+					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] } })
 				}
 			}
 			
@@ -3184,6 +3178,21 @@ jui.define("util.svg",
         "util.svg.element.path", "util.svg.element.poly" ],
     function(_, math, Element, TransElement, PathElement, PolyElement) {
 
+
+    var element_type_list = {
+        "default" : Element,
+        "rect" : TransElement,
+        "ellipse" : TransElement,
+        "circle" : TransElement,
+        "g" : TransElement,
+        "a" : TransElement,
+        "line" : TransElement,
+        "image" : TransElement,
+        "path" : PathElement,
+        "poly" : PolyElement,
+        "polyline" : PolyElement,
+        "polygon" : PolyElement
+    };
     /**
      * @class util.svg
      *
@@ -3719,7 +3728,11 @@ jui.define("util.svg",
      *      </pattern>
      */
     SVG.createElement = function(obj) {
-        var el = new Element();
+
+        var type = obj.type.toLowerCase();
+        var ElementClass = element_type_list[type] || element_type_list["default"];
+
+        var el = new ElementClass();
 
         el.create(obj.type, obj.attr);
 
@@ -4467,17 +4480,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var g = null,
                 id = _.createId("gradient");
 
-            obj.id = id;
+            obj.attr.id = id;
 
-            if(obj.type == "linear") {
-                g = self.svg.linearGradient(obj);
-            } else if(obj.type == "radial") {
-                g = self.svg.radialGradient(obj);
-            }
-
-            for(var i = 0; i < obj.stops.length; i++) {
-                g.append(self.svg.stop(obj.stops[i]));
-            }
+            g = SVGUtil.createElement(obj);
 
             self.defs.append(g);
 
@@ -4513,7 +4518,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var patternElement = pattern[method];
                 
                 if (typeof patternElement == 'function') {
-                    patternElement = patternElement.call(self);
+                    patternElement = patternElement.call(patternElement);
                 }
 
                 if (!patternElement.attr('id')) {
@@ -4534,7 +4539,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     return "url(#" + obj.id + ")"; 
                 }                
                 
-                var patternElement = SVGElement.createByObject(obj);
+                var patternElement = SVGUtil.createElement(obj);
                 
                 self.defs.append(patternElement);
                 

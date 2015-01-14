@@ -37,14 +37,8 @@ jui.define("util.color", [], function() {
 			var attr = this.parseAttr(type, this.trim(matches[2]));
 			var stops = this.parseStop(this.trim(matches[3]));
 			
-			var obj = { type : type };
-			
-			for(var k in attr) {
-				obj[k] = attr[k];
-			}
-			
-			obj.stops = stops;
-			
+			var obj = { type : type + "Gradient", attr : attr, children : stops };
+
 			return obj; 
 			
 		},
@@ -62,11 +56,11 @@ jui.define("util.color", [], function() {
 				if (arr.length == 0) continue;
 				
 				if (arr.length == 1) {
-					stops.push({ "stop-color" : arr[0] })
+					stops.push({ type : "stop", attr : {"stop-color" : arr[0] } })
 				} else if (arr.length == 2) {
-					stops.push({ "offset" : arr[0], "stop-color" : arr[1] })
+					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1] } })
 				} else if (arr.length == 3) {
-					stops.push({ "offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] })
+					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] } })
 				}
 			}
 			
