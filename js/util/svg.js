@@ -821,7 +821,7 @@ jui.define("util.svg",
          *
          * caculate real pixel size of text element
          *
-         * @param text
+         * @param {String} text target text
          * @return {Object}
          * @return {Integer} return.width  text element's width (px)
          * @return {Integer} return.height text element's height(px)
