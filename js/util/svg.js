@@ -519,6 +519,8 @@ jui.define("util.svg",
     /**
      * @class util.svg
      *
+     * SVG Util
+     *
      * @param {jQuery/Element} rootElem
      * @param {Object} rootAttr
      * @constructor
@@ -604,6 +606,14 @@ jui.define("util.svg",
          *
          */
 
+        /**
+         * @method size
+         *
+         * if arguments.length is 2, set attribute width, height to root element
+         * if arguments.length is zero, return svg size
+         *
+         * @returns {Object}
+         */
         this.size = function() {
             if(arguments.length == 2) {
                 var w = arguments[0],
@@ -615,6 +625,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method clear
+         * @param isAll
+         */
         this.clear = function(isAll) {
             main.each(function() {
                 if(this.element.parentNode) {
@@ -631,6 +645,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method reset
+         * @param isAll
+         */
         this.reset = function(isAll) {
             this.clear(isAll);
             main.childrens = [];
@@ -640,6 +658,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method render
+         * @param isAll
+         */
         this.render = function(isAll) {
             this.clear();
 
@@ -652,6 +674,11 @@ jui.define("util.svg",
             isFirst = true;
         }
 
+        /**
+         * @method
+         * implements svg image file download used by canvas
+         * @param name
+         */
         this.download = function(name) {
             if(_.typeCheck("string", name)) {
                 name = name.split(".")[0];
@@ -701,6 +728,13 @@ jui.define("util.svg",
       
         }
 
+        /**
+         * @method exportCanvas
+         *
+         * convert svg image to canvas
+         *
+         * @param {Canvas} canvas
+         */
         this.exportCanvas = function(canvas) {
             var img = new Image(),
                 size = this.size();
@@ -719,7 +753,14 @@ jui.define("util.svg",
 
             img.src = uri;
         }
-        
+
+        /**
+         * @method toXml
+         *
+         * convert xml string
+         *
+         * @returns {String} xml
+         */
         this.toXml = function() {
             var text = rootElem.innerHTML;
 
@@ -730,7 +771,16 @@ jui.define("util.svg",
                 text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
             ].join("\n");
         }
-        
+
+        /**
+         * @method toDataURL
+         *
+         * convert svg to datauri format
+         *
+         * @param {String} type  image mime type (ex - image/svg+xml)
+         * @param {Function} callback
+         * @returns {String}
+         */
         this.toDataURL = function(type, callback) {
             type = type || "image/svg+xml";
 
@@ -748,6 +798,12 @@ jui.define("util.svg",
 
         }
 
+        /**
+         * @method autoRender
+         *
+         * @param {util.svg.element} elem
+         * @param {Boolean} isAuto
+         */
         this.autoRender = function(elem, isAuto) {
             if(depth > 0) return;
 
@@ -757,7 +813,17 @@ jui.define("util.svg",
                 main.append(elem);
             }
         }
-        
+
+        /**
+         * @method getTextRect
+         *
+         * caculate real pixel size of text element
+         *
+         * @param text
+         * @returns {Object}
+         * @returns {Integer} width
+         * @returns {Integer} height
+         */
         this.getTextRect = function(text) {
 
             if (text == "") {
@@ -783,42 +849,132 @@ jui.define("util.svg",
          *
          */
 
+        /**
+         * @method custom
+         *
+         * return custom element
+         *
+         * @param {String} name
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element}
+         */
         this.custom = function(name, attr, callback) {
             return create(new Element(), name, attr, callback);
         }
 
+        /**
+         * @method defs
+         *
+         * return defs element
+         *
+         * @param {Function} callback
+         * @returns {util.svg.element}
+         */
         this.defs = function(callback) {
             return create(new Element(), "defs", null, callback);
         }
 
+        /**
+         * @method symbol
+         *
+         * return symbol element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element}
+         */
         this.symbol = function(attr, callback) {
             return create(new Element(), "symbol", attr, callback);
         }
 
+        /**
+         * @method g
+         *
+         * return defs element
+         *
+         * @alias group
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element.transform}
+         */
         this.g = this.group = function(attr, callback) {
             return create(new TransElement(), "g", attr, callback);
         }
 
+        /**
+         * @method marker
+         *
+         * return marker element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element}
+         */
         this.marker = function(attr, callback) {
             return create(new Element(), "marker", attr, callback);
         }
 
+        /**
+         * @method a
+         *
+         * return a element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element.transform}
+         */
         this.a = function(attr, callback) {
             return create(new TransElement(), "a", attr, callback);
         }
 
+        /**
+         * @method switch
+         *
+         * return switch element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element}
+         */
         this.switch = function(attr, callback) {
             return create(new Element(), "switch", attr, callback);
         }
 
+        /**
+         * @method use
+         *
+         * return use element
+         *
+         * @param {Object} attr
+         * @returns {util.svg.element}
+         */
         this.use = function(attr) {
             return create(new Element(), "use", attr);
         }
 
+        /**
+         * @method rect
+         *
+         * return rect element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element.transform}
+         */
         this.rect = function(attr, callback) {
             return create(new TransElement(), "rect", attr, callback);
         }
 
+        /**
+         * @method line
+         *
+         * return line element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @returns {util.svg.element.transform}
+         */
         this.line = function(attr, callback) {
             return create(new TransElement(), "line", attr, callback);
         }
