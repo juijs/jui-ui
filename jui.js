@@ -3196,6 +3196,8 @@ jui.define("util.svg",
     /**
      * @class util.svg
      *
+     * SVG Util
+     *
      * @param {jQuery/Element} rootElem
      * @param {Object} rootAttr
      * @constructor
@@ -3281,6 +3283,16 @@ jui.define("util.svg",
          *
          */
 
+        /**
+         * @method size
+         *
+         * if arguments.length is 2, set attribute width, height to root element
+         * if arguments.length is zero, return svg size
+         *
+         * @return {Object}
+         * @return {Integer} width
+         * @return {Integer} height
+         */
         this.size = function() {
             if(arguments.length == 2) {
                 var w = arguments[0],
@@ -3292,6 +3304,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method clear
+         * @param isAll
+         */
         this.clear = function(isAll) {
             main.each(function() {
                 if(this.element.parentNode) {
@@ -3308,6 +3324,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method reset
+         * @param isAll
+         */
         this.reset = function(isAll) {
             this.clear(isAll);
             main.childrens = [];
@@ -3317,6 +3337,10 @@ jui.define("util.svg",
             }
         }
 
+        /**
+         * @method render
+         * @param isAll
+         */
         this.render = function(isAll) {
             this.clear();
 
@@ -3329,6 +3353,11 @@ jui.define("util.svg",
             isFirst = true;
         }
 
+        /**
+         * @method
+         * implements svg image file download used by canvas
+         * @param name
+         */
         this.download = function(name) {
             if(_.typeCheck("string", name)) {
                 name = name.split(".")[0];
@@ -3378,6 +3407,13 @@ jui.define("util.svg",
       
         }
 
+        /**
+         * @method exportCanvas
+         *
+         * convert svg image to canvas
+         *
+         * @param {Canvas} canvas
+         */
         this.exportCanvas = function(canvas) {
             var img = new Image(),
                 size = this.size();
@@ -3396,7 +3432,14 @@ jui.define("util.svg",
 
             img.src = uri;
         }
-        
+
+        /**
+         * @method toXml
+         *
+         * convert xml string
+         *
+         * @return {String} xml
+         */
         this.toXml = function() {
             var text = rootElem.innerHTML;
 
@@ -3407,7 +3450,16 @@ jui.define("util.svg",
                 text.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')
             ].join("\n");
         }
-        
+
+        /**
+         * @method toDataURL
+         *
+         * convert svg to datauri format
+         *
+         * @param {String} type  image mime type (ex - image/svg+xml)
+         * @param {Function} callback
+         * @return {String}
+         */
         this.toDataURL = function(type, callback) {
             type = type || "image/svg+xml";
 
@@ -3425,6 +3477,12 @@ jui.define("util.svg",
 
         }
 
+        /**
+         * @method autoRender
+         *
+         * @param {util.svg.element} elem
+         * @param {Boolean} isAuto
+         */
         this.autoRender = function(elem, isAuto) {
             if(depth > 0) return;
 
@@ -3434,7 +3492,17 @@ jui.define("util.svg",
                 main.append(elem);
             }
         }
-        
+
+        /**
+         * @method getTextRect
+         *
+         * caculate real pixel size of text element
+         *
+         * @param {String} text target text
+         * @return {Object}
+         * @return {Integer} return.width  text element's width (px)
+         * @return {Integer} return.height text element's height(px)
+         */
         this.getTextRect = function(text) {
 
             if (text == "") {
@@ -3460,42 +3528,132 @@ jui.define("util.svg",
          *
          */
 
+        /**
+         * @method custom
+         *
+         * return custom element
+         *
+         * @param {String} name
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
         this.custom = function(name, attr, callback) {
             return create(new Element(), name, attr, callback);
         }
 
+        /**
+         * @method defs
+         *
+         * return defs element
+         *
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
         this.defs = function(callback) {
             return create(new Element(), "defs", null, callback);
         }
 
+        /**
+         * @method symbol
+         *
+         * return symbol element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
         this.symbol = function(attr, callback) {
             return create(new Element(), "symbol", attr, callback);
         }
 
+        /**
+         * @method g
+         *
+         * return defs element
+         *
+         * @alias group
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
         this.g = this.group = function(attr, callback) {
             return create(new TransElement(), "g", attr, callback);
         }
 
+        /**
+         * @method marker
+         *
+         * return marker element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
         this.marker = function(attr, callback) {
             return create(new Element(), "marker", attr, callback);
         }
 
+        /**
+         * @method a
+         *
+         * return a element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
         this.a = function(attr, callback) {
             return create(new TransElement(), "a", attr, callback);
         }
 
+        /**
+         * @method switch
+         *
+         * return switch element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
         this.switch = function(attr, callback) {
             return create(new Element(), "switch", attr, callback);
         }
 
+        /**
+         * @method use
+         *
+         * return use element
+         *
+         * @param {Object} attr
+         * @return {util.svg.element}
+         */
         this.use = function(attr) {
             return create(new Element(), "use", attr);
         }
 
+        /**
+         * @method rect
+         *
+         * return rect element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
         this.rect = function(attr, callback) {
             return create(new TransElement(), "rect", attr, callback);
         }
 
+        /**
+         * @method line
+         *
+         * return line element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
         this.line = function(attr, callback) {
             return create(new TransElement(), "line", attr, callback);
         }
@@ -3699,15 +3857,12 @@ jui.define("util.svg",
     }
 
     /**
-     * @method create
+     * @method createElement
      *
      * create nested elements by json
-     * @param {Object} obj
-     * @returns {util.svg.element}
-     * @static
      *
      *      @example
-     *      svg.create({
+     *      SVG.createElement({
      *          tag : "pattern",
      *          attr : { x : 0, y : 0, width : 20, height : 20  },
      *          children : [
@@ -3718,14 +3873,23 @@ jui.define("util.svg",
      *          ]
      *      });
      *
-     *      is equals to
+     * is equals to
      *
+     *      @example
      *      <pattern x="0" y="0" width="20" height="20">
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *          <rect width="20" height="20" fill="black" stroke="blue" stroke-width="2" />
      *      </pattern>
+     *
+     * @param {Object} obj json literal
+     * @param {String} obj.type  svg element name
+     * @param {Object} obj.attr  svg element's attributes
+     * @param {Array} [obj.children=null] svg element's children
+     * @static
+     * @return {util.svg.element}
+     *
      */
     SVG.createElement = function(obj) {
 
@@ -11181,19 +11345,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 
             } else {
                 
-                obj.id = obj.id || _.createId('pattern-');
+                obj.attr.id = obj.attr.id || _.createId('pattern-');
 
-                if (_hash[obj.id]) {
-                    return "url(#" + obj.id + ")"; 
+                if (_hash[obj.attr.id]) {
+                    return "url(#" + obj.attr.id + ")";
                 }                
                 
                 var patternElement = SVGUtil.createElement(obj);
                 
                 self.defs.append(patternElement);
                 
-                _hash[obj.id] = obj.id;
+                _hash[obj.attr.id] = obj.attr.id;
                 
-                return "url(#" + obj.id + ")";
+                return "url(#" + obj.attr.id + ")";
             }
             
         }
@@ -12184,10 +12348,10 @@ jui.define("chart.theme.pastel", [], function() {
 jui.define("chart.theme.pattern", [], function() {
 
     var themeColors = [
-        "pattern-white-rect",
-        "pattern-white-circle",
-        "#e9f819",
-        "#b78bf9",
+        "pattern-white-rect1",
+        "pattern-white-rect2",
+        "pattern-white-rect3",
+        "pattern-white-rect4",
         "#f94590",
         "#8bccf9",
         "#9228e4",
@@ -12203,99 +12367,163 @@ jui.define("chart.theme.pattern", [], function() {
     ];
 
     return {
-        // common styles
-    	backgroundColor : "#222222",
-    	fontSize : "12px",
-    	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana",
+        /** Chart Background Color */
+        backgroundColor : "white",
+        /** Base Font Size */
+        fontSize : "11px",
+        /** Base Font Color  */
+        fontColor : "#333333",
+        /** Base Font Family */
+        fontFamily : "arial,Tahoma,verdana",
+        /** Color List  */
         colors : themeColors,
 
         // grid styles
-    	gridFontColor : "#868686",
-    	gridActiveFontColor : "#ff762d",
-        gridBorderColor : "#464646",
+        /** Grid Font Color */
+        gridFontColor : "#333333",
+        /** Grid Active Font color */
+        gridActiveFontColor : "#ff7800",
+        /** Grid Border Color */
+        gridBorderColor : "#ebebeb",
+        /** Grid Border Width */
         gridBorderWidth : 1,
+        /** Grid Border Dash Array */
         gridBorderDashArray : "none",
-		gridAxisBorderColor : "#464646",
-		gridAxisBorderWidth : 1,
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
+        /** */
+        gridAxisBorderColor : "#ebebeb",
+        /** */
+        gridAxisBorderWidth : 1,
+        /** */
+        gridActiveBorderColor : "#ff7800",
+        /** */
+        gridActiveBorderWidth: 1,
 
         // brush styles
+        /** */
         tooltipPointRadius : 5, // common
+        /** */
         tooltipPointBorderWidth : 1, // common
+        /** */
         tooltipPointFontWeight : "bold", // common
-        barBorderColor : "none",
-        barBorderWidth : 0,
-        barBorderOpacity : 0,
-        barActiveBackgroundColor : "#fc6d65",
+        /** */
+        barBorderColor : "black",
+        /** */
+        barBorderWidth : 1,
+        /** */
+        barBorderOpacity : 1,
+        /** */
+        barActiveBackgroundColor : "#06d9b6",
+        /** */
         barCircleBorderColor : "white",
+        /** */
         barDisableBackgroundOpacity : 0.5,
-    	gaugeBackgroundColor : "#3e3e3e",
-        gaugeArrowColor : "#a6a6a6",
-        gaugeFontColor : "#c5c5c5",
-    	pieBorderColor : "#232323",
+        /** */
+        gaugeBackgroundColor : "#ececec",
+        /** */
+        gaugeArrowColor : "#666666",
+        /** */
+        gaugeFontColor : "#666666",
+        /** */
+        pieBorderColor : "white",
+        /** */
         pieBorderWidth : 1,
-        donutBorderColor : "#232323",
+        /** */
+        donutBorderColor : "white",
+        /** */
         donutBorderWidth : 1,
+        /** */
         areaBackgroundOpacity : 0.5,
-        areaSplitBackgroundColor : "#ebebeb",
+        /** */
+        areaSplitBackgroundColor : "#929292",
+        /** */
         bubbleBackgroundOpacity : 0.5,
+        /** */
         bubbleBorderWidth : 1,
-        candlestickBorderColor : "#14be9d",
-        candlestickBackgroundColor : "#14be9d",
-        candlestickInvertBorderColor : "#ff4848",
-        candlestickInvertBackgroundColor : "#ff4848",
-        ohlcBorderColor : "#14be9d",
-        ohlcInvertBorderColor : "#ff4848",
+        /** */
+        candlestickBorderColor : "black",
+        /** */
+        candlestickBackgroundColor : "white",
+        /** */
+        candlestickInvertBorderColor : "red",
+        /** */
+        candlestickInvertBackgroundColor : "red",
+        /** */
+        ohlcBorderColor : "black",
+        /** */
+        ohlcInvertBorderColor : "red",
+        /** */
         ohlcBorderRadius : 5,
+        /** */
         lineBorderWidth : 2,
+        /** */
         lineDisableBorderOpacity : 0.3,
+        /** */
         lineCircleBorderColor : "white",
+        /** */
         lineSplitBorderColor : null,
+        /** */
         lineSplitBorderOpacity : 0.5,
-        pathBackgroundOpacity : 0.2,
+        /** */
+        pathBackgroundOpacity : 0.5,
+        /** */
         pathBorderWidth : 1,
-        scatterBorderColor : "none",
+        /** */
+        scatterBorderColor : "white",
+        /** */
         scatterBorderWidth : 1,
-        scatterHoverColor : "#222222",
-        waterfallBackgroundColor : "#26f67c",
-        waterfallInvertBackgroundColor : "#f94590",
-        waterfallEdgeBackgroundColor : "#8bccf9",
+        /** */
+        scatterHoverColor : "white",
+        /** */
+        waterfallBackgroundColor : "#87BB66",
+        /** */
+        waterfallInvertBackgroundColor : "#FF7800",
+        /** */
+        waterfallEdgeBackgroundColor : "#7BBAE7",
+        /** */
         waterfallLineColor : "#a9a9a9",
+        /** */
         waterfallLineDashArray : "0.9",
+        /** */
         focusBorderColor : "#FF7800",
+        /** */
         focusBorderWidth : 1,
+        /** */
         focusBackgroundColor : "#FF7800",
+        /** */
         focusBackgroundOpacity : 0.1,
+        /** */
         pinFontColor : "#FF7800",
+        /** */
         pinFontSize : "10px",
+        /** */
         pinBorderColor : "#FF7800",
+        /** */
         pinBorderWidth : 0.7,
-
+        /** */
         // widget styles
-        titleFontColor : "#ffffff",
-        titleFontSize : "14px",
+
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         titleFontWeight : "normal",
-        legendFontColor : "#ffffff",
-        legendFontSize : "11px",
-        tooltipFontColor : "#333333",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
+        tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
-        tooltipBorderColor : "white",
-        tooltipBackgroundOpacity : 1,
-        scrollBackgroundColor : "#3e3e3e",
-        scrollThumbBackgroundColor : "#666666",
-        scrollThumbBorderColor : "#686868",
+        tooltipBorderColor : "#aaaaaa",
+        tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundColor : "#dcdcdc",
+        scrollThumbBackgroundColor : "#b2b2b2",
+        scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
         zoomFocusColor : "gray",
         crossBorderColor : "#a9a9a9",
         crossBorderWidth : 1,
         crossBorderOpacity : 0.8,
         crossBalloonFontSize : "11px",
-        crossBalloonFontColor : "#333",
-        crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonBackgroundOpacity : 0.5
     }
 });
 jui.define("chart.pattern.white", ["util.svg"], function(SVG){
@@ -12365,7 +12593,37 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
         circle5 : function() { return CreateCirclePattern.call(this, 5, 3); },
         circle6 : function() { return CreateCirclePattern.call(this, 6, 3.5); },
         circle7 : function() { return CreateCirclePattern.call(this, 7, 4); },
-        circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); }
+        circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); },
+
+        rect1 : SVG.createElement({
+            type : 'pattern',
+            attr: { id: 'pattern-white-rect1', width: 70, height: 70, patternUnits: "userSpaceOnUse" },
+            children : [
+                { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iI2JiZDgxNyI+PC9yZWN0Pgo8ZyB0cmFuc2Zvcm09InJvdGF0ZSg0NSkiPgo8cmVjdCB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPHJlY3QgeT0iLTUwIiB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPC9nPgo8L3N2Zz4=", width: 70, height : 70}}
+            ]
+        }),
+        rect2 : SVG.createElement({
+            type : 'pattern',
+            attr: { id: 'pattern-white-rect2', width: 56, height: 100, patternUnits: "userSpaceOnUse", patternTransform : "rotate(45)" },
+            children : [
+                { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjhkMjAzIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZjYyOSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZTUwMyIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+Cjwvc3ZnPg==", width: 56, height : 100}}
+            ]
+        }),
+        rect3 : SVG.createElement({
+            type : 'pattern',
+            attr: { id: 'pattern-white-rect3', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "scale(2)" },
+            children : [
+                { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
+            ]
+        }),
+        rect4 : SVG.createElement({
+            type : 'pattern',
+            attr: { id: 'pattern-white-rect4', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "skewX(45)" },
+            children : [
+                { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
+            ]
+        })
+
     }
     
 })
@@ -14731,7 +14989,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
          * @param K
-         * @returns {{p1: Array, p2: Array}}
+         * @return {{p1: Array, p2: Array}}
          */
 		this.curvePoints = function(K) {
 			var p1 = [];
@@ -14795,7 +15053,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param maxValue
          * @param minRadius
          * @param maxRadius
-         * @returns {*}
+         * @return {*}
          */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
             var range = maxRadius - minRadius,
@@ -14836,7 +15094,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
          * @param boolean isCheckMinMax
-         * @returns {Array}
+         * @return {Array}
          */
         this.getXY = function(isCheckMinMax) {
             var xy = [],
@@ -14894,7 +15152,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param brush
          * @param chart
-         * @returns {Array}
+         * @return {Array}
          */
         this.getStackXY = function(isCheckMinMax) {
             var xy = this.getXY(isCheckMinMax);

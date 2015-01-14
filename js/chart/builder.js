@@ -496,19 +496,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 
             } else {
                 
-                obj.id = obj.id || _.createId('pattern-');
+                obj.attr.id = obj.attr.id || _.createId('pattern-');
 
-                if (_hash[obj.id]) {
-                    return "url(#" + obj.id + ")"; 
+                if (_hash[obj.attr.id]) {
+                    return "url(#" + obj.attr.id + ")";
                 }                
                 
                 var patternElement = SVGUtil.createElement(obj);
                 
                 self.defs.append(patternElement);
                 
-                _hash[obj.id] = obj.id;
+                _hash[obj.attr.id] = obj.attr.id;
                 
-                return "url(#" + obj.id + ")";
+                return "url(#" + obj.attr.id + ")";
             }
             
         }

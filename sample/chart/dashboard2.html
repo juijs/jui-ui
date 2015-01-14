@@ -35,7 +35,7 @@
     jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
 
         c = chart("#chart", {
-            theme : "gradient",
+            theme : "pattern",
             width : 800,
             height : 500,
             format : function(d) {
@@ -70,10 +70,10 @@
             }],
             series : {
                 value : {
-                    color : 1
+                    color : 0
                 },
                 value2 : {
-                    color : 2
+                    color : 1
                 }
             },
             brush : [{

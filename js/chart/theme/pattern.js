@@ -1,10 +1,10 @@
 jui.define("chart.theme.pattern", [], function() {
 
     var themeColors = [
-        "pattern-white-rect",
-        "pattern-white-circle",
-        "#e9f819",
-        "#b78bf9",
+        "pattern-white-rect1",
+        "pattern-white-rect2",
+        "pattern-white-rect3",
+        "pattern-white-rect4",
         "#f94590",
         "#8bccf9",
         "#9228e4",
@@ -20,98 +20,162 @@ jui.define("chart.theme.pattern", [], function() {
     ];
 
     return {
-        // common styles
-    	backgroundColor : "#222222",
-    	fontSize : "12px",
-    	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana",
+        /** Chart Background Color */
+        backgroundColor : "white",
+        /** Base Font Size */
+        fontSize : "11px",
+        /** Base Font Color  */
+        fontColor : "#333333",
+        /** Base Font Family */
+        fontFamily : "arial,Tahoma,verdana",
+        /** Color List  */
         colors : themeColors,
 
         // grid styles
-    	gridFontColor : "#868686",
-    	gridActiveFontColor : "#ff762d",
-        gridBorderColor : "#464646",
+        /** Grid Font Color */
+        gridFontColor : "#333333",
+        /** Grid Active Font color */
+        gridActiveFontColor : "#ff7800",
+        /** Grid Border Color */
+        gridBorderColor : "#ebebeb",
+        /** Grid Border Width */
         gridBorderWidth : 1,
+        /** Grid Border Dash Array */
         gridBorderDashArray : "none",
-		gridAxisBorderColor : "#464646",
-		gridAxisBorderWidth : 1,
-    	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
+        /** */
+        gridAxisBorderColor : "#ebebeb",
+        /** */
+        gridAxisBorderWidth : 1,
+        /** */
+        gridActiveBorderColor : "#ff7800",
+        /** */
+        gridActiveBorderWidth: 1,
 
         // brush styles
+        /** */
         tooltipPointRadius : 5, // common
+        /** */
         tooltipPointBorderWidth : 1, // common
+        /** */
         tooltipPointFontWeight : "bold", // common
-        barBorderColor : "none",
-        barBorderWidth : 0,
-        barBorderOpacity : 0,
-        barActiveBackgroundColor : "#fc6d65",
+        /** */
+        barBorderColor : "black",
+        /** */
+        barBorderWidth : 1,
+        /** */
+        barBorderOpacity : 1,
+        /** */
+        barActiveBackgroundColor : "#06d9b6",
+        /** */
         barCircleBorderColor : "white",
+        /** */
         barDisableBackgroundOpacity : 0.5,
-    	gaugeBackgroundColor : "#3e3e3e",
-        gaugeArrowColor : "#a6a6a6",
-        gaugeFontColor : "#c5c5c5",
-    	pieBorderColor : "#232323",
+        /** */
+        gaugeBackgroundColor : "#ececec",
+        /** */
+        gaugeArrowColor : "#666666",
+        /** */
+        gaugeFontColor : "#666666",
+        /** */
+        pieBorderColor : "white",
+        /** */
         pieBorderWidth : 1,
-        donutBorderColor : "#232323",
+        /** */
+        donutBorderColor : "white",
+        /** */
         donutBorderWidth : 1,
+        /** */
         areaBackgroundOpacity : 0.5,
-        areaSplitBackgroundColor : "#ebebeb",
+        /** */
+        areaSplitBackgroundColor : "#929292",
+        /** */
         bubbleBackgroundOpacity : 0.5,
+        /** */
         bubbleBorderWidth : 1,
-        candlestickBorderColor : "#14be9d",
-        candlestickBackgroundColor : "#14be9d",
-        candlestickInvertBorderColor : "#ff4848",
-        candlestickInvertBackgroundColor : "#ff4848",
-        ohlcBorderColor : "#14be9d",
-        ohlcInvertBorderColor : "#ff4848",
+        /** */
+        candlestickBorderColor : "black",
+        /** */
+        candlestickBackgroundColor : "white",
+        /** */
+        candlestickInvertBorderColor : "red",
+        /** */
+        candlestickInvertBackgroundColor : "red",
+        /** */
+        ohlcBorderColor : "black",
+        /** */
+        ohlcInvertBorderColor : "red",
+        /** */
         ohlcBorderRadius : 5,
+        /** */
         lineBorderWidth : 2,
+        /** */
         lineDisableBorderOpacity : 0.3,
+        /** */
         lineCircleBorderColor : "white",
+        /** */
         lineSplitBorderColor : null,
+        /** */
         lineSplitBorderOpacity : 0.5,
-        pathBackgroundOpacity : 0.2,
+        /** */
+        pathBackgroundOpacity : 0.5,
+        /** */
         pathBorderWidth : 1,
-        scatterBorderColor : "none",
+        /** */
+        scatterBorderColor : "white",
+        /** */
         scatterBorderWidth : 1,
-        scatterHoverColor : "#222222",
-        waterfallBackgroundColor : "#26f67c",
-        waterfallInvertBackgroundColor : "#f94590",
-        waterfallEdgeBackgroundColor : "#8bccf9",
+        /** */
+        scatterHoverColor : "white",
+        /** */
+        waterfallBackgroundColor : "#87BB66",
+        /** */
+        waterfallInvertBackgroundColor : "#FF7800",
+        /** */
+        waterfallEdgeBackgroundColor : "#7BBAE7",
+        /** */
         waterfallLineColor : "#a9a9a9",
+        /** */
         waterfallLineDashArray : "0.9",
+        /** */
         focusBorderColor : "#FF7800",
+        /** */
         focusBorderWidth : 1,
+        /** */
         focusBackgroundColor : "#FF7800",
+        /** */
         focusBackgroundOpacity : 0.1,
+        /** */
         pinFontColor : "#FF7800",
+        /** */
         pinFontSize : "10px",
+        /** */
         pinBorderColor : "#FF7800",
+        /** */
         pinBorderWidth : 0.7,
-
+        /** */
         // widget styles
-        titleFontColor : "#ffffff",
-        titleFontSize : "14px",
+
+        titleFontColor : "#333",
+        titleFontSize : "13px",
         titleFontWeight : "normal",
-        legendFontColor : "#ffffff",
-        legendFontSize : "11px",
-        tooltipFontColor : "#333333",
+        legendFontColor : "#333",
+        legendFontSize : "12px",
+        tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
-        tooltipBorderColor : "white",
-        tooltipBackgroundOpacity : 1,
-        scrollBackgroundColor : "#3e3e3e",
-        scrollThumbBackgroundColor : "#666666",
-        scrollThumbBorderColor : "#686868",
+        tooltipBorderColor : "#aaaaaa",
+        tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundColor : "#dcdcdc",
+        scrollThumbBackgroundColor : "#b2b2b2",
+        scrollThumbBorderColor : "#9f9fa4",
         zoomBackgroundColor : "red",
         zoomFocusColor : "gray",
         crossBorderColor : "#a9a9a9",
         crossBorderWidth : 1,
         crossBorderOpacity : 0.8,
         crossBalloonFontSize : "11px",
-        crossBalloonFontColor : "#333",
-        crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1
+        crossBalloonFontColor : "white",
+        crossBalloonBackgroundColor : "black",
+        crossBalloonBackgroundOpacity : 0.5
     }
 });
