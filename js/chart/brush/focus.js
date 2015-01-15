@@ -1,4 +1,11 @@
 jui.define("chart.brush.focus", [], function() {
+    /**
+     * @class chart.brush.focus
+     *
+     * implements focus brush
+     *
+     * @extends chart.brush.core
+     */
     var FocusBrush = function(chart, axis, brush) {
         var g;
 
@@ -68,7 +75,10 @@ jui.define("chart.brush.focus", [], function() {
 
     FocusBrush.setup = function() {
         return {
+            /** @cfg {Integer} [start=-1] */
             start: -1,
+
+            /** @cfg {Integer} [end=-1] */
             end: -1
         };
     }
