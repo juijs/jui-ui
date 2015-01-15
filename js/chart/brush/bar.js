@@ -28,7 +28,7 @@ jui.define("chart.brush.bar", [], function() {
 				color = this.color(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
-			var r = this.chart.svg.rect({
+			var r = this.chart.svg.round({
 				width : width,
 				height : height,
 				fill : color,
@@ -128,15 +128,9 @@ jui.define("chart.brush.bar", [], function() {
 						tooltipY = startY + (half_height / 2);
 
 					if (startX >= zeroX) {
-						r = r.attr({
-							x : zeroX,
-							y : startY
-						});
+						r.translate(zeroX, startY);
 					} else {
-						r = r.attr({
-							x : zeroX - width,
-							y : startY
-						});
+						r.translate(zeroX - width, startY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

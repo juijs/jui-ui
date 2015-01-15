@@ -9,7 +9,7 @@ jui.define("chart.brush.scatterpath", [], function() {
                 strokeWidth = this.brush.strokeWidth;
 
             var g = this.chart.svg.group(),
-                path = this.chart.svg.path({
+                path = this.chart.svg.pathSymbol({
                 fill : "none",
                 stroke : color,
                 "stroke-width" : strokeWidth,
@@ -27,7 +27,7 @@ jui.define("chart.brush.scatterpath", [], function() {
                 var j = points[i].x.length;
 
                 while(j--) {
-                    path.symbol(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
+                    path.add(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
                 }
             }
 

@@ -33,15 +33,9 @@ jui.define("chart.brush.column", [], function() {
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
-						r = r.attr({
-							x: startX,
-							y: startY
-						});
+						r.translate(startX, startY);
 					} else {
-						r = r.attr({
-							x: startX,
-							y: zeroY
-						});
+						r.translate(startX, zeroY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

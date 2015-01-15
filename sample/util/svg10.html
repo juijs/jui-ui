@@ -1,0 +1,109 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../jui.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/svg.js"></script>
+
+<script>
+
+jui.ready([ "util.svg" ], function(SVGUtil) {
+    svg = new SVGUtil($("#svg").get(0), { width: 1300, height: 500 });
+
+    //topRoundedRect(0, 0, 300, 300, 10);
+    //bottomRoundedRect(310, 0, 300, 300, 10);
+    //roundedRect(620, 0, 300, 300, 10);
+    roundedRectAll(930, 0, 300, 300, 10, 0, 0, 0);
+
+    r = svg.round({
+        width: 300,
+        height: 300,
+        "radius-top-left": 10,
+        fill : "red",
+        stroke : "black",
+        "stroke-width" : 2
+    });
+
+    console.log(r);
+
+    svg.render();
+
+    function topRoundedRect(x, y, width, height, radius) {
+        svg.path({
+            //d: "M50,200 L150,150 L100,200 Z",
+            style: "stroke: #006666; fill:red;"
+        })
+                .MoveTo(0, radius)
+                .Arc(radius, radius, 0, 0, 1, radius, 0)
+                .HLineTo(width - radius)
+                .Arc(radius, radius, 0, 0, 1, width, radius)
+                .VLineTo(height)
+                .HLineTo(0)
+                .ClosePath()
+                .translate(x, y);
+    }
+
+    function bottomRoundedRect(x, y, width, height, radius) {
+        svg.path({
+            //d: "M50,200 L150,150 L100,200 Z",
+            style: "stroke: #006666; fill:red;"
+        })
+                .MoveTo(0, 0)
+                .HLineTo(width)
+                .VLineTo(height - radius)
+                .Arc(radius, radius, 0, 0, 1, width - radius, height)
+                .HLineTo(radius)
+                .Arc(radius, radius, 0, 0, 1, 0, height - radius)
+                .ClosePath()
+                .translate(x, y);
+    }
+
+    function roundedRect(x, y, width, height, radius) {
+        svg.path({
+            //d: "M50,200 L150,150 L100,200 Z",
+            style: "stroke: #006666; fill:red;"
+        })
+                .MoveTo(0, radius)
+                .Arc(radius, radius, 0, 0, 1, radius, 0)
+                .HLineTo(width - radius)
+                .Arc(radius, radius, 0, 0, 1, width, radius)
+                .VLineTo(height - radius)
+                .Arc(radius, radius, 0, 0, 1, width - radius, height)
+                .HLineTo(radius)
+                .Arc(radius, radius, 0, 0, 1, 0, height - radius)
+                .ClosePath()
+                .translate(x, y);
+    }
+
+    function roundedRectAll(x, y, width, height, tl_radius, tr_radius, bl_radius, br_radius) {
+        svg.path({
+            //d: "M50,200 L150,150 L100,200 Z",
+            style: "stroke: #006666; fill:red;"
+        })
+                .MoveTo(0, tl_radius)
+                .Arc(tl_radius, tl_radius, 0, 0, 1, tl_radius, 0)
+                .HLineTo(width - tr_radius)
+                .Arc(tr_radius, tr_radius, 0, 0, 1, width, tr_radius)
+                .VLineTo(height - bl_radius)
+                .Arc(bl_radius, bl_radius, 0, 0, 1, width - bl_radius, height)
+                .HLineTo(bl_radius)
+                .Arc(br_radius, br_radius, 0, 0, 1, 0, height - br_radius)
+                .ClosePath()
+                .translate(x, y);
+    }
+});
+</script>
+</head>
+<body class="jui">
+    <h3>SVG 1</h3>
+    <div id="svg"></div>
+</body>
+</html>
