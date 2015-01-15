@@ -10740,11 +10740,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         function init() {
             _.extend(self, cloneAxis);
 
-            // 엑시스 영역 설정
-            self.area = _.extend(self.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
-            }, true);
-
             // 원본 데이터 설정
             self.origin = self.data;
 
@@ -11058,6 +11053,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     _axis[i].y = axisList[i].y;
                     _axis[i].c = axisList[i].c;
                 }
+
+                // 엑시스 영역 설정
+                _axis[i].area = _.extend(axisList[i].area, {
+                    x: 0, y: 0 , width: self.area("width"), height: self.area("height")
+                }, true);
 
                 savePanel(caculatePanel(_axis[i].area));
                 _axis[i].x = drawGridType(_axis[i], "x");

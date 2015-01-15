@@ -34,11 +34,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         function init() {
             _.extend(self, cloneAxis);
 
-            // 엑시스 영역 설정
-            self.area = _.extend(self.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
-            }, true);
-
             // 원본 데이터 설정
             self.origin = self.data;
 

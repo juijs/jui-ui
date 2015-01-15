@@ -214,6 +214,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     _axis[i].c = axisList[i].c;
                 }
 
+                // 엑시스 영역 설정
+                _axis[i].area = _.extend(axisList[i].area, {
+                    x: 0, y: 0 , width: self.area("width"), height: self.area("height")
+                }, true);
+
                 savePanel(caculatePanel(_axis[i].area));
                 _axis[i].x = drawGridType(_axis[i], "x");
                 _axis[i].y = drawGridType(_axis[i], "y");
