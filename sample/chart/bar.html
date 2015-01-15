@@ -4,7 +4,6 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="../../jui.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
@@ -16,25 +15,12 @@
 
     </style>
 </head>
-<body class="jui">
+<body >
 
-<ul id="tab" class="tab tab-top">
-    <li><a href="#view">View</a> </li>
-    <li><a href="#code">Code</a> </li>
-</ul>
-
-<div id="tab_contents" class="tab-contents">
-    <div id="view"><div id="chart"></div></div>
-    <div id="code"><textarea id="codemirror"></textarea></div>
-</div>
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
 
 <script>
-    jui.ready([ "uix.tab" ], function(tab) {
-        tab_1 = tab("#tab", {
-            target: "#tab_contents"
-        });
-    });
-
     $(function() {
         $("#codemirror").val($("#script_code").html());
 
