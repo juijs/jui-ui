@@ -183,11 +183,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
              * @cfg {Number} [extend=null] extend grid's option
              */
 			extend:	null,
-            /**
-             * @cfg
-             * grid line distance
-             */
+            /**  @cfg {Number} [dist=0]  */
 			dist: 0,
+
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null]  */
 			orient: null,
 			hide: false,
 			color: null,
