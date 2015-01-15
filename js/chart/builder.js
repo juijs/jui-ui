@@ -669,6 +669,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * @method bindUI 
+         * 
          * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
          * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
          *
@@ -704,6 +706,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * @method on
+         * 
          * 차트에서 사용할 커스텀 이벤트 핸들러
          *
          * @param type
@@ -717,6 +721,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * @method render 
+         *
          * chart render 함수 재정의
          *
          */
@@ -829,19 +835,30 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
     }
 
+
+
     UI.setup = function() {
         return {
+            
+            /** @cfg  {String/Number} [width="100%"] chart width */ 
             width: "100%", // chart 기본 넓이
+            /** @cfg  {String/Number} [height="100%"] chart height */
             height: "100%", // chart 기본 높이
+            /** @cfg  {Object} padding chart padding */
             padding: {
+                /** @cfg  {Number} [padding.top=50] chart padding */
                 top: 50,
+                /** @cfg  {Number} [padding.bottom=50] chart padding */
                 bottom: 50,
+                /** @cfg  {Number} [padding.left=50] chart padding */
                 left: 50,
+                /** @cfg  {Number} [padding.right=50] chart padding */
                 right: 50
             },
 
-            // chart
-            theme: "jennifer", // 기본 테마 jennifer
+            /** @cfg  {String} [theme=jennifer] chart theme  */
+            theme: "jennifer",
+            /** @cfg  {Object} style chart custom theme  */
             style: {},
             series: {},
             brush: [],
@@ -853,5 +870,30 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
     }
 
+    /**
+     * @event bg.click
+     * Fired when chart bg is clicked on.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart.click
+     * Fired when chart is clicked on.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart.rclick
+     * Fired when chart is right clicked on.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg.rclick
+     * Fired when chart bg is right clicked on.
+     * @param {jQueryEvent} e The event object.
+     */
+
+        
     return UI;
 });
