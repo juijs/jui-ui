@@ -513,8 +513,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method setOption
          * 옵션을 설정한다.
-         * @param key
-         * @param value
+         * @param {String} key
+         * @param {Mixed} value
          */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
