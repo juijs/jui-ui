@@ -4400,21 +4400,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // 엑시스 리스트 얻어오기
             var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
-            for(var key in axisList) {
-                jui.defineOptions(Axis, axisList[key]);
+            for(var i = 0; i < axisList.length; i++) {
+                jui.defineOptions(Axis, axisList[i]);
 
-                if(!_axis[key]) {
-                    _axis[key] = new Axis(self, _options.axis[key], axisList[key]);
+                if(!_axis[i]) {
+                    _axis[i] = new Axis(self, _options.axis[i], axisList[i]);
                 } else {
-                    _axis[key].x = axisList[key].x;
-                    _axis[key].y = axisList[key].y;
-                    _axis[key].c = axisList[key].c;
+                    _axis[i].x = axisList[i].x;
+                    _axis[i].y = axisList[i].y;
+                    _axis[i].c = axisList[i].c;
                 }
 
-                savePanel(caculatePanel(_axis[key].area));
-                _axis[key].x = drawGridType(_axis[key], "x");
-                _axis[key].y = drawGridType(_axis[key], "y");
-                _axis[key].c = drawGridType(_axis[key], "c");
+                savePanel(caculatePanel(_axis[i].area));
+                _axis[i].x = drawGridType(_axis[i], "x");
+                _axis[i].y = drawGridType(_axis[i], "y");
+                _axis[i].c = drawGridType(_axis[i], "c");
                 restorePanel();
             }
         }
