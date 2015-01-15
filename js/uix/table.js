@@ -1755,24 +1755,31 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			
 			$cells.each(function(i) {
 				setEventEditCell(self, this, row, i, e, function() {
-					var data = {};
-					
+					var data = {},
+                        originData = row.data;
+
 					$cells.each(function(colIndex) {
 						var column = self.getColumn(colIndex);
 						
 						if(column.name != null) {
-							data[column.name] = $(this).find(".edit").val();
+                            var value = $(this).find(".edit").val();
+                            data[column.name] = (!isNaN(value) && value != null) ? parseFloat(value) : value;
 						}
 					});
-					
-					var res = self.emit("editend", [ data ]);
+
+                    // 변경된 값으로 데이터 갱신하기
+                    row.data = data;
+
+                    // 콜백 결과 가져오기
+					var res = self.emit("editend", [ row, e ]);
 					
 					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
 					if(res !== false) {
 						self.update(row.index, data);
-					}
+					} else {
+                        row.data = originData;
+                    }
 				});
-				
 			});
 
 			rowIndex = index;

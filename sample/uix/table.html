@@ -44,9 +44,11 @@ jui.ready(function(ui, uix, _) {
         data: table_data,
         editRow: true,
         event: {
-            editend: function(data) {
-                for(var key in data) {
-                    if(key == "min" && isNaN(data[key])) {
+            editend: function(row) {
+                console.log(row);
+
+                for(var key in row.data) {
+                    if(key == "min" && isNaN(row.data[key])) {
                         alert("숫자만 입력할 수 있습니다.");
                         return false;
                     }
