@@ -616,7 +616,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             return list;
         }
     }
-	
+
 	UICore.init = function(UI) {
 		var uiObj = null;
 		

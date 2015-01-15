@@ -10,8 +10,36 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
      */
 	var Draw = function() {
 
+        /**
+         * @method drawBefore
+         *
+         * run before draw object
+         *
+         */
+
+        /**
+         * @method draw
+         *
+         * draw object
+         *
+         */
+
+        /**
+         * @method drawAfter
+         *
+         * run after draw object
+         */
+
+        /**
+         * @method drawAnimate
+         *
+         * implements animate code after draw object
+         */
+
 		/**
-		 * 모든 Draw 객체는  render 함수를 통해서 그려진다. 
+		 * @method render
+         *
+         * 모든 Draw 객체는  render 함수를 통해서 그려진다.
 		 * 
 		 */
 		this.render = function() {

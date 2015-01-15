@@ -5,8 +5,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      * implements core method for brush
      *
      * @extends chart.draw
-     * @requires {jquery}
-     * @requires {util.base}
+     * @requires jquery
+     * @requires util.base
      */
 	var CoreBrush = function() {
 
