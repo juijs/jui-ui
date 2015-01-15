@@ -22,6 +22,10 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
          *
          * draw object
          *
+         * @return {Object/util.svg.element}
+         * @return {util.svg.element} root
+         * @return {util.scale.*} scale
+         *
          */
 
         /**
