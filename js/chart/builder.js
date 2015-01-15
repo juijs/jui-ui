@@ -844,15 +844,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             width: "100%", // chart 기본 넓이
             /** @cfg  {String/Number} [height="100%"] chart height */
             height: "100%", // chart 기본 높이
-            /** @cfg  {Object} padding chart padding */
+            /** 
+             * @cfg  {Object} padding chart padding 
+             * @cfg  {Number} [padding.top=50] chart padding 
+             * @cfg  {Number} [padding.bottom=50] chart padding
+             * @cfg  {Number} [padding.left=50] chart padding
+             * @cfg  {Number} [padding.right=50] chart padding
+             */
             padding: {
-                /** @cfg  {Number} [padding.top=50] chart padding */
                 top: 50,
-                /** @cfg  {Number} [padding.bottom=50] chart padding */
                 bottom: 50,
-                /** @cfg  {Number} [padding.left=50] chart padding */
                 left: 50,
-                /** @cfg  {Number} [padding.right=50] chart padding */
                 right: 50
             },
 
@@ -871,7 +873,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     }
 
     /**
-     * @event bg.click
+     * @event [bg.click]
      * Fired when chart bg is clicked on.
      * @param {jQueryEvent} e The event object.
      */
