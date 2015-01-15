@@ -379,13 +379,13 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				if (domainMax < x) {
 					if (_isClamp) {
-						return domainMax;
+						return func(domainMax);
 					}
 
 					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
-						return domainMin;
+						return func(domainMin);
 					}
 
 					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;

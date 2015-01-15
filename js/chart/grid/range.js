@@ -318,6 +318,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				this.scale.range([obj.start, obj.end]);
 			}
 
+			this.scale.clamp(grid.clamp)
+
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
@@ -345,6 +347,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			min: 0,
 			max: 0,
 			unit: null,
+			clamp : true,
 			reverse: false,
 			key: null,
 			hideText: false,

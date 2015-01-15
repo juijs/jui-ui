@@ -44,7 +44,7 @@
             axis : {
                 x : {
                     type : "date",
-                    domain : [ today.start, today.end ],
+                    domain : "time",
                     step : [ time.hours, 1 ],
                     format : "HH",
                     key: "time"
@@ -56,7 +56,7 @@
                         return [0, 600];
                     }
                 },
-                data : today.data,
+                //data : today.data,
                 buffer: today.data.length
             },
             brush : [{

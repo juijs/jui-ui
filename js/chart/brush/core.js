@@ -196,7 +196,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 }
 
             }
-
             return xy;
         }
 

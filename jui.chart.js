@@ -2394,13 +2394,13 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				if (domainMax < x) {
 					if (_isClamp) {
-						return domainMax;
+						return func(domainMax);
 					}
 
 					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
-						return domainMin;
+						return func(domainMin);
 					}
 
 					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
@@ -6637,7 +6637,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
             var value_list = [] ;
 
-			if (_.typeCheck("string", this.grid.domain)) {
+			if (_.typeCheck("string", this.grid.domain) && data.length > 0) {
 				var field = this.grid.domain;
 				value_list.push(+data[0][field]);
 				value_list.push(+data[data.length-1][field]);
@@ -7638,6 +7638,8 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				this.scale.range([obj.start, obj.end]);
 			}
 
+			this.scale.clamp(grid.clamp)
+
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
@@ -7665,6 +7667,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			min: 0,
 			max: 0,
 			unit: null,
+			clamp : true,
 			reverse: false,
 			key: null,
 			hideText: false,
@@ -8476,7 +8479,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 }
 
             }
-
             return xy;
         }
 
