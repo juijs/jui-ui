@@ -77,7 +77,6 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
             });
 
             clip.append(rect);
-            console.log(chart);
             chart.defs.append(clip);
         }
 		

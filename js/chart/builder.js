@@ -173,8 +173,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
-                    
-                    console.log(axis);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, axis, draws[i]);

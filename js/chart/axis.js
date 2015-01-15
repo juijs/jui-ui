@@ -45,8 +45,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if (k == 'c' && !axis[k]) {
                 Grid = jui.include("chart.grid.panel");
             }
-            
-            console.log(axis[k]);
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Grid, axis[k]);

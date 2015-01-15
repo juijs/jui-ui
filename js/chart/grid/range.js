@@ -301,8 +301,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
-
-            console.log(domain);
+            
 			return domain;
 		}
 
@@ -328,8 +327,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
-            
-            console.log(this.ticks);
 
 			this.bar = 6;
 

@@ -4137,8 +4137,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if (k == 'c' && !axis[k]) {
                 Grid = jui.include("chart.grid.panel");
             }
-            
-            console.log(axis[k]);
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Grid, axis[k]);
@@ -4507,8 +4505,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
-                    
-                    console.log(axis);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, axis, draws[i]);
@@ -7674,8 +7670,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
-
-            console.log(domain);
+            
 			return domain;
 		}
 
@@ -7701,8 +7696,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
-            
-            console.log(this.ticks);
 
 			this.bar = 6;
 
@@ -10555,7 +10548,6 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
             });
 
             clip.append(rect);
-            console.log(chart);
             chart.defs.append(clip);
         }
 		
