@@ -1,4 +1,13 @@
 jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
+    /**
+     * @class chart.brush.core
+     *
+     * implements core method for brush
+     *
+     * @extends chart.draw
+     * @requires {jquery}
+     * @requires {util.base}
+     */
 	var CoreBrush = function() {
 
         function getMinMaxValue(data, target) {
@@ -40,10 +49,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * 
+         * @method curvePoints
+         *
          * 좌표 배열 'K'에 대한 커브 좌표 'P1', 'P2'를 구하는 함수
          *
-         * @param K
-         * @return {{p1: Array, p2: Array}}
+         * TODO: min, max 에 대한 처리도 같이 필요함.
+         *
+         * @param {Array} K
+         * @return {Object}
+         * @return {Array} return.p1
+         * @return {Array} return.p2
+         *
          */
 		this.curvePoints = function(K) {
 			var p1 = [];
@@ -100,6 +117,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
+         * 
+         * @method getScaleValue
+         *
          * 값에 비례하여 반지름을 구하는 함수
          *
          * @param value
@@ -128,6 +148,15 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * 차트 데이터 핸들링 함수
          *
          */
+
+        /**
+         * 
+         * @method eachData
+         *
+         * loop axis data
+         *
+         * @param {Function} callback
+         */
         this.eachData = function(callback) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
@@ -137,17 +166,39 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 callback.call(this, index, list[index]);
             }
         }
+
+        /**
+         * 
+         * @method listData
+         *
+         * get axis.data
+         *
+         * @returns {Array} axis.data
+         */
         this.listData = function() {
             return this.axis.data;
         }
+
+        /**
+         * 
+         * @method getData
+         *
+         * get record by index in axis.data
+         *
+         * @param {Integer} index
+         * @returns {Object} record in axis.data
+         */
         this.getData = function(index) {
             return this.listData()[index];
         }
 
         /**
+         * 
+         * @method
+         *
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *
-         * @param boolean isCheckMinMax
+         * @param {Boolean} [isCheckMinMax=true]
          * @return {Array}
          */
         this.getXY = function(isCheckMinMax) {
@@ -200,11 +251,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * 
+         * @method getStackXY
+         *
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          * 단, 'y' 좌표는 다음 데이터 보다 높게 구해진다.
          *
-         * @param brush
-         * @param chart
+         * @param {Boolean} [isCheckMinMax=true]
          * @return {Array}
          */
         this.getStackXY = function(isCheckMinMax) {
@@ -229,13 +282,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
         
         /**
+         * @method addEvent 
          * 브러쉬 엘리먼트에 대한 공통 이벤트 정의
          *
-         * @param brush
-         * @param chart
-         * @param element
-         * @param targetIndex
-         * @param dataIndex
+         * @param {Element} element
+         * @param {Integer} dataIndex
+         * @param {Integer} targetIndex
          */
         this.addEvent = function(elem, dataIndex, targetIndex) {
             var chart = this.chart,
@@ -342,10 +394,15 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreBrush.setup = function() {
         return {
+            /** @cfg {Array} [target=null] */
             target: null,
+            /** @cfg {Array} [colors=null] */
             colors: null,
+            /** @cfg {Integer} [axis=0] */
             axis: 0,
+            /** @cfg {Integer} [index=null] */
             index: null,
+            /** @cfg {boolean} [clip=false] */
             clip: false
         }
     }
