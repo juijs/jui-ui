@@ -158,11 +158,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 				for(var i = 0; i < classes.length; i++) {
 					if(key == classes[i].type) {
                         return classes[i];
-					} else { // @Deprecated 그룹이 정해져 있지 않을 경우
-                        if(classes[i].type.indexOf("." + key) != -1) {
-                            return classes[i];
-                        }
-                    }
+					}
 				}
 			}
 			
