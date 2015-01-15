@@ -187,10 +187,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
             var value_list = [] ;
 
-			if (_.typeCheck("string", this.grid.domain) && data.length > 0) {
-				var field = this.grid.domain;
-				value_list.push(+data[0][field]);
-				value_list.push(+data[data.length-1][field]);
+			if (_.typeCheck("string", this.grid.domain) ) {
+				if (data.length > 0) {
+					var field = this.grid.domain;
+					value_list.push(+data[0][field]);
+					value_list.push(+data[data.length-1][field]);
+				}
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var index = data.length;
 				while(index--) {
@@ -205,13 +207,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
                     }
                 }
 
-
 			} else {
 				value_list = this.grid.domain;
 			}
 
-			if (_.typeCheck("undefined", min)) min = Math.min.apply(Math, value_list);
-			if (_.typeCheck("undefined", max)) max = Math.max.apply(Math, value_list);
+			if (_.typeCheck("undefined", min) && value_list.length > 0 ) min = Math.min.apply(Math, value_list);
+			if (_.typeCheck("undefined", max) && value_list.length > 0 ) max = Math.max.apply(Math, value_list);
 
 			this.grid.max = max;
 			this.grid.min = min;
@@ -237,12 +238,14 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
-
-
 			if (this.grid.realtime) {
 				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
 			} else {
 				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
+			}
+
+			if (this.axis.data.length == 0) {
+				this.ticks = [];
 			}
 
 			if ( typeof grid.format == "string") {
