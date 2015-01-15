@@ -4377,6 +4377,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 if(!_.typeCheck("object", axis[k])) return null;
 
                 // 축 위치 설정
+                axis[k].type = axis[k].type || "block";
                 axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
                 if (k == 'c') {
@@ -4388,7 +4389,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     _.extend(axis[k], _options.axis[axis[k].extend][k], true);
                 }
 
-                var Grid = jui.include("chart.grid." + (axis[k].type || "block"));
+                var Grid = jui.include("chart.grid." + axis[k].type);
                 
                 if (k == 'c' && !axis[k]) {
                     Grid = jui.include("chart.grid.panel");
@@ -4418,6 +4419,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     // custom
                     if(elem.root) elem.root.translate(_area.x + self.area("x"), _area.y + self.area('y'));
                 }
+
+                elem.scale.type = axis[k].type;
 
                 return elem.scale;
             }
@@ -8562,6 +8565,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 }
 
             }
+
             return xy;
         }
 
@@ -11535,10 +11539,9 @@ jui.define("chart.brush.focus", [], function() {
 
         this.draw = function() {
             var start = 0, end = 0;
-            brush.hide = false;
 
-            if(brush.start == -1 && brush.end == -1) {
-                brush.hide = true;
+            if(brush.start == -1 || brush.end == -1) {
+                return this.chart.svg.g();
             }
 
             if(axis.x.type == "block") {

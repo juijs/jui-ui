@@ -49,10 +49,9 @@ jui.define("chart.brush.focus", [], function() {
 
         this.draw = function() {
             var start = 0, end = 0;
-            brush.hide = false;
 
-            if(brush.start == -1 && brush.end == -1) {
-                brush.hide = true;
+            if(brush.start == -1 || brush.end == -1) {
+                return this.chart.svg.g();
             }
 
             if(axis.x.type == "block") {
