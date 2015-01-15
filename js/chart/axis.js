@@ -2,7 +2,82 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
+        var _area = {};
 
+        function caculatePanel(a) {
+            a.x = getValue(a.x, chart.area('width'));
+            a.y = getValue(a.y, chart.area('height'));
+            a.width = getValue(a.width, chart.area('width'));
+            a.height = getValue(a.height, chart.area('height'));
+
+            a.x2 = a.x + a.width;
+            a.y2 = a.y + a.height;
+
+            return a;
+        }
+
+        function getValue(value, max) {
+            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+        
+        function drawGridType(axis, k) {
+            if(!_.typeCheck("object", axis[k])) return null;
+
+            // 축 위치 설정
+            axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
+
+            if (k == 'c') {
+                axis[k].orient = 'custom';
+            }
+
+            // 다른 그리드 옵션을 사용함
+            if(_.typeCheck("integer", axis[k].extend)) {
+                _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
+            }
+            
+            axis[k].type = axis[k].type || "block";
+            var Grid = jui.include("chart.grid." + axis[k].type);
+
+            if (k == 'c' && !axis[k]) {
+                Grid = jui.include("chart.grid.panel");
+            }
+            
+            console.log(axis[k]);
+
+            // 그리드 기본 옵션과 사용자 옵션을 합침
+            jui.defineOptions(Grid, axis[k]);
+
+            // 엑시스 기본 프로퍼티 정의
+            var obj = new Grid(chart, axis, axis[k]);
+            obj.chart = chart;
+            obj.axis = axis;
+            obj.grid = axis[k];
+
+            var elem = obj.render();
+
+            // 그리드 별 위치 선정하기
+            if(axis[k].orient == "left") {
+                 elem.root.translate(chart.area('x') + self.area("x") - axis[k].dist, chart.area('y'));
+            } else if(axis[k].orient == "right") {
+                elem.root.translate(chart.area('x') + self.area("x2") + axis[k].dist, chart.area('y'));
+            } else if(axis[k].orient == "bottom") {
+                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y2") + axis[k].dist);
+            } else if(axis[k].orient == "top") {
+                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y") - axis[k].dist);
+            } else {
+                // custom
+                if(elem.root) elem.root.translate(chart.area('x') + self.area("x"), chart.area('y') + self.area('y'));
+            }
+
+            elem.scale.type = axis[k].type;
+
+            return elem.scale;
+        }
+        
         function page(pNo) {
             var dataList = self.origin,
                 limit = self.buffer,
@@ -32,12 +107,51 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function init() {
-            _.extend(self, cloneAxis);
 
+            _.extend(self, {
+                x : cloneAxis.x,
+                y : cloneAxis.y,
+                c : cloneAxis.c,
+                data : cloneAxis.data,
+                origin : cloneAxis.origin,
+                buffer : cloneAxis.buffer,
+                shift : cloneAxis.shift,
+                page : cloneAxis.page
+            });
+            
             // 원본 데이터 설정
             self.origin = self.data;
 
+            _area = caculatePanel(_.extend(cloneAxis.area, {
+                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+            }, true));
+            
+            self.x = drawGridType(self, "x");
+            self.y = drawGridType(self, "y");
+            self.c = drawGridType(self, "c");
+
             page(1);
+        }
+        
+        this.reload = function(options) {
+            _.extend(self, {
+                x : options.x,
+                y : options.y,
+                c : options.c
+            });
+
+            _area = caculatePanel(_.extend(self.area, {
+                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+            }, true));
+
+            self.x = drawGridType(self, "x");
+            self.y = drawGridType(self, "y");
+            self.c = drawGridType(self, "c");
+            
+        }
+        
+        this.area = function(key) {
+            return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         this.updateGrid = function(type, grid) {
@@ -105,11 +219,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-
-        this.x = function(value) {}
-        this.y = function(value) {}
-        this.c = function(value) {}
-
+        
         init();
     }
 
@@ -123,9 +233,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             area: {},
             buffer: 10000,
             shift: 1,
-            page: 1,
-            start: 0,
-            end: 0
+            page: 1
         }
     }
 

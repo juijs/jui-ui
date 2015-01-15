@@ -131,7 +131,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 		}
 
 		this.draw = function() {
-			var width = chart.area('width'), height = chart.area('height');
+			var width = this.axis.area('width'), height = this.axis.area('height');
 			var min = width;
 
 			if (height < min) {
@@ -140,8 +140,8 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 			// center
 			var w = min / 2,
-				centerX = chart.area('x') + width / 2,
-				centerY = chart.area('y') + height / 2;
+				centerX = this.axis.area('x') + width / 2,
+				centerY = this.axis.area('y') + height / 2;
 
 			var startY = -w,
 				startX = 0,

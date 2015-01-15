@@ -272,8 +272,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			}
 
 			func.ticks = function(type, step) {
-				var start = func.min();
-				var end = func.max();
+				var start = _domain[0];
+				var end = _domain[1];
 
 				var times = [];
 				while (start < end) {
@@ -499,6 +499,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				if (arr[arr.length - 1] * intNumber != end && start > end) {
 					arr.push(end / intNumber);
 				}
+                
+                if (_domain[0] > _domain[1]) {
+                    arr.reverse();
+                }
 
 				return arr;
 			}

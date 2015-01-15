@@ -5,7 +5,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		var domain = [];
 
 		this.top = function(chart, g, scale) {
-			var full_height = chart.area('height');
+			var full_height = this.axis.area('height');
 			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -55,7 +55,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 		
 		this.bottom = function(chart, g, scale) {
-			var full_height = chart.area('height');
+			var full_height = this.axis.area('height');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -105,7 +105,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 		
 		this.left = function(chart, g, scale) {
-			var full_width = chart.area('width');
+			var full_width = this.axis.area('width');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -144,7 +144,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -this.bar
+					x2 : (grid.line) ? this.axis.area('width') : -this.bar
 				}));
 
 				g.append(axis);
@@ -171,7 +171,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : this.bar
+					x2 : (grid.line) ? -this.axis.area('width') : this.bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -189,7 +189,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : this.bar
+					x2 : (grid.line) ? -this.axis.area('width') : this.bar
 				}));
 
 				g.append(axis);

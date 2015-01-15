@@ -2287,8 +2287,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			}
 
 			func.ticks = function(type, step) {
-				var start = func.min();
-				var end = func.max();
+				var start = _domain[0];
+				var end = _domain[1];
 
 				var times = [];
 				while (start < end) {
@@ -2514,6 +2514,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				if (arr[arr.length - 1] * intNumber != end && start > end) {
 					arr.push(end / intNumber);
 				}
+                
+                if (_domain[0] > _domain[1]) {
+                    arr.reverse();
+                }
 
 				return arr;
 			}
@@ -4090,7 +4094,82 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
+        var _area = {};
 
+        function caculatePanel(a) {
+            a.x = getValue(a.x, chart.area('width'));
+            a.y = getValue(a.y, chart.area('height'));
+            a.width = getValue(a.width, chart.area('width'));
+            a.height = getValue(a.height, chart.area('height'));
+
+            a.x2 = a.x + a.width;
+            a.y2 = a.y + a.height;
+
+            return a;
+        }
+
+        function getValue(value, max) {
+            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
+                return max * (parseFloat(value.replace("%", "")) /100);
+            }
+
+            return value;
+        }
+        
+        function drawGridType(axis, k) {
+            if(!_.typeCheck("object", axis[k])) return null;
+
+            // 축 위치 설정
+            axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
+
+            if (k == 'c') {
+                axis[k].orient = 'custom';
+            }
+
+            // 다른 그리드 옵션을 사용함
+            if(_.typeCheck("integer", axis[k].extend)) {
+                _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
+            }
+            
+            axis[k].type = axis[k].type || "block";
+            var Grid = jui.include("chart.grid." + axis[k].type);
+
+            if (k == 'c' && !axis[k]) {
+                Grid = jui.include("chart.grid.panel");
+            }
+            
+            console.log(axis[k]);
+
+            // 그리드 기본 옵션과 사용자 옵션을 합침
+            jui.defineOptions(Grid, axis[k]);
+
+            // 엑시스 기본 프로퍼티 정의
+            var obj = new Grid(chart, axis, axis[k]);
+            obj.chart = chart;
+            obj.axis = axis;
+            obj.grid = axis[k];
+
+            var elem = obj.render();
+
+            // 그리드 별 위치 선정하기
+            if(axis[k].orient == "left") {
+                 elem.root.translate(chart.area('x') + self.area("x") - axis[k].dist, chart.area('y'));
+            } else if(axis[k].orient == "right") {
+                elem.root.translate(chart.area('x') + self.area("x2") + axis[k].dist, chart.area('y'));
+            } else if(axis[k].orient == "bottom") {
+                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y2") + axis[k].dist);
+            } else if(axis[k].orient == "top") {
+                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y") - axis[k].dist);
+            } else {
+                // custom
+                if(elem.root) elem.root.translate(chart.area('x') + self.area("x"), chart.area('y') + self.area('y'));
+            }
+
+            elem.scale.type = axis[k].type;
+
+            return elem.scale;
+        }
+        
         function page(pNo) {
             var dataList = self.origin,
                 limit = self.buffer,
@@ -4120,12 +4199,51 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function init() {
-            _.extend(self, cloneAxis);
 
+            _.extend(self, {
+                x : cloneAxis.x,
+                y : cloneAxis.y,
+                c : cloneAxis.c,
+                data : cloneAxis.data,
+                origin : cloneAxis.origin,
+                buffer : cloneAxis.buffer,
+                shift : cloneAxis.shift,
+                page : cloneAxis.page
+            });
+            
             // 원본 데이터 설정
             self.origin = self.data;
 
+            _area = caculatePanel(_.extend(cloneAxis.area, {
+                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+            }, true));
+            
+            self.x = drawGridType(self, "x");
+            self.y = drawGridType(self, "y");
+            self.c = drawGridType(self, "c");
+
             page(1);
+        }
+        
+        this.reload = function(options) {
+            _.extend(self, {
+                x : options.x,
+                y : options.y,
+                c : options.c
+            });
+
+            _area = caculatePanel(_.extend(self.area, {
+                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+            }, true));
+
+            self.x = drawGridType(self, "x");
+            self.y = drawGridType(self, "y");
+            self.c = drawGridType(self, "c");
+            
+        }
+        
+        this.area = function(key) {
+            return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         this.updateGrid = function(type, grid) {
@@ -4193,11 +4311,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-
-        this.x = function(value) {}
-        this.y = function(value) {}
-        this.c = function(value) {}
-
+        
         init();
     }
 
@@ -4211,9 +4325,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             area: {},
             buffer: 10000,
             shift: 1,
-            page: 1,
-            start: 0,
-            end: 0
+            page: 1
         }
     }
 
@@ -4263,7 +4375,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
-        var _padding, _series, _area, _panel, _theme, _hash = {};
+        var _padding, _series, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         /**
@@ -4297,34 +4409,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _chart.y2 = _chart.y + _chart.height;
 
             _area = _chart;
-        }
-
-        function caculatePanel(a) {
-            a.x = getValue(a.x, _area.width);
-            a.y = getValue(a.y, _area.height);
-            a.width = getValue(a.width, _area.width);
-            a.height = getValue(a.height, _area.height);
-
-            a.x2 = a.x + a.width;
-            a.y2 = a.y + a.height;
-
-            return a;
-        }
-
-        function getValue(value, max) {
-            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
-
-            return value;
-        }
-
-        function savePanel(panel) {
-            _panel = panel;
-        }
-
-        function restorePanel() {
-            _panel = null;
         }
 
         /**
@@ -4373,58 +4457,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         function drawAxis(self) {
 
-            function drawGridType(axis, k) {
-                if(!_.typeCheck("object", axis[k])) return null;
-
-                // 축 위치 설정
-                axis[k].type = axis[k].type || "block";
-                axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
-
-                if (k == 'c') {
-                    axis[k].orient = 'custom';
-                }
-
-                // 다른 그리드 옵션을 사용함
-                if(_.typeCheck("integer", axis[k].extend)) {
-                    _.extend(axis[k], _options.axis[axis[k].extend][k], true);
-                }
-
-                var Grid = jui.include("chart.grid." + axis[k].type);
-                
-                if (k == 'c' && !axis[k]) {
-                    Grid = jui.include("chart.grid.panel");
-                }
-
-                // 그리드 기본 옵션과 사용자 옵션을 합침
-                jui.defineOptions(Grid, axis[k]);
-
-                // 엑시스 기본 프로퍼티 정의
-                var obj = new Grid(self, axis, axis[k]);
-                obj.chart = self;
-                obj.axis = axis;
-                obj.grid = axis[k];
-
-                var elem = obj.render();
-
-                // 그리드 별 위치 선정하기
-                if(axis[k].orient == "left") {
-                    elem.root.translate(_area.x + self.area("x") - axis[k].dist, _area.y);
-                } else if(axis[k].orient == "right") {
-                    elem.root.translate(_area.x + self.area("x2") + axis[k].dist, _area.y);
-                } else if(axis[k].orient == "bottom") {
-                    elem.root.translate(_area.x , _area.y + self.area("y2") + axis[k].dist);
-                } else if(axis[k].orient == "top") {
-                    elem.root.translate(_area.x , _area.y + self.area("y") - axis[k].dist);
-                } else {
-                    // custom
-                    if(elem.root) elem.root.translate(_area.x + self.area("x"), _area.y + self.area('y'));
-                }
-
-                elem.scale.type = axis[k].type;
-
-                return elem.scale;
-            }
-
             // 엑시스 리스트 얻어오기
             var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
@@ -4434,21 +4466,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 if(!_axis[i]) {
                     _axis[i] = new Axis(self, _options.axis[i], axisList[i]);
                 } else {
-                    _axis[i].x = axisList[i].x;
-                    _axis[i].y = axisList[i].y;
-                    _axis[i].c = axisList[i].c;
+                    _axis[i].reload(axisList[i]);
                 }
 
-                // 엑시스 영역 설정
-                _axis[i].area = _.extend(axisList[i].area, {
-                    x: 0, y: 0 , width: self.area("width"), height: self.area("height")
-                }, true);
-
-                savePanel(caculatePanel(_axis[i].area));
-                _axis[i].x = drawGridType(_axis[i], "x");
-                _axis[i].y = drawGridType(_axis[i], "y");
-                _axis[i].c = drawGridType(_axis[i], "c");
-                restorePanel();
             }
         }
 
@@ -4487,6 +4507,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
+                    
+                    console.log(axis);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, axis, draws[i]);
@@ -4855,11 +4877,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {*}
          */
         this.area = function(key) {
-            if(_panel) {
-                return _.typeCheck("undefined", _panel[key]) ? _panel : _panel[key];
-            } else {
-                return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
-            }
+            return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         /**
@@ -6159,9 +6177,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {Number} end
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-			var width = chart.area('width'),
-				height = chart.area('height'),
-				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
+			var width = this.axis.area('width'),
+				height = this.axis.area('height'),
+				axis = (orient == "left" || orient == "right") ? this.axis.area('y') : this.axis.area('x'),
 				max = (orient == "left" || orient == "right") ? height : width,
 				start = axis,
 				size = max;
@@ -6205,7 +6223,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		var domain = [];
 
 		this.top = function(chart, g, scale) {
-			var full_height = chart.area('height');
+			var full_height = this.axis.area('height');
 			
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -6255,7 +6273,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 		
 		this.bottom = function(chart, g, scale) {
-			var full_height = chart.area('height');
+			var full_height = this.axis.area('height');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -6305,7 +6323,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 		
 		this.left = function(chart, g, scale) {
-			var full_width = chart.area('width');
+			var full_width = this.axis.area('width');
 
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -6344,7 +6362,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -this.bar
+					x2 : (grid.line) ? this.axis.area('width') : -this.bar
 				}));
 
 				g.append(axis);
@@ -6371,7 +6389,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : this.bar
+					x2 : (grid.line) ? -this.axis.area('width') : this.bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6389,7 +6407,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : this.bar
+					x2 : (grid.line) ? -this.axis.area('width') : this.bar
 				}));
 
 				g.append(axis);
@@ -6511,7 +6529,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.area('height') : -bar
+					y2 : (grid.line) ? this.axis.area('height') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6549,7 +6567,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				});
 
 				group.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.area('height') : bar
+					y2 : (grid.line) ? -this.axis.area('height') : bar
 				}));
 
 				group.append(this.getTextRotate(chart.text({
@@ -6587,7 +6605,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -bar
+					x2 : (grid.line) ? this.axis.area('width') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6625,7 +6643,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				});
 
 				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -chart.area('width') : bar
+					x2 : (grid.line) ? -this.axis.area('width') : bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6804,7 +6822,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.area('height') : -bar
+					y2 : (grid.line) ? this.axis.area('height') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6842,7 +6860,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				group.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.area('height') : bar
+					y2 : (grid.line) ? -this.axis.area('height') : bar
 				}));
 
 				group.append(this.getTextRotate(chart.text({
@@ -6880,7 +6898,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -bar
+					x2 : (grid.line) ? this.axis.area('width') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -6918,7 +6936,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -chart.area('width') : bar
+					x2 : (grid.line) ? -this.axis.area('width') : bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -7209,7 +7227,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 		}
 
 		this.draw = function() {
-			var width = chart.area('width'), height = chart.area('height');
+			var width = this.axis.area('width'), height = this.axis.area('height');
 			var min = width;
 
 			if (height < min) {
@@ -7218,8 +7236,8 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 			// center
 			var w = min / 2,
-				centerX = chart.area('x') + width / 2,
-				centerY = chart.area('y') + height / 2;
+				centerX = this.axis.area('x') + width / 2,
+				centerY = this.axis.area('y') + height / 2;
 
 			var startY = -w,
 				startX = 0,
@@ -7386,7 +7404,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.area('height') : -bar,
+					y2 : (grid.line) ? this.axis.area('height') : -bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -7430,7 +7448,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.area('height') : bar,
+					y2 : (grid.line) ? -this.axis.area('height') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -7478,7 +7496,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -bar,
+					x2 : (grid.line) ? this.axis.area('width') : -bar,
 					stroke : isZero ? activeBorderColor : borderColor,
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
@@ -7524,7 +7542,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : bar,
+					x2 : (grid.line) ? -this.axis.area('width') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -7657,6 +7675,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				domain.reverse();
 			}
 
+            console.log(domain);
 			return domain;
 		}
 
@@ -7668,11 +7687,12 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.scale = UtilScale.linear().domain(domain);
 
 			if (orient == "left" || orient == "right") {
-				this.scale.range([obj.end, obj.start]);
+                var arr = [obj.end, obj.start];
 			} else {
-				this.scale.range([obj.start, obj.end]);
+                var arr = [obj.start, obj.end]
 			}
-
+            if (grid.reverse) arr.reverse();
+            this.scale.range(arr);
 			this.scale.clamp(grid.clamp)
 
 			this.start = obj.start;
@@ -7681,6 +7701,9 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
+            
+            console.log(this.ticks);
+
 			this.bar = 6;
 
 			this.values = [];
@@ -7720,7 +7743,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 		var domain = [];
 
 		this.top = function(chart, g) {
-			var height = chart.area('height'),
+			var height = this.axis.area('height'),
 				half_height = height/2;
 
 			g.append(this.axisLine(chart, {
@@ -7765,7 +7788,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 		}
 
 		this.bottom = function(chart, g) {
-			var height = chart.area('height'),
+			var height = this.axis.area('height'),
 				half_height = height/2;
 		  
 			g.append(this.axisLine(chart, {
@@ -7810,8 +7833,8 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 		}
 
 		this.left = function(chart, g) {
-			var width = chart.area('width'),
-				height = chart.area('height'),
+			var width = this.axis.area('width'),
+				height = this.axis.area('height'),
 				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
@@ -7855,7 +7878,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 		}
 
 		this.right = function(chart, g) {
-			var width = chart.area('width'),
+			var width = this.axis.area('width'),
 				half_width = width/2;
 
 			g.append(this.axisLine(chart, {
@@ -7997,8 +8020,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
                 }
 
                 domain = [end, start];
-                console.log(min, max);
-
                 //this.grid.step = Math.abs(start / unit) + Math.abs(end / unit);
             }
 
@@ -8015,11 +8036,13 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			var obj = this.getGridSize(chart, orient, grid);
 			this.scale = UtilScale.linear().domain(domain);
 
-			if (orient == "left" || orient == "right") {
-				this.scale.range([obj.end, obj.start]);
-			} else {
-				this.scale.range([obj.start, obj.end]);
-			}
+            if (orient == "left" || orient == "right") {
+                var arr = [obj.end, obj.start];
+            } else {
+                var arr = [obj.start, obj.end]
+            }
+            if (grid.reverse) arr.reverse();
+            this.scale.range(arr);
 
 			this.start = obj.start;
 			this.size = obj.size;
@@ -8088,8 +8111,8 @@ jui.define("chart.grid.panel", [  ], function() {
         this.custom = function(chart, g) {
             var obj = this.scale(0);
 
-            obj.x -= axis.area.x;
-            obj.y -= axis.area.y;
+            obj.x -= axis.area('x');
+            obj.y -= axis.area('y');
 
             var rect = chart.svg.rect($.extend(obj, {
                 fill : 'white',
@@ -8117,10 +8140,10 @@ jui.define("chart.grid.panel", [  ], function() {
                 return function(i) {
 
                     return {
-                        x : axis.area.x,
-                        y : axis.area.y,
-                        width : axis.area.width,
-                        height : axis.area.height
+                        x : axis.area('x'),
+                        y : axis.area('y'),
+                        width : axis.area('width'),
+                        height : axis.area('height')
                     }
                 }
             })(axis);
@@ -8157,8 +8180,8 @@ jui.define("chart.grid.table", [  ], function() {
 
                     var obj = this.scale(index);
 
-                    obj.x -= axis.area.x;
-                    obj.y -= axis.area.y;
+                    obj.x -= axis.area('x');
+                    obj.y -= axis.area('y');
 
                     var rect = chart.svg.rect($.extend(obj, {
                         fill : 'white',
@@ -8175,8 +8198,8 @@ jui.define("chart.grid.table", [  ], function() {
             row = grid.rows;
             column = grid.columns;
 
-            columnUnit = axis.area.width / column;
-            rowUnit = axis.area.height / row;
+            columnUnit = axis.area('width') / column;
+            rowUnit = axis.area('height') / row;
 
             outerPadding = grid.outerPadding;
 
@@ -8193,8 +8216,8 @@ jui.define("chart.grid.table", [  ], function() {
                     var padding = ((column == 0) ? -outerPadding : 0);
 
                     return {
-                        x : axis.area.x + x +  padding,
-                        y : axis.area.y + y + padding,
+                        x : axis.area('x') + x +  padding,
+                        y : axis.area('y') + y + padding,
                         width : columnUnit + padding*2,
                         height : rowUnit + padding *2
                     }
@@ -8250,8 +8273,8 @@ jui.define("chart.grid.overlap", [  ], function() {
             for(var i = 0, len = this.axis.data.length; i < len; i++) {
                 var obj = this.scale(i);
 
-                obj.x -= this.axis.area.x;
-                obj.y -= this.axis.area.y;
+                obj.x -= this.axis.area('x');
+                obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
                     fill : 'white',
@@ -8265,11 +8288,11 @@ jui.define("chart.grid.overlap", [  ], function() {
         this.drawBefore = function() {
             size = this.grid.count || this.axis.data.length ||  1;
 
-            widthUnit = (this.axis.area.width / 2) / size;
-            heightUnit = (this.axis.area.height / 2) / size;
+            widthUnit = (this.axis.area('width') / 2) / size;
+            heightUnit = (this.axis.area('height') / 2) / size;
 
-            width = this.axis.area.width;
-            height = this.axis.area.height;
+            width = this.axis.area('width');
+            height = this.axis.area('height');
 
             // create scale
             this.scale = (function(axis) {
@@ -8281,14 +8304,14 @@ jui.define("chart.grid.overlap", [  ], function() {
                     var obj = { x : x , y : y };
 
                     return {
-                        x : axis.area.x + obj.x,
-                        y : axis.area.y + obj.y,
+                        x : axis.area('x') + obj.x,
+                        y : axis.area('y') + obj.y,
                         width : Math.abs(width/2 - obj.x)*2,
                         height : Math.abs(height/2 - obj.y)*2
                     }
 
                 }
-            })(axis);
+            })(this.axis);
 
         }
 
@@ -10502,18 +10525,7 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
         this.drawBefore = function() {
             var axis = axis || {};
-
-            if (!axis.c) {
-                axis.c = function() {
-                    return {
-                        x : 0,
-                        y : 0,
-                        width : chart.area('width'),
-                        height : chart.area('height')
-                    };
-                }
-            }
-
+            
             var obj = axis.c(),
                 width = obj.width,
                 height = obj.height,
@@ -10543,6 +10555,7 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
             });
 
             clip.append(rect);
+            console.log(chart);
             chart.defs.append(clip);
         }
 		

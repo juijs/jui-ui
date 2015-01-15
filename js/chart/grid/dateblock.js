@@ -31,7 +31,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.area('height') : -bar
+					y2 : (grid.line) ? this.axis.area('height') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -69,7 +69,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				group.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.area('height') : bar
+					y2 : (grid.line) ? -this.axis.area('height') : bar
 				}));
 
 				group.append(this.getTextRotate(chart.text({
@@ -107,7 +107,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -bar
+					x2 : (grid.line) ? this.axis.area('width') : -bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({
@@ -145,7 +145,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				});
 
 				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -chart.area('width') : bar
+					x2 : (grid.line) ? -this.axis.area('width') : bar
 				}));
 
 				axis.append(this.getTextRotate(chart.text({

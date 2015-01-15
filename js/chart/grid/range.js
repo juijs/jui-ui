@@ -31,7 +31,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? chart.area('height') : -bar,
+					y2 : (grid.line) ? this.axis.area('height') : -bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -75,7 +75,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -chart.area('height') : bar,
+					y2 : (grid.line) ? -this.axis.area('height') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -123,7 +123,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? chart.area('width') : -bar,
+					x2 : (grid.line) ? this.axis.area('width') : -bar,
 					stroke : isZero ? activeBorderColor : borderColor,
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
 				}));
@@ -169,7 +169,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line(chart, {
-					x2 : (grid.line) ? -chart.area('width') : bar,
+					x2 : (grid.line) ? -this.axis.area('width') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -302,6 +302,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				domain.reverse();
 			}
 
+            console.log(domain);
 			return domain;
 		}
 
@@ -313,11 +314,12 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.scale = UtilScale.linear().domain(domain);
 
 			if (orient == "left" || orient == "right") {
-				this.scale.range([obj.end, obj.start]);
+                var arr = [obj.end, obj.start];
 			} else {
-				this.scale.range([obj.start, obj.end]);
+                var arr = [obj.start, obj.end]
 			}
-
+            if (grid.reverse) arr.reverse();
+            this.scale.range(arr);
 			this.scale.clamp(grid.clamp)
 
 			this.start = obj.start;
@@ -326,6 +328,9 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
+            
+            console.log(this.ticks);
+
 			this.bar = 6;
 
 			this.values = [];

@@ -162,9 +162,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {Number} end
 		 */
 		this.getGridSize = function(chart, orient, grid) {
-			var width = chart.area('width'),
-				height = chart.area('height'),
-				axis = (orient == "left" || orient == "right") ? chart.area('y') : chart.area('x'),
+			var width = this.axis.area('width'),
+				height = this.axis.area('height'),
+				axis = (orient == "left" || orient == "right") ? this.axis.area('y') : this.axis.area('x'),
 				max = (orient == "left" || orient == "right") ? height : width,
 				start = axis,
 				size = max;

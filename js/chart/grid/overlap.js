@@ -18,8 +18,8 @@ jui.define("chart.grid.overlap", [  ], function() {
             for(var i = 0, len = this.axis.data.length; i < len; i++) {
                 var obj = this.scale(i);
 
-                obj.x -= this.axis.area.x;
-                obj.y -= this.axis.area.y;
+                obj.x -= this.axis.area('x');
+                obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
                     fill : 'white',
@@ -33,11 +33,11 @@ jui.define("chart.grid.overlap", [  ], function() {
         this.drawBefore = function() {
             size = this.grid.count || this.axis.data.length ||  1;
 
-            widthUnit = (this.axis.area.width / 2) / size;
-            heightUnit = (this.axis.area.height / 2) / size;
+            widthUnit = (this.axis.area('width') / 2) / size;
+            heightUnit = (this.axis.area('height') / 2) / size;
 
-            width = this.axis.area.width;
-            height = this.axis.area.height;
+            width = this.axis.area('width');
+            height = this.axis.area('height');
 
             // create scale
             this.scale = (function(axis) {
@@ -49,14 +49,14 @@ jui.define("chart.grid.overlap", [  ], function() {
                     var obj = { x : x , y : y };
 
                     return {
-                        x : axis.area.x + obj.x,
-                        y : axis.area.y + obj.y,
+                        x : axis.area('x') + obj.x,
+                        y : axis.area('y') + obj.y,
                         width : Math.abs(width/2 - obj.x)*2,
                         height : Math.abs(height/2 - obj.y)*2
                     }
 
                 }
-            })(axis);
+            })(this.axis);
 
         }
 

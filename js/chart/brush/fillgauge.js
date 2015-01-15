@@ -47,18 +47,7 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
         this.drawBefore = function() {
             var axis = axis || {};
-
-            if (!axis.c) {
-                axis.c = function() {
-                    return {
-                        x : 0,
-                        y : 0,
-                        width : chart.area('width'),
-                        height : chart.area('height')
-                    };
-                }
-            }
-
+            
             var obj = axis.c(),
                 width = obj.width,
                 height = obj.height,
@@ -88,6 +77,7 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
             });
 
             clip.append(rect);
+            console.log(chart);
             chart.defs.append(clip);
         }
 		

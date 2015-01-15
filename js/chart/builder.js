@@ -41,7 +41,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
-        var _padding, _series, _area, _panel, _theme, _hash = {};
+        var _padding, _series, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
 
         /**
@@ -75,34 +75,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _chart.y2 = _chart.y + _chart.height;
 
             _area = _chart;
-        }
-
-        function caculatePanel(a) {
-            a.x = getValue(a.x, _area.width);
-            a.y = getValue(a.y, _area.height);
-            a.width = getValue(a.width, _area.width);
-            a.height = getValue(a.height, _area.height);
-
-            a.x2 = a.x + a.width;
-            a.y2 = a.y + a.height;
-
-            return a;
-        }
-
-        function getValue(value, max) {
-            if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
-                return max * (parseFloat(value.replace("%", "")) /100);
-            }
-
-            return value;
-        }
-
-        function savePanel(panel) {
-            _panel = panel;
-        }
-
-        function restorePanel() {
-            _panel = null;
         }
 
         /**
@@ -151,58 +123,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         function drawAxis(self) {
 
-            function drawGridType(axis, k) {
-                if(!_.typeCheck("object", axis[k])) return null;
-
-                // 축 위치 설정
-                axis[k].type = axis[k].type || "block";
-                axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
-
-                if (k == 'c') {
-                    axis[k].orient = 'custom';
-                }
-
-                // 다른 그리드 옵션을 사용함
-                if(_.typeCheck("integer", axis[k].extend)) {
-                    _.extend(axis[k], _options.axis[axis[k].extend][k], true);
-                }
-
-                var Grid = jui.include("chart.grid." + axis[k].type);
-                
-                if (k == 'c' && !axis[k]) {
-                    Grid = jui.include("chart.grid.panel");
-                }
-
-                // 그리드 기본 옵션과 사용자 옵션을 합침
-                jui.defineOptions(Grid, axis[k]);
-
-                // 엑시스 기본 프로퍼티 정의
-                var obj = new Grid(self, axis, axis[k]);
-                obj.chart = self;
-                obj.axis = axis;
-                obj.grid = axis[k];
-
-                var elem = obj.render();
-
-                // 그리드 별 위치 선정하기
-                if(axis[k].orient == "left") {
-                    elem.root.translate(_area.x + self.area("x") - axis[k].dist, _area.y);
-                } else if(axis[k].orient == "right") {
-                    elem.root.translate(_area.x + self.area("x2") + axis[k].dist, _area.y);
-                } else if(axis[k].orient == "bottom") {
-                    elem.root.translate(_area.x , _area.y + self.area("y2") + axis[k].dist);
-                } else if(axis[k].orient == "top") {
-                    elem.root.translate(_area.x , _area.y + self.area("y") - axis[k].dist);
-                } else {
-                    // custom
-                    if(elem.root) elem.root.translate(_area.x + self.area("x"), _area.y + self.area('y'));
-                }
-
-                elem.scale.type = axis[k].type;
-
-                return elem.scale;
-            }
-
             // 엑시스 리스트 얻어오기
             var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
@@ -212,21 +132,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 if(!_axis[i]) {
                     _axis[i] = new Axis(self, _options.axis[i], axisList[i]);
                 } else {
-                    _axis[i].x = axisList[i].x;
-                    _axis[i].y = axisList[i].y;
-                    _axis[i].c = axisList[i].c;
+                    _axis[i].reload(axisList[i]);
                 }
 
-                // 엑시스 영역 설정
-                _axis[i].area = _.extend(axisList[i].area, {
-                    x: 0, y: 0 , width: self.area("width"), height: self.area("height")
-                }, true);
-
-                savePanel(caculatePanel(_axis[i].area));
-                _axis[i].x = drawGridType(_axis[i], "x");
-                _axis[i].y = drawGridType(_axis[i], "y");
-                _axis[i].c = drawGridType(_axis[i], "c");
-                restorePanel();
             }
         }
 
@@ -265,6 +173,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                     // 브러쉬 인덱스 설정
                     draws[i].index = i;
+                    
+                    console.log(axis);
 
                     // 브러쉬 기본 프로퍼티 정의
                     var draw = new Obj(self, axis, draws[i]);
@@ -633,11 +543,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {*}
          */
         this.area = function(key) {
-            if(_panel) {
-                return _.typeCheck("undefined", _panel[key]) ? _panel : _panel[key];
-            } else {
-                return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
-            }
+            return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         /**

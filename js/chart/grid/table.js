@@ -11,8 +11,8 @@ jui.define("chart.grid.table", [  ], function() {
 
                     var obj = this.scale(index);
 
-                    obj.x -= axis.area.x;
-                    obj.y -= axis.area.y;
+                    obj.x -= axis.area('x');
+                    obj.y -= axis.area('y');
 
                     var rect = chart.svg.rect($.extend(obj, {
                         fill : 'white',
@@ -29,8 +29,8 @@ jui.define("chart.grid.table", [  ], function() {
             row = grid.rows;
             column = grid.columns;
 
-            columnUnit = axis.area.width / column;
-            rowUnit = axis.area.height / row;
+            columnUnit = axis.area('width') / column;
+            rowUnit = axis.area('height') / row;
 
             outerPadding = grid.outerPadding;
 
@@ -47,8 +47,8 @@ jui.define("chart.grid.table", [  ], function() {
                     var padding = ((column == 0) ? -outerPadding : 0);
 
                     return {
-                        x : axis.area.x + x +  padding,
-                        y : axis.area.y + y + padding,
+                        x : axis.area('x') + x +  padding,
+                        y : axis.area('y') + y + padding,
                         width : columnUnit + padding*2,
                         height : rowUnit + padding *2
                     }

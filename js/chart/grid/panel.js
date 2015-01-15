@@ -25,8 +25,8 @@ jui.define("chart.grid.panel", [  ], function() {
         this.custom = function(chart, g) {
             var obj = this.scale(0);
 
-            obj.x -= axis.area.x;
-            obj.y -= axis.area.y;
+            obj.x -= axis.area('x');
+            obj.y -= axis.area('y');
 
             var rect = chart.svg.rect($.extend(obj, {
                 fill : 'white',
@@ -54,10 +54,10 @@ jui.define("chart.grid.panel", [  ], function() {
                 return function(i) {
 
                     return {
-                        x : axis.area.x,
-                        y : axis.area.y,
-                        width : axis.area.width,
-                        height : axis.area.height
+                        x : axis.area('x'),
+                        y : axis.area('y'),
+                        width : axis.area('width'),
+                        height : axis.area('height')
                     }
                 }
             })(axis);
