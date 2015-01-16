@@ -3,6 +3,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
     /**
      * @class chart.grid.block
      * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * 
+     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
+     * 
+     * domain 을 배열로 지정하면 해단 개수만큼 그리드의 영역이 설정된다.
+     *
      * @extends chart.grid.core  
      */
 	var BlockGrid = function(chart, axis, grid) {
