@@ -1,5 +1,9 @@
 jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
+    /**
+     * @class chart.grid.block
+     * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     */
 	var BlockGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
 		var domain = [];

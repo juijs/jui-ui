@@ -7,6 +7,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
+        /**
+         * @method drawAfter
+         * 
+         *
+         *  
+         * @param {Object} obj
+         * @protected 
+         */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
 		}
@@ -70,6 +78,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			}, attr));
 		}
 
+        /**
+         * @method color 
+         * grid 에서 color 를 위한 유틸리티 함수
+         * @param theme
+         * @return {Mixed}
+         */
 		this.color  = function(theme) {
 			if (arguments.length == 3) {
 				return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme.apply(this.chart, arguments);
@@ -153,13 +167,13 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          *  
          * get real size of grid 
 		 *
-		 * @param chart
-		 * @param orient
-		 * @param grid
-		 * @returns {Object} 
-         * @returns {Number} start
-         * @returns {Number} size 
-         * @returns {Number} end
+		 * @param {chart.builder} chart
+		 * @param {Strng} orient
+		 * @param {Object} grid             그리드 옵션 
+		 * @return {Object}
+         * @return {Number} return.start    시작 지점
+         * @return {Number} return.size     그리드 넓이 또는 높이
+         * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function(chart, orient, grid) {
 			var width = this.axis.area('width'),
@@ -188,13 +202,21 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null]  */
 			orient: null,
+            
+            /** @cfg {Boolean} [hide=false] */
 			hide: false,
+
+            /** @cfg {String/Object/Number} [color=null] */
 			color: null,
+            /** @cfg {String} [title=null] */
 			title: null,
+            /** @cfg {Boolean} [hide=false] */
 			line: false,
             subline : 0,
             baseline : true,
+            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
 			format: null,
+            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
 			textRotate : null
 		};
 	}

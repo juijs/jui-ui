@@ -1,8 +1,8 @@
 jui.define("util.color", [], function() {
 
 	/**
-	 * color parser for chart
-	 * @class util.color
+	 *  @class util.color
+     * color parser for chart
 	 * @singleton
 	 */
 	var self = {
@@ -13,20 +13,22 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
+        
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
 		
 		/**
-		 * gradient parser 
+		 * @method parseGrident 
+         *
+         * gradient parser
 		 * 
-		 * ex)
-		 * 
-		 * linear(left) #fff,#000
-		 * linear(right) #fff,50 yellow,black
-		 * radial(50%,50%,50%,50,50)
+		 *      @example
+		 *      linear(left) #fff,#000
+		 *      linear(right) #fff,50 yellow,black
+		 *      radial(50%,50%,50%,50,50)
 		 *  
- 		 * @param {Object} color
+ 		 * @param {String} color
 		 */
 		parseGradient : function(color) {
 			var matches = color.match(this.regex);

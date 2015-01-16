@@ -1,5 +1,13 @@
 jui.define("core", [ "jquery", "util.base" ], function($, _) {
-	
+
+    /**
+     * @class core.UIManager
+     * UI에 관련된 기본 로직 클래스 
+     *  
+     * @alias jui
+     * @singleton
+     *  
+     */
 	var UIManager = new function() {
 		var instances = [], classes = [];
 
@@ -327,11 +335,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         var vo = null;
 
         /**
+         * @method emit
+         * 
          * 커스텀 이벤트 발생시키는 메소드
          *
-         * @param type 발생시킬 이벤트
-         * @param args 이벤트 핸들러에 넘기는 값
-         * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
+         * @param {String} type 발생시킬 이벤트
+         * @param {Function} args 이벤트 핸들러에 넘기는 값
+         * @return {Mixed} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
          */
         this.emit = function(type, args) {
             if(typeof(type) != "string") return;
