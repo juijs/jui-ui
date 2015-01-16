@@ -3214,120 +3214,28 @@ jui.define("util.svg.element.path.symbol", [ "util.base" ], function(_) { // sym
     return PathSymbolElement;
 }, "util.svg.element.path");
 
-jui.define("util.svg.element.round", [ "util.base" ], function(_) {
-    var RoundElement = function() {
-        var self = this,
-            radius = {
-                top: {
-                    left: 0,
-                    right: 0
-                },
-                bottom: {
-                    left: 0,
-                    right: 0
-                }
-            };
+jui.define("util.svg.element.path.rect", [], function() {
+    var PathRectElement = function() {
+        this.round = function(width, height, tl, tr, br, bl) {
+            tl = (!tl) ? 0 : tl;
+            tr = (!tr) ? 0 : tr;
+            br = (!br) ? 0 : br;
+            bl = (!bl) ? 0 : bl;
 
-        function level1(attr) {
-            var key = "radius";
-
-            if(attr[key]) {
-                radius.top.left = attr[key];
-                radius.top.right = attr[key];
-                radius.bottom.left = attr[key];
-                radius.bottom.right = attr[key];
-            }
-        }
-
-        function level2(attr, position) {
-            var key = "radius-" + position;
-
-            if(attr[key]) {
-                if(position == "top" || position == "bottom") {
-                    radius[position].left = attr[key];
-                    radius[position].right = attr[key];
-                } else if(position == "left") {
-                    radius.top.left = attr[key];
-                    radius.bottom.left = attr[key];
-                } else if(position == "right") {
-                    radius.top.right = attr[key];
-                    radius.bottom.right = attr[key];
-                }
-            }
-        }
-
-        function level3(attr, position, align) {
-            var key = "radius-" + position + "-" + align;
-
-            if(attr[key]) {
-                radius[position][align] = attr[key];
-            }
-        }
-
-        function draw(attr) {
-            level1(attr);
-            level2(attr, "top");
-            level2(attr, "bottom");
-            level2(attr, "left");
-            level2(attr, "right");
-            level3(attr, "top", "left");
-            level3(attr, "top", "right");
-            level3(attr, "bottom", "left");
-            level3(attr, "bottom", "right");
-
-            var width = self.attributes.width || 0,
-                height = self.attributes.height || 0;
-
-            self.MoveTo(0, radius.top.left)
-                .Arc(radius.top.left, radius.top.left, 0, 0, 1, radius.top.left, 0)
-                .HLineTo(width - radius.top.right)
-                .Arc(radius.top.right, radius.top.right, 0, 0, 1, width, radius.top.right)
-                .VLineTo(height - radius.bottom.right)
-                .Arc(radius.bottom.right, radius.bottom.right, 0, 0, 1, width - radius.bottom.right, height)
-                .HLineTo(radius.bottom.left)
-                .Arc(radius.bottom.left, radius.bottom.left, 0, 0, 1, 0, height - radius.bottom.left)
+            this.MoveTo(0, tl)
+                .Arc(tl, tl, 0, 0, 1, tl, 0)
+                .HLineTo(width - tr)
+                .Arc(tr, tr, 0, 0, 1, width, tr)
+                .VLineTo(height - br)
+                .Arc(br, br, 0, 0, 1, width - br, height)
+                .HLineTo(bl)
+                .Arc(bl, bl, 0, 0, 1, 0, height - bl)
                 .ClosePath()
                 .join();
         }
-
-        this.attr = function(attr) {
-            var isDraw = false;
-
-            if(_.typeCheck("string", attr)) {
-                return this.attributes[attr];
-            }
-
-            for(var k in attr) {
-                this.attributes[k] = attr[k];
-
-                if(k != "x" && k != "y" && k != "width" && k != "height" && k.indexOf("radius")) {
-                    if(k.indexOf("xlink:") != -1) {
-                        this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
-                    } else {
-                        this.element.setAttributeNS(null, k, attr[k]);
-                    }
-                } else {
-                    if(k != "x" && k != "y") {
-                        isDraw = true;
-                    }
-                }
-            }
-
-            // 위치 설정 하기
-            if(attr.x && attr.y) {
-                this.translate(attr.x, attr.y);
-            }
-
-            // 패스 그리기
-            if(isDraw) {
-                draw(attr);
-            }
-
-            return this;
-        }
     }
 
-    return RoundElement;
+    return PathRectElement;
 }, "util.svg.element.path");
 
 jui.define("util.svg.element.poly", [], function() { // polygon, polyline
@@ -3357,8 +3265,8 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 
 jui.define("util.svg",
     [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
-        "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.round", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, RoundElement, PolyElement) {
+        "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
+    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
 
     /**
      * @class util.svg
@@ -3810,19 +3718,6 @@ jui.define("util.svg",
         }
 
         /**
-         * @method round
-         *
-         * TODO: 차후에 메소드로 갈지, 속성으로 갈지 정해야 함
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element.path}
-         */
-        this.round = function(attr, callback) {
-            return create(new RoundElement(), "path", attr, callback);
-        }
-
-        /**
          * @method line
          *
          * return line element
@@ -3889,6 +3784,10 @@ jui.define("util.svg",
 
         this.pathSymbol = function(attr, callback) {
             return create(new PathSymbolElement(), "path", attr, callback);
+        }
+
+        this.pathRect = function(attr, callback) {
+            return create(new PathRectElement(), "path", attr, callback);
         }
 
         this.polyline = function(attr, callback) {
@@ -15689,9 +15588,7 @@ jui.define("chart.brush.bar", [], function() {
 				color = this.color(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
-			var r = this.chart.svg.round({
-				width : width,
-				height : height,
+			var r = this.chart.svg.pathRect({
 				fill : color,
 				stroke : style.borderColor,
 				"stroke-width" : style.borderWidth,
@@ -15784,24 +15681,18 @@ jui.define("chart.brush.bar", [], function() {
 						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
+						radius = (width < style.borderRadius || bar_height < style.borderRadius) ? 0 : style.borderRadius,
                         r = this.getBarElement(width, bar_height, i, j);
 
 					var tooltipX = startX,
 						tooltipY = startY + (half_height / 2);
 
 					if (startX >= zeroX) {
-						r.attr({
-							"radius-right": style.borderRadius,
-							"x": zeroX,
-							"y": startY
-						});
+						r.round(width, bar_height, 0, radius, radius, 0);
 						r.translate(zeroX, startY);
 					} else {
-						r.attr({
-							"radius-left": style.borderRadius,
-							"x": zeroX - width,
-							"y": startY
-						});
+						r.round(width, bar_height, radius, 0, 0, radius);
+						r.translate(zeroX - width, startY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
@@ -15872,24 +15763,20 @@ jui.define("chart.brush.column", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						startY = axis.y((value == 0) ? brush.minValue : value),
+						height = Math.abs(zeroY - startY),
 						position = (startY <= zeroY) ? "top" : "bottom",
-						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
+						radius = (col_width < style.borderRadius || height < style.borderRadius) ? 0 : style.borderRadius,
+						r = this.getBarElement(col_width, height, i, j);
 
 					var tooltipX = startX + (col_width / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
-						r.attr({
-							"radius-top": style.borderRadius,
-							"x": startX,
-							"y": startY
-						});
+						r.round(col_width, height, radius, radius, 0, 0);
+						r.translate(startX, startY);
 					} else {
-						r.attr({
-							"radius-bottom": style.borderRadius,
-							"x": startX,
-							"y": zeroY
-						});
+						r.round(col_width, height, 0, 0, radius, radius);
+						r.translate(startX, zeroY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

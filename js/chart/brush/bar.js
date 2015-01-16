@@ -29,9 +29,7 @@ jui.define("chart.brush.bar", [], function() {
 				color = this.color(targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
-			var r = this.chart.svg.round({
-				width : width,
-				height : height,
+			var r = this.chart.svg.pathRect({
 				fill : color,
 				stroke : style.borderColor,
 				"stroke-width" : style.borderWidth,
@@ -124,24 +122,18 @@ jui.define("chart.brush.bar", [], function() {
 						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
+						radius = (width < style.borderRadius || bar_height < style.borderRadius) ? 0 : style.borderRadius,
                         r = this.getBarElement(width, bar_height, i, j);
 
 					var tooltipX = startX,
 						tooltipY = startY + (half_height / 2);
 
 					if (startX >= zeroX) {
-						r.attr({
-							"radius-right": style.borderRadius,
-							"x": zeroX,
-							"y": startY
-						});
+						r.round(width, bar_height, 0, radius, radius, 0);
 						r.translate(zeroX, startY);
 					} else {
-						r.attr({
-							"radius-left": style.borderRadius,
-							"x": zeroX - width,
-							"y": startY
-						});
+						r.round(width, bar_height, radius, 0, 0, radius);
+						r.translate(zeroX - width, startY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

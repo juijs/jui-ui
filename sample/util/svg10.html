@@ -23,16 +23,12 @@ jui.ready([ "util.svg" ], function(SVGUtil) {
     //roundedRect(620, 0, 300, 300, 10);
     roundedRectAll(930, 0, 300, 300, 10, 0, 0, 0);
 
-    r = svg.round({
-        width: 300,
-        height: 300,
-        "radius-top-left": 10,
+    r = svg.pathRect({
         fill : "red",
         stroke : "black",
         "stroke-width" : 2
-    });
-
-    r.attr({ "radius-bottom": 20 });
+    })
+    .round(300, 300, 10, 0, 0, 0);
 
     svg.render();
 

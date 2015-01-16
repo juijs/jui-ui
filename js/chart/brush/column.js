@@ -27,24 +27,20 @@ jui.define("chart.brush.column", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						startY = axis.y((value == 0) ? brush.minValue : value),
+						height = Math.abs(zeroY - startY),
 						position = (startY <= zeroY) ? "top" : "bottom",
-						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
+						radius = (col_width < style.borderRadius || height < style.borderRadius) ? 0 : style.borderRadius,
+						r = this.getBarElement(col_width, height, i, j);
 
 					var tooltipX = startX + (col_width / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
-						r.attr({
-							"radius-top": style.borderRadius,
-							"x": startX,
-							"y": startY
-						});
+						r.round(col_width, height, radius, radius, 0, 0);
+						r.translate(startX, startY);
 					} else {
-						r.attr({
-							"radius-bottom": style.borderRadius,
-							"x": startX,
-							"y": zeroY
-						});
+						r.round(col_width, height, 0, 0, radius, radius);
+						r.translate(startX, zeroY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
