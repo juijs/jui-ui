@@ -303,7 +303,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
             } else {
                 var arr = [obj.start, obj.end]
             }
-            if (grid.reverse) arr.reverse();
             this.scale.range(arr);
 
 			this.start = obj.start;

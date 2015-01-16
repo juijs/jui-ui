@@ -382,15 +382,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 						return func(domainMax);
 					}
 
-					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
+					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
+					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
 				} else {
-					var pos = (x - domainMin) / (distDomain);
+					var pos = (x - _domain[0]) / (distDomain);
 
 					return callFunction(pos);
 				}
@@ -438,7 +438,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				domainMin = func.min();
 				domainMax = func.max();
 
-				distDomain = Math.abs(domainMax - domainMin);
+				distDomain = _domain[1] - _domain[0];
 
 				return this;
 			}

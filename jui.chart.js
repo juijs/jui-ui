@@ -1814,12 +1814,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 jui.define("util.math", [], function() {
 
 	/**
-	 * math utility
 	 * @class util.math
+	 *
+	 * Math Utility
+	 *
 	 * @singleton
 	 */
 	var self = {
-		// 2d rotate
+
+		/**
+		 * @method rotate
+		 *
+		 * 2d rotate
+		 *
+		 * @param {Number} x
+		 * @param {Number} y
+		 * @param {Number} radian	roate 할 radian
+		 * @return {Object}
+		 * @return {Number} return.x  변환된 x
+		 * @return {Number} return.y  변환된 y
+		 *
+ 		 */
 		rotate : function(x, y, radian) {
 			return {
 				x : x * Math.cos(radian) - y * Math.sin(radian),
@@ -1827,17 +1842,39 @@ jui.define("util.math", [], function() {
 			}
 		},
 
-		// degree to radian
+		/**
+		 * @method radian
+		 *
+		 * convert degree to radian
+		 *
+		 * @param {Number} degree
+		 * @return {Number} radian
+		 */
 		radian : function(degree) {
 			return degree * Math.PI / 180;
 		},
-		
-		// radian to degree 
+
+		/**
+		 * @method degree
+		 *
+		 * convert radian to degree
+		 *
+		 * @param {Number} radian
+		 * @return {Number} degree
+		 */
 		degree : function(radian) {
 			return radian * 180 / Math.PI;
 		},
 
-		// 중간값 계산 하기 
+		/**
+		 * @method interpolateNumber
+		 *
+		 * a, b 의 중간값 계산을 위한 callback 함수 만들기
+		 *
+		 * @param {Number} a	first value
+		 * @param {Number} b 	second value
+		 * @return {Function}
+		 */
 		interpolateNumber : function(a, b) {
             var dist = (b - a);
 			return function(t) {
@@ -2397,15 +2434,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 						return func(domainMax);
 					}
 
-					return _range[0] + Math.abs(x - domainMax) * distDomain / distRange;
+					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x - domainMin) * distDomain / distRange;
+					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
 				} else {
-					var pos = (x - domainMin) / (distDomain);
+					var pos = (x - _domain[0]) / (distDomain);
 
 					return callFunction(pos);
 				}
@@ -2453,7 +2490,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				domainMin = func.min();
 				domainMax = func.max();
 
-				distDomain = Math.abs(domainMax - domainMin);
+				distDomain = _domain[1] - _domain[0];
 
 				return this;
 			}
@@ -5334,13 +5371,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
 
     /**
-     * @event chart.rclick
+     * @event "chart.rclick"
      * Fired when chart is right clicked on.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
-     * @event bg.rclick
+     * @event 'bg.rclick'
      * Fired when chart bg is right clicked on.
      * @param {jQueryEvent} e The event object.
      */
@@ -7854,7 +7891,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
                 var arr = [obj.start, obj.end]
 			}
-            if (grid.reverse) arr.reverse();
             this.scale.range(arr);
 			this.scale.clamp(grid.clamp)
 
@@ -7872,6 +7908,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
+
 		}
 
 		this.draw = function() {
@@ -8202,7 +8239,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
             } else {
                 var arr = [obj.start, obj.end]
             }
-            if (grid.reverse) arr.reverse();
             this.scale.range(arr);
 
 			this.start = obj.start;

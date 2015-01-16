@@ -317,7 +317,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
                 var arr = [obj.start, obj.end]
 			}
-            if (grid.reverse) arr.reverse();
             this.scale.range(arr);
 			this.scale.clamp(grid.clamp)
 
@@ -335,6 +334,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			for (var i = 0, len = this.ticks.length; i < len; i++) {
 				this.values[i] = this.scale(this.ticks[i]);
 			}
+
 		}
 
 		this.draw = function() {
