@@ -3,11 +3,16 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
     /**
      * @class chart.grid.block
      * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * @extends chart.grid.core  
      */
 	var BlockGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
 		var domain = [];
-
+        /**
+         * @method top
+         *
+         * @protected
+         */
 		this.top = function(chart, g, scale) {
 			var full_height = this.axis.area('height');
 			
@@ -57,7 +62,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-		
+        /**
+         * @method bottom
+         *
+         * @protected
+         */
 		this.bottom = function(chart, g, scale) {
 			var full_height = this.axis.area('height');
 
@@ -107,7 +116,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-		
+        /**
+         * @method left
+         *
+         * @protected
+         */
 		this.left = function(chart, g, scale) {
 			var full_width = this.axis.area('width');
 
@@ -154,7 +167,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-
+        
+        /**
+         * @method right
+         *
+         * @protected
+         */
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -201,8 +219,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *
+		 * @method initDomain
+         * block grid 에 대한 domain 설정
+		 * @private 
 		 */
 		this.initDomain = function() {
 
@@ -237,6 +256,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
+        /**
+         * @method drawBefore
+         *
+         * @protected
+         */
 		this.drawBefore = function() {
 			this.initDomain();
 
@@ -266,6 +290,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = grid.reverse;
 		}
 
+        /**
+         * @method draw 
+         * 
+         * @protected 
+         * @return {Mixed}
+         */
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
 		}
@@ -274,9 +304,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
+            /** @cfg {String/Array/Function} [domain=null] */
 			domain: null,
+            /** @cfg {Boolean} [reverse=false] */
 			reverse: false,
+            /** @cfg {Number} [max=10] */
 			max: 10,
+            /** @cfg {Boolean} [full=false] */
 			full: false
 		};
 	}
