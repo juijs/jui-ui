@@ -18,7 +18,8 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		this.draw = function() {
-			var points = this.getXY();
+			var points = this.getXY(),
+				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
 				var startX = axis.x(i) - (half_width / 2);
@@ -33,9 +34,17 @@ jui.define("chart.brush.column", [], function() {
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
-						r.translate(startX, startY);
+						r.attr({
+							"radius-top": style.borderRadius,
+							"x": startX,
+							"y": startY
+						});
 					} else {
-						r.translate(startX, zeroY);
+						r.attr({
+							"radius-bottom": style.borderRadius,
+							"x": startX,
+							"y": zeroY
+						});
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

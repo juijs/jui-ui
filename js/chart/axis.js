@@ -120,15 +120,16 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             // 원본 데이터 설정
             self.origin = self.data;
 
+            // 페이지 초기화
+            page(1);
+
             _area = caculatePanel(_.extend(cloneAxis.area, {
                 x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
             }, true));
-            
+
             self.x = drawGridType(self, "x");
             self.y = drawGridType(self, "y");
             self.c = drawGridType(self, "c");
-
-            page(1);
         }
         
         this.reload = function(options) {

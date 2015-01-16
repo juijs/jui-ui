@@ -72,12 +72,14 @@ jui.define("chart.theme.jennifer", [], function() {
         barBorderWidth : 0,
         /** */
         barBorderOpacity : 0,
+        /** */
+        barBorderRadius : 3,
         /** */        
         barActiveBackgroundColor : "#06d9b6",
         /** */
         barCircleBorderColor : "white",
         /** */
-        barDisableBackgroundOpacity : 0.5,
+        barDisableBackgroundOpacity : 0.4,
         /** */        
     	gaugeBackgroundColor : "#ececec",
         /** */        

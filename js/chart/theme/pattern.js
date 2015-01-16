@@ -65,11 +65,13 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         barBorderOpacity : 1,
         /** */
+        barBorderRadius : 5,
+        /** */
         barActiveBackgroundColor : "#06d9b6",
         /** */
         barCircleBorderColor : "white",
         /** */
-        barDisableBackgroundOpacity : 0.5,
+        barDisableBackgroundOpacity : 0.4,
         /** */
         gaugeBackgroundColor : "#ececec",
         /** */

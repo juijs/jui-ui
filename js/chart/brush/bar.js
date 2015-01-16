@@ -9,6 +9,7 @@ jui.define("chart.brush.bar", [], function() {
 				borderColor: this.chart.theme("barBorderColor"),
 				borderWidth: this.chart.theme("barBorderWidth"),
 				borderOpacity: this.chart.theme("barBorderOpacity"),
+				borderRadius: this.chart.theme("barBorderRadius"),
 				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
 				activeColor: this.chart.theme("barActiveBackgroundColor"),
 				circleColor: this.chart.theme("barCircleBorderColor")
@@ -112,7 +113,8 @@ jui.define("chart.brush.bar", [], function() {
 		}
 
 		this.draw = function() {
-			var points = this.getXY();
+			var points = this.getXY(),
+				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
 				var startY = axis.y(i) - (half_height / 2);
@@ -128,9 +130,18 @@ jui.define("chart.brush.bar", [], function() {
 						tooltipY = startY + (half_height / 2);
 
 					if (startX >= zeroX) {
+						r.attr({
+							"radius-right": style.borderRadius,
+							"x": zeroX,
+							"y": startY
+						});
 						r.translate(zeroX, startY);
 					} else {
-						r.translate(zeroX - width, startY);
+						r.attr({
+							"radius-left": style.borderRadius,
+							"x": zeroX - width,
+							"y": startY
+						});
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가

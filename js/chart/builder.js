@@ -885,13 +885,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
 
     /**
-     * @event chart.rclick
+     * @event "chart.rclick"
      * Fired when chart is right clicked on.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
-     * @event bg.rclick
+     * @event 'bg.rclick'
      * Fired when chart bg is right clicked on.
      * @param {jQueryEvent} e The event object.
      */

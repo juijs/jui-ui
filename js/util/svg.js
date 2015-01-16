@@ -262,10 +262,9 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
         }
 
         this.rotate = function(angle, x, y) {
-
-            if (arguments.length == 1) {
+            if(arguments.length == 1) {
                 var str = angle;
-            } else if (arguments.length == 3) {
+            } else if(arguments.length == 3) {
                 var str = angle + " " + x + "," + y;
             }
 
@@ -388,13 +387,15 @@ jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
         }
 
         this.join = function() {
-            if(orders.length == 0) return;
-            this.attr({ d: orders.join(" ") });
+            if(orders.length > 0) {
+                this.attr({ d: orders.join(" ") });
+                orders = [];
+            }
         }
 
         this.length = function() {
             var key = _.createId(),
-                d = ordersString || orders.join(" "),
+                d = orders.join(" "),
                 $dummy = $("<svg><path id='" + key + "'></path></svg>");
 
             $("body").append($dummy.find("path").attr("d", d).end());
@@ -418,12 +419,12 @@ jui.define("util.svg.element.path.symbol", [ "util.base" ], function(_) { // sym
          *
          */
         this.template = function(width, height) {
-            var r = width;
-            var half_width = half_r =  width / 2;
-            var half_height = height / 2;
+            var r = width,
+                half_width = half_r =  width / 2,
+                half_height = height / 2;
 
-            var start = "a" + half_r + "," + half_r + " 0 1,1 " + r + ",0";
-            var end = "a" + half_r + "," + half_r + " 0 1,1 " + -r + ",0";
+            var start = "a" + half_r + "," + half_r + " 0 1,1 " + r + ",0",
+                end = "a" + half_r + "," + half_r + " 0 1,1 " + -r + ",0";
 
             var obj = {
                 triangle : ["m0," + -half_height, "l" + (half_width) + "," + height, "l" + (-width) + ",0", "l" + (half_width) + "," + (-height)].join(" "),
@@ -440,6 +441,7 @@ jui.define("util.svg.element.path.symbol", [ "util.base" ], function(_) { // sym
         this.join = function() {
             if(ordersString.length > 0) {
                 this.attr({ d: ordersString });
+                ordersString = "";
             }
         }
 
@@ -474,6 +476,122 @@ jui.define("util.svg.element.path.symbol", [ "util.base" ], function(_) { // sym
     return PathSymbolElement;
 }, "util.svg.element.path");
 
+jui.define("util.svg.element.round", [ "util.base" ], function(_) {
+    var RoundElement = function() {
+        var self = this,
+            radius = {
+                top: {
+                    left: 0,
+                    right: 0
+                },
+                bottom: {
+                    left: 0,
+                    right: 0
+                }
+            };
+
+        function level1(attr) {
+            var key = "radius";
+
+            if(attr[key]) {
+                radius.top.left = attr[key];
+                radius.top.right = attr[key];
+                radius.bottom.left = attr[key];
+                radius.bottom.right = attr[key];
+            }
+        }
+
+        function level2(attr, position) {
+            var key = "radius-" + position;
+
+            if(attr[key]) {
+                if(position == "top" || position == "bottom") {
+                    radius[position].left = attr[key];
+                    radius[position].right = attr[key];
+                } else if(position == "left") {
+                    radius.top.left = attr[key];
+                    radius.bottom.left = attr[key];
+                } else if(position == "right") {
+                    radius.top.right = attr[key];
+                    radius.bottom.right = attr[key];
+                }
+            }
+        }
+
+        function level3(attr, position, align) {
+            var key = "radius-" + position + "-" + align;
+
+            if(attr[key]) {
+                radius[position][align] = attr[key];
+            }
+        }
+
+        function draw(attr) {
+            level1(attr);
+            level2(attr, "top");
+            level2(attr, "bottom");
+            level2(attr, "left");
+            level2(attr, "right");
+            level3(attr, "top", "left");
+            level3(attr, "top", "right");
+            level3(attr, "bottom", "left");
+            level3(attr, "bottom", "right");
+
+            var width = self.attributes.width || 0,
+                height = self.attributes.height || 0;
+
+            self.MoveTo(0, radius.top.left)
+                .Arc(radius.top.left, radius.top.left, 0, 0, 1, radius.top.left, 0)
+                .HLineTo(width - radius.top.right)
+                .Arc(radius.top.right, radius.top.right, 0, 0, 1, width, radius.top.right)
+                .VLineTo(height - radius.bottom.right)
+                .Arc(radius.bottom.right, radius.bottom.right, 0, 0, 1, width - radius.bottom.right, height)
+                .HLineTo(radius.bottom.left)
+                .Arc(radius.bottom.left, radius.bottom.left, 0, 0, 1, 0, height - radius.bottom.left)
+                .ClosePath()
+                .join();
+        }
+
+        this.attr = function(attr) {
+            var isDraw = false;
+
+            if(_.typeCheck("string", attr)) {
+                return this.attributes[attr];
+            }
+
+            for(var k in attr) {
+                this.attributes[k] = attr[k];
+
+                if(k != "x" && k != "y" && k != "width" && k != "height" && k.indexOf("radius")) {
+                    if(k.indexOf("xlink:") != -1) {
+                        this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
+                    } else {
+                        this.element.setAttributeNS(null, k, attr[k]);
+                    }
+                } else {
+                    if(k != "x" && k != "y") {
+                        isDraw = true;
+                    }
+                }
+            }
+
+            // 위치 설정 하기
+            if(attr.x && attr.y) {
+                this.translate(attr.x, attr.y);
+            }
+
+            // 패스 그리기
+            if(isDraw) {
+                draw(attr);
+            }
+
+            return this;
+        }
+    }
+
+    return RoundElement;
+}, "util.svg.element.path");
+
 jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     var PolyElement = function() {
         var orders = [];
@@ -484,13 +602,15 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
         }
 
         this.join = function() {
-            if(orders.length > 0) { // Firefox 처리
+            if(orders.length > 0) {
+                // Firefox 처리
                 var start = orders[0];
                 orders.push(start);
-            }
 
-            if(orders.length == 0) return;
-            this.attr({ points: orders.join(" ") });
+                // 폴리곤 그리기
+                this.attr({ points: orders.join(" ") });
+                orders = [];
+            }
         }
     }
 
@@ -499,8 +619,8 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 
 jui.define("util.svg",
     [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
-        "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PolyElement) {
+        "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.round", "util.svg.element.poly" ],
+    function(_, math, Element, TransElement, PathElement, PathSymbolElement, RoundElement, PolyElement) {
 
     /**
      * @class util.svg
@@ -576,7 +696,7 @@ jui.define("util.svg",
                         target.element.appendChild(child.element);
                     }
 
-                    // PathElement & SymbolElement & PolyElement auto join
+                    // PathElement & PathSymbolElement & PathRectElement & PolyElement auto join
                     if(child instanceof PathElement || child instanceof PolyElement) {
                         child.join();
                     }
@@ -766,13 +886,9 @@ jui.define("util.svg",
          *
          * convert svg to datauri format
          *
-         * @param {String} type  image mime type (ex - image/svg+xml)
-         * @param {Function} callback
          * @return {String}
          */
-        this.toDataURL = function(type, callback) {
-            type = type || "image/svg+xml";
-
+        this.toDataURL = function() {
             var xml = this.toXml();
 
             if (_.browser.mozilla || _.browser.msie) {
@@ -958,95 +1074,14 @@ jui.define("util.svg",
         /**
          * @method round
          *
-         * return round element
+         * TODO: 차후에 메소드로 갈지, 속성으로 갈지 정해야 함
          *
          * @param {Object} attr
          * @param {Function} callback
          * @return {util.svg.element.path}
          */
         this.round = function(attr, callback) {
-            var radius = {
-                top: {
-                    left: 0,
-                    right: 0
-                },
-                bottom: {
-                    left: 0,
-                    right: 0
-                }
-            };
-
-            function level1() {
-                var key = "radius";
-
-                if(_.typeCheck("number", attr[key])) {
-                    radius.top.left = attr[key];
-                    radius.top.right = attr[key];
-                    radius.bottom.left = attr[key];
-                    radius.bottom.right = attr[key];
-
-                    delete attr[key];
-                }
-            }
-
-            function level2(position) {
-                var key = "radius-" + position;
-
-                if(_.typeCheck("number", attr[key])) {
-                    if(position == "top" || position == "bottom") {
-                        radius[position].left = attr[key];
-                        radius[position].right = attr[key];
-                    } else if(position == "left") {
-                        radius.top.left = attr[key];
-                        radius.bottom.left = attr[key];
-                    } else if(position == "right") {
-                        radius.top.right = attr[key];
-                        radius.bottom.right = attr[key];
-                    }
-
-                    delete attr[key];
-                }
-            }
-
-            function level3(position, align) {
-                var key = "radius-" + position + "-" + align;
-
-                if(_.typeCheck("number", attr[key])) {
-                    radius[position][align] = attr[key];
-                    delete attr[key];
-                }
-            }
-
-            function draw() {
-                var elem = new PathElement();
-
-                elem.MoveTo(0, radius.top.left)
-                    .Arc(radius.top.left, radius.top.left, 0, 0, 1, radius.top.left, 0)
-                    .HLineTo(attr.width - radius.top.right)
-                    .Arc(radius.top.right, radius.top.right, 0, 0, 1, attr.width, radius.top.right)
-                    .VLineTo(attr.height - radius.bottom.right)
-                    .Arc(radius.bottom.right, radius.bottom.right, 0, 0, 1, attr.width - radius.bottom.right, attr.height)
-                    .HLineTo(radius.bottom.left)
-                    .Arc(radius.bottom.left, radius.bottom.left, 0, 0, 1, 0, attr.height - radius.bottom.left)
-                    .ClosePath();
-
-                delete attr.width;
-                delete attr.height;
-
-                return elem;
-            }
-
-            level1();
-            level2("top");
-            level2("bottom");
-            level2("left");
-            level2("right");
-            level3("top", "left");
-            level3("top", "right");
-            level3("bottom", "left");
-            level3("bottom", "right");
-
-            return create(draw(), "path", attr, callback);
+            return create(new RoundElement(), "path", attr, callback);
         }
 
         /**
