@@ -9074,6 +9074,7 @@ jui.define("chart.brush.bar", [], function() {
 						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
+						radius = (width < style.borderRadius || bar_height < style.borderRadius) ? 0 : style.borderRadius,
                         r = this.getBarElement(width, bar_height, i, j);
 
 					var tooltipX = startX,
@@ -9081,14 +9082,13 @@ jui.define("chart.brush.bar", [], function() {
 
 					if (startX >= zeroX) {
 						r.attr({
-							"radius-right": style.borderRadius,
+							"radius-right": radius,
 							"x": zeroX,
 							"y": startY
 						});
-						r.translate(zeroX, startY);
 					} else {
 						r.attr({
-							"radius-left": style.borderRadius,
+							"radius-left": radius,
 							"x": zeroX - width,
 							"y": startY
 						});
@@ -9162,21 +9162,23 @@ jui.define("chart.brush.column", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						startY = axis.y((value == 0) ? brush.minValue : value),
+						height = Math.abs(zeroY - startY),
 						position = (startY <= zeroY) ? "top" : "bottom",
-						r = this.getBarElement(col_width, Math.abs(zeroY - startY), i, j);
+						radius = (col_width < style.borderRadius || height < style.borderRadius) ? 0 : style.borderRadius,
+						r = this.getBarElement(col_width, height, i, j);
 
 					var tooltipX = startX + (col_width / 2),
 						tooltipY = startY;
 
 					if (startY <= zeroY) {
 						r.attr({
-							"radius-top": style.borderRadius,
+							"radius-top": radius,
 							"x": startX,
 							"y": startY
 						});
 					} else {
 						r.attr({
-							"radius-bottom": style.borderRadius,
+							"radius-bottom": radius,
 							"x": startX,
 							"y": zeroY
 						});

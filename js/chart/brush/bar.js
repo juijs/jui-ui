@@ -124,6 +124,7 @@ jui.define("chart.brush.bar", [], function() {
 						startX = axis.x((value == 0) ? brush.minValue : value),
 						width = Math.abs(zeroX - startX),
 						position = (startX >= zeroX) ? "right" : "left",
+						radius = (width < style.borderRadius || bar_height < style.borderRadius) ? 0 : style.borderRadius,
                         r = this.getBarElement(width, bar_height, i, j);
 
 					var tooltipX = startX,
@@ -131,14 +132,13 @@ jui.define("chart.brush.bar", [], function() {
 
 					if (startX >= zeroX) {
 						r.attr({
-							"radius-right": style.borderRadius,
+							"radius-right": radius,
 							"x": zeroX,
 							"y": startY
 						});
-						r.translate(zeroX, startY);
 					} else {
 						r.attr({
-							"radius-left": style.borderRadius,
+							"radius-left": radius,
 							"x": zeroX - width,
 							"y": startY
 						});
