@@ -27,7 +27,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
 		 * 
-		 *  @example
+		 *      @example
 		 *      // 그리드 속성에 키가 없을 때
 		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
 		 *      // grid 속성에 key 가 있을 때

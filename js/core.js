@@ -645,8 +645,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             vo: null
         }
     }
-	
-	// UIManager는 Global 객체로 정의
+
+    /**
+     * @class jui 
+     * 
+     * @extends core.UIManager
+     */
 	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;
 	
 	return UICore;
