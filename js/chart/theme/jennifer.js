@@ -59,13 +59,15 @@ jui.define("chart.theme.jennifer", [], function() {
         /** */
     	gridActiveBorderWidth: 1,
 
-        // brush styles
+        // brush-item styles
         /** */
         tooltipPointRadius : 5, // common
         /** */
         tooltipPointBorderWidth : 1, // common
         /** */        
         tooltipPointFontWeight : "bold", // common
+
+        // brush styles
         /** */
         barBorderColor : "none",
         /** */        

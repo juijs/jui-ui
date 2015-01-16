@@ -1,7 +1,7 @@
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	var BarBrush = function(chart, axis, brush) {
-		var g, activeTooltip, minmaxTooltip;
+		var g, active, minmax;
 		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
@@ -42,73 +42,73 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 
 			this.addBarElement(_.extend({
-				index: dataIndex,
-				target: this.brush.target[targetIndex],
 				element: r,
-				color: color,
-				opacity: 1
+				color: color
 			}, info));
 
 			return r;
 		}
 
-		this.setActiveEffect = function(bar, activeTooltip, minmaxTooltip) {
+		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
-				columns = this.barList;
+				cols = this.barList;
 
-			for(var i = 0; i < columns.length; i++) {
-				columns[i].opacity = (columns[i] == bar) ? 1 : style.disableOpacity;
-				columns[i].element.attr({ fill: columns[i].color, opacity: columns[i].opacity });
+			for(var i = 0; i < cols.length; i++) {
+				cols[i].element.attr({ opacity: (cols[i] == r) ? 1 : style.disableOpacity });
 			}
-
-			activeTooltip.childrens[1].attr({ fill: bar.color, opacity: bar.opacity });
-			minmaxTooltip.childrens[1].attr({ fill: bar.color, opacity: style.disableOpacity });
-
-			this.showTooltip(activeTooltip, bar.tooltipX, bar.tooltipY, bar.value, bar.position);
 		}
 
-		this.setActiveEvent = function(bar, activeTooltip, minmaxTooltip) {
-			var self = this;
+		this.drawETC = function(group) {
+			var self = this,
+				style = this.getBarStyle();
 
-			bar.element.on(this.brush.activeEvent, function(e) {
-				self.setActiveEffect(bar, activeTooltip, minmaxTooltip);
-			});
-		}
+			// 액티브 툴팁 생성
+			active = this.drawItem(group);
 
-		this.drawETC = function(activeTooltip, minmaxTooltip) {
-			for(var i = 0; i < this.barList.length; i++) {
+			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					minmaxTooltip.childrens[1].attr({ fill: r.color });
-					this.showTooltip(minmaxTooltip, r.tooltipX, r.tooltipY, r.value, r.position);
+					minmax = this.drawItem(group, null, {
+						fill: r.color,
+						stroke: style.circleColor,
+						opacity: (this.brush.active == i) ? 1 : style.disableOpacity
+					});
+
+					minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
 				}
 
 				// 액티브 엘리먼트 설정
 				if (this.brush.active == i) {
-					this.setActiveEffect(r, activeTooltip, minmaxTooltip);
+					active.style(r.color, style.circleColor, 1);
+					active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+
+					this.setActiveEffect(r);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
 				if (r.value != 0 && this.brush.activeEvent != null) {
-					this.setActiveEvent(r, activeTooltip, minmaxTooltip);
-					r.element.attr({ cursor: "pointer" });
+					(function(bar) {
+						active.style(bar.color, style.circleColor, 1);
+
+						bar.element.on(self.brush.activeEvent, function(e) {
+							active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
+							self.setActiveEffect(bar);
+						});
+
+						bar.element.attr({ cursor: "pointer" });
+					})(r);
 				}
 			}
 		}
 
 		this.drawBefore = function() {
-			var style = this.getBarStyle();
-
+			g = chart.svg.group();
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-
-			g = chart.svg.group();
-			activeTooltip = this.createTooltip(null, style.circleColor);
-			minmaxTooltip = this.createTooltip(null, style.circleColor);
 		}
 
 		this.draw = function() {
@@ -153,10 +153,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				}
 			});
 
-			g.append(activeTooltip);
-			g.append(minmaxTooltip);
-
-			this.drawETC(activeTooltip, minmaxTooltip);
+			this.drawETC(g);
 
             return g;
 		}
@@ -169,7 +166,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			innerPadding: 1,
 			active: null,
 			activeEvent: null, // or click, mouseover, ...
-			display: null // or max, min
+			display: null, // or max, min
+			items: [ "tooltip" ]
 		};
 	}
 

@@ -1,25 +1,22 @@
 jui.define("chart.brush.line", [], function() {
 
 	var LineBrush = function() {
-        var self = this;
+        var g;
+        var circleColor, disableOpacity, lineBorderWidth;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
 
             for(var i = 0; i < lines.length; i++) {
-                var opacity = (elem == lines[i].element) ? 1 : this.chart.theme("lineDisableBorderOpacity");
+                var opacity = (elem == lines[i].element) ? 1 : disableOpacity,
+                    color = lines[i].element.attr("stroke");
+
+                if(lines[i].tooltip != null) {
+                    lines[i].tooltip.style(color, circleColor, opacity);
+                }
 
                 lines[i].element.attr({ opacity: opacity });
-                if(lines[i].tooltip != null) {
-                    lines[i].tooltip.attr({ opacity: opacity });
-                }
             }
-        }
-
-        this.setActiveEvent = function(elem) {
-            elem.on(this.brush.activeEvent, function(e) {
-                self.setActiveEffect(elem);
-            });
         }
 
         this.addLineElement = function(elem) {
@@ -36,7 +33,7 @@ jui.define("chart.brush.line", [], function() {
 
             var p = this.chart.svg.path({
                 stroke : this.color(index),
-                "stroke-width" : this.chart.theme("lineBorderWidth"),
+                "stroke-width" : lineBorderWidth,
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             }).MoveTo(x[0], y[0]);
@@ -66,15 +63,19 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawTooltip = function(g, pos, index) {
             var display = this.brush.display,
-                circleColor = this.chart.theme("lineCircleBorderColor");
+                active = this.brush.active;
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
-                    var tooltip = this.createTooltip(this.color(index), circleColor),
-                        position = (display == "max" && pos.max[i]) ? "top" : "bottom";
+                    var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    this.showTooltip(tooltip, pos.x[i], pos.y[i], pos.value[i], position);
-                    g.append(tooltip);
+                    var tooltip = this.drawItem(g, null, {
+                        fill: this.color(index),
+                        stroke: circleColor,
+                        opacity: (active == i) ? 1 : disableOpacity
+                    });
+
+                    tooltip.control(orient, pos.x[i], pos.y[i], pos.value[i]);
 
                     // 컬럼 상태 설정 (툴팁)
                     this.lineList[index].tooltip = tooltip;
@@ -83,8 +84,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawLine = function(path) {
-            var brush = this.brush,
-                g = this.chart.svg.group();
+            var self = this;
 
             for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k);
@@ -99,26 +99,35 @@ jui.define("chart.brush.line", [], function() {
                 });
 
                 // Max & Min 툴팁 추가
-                if(brush.display != null) {
+                if(this.brush.display != null) {
                     this.drawTooltip(g, path[k], k);
                 }
 
-                // 액티브 라인 추가
-                if(brush.activeEvent != null) {
-                    this.setActiveEvent(p);
+                // 액티브 이벤트 설정
+                if(this.brush.activeEvent != null) {
+                    (function(elem) {
+                        elem.on(self.brush.activeEvent, function(e) {
+                            self.setActiveEffect(elem);
+                        });
+                    })(p);
                 }
             }
 
             // 액티브 라인 설정
-            if(this.lineList) {
-                for (var i = 0; i < this.lineList.length; i++) {
-                    if (brush.active == brush.target[i]) {
-                        this.setActiveEffect(p);
-                    }
+            for(var k = 0; k < path.length; k++) {
+                if(this.brush.active == this.brush.target[k]) {
+                    this.setActiveEffect(this.lineList[k].element);
                 }
             }
 
             return g;
+        }
+
+        this.drawBefore = function() {
+            g = this.chart.svg.group();
+            circleColor = this.chart.theme("lineCircleBorderColor");
+            disableOpacity = this.chart.theme("lineDisableBorderOpacity");
+            lineBorderWidth = this.chart.theme("lineBorderWidth");
         }
 
         this.draw = function() {
@@ -133,7 +142,7 @@ jui.define("chart.brush.line", [], function() {
                     var len = elem.length();
 
                     elem.attr({
-                        "stroke-dasharray" : len
+                        "stroke-dasharray": len
                     });
 
                     elem.append(svg.animate({
@@ -154,7 +163,8 @@ jui.define("chart.brush.line", [], function() {
             symbol: "normal", // normal, curve, step
             display: null,
             active: null,
-            activeEvent: null // or click, mouseover, ...
+            activeEvent: null, // or click, mouseover, ...
+            items: [ "tooltip" ]
         };
     }
 

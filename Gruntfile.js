@@ -99,6 +99,7 @@ module.exports = function(grunt) {
         // chart.brush.item
         "js/chart/brush/item/core.js",
         "js/chart/brush/item/arrow.js",
+        "js/chart/brush/item/tooltip.js",
 
         // chart.widget
         "js/chart/widget/core.js",

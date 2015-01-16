@@ -1,21 +1,15 @@
 jui.define("chart.brush.column", [], function() {
 
 	var ColumnBrush = function(chart, axis, brush) {
-		var g, activeTooltip, minmaxTooltip;
+		var g;
 		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
-			var style = this.getBarStyle();
-
+			g = chart.svg.group();
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
 			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-
-			// 엘리먼트 생성
-			g = chart.svg.group();
-			activeTooltip = this.createTooltip(null, style.circleColor);
-			minmaxTooltip = this.createTooltip(null, style.circleColor);
 		}
 
 		this.draw = function() {
@@ -60,10 +54,7 @@ jui.define("chart.brush.column", [], function() {
 				}
 			});
 
-			g.append(activeTooltip);
-			g.append(minmaxTooltip);
-
-			this.drawETC(activeTooltip, minmaxTooltip);
+			this.drawETC(g);
 
             return g;
 		}

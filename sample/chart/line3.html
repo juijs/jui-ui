@@ -33,8 +33,7 @@
             axis : {
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    line : true,
-                    orient : "left"
+                    line : true
                 },
                 y :
                 {
@@ -42,10 +41,8 @@
                     domain : function(d) {
                         return [d.apple, d.ms, d.oracle];
                     },
-                    step : 10,
-                    orient : "bottom"
+                    step : 10
                 },
-                //area : { x : 0, y : 0, width : '100%', height : '100%' },
                 data : data
             },
             brush : [
@@ -53,7 +50,8 @@
                     type : 'line',
                     display : 'max',
                     activeEvent : "click",
-                    active: "ms"
+                    active: "oracle",
+                    animate: true
                 }
             ],
             widget : [

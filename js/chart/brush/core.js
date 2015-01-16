@@ -46,26 +46,23 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             obj.attr({ "class": "brush brush-" + this.brush.type });
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
-
-            //
-
         }
 
         this.drawItem = function(group, data, options) {
             for(var i = 0, len = this.brush.items.length; i < len; i++) {
-
-                var ItemClass = jui.include("chart.brush.item." + this.brush.items[i]);
+                var type = this.brush.items[i],
+                    ItemClass = jui.include("chart.brush.item." + type);
 
                 if (ItemClass) {
                     var itemObject = new ItemClass();
                     itemObject.chart = this.chart;
                     itemObject.data = data;
                     itemObject.group = group;
-                    itemObject.item = options;
+                    itemObject.item = options || {};
 
-                    itemObject.render();
+                    return itemObject.render();
                 } else {
-                    throw new Error("JUI_CRITICAL_ERR: ItemClass is not exists.");
+                    throw new Error("JUI_CRITICAL_ERR: '" + type + "' brush item is not exists");
                 }
             }
         }
@@ -372,42 +369,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 e.chartX = offsetX - chart.padding("left");
                 e.chartY = offsetY - chart.padding("top");
             }
-        }
-
-        this.createTooltip = function(fill, stroke) {
-            var chart = this.chart;
-
-            return this.chart.svg.group({ "visibility" : "hidden" }, function() {
-                chart.text({
-                    "text-anchor" : "middle",
-                    "font-weight" : chart.theme("tooltipPointFontWeight")
-                });
-
-                chart.svg.circle({
-                    r: chart.theme("tooltipPointRadius"),
-                    fill: fill,
-                    stroke: stroke,
-                    "stroke-width": chart.theme("tooltipPointBorderWidth")
-                });
-            });
-        }
-
-        this.showTooltip = function(tooltip, x, y, value, position) {
-            var text = tooltip.get(0);
-            text.element.textContent = this.format(value);
-
-            if(position == "left") {
-                text.attr({ x: -7, y: 4, "text-anchor": "end" });
-            } else if(position == "right") {
-                text.attr({ x: 7, y: 4, "text-anchor": "start" });
-            } else if(position == "bottom") {
-                text.attr({ y: 16 });
-            } else {
-                text.attr({ y: -7 });
-            }
-
-            tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
-            tooltip.translate(x, y);
         }
 
         this.color = function(key) {

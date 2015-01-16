@@ -38,7 +38,13 @@
                 value : { text : "test" }
             },
             brush : [
-                { type : 'stackline' , target : [ 'name', 'value'] }
+                {
+                    type : 'stackline' ,
+                    target : [ 'name', 'value'] ,
+                    display : 'max',
+                    activeEvent : "click",
+                    active: "value"
+                }
             ]
         });
 	})

@@ -62,11 +62,5 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
 
 	}
 
-    ArrowBrushItem.setup = function() {
-        return {
-
-        }
-    }
-
 	return ArrowBrushItem;
 }, "chart.brush.item.core");
