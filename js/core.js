@@ -650,6 +650,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
      * @class jui 
      * 
      * @extends core.UIManager
+     * @singleton
      */
 	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;
 	
