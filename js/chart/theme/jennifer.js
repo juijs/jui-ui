@@ -75,8 +75,6 @@ jui.define("chart.theme.jennifer", [], function() {
         /** */
         barBorderRadius : 3,
         /** */        
-        barActiveBackgroundColor : "#06d9b6",
-        /** */
         barCircleBorderColor : "white",
         /** */
         barDisableBackgroundOpacity : 0.4,

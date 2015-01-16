@@ -31,13 +31,13 @@
                         { quarter : "11", sales : 32 },
                         { quarter : "12", sales : 25 }
                     ],
-                    x : {
+                    y : {
                         type : "range",
                         domain : "sales",
                         step : 10,
                         line : true
                     },
-                    y : {
+                    x : {
                         type : "block",
                         domain : "quarter",
                         line : true
@@ -46,10 +46,9 @@
 
             ],
             brush : {
-                type : "bar",
+                type : "column",
                 target : "sales",
                 display : "max",
-                active : 5,
                 activeEvent : "mouseover"
             },
             widget : {
