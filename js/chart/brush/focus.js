@@ -1,72 +1,87 @@
-jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
-    /**
-     * @class chart.brush.item.arrow
-     *
-     * implements simple brush item
-     *
-     * @extends chart.brush.item.core
-     * @requires util.base
-     */
-	var ArrowBrushItem = function() {
+jui.define("chart.brush.focus", [], function() {
+	/**
+	 * @class chart.brush.focus
+	 *
+	 * implements focus brush
+	 *
+	 * @extends chart.brush.core
+	 */
+	var FocusBrush = function(chart, axis, brush) {
+		var g;
 
+		this.drawFocus = function(start, end) {
+			var borderColor = chart.theme("focusBorderColor"),
+				borderSize = chart.theme("focusBorderWidth"),
+				bgColor = chart.theme("focusBackgroundColor"),
+				bgOpacity = chart.theme("focusBackgroundOpacity");
 
-        this.drawBefore = function() {
+			var height = chart.area('height');
 
-        }
+			g = chart.svg.group({}, function() {
+				var startX = start,
+					endX = end;
 
-        this.draw = function() {
+				if (brush.hide) {
+					return ;
+				}
 
-            var svg = this.chart.svg;
-            var chart = this.chart;
+				chart.svg.line({
+					stroke: borderColor,
+					"stroke-width": borderSize,
+					x1: 0,
+					y1: 0,
+					x2: 0,
+					y2: height
+				}).translate(startX, 0);
 
-            var g = svg.group().translate(this.item.centerX, this.item.centerY);
+				chart.svg.rect({
+					width: Math.abs(endX - startX),
+					height: height,
+					fill: bgColor,
+					opacity: bgOpacity
+				}).translate(startX, 0)
 
-            this.group.append(g);
+				chart.svg.line({
+					stroke: borderColor,
+					"stroke-width": borderSize,
+					x1: 0,
+					y1: 0,
+					x2: 0,
+					y2: height
+				}).translate(endX, 0);
+			});
 
-            // 바깥 지름 부터 그림
-            var startX = 0;
-            var startY = -(this.item.centerY/2 + 5);
+			return g;
+		}
 
-            var path = svg.path({
-                stroke : this.chart.theme("gaugeArrowColor"),
-                "stroke-width" : 0.2,
-                "fill" : this.chart.theme("gaugeArrowColor")
-            });
+		this.draw = function() {
+			var start = 0, end = 0;
 
-            path.MoveTo(startX, startY);
-            path.LineTo(5, 0);
-            path.LineTo(-5, 0);
-            path.ClosePath();
+			if(brush.start == -1 || brush.end == -1) {
+				return this.chart.svg.g();
+			}
 
-            // start angle
-            path.rotate(this.item.startAngle);
-            g.append(path)
-            path.rotate(this.item.endAngle + this.item.startAngle);
+			if(axis.x.type == "block") {
+				start = axis.x(brush.start) - axis.x.rangeBand() / 2;
+				end = axis.x(brush.end) + axis.x.rangeBand() / 2;
+			} else  {
+				start = axis.x(brush.start);
+				end = axis.x(brush.end);
+			}
 
-            g.append(svg.circle({
-                cx : 0,
-                cy : 0,
-                r : 5,
-                fill : chart.theme("gaugeArrowColor")
-            }));
-
-            g.append(svg.circle({
-                cx : 0,
-                cy : 0,
-                r : 2,
-                fill : chart.theme("gaugeArrowColor")
-            }));
-
-            return g;
-        }
-
+			return this.drawFocus(start, end);
+		}
 	}
 
-    ArrowBrushItem.setup = function() {
-        return {
+	FocusBrush.setup = function() {
+		return {
+			/** @cfg {Integer} [start=-1] */
+			start: -1,
 
-        }
-    }
+			/** @cfg {Integer} [end=-1] */
+			end: -1
+		};
+	}
 
-	return ArrowBrushItem;
-}, "chart.brush.item.core");
+	return FocusBrush;
+}, "chart.brush.core");
