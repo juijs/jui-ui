@@ -431,6 +431,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callBefore
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.callBefore = function(name, callback) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
