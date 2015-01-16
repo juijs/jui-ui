@@ -874,7 +874,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @event bg_click
-     * Fired when chart bg is clicked on.
+     * 실제 이벤트 이름은 bg.click 사용된다.
      * @param {jQueryEvent} e The event object.
      */
 
