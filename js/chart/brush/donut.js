@@ -17,37 +17,18 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				startX = obj.x,
 				startY = obj.y;
 
-			/*
-			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
-				startInnerX = innerCircle.x,
-				startInnerY = innerCircle.y;
-			*/
+
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
 			obj = math.rotate(startX, startY, math.radian(endAngle));
 
-			/*
-			// inner arc 에 대한 지점 설정 			
-			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle)); */
-
-			// 중심점 이동 
+			// 중심점 이동
 			g.translate(centerX, centerY);
 
 			// outer arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
-
-			/*
-			// 라인 긋기 
-			path.LineTo(innerCircle.x, innerCircle.y);
-
-			// inner arc 그리기 
-			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
-			*/
-
-			// 패스 종료
-			//path.ClosePath();
 
 			g.append(path);
 

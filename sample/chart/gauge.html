@@ -4,27 +4,62 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
+    <script src="../../js/chart/brush/item/core.js"></script>
+    <script src="../../js/chart/brush/item/arrow.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
 </head>
-<body>
+<body >
 
 <div id="chart"></div>
+<textarea id="codemirror"></textarea>
 
 <script>
+    $(function() {
+        $("#codemirror").val($("#script_code").html());
+
+        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+    })
+
+</script>
+
+<script id="script_code">
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
-            width: 400,
+            width: 800,
             height : 400,
-            theme : "jennifer",
+            theme : "pattern",
+            axis : [{
+                data : [
+                    { title : 'Overall Visits', value : 192, max : 200, min : 0, unit : "k" },
+                    { title : 'New Visits', value : 66, max : 100, min : 0, unit : "%" },
+                    { title : 'Mobile Visits', value : 75, max : 100, min : 0, unit : "%" },
+                    { title : 'Desktop Visits', value : 25, max : 100, min : 0, unit : "%" }
+                ],
+                c : {
+                    type : 'table',
+                    rows : 1,
+                    columns : 4
+                }
+            }],
             brush : {
                 type : 'gauge',
-                value : 200,
-                min : 10,
-                max : 700,
-                startAngle : -90,
-                endAngle : 180,
-                arrow : true,
-                unitText : "feeds"
+                startAngle : -120,
+                endAngle : 360,
+                items : [ 'arrow' ]
             }
         });
 	})

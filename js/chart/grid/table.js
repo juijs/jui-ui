@@ -1,5 +1,12 @@
 jui.define("chart.grid.table", [  ], function() {
 
+    /**
+     * @class chart.grid.table
+     *
+     * @param {chart.builder} chart
+     * @param {chart.axis} axis
+     * @param {chart.grid.core} grid
+     */
     var TableGrid = function(chart, axis, grid) {
         var orient = grid.orient;
         var rowUnit, columnUnit, outerPadding, row, column ;

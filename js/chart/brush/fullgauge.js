@@ -31,18 +31,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-			var axis = axis || {};
 
-			if (!axis.c) {
-				axis.c = function() {
-					return {
-						x : 0,
-						y : 0,
-						width : chart.area("width"),
-						height : chart.area("height")
-					};
-				}
-			}
         }
 
 		this.drawUnit = function(index, data, group) {

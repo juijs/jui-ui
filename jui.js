@@ -953,11 +953,21 @@
 
 
 	/**
-	 * Global Object
 	 * @class jui
+	 *
+	 * Global Object
+	 *
+	 * @singleton
 	 */
 	exports.jui = {
-		
+
+		/**
+		 * @method ready
+		 *
+		 * ready 타임에 실행될 callback 정의
+		 *
+		 * @param {Function} callback
+		 */
 		ready: function() {
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
@@ -981,12 +991,14 @@
 		},
 
         /**
-         * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
+         * @method defineUI
+		 *
+		 * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
          *
-         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -1025,12 +1037,14 @@
 		},
 
         /**
-         * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
+         * @method define
+		 *
+		 * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
          *
-         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -1059,6 +1073,16 @@
             globalFunc[name] = true;
         },
 
+		/**
+		 * @method defineOptions
+		 *
+		 * 모듈 기본 옵션 정의
+		 *
+		 * @param {Object} Module
+		 * @param {Object} options
+		 * @param {Object} exceptOpts
+		 * @return {Object}
+		 */
 		defineOptions: function(Module, options, exceptOpts) {
 			var defOpts = getOptions(Module, {});
 			var defOptKeys = Object.keys(defOpts),
@@ -15021,6 +15045,13 @@ jui.define("chart.grid.panel", [  ], function() {
 
 jui.define("chart.grid.table", [  ], function() {
 
+    /**
+     * @class chart.grid.table
+     *
+     * @param {chart.builder} chart
+     * @param {chart.axis} axis
+     * @param {chart.grid.core} grid
+     */
     var TableGrid = function(chart, axis, grid) {
         var orient = grid.orient;
         var rowUnit, columnUnit, outerPadding, row, column ;
@@ -15239,6 +15270,28 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             obj.attr({ "class": "brush brush-" + this.brush.type });
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
+
+            //
+
+        }
+
+        this.drawItem = function(group, data, options) {
+            for(var i = 0, len = this.brush.items.length; i < len; i++) {
+
+                var ItemClass = jui.include("chart.brush.item." + this.brush.items[i]);
+
+                if (ItemClass) {
+                    var itemObject = new ItemClass();
+                    itemObject.chart = this.chart;
+                    itemObject.data = data;
+                    itemObject.group = group;
+                    itemObject.item = options;
+
+                    itemObject.render();
+                } else {
+                    throw new Error("JUI_CRITICAL_ERR: ItemClass is not exists.");
+                }
+            }
         }
 
         /**
@@ -15597,7 +15650,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] */
             index: null,
             /** @cfg {boolean} [clip=false] */
-            clip: false
+            clip: false,
+
+            items : []
         }
     }
 
@@ -16455,37 +16510,18 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 				startX = obj.x,
 				startY = obj.y;
 
-			/*
-			var innerCircle = math.rotate(0, -innerRadius, math.radian(startAngle)),
-				startInnerX = innerCircle.x,
-				startInnerY = innerCircle.y;
-			*/
+
 			// 시작 하는 위치로 옮김
 			path.MoveTo(startX, startY);
 
 			// outer arc 에 대한 지점 설정
 			obj = math.rotate(startX, startY, math.radian(endAngle));
 
-			/*
-			// inner arc 에 대한 지점 설정 			
-			innerCircle = math.rotate(startInnerX, startInnerY, math.radian(endAngle)); */
-
-			// 중심점 이동 
+			// 중심점 이동
 			g.translate(centerX, centerY);
 
 			// outer arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
-
-			/*
-			// 라인 긋기 
-			path.LineTo(innerCircle.x, innerCircle.y);
-
-			// inner arc 그리기 
-			path.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, startInnerX, startInnerY);
-			*/
-
-			// 패스 종료
-			//path.ClosePath();
 
 			g.append(path);
 
@@ -17582,7 +17618,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
-        function createText(startAngle, endAngle, min, max, value) {
+        function createText(startAngle, endAngle, min, max, value, unit) {
 			var g = chart.svg.group({
 				"class" : "gauge text"
 			}).translate(centerX, centerY);
@@ -17597,7 +17633,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"fill" : self.color(0)
 			}, value + ""));
 
-			if (brush.unitText != "") {
+			if (unit != "") {
 				g.append(chart.text({
 					x : 0,
 					y : 100,
@@ -17606,7 +17642,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					"font-size" : "1.5em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")
-				}, brush.unitText))
+				}, unit))
 			}
 
 			// 바깥 지름 부터 그림
@@ -17642,121 +17678,91 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			return g;
 		}
 
-        function createArrow(startAngle, endAngle) {
-			var g = chart.svg.group().translate(centerX, centerY);
-
-			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -(outerRadius + 5);
-
-			var path = chart.svg.path({
-				stroke : chart.theme("gaugeArrowColor"),
-				"stroke-width" : 0.2,
-				"fill" : chart.theme("gaugeArrowColor")
-			});
-
-			path.MoveTo(startX, startY);
-			path.LineTo(5, 0);
-			path.LineTo(-5, 0);
-			path.ClosePath();
-
-			// start angle
-			path.rotate(startAngle);
-			g.append(path)
-			path.rotate(endAngle + startAngle);
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 5,
-				fill : chart.theme("gaugeArrowColor")
-			}));
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 2,
-				fill : chart.theme("gaugeArrowColor")
-			}));
-
-			return g;
-		}
-
         this.drawBefore = function() {
-			var axis = axis || {};
 
-			if (!axis.c) {
-				axis.c = function() {
-					return {
-						x : 0,
-						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
-					};
-				}
-			}
-
-			var obj = axis.c(),
-				width = obj.width,
-				height = obj.height,
-				x = obj.x,
-				y = obj.y,
-				min = width;
-
-            if (height < min) {
-                min = height;
-            }
-
-            w = min / 2;
-			centerX = width / 2 + x;
-			centerY = height / 2 + y;
-			outerRadius = w;
-            innerRadius = outerRadius - brush.size;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush gauge"
-			});
+		this.drawUnit = function(index, data, group) {
+			var obj = axis.c(index),
+				value = (data[this.brush.target] || data.value) || 0,
+				max = (data[this.brush.max] || data.max) || 100,
+				min = (data[this.brush.min] || data.min) || 0,
+				unit = (data[this.brush.unit] || data.unit) || "";
 
-			var rate = (brush.value - brush.min) / (brush.max - brush.min),
-                currentAngle = (brush.endAngle) * rate;
-			
+
+			var rate = (value - min) / (max - min),
+				currentAngle = brush.endAngle * rate;
+
 			if (brush.endAngle >= 360) {
-                brush.endAngle = 359.99999;
+				brush.endAngle = 359.99999;
 			}
-			
-			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
-				fill : chart.theme("gaugeBackgroundColor")
+
+			if (currentAngle > brush.endAngle) {
+				currentAngle = brush.endAngle;
+			}
+
+			var width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y;
+
+			// center
+			w = Math.min(width, height) / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w - brush.size/2;
+			innerRadius = outerRadius - brush.size/2;
+
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+				fill : "transparent",
+				stroke : chart.theme("gaugeBackgroundColor")
+			}));
+
+
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+				fill : "transparent",
+				stroke : this.color(0)
+			}));
+
+
+			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
+			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
+
+
+			this.drawItem(group, data, {
+				width : width,
+				height : height,
+				startAngle : brush.startAngle,
+				endAngle : currentAngle,
+				centerX : centerX,
+				centerY : centerY
 			});
 
-			group.append(g);
 
-			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : this.color(0)
+			return group;
+		}
+
+		this.draw = function() {
+
+			var group = chart.svg.group();
+
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
 			});
 
-			group.append(g);
+			return group;
 
-            if (brush.arrow) {
-                g = createArrow(brush.startAngle, currentAngle);
-                group.append(g);
-            }
 
-            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
-            g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);
 
-            return group;
 		}
 	}
 
 	GaugeBrush.setup = function() {
 		return {
-			min: 0,
-			max: 100,
-			value: 0,
-			size: 60,
+			min: "min",
+			max: "max",
+			value: "value",
+			size: 30,
 			startAngle: 0,
 			endAngle: 360,
 			arrow: true,
@@ -17800,18 +17806,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         this.drawBefore = function() {
-			var axis = axis || {};
 
-			if (!axis.c) {
-				axis.c = function() {
-					return {
-						x : 0,
-						y : 0,
-						width : chart.area("width"),
-						height : chart.area("height")
-					};
-				}
-			}
         }
 
 		this.drawUnit = function(index, data, group) {
@@ -18360,93 +18355,78 @@ jui.define("chart.brush.rangebar", [], function() {
 	return RangeBarBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.focus", [], function() {
+jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
     /**
-     * @class chart.brush.focus
+     * @class chart.brush.item.arrow
      *
-     * implements focus brush
+     * implements simple brush item
      *
-     * @extends chart.brush.core
+     * @extends chart.brush.item.core
+     * @requires util.base
      */
-    var FocusBrush = function(chart, axis, brush) {
-        var g;
+	var ArrowBrushItem = function() {
 
-        this.drawFocus = function(start, end) {
-            var borderColor = chart.theme("focusBorderColor"),
-                borderSize = chart.theme("focusBorderWidth"),
-                bgColor = chart.theme("focusBackgroundColor"),
-                bgOpacity = chart.theme("focusBackgroundOpacity");
 
-            var height = chart.area('height');
+        this.drawBefore = function() {
 
-            g = chart.svg.group({}, function() {
-                var startX = start,
-                    endX = end;
+        }
 
-                if (brush.hide) {
-                    return ;
-                }
+        this.draw = function() {
 
-                chart.svg.line({
-                    stroke: borderColor,
-                    "stroke-width": borderSize,
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: height
-                }).translate(startX, 0);
+            var svg = this.chart.svg;
+            var chart = this.chart;
 
-                chart.svg.rect({
-                    width: Math.abs(endX - startX),
-                    height: height,
-                    fill: bgColor,
-                    opacity: bgOpacity
-                }).translate(startX, 0)
+            var g = svg.group().translate(this.item.centerX, this.item.centerY);
 
-                chart.svg.line({
-                    stroke: borderColor,
-                    "stroke-width": borderSize,
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: height
-                }).translate(endX, 0);
+            this.group.append(g);
+
+            // 바깥 지름 부터 그림
+            var startX = 0;
+            var startY = -(this.item.centerY/2 + 5);
+
+            var path = svg.path({
+                stroke : this.chart.theme("gaugeArrowColor"),
+                "stroke-width" : 0.2,
+                "fill" : this.chart.theme("gaugeArrowColor")
             });
+
+            path.MoveTo(startX, startY);
+            path.LineTo(5, 0);
+            path.LineTo(-5, 0);
+            path.ClosePath();
+
+            // start angle
+            path.rotate(this.item.startAngle);
+            g.append(path)
+            path.rotate(this.item.endAngle + this.item.startAngle);
+
+            g.append(svg.circle({
+                cx : 0,
+                cy : 0,
+                r : 5,
+                fill : chart.theme("gaugeArrowColor")
+            }));
+
+            g.append(svg.circle({
+                cx : 0,
+                cy : 0,
+                r : 2,
+                fill : chart.theme("gaugeArrowColor")
+            }));
 
             return g;
         }
 
-        this.draw = function() {
-            var start = 0, end = 0;
+	}
 
-            if(brush.start == -1 || brush.end == -1) {
-                return this.chart.svg.g();
-            }
+    ArrowBrushItem.setup = function() {
+        return {
 
-            if(axis.x.type == "block") {
-                start = axis.x(brush.start) - axis.x.rangeBand() / 2;
-                end = axis.x(brush.end) + axis.x.rangeBand() / 2;
-            } else  {
-                start = axis.x(brush.start);
-                end = axis.x(brush.end);
-            }
-
-            return this.drawFocus(start, end);
         }
     }
 
-    FocusBrush.setup = function() {
-        return {
-            /** @cfg {Integer} [start=-1] */
-            start: -1,
-
-            /** @cfg {Integer} [end=-1] */
-            end: -1
-        };
-    }
-
-    return FocusBrush;
-}, "chart.brush.core");
+	return ArrowBrushItem;
+}, "chart.brush.item.core");
 jui.define("chart.brush.pin", [], function() {
     var PinBrush = function(chart, axis, brush) {
         var self = this;
@@ -18500,6 +18480,102 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
+jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
+    /**
+     * @class chart.brush.item.core
+     *
+     * implements simple brush item
+     *
+     * @extends chart.draw
+     * @requires jquery
+     * @requires util.base
+     */
+	var CoreBrushItem = function() {
+
+        this.drawAfter = function(obj) {
+
+        }
+
+	}
+
+    CoreBrushItem.setup = function() {
+        return { }
+    }
+
+	return CoreBrushItem;
+}, "chart.draw"); 
+jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
+    /**
+     * @class chart.brush.item.arrow
+     *
+     * implements simple brush item
+     *
+     * @extends chart.brush.item.core
+     * @requires util.base
+     */
+	var ArrowBrushItem = function() {
+
+
+        this.drawBefore = function() {
+
+        }
+
+        this.draw = function() {
+
+            var svg = this.chart.svg;
+            var chart = this.chart;
+
+            var g = svg.group().translate(this.item.centerX, this.item.centerY);
+
+            this.group.append(g);
+
+            // 바깥 지름 부터 그림
+            var startX = 0;
+            var startY = -(this.item.centerY/2 + 5);
+
+            var path = svg.path({
+                stroke : this.chart.theme("gaugeArrowColor"),
+                "stroke-width" : 0.2,
+                "fill" : this.chart.theme("gaugeArrowColor")
+            });
+
+            path.MoveTo(startX, startY);
+            path.LineTo(5, 0);
+            path.LineTo(-5, 0);
+            path.ClosePath();
+
+            // start angle
+            path.rotate(this.item.startAngle);
+            g.append(path)
+            path.rotate(this.item.endAngle + this.item.startAngle);
+
+            g.append(svg.circle({
+                cx : 0,
+                cy : 0,
+                r : 5,
+                fill : chart.theme("gaugeArrowColor")
+            }));
+
+            g.append(svg.circle({
+                cx : 0,
+                cy : 0,
+                r : 2,
+                fill : chart.theme("gaugeArrowColor")
+            }));
+
+            return g;
+        }
+
+	}
+
+    ArrowBrushItem.setup = function() {
+        return {
+
+        }
+    }
+
+	return ArrowBrushItem;
+}, "chart.brush.item.core");
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 

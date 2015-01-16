@@ -953,11 +953,21 @@
 
 
 	/**
-	 * Global Object
 	 * @class jui
+	 *
+	 * Global Object
+	 *
+	 * @singleton
 	 */
 	exports.jui = {
-		
+
+		/**
+		 * @method ready
+		 *
+		 * ready 타임에 실행될 callback 정의
+		 *
+		 * @param {Function} callback
+		 */
 		ready: function() {
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
@@ -981,12 +991,14 @@
 		},
 
         /**
-         * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
+         * @method defineUI
+		 *
+		 * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
          *
-         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
 		defineUI: function(name, depends, callback, parent) {
 			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -1025,12 +1037,14 @@
 		},
 
         /**
-         * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
+         * @method define
+		 *
+		 * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
          *
-         * @param name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
          */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -1059,6 +1073,16 @@
             globalFunc[name] = true;
         },
 
+		/**
+		 * @method defineOptions
+		 *
+		 * 모듈 기본 옵션 정의
+		 *
+		 * @param {Object} Module
+		 * @param {Object} options
+		 * @param {Object} exceptOpts
+		 * @return {Object}
+		 */
 		defineOptions: function(Module, options, exceptOpts) {
 			var defOpts = getOptions(Module, {});
 			var defOptKeys = Object.keys(defOpts),

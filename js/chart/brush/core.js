@@ -46,6 +46,28 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             obj.attr({ "class": "brush brush-" + this.brush.type });
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
+
+            //
+
+        }
+
+        this.drawItem = function(group, data, options) {
+            for(var i = 0, len = this.brush.items.length; i < len; i++) {
+
+                var ItemClass = jui.include("chart.brush.item." + this.brush.items[i]);
+
+                if (ItemClass) {
+                    var itemObject = new ItemClass();
+                    itemObject.chart = this.chart;
+                    itemObject.data = data;
+                    itemObject.group = group;
+                    itemObject.item = options;
+
+                    itemObject.render();
+                } else {
+                    throw new Error("JUI_CRITICAL_ERR: ItemClass is not exists.");
+                }
+            }
         }
 
         /**
@@ -404,7 +426,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] */
             index: null,
             /** @cfg {boolean} [clip=false] */
-            clip: false
+            clip: false,
+
+            items : []
         }
     }
 

@@ -4,7 +4,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
-        function createText(startAngle, endAngle, min, max, value) {
+        function createText(startAngle, endAngle, min, max, value, unit) {
 			var g = chart.svg.group({
 				"class" : "gauge text"
 			}).translate(centerX, centerY);
@@ -19,7 +19,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				"fill" : self.color(0)
 			}, value + ""));
 
-			if (brush.unitText != "") {
+			if (unit != "") {
 				g.append(chart.text({
 					x : 0,
 					y : 100,
@@ -28,7 +28,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					"font-size" : "1.5em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")
-				}, brush.unitText))
+				}, unit))
 			}
 
 			// 바깥 지름 부터 그림
@@ -64,121 +64,91 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			return g;
 		}
 
-        function createArrow(startAngle, endAngle) {
-			var g = chart.svg.group().translate(centerX, centerY);
-
-			// 바깥 지름 부터 그림
-			var startX = 0;
-			var startY = -(outerRadius + 5);
-
-			var path = chart.svg.path({
-				stroke : chart.theme("gaugeArrowColor"),
-				"stroke-width" : 0.2,
-				"fill" : chart.theme("gaugeArrowColor")
-			});
-
-			path.MoveTo(startX, startY);
-			path.LineTo(5, 0);
-			path.LineTo(-5, 0);
-			path.ClosePath();
-
-			// start angle
-			path.rotate(startAngle);
-			g.append(path)
-			path.rotate(endAngle + startAngle);
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 5,
-				fill : chart.theme("gaugeArrowColor")
-			}));
-
-			g.append(chart.svg.circle({
-				cx : 0,
-				cy : 0,
-				r : 2,
-				fill : chart.theme("gaugeArrowColor")
-			}));
-
-			return g;
-		}
-
         this.drawBefore = function() {
-			var axis = axis || {};
 
-			if (!axis.c) {
-				axis.c = function() {
-					return {
-						x : 0,
-						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
-					};
-				}
-			}
-
-			var obj = axis.c(),
-				width = obj.width,
-				height = obj.height,
-				x = obj.x,
-				y = obj.y,
-				min = width;
-
-            if (height < min) {
-                min = height;
-            }
-
-            w = min / 2;
-			centerX = width / 2 + x;
-			centerY = height / 2 + y;
-			outerRadius = w;
-            innerRadius = outerRadius - brush.size;
         }
 
-		this.draw = function() {
-			var group = chart.svg.group({
-				"class" : "brush gauge"
-			});
+		this.drawUnit = function(index, data, group) {
+			var obj = axis.c(index),
+				value = (data[this.brush.target] || data.value) || 0,
+				max = (data[this.brush.max] || data.max) || 100,
+				min = (data[this.brush.min] || data.min) || 0,
+				unit = (data[this.brush.unit] || data.unit) || "";
 
-			var rate = (brush.value - brush.min) / (brush.max - brush.min),
-                currentAngle = (brush.endAngle) * rate;
-			
+
+			var rate = (value - min) / (max - min),
+				currentAngle = brush.endAngle * rate;
+
 			if (brush.endAngle >= 360) {
-                brush.endAngle = 359.99999;
+				brush.endAngle = 359.99999;
 			}
-			
-			var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
-				fill : chart.theme("gaugeBackgroundColor")
+
+			if (currentAngle > brush.endAngle) {
+				currentAngle = brush.endAngle;
+			}
+
+			var width = obj.width,
+				height = obj.height,
+				x = obj.x,
+				y = obj.y;
+
+			// center
+			w = Math.min(width, height) / 2;
+			centerX = width / 2 + x;
+			centerY = height / 2 + y;
+			outerRadius = w - brush.size/2;
+			innerRadius = outerRadius - brush.size/2;
+
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+				fill : "transparent",
+				stroke : chart.theme("gaugeBackgroundColor")
+			}));
+
+
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+				fill : "transparent",
+				stroke : this.color(0)
+			}));
+
+
+			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
+			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
+
+
+			this.drawItem(group, data, {
+				width : width,
+				height : height,
+				startAngle : brush.startAngle,
+				endAngle : currentAngle,
+				centerX : centerX,
+				centerY : centerY
 			});
 
-			group.append(g);
 
-			g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				fill : this.color(0)
+			return group;
+		}
+
+		this.draw = function() {
+
+			var group = chart.svg.group();
+
+			this.eachData(function(i, data) {
+				this.drawUnit(i, data, group);
 			});
 
-			group.append(g);
+			return group;
 
-            if (brush.arrow) {
-                g = createArrow(brush.startAngle, currentAngle);
-                group.append(g);
-            }
 
-            // startAngle, endAngle 에 따른 Text 위치를 선정해야함
-            g = createText(brush.startAngle, brush.endAngle, brush.min, brush.max, brush.value);
-            group.append(g);
 
-            return group;
 		}
 	}
 
 	GaugeBrush.setup = function() {
 		return {
-			min: 0,
-			max: 100,
-			value: 0,
-			size: 60,
+			min: "min",
+			max: "max",
+			value: "value",
+			size: 30,
 			startAngle: 0,
 			endAngle: 360,
 			arrow: true,
