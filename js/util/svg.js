@@ -302,7 +302,11 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
         this.data = function(type) {
             var text = this.attr("transform"),
                 regex = {
-                    translate: /[^translate()]+/g
+                    translate: /[^translate()]+/g,
+                    rotate: /[^rotate()]+/g,
+                    scale: /[^scale()]+/g,
+                    skew: /[^skew()]+/g,
+                    matrix: /[^matrix()]+/g
                 };
 
             if(_.typeCheck("string", text)) {

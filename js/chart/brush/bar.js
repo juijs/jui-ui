@@ -167,7 +167,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 		}
 
 		this.drawAnimate = function(root) {
-			var svg = this.chart.svg;
+			var svg = this.chart.svg,
+				type = this.brush.animate;
 
 			root.append(
 				svg.animate({
@@ -184,13 +185,16 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			root.each(function(i, elem) {
 				if(elem.is("util.svg.element.path")) {
 					var xy = elem.data("translate").split(","),
-						w = elem.attr("width");
+						x = parseInt(xy[0]),
+						y = parseInt(xy[1]),
+						w = parseInt(elem.attr("width")),
+						start = (type == "right") ? x + w : x - w;
 
 					elem.append(svg.animateTransform({
 						attributeName: "transform",
 						type: "translate",
-						from: (parseInt(xy[0]) - parseInt(w) + " " + xy[1]),
-						to: xy[0] + " " + xy[1],
+						from: start + " " + y,
+						to: x + " " + y,
 						begin: "0s",
 						dur: "0.7s",
 						repeatCount: "1",

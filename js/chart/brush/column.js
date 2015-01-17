@@ -60,7 +60,8 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		this.drawAnimate = function(root) {
-			var svg = this.chart.svg;
+			var svg = this.chart.svg,
+				type = this.brush.animate;
 
 			root.append(
 				svg.animate({
@@ -77,13 +78,16 @@ jui.define("chart.brush.column", [], function() {
 			root.each(function(i, elem) {
 				if(elem.is("util.svg.element.path")) {
 					var xy = elem.data("translate").split(","),
-						h = elem.attr("height");
+						x = parseInt(xy[0]),
+						y = parseInt(xy[1]),
+						h = parseInt(elem.attr("height")),
+						start = (type == "top") ? y - h : y + h;
 
 					elem.append(svg.animateTransform({
 						attributeName: "transform",
 						type: "translate",
-						from: xy[0] + " " + (parseInt(xy[1]) + parseInt(h)),
-						to: xy[0] + " " + xy[1],
+						from: x + " " + start,
+						to: x + " " + y,
 						begin: "0s",
 						dur: "0.7s",
 						repeatCount: "1",

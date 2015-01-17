@@ -3062,7 +3062,11 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
         this.data = function(type) {
             var text = this.attr("transform"),
                 regex = {
-                    translate: /[^translate()]+/g
+                    translate: /[^translate()]+/g,
+                    rotate: /[^rotate()]+/g,
+                    scale: /[^scale()]+/g,
+                    skew: /[^skew()]+/g,
+                    matrix: /[^matrix()]+/g
                 };
 
             if(_.typeCheck("string", text)) {
@@ -9136,7 +9140,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 		}
 
 		this.drawAnimate = function(root) {
-			var svg = this.chart.svg;
+			var svg = this.chart.svg,
+				type = this.brush.animate;
 
 			root.append(
 				svg.animate({
@@ -9153,13 +9158,16 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			root.each(function(i, elem) {
 				if(elem.is("util.svg.element.path")) {
 					var xy = elem.data("translate").split(","),
-						w = elem.attr("width");
+						x = parseInt(xy[0]),
+						y = parseInt(xy[1]),
+						w = parseInt(elem.attr("width")),
+						start = (type == "right") ? x + w : x - w;
 
 					elem.append(svg.animateTransform({
 						attributeName: "transform",
 						type: "translate",
-						from: (parseInt(xy[0]) - parseInt(w) + " " + xy[1]),
-						to: xy[0] + " " + xy[1],
+						from: start + " " + y,
+						to: x + " " + y,
 						begin: "0s",
 						dur: "0.7s",
 						repeatCount: "1",
@@ -9247,7 +9255,8 @@ jui.define("chart.brush.column", [], function() {
 		}
 
 		this.drawAnimate = function(root) {
-			var svg = this.chart.svg;
+			var svg = this.chart.svg,
+				type = this.brush.animate;
 
 			root.append(
 				svg.animate({
@@ -9264,13 +9273,16 @@ jui.define("chart.brush.column", [], function() {
 			root.each(function(i, elem) {
 				if(elem.is("util.svg.element.path")) {
 					var xy = elem.data("translate").split(","),
-						h = elem.attr("height");
+						x = parseInt(xy[0]),
+						y = parseInt(xy[1]),
+						h = parseInt(elem.attr("height")),
+						start = (type == "top") ? y - h : y + h;
 
 					elem.append(svg.animateTransform({
 						attributeName: "transform",
 						type: "translate",
-						from: xy[0] + " " + (parseInt(xy[1]) + parseInt(h)),
-						to: xy[0] + " " + xy[1],
+						from: x + " " + start,
+						to: x + " " + y,
 						begin: "0s",
 						dur: "0.7s",
 						repeatCount: "1",
