@@ -58,6 +58,40 @@ jui.define("chart.brush.column", [], function() {
 
             return g;
 		}
+
+		this.drawAnimate = function(root) {
+			var svg = this.chart.svg;
+
+			root.append(
+				svg.animate({
+					attributeName: "opacity",
+					from: "0",
+					to: "1",
+					begin: "0s" ,
+					dur: "1.4s",
+					repeatCount: "1",
+					fill: "freeze"
+				})
+			);
+
+			root.each(function(i, elem) {
+				if(elem.is("util.svg.element.path")) {
+					var xy = elem.data("translate").split(","),
+						h = elem.attr("height");
+
+					elem.append(svg.animateTransform({
+						attributeName: "transform",
+						type: "translate",
+						from: xy[0] + " " + (parseInt(xy[1]) + parseInt(h)),
+						to: xy[0] + " " + xy[1],
+						begin: "0s",
+						dur: "0.7s",
+						repeatCount: "1",
+						fill: "freeze"
+					}));
+				}
+			});
+		}
 	}
 
 	return ColumnBrush;

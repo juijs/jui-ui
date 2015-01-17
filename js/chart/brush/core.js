@@ -386,9 +386,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             axis: 0,
             /** @cfg {Integer} [index=null] */
             index: null,
-            /** @cfg {boolean} [clip=false] */
-            clip: false,
-
+            /** @cfg {boolean} [clip=true] */
+            clip: true,
+            /** @cfg {Array} [items=null] */
             items : []
         }
     }

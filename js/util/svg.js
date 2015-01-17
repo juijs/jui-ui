@@ -216,12 +216,16 @@ jui.define("util.svg.element", [], function() {
 
             return size;
         }
+
+        this.is = function(moduleId) {
+            return this instanceof jui.include(moduleId);
+        }
     }
 
     return Element;
 });
 
-jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polygon, polyline
 
     /**
      * @class util.svg.element.transform
@@ -293,6 +297,19 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
             applyOrders(this);
 
             return this;
+        }
+
+        this.data = function(type) {
+            var text = this.attr("transform"),
+                regex = {
+                    translate: /[^translate()]+/g
+                };
+
+            if(_.typeCheck("string", text)) {
+                return text.match(regex[type])[0];
+            }
+
+            return null;
         }
     }
 

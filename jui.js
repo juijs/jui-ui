@@ -2976,12 +2976,16 @@ jui.define("util.svg.element", [], function() {
 
             return size;
         }
+
+        this.is = function(moduleId) {
+            return this instanceof jui.include(moduleId);
+        }
     }
 
     return Element;
 });
 
-jui.define("util.svg.element.transform", [], function() { // polygon, polyline
+jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polygon, polyline
 
     /**
      * @class util.svg.element.transform
@@ -3053,6 +3057,19 @@ jui.define("util.svg.element.transform", [], function() { // polygon, polyline
             applyOrders(this);
 
             return this;
+        }
+
+        this.data = function(type) {
+            var text = this.attr("transform"),
+                regex = {
+                    translate: /[^translate()]+/g
+                };
+
+            if(_.typeCheck("string", text)) {
+                return text.match(regex[type])[0];
+            }
+
+            return null;
         }
     }
 
@@ -15596,9 +15613,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             axis: 0,
             /** @cfg {Integer} [index=null] */
             index: null,
-            /** @cfg {boolean} [clip=false] */
-            clip: false,
-
+            /** @cfg {boolean} [clip=true] */
+            clip: true,
+            /** @cfg {Array} [items=null] */
             items : []
         }
     }
@@ -15772,6 +15789,40 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
             return g;
 		}
+
+		this.drawAnimate = function(root) {
+			var svg = this.chart.svg;
+
+			root.append(
+				svg.animate({
+					attributeName: "opacity",
+					from: "0",
+					to: "1",
+					begin: "0s" ,
+					dur: "1.4s",
+					repeatCount: "1",
+					fill: "freeze"
+				})
+			);
+
+			root.each(function(i, elem) {
+				if(elem.is("util.svg.element.path")) {
+					var xy = elem.data("translate").split(","),
+						w = elem.attr("width");
+
+					elem.append(svg.animateTransform({
+						attributeName: "transform",
+						type: "translate",
+						from: (parseInt(xy[0]) - parseInt(w) + " " + xy[1]),
+						to: xy[0] + " " + xy[1],
+						begin: "0s",
+						dur: "0.7s",
+						repeatCount: "1",
+						fill: "freeze"
+					}));
+				}
+			});
+		}
 	}
 
 	BarBrush.setup = function() {
@@ -15848,6 +15899,40 @@ jui.define("chart.brush.column", [], function() {
 			this.drawETC(g);
 
             return g;
+		}
+
+		this.drawAnimate = function(root) {
+			var svg = this.chart.svg;
+
+			root.append(
+				svg.animate({
+					attributeName: "opacity",
+					from: "0",
+					to: "1",
+					begin: "0s" ,
+					dur: "1.4s",
+					repeatCount: "1",
+					fill: "freeze"
+				})
+			);
+
+			root.each(function(i, elem) {
+				if(elem.is("util.svg.element.path")) {
+					var xy = elem.data("translate").split(","),
+						h = elem.attr("height");
+
+					elem.append(svg.animateTransform({
+						attributeName: "transform",
+						type: "translate",
+						from: xy[0] + " " + (parseInt(xy[1]) + parseInt(h)),
+						to: xy[0] + " " + xy[1],
+						begin: "0s",
+						dur: "0.7s",
+						repeatCount: "1",
+						fill: "freeze"
+					}));
+				}
+			});
 		}
 	}
 
@@ -16259,8 +16344,7 @@ jui.define("chart.brush.bubble", [], function() {
     BubbleBrush.setup = function() {
         return {
             min: 5,
-            max: 30,
-            clip: true
+            max: 30
         };
     }
 
@@ -16768,7 +16852,7 @@ jui.define("chart.brush.line", [], function() {
             var svg = this.chart.svg;
 
             root.each(function(i, elem) {
-                if(elem instanceof jui.include("util.svg.element.path")) {
+                if(elem.is("util.svg.element.path")) {
                     var len = elem.length();
 
                     elem.attr({
@@ -18449,16 +18533,10 @@ jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var CoreBrushItem = function() {
-
         this.drawAfter = function(obj) {
 
         }
-
 	}
-
-    CoreBrushItem.setup = function() {
-        return { }
-    }
 
 	return CoreBrushItem;
 }, "chart.draw"); 
@@ -18473,15 +18551,9 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
      */
 	var ArrowBrushItem = function() {
 
-
-        this.drawBefore = function() {
-
-        }
-
         this.draw = function() {
-
-            var svg = this.chart.svg;
-            var chart = this.chart;
+            var svg = this.chart.svg,
+                chart = this.chart;
 
             var g = svg.group().translate(this.item.centerX, this.item.centerY);
 
@@ -18523,7 +18595,6 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
 
             return g;
         }
-
 	}
 
 	return ArrowBrushItem;

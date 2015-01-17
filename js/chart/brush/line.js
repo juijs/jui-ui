@@ -137,7 +137,7 @@ jui.define("chart.brush.line", [], function() {
             var svg = this.chart.svg;
 
             root.each(function(i, elem) {
-                if(elem instanceof jui.include("util.svg.element.path")) {
+                if(elem.is("util.svg.element.path")) {
                     var len = elem.length();
 
                     elem.attr({
