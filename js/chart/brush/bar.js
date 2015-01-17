@@ -1,7 +1,7 @@
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	var BarBrush = function(chart, axis, brush) {
-		var g, active, minmax;
+		var g, active, minmax, minmaxIndex;
 		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
@@ -54,7 +54,13 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				cols = this.barList;
 
 			for(var i = 0; i < cols.length; i++) {
-				cols[i].element.attr({ opacity: (cols[i] == r) ? 1 : style.disableOpacity });
+				var opacity = (cols[i] == r) ? 1 : style.disableOpacity;
+
+				cols[i].element.attr({ opacity: opacity });
+
+				if(i == minmaxIndex) {
+					minmax.style(r.color, style.circleColor, opacity);
+				}
 			}
 		}
 
@@ -70,21 +76,15 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
+					minmaxIndex = i;
+
 					minmax = this.drawItem(group, null, {
 						fill: r.color,
 						stroke: style.circleColor,
-						opacity: (this.brush.active == i) ? 1 : style.disableOpacity
+						opacity: 1
 					});
 
 					minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
-				}
-
-				// 액티브 엘리먼트 설정
-				if (this.brush.active == i) {
-					active.style(r.color, style.circleColor, 1);
-					active.control(r.position, r.tooltipX, r.tooltipY, r.value);
-
-					this.setActiveEffect(r);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
@@ -100,6 +100,14 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 						bar.element.attr({ cursor: "pointer" });
 					})(r);
 				}
+			}
+
+			// 액티브 툴팁 위치 설정
+			var r = this.barList[this.brush.active];
+			if(r != null) {
+				active.style(r.color, style.circleColor, 1);
+				active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+				this.setActiveEffect(r);
 			}
 		}
 

@@ -62,8 +62,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawTooltip = function(g, pos, index) {
-            var display = this.brush.display,
-                active = this.brush.active;
+            var display = this.brush.display;
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
@@ -72,7 +71,7 @@ jui.define("chart.brush.line", [], function() {
                     var tooltip = this.drawItem(g, null, {
                         fill: this.color(index),
                         stroke: circleColor,
-                        opacity: (active == i) ? 1 : disableOpacity
+                        opacity: 1
                     });
 
                     tooltip.control(orient, pos.x[i], pos.y[i], pos.value[i]);

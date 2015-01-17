@@ -9,15 +9,9 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
      */
 	var ArrowBrushItem = function() {
 
-
-        this.drawBefore = function() {
-
-        }
-
         this.draw = function() {
-
-            var svg = this.chart.svg;
-            var chart = this.chart;
+            var svg = this.chart.svg,
+                chart = this.chart;
 
             var g = svg.group().translate(this.item.centerX, this.item.centerY);
 
@@ -59,7 +53,6 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
 
             return g;
         }
-
 	}
 
 	return ArrowBrushItem;

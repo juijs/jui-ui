@@ -1193,7 +1193,15 @@
 	};
 })(window, jQuery || $);
 jui.define("core", [ "jquery", "util.base" ], function($, _) {
-	
+
+    /**
+     * @class core.UIManager
+     * UI에 관련된 기본 로직 클래스 
+     *  
+     * @alternateClassName jui
+     * @singleton
+     *  
+     */
 	var UIManager = new function() {
 		var instances = [], classes = [];
 
@@ -1521,11 +1529,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         var vo = null;
 
         /**
+         * @method emit
+         * 
          * 커스텀 이벤트 발생시키는 메소드
          *
-         * @param type 발생시킬 이벤트
-         * @param args 이벤트 핸들러에 넘기는 값
-         * @returns {*} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
+         * @param {String} type 발생시킬 이벤트
+         * @param {Function} args 이벤트 핸들러에 넘기는 값
+         * @return {Mixed} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
          */
         this.emit = function(type, args) {
             if(typeof(type) != "string") return;
@@ -1615,6 +1625,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callBefore
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.callBefore = function(name, callback) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
@@ -1829,8 +1844,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             vo: null
         }
     }
-	
-	// UIManager는 Global 객체로 정의
+
+    /**
+     * @class jui 
+     * 
+     * @extends core.UIManager
+     * @singleton
+     */
 	window.jui = (typeof(jui) == "object") ? $.extend(jui, UIManager) : UIManager;
 	
 	return UICore;
@@ -2593,8 +2613,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 jui.define("util.color", [], function() {
 
 	/**
-	 * color parser for chart
-	 * @class util.color
+	 *  @class util.color
+     * color parser for chart
 	 * @singleton
 	 */
 	var self = {
@@ -2605,20 +2625,22 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
+        
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
 		
 		/**
-		 * gradient parser 
+		 * @method parseGrident 
+         *
+         * gradient parser
 		 * 
-		 * ex)
-		 * 
-		 * linear(left) #fff,#000
-		 * linear(right) #fff,50 yellow,black
-		 * radial(50%,50%,50%,50,50)
+		 *      @example
+		 *      linear(left) #fff,#000
+		 *      linear(right) #fff,50 yellow,black
+		 *      radial(50%,50%,50%,50,50)
 		 *  
- 		 * @param {Object} color
+ 		 * @param {String} color
 		 */
 		parseGradient : function(color) {
 			var matches = color.match(this.regex);
@@ -11937,25 +11959,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     }
 
     /**
-     * @event bg\.click
-     * Fired when chart bg is clicked on.
+     * @event bg_click
+     * 실제 이벤트 이름은 bg.click 사용된다.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
-     * @event chart.click
+     * @event chart_click
      * Fired when chart is clicked on.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
-     * @event "chart.rclick"
+     * @event chart_rclick
      * Fired when chart is right clicked on.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
-     * @event 'bg.rclick'
+     * @event bg_rclick
      * Fired when chart bg is right clicked on.
      * @param {jQueryEvent} e The event object.
      */
@@ -12801,6 +12823,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	 */
 	var CoreGrid = function() {
 
+        /**
+         * @method drawAfter
+         * 
+         *
+         *  
+         * @param {Object} obj
+         * @protected 
+         */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
 		}
@@ -12813,7 +12843,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * 
 		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
 		 * 
-		 *  @example
+		 *      @example
 		 *      // 그리드 속성에 키가 없을 때
 		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
 		 *      // grid 속성에 key 가 있을 때
@@ -12864,6 +12894,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			}, attr));
 		}
 
+        /**
+         * @method color 
+         * grid 에서 color 를 위한 유틸리티 함수
+         * @param theme
+         * @return {Mixed}
+         */
 		this.color  = function(theme) {
 			if (arguments.length == 3) {
 				return (this.grid.color) ? this.chart.color(0, { colors: [ this.grid.color ] }) : this.chart.theme.apply(this.chart, arguments);
@@ -12947,13 +12983,13 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          *  
          * get real size of grid 
 		 *
-		 * @param chart
-		 * @param orient
-		 * @param grid
-		 * @returns {Object} 
-         * @returns {Number} start
-         * @returns {Number} size 
-         * @returns {Number} end
+		 * @param {chart.builder} chart
+		 * @param {Strng} orient
+		 * @param {Object} grid             그리드 옵션 
+		 * @return {Object}
+         * @return {Number} return.start    시작 지점
+         * @return {Number} return.size     그리드 넓이 또는 높이
+         * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function(chart, orient, grid) {
 			var width = this.axis.area('width'),
@@ -12982,13 +13018,21 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null]  */
 			orient: null,
+            
+            /** @cfg {Boolean} [hide=false] */
 			hide: false,
+
+            /** @cfg {String/Object/Number} [color=null] */
 			color: null,
+            /** @cfg {String} [title=null] */
 			title: null,
+            /** @cfg {Boolean} [hide=false] */
 			line: false,
             subline : 0,
             baseline : true,
+            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
 			format: null,
+            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
 			textRotate : null
 		};
 	}
@@ -12997,10 +13041,24 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
+    /**
+     * @class chart.grid.block
+     * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * 
+     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
+     * 
+     * domain 을 배열로 지정하면 해단 개수만큼 그리드의 영역이 설정된다.
+     *
+     * @extends chart.grid.core  
+     */
 	var BlockGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
 		var domain = [];
-
+        /**
+         * @method top
+         *
+         * @protected
+         */
 		this.top = function(chart, g, scale) {
 			var full_height = this.axis.area('height');
 			
@@ -13050,7 +13108,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-		
+        /**
+         * @method bottom
+         *
+         * @protected
+         */
 		this.bottom = function(chart, g, scale) {
 			var full_height = this.axis.area('height');
 
@@ -13100,7 +13162,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-		
+        /**
+         * @method left
+         *
+         * @protected
+         */
 		this.left = function(chart, g, scale) {
 			var full_width = this.axis.area('width');
 
@@ -13147,7 +13213,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				g.append(axis);
 			}
 		}
-
+        
+        /**
+         * @method right
+         *
+         * @protected
+         */
 		this.right = function(chart, g) {
 			if (!grid.line) {
 				g.append(this.axisLine(chart, {
@@ -13194,8 +13265,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *
+		 * @method initDomain
+         * block grid 에 대한 domain 설정
+		 * @private 
 		 */
 		this.initDomain = function() {
 
@@ -13230,6 +13302,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
+        /**
+         * @method drawBefore
+         *
+         * @protected
+         */
 		this.drawBefore = function() {
 			this.initDomain();
 
@@ -13259,6 +13336,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = grid.reverse;
 		}
 
+        /**
+         * @method draw 
+         * 
+         * @protected 
+         * @return {Mixed}
+         */
 		this.draw = function() {
 			return this.drawGrid(chart, orient, "block", grid);
 		}
@@ -13267,9 +13350,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
+            /** @cfg {String/Array/Function} [domain=null] */
 			domain: null,
+            /** @cfg {Boolean} [reverse=false] */
 			reverse: false,
+            /** @cfg {Number} [max=10] */
 			max: 10,
+            /** @cfg {Boolean} [full=false] */
 			full: false
 		};
 	}
@@ -15521,7 +15608,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	var BarBrush = function(chart, axis, brush) {
-		var g, active, minmax;
+		var g, active, minmax, minmaxIndex;
 		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
@@ -15574,7 +15661,13 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				cols = this.barList;
 
 			for(var i = 0; i < cols.length; i++) {
-				cols[i].element.attr({ opacity: (cols[i] == r) ? 1 : style.disableOpacity });
+				var opacity = (cols[i] == r) ? 1 : style.disableOpacity;
+
+				cols[i].element.attr({ opacity: opacity });
+
+				if(i == minmaxIndex) {
+					minmax.style(r.color, style.circleColor, opacity);
+				}
 			}
 		}
 
@@ -15590,21 +15683,15 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
+					minmaxIndex = i;
+
 					minmax = this.drawItem(group, null, {
 						fill: r.color,
 						stroke: style.circleColor,
-						opacity: (this.brush.active == i) ? 1 : style.disableOpacity
+						opacity: 1
 					});
 
 					minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
-				}
-
-				// 액티브 엘리먼트 설정
-				if (this.brush.active == i) {
-					active.style(r.color, style.circleColor, 1);
-					active.control(r.position, r.tooltipX, r.tooltipY, r.value);
-
-					this.setActiveEffect(r);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
@@ -15620,6 +15707,14 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 						bar.element.attr({ cursor: "pointer" });
 					})(r);
 				}
+			}
+
+			// 액티브 툴팁 위치 설정
+			var r = this.barList[this.brush.active];
+			if(r != null) {
+				active.style(r.color, style.circleColor, 1);
+				active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+				this.setActiveEffect(r);
 			}
 		}
 
@@ -16598,8 +16693,7 @@ jui.define("chart.brush.line", [], function() {
         }
 
         this.drawTooltip = function(g, pos, index) {
-            var display = this.brush.display,
-                active = this.brush.active;
+            var display = this.brush.display;
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
@@ -16608,7 +16702,7 @@ jui.define("chart.brush.line", [], function() {
                     var tooltip = this.drawItem(g, null, {
                         fill: this.color(index),
                         stroke: circleColor,
-                        opacity: (active == i) ? 1 : disableOpacity
+                        opacity: 1
                     });
 
                     tooltip.control(orient, pos.x[i], pos.y[i], pos.value[i]);

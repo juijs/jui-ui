@@ -9,16 +9,10 @@ jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var CoreBrushItem = function() {
-
         this.drawAfter = function(obj) {
 
         }
-
 	}
-
-    CoreBrushItem.setup = function() {
-        return { }
-    }
 
 	return CoreBrushItem;
 }, "chart.draw"); 
