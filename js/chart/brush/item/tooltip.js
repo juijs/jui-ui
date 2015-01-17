@@ -15,7 +15,8 @@ jui.define("chart.brush.item.tooltip", [], function() {
             return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                 self.chart.text({
                     "text-anchor" : "middle",
-                    "font-weight" : self.chart.theme("tooltipPointFontWeight")
+                    "font-weight" : self.chart.theme("tooltipPointFontWeight"),
+                    opacity: opacity
                 });
 
                 self.chart.svg.circle({
@@ -53,6 +54,10 @@ jui.define("chart.brush.item.tooltip", [], function() {
             return {
                 control: showTooltip,
                 style: function(fill, stroke, opacity) {
+                    tooltip.get(0).attr({
+                        opacity: opacity
+                    });
+
                     tooltip.get(1).attr({
                         fill: fill,
                         stroke: stroke,
