@@ -1,7 +1,7 @@
 jui.define("chart.brush.line", [], function() {
 
     /**
-     * @class line 
+     * @class chart.brush.line
      * implements line brush
      * @extends chart.brush.core
      */
