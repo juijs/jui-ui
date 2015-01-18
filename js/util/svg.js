@@ -497,7 +497,7 @@ jui.define("util.svg.element.path.symbol", [ "util.base" ], function(_) { // sym
     return PathSymbolElement;
 }, "util.svg.element.path");
 
-jui.define("util.svg.element.path.rect", [], function() {
+jui.define("util.svg.element.path.rect", [ "util.math" ], function(math) {
     var PathRectElement = function() {
         this.round = function(width, height, tl, tr, br, bl) {
             tl = (!tl) ? 0 : tl;
@@ -515,6 +515,42 @@ jui.define("util.svg.element.path.rect", [], function() {
                 .Arc(bl, bl, 0, 0, 1, 0, height - bl)
                 .ClosePath()
                 .join();
+        }
+
+        this.rect3d = function(width, height, degree, depth) {
+            var radian = math.radian(degree),
+                x1 = 0, y1 = 0,
+                w1 = width, h1 = height;
+
+            var x2 = (Math.cos(radian) * depth) + x1,
+                y2 = (Math.sin(radian) * depth) + y1;
+
+            var w2 = width + x2,
+                h2 = height + y2;
+
+            var g = svg.group({
+                width: w2,
+                height: h2
+            }, function() {
+                this.MoveTo(x2, x1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .LineTo(x1, y2);
+
+                this.MoveTo(x1, y2)
+                    .LineTo(x1, h2)
+                    .LineTo(w1, h2)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+
+                this.MoveTo(w1, h2)
+                    .LineTo(w2, h1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .ClosePath();
+            });
+
+            return g;
         }
     }
 
