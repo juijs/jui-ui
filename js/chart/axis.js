@@ -105,11 +105,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function init() {
-
             _.extend(self, {
-                x : cloneAxis.x,
-                y : cloneAxis.y,
-                c : cloneAxis.c,
                 data : cloneAxis.data,
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
@@ -123,30 +119,24 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             // 페이지 초기화
             page(1);
 
-            _area = caculatePanel(_.extend(cloneAxis.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
-            }, true));
-
-            self.x = drawGridType(self, "x");
-            self.y = drawGridType(self, "y");
-            self.c = drawGridType(self, "c");
+            // Grid 및 Area 설정
+            self.reload(cloneAxis);
         }
         
         this.reload = function(options) {
-            _.extend(self, {
+            _.extend(this, {
                 x : options.x,
                 y : options.y,
                 c : options.c
             });
 
-            _area = caculatePanel(_.extend(self.area, {
+            _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
             }, true));
 
-            self.x = drawGridType(self, "x");
-            self.y = drawGridType(self, "y");
-            self.c = drawGridType(self, "c");
-            
+            this.x = drawGridType(this, "x");
+            this.y = drawGridType(this, "y");
+            this.c = drawGridType(this, "c");
         }
         
         this.area = function(key) {
