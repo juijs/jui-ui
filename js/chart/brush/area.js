@@ -10,9 +10,12 @@ jui.define("chart.brush.area", [], function() {
                 var p = this.createLine(path[k], k),
                     xList = path[k].x;
 
-                p.LineTo(xList[xList.length - 1], maxY);
-                p.LineTo(xList[0], maxY);
-                p.ClosePath();
+                if(path[k].length > 0) {
+                    p.LineTo(xList[xList.length - 1], maxY);
+                    p.LineTo(xList[0], maxY);
+                    p.ClosePath();
+                }
+
                 p.attr({
                     fill: this.color(k),
                     "fill-opacity": this.chart.theme("areaBackgroundOpacity"),
