@@ -397,7 +397,7 @@
 		/**
 		 * @method scrollWidth
 		 * returns scroll width for body
-		 * @rerturn {Number}
+		 * @return {Number}
 		 */
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
@@ -431,7 +431,7 @@
 		 * @param origin
 		 * @param add
 		 * @param skip
-		 * @rerturn {Object}
+		 * @return {Object}
 		 */
 		extend: function(origin, add, skip) {
 			if(!this.typeCheck("object", origin)) origin = {};
@@ -462,7 +462,7 @@
 		/**
 		 * convert px to integer
 		 * @param {String or Number} px
-		 * @rerturn {Number}
+		 * @return {Number}
 		 */
 		pxToInt: function(px) {
 			if(typeof(px) == "string" && px.indexOf("px") != -1) {
@@ -476,7 +476,7 @@
 		 * @method clone
 		 * implements object clone
 		 * @param obj
-		 * @rerturn {Array}
+		 * @return {Array}
 		 */
 		clone: function(obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
@@ -495,7 +495,7 @@
 		 * implements object deep clone
 		 * @param obj
 		 * @param emit
-		 * @rerturn {*}
+		 * @return {*}
 		 */
         deepClone: function(obj, emit) {
             var value = null;
@@ -529,7 +529,7 @@
 		 * @method sort
 		 * use QuickSort
 		 * @param {Array} array
-		 * @rerturn {QuickSort}
+		 * @return {QuickSort}
 		 */
 		sort: function(array) {
 			return new QuickSort(array);
@@ -587,7 +587,7 @@
 		 * split array by length
 		 * @param {Array} arr
 		 * @param {Number} len
-		 * @rerturn {Array}
+		 * @return {Array}
 		 */
 		chunk: function(arr, len) {
 		  var chunks = [],
@@ -1126,7 +1126,7 @@
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
          *
          * @param name 가져온 클래스 또는 객체의 이름
-         * @rerturn {*}
+         * @return {*}
          */
         include: function(name) {
             if(!utility.typeCheck("string", name)) {
@@ -1151,7 +1151,7 @@
         /**
          * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
          *
-         * @rerturn {Array}
+         * @return {Array}
          */
         includeAll: function() {
             var result = [];
@@ -1167,7 +1167,7 @@
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
          * @param logUrl
-         * @rerturn {Window}
+         * @return {Window}
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
