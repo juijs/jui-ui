@@ -4,6 +4,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
      * @class core.UIManager
      * UI에 관련된 기본 로직 클래스 
      *
+     * @private
      * @singleton
      *  
      */
