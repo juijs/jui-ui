@@ -36,25 +36,29 @@ jui.define("chart.brush.line", [], function() {
                 "stroke-width" : lineBorderWidth,
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
-            }).MoveTo(x[0], y[0]);
+            });
 
-            if(this.brush.symbol == "curve") {
-                var px = this.curvePoints(x),
-                    py = this.curvePoints(y);
+            if(pos.length > 0) {
+                p.MoveTo(x[0], y[0]);
 
-                for (var i = 0; i < x.length - 1; i++) {
-                    p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
-                }
-            } else {
-                for (var i = 0; i < x.length - 1; i++) {
-                    if(this.brush.symbol == "step") {
-                        var sx = x[i] + ((x[i + 1] - x[i]) / 2);
+                if (this.brush.symbol == "curve") {
+                    var px = this.curvePoints(x),
+                        py = this.curvePoints(y);
 
-                        p.LineTo(sx, y[i]);
-                        p.LineTo(sx, y[i + 1]);
+                    for (var i = 0; i < x.length - 1; i++) {
+                        p.CurveTo(px.p1[i], py.p1[i], px.p2[i], py.p2[i], x[i + 1], y[i + 1]);
                     }
+                } else {
+                    for (var i = 0; i < x.length - 1; i++) {
+                        if (this.brush.symbol == "step") {
+                            var sx = x[i] + ((x[i + 1] - x[i]) / 2);
 
-                    p.LineTo(x[i + 1], y[i + 1]);
+                            p.LineTo(sx, y[i]);
+                            p.LineTo(sx, y[i + 1]);
+                        }
+
+                        p.LineTo(x[i + 1], y[i + 1]);
+                    }
                 }
             }
 

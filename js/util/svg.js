@@ -116,6 +116,7 @@ jui.define("util.svg.element", [], function() {
 
             for(var k in attr) {
                 this.attributes[k] = attr[k];
+
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
