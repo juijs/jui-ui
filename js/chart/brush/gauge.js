@@ -97,7 +97,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
 			outerRadius = w - brush.size/2;
-			innerRadius = outerRadius - brush.size/2;
+			innerRadius = outerRadius - brush.size;
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
 				fill : "transparent",
@@ -120,6 +120,9 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				height : height,
 				startAngle : brush.startAngle,
 				endAngle : currentAngle,
+                outerRadius : outerRadius,
+                innerRadius : innerRadius,
+                size : brush.size,
 				centerX : centerX,
 				centerY : centerY
 			});

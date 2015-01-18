@@ -5,7 +5,6 @@ jui.define("chart.brush.item.tooltip", [], function() {
      * implements simple brush item
      *
      * @extends chart.brush.item.core
-     * @requires util.base
      */
 	var TooltipBrushItem = function() {
         var self = this,

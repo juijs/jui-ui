@@ -57,7 +57,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			w = Math.min(width, height) / 2;
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
-			outerRadius = w;
+			outerRadius = w - brush.size;
 			innerRadius = outerRadius - brush.size;
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {

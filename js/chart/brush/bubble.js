@@ -1,8 +1,25 @@
 jui.define("chart.brush.bubble", [], function() {
 
+    /**
+     * @class chart.brush.bubble 
+     *
+     * @extends chart.brush.core
+     */
 	var BubbleBrush = function(chart, axis, brush) {
         var self = this;
 
+        /**
+         * @method createBubble 
+         *  
+         *  util method for craete bubble
+         *   
+         * @private
+         * @param {chart.builder} chart
+         * @param {Object} brush
+         * @param {Object} pos
+         * @param {Number} index
+         * @return {GroupElement}
+         */
         function createBubble(chart, brush, pos, index) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
                 circle = chart.svg.group();
@@ -20,6 +37,15 @@ jui.define("chart.brush.bubble", [], function() {
             return circle;
         }
 
+        /**
+         * @method drawBubble 
+         * 
+         * @protected  
+         * @param {chart.builder} chart
+         * @param {Object} brush
+         * @param {Array} points
+         * @return {GroupElement}
+         */
         this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group();
             
@@ -37,10 +63,21 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
+        /**
+         * @method draw 
+         * 
+         * @protected 
+         * @return {GroupElement}
+         */
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
         }
 
+        /**
+         * @method drawAnimate
+         *
+         * @protected
+         */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
                 var c = elem.childrens[0];
@@ -71,7 +108,9 @@ jui.define("chart.brush.bubble", [], function() {
 
     BubbleBrush.setup = function() {
         return {
+            /** @cfg {Number} [min=5] */
             min: 5,
+            /** @cfg {Number} [max=5] */
             max: 30
         };
     }

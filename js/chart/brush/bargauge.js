@@ -1,20 +1,27 @@
 jui.define("chart.brush.bargauge", [], function() {
 
+    /**
+     * @class chart.brush.bargauge 
+     *
+     * @extends chart.brush.core
+     */
 	var BarGaugeBrush = function(chart, axis, brush) {
 
+        /**
+         * @method drawBefore
+         * 
+         * @protected
+         */
         this.drawBefore = function() {
-            if (!axis.c) {
-                axis.c = function() {
-                    return {
-                        x : 0,
-                        y : 0,
-                        width : chart.area('width'),
-                        height : chart.area('height')
-                    };
-                }
-            }
+
         }
 
+        /**
+         * @method draw
+         * 
+         * @protected
+         * @return {TransformElement}
+         */
 		this.draw = function() {
             var obj = axis.c(),
                 width = obj.width,
@@ -104,10 +111,15 @@ jui.define("chart.brush.bargauge", [], function() {
 
     BarGaugeBrush.setup = function() {
         return {
+            /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
+            /** @cfg {Number} [size=20]  bar gauge item height */
             size: 20,
+            /** @cfg {Boolean} [split=false] */
             split: false,
+            /** @cfg {String} [align=left] bar gauge align  */
             align: "left",
+            /** @cfg {String} [title=title]  a field for title */
             title: "title"
         };
     }

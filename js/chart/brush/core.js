@@ -49,6 +49,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawItem = function(group, data, options) {
+            var returnObject = {};
             for(var i = 0, len = this.brush.items.length; i < len; i++) {
                 var type = this.brush.items[i],
                     ItemClass = jui.include("chart.brush.item." + type);
@@ -60,11 +61,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     itemObject.group = group;
                     itemObject.item = options || {};
 
-                    return itemObject.render();
+                    returnObject[type] = itemObject.render();
                 } else {
                     throw new Error("JUI_CRITICAL_ERR: '" + type + "' brush item is not exists");
                 }
             }
+            
+            return returnObject;
         }
 
         /**

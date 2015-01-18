@@ -1,5 +1,11 @@
 jui.define("chart.brush.candlestick", [], function() {
 
+    /**
+     * @class chart.brush.candlestick 
+     * 
+     * implements candlestick brush 
+
+     */
     var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
@@ -85,9 +91,13 @@ jui.define("chart.brush.candlestick", [], function() {
 
     CandleStickBrush.setup = function() {
         return {
+            /** @cfg {String} [low=low] a field for low value   */ 
             low: "low",
+            /** @cfg {String} [high=high] a field for high value   */
             high: "high",
+            /** @cfg {String} [open=open] a field for open value   */
             open: "open",
+            /** @cfg {String} [close=close] a field for close value   */
             close: "close"
         }
     }

@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
+    <script src="../../js/chart/brush/item/circle.js"></script>
 
 </head>
 <body>
@@ -25,9 +26,11 @@
                 
             },
             brush : {
-                type : 'fullgauge',
+                type : 'gauge',
                 size : 30,
-                animate : true
+                startAngle : -120,
+                animate : true,
+                items : [ 'circle', 'arrow' ]
             }
         });
 	})

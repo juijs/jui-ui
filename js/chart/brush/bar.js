@@ -1,5 +1,10 @@
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.bar 
+     * implements bar brush 
+     * @extends chart.brush.core
+     */
 	var BarBrush = function(chart, axis, brush) {
 		var g, active, minmax, minmaxIndex;
 		var zeroX, height, half_height, bar_height;
@@ -69,7 +74,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			active = this.drawItem(group);
+            var ret = this.drawItem(group);
+			active = ret.active;
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
@@ -207,11 +213,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
+            /** @cfg {Number} [minValue=0] */
 			minValue: 0,
+            /** @cfg {Number} [outerPadding=2] */
 			outerPadding: 2,
+            /** @cfg {Number} [innerPadding=1] */
 			innerPadding: 1,
+            /** @cfg {Number} [active=null] */
 			active: null,
+            /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
 			activeEvent: null, // or click, mouseover, ...
+            /** @cfg {String} [display=null]  'max', 'min' */
 			display: null, // or max, min
 			items: [ "tooltip" ]
 		};

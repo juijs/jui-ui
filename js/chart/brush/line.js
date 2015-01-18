@@ -1,5 +1,10 @@
 jui.define("chart.brush.line", [], function() {
 
+    /**
+     * @class line 
+     * implements line brush
+     * @extends chart.brush.core
+     */
 	var LineBrush = function() {
         var g;
         var circleColor, disableOpacity, lineBorderWidth;

@@ -8358,10 +8358,10 @@ jui.define("chart.grid.table", [  ], function() {
         this.custom = function(chart, g) {
             for(var r = 0; r < row; r++) {
                 for (var c = 0; c < column; c++) {
-                    var index = r * columnUnit + c;
+                    var index = r * column + c;
 
                     var obj = this.scale(index);
-
+                    
                     obj.x -= axis.area('x');
                     obj.y -= axis.area('y');
 
@@ -8379,11 +8379,11 @@ jui.define("chart.grid.table", [  ], function() {
 
             row = grid.rows;
             column = grid.columns;
-
-            columnUnit = axis.area('width') / column;
-            rowUnit = axis.area('height') / row;
-
-            outerPadding = grid.outerPadding;
+            
+            padding = grid.padding;
+            
+            columnUnit = (axis.area('width') -  (column - 1) * padding) / column;
+            rowUnit = (axis.area('height') - (row - 1) * padding ) / row;
 
             // create scale
             this.scale = (function(axis) {
@@ -8395,13 +8395,14 @@ jui.define("chart.grid.table", [  ], function() {
                     var x = c * columnUnit;
                     var y = r * rowUnit;
 
-                    var padding = ((column == 0) ? -outerPadding : 0);
+                    var space = padding * c;
+                    var rspace = padding * r;
 
                     return {
-                        x : axis.area('x') + x +  padding,
-                        y : axis.area('y') + y + padding,
-                        width : columnUnit + padding*2,
-                        height : rowUnit + padding *2
+                        x : axis.area('x') + x +  space,
+                        y : axis.area('y') + y + rspace,
+                        width : columnUnit,
+                        height : rowUnit
                     }
                 }
             })(axis);
@@ -8427,8 +8428,8 @@ jui.define("chart.grid.table", [  ], function() {
             rows: 1,
             /** @cfg {Number} [column=1] column count in table  */
             columns: 1,
-            /** @cfg {Number} [outerPadding=1] padding in table  */
-            outerPadding: 1
+            /** @cfg {Number} [padding=1] padding in table  */
+            padding: 10
         };
     }
     
@@ -8572,6 +8573,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.drawItem = function(group, data, options) {
+            var returnObject = {};
             for(var i = 0, len = this.brush.items.length; i < len; i++) {
                 var type = this.brush.items[i],
                     ItemClass = jui.include("chart.brush.item." + type);
@@ -8583,11 +8585,13 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                     itemObject.group = group;
                     itemObject.item = options || {};
 
-                    return itemObject.render();
+                    returnObject[type] = itemObject.render();
                 } else {
                     throw new Error("JUI_CRITICAL_ERR: '" + type + "' brush item is not exists");
                 }
             }
+            
+            return returnObject;
         }
 
         /**
@@ -8920,6 +8924,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 }, "chart.draw"); 
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.bar 
+     * implements bar brush 
+     * @extends chart.brush.core
+     */
 	var BarBrush = function(chart, axis, brush) {
 		var g, active, minmax, minmaxIndex;
 		var zeroX, height, half_height, bar_height;
@@ -8989,7 +8998,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			active = this.drawItem(group);
+            var ret = this.drawItem(group);
+			active = ret.active;
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
@@ -9127,11 +9137,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
+            /** @cfg {Number} [minValue=0] */
 			minValue: 0,
+            /** @cfg {Number} [outerPadding=2] */
 			outerPadding: 2,
+            /** @cfg {Number} [innerPadding=1] */
 			innerPadding: 1,
+            /** @cfg {Number} [active=null] */
 			active: null,
+            /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
 			activeEvent: null, // or click, mouseover, ...
+            /** @cfg {String} [display=null]  'max', 'min' */
 			display: null, // or max, min
 			items: [ "tooltip" ]
 		};
@@ -9142,6 +9158,13 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 jui.define("chart.brush.column", [], function() {
 
+    /**
+     * @class chart.brush.column 
+     *
+     * implements column brush
+     *
+     * @extends chart.brush.bar
+     */
 	var ColumnBrush = function(chart, axis, brush) {
 		var g;
 		var zeroY, width, col_width, half_width;
@@ -9576,9 +9599,26 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 jui.define("chart.brush.bubble", [], function() {
 
+    /**
+     * @class chart.brush.bubble 
+     *
+     * @extends chart.brush.core
+     */
 	var BubbleBrush = function(chart, axis, brush) {
         var self = this;
 
+        /**
+         * @method createBubble 
+         *  
+         *  util method for craete bubble
+         *   
+         * @private
+         * @param {chart.builder} chart
+         * @param {Object} brush
+         * @param {Object} pos
+         * @param {Number} index
+         * @return {GroupElement}
+         */
         function createBubble(chart, brush, pos, index) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
                 circle = chart.svg.group();
@@ -9596,6 +9636,15 @@ jui.define("chart.brush.bubble", [], function() {
             return circle;
         }
 
+        /**
+         * @method drawBubble 
+         * 
+         * @protected  
+         * @param {chart.builder} chart
+         * @param {Object} brush
+         * @param {Array} points
+         * @return {GroupElement}
+         */
         this.drawBubble = function(chart, brush, points) {
             var g = chart.svg.group();
             
@@ -9613,10 +9662,21 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
+        /**
+         * @method draw 
+         * 
+         * @protected 
+         * @return {GroupElement}
+         */
         this.draw = function() {
             return this.drawBubble(chart, brush, this.getXY());
         }
 
+        /**
+         * @method drawAnimate
+         *
+         * @protected
+         */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
                 var c = elem.childrens[0];
@@ -9647,7 +9707,9 @@ jui.define("chart.brush.bubble", [], function() {
 
     BubbleBrush.setup = function() {
         return {
+            /** @cfg {Number} [min=5] */
             min: 5,
+            /** @cfg {Number} [max=5] */
             max: 30
         };
     }
@@ -9656,6 +9718,12 @@ jui.define("chart.brush.bubble", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.candlestick", [], function() {
 
+    /**
+     * @class chart.brush.candlestick 
+     * 
+     * implements candlestick brush 
+
+     */
     var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
@@ -9741,9 +9809,13 @@ jui.define("chart.brush.candlestick", [], function() {
 
     CandleStickBrush.setup = function() {
         return {
+            /** @cfg {String} [low=low] a field for low value   */ 
             low: "low",
+            /** @cfg {String} [high=high] a field for high value   */
             high: "high",
+            /** @cfg {String} [open=open] a field for open value   */
             open: "open",
+            /** @cfg {String} [close=close] a field for close value   */
             close: "close"
         }
     }
@@ -10019,6 +10091,11 @@ jui.define("chart.brush.equalizer", [], function() {
 
 jui.define("chart.brush.line", [], function() {
 
+    /**
+     * @class line 
+     * implements line brush
+     * @extends chart.brush.core
+     */
 	var LineBrush = function() {
         var g;
         var circleColor, disableOpacity, lineBorderWidth;
@@ -10518,21 +10595,28 @@ jui.define("chart.brush.scatterpath", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.bargauge", [], function() {
 
+    /**
+     * @class chart.brush.bargauge 
+     *
+     * @extends chart.brush.core
+     */
 	var BarGaugeBrush = function(chart, axis, brush) {
 
+        /**
+         * @method drawBefore
+         * 
+         * @protected
+         */
         this.drawBefore = function() {
-            if (!axis.c) {
-                axis.c = function() {
-                    return {
-                        x : 0,
-                        y : 0,
-                        width : chart.area('width'),
-                        height : chart.area('height')
-                    };
-                }
-            }
+
         }
 
+        /**
+         * @method draw
+         * 
+         * @protected
+         * @return {TransformElement}
+         */
 		this.draw = function() {
             var obj = axis.c(),
                 width = obj.width,
@@ -10622,10 +10706,15 @@ jui.define("chart.brush.bargauge", [], function() {
 
     BarGaugeBrush.setup = function() {
         return {
+            /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
+            /** @cfg {Number} [size=20]  bar gauge item height */
             size: 20,
+            /** @cfg {Boolean} [split=false] */
             split: false,
+            /** @cfg {String} [align=left] bar gauge align  */
             align: "left",
+            /** @cfg {String} [title=title]  a field for title */
             title: "title"
         };
     }
@@ -10635,44 +10724,42 @@ jui.define("chart.brush.bargauge", [], function() {
 
 jui.define("chart.brush.circlegauge", [], function() {
 
+    /**
+     * @class chart.brush.circlegauge 
+     * 
+     * implements circle gauge  
+     *
+     * @extends chart.brush.core 
+     */
 	var CircleGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
 		this.drawBefore = function() {
-            var axis = axis || {};
 
-            if(!axis.c) {
-                axis.c = function() {
-                    return {
-                        x : 0,
-                        y : 0,
-                        width : chart.area('width'),
-                        height : chart.area('height')
-                    };
-                }
-            }
+		}
 
-            var obj = axis.c(),
-                width = obj.width,
+        this.drawUnit = function(i, data, group) {
+
+            var obj = axis.c(index),
+                value = (data[this.brush.target] || data.value) || 0,
+                max = (data[this.brush.max] || data.max) || 100,
+                min = (data[this.brush.min] || data.min) || 0;
+
+
+            var rate = (value - min) / (max - min);
+
+            var width = obj.width,
                 height = obj.height,
                 x = obj.x,
-                y = obj.y,
-                min = width;
+                y = obj.y;
 
-            if(height < min) {
-                min = height;
-            }
-
-            w = min / 2;
+            // center
+            w = Math.min(width, height) / 2;
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             outerRadius = w;
-		}
 
-		this.draw = function() {
-            var rate = (brush.value - brush.min) / (brush.max - brush.min);
-
-			var group = chart.svg.group();
+            var group = chart.svg.group();
 
             group.append(chart.svg.circle({
                 cx : centerX,
@@ -10682,7 +10769,7 @@ jui.define("chart.brush.circlegauge", [], function() {
                 stroke : this.color(0),
                 "stroke-width" : 2
             }));
-            
+
             group.append(chart.svg.circle({
                 cx : centerX,
                 cy : centerY,
@@ -10692,15 +10779,30 @@ jui.define("chart.brush.circlegauge", [], function() {
 
             this.addEvent(group, null, null);
 
+        }
+        
+		this.draw = function() {
+
+            var group = chart.svg.group();
+
+            this.eachData(function(i, data) {
+                this.drawUnit(i, data, group);
+            });
+
             return group;
+
+
 		}
 	}
 
     CircleGaugeBrush.setup = function() {
         return {
-            min: 0,
-            max: 100,
-            value: 0
+            /** @cfg {String} [min=min] a field for min */
+            min: 'min',
+            /** @cfg {String} [max=max] a field for max */
+            max: 'max',
+            /** @cfg {String} [value=value] a field for value */
+            value: 'value'
         };
     }
 
@@ -10868,8 +10970,22 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
 jui.define("chart.brush.area", [], function() {
 
+    /**
+     * @class chart.brush.area
+     * implements area brush
+     *
+     */
     var AreaBrush = function() {
 
+        /**
+         * @method drawArea 
+         * 
+         * draw area util method
+         *
+         * @param {Array} path  caculated xy points
+         * @return {TransformElement}
+         * @protected
+         */
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
                 maxY = this.axis.y(this.axis.y.min());
@@ -10897,10 +11013,21 @@ jui.define("chart.brush.area", [], function() {
             return g;
         }
 
+        /**
+         * @method draw 
+         * 
+         * @protected  
+         * @return {TransformElement}
+         */
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
 
+        /**
+         * @method drawAnimate
+         *
+         * @protected
+         */
         this.drawAnimate = function(root) {
             root.append(
                 this.chart.svg.animate({
@@ -11049,7 +11176,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
 			outerRadius = w - brush.size/2;
-			innerRadius = outerRadius - brush.size/2;
+			innerRadius = outerRadius - brush.size;
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
 				fill : "transparent",
@@ -11072,6 +11199,9 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				height : height,
 				startAngle : brush.startAngle,
 				endAngle : currentAngle,
+                outerRadius : outerRadius,
+                innerRadius : innerRadius,
+                size : brush.size,
 				centerX : centerX,
 				centerY : centerY
 			});
@@ -11170,7 +11300,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			w = Math.min(width, height) / 2;
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
-			outerRadius = w;
+			outerRadius = w - brush.size;
 			innerRadius = outerRadius - brush.size;
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
@@ -11872,7 +12002,7 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
 
             // 바깥 지름 부터 그림
             var startX = 0;
-            var startY = -(this.item.centerY/2 + 5);
+            var startY = -(this.item.outerRadius + this.item.size/2);
 
             var path = svg.path({
                 stroke : this.chart.theme("gaugeArrowColor"),
@@ -11901,7 +12031,7 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
                 cx : 0,
                 cy : 0,
                 r : 2,
-                fill : chart.theme("gaugeArrowColor")
+                fill : 'white'
             }));
 
             return g;
@@ -11917,7 +12047,6 @@ jui.define("chart.brush.item.tooltip", [], function() {
      * implements simple brush item
      *
      * @extends chart.brush.item.core
-     * @requires util.base
      */
 	var TooltipBrushItem = function() {
         var self = this,

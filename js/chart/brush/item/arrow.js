@@ -19,7 +19,7 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
 
             // 바깥 지름 부터 그림
             var startX = 0;
-            var startY = -(this.item.centerY/2 + 5);
+            var startY = -(this.item.outerRadius + this.item.size/2);
 
             var path = svg.path({
                 stroke : this.chart.theme("gaugeArrowColor"),
@@ -48,7 +48,7 @@ jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
                 cx : 0,
                 cy : 0,
                 r : 2,
-                fill : chart.theme("gaugeArrowColor")
+                fill : 'white'
             }));
 
             return g;
