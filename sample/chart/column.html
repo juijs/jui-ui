@@ -47,7 +47,7 @@
     var data = [
         { name : 2, value : 5 },
         { name : -15, value : 5 },
-        { name : -88, value : 10 },
+        { name : -88, value : 9 },
         { name : 18, value : 10 },
     ];
 
@@ -145,12 +145,8 @@
                 value : { text : "값" }
             },
             brush : [
-                {
-                    type : 'focus', start : 0, end : 1
-                },
             {
                 type : 'column',
-                target : ['name','value'],
                 display : "max",
                 active : 2,
                 activeEvent : "click"
@@ -163,11 +159,9 @@
             }
         });
 
-        c2[0].updateBrush(0, { target: "name" });
         c2[0].get("axis", 0).update(data);
         c2[0].render();
 
-        c2[1].updateBrush(0, { target: "value" });
         c2[1].get("axis", 0).update(data);
         c2[1].render();
 

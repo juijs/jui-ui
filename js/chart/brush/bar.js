@@ -6,7 +6,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var BarBrush = function(chart, axis, brush) {
-		var g, active, minmax, minmaxIndex;
+		var g;
 		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
@@ -18,14 +18,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
 				circleColor: this.chart.theme("barCircleBorderColor")
 			}
-		}
-
-		this.addBarElement = function(elem) {
-			if(!this.barList) {
-				this.barList = [];
-			}
-
-			this.barList.push(elem);
 		}
 
 		this.getBarElement = function(dataIndex, targetIndex, info) {
@@ -46,7 +38,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				this.addEvent(r, dataIndex, targetIndex);
 			}
 
-			this.addBarElement(_.extend({
+			if(this.barList == null) {
+				this.barList = [];
+			}
+
+			this.barList.push(_.extend({
 				element: r,
 				color: color
 			}, info));
@@ -60,46 +56,53 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 			for(var i = 0; i < cols.length; i++) {
 				var opacity = (cols[i] == r) ? 1 : style.disableOpacity;
-
 				cols[i].element.attr({ opacity: opacity });
 
-				if(i == minmaxIndex) {
-					minmax.style(r.color, style.circleColor, opacity);
+				if(cols[i].minmax) {
+					cols[i].minmax.style(cols[i].color, style.circleColor, opacity);
 				}
 			}
 		}
 
+		this.drawBefore = function() {
+			g = chart.svg.group();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
+			half_height = height - (brush.outerPadding * 2);
+			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+		}
+
 		this.drawETC = function(group) {
+			if(!_.typeCheck("array", this.barList)) return;
+
 			var self = this,
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-            var ret = this.drawItem(group);
-			active = ret.active;
+			this.active = this.drawItem(group).tooltip;
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					minmaxIndex = i;
-
-					minmax = this.drawItem(group, null, {
+					r.minmax = this.drawItem(group, null, {
 						fill: r.color,
 						stroke: style.circleColor,
 						opacity: 1
-					});
+					}).tooltip;
 
-					minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
+					r.minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
 				if (r.value != 0 && this.brush.activeEvent != null) {
 					(function(bar) {
-						active.style(bar.color, style.circleColor, 1);
+						self.active.style(bar.color, style.circleColor, 1);
 
 						bar.element.on(self.brush.activeEvent, function(e) {
-							active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
+							self.active.style(bar.color, style.circleColor, 1);
+							self.active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
 							self.setActiveEffect(bar);
 						});
 
@@ -111,18 +114,10 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			// 액티브 툴팁 위치 설정
 			var r = this.barList[this.brush.active];
 			if(r != null) {
-				active.style(r.color, style.circleColor, 1);
-				active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+				this.active.style(r.color, style.circleColor, 1);
+				this.active.control(r.position, r.tooltipX, r.tooltipY, r.value);
 				this.setActiveEffect(r);
 			}
-		}
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-			zeroX = axis.x(0);
-			height = axis.y.rangeBand();
-			half_height = height - (brush.outerPadding * 2);
-			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 		}
 
 		this.draw = function() {
@@ -135,7 +130,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						tooltipX = axis.x((value == 0) ? brush.minValue : value),
-						tooltipY = startY + (half_height / 2),
+						tooltipY = startY + (bar_height / 2),
 						position = (tooltipX >= zeroX) ? "right" : "left";
 
 					var width = Math.abs(zeroX - tooltipX),

@@ -38,7 +38,6 @@
         chart("#chart", {
             width: 400,
             height : 400,
-            theme : "pattern",
             axis : [
                 {
                     data : [
@@ -54,9 +53,7 @@
                     },
                     x : {
                         type : 'range',
-                        domain : function(d) {
-                            return [d.name , d.value] ;
-                        },
+                        domain : [ -40, 20 ],
                         step : 10
                     }
                 }
@@ -70,7 +67,9 @@
             brush : {
                 type : 'bar',
                 target : ['name', 'value'],
-                innerPadding : 2
+                innerPadding : 2,
+                display : "min",
+                activeEvent : "click"
             },
             style : {
                 barBorderWidth : 1,

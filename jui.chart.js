@@ -397,7 +397,7 @@
 		/**
 		 * @method scrollWidth
 		 * returns scroll width for body
-		 * @rerturn {Number}
+		 * @return {Number}
 		 */
 		scrollWidth: function() {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
@@ -431,7 +431,7 @@
 		 * @param origin
 		 * @param add
 		 * @param skip
-		 * @rerturn {Object}
+		 * @return {Object}
 		 */
 		extend: function(origin, add, skip) {
 			if(!this.typeCheck("object", origin)) origin = {};
@@ -462,7 +462,7 @@
 		/**
 		 * convert px to integer
 		 * @param {String or Number} px
-		 * @rerturn {Number}
+		 * @return {Number}
 		 */
 		pxToInt: function(px) {
 			if(typeof(px) == "string" && px.indexOf("px") != -1) {
@@ -476,7 +476,7 @@
 		 * @method clone
 		 * implements object clone
 		 * @param obj
-		 * @rerturn {Array}
+		 * @return {Array}
 		 */
 		clone: function(obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
@@ -495,7 +495,7 @@
 		 * implements object deep clone
 		 * @param obj
 		 * @param emit
-		 * @rerturn {*}
+		 * @return {*}
 		 */
         deepClone: function(obj, emit) {
             var value = null;
@@ -529,7 +529,7 @@
 		 * @method sort
 		 * use QuickSort
 		 * @param {Array} array
-		 * @rerturn {QuickSort}
+		 * @return {QuickSort}
 		 */
 		sort: function(array) {
 			return new QuickSort(array);
@@ -587,7 +587,7 @@
 		 * split array by length
 		 * @param {Array} arr
 		 * @param {Number} len
-		 * @rerturn {Array}
+		 * @return {Array}
 		 */
 		chunk: function(arr, len) {
 		  var chunks = [],
@@ -1126,7 +1126,7 @@
          * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
          *
          * @param name 가져온 클래스 또는 객체의 이름
-         * @rerturn {*}
+         * @return {*}
          */
         include: function(name) {
             if(!utility.typeCheck("string", name)) {
@@ -1151,7 +1151,7 @@
         /**
          * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
          *
-         * @rerturn {Array}
+         * @return {Array}
          */
         includeAll: function() {
             var result = [];
@@ -1167,7 +1167,7 @@
          * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
          *
          * @param logUrl
-         * @rerturn {Window}
+         * @return {Window}
          */
 		log: function(logUrl) {
 			var jui_mng = window.open(
@@ -1197,8 +1197,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class core.UIManager
      * UI에 관련된 기본 로직 클래스 
-     *  
-     * @alternateClassName jui
+     *
+     * @private
      * @singleton
      *  
      */
@@ -8930,7 +8930,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var BarBrush = function(chart, axis, brush) {
-		var g, active, minmax, minmaxIndex;
+		var g;
 		var zeroX, height, half_height, bar_height;
 
 		this.getBarStyle = function() {
@@ -8942,14 +8942,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
 				circleColor: this.chart.theme("barCircleBorderColor")
 			}
-		}
-
-		this.addBarElement = function(elem) {
-			if(!this.barList) {
-				this.barList = [];
-			}
-
-			this.barList.push(elem);
 		}
 
 		this.getBarElement = function(dataIndex, targetIndex, info) {
@@ -8970,7 +8962,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				this.addEvent(r, dataIndex, targetIndex);
 			}
 
-			this.addBarElement(_.extend({
+			if(this.barList == null) {
+				this.barList = [];
+			}
+
+			this.barList.push(_.extend({
 				element: r,
 				color: color
 			}, info));
@@ -8984,46 +8980,53 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 			for(var i = 0; i < cols.length; i++) {
 				var opacity = (cols[i] == r) ? 1 : style.disableOpacity;
-
 				cols[i].element.attr({ opacity: opacity });
 
-				if(i == minmaxIndex) {
-					minmax.style(r.color, style.circleColor, opacity);
+				if(cols[i].minmax) {
+					cols[i].minmax.style(cols[i].color, style.circleColor, opacity);
 				}
 			}
 		}
 
+		this.drawBefore = function() {
+			g = chart.svg.group();
+			zeroX = axis.x(0);
+			height = axis.y.rangeBand();
+			half_height = height - (brush.outerPadding * 2);
+			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+		}
+
 		this.drawETC = function(group) {
+			if(!_.typeCheck("array", this.barList)) return;
+
 			var self = this,
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-            var ret = this.drawItem(group);
-			active = ret.active;
+			this.active = this.drawItem(group).tooltip;
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					minmaxIndex = i;
-
-					minmax = this.drawItem(group, null, {
+					r.minmax = this.drawItem(group, null, {
 						fill: r.color,
 						stroke: style.circleColor,
 						opacity: 1
-					});
+					}).tooltip;
 
-					minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
+					r.minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
 				if (r.value != 0 && this.brush.activeEvent != null) {
 					(function(bar) {
-						active.style(bar.color, style.circleColor, 1);
+						self.active.style(bar.color, style.circleColor, 1);
 
 						bar.element.on(self.brush.activeEvent, function(e) {
-							active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
+							self.active.style(bar.color, style.circleColor, 1);
+							self.active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
 							self.setActiveEffect(bar);
 						});
 
@@ -9035,18 +9038,10 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			// 액티브 툴팁 위치 설정
 			var r = this.barList[this.brush.active];
 			if(r != null) {
-				active.style(r.color, style.circleColor, 1);
-				active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+				this.active.style(r.color, style.circleColor, 1);
+				this.active.control(r.position, r.tooltipX, r.tooltipY, r.value);
 				this.setActiveEffect(r);
 			}
-		}
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-			zeroX = axis.x(0);
-			height = axis.y.rangeBand();
-			half_height = height - (brush.outerPadding * 2);
-			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
 		}
 
 		this.draw = function() {
@@ -9059,7 +9054,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						tooltipX = axis.x((value == 0) ? brush.minValue : value),
-						tooltipY = startY + (half_height / 2),
+						tooltipY = startY + (bar_height / 2),
 						position = (tooltipX >= zeroX) ? "right" : "left";
 
 					var width = Math.abs(zeroX - tooltipX),
@@ -10092,7 +10087,7 @@ jui.define("chart.brush.equalizer", [], function() {
 jui.define("chart.brush.line", [], function() {
 
     /**
-     * @class line 
+     * @class chart.brush.line
      * implements line brush
      * @extends chart.brush.core
      */
