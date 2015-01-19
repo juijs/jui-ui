@@ -92,7 +92,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 						opacity: 1
 					}).tooltip;
 
-					r.minmax.control(r.position, r.tooltipX, r.tooltipY, r.value);
+					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
@@ -102,7 +102,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 						bar.element.on(self.brush.activeEvent, function(e) {
 							self.active.style(bar.color, style.circleColor, 1);
-							self.active.control(bar.position, bar.tooltipX, bar.tooltipY, bar.value);
+							self.active.control(bar.position, bar.tooltipX, bar.tooltipY, self.format(bar.value));
 							self.setActiveEffect(bar);
 						});
 
@@ -115,7 +115,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			var r = this.barList[this.brush.active];
 			if(r != null) {
 				this.active.style(r.color, style.circleColor, 1);
-				this.active.control(r.position, r.tooltipX, r.tooltipY, r.value);
+				this.active.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
 				this.setActiveEffect(r);
 			}
 		}

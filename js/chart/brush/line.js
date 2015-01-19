@@ -81,9 +81,9 @@ jui.define("chart.brush.line", [], function() {
                         fill: this.color(index),
                         stroke: circleColor,
                         opacity: 1
-                    });
+                    }).tooltip;
 
-                    tooltip.control(orient, pos.x[i], pos.y[i], pos.value[i]);
+                    tooltip.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
 
                     // 컬럼 상태 설정 (툴팁)
                     this.lineList[index].tooltip = tooltip;
