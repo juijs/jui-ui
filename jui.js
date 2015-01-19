@@ -15921,6 +15921,14 @@ jui.define("chart.brush.stackbar", [], function() {
 	var StackBarBrush = function(chart, axis, brush) {
 		var g, height, bar_width;
 
+		this.addBarElement = function(elem) {
+			if(this.barList == null) {
+				this.barList = [];
+			}
+
+			this.barList.push(elem);
+		}
+
 		this.getBarElement = function(dataIndex, targetIndex) {
 			var style = this.getBarStyle(),
 				color = this.color(targetIndex),
