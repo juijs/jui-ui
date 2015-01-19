@@ -110,7 +110,8 @@ module.exports = function(grunt) {
         "js/chart/widget/cross.js",
 
         // chart wrapper
-        "js/chartx/realtime.js"
+        "js/chartx/realtime.js",
+        "js/chartx/topology.js"
     ]
 
     grunt.initConfig({

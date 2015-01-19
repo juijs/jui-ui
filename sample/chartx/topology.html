@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+
+<style>
+    #chart {
+        width: 800px;
+        height: 300px;
+    }
+</style>
+
+<script>
+    var data = [
+        { name: "W1", type: 1, x: 100, y: 100, outgoing: [ 1 ], incoming: [] },
+        { name: "W2", type: 1, x: 300, y: 100, outgoing: [ 2 ], incoming: [ 0 ] },
+        { name: "W3", type: 1, x: 500, y: 100, outgoing: [ 3 ], incoming: [ 1 ] },
+        { name: "Oracle", type: 2, x: 700, y: 200, outgoing: [], incoming: [ 2 ] }
+    ]
+    jui.ready([ "chartx.topology", "util.base" ], function(chart, _) {
+        c = chart("#chart", {
+            data: data
+        });
+    });
+</script>
+
+
+</body>
+</html>
