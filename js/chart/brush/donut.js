@@ -1,8 +1,29 @@
 jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
+    /**
+     * @class chart.brush.donut 
+     * 
+     * implements donut brush 
+     *  
+     * @extends chart.brush.core  
+     * 
+     */
 	var DonutBrush = function() {
         var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
 
+        /**
+         * @method drawDonut 
+         *  
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @param {Number} innerRadius
+         * @param {Number} outerRadius
+         * @param {Number} startAngle
+         * @param {Number} endAngle
+         * @param {Object} attr
+         * @param {Boolean} hasCircle
+         * @return {util.svg.element}
+         */
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    hasCircle = hasCircle || false;
 
@@ -114,6 +135,7 @@ jui.define("chart.brush.donut", [ "util.math" ], function(math) {
 
 	DonutBrush.setup = function() {
 		return {
+            /** @cfg {Number} [size=50] donut stroke width  */
 			size: 50
 		};
 	}

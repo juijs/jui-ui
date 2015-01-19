@@ -5,13 +5,25 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 	 *
 	 * implements pie brush
 	 *
-	 * @param {chart.builder} chart
-	 * @param {chart.axis} axis
-	 * @param {Object} brush
+     * @extends chart.brush.core
 	 */
 	var PieBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
+        /**
+         * @method drawPie 
+         * 
+         * draw pie
+         *
+         * @param {chart.builder}chart
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @param {Number} outerRadius
+         * @param {Number} startAngle
+         * @param {Number} endAngle
+         * @param {Object} attr
+         * @return {util.svg.element}
+         */
 		this.drawPie = function(chart, centerX, centerY, outerRadius, startAngle, endAngle, attr) {
 			var g = chart.svg.group(),
 				path = chart.svg.path(attr);
@@ -40,16 +52,7 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 		}
 
         this.drawBefore = function() {
-			if (!axis.c) {
-				axis.c = function(i) {
-					return {
-						x : 0,
-						y : 0,
-						width : chart.area('width'),
-						height : chart.area('height')
-					};
-				}
-			}
+
         }
 
 		this.drawUnit = function(index, data, group) {

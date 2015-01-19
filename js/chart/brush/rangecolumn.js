@@ -1,5 +1,12 @@
 jui.define("chart.brush.rangecolumn", [], function() {
 
+    /**
+     * @class chart.brush.rangecolumn 
+     * 
+     * implements range column brush 
+     * 
+     * @extends chart.brush.core
+     */
 	var RangeColumnBrush = function(chart, axis, brush) {
 		var g, width, columnWidth, half_width;
 		var outerPadding, innerPadding;
@@ -53,8 +60,10 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 	RangeColumnBrush.setup = function() {
 		return {
-			outerPadding: 2,
-			innerPadding: 1
+            /** @cfg {Number} [outerPadding=2] */
+            outerPadding: 2,
+            /** @cfg {Number} [innerPadding=1] */
+            innerPadding: 1
 		};
 	}
 

@@ -1,5 +1,12 @@
 jui.define("chart.brush.fullstackbar", [], function() {
 
+    /**
+     * @class chart.brush.fullstackbar 
+     * 
+     * implements fullstack bar brush 
+     *  
+     * @extends chart.brush.stackbar 
+     */
 	var FullStackBarBrush = function(chart, axis, brush) {
 		var g, zeroX, height, bar_height;
 
@@ -79,9 +86,13 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
 	FullStackBarBrush.setup = function() {
 		return {
+            /** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
+            /** @cfg {Number} [active=null] active data index  */
 			active: null,
+            /** @cfg {Number} [activeEvent=null] active event name (click or mouseover ...) */
 			activeEvent: null, // or click, mouseover, ...
+            /** @cfg {Boolean} [showText=false] */
 			showText: false
 		};
 	}

@@ -33,6 +33,8 @@ jui.define("chart.brush.item.circle", [ "util.base" ], function(_) {
             return g;
         }
 	}
+    
+    
 
 	return CircleBrushItem;
 }, "chart.brush.item.core");

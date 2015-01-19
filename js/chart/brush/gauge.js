@@ -1,5 +1,12 @@
 jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
+    /**
+     * @class chart.brush.gauge 
+     * 
+     * implements gauge brush 
+     *  
+     * @extends chart.brush.donut
+     */
 	var GaugeBrush = function(chart, axis, brush) {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
@@ -68,6 +75,16 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
         }
 
+        /**
+         * @method drawUnit 
+         * 
+         * data 별 gague 를 그린다.
+         *  
+         * @param {Number} index
+         * @param {Object} data
+         * @param {util.svg.element} group
+         * @return {util.svg.element}
+         */
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
 				value = (data[this.brush.target] || data.value) || 0,
@@ -115,6 +132,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
 
 
+            // draw item 
 			this.drawItem(group, data, {
 				width : width,
 				height : height,
@@ -148,13 +166,19 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
+            /** @cfg {String} [min=min] a field for min value */
 			min: "min",
+            /** @cfg {String} [max=max] a field for max value */
 			max: "max",
+            /** @cfg {String} [value=value] a field for value */
 			value: "value",
+            /** @cfg {Number} [size=30] stroke width  */
 			size: 30,
+            /** @cfg {Number} [startAngle=0] start point */
 			startAngle: 0,
+            /** @cfg {Number} [endAngle=360]  */
 			endAngle: 360,
-			arrow: true,
+            /** @cfg {String} [unitText=""]  */
 			unitText: ""
 		};
 	}

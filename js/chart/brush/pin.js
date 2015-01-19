@@ -1,4 +1,11 @@
 jui.define("chart.brush.pin", [], function() {
+    /**
+     * @class chart.brush.pin  
+     * 
+     * implements pin brush  
+     *  
+     * @extends chart.brush.core   
+     */
     var PinBrush = function(chart, axis, brush) {
         var self = this;
 
@@ -42,9 +49,13 @@ jui.define("chart.brush.pin", [], function() {
 
     PinBrush.setup = function() {
         return {
+            /** @cfg {Number} [size=6] */
             size: 6,
+            /** @cfg {Number} [split=0] */
             split: 0,
+            /** @cfg {Boolean} [showValue=false] */
             showValue: false,
+            /** @cfg {Function} [format=null] */
             format: null
         };
     }
