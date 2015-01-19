@@ -3,9 +3,9 @@ jui.define("chart.grid.table", [  ], function() {
     /**
      * @class chart.grid.table
      *
-     * @param {chart.builder} chart
-     * @param {chart.axis} axis
-     * @param {chart.grid.core} grid
+     * implements table grid 
+     *
+     * @extends chart.grid.core
      */
     var TableGrid = function(chart, axis, grid) {
         var orient = grid.orient;

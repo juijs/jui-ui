@@ -4,6 +4,8 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
      * @class chart.pattern.white 
      * 
      * pattern default sample  
+     * 
+     * @singleton
      */
 
     function CreateCirclePattern (id, size) {
