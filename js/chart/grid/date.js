@@ -1,5 +1,12 @@
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
+    /**
+     * @class chart.grid.date
+     *
+     * implements date grid 
+     *  
+     * @extends chart.grid.core 
+     */
 	var DateGrid = function(chart, axis, grid) {
 		var orient = grid.orient;
 		var domain = [];
@@ -275,13 +282,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
+            /** @cfg {Array} [domain=null] */
 			domain: null,
-			step: 10,
+            /** @cfg {Array} [step=[]] */
+			step: [],
+            /** @cfg {Number} [min=0] min timestamp  */
 			min: 0,
+            /** @cfg {Number} [max=0] max timestamp  */
 			max: 0,
-			unit: null,
+            /** @cfg {Boolean} [reverse=false]  */
 			reverse: false,
+            /** @cfg {String} [key=null] a field for value  */
 			key: null,
+            /** @cfg {Boolean} [realtime=false]  */
 			realtime: false
 		};
 	}
