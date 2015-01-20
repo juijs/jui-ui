@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="clip-id-1409714341709-17">
+			<rect x="0" y="0" width="300" height="300"></rect>
+		</clipPath>
+	</defs>
+	<g class="grid block" display="none" transform="translate(0,300)">
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week1</text>
+		</g>
+		<g transform="translate(100, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week2</text>
+		</g>
+		<g transform="translate(200, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week3</text>
+		</g>
+		<g transform="translate(300, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week4</text>
+		</g>
+	</g>
+	<g class="grid range" display="none" transform="translate(0,0)">
+		<line x1="0" y1="0" x2="0" y2="300" stroke="#aaaaaa" stroke-width="2px" stroke-opacity="1"></line>
+		<g transform="translate(0, 300)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">0</text>
+		</g>
+		<g transform="translate(0, 262.5)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">4</text>
+		</g>
+		<g transform="translate(0, 225)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">8</text>
+		</g>
+		<g transform="translate(0, 187.5)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">12</text>
+		</g>
+		<g transform="translate(0, 150)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">16</text>
+		</g>
+		<g transform="translate(0, 112.5)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">20</text>
+		</g>
+		<g transform="translate(0, 75)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">24</text>
+		</g>
+		<g transform="translate(0, 37.5)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">28</text>
+		</g>
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="-6" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">32</text>
+		</g>
+	</g>
+	<g transform="translate(0,0)">
+		<path stroke="#FFC000" stroke-width="0" fill="#FFC000" d="M0,206.25 L100,112.5 L200,103.125 L300,150 L300,300 L0,300 Z" fill-opacity="0.5"></path>
+		<path stroke="#7BBAE7" stroke-width="0" fill="#7BBAE7" d="M0,234.375 L100,159.375 L200,159.375 L300,187.5 L300,300 L0,300 Z" fill-opacity="0.5"></path>
+		<path stroke="#7977C2" stroke-width="0" fill="#7977C2" d="M0,281.25 L100,215.625 L200,225 L300,234.375 L300,300 L0,300 Z" fill-opacity="0.5"></path>
+	</g>
+	<g transform="translate(0,0)">
+		<path stroke="#7977C2" stroke-width="2" fill="transparent" d="M0,281.25 L100,215.625 L200,225 L300,234.375"></path>
+		<path stroke="#7BBAE7" stroke-width="2" fill="transparent" d="M0,234.375 L100,159.375 L200,159.375 L300,187.5"></path>
+		<path stroke="#FFC000" stroke-width="2" fill="transparent" d="M0,206.25 L100,112.5 L200,103.125 L300,150"></path>
+	</g>
+	<g clip-path="url(#clip-id-1409714341709-17)" transform="translate(0,0)">
+		<ellipse rx="4" ry="4" cx="0" cy="281.25" fill="#7977C2" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="100" cy="215.625" fill="#7977C2" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="200" cy="225" fill="#7977C2" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="300" cy="234.375" fill="#7977C2" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="0" cy="234.375" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="100" cy="159.375" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="200" cy="159.375" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="300" cy="187.5" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="0" cy="206.25" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="100" cy="112.5" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="200" cy="103.125" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+		<ellipse rx="4" ry="4" cx="300" cy="150" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+	</g>
+</svg>

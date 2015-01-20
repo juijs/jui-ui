@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="clip-id-1409719556061-8">
+			<rect x="0" y="0" width="300" height="300"></rect>
+		</clipPath>
+	</defs>
+	<g class="grid date" display="none" transform="translate(0,300)">
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">01:45</text>
+		</g>
+		<g transform="translate(60, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">02:45</text>
+		</g>
+		<g transform="translate(120, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">03:45</text>
+		</g>
+		<g transform="translate(180, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">04:45</text>
+		</g>
+		<g transform="translate(240, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">05:45</text>
+		</g>
+		<g transform="translate(300, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">06:45</text>
+		</g>
+	</g>
+	<g class="grid range" display="none" transform="translate(0,0)">
+		<g transform="translate(0, 300)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">0</text>
+		</g>
+		<g transform="translate(0, 270)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">2</text>
+		</g>
+		<g transform="translate(0, 240)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">4</text>
+		</g>
+		<g transform="translate(0, 210)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">6</text>
+		</g>
+		<g transform="translate(0, 180)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">8</text>
+		</g>
+		<g transform="translate(0, 150)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">10</text>
+		</g>
+		<g transform="translate(0, 120)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">12</text>
+		</g>
+		<g transform="translate(0, 90)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">14</text>
+		</g>
+		<g transform="translate(0, 60)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">16</text>
+		</g>
+		<g transform="translate(0, 30)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">18</text>
+		</g>
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">20</text>
+		</g>
+	</g>
+	<g clip-path="url(#clip-id-1409719556061-8)" transform="translate(0,0)">
+		<circle cx="0" cy="30" r="18" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="10" cy="180" r="8" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="20" cy="60" r="16" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="30" cy="270" r="2" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="40" cy="0" r="20" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="50" cy="165" r="9" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="60" cy="135" r="11" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="70" cy="75" r="15" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="80" cy="165" r="9" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="90" cy="60" r="16" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="100" cy="210" r="6" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="110" cy="30" r="18" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="120" cy="210" r="6" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="130" cy="195" r="7" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="140" cy="270" r="2" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="150" cy="75" r="15" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="160" cy="45" r="17" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="170" cy="0" r="20" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="180" cy="255" r="3" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="190" cy="60" r="16" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="200" cy="255" r="3" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="210" cy="285" r="1" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="220" cy="120" r="12" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="230" cy="75" r="15" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="240" cy="225" r="5" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="250" cy="165" r="9" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="260" cy="165" r="9" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="270" cy="210" r="6" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="280" cy="285" r="1" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="290" cy="210" r="6" fill="#7977C2" fill-opacity="0.5" stroke="#7977C2" stroke-width="1"></circle>
+		<circle cx="0" cy="225" r="5" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="10" cy="105" r="13" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="20" cy="105" r="13" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="30" cy="180" r="8" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="40" cy="195" r="7" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="50" cy="195" r="7" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="60" cy="195" r="7" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="70" cy="285" r="1" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="80" cy="45" r="17" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="90" cy="225" r="5" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="100" cy="180" r="8" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="110" cy="285" r="1" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="120" cy="30" r="18" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="130" cy="255" r="3" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="140" cy="255" r="3" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="150" cy="270" r="2" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="160" cy="45" r="17" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="170" cy="180" r="8" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="180" cy="255" r="3" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="190" cy="210" r="6" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="200" cy="45" r="17" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="210" cy="120" r="12" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="220" cy="270" r="2" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="230" cy="15" r="19" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="240" cy="300" r="1.1102230246251565e-16" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="250" cy="150" r="10" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="260" cy="0" r="20" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="270" cy="180" r="8" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="280" cy="210" r="6" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+		<circle cx="290" cy="255" r="3" fill="#7BBAE7" fill-opacity="0.5" stroke="#7BBAE7" stroke-width="1"></circle>
+	</g>
+</svg>

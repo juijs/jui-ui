@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="clip-id-1409713829001-96">
+			<rect x="0" y="0" width="300" height="300"></rect>
+		</clipPath>
+	</defs>
+	<g class="grid block" display="none" transform="translate(0,300)">
+		<g transform="translate(37.5, 0)">
+			<line x1="-37.5" y1="0" x2="-37.5" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week1</text>
+		</g>
+		<g transform="translate(112.5, 0)">
+			<line x1="-37.5" y1="0" x2="-37.5" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week2</text>
+		</g>
+		<g transform="translate(187.5, 0)">
+			<line x1="-37.5" y1="0" x2="-37.5" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week3</text>
+		</g>
+		<g transform="translate(262.5, 0)">
+			<line x1="-37.5" y1="0" x2="-37.5" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">week4</text>
+		</g>
+		<g transform="translate(300, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+		</g>
+	</g>
+	<g class="grid range" display="none" transform="translate(0,0)">
+		<g transform="translate(0, 300)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">0</text>
+		</g>
+		<g transform="translate(0, 266.6666666666667)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">5</text>
+		</g>
+		<g transform="translate(0, 233.33333333333334)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">10</text>
+		</g>
+		<g transform="translate(0, 200)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">15</text>
+		</g>
+		<g transform="translate(0, 166.66666666666669)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">20</text>
+		</g>
+		<g transform="translate(0, 133.33333333333331)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">25</text>
+		</g>
+		<g transform="translate(0, 100)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">30</text>
+		</g>
+		<g transform="translate(0, 66.66666666666666)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">35</text>
+		</g>
+		<g transform="translate(0, 33.33333333333337)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">40</text>
+		</g>
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">45</text>
+		</g>
+	</g>
+	<g transform="translate(0,0)">
+		<rect x="15" y="53.33333333333334" width="45" height="133.33333333333331" fill="#FFC000"></rect>
+		<rect x="15" y="186.66666666666666" width="45" height="100" fill="#7BBAE7"></rect>
+		<rect x="15" y="286.66666666666663" width="45" height="13.333333333333314" fill="#7977C2"></rect>
+		<rect x="90" y="26.666666666666686" width="45" height="133.33333333333331" fill="#FFC000"></rect>
+		<rect x="90" y="160" width="45" height="40" fill="#7BBAE7"></rect>
+		<rect x="90" y="200" width="45" height="100" fill="#7977C2"></rect>
+		<rect x="165" y="46.66666666666666" width="45" height="133.33333333333331" fill="#FFC000"></rect>
+		<rect x="165" y="179.99999999999997" width="45" height="66.66666666666666" fill="#7BBAE7"></rect>
+		<rect x="165" y="246.66666666666663" width="45" height="53.33333333333334" fill="#7977C2"></rect>
+		<rect x="240" y="13.333333333333314" width="45" height="133.33333333333331" fill="#FFC000"></rect>
+		<rect x="240" y="146.66666666666663" width="45" height="33.333333333333314" fill="#7BBAE7"></rect>
+		<rect x="240" y="179.99999999999994" width="45" height="120" fill="#7977C2"></rect>
+	</g>
+</svg>

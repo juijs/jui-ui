@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="clip-id-1409720880992-58">
+			<rect x="0" y="0" width="300" height="300"></rect>
+		</clipPath>
+	</defs>
+	<g class="grid block" display="none" transform="translate(0,300)">
+		<g transform="translate(25, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-01</text>
+		</g>
+		<g transform="translate(75, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-02</text>
+		</g>
+		<g transform="translate(125, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-03</text>
+		</g>
+		<g transform="translate(175, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-04</text>
+		</g>
+		<g transform="translate(225, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-07</text>
+		</g>
+		<g transform="translate(275, 0)">
+			<line x1="-25" y1="0" x2="-25" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="20" x="0">03-08</text>
+		</g>
+		<g transform="translate(300, 0)">
+			<line x1="0" y1="0" x2="0" y2="-300" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+		</g>
+	</g>
+	<g class="grid range" display="none" transform="translate(0,0)">
+		<g transform="translate(0, 300)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">20</text>
+		</g>
+		<g transform="translate(0, 240)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">22</text>
+		</g>
+		<g transform="translate(0, 180)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">24</text>
+		</g>
+		<g transform="translate(0, 120)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">26</text>
+		</g>
+		<g transform="translate(0, 60)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">28</text>
+		</g>
+		<g transform="translate(0, 0)">
+			<line x1="0" y1="0" x2="300" y2="0" stroke="#aaaaaa" stroke-width="1" stroke-opacity="1"></line>
+			<text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">30</text>
+		</g>
+	</g>
+	<g transform="translate(0,0)">
+		<line x1="25" y1="150" x2="25" y2="180" stroke="red" stoke-width="1"></line>
+		<rect x="7.5" y="150" width="35" height="3.75" fill="red" stroke="red" stroke-width="1"></rect>
+		<line x1="75" y1="146.25" x2="75" y2="191.25" stroke="black" stoke-width="1"></line>
+		<rect x="57.5" y="153.75" width="35" height="26.25" fill="white" stroke="black" stroke-width="1"></rect>
+		<line x1="125" y1="52.5" x2="125" y2="112.5" stroke="black" stoke-width="1"></line>
+		<rect x="107.5" y="90" width="35" height="7.5" fill="white" stroke="black" stroke-width="1"></rect>
+		<line x1="175" y1="63.75" x2="175" y2="105" stroke="black" stoke-width="1"></line>
+		<rect x="157.5" y="82.5" width="35" height="11.25" fill="white" stroke="black" stroke-width="1"></rect>
+		<line x1="225" y1="75" x2="225" y2="108.75" stroke="red" stoke-width="1"></line>
+		<rect x="207.5" y="78.75" width="35" height="18.75" fill="red" stroke="red" stroke-width="1"></rect>
+		<line x1="275" y1="93.75" x2="275" y2="127.5" stroke="red" stoke-width="1"></line>
+		<rect x="257.5" y="97.5" width="35" height="22.5" fill="red" stroke="red" stroke-width="1"></rect>
+	</g>
+</svg>

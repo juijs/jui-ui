@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0.5,0.5)">
+    <defs>
+      <clipPath id="clip-id-1414563447402-97">
+        <rect x="0" y="0" width="300" height="300"></rect>
+      </clipPath>
+    </defs>
+    <g class="grid date" display="none" transform="translate(0,300)">
+      <g transform="translate(0, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">03:17</text>
+      </g>
+      <g transform="translate(60, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">04:17</text>
+      </g>
+      <g transform="translate(120, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">05:17</text>
+      </g>
+      <g transform="translate(180, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">06:17</text>
+      </g>
+      <g transform="translate(240, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">07:17</text>
+      </g>
+      <g transform="translate(300, 0)">
+        <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="middle" y="18" x="0">08:17</text>
+      </g>
+    </g>
+    <g class="grid range" display="none" transform="translate(0,0)">
+      <line x1="0" y1="0" x2="0" y2="300" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+      <g transform="translate(0, 300)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">0</text>
+      </g>
+      <g transform="translate(0, 270)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">50</text>
+      </g>
+      <g transform="translate(0, 240)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">100</text>
+      </g>
+      <g transform="translate(0, 210)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">150</text>
+      </g>
+      <g transform="translate(0, 180)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">200</text>
+      </g>
+      <g transform="translate(0, 150)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">250</text>
+      </g>
+      <g transform="translate(0, 120)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">300</text>
+      </g>
+      <g transform="translate(0, 90)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">350</text>
+      </g>
+      <g transform="translate(0, 60)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">400</text>
+      </g>
+      <g transform="translate(0, 30)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">450</text>
+      </g>
+      <g transform="translate(0, 0)">
+        <line x1="0" y1="0" x2="-6" y2="0" stroke="#ebebeb" stroke-width="1" stroke-opacity="1"></line>
+        <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end" y="6" x="-10">500</text>
+      </g>
+    </g>
+    <g transform="translate(0,0)">
+      <g width="10" height="10" transform="translate(-5,123.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(5,287.2)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(15,29.19999999999999)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(25,247)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(35,2.8000000000000114)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(45,25)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(55,220)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(65,208)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(75,105.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(85,149.20000000000002)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(95,76.6)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(105,203.8)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(115,174.39999999999998)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(125,260.2)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(135,53.19999999999999)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(145,234.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(155,136)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(165,-2)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(175,169.60000000000002)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(185,287.8)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(195,11.199999999999989)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(205,153.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(215,261.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(225,277.6)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(235,289)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(245,19.599999999999966)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(255,25.599999999999966)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(265,117.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(275,264.4)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <g width="10" height="10" transform="translate(285,197.8)" fill="#7977C2" stroke="white" stroke-width="1">
+        <polygon points="0,10 10,10 5,0"></polygon>
+      </g>
+      <ellipse rx="5" ry="5" cx="0" cy="187.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="10" cy="153" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="20" cy="277.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="30" cy="72" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="40" cy="184.2" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="50" cy="276" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="60" cy="25.19999999999999" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="70" cy="275.4" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="80" cy="158.4" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="90" cy="178.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="100" cy="265.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="110" cy="213" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="120" cy="109.19999999999999" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="130" cy="78" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="140" cy="265.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="150" cy="223.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="160" cy="9" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="170" cy="27.599999999999966" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="180" cy="156.6" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="190" cy="204.6" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="200" cy="114" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="210" cy="207" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="220" cy="155.4" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="230" cy="141" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="240" cy="96.6" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="250" cy="86.4" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="260" cy="166.8" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="270" cy="38.39999999999998" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="280" cy="291.6" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="290" cy="197.39999999999998" fill="#7BBAE7" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="0" cy="848738068120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="10" cy="848738428120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="20" cy="848738788120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="30" cy="848739148120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="40" cy="848739508120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="50" cy="848739868120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="60" cy="848740228120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="70" cy="848740588120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="80" cy="848740948120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="90" cy="848741308120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="100" cy="848741668120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="110" cy="848742028120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="120" cy="848742388120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="130" cy="848742748120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="140" cy="848743108120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="150" cy="848743468120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="160" cy="848743828120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="170" cy="848744188120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="180" cy="848744548120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="190" cy="848744908120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="200" cy="848745268120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="210" cy="848745628120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="220" cy="848745988120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="230" cy="848746348120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="240" cy="848746708120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="250" cy="848747068120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="260" cy="848747428120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="270" cy="848747788120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="280" cy="848748148120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+      <ellipse rx="5" ry="5" cx="290" cy="848748508120.2" fill="#FFC000" stroke="white" stroke-width="1"></ellipse>
+    </g>
+  </g>
+  <g transform="translate(0.5,0.5)"></g>
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="clip-id-1409713349174-75">
+			<rect x="0" y="0" width="300" height="300"></rect>
+		</clipPath>
+	</defs>
+	<g class="brush donut" transform="translate(0,0)">
+		<g class="donut" transform="translate(150,150)">
+			<path fill="#7977C2" stroke="white" stroke-width="1" d="M0,-150 A150,150 0 0,1 33.04657991798107,146.31446803281082 L22.03105327865405,97.54297868854054 A100,100 0 0,0 0,-100 Z"></path>
+		</g>
+		<g class="donut" transform="translate(150,150)">
+			<path fill="#7BBAE7" stroke="white" stroke-width="1" d="M33.04657991798107,146.31446803281082 A150,150 0 0,1 -146.8203669322165,30.721000209778552 L-97.88024462147764,20.480666806519032 A100,100 0 0,0 22.03105327865405,97.54297868854054 Z"></path>
+		</g>
+		<g class="donut" transform="translate(150,150)">
+			<path fill="#FFC000" stroke="white" stroke-width="1" d="M-146.82036693221661,30.721000209778552 A150,150 0 0,1 -88.93618935819595,-120.79053862965858 L-59.29079290546396,-80.52702575310573 A100,100 0 0,0 -97.88024462147776,20.480666806519036 Z"></path>
+		</g>
+		<g class="donut" transform="translate(150,150)">
+			<path fill="#FF7800" stroke="white" stroke-width="1" d="M-88.93618935819606,-120.79053862965861 A150,150 0 0,1 -7.105427357601002e-14,-149.99999999999972 L-4.973799150320701e-14,-99.9999999999998 A100,100 0 0,0 -59.29079290546404,-80.52702575310575 Z"></path>
+		</g>
+	</g>
+</svg>
