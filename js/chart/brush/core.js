@@ -4,6 +4,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      *
      * implements core method for brush
      *
+     * @abstract
      * @extends chart.draw
      * @requires jquery
      * @requires util.base
@@ -216,7 +217,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * 
-         * @method
+         * @method getXY
          *
          * 차트 데이터에 대한 좌표 'x', 'y'를 구하는 함수
          *

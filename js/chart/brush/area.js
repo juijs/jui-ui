@@ -4,6 +4,7 @@ jui.define("chart.brush.area", [], function() {
      * @class chart.brush.area
      * implements area brush
      *
+     * @extends chart.brush.line
      */
     var AreaBrush = function() {
 

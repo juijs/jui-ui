@@ -4,7 +4,7 @@ jui.define("chart.brush.candlestick", [], function() {
      * @class chart.brush.candlestick 
      * 
      * implements candlestick brush 
-
+     * @extends chart.brush.core
      */
     var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;

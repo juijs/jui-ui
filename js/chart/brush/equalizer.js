@@ -1,5 +1,12 @@
 jui.define("chart.brush.equalizer", [], function() {
 
+    /**
+     * @class chart.brush.equalizer 
+     *  
+     * implements equalizer brush 
+     *  
+     * @extends chart.brush.core   
+     */
     var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;
 
@@ -69,9 +76,13 @@ jui.define("chart.brush.equalizer", [], function() {
 
     EqualizerBrush.setup = function() {
         return {
+            /** @cfg {Number} [innerPadding=10] */
             innerPadding: 10,
+            /** @cfg {Number} [outerPadding=15] */
             outerPadding: 15,
+            /** @cfg {Number} [unit=5] */
             unit: 5,
+            /** @cfg {Number} [gap=5] */
             gap: 5
         };
     }

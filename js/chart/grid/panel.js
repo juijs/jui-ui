@@ -5,9 +5,7 @@ jui.define("chart.grid.panel", [  ], function() {
      *
      * implements default panel grid
      *
-     * @param {ChartBuilder} chart
-     * @param {Axis} axis
-     * @param {Object} grid
+     * @extends chart.grid.core
      */
     var PanelGrid = function(chart, axis, grid) {
 

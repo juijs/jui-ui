@@ -14,5 +14,9 @@ jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
         }
 	}
 
+    /** @cfg {Object} item */
+    /** @cfg {chart.builder} chart */
+    /** @cfg {Object} data */
+
 	return CoreBrushItem;
 }, "chart.draw"); 
