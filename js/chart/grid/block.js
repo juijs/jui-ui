@@ -197,7 +197,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					x2 : (grid.line) ? -this.axis.area('width') : this.bar
+					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar
 				}));
 
 				axis.append(this.getTextRotate(this.chart.text({
