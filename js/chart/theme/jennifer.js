@@ -1,9 +1,10 @@
-/**
- * @class chart.theme.jennifer
- * Jennifer Theme
- * @singleton
- */
 jui.define("chart.theme.jennifer", [], function() {
+
+    /**
+     * @class chart.theme.jennifer
+     * Jennifer Theme
+     * @singleton
+     */
     var themeColors = [
         "#7977C2",
         "#7BBAE7",
@@ -27,144 +28,142 @@ jui.define("chart.theme.jennifer", [], function() {
         "#9228E4"
     ];
 
+
     return {
-        /** Chart Background Color */
+        /** @cfg @cfg Chart Background Color */
     	backgroundColor : "white",
-        /** Base Font Size */
+        /** @cfg Base Font Size */
     	fontSize : "11px",
-        /** Base Font Color  */
+        /** @cfg Base Font Color  */
     	fontColor : "#333333",
-        /** Base Font Family */
+        /** @cfg Base Font Family */
 		fontFamily : "arial,Tahoma,verdana",
-        /** Color List  */
+        /** @cfg Color List  */
         colors : themeColors,
 
         // grid styles
-        /** Grid Font Color */
+        /** @cfg Grid Font Color */
     	gridFontColor : "#333333",
-        /** Grid Active Font color */
+        /** @cfg Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
-        /** Grid Border Color */
+        /** @cfg Grid Border Color */
         gridBorderColor : "#ebebeb",
-        /** Grid Border Width */
+        /** @cfg Grid Border Width */
     	gridBorderWidth : 1,
-        /** Grid Border Dash Array */
+        /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-        /** */
+        /** @cfg */
 		gridAxisBorderColor : "#ebebeb",
-        /** */
+        /** @cfg */
 		gridAxisBorderWidth : 1,
-        /** */
+        /** @cfg */
     	gridActiveBorderColor : "#ff7800",
-        /** */
+        /** @cfg */
     	gridActiveBorderWidth: 1,
 
         // brush-item styles
-        /** */
+        /** @cfg */
         tooltipPointRadius : 5, // common
-        /** */
+        /** @cfg */
         tooltipPointBorderWidth : 1, // common
-        /** */        
+        /** @cfg */        
         tooltipPointFontWeight : "bold", // common
 
-        // brush styles
-        /** */
+        /** @cfg */
         barBorderColor : "none",
-        /** */        
+        /** @cfg */        
         barBorderWidth : 0,
-        /** */
+        /** @cfg */
         barBorderOpacity : 0,
-        /** */
+        /** @cfg */
         barBorderRadius : 3,
-        /** */        
+        /** @cfg */        
         barCircleBorderColor : "white",
-        /** */
+        /** @cfg */
         barDisableBackgroundOpacity : 0.4,
-        /** */        
+        /** @cfg */        
     	gaugeBackgroundColor : "#ececec",
-        /** */        
+        /** @cfg */        
         gaugeArrowColor : "#666666",
-        /** */        
+        /** @cfg */        
         gaugeFontColor : "#666666",
-        /** */        
+        /** @cfg */        
     	pieBorderColor : "white",
-        /** */        
+        /** @cfg */        
         pieBorderWidth : 1,
-        /** */
+        /** @cfg */
         donutBorderColor : "white",
-        /** */
+        /** @cfg */
         donutBorderWidth : 1,
-        /** */
+        /** @cfg */
     	areaBackgroundOpacity : 0.5,
-        /** */
+        /** @cfg */
         areaSplitBackgroundColor : "#929292",
-        /** */
+        /** @cfg */
         bubbleBackgroundOpacity : 0.5,
-        /** */
+        /** @cfg */
         bubbleBorderWidth : 1,
-        /** */
+        /** @cfg */
         candlestickBorderColor : "black",
-        /** */
+        /** @cfg */
         candlestickBackgroundColor : "white",
-        /** */
+        /** @cfg */
         candlestickInvertBorderColor : "red",
-        /** */
+        /** @cfg */
         candlestickInvertBackgroundColor : "red",
-        /** */
+        /** @cfg */
         ohlcBorderColor : "black",
-        /** */
+        /** @cfg */
         ohlcInvertBorderColor : "red",
-        /** */
+        /** @cfg */
         ohlcBorderRadius : 5,
-        /** */
+        /** @cfg */
         lineBorderWidth : 2,
-        /** */
+        /** @cfg */
         lineDisableBorderOpacity : 0.3,
-        /** */
+        /** @cfg */
         lineCircleBorderColor : "white",
-        /** */
+        /** @cfg */
         lineSplitBorderColor : null,
-        /** */
+        /** @cfg */
         lineSplitBorderOpacity : 0.5,
-        /** */
+        /** @cfg */
         pathBackgroundOpacity : 0.5,
-        /** */
+        /** @cfg */
         pathBorderWidth : 1,
-        /** */
+        /** @cfg */
         scatterBorderColor : "white",
-        /** */
+        /** @cfg */
         scatterBorderWidth : 1,
-        /** */
+        /** @cfg */
         scatterHoverColor : "white",
-        /** */
+        /** @cfg */
         waterfallBackgroundColor : "#87BB66",
-        /** */
+        /** @cfg */
         waterfallInvertBackgroundColor : "#FF7800",
-        /** */
+        /** @cfg */
         waterfallEdgeBackgroundColor : "#7BBAE7",
-        /** */
+        /** @cfg */
         waterfallLineColor : "#a9a9a9",
-        /** */
+        /** @cfg */
         waterfallLineDashArray : "0.9",
-        /** */
+        /** @cfg */
         focusBorderColor : "#FF7800",
-        /** */
+        /** @cfg */
         focusBorderWidth : 1,
-        /** */
+        /** @cfg */
         focusBackgroundColor : "#FF7800",
-        /** */
+        /** @cfg */
         focusBackgroundOpacity : 0.1,
-        /** */
+        /** @cfg */
         pinFontColor : "#FF7800",
-        /** */
+        /** @cfg */
         pinFontSize : "10px",
-        /** */
+        /** @cfg */
         pinBorderColor : "#FF7800",
-        /** */
+        /** @cfg */
         pinBorderWidth : 0.7,
-        /** */
-        // widget styles
-
+        /** @cfg */
         titleFontColor : "#333",
         titleFontSize : "13px",
         titleFontWeight : "normal",
