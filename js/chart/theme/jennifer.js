@@ -30,18 +30,17 @@ jui.define("chart.theme.jennifer", [], function() {
 
 
     return {
-        /** @cfg @cfg Chart Background Color */
+        /** @cfg  */
     	backgroundColor : "white",
-        /** @cfg Base Font Size */
+        /** @cfg  */
     	fontSize : "11px",
-        /** @cfg Base Font Color  */
+        /** @cfg   */
     	fontColor : "#333333",
-        /** @cfg Base Font Family */
+        /** @cfg  */
 		fontFamily : "arial,Tahoma,verdana",
-        /** @cfg Color List  */
+        /** @cfg   */
         colors : themeColors,
 
-        // grid styles
         /** @cfg Grid Font Color */
     	gridFontColor : "#333333",
         /** @cfg Grid Active Font color */
