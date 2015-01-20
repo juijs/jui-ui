@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg width="300" height="300" style="background:white" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(0.5,0.5)">
+        <defs>
+            <clipPath id="clip-id-1421740838629">
+                <rect x="0" y="0" width="300" height="300"></rect>
+            </clipPath>
+        </defs>
+        <g display="none" class="grid grid-range" transform="translate(0,300)">
+            <g transform="translate(0, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">60
+                </text>
+            </g>
+            <g transform="translate(30, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">54
+                </text>
+            </g>
+            <g transform="translate(60, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">48
+                </text>
+            </g>
+            <g transform="translate(90, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">42
+                </text>
+            </g>
+            <g transform="translate(120, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">36
+                </text>
+            </g>
+            <g transform="translate(150, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">30
+                </text>
+            </g>
+            <g transform="translate(180, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">24
+                </text>
+            </g>
+            <g transform="translate(210, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">18
+                </text>
+            </g>
+            <g transform="translate(240, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">12
+                </text>
+            </g>
+            <g transform="translate(270, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">6
+                </text>
+            </g>
+            <g transform="translate(300, 0)">
+                <line x1="0" y1="0" x2="0" y2="-300" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="0" y="18"
+                      text-anchor="middle">0
+                </text>
+            </g>
+        </g>
+        <g display="none" class="grid grid-block" transform="translate(0,0)">
+            <g transform="translate(0, 0)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">01
+                </text>
+            </g>
+            <g transform="translate(0, 25)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">02
+                </text>
+            </g>
+            <g transform="translate(0, 50)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">03
+                </text>
+            </g>
+            <g transform="translate(0, 75)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">04
+                </text>
+            </g>
+            <g transform="translate(0, 100)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">05
+                </text>
+            </g>
+            <g transform="translate(0, 125)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">06
+                </text>
+            </g>
+            <g transform="translate(0, 150)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">07
+                </text>
+            </g>
+            <g transform="translate(0, 175)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">08
+                </text>
+            </g>
+            <g transform="translate(0, 200)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">09
+                </text>
+            </g>
+            <g transform="translate(0, 225)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">10
+                </text>
+            </g>
+            <g transform="translate(0, 250)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">11
+                </text>
+            </g>
+            <g transform="translate(0, 275)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" x="-10" y="12.5"
+                      text-anchor="end">12
+                </text>
+            </g>
+            <g transform="translate(0, 300)">
+                <line x1="0" y1="0" x2="300" y2="0" stroke="#ebebeb" stroke-width="1" stroke-dasharray="none"
+                      stroke-opacity="1"></line>
+            </g>
+        </g>
+        <g clip-path="url(#clip-id-1421740838629)" class="brush brush-bar" transform="translate(0,0)">
+            <path width="250" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H250 A0,0 0 0,1 250,0 V21 A0,0 0 0,1 250,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(50 2)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 2" to="50 2" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="100" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H100 A0,0 0 0,1 100,0 V21 A0,0 0 0,1 100,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(200 27)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 27" to="200 27" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="50" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H50 A0,0 0 0,1 50,0 V21 A0,0 0 0,1 50,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(250 52)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 52" to="250 52" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="150" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H150 A0,0 0 0,1 150,0 V21 A0,0 0 0,1 150,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(150 77)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 77" to="150 77" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="220" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H220 A0,0 0 0,1 220,0 V21 A0,0 0 0,1 220,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(80 102)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 102" to="80 102" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="110" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H110 A0,0 0 0,1 110,0 V21 A0,0 0 0,1 110,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(190 127)" cursor="pointer" opacity="1">
+                <animateTransform attributeName="transform" type="translate" from="300 127" to="190 127" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="105" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H105 A0,0 0 0,1 105,0 V21 A0,0 0 0,1 105,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(195 152)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 152" to="195 152" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="180" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H180 A0,0 0 0,1 180,0 V21 A0,0 0 0,1 180,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(120 177)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 177" to="120 177" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="280" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H280 A0,0 0 0,1 280,0 V21 A0,0 0 0,1 280,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(20 202)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 202" to="20 202" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="150" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H150 A0,0 0 0,1 150,0 V21 A0,0 0 0,1 150,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(150 227)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 227" to="150 227" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="160" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H160 A0,0 0 0,1 160,0 V21 A0,0 0 0,1 160,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(140 252)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 252" to="140 252" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <path width="125" height="21" fill="#7977C2" stroke="none" stroke-width="0" stroke-opacity="0"
+                  d="M0,3 A3,3 0 0,1 3,0 H125 A0,0 0 0,1 125,0 V21 A0,0 0 0,1 125,21 H3 A3,3 0 0,1 0,18 Z"
+                  transform="translate(175 277)" cursor="pointer" opacity="0.4">
+                <animateTransform attributeName="transform" type="translate" from="300 277" to="175 277" begin="0s"
+                                  dur="0.7s" repeatCount="1" fill="freeze"></animateTransform>
+            </path>
+            <g visibility="visible" transform="translate(190,137.5)">
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end"
+                      font-weight="bold" opacity="1" x="-7" y="4">22
+                </text>
+                <circle r="5" fill="#7977C2" stroke="white" opacity="1" stroke-width="1"></circle>
+            </g>
+            <g visibility="visible" transform="translate(20,212.5)">
+                <text font-family="arial,Tahoma,verdana" font-size="11px" fill="#333333" text-anchor="end"
+                      font-weight="bold" opacity="0.4" x="-7" y="4">56
+                </text>
+                <circle r="5" fill="#7977C2" stroke="white" opacity="0.4" stroke-width="1"></circle>
+            </g>
+            <animate attributeName="opacity" from="0" to="1" begin="0s" dur="1.4s" repeatCount="1"
+                     fill="freeze"></animate>
+        </g>
+    </g>
+    <g transform="translate(0.5,0.5)"></g>
+</svg>
