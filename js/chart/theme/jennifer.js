@@ -164,26 +164,48 @@ jui.define("chart.theme.jennifer", [], function() {
         pinBorderWidth : 0.7,
         /** @cfg */
         titleFontColor : "#333",
+        /** @cfg */
         titleFontSize : "13px",
+        /** @cfg */
         titleFontWeight : "normal",
+        /** @cfg */
         legendFontColor : "#333",
+        /** @cfg */
         legendFontSize : "12px",
+        /** @cfg */
         tooltipFontColor : "#333",
+        /** @cfg */
         tooltipFontSize : "12px",
+        /** @cfg */
         tooltipBackgroundColor : "white",
+        /** @cfg */
         tooltipBorderColor : "#aaaaaa",
+        /** @cfg */
         tooltipBackgroundOpacity : 0.7,
+        /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
+        /** @cfg */
         scrollThumbBackgroundColor : "#b2b2b2",
+        /** @cfg */
         scrollThumbBorderColor : "#9f9fa4",
+        /** @cfg */
         zoomBackgroundColor : "red",
+        /** @cfg */
         zoomFocusColor : "gray",
+        /** @cfg */
         crossBorderColor : "#a9a9a9",
+        /** @cfg */
         crossBorderWidth : 1,
+        /** @cfg */
         crossBorderOpacity : 0.8,
+        /** @cfg */
         crossBalloonFontSize : "11px",
+        /** @cfg */
         crossBalloonFontColor : "white",
+        /** @cfg */
         crossBalloonBackgroundColor : "black",
+        /** @cfg */
         crossBalloonBackgroundOpacity : 0.5
+
     }
 });
