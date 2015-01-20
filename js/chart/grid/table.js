@@ -8,22 +8,21 @@ jui.define("chart.grid.table", [  ], function() {
      * @extends chart.grid.core
      */
     var TableGrid = function(chart, axis, grid) {
-        var orient = grid.orient;
         var rowUnit, columnUnit, outerPadding, row, column ;
 
-        this.custom = function(chart, g) {
+        this.custom = function(g) {
             for(var r = 0; r < row; r++) {
                 for (var c = 0; c < column; c++) {
                     var index = r * column + c;
 
                     var obj = this.scale(index);
                     
-                    obj.x -= axis.area('x');
-                    obj.y -= axis.area('y');
+                    obj.x -= this.axis.area('x');
+                    obj.y -= this.axis.area('y');
 
-                    var rect = chart.svg.rect($.extend(obj, {
+                    var rect = this.chart.svg.rect($.extend(obj, {
                         fill : 'white',
-                        stroke : "white"
+                        stroke : "black"
                     }));
 
                     g.append(rect);
@@ -33,16 +32,16 @@ jui.define("chart.grid.table", [  ], function() {
 
         this.drawBefore = function() {
 
-            row = grid.rows;
-            column = grid.columns;
+            var row = this.grid.rows;
+            var column = this.grid.columns;
             
-            padding = grid.padding;
+            padding = this.grid.padding;
             
-            columnUnit = (axis.area('width') -  (column - 1) * padding) / column;
-            rowUnit = (axis.area('height') - (row - 1) * padding ) / row;
+            var columnUnit = (this.axis.area('width') -  (column - 1) * padding) / column;
+            var rowUnit = (this.axis.area('height') - (row - 1) * padding ) / row;
 
             // create scale
-            this.scale = (function(axis) {
+            this.scale = (function(axis, row, column, rowUnit, columnUnit) {
                 return function(i) {
 
                     var r = Math.floor(i  / column) ;
@@ -61,7 +60,7 @@ jui.define("chart.grid.table", [  ], function() {
                         height : rowUnit
                     }
                 }
-            })(axis);
+            })(this.axis, row, column, rowUnit, columnUnit);
         }
 
         /**
@@ -74,7 +73,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
-            return this.drawGrid(chart, orient, "table", grid);
+            return this.drawGrid("table");
         }
     }
 

@@ -36,7 +36,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          *
 		 * @protected 
 		 */
-		this.wrapper = function(chart, scale, key) {
+		this.wrapper = function(scale, key) {
 			return scale;
 		}
 		
@@ -46,14 +46,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 * @param {ChartBuilder} chart 
          * @param {Object} attr  
 		 */
-		this.axisLine = function(chart, attr) {
-			return chart.svg.line($.extend({
+		this.axisLine = function(attr) {
+			return this.chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,
 				stroke : this.color("gridAxisBorderColor"),
-				"stroke-width" : chart.theme("gridAxisBorderWidth"),
+				"stroke-width" : this.chart.theme("gridAxisBorderWidth"),
 				"stroke-opacity" : 1
 			}, attr));
 		}
@@ -65,15 +65,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @param {ChartBuilder} chart
          * @param {Object} attr
 		 */
-		this.line = function(chart, attr) {
-			return chart.svg.line($.extend({
+		this.line = function(attr) {
+			return this.chart.svg.line($.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
 				y2 : 0,				
 				stroke : this.color("gridBorderColor"),
-				"stroke-width" : chart.theme("gridBorderWidth"),
-				"stroke-dasharray" : chart.theme("gridBorderDashArray"),
+				"stroke-width" : this.chart.theme("gridBorderWidth"),
+				"stroke-dasharray" : this.chart.theme("gridBorderDashArray"),
 				"stroke-opacity" : 1
 			}, attr));
 		}
@@ -116,18 +116,18 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @param {String} cls 
          * @param {Grid} grid 
          */		
-		this.drawGrid = function(chart, orient, cls, grid) {
+		this.drawGrid = function(cls) {
 			// create group
-			var root = chart.svg.group();
+			var root = this.chart.svg.group();
 
 			// render axis
-			this[orient].call(this, chart, root);
+			this[this.grid.orient].call(this, root);
 
 			// wrapped scale
-			this.scale = this.wrapper(chart, this.scale, grid.key);
+			this.scale = this.wrapper(this.scale, this.grid.key);
 
 			// hide grid 
-			if (grid.hide) {
+			if (this.grid.hide) {
 				root.attr({ display : "none" })
 			}
 
@@ -175,11 +175,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @return {Number} return.size     그리드 넓이 또는 높이
          * @return {Number} return.end      마지막 지점
 		 */
-		this.getGridSize = function(chart, orient, grid) {
+		this.getGridSize = function() {
 			var width = this.axis.area('width'),
 				height = this.axis.area('height'),
-				axis = (orient == "left" || orient == "right") ? this.axis.area('y') : this.axis.area('x'),
-				max = (orient == "left" || orient == "right") ? height : width,
+				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area('y') : this.axis.area('x'),
+				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
 				start = axis,
 				size = max;
 
@@ -197,22 +197,21 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
              * @cfg {Number} [extend=null] extend grid's option
              */
 			extend:	null,
-            /**  @cfg {Number} [dist=0]  */
+            /**  @cfg {Number} [dist=0] 그리는 좌표로부터 떨어지는 거리  */
 			dist: 0,
 
-			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null]  */
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
 			orient: null,
             
-            /** @cfg {Boolean} [hide=false] */
+            /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
 			hide: false,
 
-            /** @cfg {String/Object/Number} [color=null] */
+            /** @cfg {String/Object/Number} [color=null] 그리드의 라인 색깔 */
 			color: null,
             /** @cfg {String} [title=null] */
 			title: null,
             /** @cfg {Boolean} [hide=false] */
 			line: false,
-            subline : 0,
             baseline : true,
             /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
 			format: null,

@@ -5,13 +5,35 @@
     <link rel="stylesheet" href="../../jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
 </head>
+<body >
 
-<body class="jui">
-
-        <div id="chart-content"></div>
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
 
 <script>
+    $(function() {
+        $("#codemirror").val($("#script_code").html());
+
+        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+    })
+
+</script>
+
+<script id="script_code">
     var data = [
         { age : "80+",   female : 6.0,  male : 5.3 },
         { age : "75-79", female : 4.7,  male : 4.5 },
@@ -33,7 +55,7 @@
     ];
 
     jui.ready([ "chart.builder", "chart.theme.pastel" ], function(chart, theme) {
-        c = chart("#chart-content", {
+        c = chart("#chart", {
             width : 800,
             height : 400,
             theme : 'pattern',

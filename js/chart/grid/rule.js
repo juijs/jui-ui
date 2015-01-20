@@ -1,14 +1,19 @@
 jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
-	var RuleGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
-		var domain = [];
+	/**
+	 * @class chart.grid.rule
+	 *
+	 * implements rule grid
+	 *
+	 * @extends chart.grid.core
+	 */
+	var RuleGrid = function() {
 
-		this.top = function(chart, g) {
+		this.top = function(g) {
 			var height = this.axis.area('height'),
 				half_height = height/2;
 
-			g.append(this.axisLine(chart, {
+			g.append(this.axisLine({
 				y1 : this.center ? half_height : 0,
 				y2 : this.center ? half_height : 0,
 				x1 : this.start,
@@ -27,21 +32,21 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 				}
 
 				var isZero = (ticks[i] == 0),
-					axis = chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
+					axis = this.chart.svg.group().translate(values[i], (this.center) ? half_height : 0)
 
-				axis.append(this.line(chart, {
+				axis.append(this.line({
 				  y1 : (this.center) ? -bar : 0,
 					y2 : bar,
 					stroke : this.color("gridAxisBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : this.chart.theme("gridBorderWidth")
 				}));
 
 				if (!isZero || (isZero && !this.hideZero)) {
-					axis.append(this.getTextRotate(chart.text({
+					axis.append(this.getTextRotate(this.chart.text({
 						x : 0,
 						y : bar + bar + 4,
 						"text-anchor" : "middle",
-						fill : chart.theme("gridFontColor")
+						fill : this.chart.theme("gridFontColor")
 					}, domain)));
 				}
 
@@ -49,11 +54,11 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			}
 		}
 
-		this.bottom = function(chart, g) {
+		this.bottom = function(g) {
 			var height = this.axis.area('height'),
 				half_height = height/2;
 		  
-			g.append(this.axisLine(chart, {
+			g.append(this.axisLine({
 				y1 : this.center ? -half_height : 0,
 				y2 : this.center ? -half_height : 0,
 				x1 : this.start,
@@ -72,21 +77,21 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 				}
 
 				var isZero = (ticks[i] == 0),
-					axis = chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
+					axis = this.chart.svg.group().translate(values[i], (this.center) ? -half_height : 0);
 
-				axis.append(this.line(chart, {
+				axis.append(this.line({
 				  y1 : (this.center) ? -bar : 0,
 					y2 : (this.center) ? bar : -bar,
 					stroke : this.color("gridAxisBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : this.chart.theme("gridBorderWidth")
 				}));
 				
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(this.getTextRotate(chart.text({
+					axis.append(this.getTextRotate(this.chart.text({
 						x : 0,
 						y : -bar * 2,
 						"text-anchor" : "middle",
-						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+						fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 					}, domain)));
 				}
 
@@ -94,12 +99,12 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			}
 		}
 
-		this.left = function(chart, g) {
+		this.left = function(g) {
 			var width = this.axis.area('width'),
 				height = this.axis.area('height'),
 				half_width = width/2;
 
-			g.append(this.axisLine(chart, {
+			g.append(this.axisLine({
 				x1 : this.center ? half_width : 0,
 				x2 : this.center ? half_width : 0,
 				y1 : this.start ,
@@ -118,20 +123,20 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 				}
 
 				var isZero = (ticks[i] == 0),
-					axis = chart.svg.group().translate((this.center) ? half_width : 0, values[i])
+					axis = this.chart.svg.group().translate((this.center) ? half_width : 0, values[i])
 
-				axis.append(this.line(chart, {
+				axis.append(this.line({
 					x1 : (this.center) ? -bar : 0,
 					x2 : bar,
 					stroke : this.color("gridAxisBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")					
+					"stroke-width" : this.chart.theme("gridBorderWidth")
 				}));
 				
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(this.getTextRotate(chart.text({
+					axis.append(this.getTextRotate(this.chart.text({
 					  x : bar/2 + 4,
 					  y : bar-2,
-					  fill : chart.theme("gridFontColor")
+					  fill : this.chart.theme("gridFontColor")
 					}, domain)));
 				}
 
@@ -139,11 +144,11 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			}
 		}
 
-		this.right = function(chart, g) {
+		this.right = function(g) {
 			var width = this.axis.area('width'),
 				half_width = width/2;
 
-			g.append(this.axisLine(chart, {
+			g.append(this.axisLine({
 				x1 : this.center ? -half_width : 0,
 				x2 : this.center ? -half_width : 0,
 				y1 : this.start ,
@@ -162,21 +167,21 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 				}
 
 				var isZero = (ticks[i] == 0),
-					axis = chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
+					axis = this.chart.svg.group().translate((this.center) ? -half_width : 0, values[i]);
 
-				axis.append(this.line(chart, {
+				axis.append(this.line({
 					x1 : (this.center) ? -bar : 0,
 					x2 : (this.center) ? bar : -bar,
 					stroke : this.color("gridAxisBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : this.chart.theme("gridBorderWidth")
 				}));
 
 				if (!isZero ||  (isZero && !this.hideZero)) {
-					axis.append(this.getTextRotate(chart.text({
+					axis.append(this.getTextRotate(this.chart.text({
 						x : -bar - 4,
 						y : bar-2,
 						"text-anchor" : "end",
-						fill : chart.theme("gridFontColor")
+						fill : this.chart.theme("gridFontColor")
 					}, domain)));
 				}
 
@@ -184,16 +189,12 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			}
 		}
 
-        this.wrapper = function(chart, scale, key) {
+        this.wrapper = function(scale, key) {
             var old_scale = scale;
             var self = this;
 
             function new_scale(i) {
                 return old_scale(self.axis.data[i][key]);
-            }
-
-            old_scale.update = function(obj) {
-                self.grid = $.extend(self.grid, obj);
             }
 
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
@@ -207,6 +208,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 		 */
         this.initDomain = function() {
 
+			var domain = [];
             var min = this.grid.min || undefined,
                 max = this.grid.max || undefined,
                 data = this.data();
@@ -293,12 +295,12 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
         }
 
 		this.drawBefore = function() {
-			this.initDomain();
+			var domain = this.initDomain();
 
-			var obj = this.getGridSize(chart, orient, grid);
+			var obj = this.getGridSize();
 			this.scale = UtilScale.linear().domain(domain);
 
-            if (orient == "left" || orient == "right") {
+            if (this.grid.orient == "left" || this.grid.orient == "right") {
                 var arr = [obj.end, obj.start];
             } else {
                 var arr = [obj.start, obj.end]
@@ -328,17 +330,42 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	RuleGrid.setup = function() {
 		return {
+			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
 			domain: null,
+			/** @cfg {Number} [step=10] 나누는 숫자 */
 			step: 10,
+			/** @cfg {Number} [min=0] 최소값 설정 */
 			min: 0,
+			/** @cfg {Number} [max=0] 최대값 설정 */
 			max: 0,
+			/** @cfg {Number} [unit=null] 단계별 사이즈  */
 			unit: null,
+			/**
+			 * @cfg {Boolean} [clamp=true]
+			 *
+			 * max 나 min 을 넘어가는 값에 대한 체크,
+			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
+			 */
+			clamp : true,
+			/**
+			 * @cfg {Boolean} [reverse=false]
+			 *
+			 * 도메인을 거꾸로 정렬한다.
+			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
+			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
+			 */
 			reverse: false,
+			/** @cfg {String} [key=null] a field for value */
 			key: null,
-			hideZero: false,
+			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
 			hideText: false,
+			/** @cfg {Boolean} [hideZero=false] 0(zero) value 화면에서 보이지 않기 */
+			hideZero: false,
+			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
 			nice: false,
+			/** @cfg {Boolean} [center=false] 가운데로 그리드 이동  */
 			center: false
+
 		};
 	}
 

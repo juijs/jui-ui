@@ -1,27 +1,27 @@
 jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
-	var RadarGrid = function(chart, axis, grid) {
+	var RadarGrid = function() {
 		var self = this,
 			position = [];
 		var domain = [] ;
 
-		function drawCircle(chart, root, centerX, centerY, x, y, count) {
+		function drawCircle(root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
 				cx = centerX,
 				cy = centerY;
 
-			root.append(chart.svg.circle({
+			root.append(self.chart.svg.circle({
 				cx : cx,
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
 				stroke : self.color("gridAxisBorderColor"),
-				"stroke-width" : chart.theme("gridBorderWidth")
+				"stroke-width" : self.chart.theme("gridBorderWidth")
 			}));
 		}
 
-		function drawRadial(chart, root, centerX, centerY, x, y, count, unit) {
-			var g = chart.svg.group();
+		function drawRadial(root, centerX, centerY, x, y, count, unit) {
+			var g = self.chart.svg.group();
 			var points = [];
 
 			points.push([centerX + x, centerY + y]);
@@ -38,10 +38,10 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				points.push([centerX + obj.x, centerY + obj.y]);
 			}
 
-			var path = chart.svg.path({
+			var path = self.chart.svg.path({
 				"fill" : "none",
 				stroke : self.color("gridAxisBorderColor"),
-				"stroke-width" : chart.theme("gridBorderWidth")
+				"stroke-width" : self.chart.theme("gridBorderWidth")
 			});
 
 			for (var i = 0; i < points.length; i++) {
@@ -62,10 +62,10 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 		}
 
         function scale(obj) {
-            var max = grid.max;
+            var max = self.grid.max;
 
-            var dx = chart.padding('left');
-            var dy = chart.padding('top');
+            var dx = self.chart.padding('left');
+            var dy = self.chart.padding('top');
 
             return function(index, value) {
                 var rate = value / max;
@@ -94,7 +94,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 		 *
 		 */
 		this.initDomain = function() {
-
+			var domain = [];
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
 				var data = this.data();
@@ -124,10 +124,12 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				domain.reverse();
 			}
 
+			return domain;
+
 		}
 
 		this.drawBefore = function() {
-			this.initDomain();
+			this.domain = this.initDomain();
 		}
 
 		this.draw = function() {
@@ -145,13 +147,13 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 			var startY = -w,
 				startX = 0,
-				count = domain.length,
+				count = this.domain.length,
 				step = this.grid.step,
 				unit = 2 * Math.PI / count,
 				h = Math.abs(startY) / step;
 
-			var g = chart.svg.group(),
-				root = chart.svg.group();
+			var g = this.chart.svg.group(),
+				root = this.chart.svg.group();
 
 			g.append(root);
 
@@ -162,13 +164,13 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				var x2 = centerX + startX,
 					y2 = centerY + startY;
 
-				root.append(chart.svg.line({
+				root.append(this.chart.svg.line({
 					x1 : centerX,
 					y1 : centerY,
 					x2 : x2,
 					y2 : y2,
 					stroke : this.color("gridAxisBorderColor"),
-					"stroke-width" : chart.theme("gridBorderWidth")
+					"stroke-width" : this.chart.theme("gridBorderWidth")
 				}));
 
 				position[i] = {
@@ -196,13 +198,13 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 					tx -= 10;
 				}
 
-				if (!grid.hideText) {
-					root.append(chart.text({
+				if (!this.grid.hideText) {
+					root.append(this.chart.text({
 						x : tx,
 						y : ty,
 						"text-anchor" : talign,
-						fill : chart.theme("gridFontColor")
-					}, domain[i]))
+						fill : this.chart.theme("gridFontColor")
+					}, this.domain[i]))
 				}
 				
 				var obj = math.rotate(startX, startY, unit);
@@ -211,7 +213,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				startY = obj.y;
 			}
 
-			if (!grid.line) {
+			if (!this.grid.line) {
 				return {
 					root : root , 
 					scale : scale(position[0])
@@ -230,16 +232,16 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				}
 
 				if (this.grid.shape == "circle") {
-					drawCircle(chart, root, centerX, centerY, 0, startY, count);
+					drawCircle(root, centerX, centerY, 0, startY, count);
 				} else {
-					drawRadial(chart, root, centerX, centerY, 0, startY, count, unit);
+					drawRadial(root, centerX, centerY, 0, startY, count, unit);
 				}
 
 				if (!this.grid.hideText) {
-					root.append(chart.text({
+					root.append(this.chart.text({
 						x : centerX,
 						y : centerY + (startY + h - 5),
-						fill : chart.theme("gridFontColor")
+						fill : this.chart.theme("gridFontColor")
 					}, (this.grid.max - stepBase) + ""))
 				}
 

@@ -10,8 +10,7 @@ jui.define("chart.grid.overlap", [  ], function() {
      * @param grid
      * @extends chart.grid.core
      */
-    var OverlapGrid = function(chart, axis, grid) {
-        var orient = grid.orient;
+    var OverlapGrid = function() {
         var size, widthUnit, heightUnit, width, height ;
 
         this.custom = function(chart, g) {
@@ -46,13 +45,11 @@ jui.define("chart.grid.overlap", [  ], function() {
                     var x = i * widthUnit;
                     var y = i * heightUnit;
 
-                    var obj = { x : x , y : y };
-
                     return {
-                        x : axis.area('x') + obj.x,
-                        y : axis.area('y') + obj.y,
-                        width : Math.abs(width/2 - obj.x)*2,
-                        height : Math.abs(height/2 - obj.y)*2
+                        x : axis.area('x') + x,
+                        y : axis.area('y') + y,
+                        width : Math.abs(width/2 - x)*2,
+                        height : Math.abs(height/2 - y)*2
                     }
 
                 }
@@ -70,12 +67,12 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
-            return this.drawGrid(chart, orient, "overlap", grid);
+            return this.drawGrid("overlap");
         }
 
         OverlapGrid.setup = function() {
             return {
-                /** @cfg {Number} [size=null] divid count */
+                /** @cfg {Number} [size=null] 분할할 개수  */
                 count : null
             }
         }

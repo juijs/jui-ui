@@ -7,9 +7,7 @@ jui.define("chart.grid.panel", [  ], function() {
      *
      * @extends chart.grid.core
      */
-    var PanelGrid = function(chart, axis, grid) {
-
-        var orient = grid.orient;
+    var PanelGrid = function() {
 
         /**
          * @method custom
@@ -20,13 +18,13 @@ jui.define("chart.grid.panel", [  ], function() {
          * @param {SVGElement} g
          * @protected
          */
-        this.custom = function(chart, g) {
+        this.custom = function(g) {
             var obj = this.scale(0);
 
-            obj.x -= axis.area('x');
-            obj.y -= axis.area('y');
+            obj.x -= this.axis.area('x');
+            obj.y -= this.axis.area('y');
 
-            var rect = chart.svg.rect($.extend(obj, {
+            var rect = this.chart.svg.rect($.extend(obj, {
                 fill : 'white',
                 stroke : "white"
             }));
@@ -58,7 +56,7 @@ jui.define("chart.grid.panel", [  ], function() {
                         height : axis.area('height')
                     }
                 }
-            })(axis);
+            })(this.axis);
 
         }
 
@@ -72,7 +70,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
-            return this.drawGrid(chart, orient, "panel", grid);
+            return this.drawGrid("panel");
         }
     }
     

@@ -7,14 +7,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
      *  
      * @extends chart.grid.core 
      */
-	var DateGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
-		var domain = [];
-		var step = [];
+	var DateGrid = function() {
 
-		this.top = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.top = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					x1 : this.start,
 					x2 : this.end
 				}));
@@ -24,35 +21,35 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				values = this.values,
 				bar = this.bar;
 
-			for (var i = 0; i < ticks.length; i++) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
 				}
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
 
-				axis.append(this.line(chart, {
-					y2 : (grid.line) ? this.axis.area('height') : -bar
+				axis.append(this.line({
+					y2 : (this.grid.line) ? this.axis.area('height') : -bar
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
+					fill : this.chart.theme("gridFontColor")
 				}, domain)));
 
 				g.append(axis);
 			}
 		}
 
-		this.bottom = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.bottom = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					x1 : this.start,
 					x2 : this.end
 				}));
@@ -62,35 +59,35 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				values = this.values,
 				bar = this.bar;
 
-			for (var i = 0; i < ticks.length; i++) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
 				}
 
-				var group = chart.svg.group({
+				var group = this.chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
 
-				group.append(this.line(chart, {
-					y2 : (grid.line) ? -this.axis.area('height') : bar
+				group.append(this.line({
+					y2 : (this.grid.line) ? -this.axis.area('height') : bar
 				}));
 
-				group.append(this.getTextRotate(chart.text({
+				group.append(this.getTextRotate(this.chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
+					fill : this.chart.theme("gridFontColor")
 				}, domain)));
 
 				g.append(group);
 			}
 		}
 
-		this.left = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.left = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					y1 : this.start,
 					y2 : this.end
 				}));
@@ -100,35 +97,35 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				values = this.values,
 				bar = this.bar;
 
-			for (var i = 0; i < ticks.length; i++) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
 				}
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
 				});
 
-				axis.append(this.line(chart, {
-					x2 : (grid.line) ? this.axis.area('width') : -bar
+				axis.append(this.line({
+					x2 : (this.grid.line) ? this.axis.area('width') : -bar
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : -bar-2,
 					y : bar-2,
 					"text-anchor" : "end",
-					fill : chart.theme("gridFontColor")
+					fill : this.chart.theme("gridFontColor")
 				}, domain)));
 
 				g.append(axis);
 			}
 		}
 
-		this.right = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.right = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					y1 : this.start,
 					y2 : this.end
 				}));
@@ -138,33 +135,33 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				values = this.values,
 				bar = this.bar;
 			
-			for (var i = 0; i < ticks.length; i++) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i);
 
 				if (!domain && domain !== 0) {
 					continue;
 				}
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(0," + values[i] + ")"
 				});
 
-				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -this.axis.area('width') : bar
+				axis.append(this.line({
+					x2 : (this.grid.line) ? -this.axis.area('width') : bar
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : bar + 4,
 					y : -bar,
 					"text-anchor" : "start",
-					fill : chart.theme("gridFontColor")
+					fill : this.chart.theme("gridFontColor")
 				}, domain)));
 
 				g.append(axis);
 			}
 		}
 
-        this.wrapper = function(chart, scale, key) {
+        this.wrapper = function(scale, key) {
             var old_scale = scale;
             var self = this;
 
@@ -187,6 +184,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		 *
 		 */
 		this.initDomain = function() {
+
+			var domain = [];
+			var step = [];
 
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined;
@@ -238,29 +238,29 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		}
 
 		this.drawBefore = function() {
-			this.initDomain();
+			var domain = this.initDomain();
 
-			var obj = this.getGridSize(chart, orient, grid),
+			var obj = this.getGridSize(),
 				range = [obj.start, obj.end];
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
 			if (this.grid.realtime) {
-				this.ticks = this.scale.realTicks(grid.step[0], grid.step[1]);
+				this.ticks = this.scale.realTicks(this.grid.step[0], this.grid.step[1]);
 			} else {
-				this.ticks = this.scale.ticks(grid.step[0], grid.step[1]);
+				this.ticks = this.scale.ticks(this.grid.step[0], this.grid.step[1]);
 			}
 
 			if (this.axis.data.length == 0) {
 				this.ticks = [];
 			}
 
-			if ( typeof grid.format == "string") {
+			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
 					}	
-				})(grid, grid.format)
+				})(this.grid, this.grid.format)
 			}
 
 			// step = [this.time.days, 1];
@@ -276,7 +276,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "date", grid);
+			return this.drawGrid("date");
 		}
 	}
 
@@ -286,10 +286,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			domain: null,
             /** @cfg {Array} [step=[]] */
 			step: [],
-            /** @cfg {Number} [min=0] min timestamp  */
-			min: 0,
-            /** @cfg {Number} [max=0] max timestamp  */
-			max: 0,
+            /** @cfg {Number} [min=null] min timestamp  */
+			min: null,
+            /** @cfg {Number} [max=null] max timestamp  */
+			max: null,
             /** @cfg {Boolean} [reverse=false]  */
 			reverse: false,
             /** @cfg {String} [key=null] a field for value  */

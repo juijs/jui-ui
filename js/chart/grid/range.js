@@ -1,12 +1,16 @@
 jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
-	var RangeGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
-		var domain = [];
-
-		this.top = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+	/**
+	 * @class chart.grid.range
+	 *
+	 * implements range grid
+	 *
+	 * @extends chart.grid.core
+	 */
+	var RangeGrid = function() {
+		this.top = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					x2 : this.size
 				}));
 			}
@@ -16,7 +20,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				values = this.values,
 				bar = this.bar;
 
-			for (var i = 0; i < ticks.length; i++) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
 
 				var domain = this.format(ticks[i], i);
 
@@ -26,30 +30,30 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
 
-				axis.append(this.line(chart, {
-					y2 : (grid.line) ? this.axis.area('height') : -bar,
+				axis.append(this.line({
+					y2 : (this.grid.line) ? this.axis.area('height') : -bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : 0,
 					y : -bar - 4,
 					"text-anchor" : "middle",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, domain)));
 
 				g.append(axis);
 			}
 		}
 
-		this.bottom = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.bottom = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					x1 : this.start,
 					x2 : this.end
 				}));
@@ -70,30 +74,30 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(" + values[i] + ", 0)"
 				});
 
-				axis.append(this.line(chart, {
-					y2 : (grid.line) ? -this.axis.area('height') : bar,
+				axis.append(this.line({
+					y2 : (this.grid.line) ? -this.axis.area('height') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : 0,
 					y : bar * 3,
 					"text-anchor" : "middle",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, domain)))
 
 				g.append(axis);
 			}
 		}
 
-		this.left = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.left = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					y1 : this.start,
 					y2 : this.end
 				}));
@@ -118,22 +122,22 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(0, " + values[i] + ")"
 				})
 
-				axis.append(this.line(chart, {
-					x2 : (grid.line) ? this.axis.area('width') : -bar,
+				axis.append(this.line({
+					x2 : (this.grid.line) ? this.axis.area('width') : -bar,
 					stroke : isZero ? activeBorderColor : borderColor,
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")					
+					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				if (!grid.hideText) {
-					axis.append(this.getTextRotate(chart.text({
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
 						x : -bar - 4,
 						y : bar,
 						"text-anchor" : "end",
-						fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+						fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 					}, domain)));
 				}
 
@@ -142,9 +146,9 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			}
 		}
 
-		this.right = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
+		this.right = function(g) {
+			if (!this.grid.line) {
+				g.append(this.axisLine({
 					y1 : this.start,
 					y2 : this.end
 				}));
@@ -164,28 +168,28 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var isZero = (ticks[i] == 0 && ticks[i] != min);
 
-				var axis = chart.svg.group({
+				var axis = this.chart.svg.group({
 					"transform" : "translate(0, " + values[i] + ")"
 				});
 
-				axis.append(this.line(chart, {
+				axis.append(this.line({
 					x2 : (grid.line) ? -this.axis.area('width') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
+					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
-				axis.append(this.getTextRotate(chart.text({
+				axis.append(this.getTextRotate(this.chart.text({
 					x : bar + 4,
 					y : bar,
 					"text-anchor" : "start",
-					fill : chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
+					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
 				}, domain)));
 
 				g.append(axis);
 			}
 		}
 
-        this.wrapper = function(chart, scale, key) {
+        this.wrapper = function(scale, key) {
             var old_scale = scale;
             var self = this;
 
@@ -204,6 +208,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		 */
 		this.initDomain = function() {
 
+			var domain = [];
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined,
 				data = this.data();
@@ -250,7 +255,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 					}
 				}
 			} else {
-				value_list = grid.domain;
+				value_list = this.grid.domain;
 				isArray = true;
 			}
 
@@ -306,19 +311,19 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.drawBefore = function() {
-			this.initDomain();
+			var domain = this.initDomain();
 
-			var obj = this.getGridSize(chart, orient, grid);
+			var obj = this.getGridSize();
 
 			this.scale = UtilScale.linear().domain(domain);
 
-			if (orient == "left" || orient == "right") {
+			if (this.grid.orient == "left" || this.grid.orient == "right") {
                 var arr = [obj.end, obj.start];
 			} else {
                 var arr = [obj.start, obj.end]
 			}
             this.scale.range(arr);
-			this.scale.clamp(grid.clamp)
+			this.scale.clamp(this.grid.clamp)
 
 			this.start = obj.start;
 			this.size = obj.size;
@@ -338,21 +343,42 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "range", grid);
+			return this.drawGrid("range");
 		}
 	}
 
 	RangeGrid.setup = function() {
 		return {
+			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
 			domain: null,
+			/** @cfg {Number} [step=10] 나누는 숫자 */
 			step: 10,
+			/** @cfg {Number} [min=0] 최소값 설정 */
 			min: 0,
+			/** @cfg {Number} [max=0] 최대값 설정 */
 			max: 0,
+			/** @cfg {Number} [unit=null] 단계별 사이즈  */
 			unit: null,
+			/**
+			 * @cfg {Boolean} [clamp=true]
+			 *
+			 * max 나 min 을 넘어가는 값에 대한 체크,
+			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
+			 */
 			clamp : true,
+			/**
+			 * @cfg {Boolean} [reverse=false]
+			 *
+			 * 도메인을 거꾸로 정렬한다.
+			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
+			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
+			 */
 			reverse: false,
+			/** @cfg {String} [key=null] a field for value */
 			key: null,
+			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
 			hideText: false,
+			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
 			nice: false
 		};
 	}

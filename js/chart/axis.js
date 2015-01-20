@@ -38,7 +38,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(_.typeCheck("integer", axis[k].extend)) {
                 _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
             }
-            
+
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
 
