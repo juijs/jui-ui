@@ -16,12 +16,12 @@
 	 *
 	 * 퀵 정렬
 	 *
-	 * @param array
-	 * @param isClone
+	 * @param {Array} array
+	 * @param {Boolean} isClone  isClone 이 true 이면, 해당 배열을 참조하지 않고 복사해서 처리
 	 * @constructor
 	 * @private
 	 */
-	var QuickSort = function(array, isClone) { // isClone이면, 해당 배열을 참조하지 않고 복사해서 처리
+	var QuickSort = function(array, isClone) { //
         var compareFunc = null,
         	array = (isClone) ? array.slice(0) : array;
   
