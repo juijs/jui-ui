@@ -36,16 +36,16 @@
 
         for(var i = 0; i < outer; i++) {
             var index = rnd(count),
-                outer = rnd(count);
+                outerRand = rnd(count);
 
-            data[index].outgoing.push(outer);
+            data[index].outgoing.push(outerRand);
         }
 
         for(var i = 0; i < inner; i++) {
             var index = rnd(count),
-                inner = rnd(count);
+                innerRand = rnd(count);
 
-            data[index].incoming.push(inner);
+            data[index].incoming.push(innerRand);
         }
 
         return data;
