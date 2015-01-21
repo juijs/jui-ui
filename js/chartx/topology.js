@@ -54,6 +54,19 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
             }
         }
 
+        function getLineCoef(x1, y1, x2, y2) { // 직선의 식 y = ax + b 에서 두점을 주고 a와 b를 구함
+            var a = 0.0;
+
+            if(x2 != x1) {
+                a = (y2 - y1) / (x2 - x1);
+            }
+
+            return {
+                a: a,
+                b: y1 - (a * x1)
+            }
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group();
         }
@@ -96,6 +109,44 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
                 }).translate(data.x, data.y);
 
                 node.append(group);
+
+                for(var j = 0; j < data.outgoing.length; j++) {
+                    var group = g.get(data.outgoing[j]),
+                        target = self.getData(data.outgoing[j])
+
+                    var a = data.x - target.x,
+                        b = data.y - target.y,
+                        c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) - r,
+                        angle = math.angle(data.x, data.y, target.x, target.y);
+
+                    group.append(chart.svg.circle({
+                        fill: "black",
+                        r: 5,
+                        cx: data.x,
+                        cy: data.y
+                    }));
+
+                    group.append(chart.svg.circle({
+                        fill: "red",
+                        r: 5,
+                        cx: data.x + Math.cos(angle) * c,
+                        cy: data.y + Math.sin(angle) * c
+                    }));
+
+
+                    /*/
+                    var val = getLineCoef(data.x, data.y, target.x, target.y);
+
+                    for(var i = 0; i < 100; i++) {
+                        group.append(chart.svg.circle({
+                            fill: "red",
+                            r: 1,
+                            cx: data.x + i,
+                            cy: (val.a * (data.x + i)) + val.b
+                        }));
+                    }
+                    /**/
+                }
 
                 setDragEvent(node, data);
             });

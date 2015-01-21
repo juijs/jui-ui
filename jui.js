@@ -12,10 +12,16 @@
 	};
 
 	/**
-	 * Private Classes
-	 * 
+	 * @class QuickSort
+	 *
+	 * 퀵 정렬
+	 *
+	 * @param {Array} array
+	 * @param {Boolean} isClone  isClone 이 true 이면, 해당 배열을 참조하지 않고 복사해서 처리
+	 * @constructor
+	 * @private
 	 */
-	var QuickSort = function(array, isClone) { // isClone이면, 해당 배열을 참조하지 않고 복사해서 처리
+	var QuickSort = function(array, isClone) { //
         var compareFunc = null,
         	array = (isClone) ? array.slice(0) : array;
   
@@ -1909,6 +1915,13 @@ jui.define("util.math", [], function() {
 		degree : function(radian) {
 			return radian * 180 / Math.PI;
 		},
+
+        angle : function(x1, y1, x2, y2) {
+            var dx = x2 - x1,
+                dy = y2 - y1;
+
+            return Math.atan2(dy, dx);
+        },
 
 		/**
 		 * @method interpolateNumber
@@ -11986,18 +11999,17 @@ jui.define("chart.theme.jennifer", [], function() {
 
 
     return {
-        /** @cfg @cfg Chart Background Color */
+        /** @cfg  */
     	backgroundColor : "white",
-        /** @cfg Base Font Size */
+        /** @cfg  */
     	fontSize : "11px",
-        /** @cfg Base Font Color  */
+        /** @cfg   */
     	fontColor : "#333333",
-        /** @cfg Base Font Family */
+        /** @cfg  */
 		fontFamily : "arial,Tahoma,verdana",
-        /** @cfg Color List  */
+        /** @cfg   */
         colors : themeColors,
 
-        // grid styles
         /** @cfg Grid Font Color */
     	gridFontColor : "#333333",
         /** @cfg Grid Active Font color */
@@ -12121,27 +12133,49 @@ jui.define("chart.theme.jennifer", [], function() {
         pinBorderWidth : 0.7,
         /** @cfg */
         titleFontColor : "#333",
+        /** @cfg */
         titleFontSize : "13px",
+        /** @cfg */
         titleFontWeight : "normal",
+        /** @cfg */
         legendFontColor : "#333",
+        /** @cfg */
         legendFontSize : "12px",
+        /** @cfg */
         tooltipFontColor : "#333",
+        /** @cfg */
         tooltipFontSize : "12px",
+        /** @cfg */
         tooltipBackgroundColor : "white",
+        /** @cfg */
         tooltipBorderColor : "#aaaaaa",
+        /** @cfg */
         tooltipBackgroundOpacity : 0.7,
+        /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
+        /** @cfg */
         scrollThumbBackgroundColor : "#b2b2b2",
+        /** @cfg */
         scrollThumbBorderColor : "#9f9fa4",
+        /** @cfg */
         zoomBackgroundColor : "red",
+        /** @cfg */
         zoomFocusColor : "gray",
+        /** @cfg */
         crossBorderColor : "#a9a9a9",
+        /** @cfg */
         crossBorderWidth : 1,
+        /** @cfg */
         crossBorderOpacity : 0.8,
+        /** @cfg */
         crossBalloonFontSize : "11px",
+        /** @cfg */
         crossBalloonFontColor : "white",
+        /** @cfg */
         crossBalloonBackgroundColor : "black",
+        /** @cfg */
         crossBalloonBackgroundOpacity : 0.5
+
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -20186,6 +20220,19 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
             }
         }
 
+        function getLineCoef(x1, y1, x2, y2) { // 직선의 식 y = ax + b 에서 두점을 주고 a와 b를 구함
+            var a = 0.0;
+
+            if(x2 != x1) {
+                a = (y2 - y1) / (x2 - x1);
+            }
+
+            return {
+                a: a,
+                b: y1 - (a * x1)
+            }
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group();
         }
@@ -20228,6 +20275,44 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
                 }).translate(data.x, data.y);
 
                 node.append(group);
+
+                for(var j = 0; j < data.outgoing.length; j++) {
+                    var group = g.get(data.outgoing[j]),
+                        target = self.getData(data.outgoing[j])
+
+                    var a = data.x - target.x,
+                        b = data.y - target.y,
+                        c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) - r,
+                        angle = math.angle(data.x, data.y, target.x, target.y);
+
+                    group.append(chart.svg.circle({
+                        fill: "black",
+                        r: 5,
+                        cx: data.x,
+                        cy: data.y
+                    }));
+
+                    group.append(chart.svg.circle({
+                        fill: "red",
+                        r: 5,
+                        cx: data.x + Math.cos(angle) * c,
+                        cy: data.y + Math.sin(angle) * c
+                    }));
+
+
+                    /*/
+                    var val = getLineCoef(data.x, data.y, target.x, target.y);
+
+                    for(var i = 0; i < 100; i++) {
+                        group.append(chart.svg.circle({
+                            fill: "red",
+                            r: 1,
+                            cx: data.x + i,
+                            cy: (val.a * (data.x + i)) + val.b
+                        }));
+                    }
+                    /**/
+                }
 
                 setDragEvent(node, data);
             });

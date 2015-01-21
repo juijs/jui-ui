@@ -20,9 +20,9 @@
 <script>
     var data = [
         { name: "W1", type: 1, x: 100, y: 100, outgoing: [ 1 ], incoming: [] },
-        { name: "W2", type: 1, x: 300, y: 100, outgoing: [ 2 ], incoming: [ 0 ] },
-        { name: "W3", type: 1, x: 500, y: 100, outgoing: [ 3 ], incoming: [ 1 ] },
-        { name: "Oracle", type: 2, x: 700, y: 200, outgoing: [], incoming: [ 2 ] }
+        { name: "W2", type: 1, x: 100, y: 200, outgoing: [], incoming: [ 0 ] },
+        //{ name: "W3", type: 1, x: 500, y: 100, outgoing: [ 3 ], incoming: [ 1 ] },
+        //{ name: "Oracle", type: 2, x: 700, y: 200, outgoing: [], incoming: [ 2 ] }
     ]
     jui.ready([ "chartx.topology", "util.base" ], function(chart, _) {
         c = chart("#chart", {
