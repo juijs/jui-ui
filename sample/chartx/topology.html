@@ -32,8 +32,9 @@
                 y = rnd(h);
 
             data.push({ name: "W" + (i + 1), x: x, y: y, outgoing: [], incoming: [] });
-        }
+        }  
 
+        // outerRand
         for(var i = 0; i < outer; i++) {
             var index = rnd(count),
                 outerRand = rnd(count);
