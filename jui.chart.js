@@ -13602,21 +13602,13 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
     var TopologyDrag = function(chart, axis, widget) {
-        function setDragEvent(node, data) {
-            var isDrag = false,
-                startX, startY;
+        var targetIndex, startX, startY;
 
-            node.on("mousedown", function(e) {
-                if(isDrag) return;
+        function initDragEvent() {
+            chart.on("chart.mousemove", function (e) {
+                if(!_.typeCheck("integer", targetIndex)) return;
 
-                isDrag = true;
-                startX = data.x;
-                startY = data.y;
-            });
-
-            chart.on("chart.mousemove", function(e) {
-                if(!isDrag) return;
-
+                var data = axis.data[targetIndex];
                 data.x = startX + (e.chartX - startX);
                 data.y = startY + (e.chartY - startY);
 
@@ -13629,9 +13621,8 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             chart.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
-                if(!isDrag) return;
-
-                isDrag = false;
+                if(!_.typeCheck("integer", targetIndex)) return;
+                targetIndex = null;
             }
         }
 
@@ -13639,14 +13630,26 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             var root = chart.svg.root.childrens[0].childrens[2];
 
             for(var i = 0; i < axis.data.length; i++) {
+                var data = axis.data[i];
+
                 root.each(function(i, node) {
-                    setDragEvent(node, axis.data[i]);
+                    (function(index) {
+                        node.on("mousedown", function(e) {
+                            if(_.typeCheck("integer", targetIndex)) return;
+
+                            targetIndex = index;
+                            startX = data.x;
+                            startY = data.y;
+                        });
+                    })(i);
                 });
             }
         }
 
         this.draw = function() {
+            initDragEvent();
             setBrushEvent();
+
             return chart.svg.group();
         }
     }
