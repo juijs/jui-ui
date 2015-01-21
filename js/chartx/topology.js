@@ -118,21 +118,19 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
         function setBrushEvent() {
             var root = chart.svg.root.childrens[0].childrens[2];
 
-            for(var i = 0; i < axis.data.length; i++) {
+            root.each(function(i, node) {
                 var data = axis.data[i];
+                (function(index, data) {
+                    node.on("mousedown", function(e) {
+                        if(_.typeCheck("integer", targetIndex)) return;
 
-                root.each(function(i, node) {
-                    (function(index) {
-                        node.on("mousedown", function(e) {
-                            if(_.typeCheck("integer", targetIndex)) return;
+                        targetIndex = index;
+                        startX = data.x;
+                        startY = data.y;
+                    });
+                })(i, data);
+            });
 
-                            targetIndex = index;
-                            startX = data.x;
-                            startY = data.y;
-                        });
-                    })(i);
-                });
-            }
         }
 
         this.draw = function() {

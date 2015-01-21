@@ -86,7 +86,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          * @return {util.svg.element}
          */
 		this.drawUnit = function(index, data, group) {
-			var obj = axis.c(index),
+			var obj = this.axis.c(index),
 				value = (data[this.brush.target] || data.value) || 0,
 				max = (data[this.brush.max] || data.max) || 100,
 				min = (data[this.brush.min] || data.min) || 0,
@@ -151,15 +151,13 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 		this.draw = function() {
 
-			var group = chart.svg.group();
+			var group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
 				this.drawUnit(i, data, group);
 			});
 
 			return group;
-
-
 
 		}
 	}

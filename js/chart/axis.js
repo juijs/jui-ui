@@ -25,12 +25,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
         
         function drawGridType(axis, k) {
-            if(!_.typeCheck("object", axis[k])) return null;
+            if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
+            axis[k] = axis[k]  || {};
             axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
             if (k == 'c') {
+                axis[k].type = axis[k].type || 'panel';
                 axis[k].orient = 'custom';
             }
 
@@ -41,10 +43,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
-
-            if (k == 'c' && !axis[k]) {
-                Grid = jui.include("chart.grid.panel");
-            }
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Grid, axis[k]);

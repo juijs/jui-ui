@@ -26,7 +26,7 @@ jui.define("util.svg.element", [], function() {
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
-            for(var i = 0; i < this.childrens.length; i++) {
+            for(var i = 0, len = this.childrens.length; i < len; i++) {
                 var self = this.childrens[i];
                 callback.apply(self, [ i, self ]);
             }
