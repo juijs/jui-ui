@@ -13555,6 +13555,7 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
     var TopologyDrag = function(chart, axis, widget) {
         var targetIndex, startX, startY;
+        var renderWait = false;
 
         function initDragEvent() {
             chart.on("chart.mousemove", function (e) {
@@ -13564,8 +13565,16 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
                 data.x = startX + (e.chartX - startX);
                 data.y = startY + (e.chartY - startY);
 
-                chart.render();
-                setBrushEvent();
+                if(renderWait === false) {
+                    setTimeout(function () {
+                        chart.render();
+                        setBrushEvent();
+
+                        renderWait = false;
+                    }, 70);
+
+                    renderWait = true;
+                }
             });
 
             chart.on("chart.mouseup", endDragAction);
