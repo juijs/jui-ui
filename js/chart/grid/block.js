@@ -11,7 +11,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
      * @extends chart.grid.core  
      */
 	var BlockGrid = function() {
-		var domain = [];
         /**
          * @method top
          *

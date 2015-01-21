@@ -378,8 +378,10 @@
 	
 	
 	/**
-	 * Public Utility Classes
 	 * @class util.base
+     *  
+     * Public Utility Classes
+     *  
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
@@ -420,8 +422,8 @@
 		/**
 		 * @method inherit
 		 * implements inherit for object
-		 * @param {Function} ctor
-		 * @param {Function} superCtor
+		 * @param {Function} ctor base Class
+		 * @param {Function} superCtor super Class
 		 */
 		inherit: function(ctor, superCtor) {
 			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
@@ -430,6 +432,17 @@
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
+
+            /**
+             * @method super 
+             * call parent method
+             * @param {String} method  parent method name
+             * @param {Array} args
+             * @returns {Mixed}
+             */
+            ctor.prototype.super = function(method, args) {
+                return this.constructor.prototype[method].apply(this, args);
+            }
 		},
 		/**
 		 * @method extend

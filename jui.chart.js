@@ -378,8 +378,10 @@
 	
 	
 	/**
-	 * Public Utility Classes
 	 * @class util.base
+     *  
+     * Public Utility Classes
+     *  
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
@@ -420,8 +422,8 @@
 		/**
 		 * @method inherit
 		 * implements inherit for object
-		 * @param {Function} ctor
-		 * @param {Function} superCtor
+		 * @param {Function} ctor base Class
+		 * @param {Function} superCtor super Class
 		 */
 		inherit: function(ctor, superCtor) {
 			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
@@ -430,6 +432,17 @@
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
             ctor.prototype.parent = ctor.prototype;
+
+            /**
+             * @method super 
+             * call parent method
+             * @param {String} method  parent method name
+             * @param {Array} args
+             * @returns {Mixed}
+             */
+            ctor.prototype.super = function(method, args) {
+                return this.constructor.prototype[method].apply(this, args);
+            }
 		},
 		/**
 		 * @method extend
@@ -2799,7 +2812,7 @@ jui.define("util.svg.element", [], function() {
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
-            for(var i = 0; i < this.childrens.length; i++) {
+            for(var i = 0, len = this.childrens.length; i < len; i++) {
                 var self = this.childrens[i];
                 callback.apply(self, [ i, self ]);
             }
@@ -4206,12 +4219,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
         
         function drawGridType(axis, k) {
-            if(!_.typeCheck("object", axis[k])) return null;
+            if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
+            axis[k] = axis[k]  || {};
             axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
             if (k == 'c') {
+                axis[k].type = axis[k].type || 'panel';
                 axis[k].orient = 'custom';
             }
 
@@ -4222,10 +4237,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
-
-            if (k == 'c' && !axis[k]) {
-                Grid = jui.include("chart.grid.panel");
-            }
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Grid, axis[k]);
@@ -6399,7 +6410,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
      * @extends chart.grid.core  
      */
 	var BlockGrid = function() {
-		var domain = [];
         /**
          * @method top
          *
@@ -9001,6 +9011,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.color = function(key) {
+            if (typeof key == 'string') {
+                return this.chart.color(0, { colors : [key] });
+            }
             return this.chart.color(key, this.brush);
         }
 	}
@@ -11339,7 +11352,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          * @return {util.svg.element}
          */
 		this.drawUnit = function(index, data, group) {
-			var obj = axis.c(index),
+			var obj = this.axis.c(index),
 				value = (data[this.brush.target] || data.value) || 0,
 				max = (data[this.brush.max] || data.max) || 100,
 				min = (data[this.brush.min] || data.min) || 0,
@@ -11404,15 +11417,13 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 		this.draw = function() {
 
-			var group = chart.svg.group();
+			var group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
 				this.drawUnit(i, data, group);
 			});
 
 			return group;
-
-
 
 		}
 	}
@@ -12209,65 +12220,6 @@ jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
 
 	return CoreBrushItem;
 }, "chart.draw"); 
-jui.define("chart.brush.item.arrow", [ "util.base" ], function(_) {
-    /**
-     * @class chart.brush.item.arrow
-     *
-     * implements simple brush item
-     *
-     * @extends chart.brush.item.core
-     * @requires util.base
-     */
-	var ArrowBrushItem = function() {
-
-        this.draw = function() {
-            var svg = this.chart.svg,
-                chart = this.chart;
-
-            var g = svg.group().translate(this.item.centerX, this.item.centerY);
-
-            this.group.append(g);
-
-            // 바깥 지름 부터 그림
-            var startX = 0;
-            var startY = -(this.item.outerRadius + this.item.size/2);
-
-            var path = svg.path({
-                stroke : this.chart.theme("gaugeArrowColor"),
-                "stroke-width" : 0.2,
-                "fill" : this.chart.theme("gaugeArrowColor")
-            });
-
-            path.MoveTo(startX, startY);
-            path.LineTo(5, 0);
-            path.LineTo(-5, 0);
-            path.ClosePath();
-
-            // start angle
-            path.rotate(this.item.startAngle);
-            g.append(path)
-            path.rotate(this.item.endAngle + this.item.startAngle);
-
-            g.append(svg.circle({
-                cx : 0,
-                cy : 0,
-                r : 5,
-                fill : chart.theme("gaugeArrowColor")
-            }));
-
-            g.append(svg.circle({
-                cx : 0,
-                cy : 0,
-                r : 2,
-                fill : 'white'
-            }));
-
-            return g;
-        }
-	}
-
-	return ArrowBrushItem;
-}, "chart.brush.item.core");
 jui.define("chart.brush.item.tooltip", [], function() {
     /**
      * @class chart.brush.item.tooltip
@@ -13629,21 +13581,19 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
         function setBrushEvent() {
             var root = chart.svg.root.childrens[0].childrens[2];
 
-            for(var i = 0; i < axis.data.length; i++) {
+            root.each(function(i, node) {
                 var data = axis.data[i];
+                (function(index, data) {
+                    node.on("mousedown", function(e) {
+                        if(_.typeCheck("integer", targetIndex)) return;
 
-                root.each(function(i, node) {
-                    (function(index) {
-                        node.on("mousedown", function(e) {
-                            if(_.typeCheck("integer", targetIndex)) return;
+                        targetIndex = index;
+                        startX = data.x;
+                        startY = data.y;
+                    });
+                })(i, data);
+            });
 
-                            targetIndex = index;
-                            startX = data.x;
-                            startY = data.y;
-                        });
-                    })(i);
-                });
-            }
         }
 
         this.draw = function() {
