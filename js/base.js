@@ -435,14 +435,13 @@
 	var utility = global["util.base"] = {
 
 		/**
-		 * @property {Object} browser check browser agent
-		 */
+		 * @property browser check browser agent
+		 * @property {Boolean} browser.webkit  Webkit 브라우저 체크
+		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
+		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			/** @property {Boolean} browser.webkit  Webkit 브라우저 체크 */
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
-			/** @property {Boolean} browser.mozilla  Mozilla 브라우저 체크 */
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
-			/** @property {Boolean} browser.msie  IE 브라우저 체크 */
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
