@@ -429,16 +429,18 @@
 	var utility = global["util.base"] = {
 
 		/**
-		 * @property
-		 * check browser agent
+		 * @property {Object} browser check browser agent
 		 */
 		browser: {
+			/** @property {Boolean} browser.webkit  Webkit 브라우저 체크 */
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
+			/** @property {Boolean} browser.mozilla  Mozilla 브라우저 체크 */
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
+			/** @property {Boolean} browser.msie  IE 브라우저 체크 */
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
-		 * @property
+		 * @property {Boolean} isTouch
 		 * check touch device
 		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
