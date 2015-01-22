@@ -43,8 +43,19 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return chart.svg.group({}, function() {
                 chart.svg.circle({
                     r: r,
-                    fill: self.color(0)
+                    fill: self.color(0),
+                    stroke: "white",
+                    "stroke-width": 1
                 });
+
+                /*/
+                chart.text({
+                    x: 0,
+                    y: 0,
+                    "font-weight": "bold",
+                    "font-size": "16px"
+                }, "\ue603");
+                /**/
 
                 chart.text({
                     x: 0,
@@ -100,13 +111,13 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             this.eachData(function(i, data) {
                 var node = chart.svg.group();
 
-                // 노드 생성
-                node.append(createNodes(data));
-
                 for(var j = 0; j < data.outgoing.length; j++) {
                     // 엣지 생성
                     node.append(createEdges(data, j));
                 }
+
+                // 노드 생성
+                node.append(createNodes(data));
 
                 g.append(node);
             });
@@ -167,6 +178,10 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
                         targetKey = key;
                         startX = data.x;
                         startY = data.y;
+
+                        // 선택한 노드 맨 마지막으로 이동
+                        var target = axis.data.splice(i, 1);
+                        axis.data.push(target[0]);
                     });
                 })(data.key, data);
             });
