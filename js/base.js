@@ -421,7 +421,9 @@
 	
 	/**
 	 * @class util.base
-     *  
+     *
+	 * jui 에서 공통적으로 사용하는 유틸리티 함수 모음
+	 *
      * ```
 	 * var _ = jui.include("util.base");
 	 *
