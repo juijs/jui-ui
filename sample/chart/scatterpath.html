@@ -18,8 +18,8 @@
 </script>
 
 <script>
-    jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
-        var maxValue = 300000;
+    jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time", "util.base" ], function(chart, theme, time, _) {
+        var maxValue = 100000
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -30,30 +30,35 @@
         function getTime() {
             return Math.floor(Math.random() * 5 * 60 * 60) + 1;
         }
-        
+
+
+
         var data = [];
         var index = maxValue;
-        while(index--) {
+
+        var func = _.loop10(maxValue);
+
+        func(function(i) {
             data.push({
                 date: +time.add(start, time.seconds, getTime()),
                 name: getNumber(),
                 value : getNumber(),
                 test : getNumber()
             });
-        }
+        })
 
         function changeData(data) {
             data = data.slice(maxValue);
 
-            var index = maxValue;
-            while(index--) {
+
+            func(function(i) {
                 data.push({
                     date: +time.add(start, time.seconds, getTime()),
                     name: getNumber(),
                     value : getNumber(),
                     test : getNumber()
                 });
-            }
+            })
 
             return data;
         }
@@ -88,15 +93,15 @@
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name", size : 1,
+                target : "name", size : 3,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",size : 1,
+                target : "value",size : 3,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",size : 1,
+                target : "test",size : 3,
                 colors : [ theme.colors[2] ]
             }]
         });

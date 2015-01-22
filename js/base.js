@@ -24,7 +24,7 @@
 	var QuickSort = function(array, isClone) { //
         var compareFunc = null,
         	array = (isClone) ? array.slice(0) : array;
-  
+
         function swap(indexA, indexB) {
             var temp = array[indexA];
             
@@ -42,12 +42,12 @@
                     storeIndex++;
                 }
             }
-    
+
             swap(right, storeIndex);
 
             return storeIndex;
         }
-  
+
         this.setCompare = function(func) {
         	compareFunc = func;
         }
@@ -1052,7 +1052,178 @@
 		 *
 		 * @return {String}
 		 */
-        atob: Base64.decode
+        atob: Base64.decode,
+
+		loop : function(total, splitCount) {
+
+			if (!splitCount ) {
+				splitCount = 2;
+				if (total > 500000) {
+					splitCount = 10;
+				} else if (total > 100000 ) {
+					splitCount = 5;
+				} else if (total > 10000 ) {
+					splitCount = 4;
+				} else if (total > 1000 ) {
+					splitCount = 3;
+				}
+			}
+
+			return this["loop" + splitCount](total);
+
+		},
+
+		/**
+		 * @method loop
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Number} count
+		 * @param {Function} callback
+		 */
+		loop2 : function(total) {
+
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/2);
+
+			return function(callback) {
+
+				var first = start, second = first + unit;
+				var firstMax = second, secondMax = end;
+
+				while(first < firstMax && first < end) {
+					callback(first); first++;
+
+					if (second < secondMax && second < end) { callback(second); second++; }
+				}
+
+			};
+
+		},
+		/**
+		 * @method loop3
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Number} count
+		 * @param {Function} callback
+		 */
+		loop3 : function(total) {
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/3);
+
+			return function(callback) {
+				var first = start, second = unit * 1, third = unit * 2;
+				var firstMax = second, secondMax = third, thirdMax = end;
+
+				while(first < firstMax && first < end) {
+					callback(first); first++;
+
+					if (second < secondMax && second < end) { callback(second); second++; }
+					if (third < thirdMax && third < end) { callback(third); third++; }
+				}
+			};
+
+		},
+
+		/**
+		 * @method loop4
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Function} callback
+		 */
+		loop4 : function(total) {
+			var start = 0;
+			var end = total;
+
+
+			var unit = Math.ceil(total/4);
+
+			return function(callback) {
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = end;
+
+				while(first < firstMax && first < end) {
+					callback(first); first++;
+					if (second < secondMax && second < end) { callback(second); second++; }
+					if (third < thirdMax && third < end) { callback(third); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
+				}
+			};
+
+		},
+		/**
+		 * @method loop5
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Function} callback
+		 */
+		loop5 : function(total) {
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/5);
+
+			return function(callback) {
+
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = start;
+
+				while(first < firstMax && first < end) {
+					callback(first); first++;
+					if (second < secondMax && second < end) { callback(second); second++; }
+					if (third < thirdMax && third < end) { callback(third); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback(fifth); fifth++; }
+				}
+			};
+
+		},
+		/**
+		 * @method loop10
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Function} callback
+		 */
+		loop10 : function(total) {
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/10);
+
+			return function(callback) {
+
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4, sixth = unit * 5, seventh = unit * 6, eighth = unit * 7, ninth = unit * 8, tenth = unit * 9;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = sixth, sixthMax = seventh, seventhMax = eighth, eighthMax = ninth, ninthMax = tenth, tenthMax = end;
+
+				while(first < firstMax && first < end) {
+					callback(first); first++;
+					if (second < secondMax && second < end) { callback(second); second++; }
+					if (third < thirdMax && third < end) { callback(third); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback(fifth); fifth++; }
+					if (sixth < sixthMax && sixth < end) { callback(sixth); sixth++; }
+					if (seventh < seventhMax && seventh < end) { callback(seventh); seventh++; }
+					if (eighth < eighthMax && eighth < end) { callback(eighth); eighth++; }
+					if (ninth < ninthMax && ninth < end) { callback(ninth); ninth++; }
+					if (tenth < tenthMax && tenth < end) { callback(tenth); tenth++; }
+				}
+			};
+
+		}
+
 	}
 
 
