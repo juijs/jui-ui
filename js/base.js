@@ -1057,11 +1057,10 @@
 	}
 
 
-    /**
+    /*
      * Module related functions
      *
      */
-	
 	var getDepends = function(depends) {
 		var args = [];
 		
