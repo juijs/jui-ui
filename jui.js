@@ -74,8 +74,21 @@
             return array;
         }
 	}
-	
+
+	/**
+	 * @class IndexParser
+	 *
+	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
+	 *
+	 * @constructor
+	 */
 	var IndexParser = function() {
+		/**
+		 * @method isIndexDepth
+		 *
+		 * @param {String} index
+		 * @return {Boolean}
+		 */
 		this.isIndexDepth = function(index) {
 			if(typeof(index) == "string" && index.indexOf(".") != -1) {
 				return true;
@@ -83,7 +96,13 @@
 			
 			return false;
 		}
-		
+
+		/**
+		 * @method getIndexList
+		 *
+		 * @param {String} index
+		 * @return {Array}
+		 */
 		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
 			var resIndex = [], strIndex = "" + index;
 			
@@ -99,7 +118,17 @@
 			
 			return resIndex;
 		}
-		
+
+
+		/**
+		 * @method changeIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @param {String} targetIndex
+		 * @param {String} rootIndex
+		 * @return {String}
+		 */
 		this.changeIndex = function(index, targetIndex, rootIndex) {
 			var rootIndexLen = this.getIndexList(rootIndex).length,
 				indexList = this.getIndexList(index),
@@ -111,7 +140,13 @@
 
 			return tIndexList.concat(indexList).join(".");
 		}
-		
+
+		/**
+		 * @method getNextIndex
+		 *
+		 * @param {String} index
+		 * @return {String}
+		 */
 		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
 			var indexList = this.getIndexList(index),
 				no = indexList.pop() + 1;
@@ -119,7 +154,14 @@
 			indexList.push(no);
 			return indexList.join(".");
 		}
-		
+
+		/**
+		 * @method getParentIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @returns {*}
+		 */
 		this.getParentIndex = function(index) {
 			if(!this.isIndexDepth(index)) return null;
 			var keys = this.getIndexList(index);
@@ -379,24 +421,31 @@
 	
 	/**
 	 * @class util.base
-     *  
-     * Public Utility Classes
+     *
+	 * jui 에서 공통적으로 사용하는 유틸리티 함수 모음
+	 *
+     * ```
+	 * var _ = jui.include("util.base");
+	 *
+	 * console.log(_.browser.webkit);
+	 * ```
      *  
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
 
 		/**
-		 * @property
-		 * check browser agent
-		 */
+		 * @property browser check browser agent
+		 * @property {Boolean} browser.webkit  Webkit 브라우저 체크
+		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
+		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
-		 * @property
+		 * @property {Boolean} isTouch
 		 * check touch device
 		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -598,6 +647,13 @@
 				after_resize();
 			});
 		},
+		/**
+		 * @method index
+		 *
+		 * IndexParser 객체 생성
+		 *
+		 * @return {IndexParser}
+		 */
 		index: function() {
 			return new IndexParser();
 		},
@@ -621,7 +677,7 @@
 		},
 		/**
 		 * @method typeCheck
-		 * check javascript type
+		 * check data  type
 		 * @param {String} t  type string
 		 * @param {Object} v value object
 		 * @returns {*}
@@ -712,6 +768,16 @@
 				}
 			}
 		},
+		/**
+		 * @method dataToCsv
+		 *
+		 * data 를 csv 로 변환한다.
+		 *
+		 * @param {Array} keys
+		 * @param {Array} dataList
+		 * @param {Number} dataSize
+		 * @return {String}  변환된 csv 문자열
+		 */
 		dataToCsv: function(keys, dataList, dataSize) {
 			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
 			
@@ -733,6 +799,13 @@
 			
 			return csv;
 		},
+
+		/**
+		 * @method dataToCsv2
+		 *
+		 * @param {Object} options
+		 * @return {String}
+		 */
 		dataToCsv2: function(options) {
 			var csv = "";
 			var opts = $.extend({
@@ -764,6 +837,14 @@
 			
 			return csv;
 		},
+		/**
+		 * @method fileToCsv
+		 *
+		 * file 에서 csv 컨텐츠 로드
+		 *
+		 * @param {File} file
+		 * @param {Function} callback
+		 */
 		fileToCsv: function(file, callback) {
 			var reader = new FileReader();
 			
@@ -775,9 +856,25 @@
 	
 	        reader.readAsText(file);
 		},
+		/**
+		 * @method csvToBase64
+		 *
+		 * csv 다운로드 링크로 변환
+		 *
+		 * @param {String} csv
+		 * @return {String}
+		 */
 		csvToBase64: function(csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
+		/**
+		 * @method csvToData
+		 *
+		 * @param {Array} keys
+		 * @param {String} csv
+		 * @param {Number} csvNumber
+		 * @return {Array}
+		 */
 		csvToData: function(keys, csv, csvNumber) {
 			var dataList = [],
 				tmpRowArr = csv.split("\n")
@@ -801,6 +898,15 @@
 			
 			return dataList;
 		},
+		/**
+		 * @method getCsvFields
+		 *
+		 * csv 에서 필드 얻어오기
+		 *
+		 * @param {Array} fields
+		 * @param {Array} csvFields
+		 * @return {Array}
+		 */
 		getCsvFields: function(fields, csvFields) {
 			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
 			
@@ -812,6 +918,15 @@
 			
 			return tmpFields;
 		},
+
+		/**
+		 * @method svgToBase64
+		 *
+		 * xml 문자열로 svg datauri 생성
+		 *
+		 * @param {String} xml
+		 * @return {String} 변환된 data uri 링크
+		 */
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
@@ -911,19 +1026,40 @@
 
             return format;
         },
+		/**
+		 * @method createId
+		 *
+		 * 유니크 아이디 생성
+		 *
+		 * @param {String} key  prefix string
+		 * @return {String} 생성된 아이디 문자열
+		 */
 		createId: function(key) {
 			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
 		},
+		/**
+		 * @method btoa
+		 *
+		 * Base64 인코딩
+		 *
+		 * @return {String}
+		 */
         btoa: Base64.encode,
+		/**
+		 * @method atob
+		 *
+		 * Base64 디코딩
+		 *
+		 * @return {String}
+		 */
         atob: Base64.decode
 	}
 
 
-    /**
+    /*
      * Module related functions
      *
      */
-	
 	var getDepends = function(depends) {
 		var args = [];
 		
@@ -1224,15 +1360,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UIManager = new function() {
 		var instances = [], classes = [];
 
-		
-		/**
-		 * Public Methods, Instance
-		 * 
-		 */
+
+        /**
+         * @method add
+         *
+         * 생성된 instance 를 추가
+         *
+         * @param {Object} uiIns
+         */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
 		}
 
+        /**
+         * @method emit
+         *
+         * 커스텀 이벤트 실행
+         *
+         * @param {String} key  selector
+         * @param {String} type  이벤트 이름
+         * @param {Array} args  이벤트에 전달될 파라미터
+         */
         this.emit = function(key, type, args) {
             var targets = [];
 
@@ -1252,7 +1400,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 }
             }
         }
-		
+
+        /**
+         * @method get
+         *
+         * 객체 가지고 오기
+         *
+         * @param {String/Integer} key 패키지 명 또는 인스턴스 index
+         * @returns {Object/Array} 생성된 객체 또는 리스트
+         */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return instances[key];
@@ -1279,11 +1435,26 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 return result;
 			}
 		}
-		
+
+        /**
+         * @method getAll
+         *
+         * 모든 인스턴스 리스트
+         *
+         * @return {Array}
+         */
 		this.getAll = function() {
 			return instances;
 		}
 
+        /**
+         * @method remove
+         *
+         * 인스턴스 삭제
+         *
+         * @param {Integer} index
+         * @return {Object}  removed instance;
+         */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
                 return instances.splice(index, 1)[0];
@@ -1297,11 +1468,29 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         this.pop = function() {
             return instances.pop();
         }
-		
+
+        /**
+         * @method size
+         *
+         * 인스턴스 길이 얻어오기
+         *
+         * @return {Number} 인스턴스 길이
+         */
 		this.size = function() {
 			return instances.length;
 		}
-		
+
+        /**
+         * @method debug
+         *
+         * 디버그 코드 삽입
+         *
+         * @param {Object} uiObj
+         * @param {Number} i
+         * @param {Number} j
+         * @param {Function} callback  디버그시 실행될 함수
+         *
+         */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
 			var exFuncList = [ "emit", "on", "addEvent", "addValid", "callBefore", 
@@ -1364,14 +1553,21 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}
 		}
 		
-		/**
-		 * Public Methods, Class
-		 * 
-		 */
+        /**
+         * @method addClass
+         *
+         * @param {String} uiCls
+         */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
 		}
-		
+
+        /**
+         * @method getClass
+         *
+         * @param {String/Integer} key
+         * @return {Object}
+         */
 		this.getClass = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return classes[key];
@@ -1391,12 +1587,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
+         * @method create
+         *
          * UI 객체 동적 생성 메소드
          *
-         * @param type
-         * @param selector
-         * @param options
-         * @returns {*}
+         * @param {String} type  모듈 이름
+         * @param {String/Object} selector   jquery selector or dom element
+         * @param {Object} options  객체 생성시 필요한 옵션
+         * @return {Object} 생성된 JUI 객체
          */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
@@ -1858,8 +2056,16 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.setup = function() {
         return {
+            /** @cfg {Object} [tpl={}]  템플릿 리스트  */
             tpl: {},
+            /** @cfg {Object} [event={}]  이벤트 리스트  */
             event: {},
+            /**
+             * @cfg {Object} [tpl={}]
+             * 템플릿 리스트
+             *
+             * @deprecated
+             */
             vo: null
         }
     }
@@ -10751,8 +10957,9 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
+     *
      * Base Draw Class
-     * @extends core
+     *
      * @alias Draw
      * @requires util.base
      * @requires jquery
@@ -11108,7 +11315,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @class chart.builder
+     *
      * implements chart builder
+     *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
@@ -20349,7 +20558,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
-            g, r = 20, point = 3;
+            g, r = 20, point = 3,
+            edges = {};
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
             var a = x1 - x2,
@@ -20402,30 +20612,40 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function createEdges(data, index) {
-            var target = self.getData(getDataIndex(data.outgoing[index])),
-                o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
-                i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point));
+            var targetKey = data.outgoing[index],
+                target = self.getData(getDataIndex(targetKey));
 
             // 아웃고잉 노드에 현재 노드의 키를 넘김
-            addIncomingKey(target, data.outgoing[index]);
+            addIncomingKey(target, targetKey);
 
             return chart.svg.group({}, function() {
-                chart.svg.line({
-                    x1: i_xy.x,
-                    y1: i_xy.y,
-                    x2: o_xy.x,
-                    y2: o_xy.y,
-                    stroke: self.color(1),
-                    "stroke-width": 1
-                });
+                var o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
+                    i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point));
 
-                chart.svg.circle({
-                    fill: "black",
-                    r: point,
-                    cx: o_xy.x,
-                    cy: o_xy.y
-                });
-            })
+                // 인커밍 노드가 아웃고잉 노드일 경우, 이미 라인이 그려져있으므로 그리지 않음
+                if(!edges[targetKey + "_" + data.key]) {
+                    chart.svg.line({
+                        x1: i_xy.x,
+                        y1: i_xy.y,
+                        x2: o_xy.x,
+                        y2: o_xy.y,
+                        stroke: self.color(1),
+                        "stroke-width": 1
+                    });
+                }
+
+                // 아웃고잉 노드가 없을 경우에만 그림
+                if(!edges[data.key + "_" + targetKey]) {
+                    chart.svg.circle({
+                        fill: "black",
+                        r: point,
+                        cx: o_xy.x,
+                        cy: o_xy.y
+                    });
+                }
+
+                edges[data.key + "_" + targetKey] = true;
+            });
         }
 
         this.drawBefore = function() {

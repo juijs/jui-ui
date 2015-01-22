@@ -2,7 +2,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
-            g, r = 20, point = 3;
+            g, r = 20, point = 3,
+            edges = {};
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
             var a = x1 - x2,
@@ -55,30 +56,40 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function createEdges(data, index) {
-            var target = self.getData(getDataIndex(data.outgoing[index])),
-                o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
-                i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point));
+            var targetKey = data.outgoing[index],
+                target = self.getData(getDataIndex(targetKey));
 
             // 아웃고잉 노드에 현재 노드의 키를 넘김
-            addIncomingKey(target, data.outgoing[index]);
+            addIncomingKey(target, targetKey);
 
             return chart.svg.group({}, function() {
-                chart.svg.line({
-                    x1: i_xy.x,
-                    y1: i_xy.y,
-                    x2: o_xy.x,
-                    y2: o_xy.y,
-                    stroke: self.color(1),
-                    "stroke-width": 1
-                });
+                var o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
+                    i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point));
 
-                chart.svg.circle({
-                    fill: "black",
-                    r: point,
-                    cx: o_xy.x,
-                    cy: o_xy.y
-                });
-            })
+                // 인커밍 노드가 아웃고잉 노드일 경우, 이미 라인이 그려져있으므로 그리지 않음
+                if(!edges[targetKey + "_" + data.key]) {
+                    chart.svg.line({
+                        x1: i_xy.x,
+                        y1: i_xy.y,
+                        x2: o_xy.x,
+                        y2: o_xy.y,
+                        stroke: self.color(1),
+                        "stroke-width": 1
+                    });
+                }
+
+                // 아웃고잉 노드가 없을 경우에만 그림
+                if(!edges[data.key + "_" + targetKey]) {
+                    chart.svg.circle({
+                        fill: "black",
+                        r: point,
+                        cx: o_xy.x,
+                        cy: o_xy.y
+                    });
+                }
+
+                edges[data.key + "_" + targetKey] = true;
+            });
         }
 
         this.drawBefore = function() {
