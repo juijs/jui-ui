@@ -422,7 +422,11 @@
 	/**
 	 * @class util.base
      *  
-     * Public Utility Classes
+     * ```
+	 * var _ = jui.include("util.base");
+	 *
+	 * console.log(_.browser.webkit);
+	 * ```
      *  
 	 * @singleton
 	 */
