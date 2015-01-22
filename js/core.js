@@ -11,15 +11,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UIManager = new function() {
 		var instances = [], classes = [];
 
-		
-		/**
-		 * Public Methods, Instance
-		 * 
-		 */
+
+        /**
+         * @method add
+         *
+         * 생성된 instance 를 추가
+         *
+         * @param {Object} uiIns
+         */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
 		}
 
+        /**
+         * @method emit
+         *
+         * 커스텀 이벤트 실행
+         *
+         * @param {String} key  selector
+         * @param {String} type  이벤트 이름
+         * @param {Array} args  이벤트에 전달될 파라미터
+         */
         this.emit = function(key, type, args) {
             var targets = [];
 
@@ -39,7 +51,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 }
             }
         }
-		
+
+        /**
+         * @method get
+         *
+         * 객체 가지고 오기
+         *
+         * @param {String/Integer} key 패키지 명 또는 인스턴스 index
+         * @returns {Object/Array} 생성된 객체 또는 리스트
+         */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return instances[key];
@@ -66,11 +86,26 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 return result;
 			}
 		}
-		
+
+        /**
+         * @method getAll
+         *
+         * 모든 인스턴스 리스트
+         *
+         * @return {Array}
+         */
 		this.getAll = function() {
 			return instances;
 		}
 
+        /**
+         * @method remove
+         *
+         * 인스턴스 삭제
+         *
+         * @param {Integer} index
+         * @return {Object}  removed instance;
+         */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
                 return instances.splice(index, 1)[0];
@@ -84,11 +119,29 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         this.pop = function() {
             return instances.pop();
         }
-		
+
+        /**
+         * @method size
+         *
+         * 인스턴스 길이 얻어오기
+         *
+         * @return {Number} 인스턴스 길이
+         */
 		this.size = function() {
 			return instances.length;
 		}
-		
+
+        /**
+         * @method debug
+         *
+         * 디버그 코드 삽입
+         *
+         * @param {Object} uiObj
+         * @param {Number} i
+         * @param {Number} j
+         * @param {Function} callback  디버그시 실행될 함수
+         *
+         */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
 			var exFuncList = [ "emit", "on", "addEvent", "addValid", "callBefore", 
@@ -151,14 +204,21 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}
 		}
 		
-		/**
-		 * Public Methods, Class
-		 * 
-		 */
+        /**
+         * @method addClass
+         *
+         * @param {String} uiCls
+         */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
 		}
-		
+
+        /**
+         * @method getClass
+         *
+         * @param {String/Integer} key
+         * @return {Object}
+         */
 		this.getClass = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return classes[key];
@@ -178,12 +238,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
+         * @method create
+         *
          * UI 객체 동적 생성 메소드
          *
-         * @param type
-         * @param selector
-         * @param options
-         * @returns {*}
+         * @param {String} type  모듈 이름
+         * @param {String/Object} selector   jquery selector or dom element
+         * @param {Object} options  객체 생성시 필요한 옵션
+         * @return {Object} 생성된 JUI 객체
          */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
@@ -645,8 +707,16 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.setup = function() {
         return {
+            /** @cfg {Object} [tpl={}]  템플릿 리스트  */
             tpl: {},
+            /** @cfg {Object} [event={}]  이벤트 리스트  */
             event: {},
+            /**
+             * @cfg {Object} [tpl={}]
+             * 템플릿 리스트
+             *
+             * @deprecated
+             */
             vo: null
         }
     }

@@ -30,7 +30,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @class chart.builder
+     *
      * implements chart builder
+     *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base

@@ -74,8 +74,21 @@
             return array;
         }
 	}
-	
+
+	/**
+	 * @class IndexParser
+	 *
+	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
+	 *
+	 * @constructor
+	 */
 	var IndexParser = function() {
+		/**
+		 * @method isIndexDepth
+		 *
+		 * @param {String} index
+		 * @return {Boolean}
+		 */
 		this.isIndexDepth = function(index) {
 			if(typeof(index) == "string" && index.indexOf(".") != -1) {
 				return true;
@@ -83,7 +96,13 @@
 			
 			return false;
 		}
-		
+
+		/**
+		 * @method getIndexList
+		 *
+		 * @param {String} index
+		 * @return {Array}
+		 */
 		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
 			var resIndex = [], strIndex = "" + index;
 			
@@ -99,7 +118,17 @@
 			
 			return resIndex;
 		}
-		
+
+
+		/**
+		 * @method changeIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @param {String} targetIndex
+		 * @param {String} rootIndex
+		 * @return {String}
+		 */
 		this.changeIndex = function(index, targetIndex, rootIndex) {
 			var rootIndexLen = this.getIndexList(rootIndex).length,
 				indexList = this.getIndexList(index),
@@ -111,7 +140,13 @@
 
 			return tIndexList.concat(indexList).join(".");
 		}
-		
+
+		/**
+		 * @method getNextIndex
+		 *
+		 * @param {String} index
+		 * @return {String}
+		 */
 		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
 			var indexList = this.getIndexList(index),
 				no = indexList.pop() + 1;
@@ -119,7 +154,14 @@
 			indexList.push(no);
 			return indexList.join(".");
 		}
-		
+
+		/**
+		 * @method getParentIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @returns {*}
+		 */
 		this.getParentIndex = function(index) {
 			if(!this.isIndexDepth(index)) return null;
 			var keys = this.getIndexList(index);
@@ -379,24 +421,31 @@
 	
 	/**
 	 * @class util.base
-     *  
-     * Public Utility Classes
+     *
+	 * jui 에서 공통적으로 사용하는 유틸리티 함수 모음
+	 *
+     * ```
+	 * var _ = jui.include("util.base");
+	 *
+	 * console.log(_.browser.webkit);
+	 * ```
      *  
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
 
 		/**
-		 * @property
-		 * check browser agent
-		 */
+		 * @property browser check browser agent
+		 * @property {Boolean} browser.webkit  Webkit 브라우저 체크
+		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
+		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
-		 * @property
+		 * @property {Boolean} isTouch
 		 * check touch device
 		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -598,6 +647,13 @@
 				after_resize();
 			});
 		},
+		/**
+		 * @method index
+		 *
+		 * IndexParser 객체 생성
+		 *
+		 * @return {IndexParser}
+		 */
 		index: function() {
 			return new IndexParser();
 		},
@@ -621,7 +677,7 @@
 		},
 		/**
 		 * @method typeCheck
-		 * check javascript type
+		 * check data  type
 		 * @param {String} t  type string
 		 * @param {Object} v value object
 		 * @returns {*}
@@ -712,6 +768,16 @@
 				}
 			}
 		},
+		/**
+		 * @method dataToCsv
+		 *
+		 * data 를 csv 로 변환한다.
+		 *
+		 * @param {Array} keys
+		 * @param {Array} dataList
+		 * @param {Number} dataSize
+		 * @return {String}  변환된 csv 문자열
+		 */
 		dataToCsv: function(keys, dataList, dataSize) {
 			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
 			
@@ -733,6 +799,13 @@
 			
 			return csv;
 		},
+
+		/**
+		 * @method dataToCsv2
+		 *
+		 * @param {Object} options
+		 * @return {String}
+		 */
 		dataToCsv2: function(options) {
 			var csv = "";
 			var opts = $.extend({
@@ -764,6 +837,14 @@
 			
 			return csv;
 		},
+		/**
+		 * @method fileToCsv
+		 *
+		 * file 에서 csv 컨텐츠 로드
+		 *
+		 * @param {File} file
+		 * @param {Function} callback
+		 */
 		fileToCsv: function(file, callback) {
 			var reader = new FileReader();
 			
@@ -775,9 +856,25 @@
 	
 	        reader.readAsText(file);
 		},
+		/**
+		 * @method csvToBase64
+		 *
+		 * csv 다운로드 링크로 변환
+		 *
+		 * @param {String} csv
+		 * @return {String}
+		 */
 		csvToBase64: function(csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
+		/**
+		 * @method csvToData
+		 *
+		 * @param {Array} keys
+		 * @param {String} csv
+		 * @param {Number} csvNumber
+		 * @return {Array}
+		 */
 		csvToData: function(keys, csv, csvNumber) {
 			var dataList = [],
 				tmpRowArr = csv.split("\n")
@@ -801,6 +898,15 @@
 			
 			return dataList;
 		},
+		/**
+		 * @method getCsvFields
+		 *
+		 * csv 에서 필드 얻어오기
+		 *
+		 * @param {Array} fields
+		 * @param {Array} csvFields
+		 * @return {Array}
+		 */
 		getCsvFields: function(fields, csvFields) {
 			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
 			
@@ -812,6 +918,15 @@
 			
 			return tmpFields;
 		},
+
+		/**
+		 * @method svgToBase64
+		 *
+		 * xml 문자열로 svg datauri 생성
+		 *
+		 * @param {String} xml
+		 * @return {String} 변환된 data uri 링크
+		 */
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
@@ -911,19 +1026,40 @@
 
             return format;
         },
+		/**
+		 * @method createId
+		 *
+		 * 유니크 아이디 생성
+		 *
+		 * @param {String} key  prefix string
+		 * @return {String} 생성된 아이디 문자열
+		 */
 		createId: function(key) {
 			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
 		},
+		/**
+		 * @method btoa
+		 *
+		 * Base64 인코딩
+		 *
+		 * @return {String}
+		 */
         btoa: Base64.encode,
+		/**
+		 * @method atob
+		 *
+		 * Base64 디코딩
+		 *
+		 * @return {String}
+		 */
         atob: Base64.decode
 	}
 
 
-    /**
+    /*
      * Module related functions
      *
      */
-	
 	var getDepends = function(depends) {
 		var args = [];
 		
