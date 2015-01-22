@@ -20345,7 +20345,7 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     return UI;
 });
-jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
+jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_, math) {
 
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
@@ -20364,6 +20364,70 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
             }
         }
 
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+
+        function addIncomingKey(data, key) {
+            if(!_.typeCheck("array", data.incoming)) {
+                data.incoming = [];
+            }
+
+            data.incoming.push(key);
+        }
+
+        function createNodes(data) {
+            return chart.svg.group({}, function() {
+                chart.svg.circle({
+                    r: r,
+                    fill: self.color(0)
+                });
+
+                chart.text({
+                    x: 0,
+                    y: r + 13,
+                    "text-anchor": "middle",
+                    "font-weight": "bold"
+                }, data.name);
+            }).translate(data.x, data.y);
+        }
+
+        function createEdges(data, index) {
+            var target = self.getData(getDataIndex(data.outgoing[index])),
+                o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
+                i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point));
+
+            // 아웃고잉 노드에 현재 노드의 키를 넘김
+            addIncomingKey(target, data.outgoing[index]);
+
+            return chart.svg.group({}, function() {
+                chart.svg.line({
+                    x1: i_xy.x,
+                    y1: i_xy.y,
+                    x2: o_xy.x,
+                    y2: o_xy.y,
+                    stroke: self.color(1),
+                    "stroke-width": 1
+                });
+
+                chart.svg.circle({
+                    fill: "black",
+                    r: point,
+                    cx: o_xy.x,
+                    cy: o_xy.y
+                });
+            })
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group();
         }
@@ -20372,60 +20436,15 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
             this.eachData(function(i, data) {
                 var node = chart.svg.group();
 
+                // 노드 생성
+                node.append(createNodes(data));
+
                 for(var j = 0; j < data.outgoing.length; j++) {
-                    var target = self.getData(data.outgoing[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.line({
-                        x1: data.x,
-                        y1: data.y,
-                        x2: target.x,
-                        y2: target.y,
-                        stroke: self.color(1),
-                        "stroke-width": 1
-                    }));
-
-                    node.append(chart.svg.circle({
-                        fill: "black",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
-                }
-
-                for(var j = 0; j < data.incoming.length; j++) {
-                    var target = self.getData(data.incoming[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.circle({
-                        fill: "red",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
+                    // 엣지 생성
+                    node.append(createEdges(data, j));
                 }
 
                 g.append(node);
-            });
-
-            this.eachData(function(i, data) {
-                var node = g.get(i);
-
-                var group = chart.svg.group({}, function() {
-                    chart.svg.circle({
-                        r: r,
-                        fill: self.color(0)
-                    });
-
-                    chart.text({
-                        x: 0,
-                        y: r + 13,
-                        "text-anchor": "middle",
-                        "font-weight": "bold"
-                    }, data.name);
-                }).translate(data.x, data.y);
-
-                node.append(group);
             });
 
             return g;
@@ -20438,14 +20457,14 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
     var TopologyDrag = function(chart, axis, widget) {
-        var targetIndex, startX, startY;
+        var targetKey, startX, startY;
         var renderWait = false;
 
         function initDragEvent() {
             chart.on("chart.mousemove", function (e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
+                if(!_.typeCheck("string", targetKey)) return;
 
-                var data = axis.data[targetIndex];
+                var data = axis.data[getDataIndex(targetKey)];
                 data.x = startX + (e.chartX - startX);
                 data.y = startY + (e.chartY - startY);
 
@@ -20466,8 +20485,8 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             chart.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
-                targetIndex = null;
+                if(!_.typeCheck("string", targetKey)) return;
+                targetKey = null;
             }
         }
 
@@ -20476,17 +20495,30 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
             root.each(function(i, node) {
                 var data = axis.data[i];
-                (function(index, data) {
-                    node.on("mousedown", function(e) {
-                        if(_.typeCheck("integer", targetIndex)) return;
 
-                        targetIndex = index;
+                (function(key, data) {
+                    node.on("mousedown", function(e) {
+                        if(_.typeCheck("string", targetKey)) return;
+
+                        targetKey = key;
                         startX = data.x;
                         startY = data.y;
                     });
-                })(i, data);
+                })(data.key, data);
             });
+        }
 
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
         }
 
         this.draw = function() {
