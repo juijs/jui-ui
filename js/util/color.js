@@ -13,7 +13,14 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
-        
+		/**
+		 * @method parse
+		 *
+		 * color 파싱
+		 *
+		 * @param color
+		 * @returns {*}
+		 */
 		parse : function(color) {
 			return this.parseGradient(color);
 		},

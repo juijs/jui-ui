@@ -1,5 +1,12 @@
 jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitarea
+     *
+     * 분리된 영역의 브러쉬
+     *
+     * @extends chart.brush.splitline
+     */
     var SplitAreaBrush = function() {
 
         this.drawArea = function(path) {

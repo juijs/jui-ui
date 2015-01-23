@@ -21,11 +21,11 @@ jui.define("chart.grid.table", [  ], function() {
                     obj.y -= this.axis.area('y');
 
                     var rect = this.chart.svg.rect($.extend(obj, {
-                        fill : 'white',
+                        fill : 'tranparent',
                         stroke : "black"
                     }));
 
-                    g.append(rect);
+                    //g.append(rect);
                 }
             }
         }
@@ -73,6 +73,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("table");
         }
     }

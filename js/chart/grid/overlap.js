@@ -21,11 +21,11 @@ jui.define("chart.grid.overlap", [  ], function() {
                 obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'white',
+                    fill : 'tranparent',
                     stroke : "white"
                 }));
 
-                g.append(rect);
+                //g.append(rect);
             }
         }
 
@@ -67,6 +67,7 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("overlap");
         }
 

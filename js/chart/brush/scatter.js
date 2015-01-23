@@ -1,6 +1,23 @@
 jui.define("chart.brush.scatter", [], function() {
 
+    /**
+     * @class chart.brush.scatter
+     *
+     * 점으로 이루어진 데이타를 표현하는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
     var ScatterBrush = function() {
+
+        /**
+         * @method createScatter
+         *
+         * 좌표별 scatter 생성
+         *
+         * @param {Object} pos
+         * @param {Number} index
+         * @return {util.svg.element}
+         */
         this.createScatter = function(pos, index) {
             var self = this;
             var elem = null,
@@ -67,6 +84,14 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
+        /**
+         * @method drawScatter
+         *
+         * scatter 그리기
+         *
+         * @param {Array} points
+         * @return {util.svg.element} g element 리턴
+         */
         this.drawScatter = function(points) {
             var g = this.chart.svg.group();
 
@@ -88,9 +113,15 @@ jui.define("chart.brush.scatter", [], function() {
             return g;
         }
 
+        /**
+         * @method draw
+         *
+         * @return {util.svg.element}
+         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+
 
         this.drawAnimate = function() {
             var area = this.chart.area();
@@ -109,8 +140,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Boolean} [clip=false] */
             clip: false
         };
     }

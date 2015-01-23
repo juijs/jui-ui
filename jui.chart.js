@@ -80,6 +80,7 @@
 	 *
 	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
 	 *
+	 * @private
 	 * @constructor
 	 */
 	var IndexParser = function() {
@@ -1057,10 +1058,9 @@
 		/**
 		 * @method loop
 		 *
-		 * 최적화된 루프 생성
+		 * 최적화된 루프 생성 (5단계로 나눔)
 		 *
 		 * @param {Number} total
-		 * @param {Function} callback
 		 */
 		loop : function(total) {
 			var start = 0;
@@ -1071,7 +1071,7 @@
 			return function(callback) {
 
 				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = start;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback(first, 1); first++;
@@ -2888,7 +2888,14 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
-        
+		/**
+		 * @method parse
+		 *
+		 * color 파싱
+		 *
+		 * @param color
+		 * @returns {*}
+		 */
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
@@ -8735,7 +8742,7 @@ jui.define("chart.grid.panel", [  ], function() {
             obj.y -= this.axis.area('y');
 
             var rect = this.chart.svg.rect($.extend(obj, {
-                fill : 'white',
+                fill : 'tranparent',
                 stroke : "white"
             }));
 
@@ -8780,6 +8787,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("panel");
         }
     }
@@ -8810,11 +8818,11 @@ jui.define("chart.grid.table", [  ], function() {
                     obj.y -= this.axis.area('y');
 
                     var rect = this.chart.svg.rect($.extend(obj, {
-                        fill : 'white',
+                        fill : 'tranparent',
                         stroke : "black"
                     }));
 
-                    g.append(rect);
+                    //g.append(rect);
                 }
             }
         }
@@ -8862,6 +8870,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("table");
         }
     }
@@ -8903,11 +8912,11 @@ jui.define("chart.grid.overlap", [  ], function() {
                 obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'white',
+                    fill : 'tranparent',
                     stroke : "white"
                 }));
 
-                g.append(rect);
+                //g.append(rect);
             }
         }
 
@@ -8949,6 +8958,7 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("overlap");
         }
 
@@ -9218,7 +9228,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             var func = _.loop(i);
 
-            func(function(i) {
+            func(function(i, group) {
                 var data = axisData[i],
                     startX = x(i);
 
@@ -9352,17 +9362,20 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreBrush.setup = function() {
         return {
-            /** @cfg {Array} [target=null] */
+            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
             target: null,
-            /** @cfg {Array} [colors=null] */
+            /** @cfg {Array} [colors=null]
+             * 필드 리스트마다 적용될 색상
+             *
+             * colors 는 theme 보다 우선순위를 가진다.
+             */
             colors: null,
-            /** @cfg {Integer} [axis=0] */
+            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
             axis: 0,
-            /** @cfg {Integer} [index=null] */
+            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
-            /** @cfg {boolean} [clip=true] */
+            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
             clip: true,
-            /** @cfg {Array} [items=null] */
             items : []
         }
     }
@@ -9710,6 +9723,14 @@ jui.define("chart.brush.column", [], function() {
 
 jui.define("chart.brush.stackbar", [], function() {
 
+	/**
+	 * @class chart.brush.stackbar
+	 *
+	 * stack 형태의 bar 브러쉬
+	 *
+	 * @extends chart.brush.bar
+	 *
+	 */
 	var StackBarBrush = function(chart, axis, brush) {
 		var g, height, bar_width;
 
@@ -9820,8 +9841,11 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
+			/** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
+			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
 			active: null,
+			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
 			activeEvent: null // or click, mouseover, ...
 		};
 	}
@@ -9831,6 +9855,13 @@ jui.define("chart.brush.stackbar", [], function() {
 
 jui.define("chart.brush.stackcolumn", [], function() {
 
+	/**
+	 * @class chart.brush.stackcolumn
+	 *
+	 * stack 형태의 column 브러쉬
+	 *
+	 * @extends chart.brush.stackbar
+	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
@@ -11188,7 +11219,24 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.scatter", [], function() {
 
+    /**
+     * @class chart.brush.scatter
+     *
+     * 점으로 이루어진 데이타를 표현하는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
     var ScatterBrush = function() {
+
+        /**
+         * @method createScatter
+         *
+         * 좌표별 scatter 생성
+         *
+         * @param {Object} pos
+         * @param {Number} index
+         * @return {util.svg.element}
+         */
         this.createScatter = function(pos, index) {
             var self = this;
             var elem = null,
@@ -11255,6 +11303,14 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
+        /**
+         * @method drawScatter
+         *
+         * scatter 그리기
+         *
+         * @param {Array} points
+         * @return {util.svg.element} g element 리턴
+         */
         this.drawScatter = function(points) {
             var g = this.chart.svg.group();
 
@@ -11276,9 +11332,15 @@ jui.define("chart.brush.scatter", [], function() {
             return g;
         }
 
+        /**
+         * @method draw
+         *
+         * @return {util.svg.element}
+         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+
 
         this.drawAnimate = function() {
             var area = this.chart.area();
@@ -11297,8 +11359,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Boolean} [clip=false] */
             clip: false
         };
     }
@@ -11307,6 +11372,16 @@ jui.define("chart.brush.scatter", [], function() {
 }, "chart.brush.core");
 jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
+    /**
+     * @class chart.brush.scatterpath
+     *
+     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
+     *
+     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
+     *
+     * @extends chart.brush.core
+     *
+     */
 	var ScatterPathBrush = function() {
 
         this.drawScatter = function(points) {
@@ -11362,8 +11437,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     ScatterPathBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
             strokeWidth : 1
         };
     }
@@ -11826,6 +11904,13 @@ jui.define("chart.brush.area", [], function() {
 
 jui.define("chart.brush.stackline", [], function() {
 
+	/**
+	 * @class chart.brush.stackline
+	 *
+	 * stack 형태의 line 브러쉬
+	 *
+	 * @extends chart.brush.line
+	 */
 	var StackLineBrush = function() {
         this.draw = function() {
             return this.drawLine(this.getStackXY());
@@ -11836,6 +11921,13 @@ jui.define("chart.brush.stackline", [], function() {
 }, "chart.brush.line");
 jui.define("chart.brush.stackarea", [], function() {
 
+	/**
+	 * @class chart.brush.stackarea
+	 *
+	 * stack 형태의 area brush
+	 *
+	 * @extends chart.brush.area
+	 */
 	var StackAreaBrush = function() {
 		this.draw = function() {
             return this.drawArea(this.getStackXY());
@@ -11847,6 +11939,13 @@ jui.define("chart.brush.stackarea", [], function() {
 
 jui.define("chart.brush.stackscatter", [], function() {
 
+	/**
+	 * @class chart.brush.stackscatter
+	 *
+	 * stack 형태의 scatter 브러쉬
+	 *
+	 * @extends chart.brush.scatter
+	 */
 	var StackScatterBrush = function() {
         this.draw = function() {
             return this.drawScatter(this.getStackXY());
@@ -12144,6 +12243,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
+	/**
+	 * @class chart.brush.stackgauge
+	 *
+	 * stack 형태의 gauge 브러쉬
+	 *
+	 * @extends chart.brush.donut
+	 */
 	var StackGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
@@ -12220,12 +12326,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
+			/** @cfg {Number} [min=0] */
 			min: 0,
+			/** @cfg {Number} [max=100] */
 			max: 100,
+			/** @cfg {Number} [cut=5] */
 			cut: 5,
+			/** @cfg {Number} [size=24] */
 			size: 24,
+			/** @cfg {Number} [startAngle=-180] */
 			startAngle: -180,
+			/** @cfg {Number} [endAngle=360] */
 			endAngle: 360,
+			/** @cfg {String} [title="title"] */
 			title: "title"
 		};
 	}
@@ -12235,6 +12348,13 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.waterfall", [], function() {
 
+	/**
+	 * @class chart.brush.waterfall
+	 *
+	 * waterfall 형태의 브러쉬
+	 *
+	 * @extends chart.brush.core
+	 */
 	var WaterFallBrush = function(chart, axis, brush) {
 		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
@@ -12332,8 +12452,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
+			/** @cfg {Boolean} [line=true] */
 			line: true,
+			/** @cfg {Boolean} [end=false] */
 			end: false,
+			/** @cfg {Boolean} [outerPadding=5] */
 			outerPadding: 5
 		};
 	}
@@ -12343,6 +12466,13 @@ jui.define("chart.brush.waterfall", [], function() {
 
 jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitline
+     *
+     * 분리된 영역의 선을 그리는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
 	var SplitLineBrush = function() {
         this.createLine = function(pos, index) {
             var opts = {
@@ -12421,7 +12551,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
             symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] 분리될 위치  */
             split: null
         };
     }
@@ -12430,6 +12562,13 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 }, "chart.brush.core");
 jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitarea
+     *
+     * 분리된 영역의 브러쉬
+     *
+     * @extends chart.brush.splitline
+     */
     var SplitAreaBrush = function() {
 
         this.drawArea = function(path) {

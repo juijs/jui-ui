@@ -80,6 +80,7 @@
 	 *
 	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
 	 *
+	 * @private
 	 * @constructor
 	 */
 	var IndexParser = function() {
@@ -1057,10 +1058,9 @@
 		/**
 		 * @method loop
 		 *
-		 * 최적화된 루프 생성
+		 * 최적화된 루프 생성 (5단계로 나눔)
 		 *
 		 * @param {Number} total
-		 * @param {Function} callback
 		 */
 		loop : function(total) {
 			var start = 0;
@@ -1071,7 +1071,7 @@
 			return function(callback) {
 
 				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = start;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback(first, 1); first++;

@@ -1,5 +1,12 @@
 jui.define("chart.brush.waterfall", [], function() {
 
+	/**
+	 * @class chart.brush.waterfall
+	 *
+	 * waterfall 형태의 브러쉬
+	 *
+	 * @extends chart.brush.core
+	 */
 	var WaterFallBrush = function(chart, axis, brush) {
 		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
@@ -97,8 +104,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
+			/** @cfg {Boolean} [line=true] */
 			line: true,
+			/** @cfg {Boolean} [end=false] */
 			end: false,
+			/** @cfg {Boolean} [outerPadding=5] */
 			outerPadding: 5
 		};
 	}
