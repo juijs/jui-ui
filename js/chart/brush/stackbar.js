@@ -1,5 +1,13 @@
 jui.define("chart.brush.stackbar", [], function() {
 
+	/**
+	 * @class chart.brush.stackbar
+	 *
+	 * stack 형태의 bar 브러쉬
+	 *
+	 * @extends chart.brush.bar
+	 *
+	 */
 	var StackBarBrush = function(chart, axis, brush) {
 		var g, height, bar_width;
 
@@ -110,8 +118,11 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
+			/** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
+			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
 			active: null,
+			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
 			activeEvent: null // or click, mouseover, ...
 		};
 	}

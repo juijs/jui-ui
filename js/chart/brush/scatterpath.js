@@ -1,5 +1,15 @@
-jui.define("chart.brush.scatterpath", [], function() {
+jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
+    /**
+     * @class chart.brush.scatterpath
+     *
+     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
+     *
+     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
+     *
+     * @extends chart.brush.core
+     *
+     */
 	var ScatterPathBrush = function() {
 
         this.drawScatter = function(points) {
@@ -8,30 +18,42 @@ jui.define("chart.brush.scatterpath", [], function() {
                 color = this.color(0),
                 strokeWidth = this.brush.strokeWidth;
 
-            var g = this.chart.svg.group(),
-                path = this.chart.svg.pathSymbol({
+            var opt = {
                 fill : "none",
-                stroke : color,
+                    stroke : color,
                 "stroke-width" : strokeWidth,
                 "stroke-opacity" : 1,
                 "stroke-linecap" : "butt",
                 "stroke-linejoin" :  "round"
-            });
+            };
+
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.pathSymbol();
 
             var tpl = path.template(width, height);
+
+            var count = 5;
+            var list = [];
+
+            for(var i = 1; i <= count; i++) {
+                list[i] = this.chart.svg.pathSymbol(opt);
+            }
+
+            var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
 
-                var j = points[i].x.length;
+                loop(function(index, group) {
+                    list[group].add(points[i].x[index]|0, points[i].y[index]|0, tpl[symbol]);
+                })
 
-                while(j--) {
-                    path.add(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
-                }
             }
 
-            g.append(path);
+            for(var i = 1; i <= count; i++) {
+                g.append(list[i]);
+            }
 
             return g;
         }
@@ -43,8 +65,11 @@ jui.define("chart.brush.scatterpath", [], function() {
 
     ScatterPathBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
             strokeWidth : 1
         };
     }

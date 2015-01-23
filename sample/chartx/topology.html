@@ -32,37 +32,41 @@
                 y = rnd(h);
 
             data.push({ name: "W" + (i + 1), x: x, y: y, outgoing: [], incoming: [] });
-        }  
+        }
 
-        // outerRand
         for(var i = 0; i < outer; i++) {
             var index = rnd(count),
-                outerRand = rnd(count);
+                outerIndex = rnd(count);
 
-            data[index].outgoing.push(outerRand);
+            data[index].outgoing.push(outerIndex);
         }
 
         for(var i = 0; i < inner; i++) {
             var index = rnd(count),
-                innerRand = rnd(count);
+                innerIndex = rnd(count);
 
-            data[index].incoming.push(innerRand);
+            data[index].incoming.push(innerIndex);
         }
 
         return data;
     }
 
     var data = [
-        { name: "W1", type: 1, x: 100, y: 100, outgoing: [ 1 ], incoming: [] },
-        { name: "W2", type: 1, x: 100, y: 200, outgoing: [ 2, 3 ], incoming: [ 0 ] },
-        { name: "W3", type: 1, x: 500, y: 100, outgoing: [ 4 ], incoming: [] },
-        { name: "W3", type: 1, x: 400, y: 150, outgoing: [ 4 ], incoming: [ 1 ] },
-        { name: "Oracle", type: 2, x: 700, y: 200, outgoing: [], incoming: [ 3 ] }
+        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [ "1000_2" ] },
+        { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_3", "1000_4" ] },
+        { key: "1000_3", name: "W3", type: 1, x: 500, y: 100, outgoing: [ "1_2_3_4", "1000_2" ] },
+        { key: "1000_4", name: "W4", type: 1, x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
+        { key: "1_2_3_4", name: "Oracle", type: 2, x: 700, y: 200, outgoing: [] }
+    ];
+
+    var data2 = [
+        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [ "1000_2" ] },
+        { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_1" ] }
     ];
 
     jui.ready([ "chartx.topology", "util.base" ], function(chart, _) {
         c = chart("#chart", {
-            data: getRandomData(100, 200, 50)
+            data: data
         });
     });
 </script>

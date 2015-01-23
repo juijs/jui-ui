@@ -18,8 +18,8 @@
 </script>
 
 <script>
-    jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time" ], function(chart, theme, time) {
-        var maxValue = 300000;
+    jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time", "util.base" ], function(chart, theme, time, _) {
+        var maxValue = 30000
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -30,34 +30,37 @@
         function getTime() {
             return Math.floor(Math.random() * 5 * 60 * 60) + 1;
         }
-        
+
+
+
         var data = [];
         var index = maxValue;
-        while(index--) {
+
+        var func = _.loop(maxValue);
+
+        func(function(i) {
             data.push({
                 date: +time.add(start, time.seconds, getTime()),
                 name: getNumber(),
                 value : getNumber(),
                 test : getNumber()
             });
-        }
+        })
 
         function changeData(data) {
             data = data.slice(maxValue);
 
-            var index = maxValue;
-            while(index--) {
+            func(function(i) {
                 data.push({
                     date: +time.add(start, time.seconds, getTime()),
                     name: getNumber(),
                     value : getNumber(),
                     test : getNumber()
                 });
-            }
+            })
 
             return data;
         }
-
 
          var c = chart("#chart", {
             width: 800,
@@ -88,21 +91,26 @@
             },
             brush : [{
                 type : 'scatterpath',
-                target : "name", size : 1,
+                target : "name", size : 5,
                 colors : [ theme.colors[0] ]
             }, {
                 type : 'scatterpath',
-                target : "value",size : 1,
+                target : "value",size : 5,
                 colors : [ theme.colors[1] ]
             }, {
                 type : 'scatterpath',
-                target : "test",size : 1,
+                target : "test",size : 5,
                 colors : [ theme.colors[2] ]
             }]
         });
 
         var tim = setInterval(function() {
-            c.get('axis', 0).update(data = changeData(data));
+            _.runtime("test", function() {
+                data = changeData(data)
+
+                c.get('axis', 0).update(data);
+            })
+
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 

@@ -1,7 +1,64 @@
-jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
+jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_, math) {
+    var EdgeManager = function() {
+        var list = [],
+            cache = {};
+
+        this.add = function(edge) {
+            cache[edge.key()] = edge;
+            list.push(edge);
+        }
+
+        this.get = function(key) {
+            return cache[key];
+        }
+
+        this.is = function(key) {
+            return (cache[key]) ? true : false;
+        }
+
+        this.list = function() {
+            return list;
+        }
+
+        this.each = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            for(var i = 0; i < list.length; i++) {
+                callback.call(this, list[i]);
+            }
+        }
+    }
+
+    var Edge = function(start, end, in_xy, out_xy) {
+        var connect = false;
+
+        this.key = function() {
+            return start + ":" + end;
+        }
+
+        this.reverseKey = function() {
+            return end + ":" + start;
+        }
+
+        this.connect = function(is) {
+            if(arguments.length == 0) {
+                return connect;
+            }
+
+            connect = is;
+        }
+
+        this.get = function(type) {
+            if(type == "start") return start;
+            else if(type == "end") return end;
+            else if(type == "in_xy") return in_xy;
+            else if(type == "out_xy") return out_xy;
+        }
+    }
 
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
+            edges = new EdgeManager(),
             g, r = 20, point = 3;
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
@@ -13,8 +70,106 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 
             return {
                 x: x1 + Math.cos(angle) * (c + dist),
-                y: y1 + Math.sin(angle) * (c + dist)
+                y: y1 + Math.sin(angle) * (c + dist),
+                angle: angle,
+                distance: c
             }
+        }
+
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+
+        function createNodes(index, data) {
+            return chart.svg.group({
+                index: index
+            }, function() {
+                chart.svg.circle({
+                    r: r,
+                    fill: self.color(0),
+                    cursor: "pointer"
+                });
+
+                chart.text({
+                    x: 0,
+                    y: 6,
+                    fill: "white",
+                    "font-weight": "bold",
+                    "font-size": "16px",
+                    "text-anchor": "middle",
+                    cursor: "pointer"
+                }, "{jennifer.gear}");
+
+                chart.text({
+                    x: 0,
+                    y: r + 13,
+                    "text-anchor": "middle",
+                    "font-weight": "bold",
+                    cursor: "pointer"
+                }, data.name);
+            }).translate(data.x, data.y);
+        }
+
+        function createEdges() {
+            edges.each(function(edge) {
+                var in_xy = edge.get("in_xy"),
+                    out_xy = edge.get("out_xy");
+
+                var node = chart.svg.group({}, function() {
+                    if(!edge.connect()) {
+                        chart.svg.line({
+                            x1: in_xy.x,
+                            y1: in_xy.y,
+                            x2: out_xy.x,
+                            y2: out_xy.y,
+                            stroke: self.color(1),
+                            "stroke-width": 1
+                        });
+                    }
+
+                    chart.svg.circle({
+                        fill: "black",
+                        r: point,
+                        cx: out_xy.x,
+                        cy: out_xy.y
+                    });
+
+                    chart.svg.text({
+                        x: out_xy.x - 15,
+                        y: out_xy.y + 15,
+                        "font-size": "12px",
+                        "text-anchor": "end"
+                    }, "총 응답시간/건수 : 3,200ms/3 ->")
+                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                });
+
+                g.append(node);
+            });
+        }
+
+        function setDataEdges(data, index) {
+            var targetKey = data.outgoing[index],
+                target = self.getData(getDataIndex(targetKey));
+
+            var dist = r + point,
+                in_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(dist)),
+                out_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(dist)),
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+
+            if(edges.is(edge.reverseKey())) {
+                edge.connect(true);
+            }
+
+            edges.add(edge);
         }
 
         this.drawBefore = function() {
@@ -23,63 +178,25 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var node = chart.svg.group();
-
                 for(var j = 0; j < data.outgoing.length; j++) {
-                    var target = self.getData(data.outgoing[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.line({
-                        x1: data.x,
-                        y1: data.y,
-                        x2: target.x,
-                        y2: target.y,
-                        stroke: self.color(1),
-                        "stroke-width": 1
-                    }));
-
-                    node.append(chart.svg.circle({
-                        fill: "black",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
+                    // 엣지 데이터 생성
+                    setDataEdges(data, j);
                 }
-
-                for(var j = 0; j < data.incoming.length; j++) {
-                    var target = self.getData(data.incoming[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.circle({
-                        fill: "red",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
-                }
-
-                g.append(node);
             });
 
+            // 엣지 그리기
+            createEdges();
+
+            // 노드 그리기
             this.eachData(function(i, data) {
-                var node = g.get(i);
-
-                var group = chart.svg.group({}, function() {
-                    chart.svg.circle({
-                        r: r,
-                        fill: self.color(0)
-                    });
-
-                    chart.text({
-                        x: 0,
-                        y: r + 13,
-                        "text-anchor": "middle",
-                        "font-weight": "bold"
-                    }, data.name);
-                }).translate(data.x, data.y);
-
-                node.append(group);
+                g.append(createNodes(i, data));
             });
+
+            console.log("----------------------");
+            var list = edges.list();
+            for(var i = 0; i < list.length; i++) {
+                console.log(list[i].key() + ":" + list[i].connect());
+            }
 
             return g;
         }
@@ -91,14 +208,14 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
     var TopologyDrag = function(chart, axis, widget) {
-        var targetIndex, startX, startY;
+        var targetKey, startX, startY;
         var renderWait = false;
 
         function initDragEvent() {
             chart.on("chart.mousemove", function (e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
+                if(!_.typeCheck("string", targetKey)) return;
 
-                var data = axis.data[targetIndex];
+                var data = axis.data[getDataIndex(targetKey)];
                 data.x = startX + (e.chartX - startX);
                 data.y = startY + (e.chartY - startY);
 
@@ -119,8 +236,8 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             chart.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
-                targetIndex = null;
+                if(!_.typeCheck("string", targetKey)) return;
+                targetKey = null;
             }
         }
 
@@ -128,18 +245,39 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             var root = chart.svg.root.childrens[0].childrens[2];
 
             root.each(function(i, node) {
-                var data = axis.data[i];
-                (function(index, data) {
-                    node.on("mousedown", function(e) {
-                        if(_.typeCheck("integer", targetIndex)) return;
+                var index = parseInt(node.attr("index"));
 
-                        targetIndex = index;
-                        startX = data.x;
-                        startY = data.y;
-                    });
-                })(i, data);
+                if(!isNaN(index)) {
+                    var data = axis.data[index];
+
+                    (function (key, data) {
+                        node.on("mousedown", function (e) {
+                            if (_.typeCheck("string", targetKey)) return;
+
+                            targetKey = key;
+                            startX = data.x;
+                            startY = data.y;
+
+                            // 선택한 노드 맨 마지막으로 이동
+                            var target = axis.data.splice(index, 1);
+                            axis.data.push(target[0]);
+                        });
+                    })(data.key, data);
+                }
             });
+        }
 
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
         }
 
         this.draw = function() {

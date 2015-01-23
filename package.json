@@ -30,15 +30,16 @@
     "url": "https://github.com/seogi1004/jui/issues"
   },
   "devDependencies": {
+    "css": "^2.1.0",
     "grunt": "~0.4.4",
-    "grunt-contrib-cssmin": "~0.9.0",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-less": "~0.11.0",
-    "load-grunt-tasks": "~0.2.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-less": "~0.11.0",
     "grunt-contrib-qunit": "~0.4.0",
-    "grunt-contrib-watch" : "*"
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "*",
+    "load-grunt-tasks": "~0.2.0"
   },
   "categories": [
     "Frameworks",

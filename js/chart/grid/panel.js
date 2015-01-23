@@ -25,7 +25,7 @@ jui.define("chart.grid.panel", [  ], function() {
             obj.y -= this.axis.area('y');
 
             var rect = this.chart.svg.rect($.extend(obj, {
-                fill : 'white',
+                fill : 'tranparent',
                 stroke : "white"
             }));
 
@@ -70,6 +70,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("panel");
         }
     }

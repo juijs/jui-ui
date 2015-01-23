@@ -30,7 +30,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @class chart.builder
+     *
      * implements chart builder
+     *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
@@ -612,6 +614,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {string|function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
+            if(_.typeCheck("string", textOrCallback)) {
+                var regex = /{([^{}]+)}/g,
+                    result = textOrCallback.match(regex);
+
+                if(result != null) {
+                    for(var i = 0; i < result.length; i++) {
+                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
+                        textOrCallback = textOrCallback.replace(result[i], unicode);
+                    }
+                }
+            }
+
             var el = this.svg.text(_.extend({
                 "font-family": this.theme("fontFamily"),
                 "font-size": this.theme("fontSize"),
@@ -619,6 +633,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }, attr), textOrCallback);
 
             return el;
+        }
+
+        /**
+         * CSS의 SVG 아이콘을 가져오는 메소드
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.icon = function(key) {
+            if(key.indexOf(".") == -1) return null;
+
+            var keySet = key.split("."),
+                module = jui.include("chart.icon." + keySet[0]);
+
+            return module[keySet[1]];
         }
 
         /**

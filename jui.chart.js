@@ -24,7 +24,7 @@
 	var QuickSort = function(array, isClone) { //
         var compareFunc = null,
         	array = (isClone) ? array.slice(0) : array;
-  
+
         function swap(indexA, indexB) {
             var temp = array[indexA];
             
@@ -42,12 +42,12 @@
                     storeIndex++;
                 }
             }
-    
+
             swap(right, storeIndex);
 
             return storeIndex;
         }
-  
+
         this.setCompare = function(func) {
         	compareFunc = func;
         }
@@ -74,8 +74,22 @@
             return array;
         }
 	}
-	
+
+	/**
+	 * @class IndexParser
+	 *
+	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
+	 *
+	 * @private
+	 * @constructor
+	 */
 	var IndexParser = function() {
+		/**
+		 * @method isIndexDepth
+		 *
+		 * @param {String} index
+		 * @return {Boolean}
+		 */
 		this.isIndexDepth = function(index) {
 			if(typeof(index) == "string" && index.indexOf(".") != -1) {
 				return true;
@@ -83,7 +97,13 @@
 			
 			return false;
 		}
-		
+
+		/**
+		 * @method getIndexList
+		 *
+		 * @param {String} index
+		 * @return {Array}
+		 */
 		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
 			var resIndex = [], strIndex = "" + index;
 			
@@ -99,7 +119,17 @@
 			
 			return resIndex;
 		}
-		
+
+
+		/**
+		 * @method changeIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @param {String} targetIndex
+		 * @param {String} rootIndex
+		 * @return {String}
+		 */
 		this.changeIndex = function(index, targetIndex, rootIndex) {
 			var rootIndexLen = this.getIndexList(rootIndex).length,
 				indexList = this.getIndexList(index),
@@ -111,7 +141,13 @@
 
 			return tIndexList.concat(indexList).join(".");
 		}
-		
+
+		/**
+		 * @method getNextIndex
+		 *
+		 * @param {String} index
+		 * @return {String}
+		 */
 		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
 			var indexList = this.getIndexList(index),
 				no = indexList.pop() + 1;
@@ -119,7 +155,14 @@
 			indexList.push(no);
 			return indexList.join(".");
 		}
-		
+
+		/**
+		 * @method getParentIndex
+		 *
+		 *
+		 * @param {String} index
+		 * @returns {*}
+		 */
 		this.getParentIndex = function(index) {
 			if(!this.isIndexDepth(index)) return null;
 			var keys = this.getIndexList(index);
@@ -379,24 +422,31 @@
 	
 	/**
 	 * @class util.base
-     *  
-     * Public Utility Classes
+     *
+	 * jui 에서 공통적으로 사용하는 유틸리티 함수 모음
+	 *
+     * ```
+	 * var _ = jui.include("util.base");
+	 *
+	 * console.log(_.browser.webkit);
+	 * ```
      *  
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
 
 		/**
-		 * @property
-		 * check browser agent
-		 */
+		 * @property browser check browser agent
+		 * @property {Boolean} browser.webkit  Webkit 브라우저 체크
+		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
+		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
 			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
-		 * @property
+		 * @property {Boolean} isTouch
 		 * check touch device
 		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -598,6 +648,13 @@
 				after_resize();
 			});
 		},
+		/**
+		 * @method index
+		 *
+		 * IndexParser 객체 생성
+		 *
+		 * @return {IndexParser}
+		 */
 		index: function() {
 			return new IndexParser();
 		},
@@ -621,7 +678,7 @@
 		},
 		/**
 		 * @method typeCheck
-		 * check javascript type
+		 * check data  type
 		 * @param {String} t  type string
 		 * @param {Object} v value object
 		 * @returns {*}
@@ -712,6 +769,16 @@
 				}
 			}
 		},
+		/**
+		 * @method dataToCsv
+		 *
+		 * data 를 csv 로 변환한다.
+		 *
+		 * @param {Array} keys
+		 * @param {Array} dataList
+		 * @param {Number} dataSize
+		 * @return {String}  변환된 csv 문자열
+		 */
 		dataToCsv: function(keys, dataList, dataSize) {
 			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
 			
@@ -733,6 +800,13 @@
 			
 			return csv;
 		},
+
+		/**
+		 * @method dataToCsv2
+		 *
+		 * @param {Object} options
+		 * @return {String}
+		 */
 		dataToCsv2: function(options) {
 			var csv = "";
 			var opts = $.extend({
@@ -764,6 +838,14 @@
 			
 			return csv;
 		},
+		/**
+		 * @method fileToCsv
+		 *
+		 * file 에서 csv 컨텐츠 로드
+		 *
+		 * @param {File} file
+		 * @param {Function} callback
+		 */
 		fileToCsv: function(file, callback) {
 			var reader = new FileReader();
 			
@@ -775,9 +857,25 @@
 	
 	        reader.readAsText(file);
 		},
+		/**
+		 * @method csvToBase64
+		 *
+		 * csv 다운로드 링크로 변환
+		 *
+		 * @param {String} csv
+		 * @return {String}
+		 */
 		csvToBase64: function(csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
+		/**
+		 * @method csvToData
+		 *
+		 * @param {Array} keys
+		 * @param {String} csv
+		 * @param {Number} csvNumber
+		 * @return {Array}
+		 */
 		csvToData: function(keys, csv, csvNumber) {
 			var dataList = [],
 				tmpRowArr = csv.split("\n")
@@ -801,6 +899,15 @@
 			
 			return dataList;
 		},
+		/**
+		 * @method getCsvFields
+		 *
+		 * csv 에서 필드 얻어오기
+		 *
+		 * @param {Array} fields
+		 * @param {Array} csvFields
+		 * @return {Array}
+		 */
 		getCsvFields: function(fields, csvFields) {
 			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
 			
@@ -812,6 +919,15 @@
 			
 			return tmpFields;
 		},
+
+		/**
+		 * @method svgToBase64
+		 *
+		 * xml 문자열로 svg datauri 생성
+		 *
+		 * @param {String} xml
+		 * @return {String} 변환된 data uri 링크
+		 */
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
@@ -911,19 +1027,70 @@
 
             return format;
         },
+		/**
+		 * @method createId
+		 *
+		 * 유니크 아이디 생성
+		 *
+		 * @param {String} key  prefix string
+		 * @return {String} 생성된 아이디 문자열
+		 */
 		createId: function(key) {
 			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
 		},
+		/**
+		 * @method btoa
+		 *
+		 * Base64 인코딩
+		 *
+		 * @return {String}
+		 */
         btoa: Base64.encode,
-        atob: Base64.decode
+		/**
+		 * @method atob
+		 *
+		 * Base64 디코딩
+		 *
+		 * @return {String}
+		 */
+        atob: Base64.decode,
+
+		/**
+		 * @method loop
+		 *
+		 * 최적화된 루프 생성 (5단계로 나눔)
+		 *
+		 * @param {Number} total
+		 */
+		loop : function(total) {
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/5);
+
+			return function(callback) {
+
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+
+				while(first < firstMax && first < end) {
+					callback(first, 1); first++;
+					if (second < secondMax && second < end) { callback(second, 2); second++; }
+					if (third < thirdMax && third < end) { callback(third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
+				}
+			};
+
+		}
+
 	}
 
 
-    /**
+    /*
      * Module related functions
      *
      */
-	
 	var getDepends = function(depends) {
 		var args = [];
 		
@@ -1224,15 +1391,27 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	var UIManager = new function() {
 		var instances = [], classes = [];
 
-		
-		/**
-		 * Public Methods, Instance
-		 * 
-		 */
+
+        /**
+         * @method add
+         *
+         * 생성된 instance 를 추가
+         *
+         * @param {Object} uiIns
+         */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
 		}
 
+        /**
+         * @method emit
+         *
+         * 커스텀 이벤트 실행
+         *
+         * @param {String} key  selector
+         * @param {String} type  이벤트 이름
+         * @param {Array} args  이벤트에 전달될 파라미터
+         */
         this.emit = function(key, type, args) {
             var targets = [];
 
@@ -1252,7 +1431,15 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 }
             }
         }
-		
+
+        /**
+         * @method get
+         *
+         * 객체 가지고 오기
+         *
+         * @param {String/Integer} key 패키지 명 또는 인스턴스 index
+         * @returns {Object/Array} 생성된 객체 또는 리스트
+         */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return instances[key];
@@ -1279,11 +1466,26 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 return result;
 			}
 		}
-		
+
+        /**
+         * @method getAll
+         *
+         * 모든 인스턴스 리스트
+         *
+         * @return {Array}
+         */
 		this.getAll = function() {
 			return instances;
 		}
 
+        /**
+         * @method remove
+         *
+         * 인스턴스 삭제
+         *
+         * @param {Integer} index
+         * @return {Object}  removed instance;
+         */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
                 return instances.splice(index, 1)[0];
@@ -1297,11 +1499,29 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         this.pop = function() {
             return instances.pop();
         }
-		
+
+        /**
+         * @method size
+         *
+         * 인스턴스 길이 얻어오기
+         *
+         * @return {Number} 인스턴스 길이
+         */
 		this.size = function() {
 			return instances.length;
 		}
-		
+
+        /**
+         * @method debug
+         *
+         * 디버그 코드 삽입
+         *
+         * @param {Object} uiObj
+         * @param {Number} i
+         * @param {Number} j
+         * @param {Function} callback  디버그시 실행될 함수
+         *
+         */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
 			var exFuncList = [ "emit", "on", "addEvent", "addValid", "callBefore", 
@@ -1364,14 +1584,21 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}
 		}
 		
-		/**
-		 * Public Methods, Class
-		 * 
-		 */
+        /**
+         * @method addClass
+         *
+         * @param {String} uiCls
+         */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
 		}
-		
+
+        /**
+         * @method getClass
+         *
+         * @param {String/Integer} key
+         * @return {Object}
+         */
 		this.getClass = function(key) {
 			if(_.typeCheck("integer", key)) {
 				return classes[key];
@@ -1391,12 +1618,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
+         * @method create
+         *
          * UI 객체 동적 생성 메소드
          *
-         * @param type
-         * @param selector
-         * @param options
-         * @returns {*}
+         * @param {String} type  모듈 이름
+         * @param {String/Object} selector   jquery selector or dom element
+         * @param {Object} options  객체 생성시 필요한 옵션
+         * @return {Object} 생성된 JUI 객체
          */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
@@ -1858,8 +2087,16 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.setup = function() {
         return {
+            /** @cfg {Object} [tpl={}]  템플릿 리스트  */
             tpl: {},
+            /** @cfg {Object} [event={}]  이벤트 리스트  */
             event: {},
+            /**
+             * @cfg {Object} [tpl={}]
+             * 템플릿 리스트
+             *
+             * @deprecated
+             */
             vo: null
         }
     }
@@ -2651,7 +2888,14 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
-        
+		/**
+		 * @method parse
+		 *
+		 * color 파싱
+		 *
+		 * @param color
+		 * @returns {*}
+		 */
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
@@ -4096,8 +4340,9 @@ jui.define("util.svg",
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
+     *
      * Base Draw Class
-     * @extends core
+     *
      * @alias Draw
      * @requires util.base
      * @requires jquery
@@ -4453,7 +4698,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @class chart.builder
+     *
      * implements chart builder
+     *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
@@ -5035,6 +5282,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {string|function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
+            if(_.typeCheck("string", textOrCallback)) {
+                var regex = /{([^{}]+)}/g,
+                    result = textOrCallback.match(regex);
+
+                if(result != null) {
+                    for(var i = 0; i < result.length; i++) {
+                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
+                        textOrCallback = textOrCallback.replace(result[i], unicode);
+                    }
+                }
+            }
+
             var el = this.svg.text(_.extend({
                 "font-family": this.theme("fontFamily"),
                 "font-size": this.theme("fontSize"),
@@ -5042,6 +5301,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }, attr), textOrCallback);
 
             return el;
+        }
+
+        /**
+         * CSS의 SVG 아이콘을 가져오는 메소드
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.icon = function(key) {
+            if(key.indexOf(".") == -1) return null;
+
+            var keySet = key.split("."),
+                module = jui.include("chart.icon." + keySet[0]);
+
+            return module[keySet[1]];
         }
 
         /**
@@ -5362,7 +5636,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg   */
     	fontColor : "#333333",
         /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana",
+		fontFamily : "arial,Tahoma,verdana,icojui",
         /** @cfg   */
         colors : themeColors,
 
@@ -5562,7 +5836,7 @@ jui.define("chart.theme.gradient", [], function() {
         backgroundColor : "white",
         fontSize : "11px",
         fontColor : "#666",
-        fontFamily : "arial,Tahoma,verdana",
+        fontFamily : "arial,Tahoma,verdana,icojui",
         colors : themeColors,
 
         // grid styles
@@ -5680,7 +5954,7 @@ jui.define("chart.theme.dark", [], function() {
     	backgroundColor : "#222222",
     	fontSize : "12px",
     	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana",
+		fontFamily : "arial,Tahoma,verdana,icojui",
         colors : themeColors,
 
         // grid styles
@@ -5794,7 +6068,7 @@ jui.define("chart.theme.pastel", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif,icojui",
 		colors : themeColors,
 
 		// grid styles
@@ -5915,7 +6189,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Base Font Color  */
         fontColor : "#333333",
         /** Base Font Family */
-        fontFamily : "arial,Tahoma,verdana",
+        fontFamily : "arial,Tahoma,verdana,icojui",
         /** Color List  */
         colors : themeColors,
 
@@ -6173,6 +6447,69 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
     
 })
 
+jui.define("chart.icon.jennifer", [], function() {
+	return {
+		"minus" : "\ue63a",
+		"label" : "\ue639",
+		"stoppage" : "\ue637",
+		"checkmark" : "\ue638",
+		"add-dir" : "\ue600",
+		"add-dir2" : "\ue601",
+		"align-center" : "\ue602",
+		"align-left" : "\ue603",
+		"align-right" : "\ue604",
+		"arrow1" : "\ue605",
+		"arrow2" : "\ue606",
+		"arrow3" : "\ue607",
+		"bold" : "\ue608",
+		"calendar" : "\ue609",
+		"caution" : "\ue60a",
+		"chart" : "\ue60b",
+		"check" : "\ue60c",
+		"chevron-left" : "\ue60d",
+		"chevron-right" : "\ue60e",
+		"close" : "\ue60f",
+		"dashboardlist" : "\ue610",
+		"document" : "\ue611",
+		"download" : "\ue612",
+		"edit" : "\ue613",
+		"exit" : "\ue614",
+		"gear" : "\ue615",
+		"help" : "\ue616",
+		"hide" : "\ue617",
+		"home" : "\ue618",
+		"html" : "\ue619",
+		"image" : "\ue61a",
+		"italic" : "\ue61b",
+		"left" : "\ue61c",
+		"link" : "\ue61d",
+		"loading" : "\ue61e",
+		"more" : "\ue61f",
+		"new-window" : "\ue620",
+		"orderedlist" : "\ue621",
+		"pause" : "\ue622",
+		"play" : "\ue623",
+		"plus" : "\ue624",
+		"preview" : "\ue625",
+		"printer" : "\ue626",
+		"realtime" : "\ue627",
+		"refresh" : "\ue628",
+		"refresh2" : "\ue629",
+		"resize" : "\ue62a",
+		"return" : "\ue62b",
+		"right" : "\ue62c",
+		"save" : "\ue62d",
+		"search" : "\ue62e",
+		"stop" : "\ue62f",
+		"table" : "\ue630",
+		"text" : "\ue631",
+		"textcolor" : "\ue632",
+		"trashcan" : "\ue633",
+		"underline" : "\ue634",
+		"unorderedlist" : "\ue635",
+		"upload" : "\ue636"
+	}
+});
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	/**
 	 * @class chart.grid.core
@@ -8405,7 +8742,7 @@ jui.define("chart.grid.panel", [  ], function() {
             obj.y -= this.axis.area('y');
 
             var rect = this.chart.svg.rect($.extend(obj, {
-                fill : 'white',
+                fill : 'tranparent',
                 stroke : "white"
             }));
 
@@ -8450,6 +8787,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("panel");
         }
     }
@@ -8480,11 +8818,11 @@ jui.define("chart.grid.table", [  ], function() {
                     obj.y -= this.axis.area('y');
 
                     var rect = this.chart.svg.rect($.extend(obj, {
-                        fill : 'white',
+                        fill : 'tranparent',
                         stroke : "black"
                     }));
 
-                    g.append(rect);
+                    //g.append(rect);
                 }
             }
         }
@@ -8532,6 +8870,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("table");
         }
     }
@@ -8573,11 +8912,11 @@ jui.define("chart.grid.overlap", [  ], function() {
                 obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'white',
+                    fill : 'tranparent',
                     stroke : "white"
                 }));
 
-                g.append(rect);
+                //g.append(rect);
             }
         }
 
@@ -8619,6 +8958,7 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("overlap");
         }
 
@@ -8864,10 +9204,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 series = {},
                 length = this.listData().length,
                 i = length,
-                targetLength = this.brush.target.length;
+                target = this.brush.target,
+                targetLength = target.length;
 
             if(isCheckMinMax !== false) {
-                series = getMinMaxValue(this.axis.data, this.brush.target);
+                series = getMinMaxValue(this.axis.data, target);
             }
 
             for(var j = 0; j < targetLength; j++) {
@@ -8884,13 +9225,15 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var axisData = this.axis.data;
             var x = this.axis.x;
             var y = this.axis.y;
-            
-            while(i--) {
+
+            var func = _.loop(i);
+
+            func(function(i, group) {
                 var data = axisData[i],
                     startX = x(i);
 
                 for(var j = 0; j < targetLength ; j++) {
-                    var key = this.brush.target[j],
+                    var key = target[j],
                         value = data[key],
                         startY = y(value);
 
@@ -8903,8 +9246,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         xy[j].max[i] = (value == series[key].max);
                     }
                 }
-
-            }
+            })
 
             return xy;
         }
@@ -9020,17 +9362,20 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreBrush.setup = function() {
         return {
-            /** @cfg {Array} [target=null] */
+            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
             target: null,
-            /** @cfg {Array} [colors=null] */
+            /** @cfg {Array} [colors=null]
+             * 필드 리스트마다 적용될 색상
+             *
+             * colors 는 theme 보다 우선순위를 가진다.
+             */
             colors: null,
-            /** @cfg {Integer} [axis=0] */
+            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
             axis: 0,
-            /** @cfg {Integer} [index=null] */
+            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
-            /** @cfg {boolean} [clip=true] */
+            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
             clip: true,
-            /** @cfg {Array} [items=null] */
             items : []
         }
     }
@@ -9378,6 +9723,14 @@ jui.define("chart.brush.column", [], function() {
 
 jui.define("chart.brush.stackbar", [], function() {
 
+	/**
+	 * @class chart.brush.stackbar
+	 *
+	 * stack 형태의 bar 브러쉬
+	 *
+	 * @extends chart.brush.bar
+	 *
+	 */
 	var StackBarBrush = function(chart, axis, brush) {
 		var g, height, bar_width;
 
@@ -9488,8 +9841,11 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
+			/** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
+			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
 			active: null,
+			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
 			activeEvent: null // or click, mouseover, ...
 		};
 	}
@@ -9499,6 +9855,13 @@ jui.define("chart.brush.stackbar", [], function() {
 
 jui.define("chart.brush.stackcolumn", [], function() {
 
+	/**
+	 * @class chart.brush.stackcolumn
+	 *
+	 * stack 형태의 column 브러쉬
+	 *
+	 * @extends chart.brush.stackbar
+	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
@@ -10607,9 +10970,273 @@ jui.define("chart.brush.pie", [ "util.math" ], function(math) {
 	return PieBrush;
 }, "chart.brush.core");
 
+jui.define("chart.brush.clock", [ "util.math" ], function(math) {
+
+    /**
+     * @class chart.brush.clock 
+     * 
+     * implements clock brush 
+     *  
+     * @extends chart.brush.core  
+     * 
+     */
+	var ClockBrush = function() {
+        var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
+
+        /**
+         * @method drawInnerCircle 
+         *
+         * 내부 원 그리기 
+         *  
+         * @param {Number} w
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @returns {util.svg.element} circle element 
+         */
+        this.drawInnerCircle = function(w, centerX, centerY) {
+            return this.chart.svg.circle({
+                cx : centerX,
+                cy : centerY,
+                r : 10
+            });
+            
+        }
+        
+        /**
+         * @method drawInnerCircle2
+         *
+         * 내부 원 그리기 2
+         *
+         * @param {Number} w
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @returns {util.svg.element} circle element
+         */        
+        this.drawInnerCircle2 = function(w, centerX, centerY) {
+            return this.chart.svg.circle({
+                cx : centerX,
+                cy : centerY,
+                r : 5,
+                fill : 'white'
+            });
+            
+        }
+
+        /**
+         * @method drawOuterCircle
+         *
+         * 바깥 원 그리기
+         *
+         * @param {Number} w
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @returns {util.svg.element} circle element
+         */        
+        this.drawOuterCircle = function(w, centerX, centerY) {
+            return this.chart.svg.circle({
+                cx : centerX,
+                cy : centerY,
+                r : w-10,
+                fill : 'transparent',
+                stroke : 'black',
+                "stroke-width" : 5
+            });
+        }
+        
+        
+        this.drawSecond = function(w, centerX, centerY, hour, minute, second, millis) {
+
+            var rate = 360 / 60; 
+            var milliRate = rate / 1000;
+
+            var radian = math.radian(rate * second + milliRate * millis);
+            var obj = math.rotate(0, -(w-20), radian );
+            
+            return this.chart.svg.line({
+                x1 : centerX,
+                y1 : centerY,
+                x2 : centerX + obj.x,
+                y2 : centerY + obj.y,
+                stroke : 'black'
+                
+            });
+        }
+        
+        this.drawMinute = function(w, centerX, centerY, hour, minute, second, millis) {
+            var g = this.chart.svg.group().translate(centerX, centerY);
+            var rate = 360 / 60;
+            var secondRate = rate / 60;
+            var milliRate = secondRate / 1000;
+
+            var radian = math.radian(rate * minute + secondRate * second + milliRate * millis);
+            var obj = math.rotate(0, -(w-40), radian );
+
+            return this.chart.svg.line({
+                x1 : centerX,
+                y1 : centerY,
+                x2 : centerX + obj.x,
+                y2 : centerY + obj.y,
+                stroke : 'black',
+                "stroke-width" : 5
+            });
+
+        }
+        
+        this.drawHour = function(w, centerX, centerY, hour, minute, second, millis) {
+            var rate = 360 / 12;
+            var minuteRate = rate / 60;
+            var secondRate = minuteRate / 60;
+            var milliRate = secondRate / 1000;
+
+            var radian = math.radian(rate * hour + minuteRate * minute + secondRate * second + milliRate * millis);
+            var obj = math.rotate(0, -(w-50), radian );
+
+            return this.chart.svg.line({
+                x1 : centerX,
+                y1 : centerY,
+                x2 : centerX + obj.x,
+                y2 : centerY + obj.y,
+                stroke : 'black',
+                "stroke-width" : 7
+
+            });
+        }
+
+        this.drawLine = function(w, centerX, centerY) {
+
+            var g = this.chart.svg.group().translate(centerX, centerY);
+
+            var hourRate = 360 / 12;
+            var minuteRate = hourRate / 5;
+
+            for (var i = 1; i <= 12; i++) {
+                var radian = math.radian(hourRate * i);
+                var outer = math.rotate(0, -(w-10), radian);
+                var inner = math.rotate(0, -(w-20), radian);
+                var text = math.rotate(0, -(w-30), radian);
+
+                var line = this.chart.svg.line({
+                    x1 : outer.x,
+                    y1 : outer.y,
+                    x2 : inner.x,
+                    y2 : inner.y,
+                    stroke : 'black',
+                    "stroke-width" :  2
+                });
+
+                g.append(line);
+                var minRadian = math.radian(hourRate * (i-1));
+                for(var j = 1; j <= 4; j++) {
+                    var radian = minRadian + math.radian(minuteRate * j);
+                    var outer = math.rotate(0, -(w-10), radian);
+                    var inner = math.rotate(0, -(w-15), radian);
+
+                    var line = this.chart.svg.line({
+                        x1 : outer.x,
+                        y1 : outer.y,
+                        x2 : inner.x,
+                        y2 : inner.y,
+                        stroke : 'black',
+                        "stroke-width" :  2
+                    });
+
+                    g.append(line);
+
+                }
+
+                g.append(this.chart.text({
+                    x : text.x,
+                    y : text.y + 6,
+                    'text-anchor' : 'middle',
+                    stroke : 'black'
+                }, i));
+
+            }
+            
+            return g;
+            
+        }
+        
+		this.drawUnit = function(index, data, group) {
+            
+            var obj = this.axis.c(index);
+            
+            var width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y;
+
+            // center
+            w = Math.min(width, height) / 2;
+            centerX = width / 2 + x;
+            centerY = height / 2 + y;
+            
+            var date = new Date();
+            
+            var hour = typeof data[this.brush.hour] == 'undefined' ? date.getHours() : data[this.brush.hour];
+            var minute = typeof data[this.brush.minute] == 'undefined' ?  date.getMinutes() : data[this.brush.minute];
+            var second = typeof data[this.brush.second] == 'undefined' ?  date.getSeconds() : data[this.brush.second];
+            var millis = typeof data[this.brush.second]  == 'undefined' ?  date.getMilliseconds() : 0;
+
+            group.append(this.drawOuterCircle(w, centerX, centerY));
+            group.append(this.drawInnerCircle(w, centerX, centerY));
+            group.append(this.drawLine(w, centerX, centerY));
+            group.append(this.drawSecond(w, centerX, centerY, hour, minute, second, millis));
+            group.append(this.drawMinute(w, centerX, centerY, hour, minute, second, millis));
+            group.append(this.drawHour(w, centerX, centerY, hour, minute, second, millis));
+            group.append(this.drawInnerCircle2(w, centerX, centerY));
+            
+            return group; 
+		}
+
+        this.drawBefore = function() {
+
+        }
+
+        this.draw = function() {
+
+            var group = this.chart.svg.group();
+
+            this.eachData(function(i, data) {
+                this.drawUnit(i, data, group);
+            });
+
+            return group;
+
+        }
+	}
+
+	ClockBrush.setup = function() {
+		return {
+            hour : "hour",
+            minute : "minute",
+            second : "second"
+		};
+	}
+
+	return ClockBrush;
+}, "chart.brush.core");
+
 jui.define("chart.brush.scatter", [], function() {
 
+    /**
+     * @class chart.brush.scatter
+     *
+     * 점으로 이루어진 데이타를 표현하는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
     var ScatterBrush = function() {
+
+        /**
+         * @method createScatter
+         *
+         * 좌표별 scatter 생성
+         *
+         * @param {Object} pos
+         * @param {Number} index
+         * @return {util.svg.element}
+         */
         this.createScatter = function(pos, index) {
             var self = this;
             var elem = null,
@@ -10676,6 +11303,14 @@ jui.define("chart.brush.scatter", [], function() {
             return elem;
         }
 
+        /**
+         * @method drawScatter
+         *
+         * scatter 그리기
+         *
+         * @param {Array} points
+         * @return {util.svg.element} g element 리턴
+         */
         this.drawScatter = function(points) {
             var g = this.chart.svg.group();
 
@@ -10697,9 +11332,15 @@ jui.define("chart.brush.scatter", [], function() {
             return g;
         }
 
+        /**
+         * @method draw
+         *
+         * @return {util.svg.element}
+         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
+
 
         this.drawAnimate = function() {
             var area = this.chart.area();
@@ -10718,16 +11359,29 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Boolean} [clip=false] */
             clip: false
         };
     }
 
     return ScatterBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.scatterpath", [], function() {
+jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
+    /**
+     * @class chart.brush.scatterpath
+     *
+     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
+     *
+     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
+     *
+     * @extends chart.brush.core
+     *
+     */
 	var ScatterPathBrush = function() {
 
         this.drawScatter = function(points) {
@@ -10736,30 +11390,42 @@ jui.define("chart.brush.scatterpath", [], function() {
                 color = this.color(0),
                 strokeWidth = this.brush.strokeWidth;
 
-            var g = this.chart.svg.group(),
-                path = this.chart.svg.pathSymbol({
+            var opt = {
                 fill : "none",
-                stroke : color,
+                    stroke : color,
                 "stroke-width" : strokeWidth,
                 "stroke-opacity" : 1,
                 "stroke-linecap" : "butt",
                 "stroke-linejoin" :  "round"
-            });
+            };
+
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.pathSymbol();
 
             var tpl = path.template(width, height);
+
+            var count = 5;
+            var list = [];
+
+            for(var i = 1; i <= count; i++) {
+                list[i] = this.chart.svg.pathSymbol(opt);
+            }
+
+            var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
 
-                var j = points[i].x.length;
+                loop(function(index, group) {
+                    list[group].add(points[i].x[index]|0, points[i].y[index]|0, tpl[symbol]);
+                })
 
-                while(j--) {
-                    path.add(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
-                }
             }
 
-            g.append(path);
+            for(var i = 1; i <= count; i++) {
+                g.append(list[i]);
+            }
 
             return g;
         }
@@ -10771,8 +11437,11 @@ jui.define("chart.brush.scatterpath", [], function() {
 
     ScatterPathBrush.setup = function() {
         return {
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
             symbol: "circle", // or triangle, rectangle, cross
+            /** @cfg {Number} [size=7]  그려질 모양 크기 */
             size: 7,
+            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
             strokeWidth : 1
         };
     }
@@ -11235,6 +11904,13 @@ jui.define("chart.brush.area", [], function() {
 
 jui.define("chart.brush.stackline", [], function() {
 
+	/**
+	 * @class chart.brush.stackline
+	 *
+	 * stack 형태의 line 브러쉬
+	 *
+	 * @extends chart.brush.line
+	 */
 	var StackLineBrush = function() {
         this.draw = function() {
             return this.drawLine(this.getStackXY());
@@ -11245,6 +11921,13 @@ jui.define("chart.brush.stackline", [], function() {
 }, "chart.brush.line");
 jui.define("chart.brush.stackarea", [], function() {
 
+	/**
+	 * @class chart.brush.stackarea
+	 *
+	 * stack 형태의 area brush
+	 *
+	 * @extends chart.brush.area
+	 */
 	var StackAreaBrush = function() {
 		this.draw = function() {
             return this.drawArea(this.getStackXY());
@@ -11256,6 +11939,13 @@ jui.define("chart.brush.stackarea", [], function() {
 
 jui.define("chart.brush.stackscatter", [], function() {
 
+	/**
+	 * @class chart.brush.stackscatter
+	 *
+	 * stack 형태의 scatter 브러쉬
+	 *
+	 * @extends chart.brush.scatter
+	 */
 	var StackScatterBrush = function() {
         this.draw = function() {
             return this.drawScatter(this.getStackXY());
@@ -11553,6 +12243,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
+	/**
+	 * @class chart.brush.stackgauge
+	 *
+	 * stack 형태의 gauge 브러쉬
+	 *
+	 * @extends chart.brush.donut
+	 */
 	var StackGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
@@ -11629,12 +12326,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
+			/** @cfg {Number} [min=0] */
 			min: 0,
+			/** @cfg {Number} [max=100] */
 			max: 100,
+			/** @cfg {Number} [cut=5] */
 			cut: 5,
+			/** @cfg {Number} [size=24] */
 			size: 24,
+			/** @cfg {Number} [startAngle=-180] */
 			startAngle: -180,
+			/** @cfg {Number} [endAngle=360] */
 			endAngle: 360,
+			/** @cfg {String} [title="title"] */
 			title: "title"
 		};
 	}
@@ -11644,6 +12348,13 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 jui.define("chart.brush.waterfall", [], function() {
 
+	/**
+	 * @class chart.brush.waterfall
+	 *
+	 * waterfall 형태의 브러쉬
+	 *
+	 * @extends chart.brush.core
+	 */
 	var WaterFallBrush = function(chart, axis, brush) {
 		var g, count, zeroY, width, columnWidth, half_width;
 		var outerPadding;
@@ -11741,8 +12452,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
+			/** @cfg {Boolean} [line=true] */
 			line: true,
+			/** @cfg {Boolean} [end=false] */
 			end: false,
+			/** @cfg {Boolean} [outerPadding=5] */
 			outerPadding: 5
 		};
 	}
@@ -11752,6 +12466,13 @@ jui.define("chart.brush.waterfall", [], function() {
 
 jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitline
+     *
+     * 분리된 영역의 선을 그리는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
 	var SplitLineBrush = function() {
         this.createLine = function(pos, index) {
             var opts = {
@@ -11830,7 +12551,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
             symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] 분리될 위치  */
             split: null
         };
     }
@@ -11839,6 +12562,13 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 }, "chart.brush.core");
 jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitarea
+     *
+     * 분리된 영역의 브러쉬
+     *
+     * @extends chart.brush.splitline
+     */
     var SplitAreaBrush = function() {
 
         this.drawArea = function(path) {
@@ -12199,35 +12929,17 @@ jui.define("chart.brush.pin", [], function() {
     return PinBrush;
 }, "chart.brush.core");
 jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
-    /**
-     * @class chart.brush.item.core
-     *
-     * implements simple brush item
-     *
-     * @extends chart.draw
-     * @requires jquery
-     * @requires util.base
-     */
+
 	var CoreBrushItem = function() {
         this.drawAfter = function(obj) {
 
         }
 	}
 
-    /** @cfg {Object} item */
-    /** @cfg {chart.builder} chart */
-    /** @cfg {Object} data */
-
 	return CoreBrushItem;
 }, "chart.draw"); 
 jui.define("chart.brush.item.tooltip", [], function() {
-    /**
-     * @class chart.brush.item.tooltip
-     *
-     * implements simple brush item
-     *
-     * @extends chart.brush.item.core
-     */
+
 	var TooltipBrushItem = function() {
         var self = this,
             tooltip = null;
@@ -13461,10 +14173,67 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     return UI;
 });
-jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
+jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_, math) {
+    var EdgeManager = function() {
+        var list = [],
+            cache = {};
+
+        this.add = function(edge) {
+            cache[edge.key()] = edge;
+            list.push(edge);
+        }
+
+        this.get = function(key) {
+            return cache[key];
+        }
+
+        this.is = function(key) {
+            return (cache[key]) ? true : false;
+        }
+
+        this.list = function() {
+            return list;
+        }
+
+        this.each = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            for(var i = 0; i < list.length; i++) {
+                callback.call(this, list[i]);
+            }
+        }
+    }
+
+    var Edge = function(start, end, in_xy, out_xy) {
+        var connect = false;
+
+        this.key = function() {
+            return start + ":" + end;
+        }
+
+        this.reverseKey = function() {
+            return end + ":" + start;
+        }
+
+        this.connect = function(is) {
+            if(arguments.length == 0) {
+                return connect;
+            }
+
+            connect = is;
+        }
+
+        this.get = function(type) {
+            if(type == "start") return start;
+            else if(type == "end") return end;
+            else if(type == "in_xy") return in_xy;
+            else if(type == "out_xy") return out_xy;
+        }
+    }
 
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
+            edges = new EdgeManager(),
             g, r = 20, point = 3;
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
@@ -13476,8 +14245,106 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 
             return {
                 x: x1 + Math.cos(angle) * (c + dist),
-                y: y1 + Math.sin(angle) * (c + dist)
+                y: y1 + Math.sin(angle) * (c + dist),
+                angle: angle,
+                distance: c
             }
+        }
+
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+
+        function createNodes(index, data) {
+            return chart.svg.group({
+                index: index
+            }, function() {
+                chart.svg.circle({
+                    r: r,
+                    fill: self.color(0),
+                    cursor: "pointer"
+                });
+
+                chart.text({
+                    x: 0,
+                    y: 6,
+                    fill: "white",
+                    "font-weight": "bold",
+                    "font-size": "16px",
+                    "text-anchor": "middle",
+                    cursor: "pointer"
+                }, "{jennifer.gear}");
+
+                chart.text({
+                    x: 0,
+                    y: r + 13,
+                    "text-anchor": "middle",
+                    "font-weight": "bold",
+                    cursor: "pointer"
+                }, data.name);
+            }).translate(data.x, data.y);
+        }
+
+        function createEdges() {
+            edges.each(function(edge) {
+                var in_xy = edge.get("in_xy"),
+                    out_xy = edge.get("out_xy");
+
+                var node = chart.svg.group({}, function() {
+                    if(!edge.connect()) {
+                        chart.svg.line({
+                            x1: in_xy.x,
+                            y1: in_xy.y,
+                            x2: out_xy.x,
+                            y2: out_xy.y,
+                            stroke: self.color(1),
+                            "stroke-width": 1
+                        });
+                    }
+
+                    chart.svg.circle({
+                        fill: "black",
+                        r: point,
+                        cx: out_xy.x,
+                        cy: out_xy.y
+                    });
+
+                    chart.svg.text({
+                        x: out_xy.x - 15,
+                        y: out_xy.y + 15,
+                        "font-size": "12px",
+                        "text-anchor": "end"
+                    }, "총 응답시간/건수 : 3,200ms/3 ->")
+                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                });
+
+                g.append(node);
+            });
+        }
+
+        function setDataEdges(data, index) {
+            var targetKey = data.outgoing[index],
+                target = self.getData(getDataIndex(targetKey));
+
+            var dist = r + point,
+                in_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(dist)),
+                out_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(dist)),
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+
+            if(edges.is(edge.reverseKey())) {
+                edge.connect(true);
+            }
+
+            edges.add(edge);
         }
 
         this.drawBefore = function() {
@@ -13486,63 +14353,25 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var node = chart.svg.group();
-
                 for(var j = 0; j < data.outgoing.length; j++) {
-                    var target = self.getData(data.outgoing[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.line({
-                        x1: data.x,
-                        y1: data.y,
-                        x2: target.x,
-                        y2: target.y,
-                        stroke: self.color(1),
-                        "stroke-width": 1
-                    }));
-
-                    node.append(chart.svg.circle({
-                        fill: "black",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
+                    // 엣지 데이터 생성
+                    setDataEdges(data, j);
                 }
-
-                for(var j = 0; j < data.incoming.length; j++) {
-                    var target = self.getData(data.incoming[j]),
-                        xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point));
-
-                    node.append(chart.svg.circle({
-                        fill: "red",
-                        r: point,
-                        cx: xy.x,
-                        cy: xy.y
-                    }));
-                }
-
-                g.append(node);
             });
 
+            // 엣지 그리기
+            createEdges();
+
+            // 노드 그리기
             this.eachData(function(i, data) {
-                var node = g.get(i);
-
-                var group = chart.svg.group({}, function() {
-                    chart.svg.circle({
-                        r: r,
-                        fill: self.color(0)
-                    });
-
-                    chart.text({
-                        x: 0,
-                        y: r + 13,
-                        "text-anchor": "middle",
-                        "font-weight": "bold"
-                    }, data.name);
-                }).translate(data.x, data.y);
-
-                node.append(group);
+                g.append(createNodes(i, data));
             });
+
+            console.log("----------------------");
+            var list = edges.list();
+            for(var i = 0; i < list.length; i++) {
+                console.log(list[i].key() + ":" + list[i].connect());
+            }
 
             return g;
         }
@@ -13554,14 +14383,14 @@ jui.define("chart.brush.topology.node", [ "util.math" ], function(math) {
 jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
 
     var TopologyDrag = function(chart, axis, widget) {
-        var targetIndex, startX, startY;
+        var targetKey, startX, startY;
         var renderWait = false;
 
         function initDragEvent() {
             chart.on("chart.mousemove", function (e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
+                if(!_.typeCheck("string", targetKey)) return;
 
-                var data = axis.data[targetIndex];
+                var data = axis.data[getDataIndex(targetKey)];
                 data.x = startX + (e.chartX - startX);
                 data.y = startY + (e.chartY - startY);
 
@@ -13582,8 +14411,8 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             chart.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
-                if(!_.typeCheck("integer", targetIndex)) return;
-                targetIndex = null;
+                if(!_.typeCheck("string", targetKey)) return;
+                targetKey = null;
             }
         }
 
@@ -13591,18 +14420,39 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             var root = chart.svg.root.childrens[0].childrens[2];
 
             root.each(function(i, node) {
-                var data = axis.data[i];
-                (function(index, data) {
-                    node.on("mousedown", function(e) {
-                        if(_.typeCheck("integer", targetIndex)) return;
+                var index = parseInt(node.attr("index"));
 
-                        targetIndex = index;
-                        startX = data.x;
-                        startY = data.y;
-                    });
-                })(i, data);
+                if(!isNaN(index)) {
+                    var data = axis.data[index];
+
+                    (function (key, data) {
+                        node.on("mousedown", function (e) {
+                            if (_.typeCheck("string", targetKey)) return;
+
+                            targetKey = key;
+                            startX = data.x;
+                            startY = data.y;
+
+                            // 선택한 노드 맨 마지막으로 이동
+                            var target = axis.data.splice(index, 1);
+                            axis.data.push(target[0]);
+                        });
+                    })(data.key, data);
+                }
             });
+        }
 
+        function getDataIndex(key) {
+            var index = null;
+
+            for(var i = 0; i < axis.data.length; i++) {
+                if(axis.data[i].key == key) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
         }
 
         this.draw = function() {
