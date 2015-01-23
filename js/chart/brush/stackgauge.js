@@ -1,5 +1,12 @@
 jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
+	/**
+	 * @class chart.brush.stackgauge
+	 *
+	 * stack 형태의 gauge 브러쉬
+	 *
+	 * @extends chart.brush.donut
+	 */
 	var StackGaugeBrush = function(chart, axis, brush) {
         var w, centerX, centerY, outerRadius;
 
@@ -76,12 +83,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
+			/** @cfg {Number} [min=0] */
 			min: 0,
+			/** @cfg {Number} [max=100] */
 			max: 100,
+			/** @cfg {Number} [cut=5] */
 			cut: 5,
+			/** @cfg {Number} [size=24] */
 			size: 24,
+			/** @cfg {Number} [startAngle=-180] */
 			startAngle: -180,
+			/** @cfg {Number} [endAngle=360] */
 			endAngle: 360,
+			/** @cfg {String} [title="title"] */
 			title: "title"
 		};
 	}

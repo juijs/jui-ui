@@ -1057,10 +1057,9 @@
 		/**
 		 * @method loop
 		 *
-		 * 최적화된 루프 생성
+		 * 최적화된 루프 생성 (5단계로 나눔)
 		 *
 		 * @param {Number} total
-		 * @param {Function} callback
 		 */
 		loop : function(total) {
 			var start = 0;

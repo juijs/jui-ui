@@ -1,5 +1,12 @@
 jui.define("chart.brush.stackcolumn", [], function() {
 
+	/**
+	 * @class chart.brush.stackcolumn
+	 *
+	 * stack 형태의 column 브러쉬
+	 *
+	 * @extends chart.brush.stackbar
+	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 

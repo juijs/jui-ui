@@ -1,5 +1,12 @@
 jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.brush.splitline
+     *
+     * 분리된 영역의 선을 그리는 브러쉬
+     *
+     * @extends chart.brush.core
+     */
 	var SplitLineBrush = function() {
         this.createLine = function(pos, index) {
             var opts = {
@@ -78,7 +85,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
             symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] 분리될 위치  */
             split: null
         };
     }
