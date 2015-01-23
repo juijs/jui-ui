@@ -134,22 +134,6 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                             stroke: self.color(1),
                             "stroke-width": 1
                         });
-
-                        chart.svg.text({
-                            x: out_xy.x - 15,
-                            y: out_xy.y + 15,
-                            "font-size": "12px",
-                            "text-anchor": "end"
-                        }, "총 응답시간/건수 : 3,200ms/3 ->")
-                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
-                    } else {
-                        chart.svg.text({
-                            x: in_xy.x - in_xy.distance + 50,
-                            y: in_xy.y - 15,
-                            "font-size": "12px",
-                            "text-anchor": "start"
-                        }, "<- 총 응답시간/건수 : 3,200ms/3")
-                            .rotate(math.degree(in_xy.angle), in_xy.x, in_xy.y);
                     }
 
                     chart.svg.circle({
@@ -158,6 +142,14 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                         cx: out_xy.x,
                         cy: out_xy.y
                     });
+
+                    chart.svg.text({
+                        x: out_xy.x - 15,
+                        y: out_xy.y + 15,
+                        "font-size": "12px",
+                        "text-anchor": "end"
+                    }, "총 응답시간/건수 : 3,200ms/3 ->")
+                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
                 });
 
                 g.append(node);
