@@ -29,7 +29,7 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
                 list[i] = this.chart.svg.pathSymbol(opt);
             }
 
-            var loop = _.loop5(points[0].x.length);
+            var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
