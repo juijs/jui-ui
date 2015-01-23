@@ -387,17 +387,20 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
     CoreBrush.setup = function() {
         return {
-            /** @cfg {Array} [target=null] */
+            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
             target: null,
-            /** @cfg {Array} [colors=null] */
+            /** @cfg {Array} [colors=null]
+             * 필드 리스트마다 적용될 색상
+             *
+             * colors 는 theme 보다 우선순위를 가진다.
+             */
             colors: null,
-            /** @cfg {Integer} [axis=0] */
+            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
             axis: 0,
-            /** @cfg {Integer} [index=null] */
+            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
-            /** @cfg {boolean} [clip=true] */
+            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
             clip: true,
-            /** @cfg {Array} [items=null] */
             items : []
         }
     }
