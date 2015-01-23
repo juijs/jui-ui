@@ -1071,7 +1071,7 @@
 			return function(callback) {
 
 				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = start;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback(first, 1); first++;

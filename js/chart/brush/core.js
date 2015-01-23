@@ -253,7 +253,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             var func = _.loop(i);
 
-            func(function(i) {
+            func(function(i, group) {
                 var data = axisData[i],
                     startX = x(i);
 
