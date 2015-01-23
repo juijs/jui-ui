@@ -8745,7 +8745,7 @@ jui.define("chart.grid.panel", [  ], function() {
                 stroke : "white"
             }));
 
-            g.append(rect);
+            //g.append(rect);
         }
 
         /**
@@ -8820,7 +8820,7 @@ jui.define("chart.grid.table", [  ], function() {
                         stroke : "black"
                     }));
 
-                    g.append(rect);
+                    //g.append(rect);
                 }
             }
         }
@@ -8913,7 +8913,7 @@ jui.define("chart.grid.overlap", [  ], function() {
                     stroke : "white"
                 }));
 
-                g.append(rect);
+                //g.append(rect);
             }
         }
 

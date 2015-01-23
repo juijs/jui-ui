@@ -25,7 +25,7 @@ jui.define("chart.grid.overlap", [  ], function() {
                     stroke : "white"
                 }));
 
-                g.append(rect);
+                //g.append(rect);
             }
         }
 

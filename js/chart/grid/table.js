@@ -25,7 +25,7 @@ jui.define("chart.grid.table", [  ], function() {
                         stroke : "black"
                     }));
 
-                    g.append(rect);
+                    //g.append(rect);
                 }
             }
         }

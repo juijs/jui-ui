@@ -29,7 +29,7 @@ jui.define("chart.grid.panel", [  ], function() {
                 stroke : "white"
             }));
 
-            g.append(rect);
+            //g.append(rect);
         }
 
         /**
