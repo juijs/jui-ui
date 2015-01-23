@@ -21,7 +21,7 @@ jui.define("chart.grid.table", [  ], function() {
                     obj.y -= this.axis.area('y');
 
                     var rect = this.chart.svg.rect($.extend(obj, {
-                        fill : 'white',
+                        fill : 'tranparent',
                         stroke : "black"
                     }));
 

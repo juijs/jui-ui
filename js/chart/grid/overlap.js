@@ -21,7 +21,7 @@ jui.define("chart.grid.overlap", [  ], function() {
                 obj.y -= this.axis.area('y');
 
                 var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'white',
+                    fill : 'tranparent',
                     stroke : "white"
                 }));
 
