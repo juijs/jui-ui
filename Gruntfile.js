@@ -46,6 +46,9 @@ module.exports = function(grunt) {
 
         // chart.pattern 
         "js/chart/pattern/white.js",
+
+        // chart.icon
+        "js/chart/icon/jennifer.js",
         
         // chart.grid
         "js/chart/grid/core.js",

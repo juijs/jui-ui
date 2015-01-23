@@ -48,14 +48,13 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     "stroke-width": 1
                 });
 
-                /*/
                 chart.text({
                     x: 0,
                     y: 0,
+                    "font-family": "icojui",
                     "font-weight": "bold",
                     "font-size": "16px"
-                }, "\ue603");
-                /**/
+                }, "\ue63a");
 
                 chart.text({
                     x: 0,
