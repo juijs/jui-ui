@@ -1054,121 +1054,15 @@
 		 */
         atob: Base64.decode,
 
-		loop : function(total, splitCount) {
-
-			if (!splitCount ) {
-				splitCount = 2;
-				if (total > 500000) {
-					splitCount = 10;
-				} else if (total > 100000 ) {
-					splitCount = 5;
-				} else if (total > 10000 ) {
-					splitCount = 4;
-				} else if (total > 1000 ) {
-					splitCount = 3;
-				}
-			}
-
-			return this["loop" + splitCount](total);
-
-		},
-
 		/**
 		 * @method loop
 		 *
 		 * 최적화된 루프 생성
 		 *
 		 * @param {Number} total
-		 * @param {Number} count
 		 * @param {Function} callback
 		 */
-		loop2 : function(total) {
-
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/2);
-
-			return function(callback) {
-
-				var first = start, second = first + unit;
-				var firstMax = second, secondMax = end;
-
-				while(first < firstMax && first < end) {
-					callback(first,1); first++;
-
-					if (second < secondMax && second < end) { callback(second,2); second++; }
-				}
-
-			};
-
-		},
-		/**
-		 * @method loop3
-		 *
-		 * 최적화된 루프 생성
-		 *
-		 * @param {Number} total
-		 * @param {Number} count
-		 * @param {Function} callback
-		 */
-		loop3 : function(total) {
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/3);
-
-			return function(callback) {
-				var first = start, second = unit * 1, third = unit * 2;
-				var firstMax = second, secondMax = third, thirdMax = end;
-
-				while(first < firstMax && first < end) {
-					callback(first,1); first++;
-
-					if (second < secondMax && second < end) { callback(second,2); second++; }
-					if (third < thirdMax && third < end) { callback(third,3); third++; }
-				}
-			};
-
-		},
-
-		/**
-		 * @method loop4
-		 *
-		 * 최적화된 루프 생성
-		 *
-		 * @param {Number} total
-		 * @param {Function} callback
-		 */
-		loop4 : function(total) {
-			var start = 0;
-			var end = total;
-
-
-			var unit = Math.ceil(total/4);
-
-			return function(callback) {
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = end;
-
-				while(first < firstMax && first < end) {
-					callback(first,1); first++;
-					if (second < secondMax && second < end) { callback(second,2); second++; }
-					if (third < thirdMax && third < end) { callback(third,3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth,4); fourth++; }
-				}
-			};
-
-		},
-		/**
-		 * @method loop5
-		 *
-		 * 최적화된 루프 생성
-		 *
-		 * @param {Number} total
-		 * @param {Function} callback
-		 */
-		loop5 : function(total) {
+		loop : function(total) {
 			var start = 0;
 			var end = total;
 
@@ -1185,40 +1079,6 @@
 					if (third < thirdMax && third < end) { callback(third, 3); third++; }
 					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
 					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
-				}
-			};
-
-		},
-		/**
-		 * @method loop10
-		 *
-		 * 최적화된 루프 생성
-		 *
-		 * @param {Number} total
-		 * @param {Function} callback
-		 */
-		loop10 : function(total) {
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/10);
-
-			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4, sixth = unit * 5, seventh = unit * 6, eighth = unit * 7, ninth = unit * 8, tenth = unit * 9;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = sixth, sixthMax = seventh, seventhMax = eighth, eighthMax = ninth, ninthMax = tenth, tenthMax = end;
-
-				while(first < firstMax && first < end) {
-					callback(first, 1); first++;
-					if (second < secondMax && second < end) { callback(second, 2); second++; }
-					if (third < thirdMax && third < end) { callback(third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
-					if (sixth < sixthMax && sixth < end) { callback(sixth, 6); sixth++; }
-					if (seventh < seventhMax && seventh < end) { callback(seventh, 7); seventh++; }
-					if (eighth < eighthMax && eighth < end) { callback(eighth, 8); eighth++; }
-					if (ninth < ninthMax && ninth < end) { callback(ninth, 9); ninth++; }
-					if (tenth < tenthMax && tenth < end) { callback(tenth, 10); tenth++; }
 				}
 			};
 
@@ -16011,7 +15871,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var x = this.axis.x;
             var y = this.axis.y;
 
-            var func = _.loop10(i);
+            var func = _.loop(i);
 
             func(function(i) {
                 var data = axisData[i],
@@ -18124,14 +17984,14 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
             var tpl = path.template(width, height);
 
-            var count = 10;
+            var count = 5;
             var list = [];
 
             for(var i = 1; i <= count; i++) {
                 list[i] = this.chart.svg.pathSymbol(opt);
             }
 
-            var loop = _.loop10(points[0].x.length);
+            var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
