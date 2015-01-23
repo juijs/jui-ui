@@ -26,7 +26,7 @@ jui.define("chart.theme.gradient", [], function() {
         backgroundColor : "white",
         fontSize : "11px",
         fontColor : "#666",
-        fontFamily : "arial,Tahoma,verdana",
+        fontFamily : "arial,Tahoma,verdana,icojui",
         colors : themeColors,
 
         // grid styles
