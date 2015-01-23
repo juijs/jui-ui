@@ -14055,10 +14055,18 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         this.list = function() {
             return list;
         }
+
+        this.each = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            for(var i = 0; i < list.length; i++) {
+                callback.call(this, list[i]);
+            }
+        }
     }
 
-    var Edge = function(start, end, xy) {
-        var incoming = false;
+    var Edge = function(start, end, in_xy, out_xy) {
+        var connect = false;
 
         this.key = function() {
             return start + ":" + end;
@@ -14068,18 +14076,19 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return end + ":" + start;
         }
 
-        this.incoming = function(is) {
+        this.connect = function(is) {
             if(arguments.length == 0) {
-                return incoming;
+                return connect;
             }
 
-            incoming = is;
+            connect = is;
         }
 
         this.get = function(type) {
             if(type == "start") return start;
             else if(type == "end") return end;
-            else if(type == "xy") return xy;
+            else if(type == "in_xy") return in_xy;
+            else if(type == "out_xy") return out_xy;
         }
     }
 
@@ -14116,16 +14125,10 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return index;
         }
 
-        function addIncomingKey(data, key) {
-            if(!_.typeCheck("array", data.incoming)) {
-                data.incoming = [];
-            }
-
-            data.incoming.push(key);
-        }
-
-        function createNodes(data) {
-            return chart.svg.group({}, function() {
+        function createNodes(index, data) {
+            return chart.svg.group({
+                index: index
+            }, function() {
                 chart.svg.circle({
                     r: r,
                     fill: self.color(0),
@@ -14152,67 +14155,65 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }).translate(data.x, data.y);
         }
 
-        function createEdges(data, index) {
-            var targetKey = data.outgoing[index],
-                target = self.getData(getDataIndex(targetKey));
+        function createEdges() {
+            edges.each(function(edge) {
+                var in_xy = edge.get("in_xy"),
+                    out_xy = edge.get("out_xy");
 
-            // 아웃고잉 노드에 현재 노드의 키를 넘김
-            addIncomingKey(target, targetKey);
+                var node = chart.svg.group({}, function() {
+                    if(!edge.connect()) {
+                        chart.svg.line({
+                            x1: in_xy.x,
+                            y1: in_xy.y,
+                            x2: out_xy.x,
+                            y2: out_xy.y,
+                            stroke: self.color(1),
+                            "stroke-width": 1
+                        });
 
-            return chart.svg.group({}, function() {
-                var o_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(r + point)),
-                    i_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(r + point)),
-                    edge = new Edge(data.key, targetKey, o_xy);
+                        chart.svg.text({
+                            x: out_xy.x - 15,
+                            y: out_xy.y + 15,
+                            "font-size": "12px",
+                            "text-anchor": "end"
+                        }, "총 응답시간/건수 : 3,200ms/3 ->")
+                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                    } else {
+                        chart.svg.text({
+                            x: in_xy.x - in_xy.distance + 50,
+                            y: in_xy.y - 15,
+                            "font-size": "12px",
+                            "text-anchor": "start"
+                        }, "<- 총 응답시간/건수 : 3,200ms/3")
+                            .rotate(math.degree(in_xy.angle), in_xy.x, in_xy.y);
+                    }
 
-                // 인커밍 노드가 아웃고잉 노드일 경우, 이미 라인이 그려져있으므로 그리지 않음
-                if(!edges.is(edge.reverseKey())) {
-                    chart.svg.line({
-                        x1: i_xy.x,
-                        y1: i_xy.y,
-                        x2: o_xy.x,
-                        y2: o_xy.y,
-                        stroke: self.color(1),
-                        "stroke-width": 1
-                    });
-                } else {
-                    edge.incoming(true);
-                }
-
-                // 아웃고잉 노드가 없을 경우에만 그림
-                if(!edges.is(edge.key())) {
                     chart.svg.circle({
                         fill: "black",
                         r: point,
-                        cx: o_xy.x,
-                        cy: o_xy.y
+                        cx: out_xy.x,
+                        cy: out_xy.y
                     });
-                }
+                });
 
-                edges.add(edge);
+                g.append(node);
             });
         }
 
-        function createTextEdges() {
+        function setDataEdges(data, index) {
+            var targetKey = data.outgoing[index],
+                target = self.getData(getDataIndex(targetKey));
 
-            /*/
-            if(edges[targetKey + "_" + data.key]) {
-                chart.svg.text({
-                    x: i_xy.x - i_xy.distance + 50,
-                    y: i_xy.y - 15,
-                    "font-size": "12px",
-                    "text-anchor": "start"
-                }, "<- 총 응답시간/건수 : 3,200ms/3")
-                    .rotate(math.degree(i_xy.angle), i_xy.x, i_xy.y);
-            } else {
-                chart.svg.text({
-                    x: o_xy.x - 15,
-                    y: o_xy.y + 15,
-                    "font-size": "12px",
-                    "text-anchor": "end"
-                }, "총 응답시간/건수 : 3,200ms/3 ->")
-                    .rotate(math.degree(o_xy.angle), o_xy.x, o_xy.y);
+            var dist = r + point,
+                in_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(dist)),
+                out_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(dist)),
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+
+            if(edges.is(edge.reverseKey())) {
+                edge.connect(true);
             }
-            /**/
+
+            edges.add(edge);
         }
 
         this.drawBefore = function() {
@@ -14221,22 +14222,24 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var node = chart.svg.group();
-
                 for(var j = 0; j < data.outgoing.length; j++) {
-                    // 엣지 생성
-                    node.append(createEdges(data, j));
+                    // 엣지 데이터 생성
+                    setDataEdges(data, j);
                 }
-
-                // 노드 생성
-                node.append(createNodes(data));
-
-                g.append(node);
             });
 
-            for(var i = 0; i < edges.list.length; i++) {
-                var edge = edges.list[i];
-                console.log(edge.key() + " = " + edge.incoming());
+            // 엣지 그리기
+            createEdges();
+
+            // 노드 그리기
+            this.eachData(function(i, data) {
+                g.append(createNodes(i, data));
+            });
+
+            console.log("----------------------");
+            var list = edges.list();
+            for(var i = 0; i < list.length; i++) {
+                console.log(list[i].key() + ":" + list[i].connect());
             }
 
             return g;
@@ -14286,21 +14289,25 @@ jui.define("chart.widget.topology.drag", [ "util.base" ], function(_) {
             var root = chart.svg.root.childrens[0].childrens[2];
 
             root.each(function(i, node) {
-                var data = axis.data[i];
+                var index = parseInt(node.attr("index"));
 
-                (function(key, data) {
-                    node.get(node.childrens.length - 1).on("mousedown", function(e) {
-                        if(_.typeCheck("string", targetKey)) return;
+                if(!isNaN(index)) {
+                    var data = axis.data[index];
 
-                        targetKey = key;
-                        startX = data.x;
-                        startY = data.y;
+                    (function (key, data) {
+                        node.on("mousedown", function (e) {
+                            if (_.typeCheck("string", targetKey)) return;
 
-                        // 선택한 노드 맨 마지막으로 이동
-                        var target = axis.data.splice(i, 1);
-                        axis.data.push(target[0]);
-                    });
-                })(data.key, data);
+                            targetKey = key;
+                            startX = data.x;
+                            startY = data.y;
+
+                            // 선택한 노드 맨 마지막으로 이동
+                            var target = axis.data.splice(index, 1);
+                            axis.data.push(target[0]);
+                        });
+                    })(data.key, data);
+                }
             });
         }
 
