@@ -8745,7 +8745,7 @@ jui.define("chart.grid.panel", [  ], function() {
                 stroke : "white"
             }));
 
-            //g.append(rect);
+            g.append(rect);
         }
 
         /**
@@ -8786,6 +8786,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("panel");
         }
     }
@@ -8868,6 +8869,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("table");
         }
     }
@@ -8955,6 +8957,7 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("overlap");
         }
 

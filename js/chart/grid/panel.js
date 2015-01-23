@@ -29,7 +29,7 @@ jui.define("chart.grid.panel", [  ], function() {
                 stroke : "white"
             }));
 
-            //g.append(rect);
+            g.append(rect);
         }
 
         /**
@@ -70,6 +70,7 @@ jui.define("chart.grid.panel", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("panel");
         }
     }

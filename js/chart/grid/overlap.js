@@ -67,6 +67,7 @@ jui.define("chart.grid.overlap", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("overlap");
         }
 

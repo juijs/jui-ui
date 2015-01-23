@@ -73,6 +73,7 @@ jui.define("chart.grid.table", [  ], function() {
          * @protected
          */
         this.draw = function() {
+            this.grid.hide = true;
             return this.drawGrid("table");
         }
     }
