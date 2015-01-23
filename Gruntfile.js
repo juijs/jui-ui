@@ -1,3 +1,5 @@
+var css = require('css');
+var fs = require('fs');
 module.exports = function(grunt) {
     var base_src = [
         // core
@@ -9,7 +11,7 @@ module.exports = function(grunt) {
         "js/util/time.js",
         "js/util/scale.js",
         "js/util/color.js",
-        "js/util/svg.js"
+        "js/util/icon.js"
     ];
 
     var ui_src = [
@@ -186,14 +188,46 @@ module.exports = function(grunt) {
                 }
             }
         },
+        icon : {
+            css : "jui.css",
+            dist : "js/chart/icon/jennifer.js"
+        },
         pkg: grunt.file.readJSON("package.json")
     });
 
     require("load-grunt-tasks")(grunt);
 
+    grunt.registerTask('icon', 'SVG Icon Build', function() {
+        var done = this.async();
+
+        var content = fs.readFileSync(grunt.config("icon.css"), { encoding : 'utf8' });
+        var obj = css.parse(content);
+
+        var icons = [];
+        obj.stylesheet.rules.forEach(function(item) {
+            if (item.declarations && item.declarations[0] && item.declarations[0].property == 'content') {
+                var obj = {
+                    name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
+                    content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
+                }
+
+                icons.push('\t\t"' + obj.name + '" : "' + obj.content + '"');
+            }
+        })
+
+        var str = 'jui.define("chart.icon.jennifer", [], function() {\n' +
+            '\treturn ' +
+            "{\n" + icons.join(",\r\n") + "\n\t}\n" +
+            "});";
+
+        fs.writeFileSync(grunt.config("icon.dist"), new Buffer(str));
+
+        grunt.log.writeln("File " + grunt.config("icon.dist") + " created.");
+    })
+
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.registerTask("js", [ "concat", "uglify" ]);
-    grunt.registerTask("css", [ "less", "cssmin" ]);
+    grunt.registerTask("css", [ "less", "cssmin", "icon" ]);
     grunt.registerTask("test", [ "qunit" ]);
     grunt.registerTask("default", [ "css", "test", "js" ]);
 };
