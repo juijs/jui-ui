@@ -1,4 +1,4 @@
-jui.define("chart.brush.scatterpath", [], function() {
+jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
 	var ScatterPathBrush = function() {
 
@@ -8,30 +8,42 @@ jui.define("chart.brush.scatterpath", [], function() {
                 color = this.color(0),
                 strokeWidth = this.brush.strokeWidth;
 
-            var g = this.chart.svg.group(),
-                path = this.chart.svg.pathSymbol({
+            var opt = {
                 fill : "none",
-                stroke : color,
+                    stroke : color,
                 "stroke-width" : strokeWidth,
                 "stroke-opacity" : 1,
                 "stroke-linecap" : "butt",
                 "stroke-linejoin" :  "round"
-            });
+            };
+
+            var g = this.chart.svg.group(),
+                path = this.chart.svg.pathSymbol();
 
             var tpl = path.template(width, height);
+
+            var count = 10;
+            var list = [];
+
+            for(var i = 1; i <= count; i++) {
+                list[i] = this.chart.svg.pathSymbol(opt);
+            }
+
+            var loop = _.loop10(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
                     symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
 
-                var j = points[i].x.length;
+                loop(function(index, group) {
+                    list[group].add(points[i].x[index]|0, points[i].y[index]|0, tpl[symbol]);
+                })
 
-                while(j--) {
-                    path.add(points[i].x[j]|0, points[i].y[j]|0, tpl[symbol]);
-                }
             }
 
-            g.append(path);
+            for(var i = 1; i <= count; i++) {
+                g.append(list[i]);
+            }
 
             return g;
         }

@@ -1095,9 +1095,9 @@
 				var firstMax = second, secondMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first); first++;
+					callback(first,1); first++;
 
-					if (second < secondMax && second < end) { callback(second); second++; }
+					if (second < secondMax && second < end) { callback(second,2); second++; }
 				}
 
 			};
@@ -1123,10 +1123,10 @@
 				var firstMax = second, secondMax = third, thirdMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first); first++;
+					callback(first,1); first++;
 
-					if (second < secondMax && second < end) { callback(second); second++; }
-					if (third < thirdMax && third < end) { callback(third); third++; }
+					if (second < secondMax && second < end) { callback(second,2); second++; }
+					if (third < thirdMax && third < end) { callback(third,3); third++; }
 				}
 			};
 
@@ -1152,10 +1152,10 @@
 				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first); first++;
-					if (second < secondMax && second < end) { callback(second); second++; }
-					if (third < thirdMax && third < end) { callback(third); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
+					callback(first,1); first++;
+					if (second < secondMax && second < end) { callback(second,2); second++; }
+					if (third < thirdMax && third < end) { callback(third,3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth,4); fourth++; }
 				}
 			};
 
@@ -1180,11 +1180,11 @@
 				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = start;
 
 				while(first < firstMax && first < end) {
-					callback(first); first++;
-					if (second < secondMax && second < end) { callback(second); second++; }
-					if (third < thirdMax && third < end) { callback(third); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback(fifth); fifth++; }
+					callback(first, 1); first++;
+					if (second < secondMax && second < end) { callback(second, 2); second++; }
+					if (third < thirdMax && third < end) { callback(third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
 				}
 			};
 
@@ -1209,16 +1209,16 @@
 				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = sixth, sixthMax = seventh, seventhMax = eighth, eighthMax = ninth, ninthMax = tenth, tenthMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first); first++;
-					if (second < secondMax && second < end) { callback(second); second++; }
-					if (third < thirdMax && third < end) { callback(third); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback(fifth); fifth++; }
-					if (sixth < sixthMax && sixth < end) { callback(sixth); sixth++; }
-					if (seventh < seventhMax && seventh < end) { callback(seventh); seventh++; }
-					if (eighth < eighthMax && eighth < end) { callback(eighth); eighth++; }
-					if (ninth < ninthMax && ninth < end) { callback(ninth); ninth++; }
-					if (tenth < tenthMax && tenth < end) { callback(tenth); tenth++; }
+					callback(first, 1); first++;
+					if (second < secondMax && second < end) { callback(second, 2); second++; }
+					if (third < thirdMax && third < end) { callback(third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
+					if (sixth < sixthMax && sixth < end) { callback(sixth, 6); sixth++; }
+					if (seventh < seventhMax && seventh < end) { callback(seventh, 7); seventh++; }
+					if (eighth < eighthMax && eighth < end) { callback(eighth, 8); eighth++; }
+					if (ninth < ninthMax && ninth < end) { callback(ninth, 9); ninth++; }
+					if (tenth < tenthMax && tenth < end) { callback(tenth, 10); tenth++; }
 				}
 			};
 
