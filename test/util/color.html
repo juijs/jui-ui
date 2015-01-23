@@ -25,16 +25,17 @@ jui.ready([ "util.color" ], function(color) {
     	assert.ok(color.parse("linear").type != "linear", "type check");
     	
     	var obj = color.parse("linear() xxx");
-    	assert.ok(obj.type == "linear", "type check");
+
+    	assert.ok(obj.type == "linearGradient", "type check");
     	
     	var obj1 = color.parse("linear(left)");
-    	assert.ok(obj1.direction == "left", "direction left check");
-    	    	
-    	var obj2 = color.parse("linear(right)");
-    	assert.ok(obj2.direction == "right", "direction right check");
+    	assert.ok(obj1.attr.direction == "left", "direction left check");
+
+		var obj2 = color.parse("linear(right)");
+    	assert.ok(obj2.attr.direction == "right", "direction right check");
     	    	
     	var obj = color.parse("linear(right) #FFF");
-    	assert.ok(obj.stops[0]['stop-color'] == "#FFF", "stop color check");    	
+    	assert.ok(obj.children[0].attr['stop-color'] == "#FFF", "stop color check");
     	
     });
 

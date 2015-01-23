@@ -20,7 +20,7 @@ jui.ready([ "util.base" ], function(_) {
 
     QUnit.test( "test optimzed loop", function(assert) {
 
-		var loop = _.optimizedLoop2(1000000);
+		var loop = _.loop2(100);
 		var count = 0;
 		var str = "";
 
@@ -34,6 +34,10 @@ jui.ready([ "util.base" ], function(_) {
 		setTimeout(function() {
 			console.log(count);
 		},1000);
+
+		assert.ok(str.length == "fdsafdsf".length * 10000, "check loop count");
+
+
 
     });
 

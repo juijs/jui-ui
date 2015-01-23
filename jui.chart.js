@@ -1222,6 +1222,62 @@
 				}
 			};
 
+		},
+		/**
+		 * @method loop20
+		 *
+		 * 최적화된 루프 생성
+		 *
+		 * @param {Number} total
+		 * @param {Function} callback
+		 */
+		loop20 : function(total) {
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/20);
+
+			return function(callback) {
+
+				var num = [];
+				var numMax = [];
+				for(var i = 0; i < 20; i++) {
+					num[i] = i * unit;
+				}
+
+				for(var i = 0; i < 20; i++) {
+					numMax[i] = num[i+1];
+
+					if (i == 19) {
+						numMax[i] = end;
+					}
+				}
+
+				while(num[0] < numMax[0] && num[0] < end) {
+					callback(num[0], 1); num[0]++;
+					if (num[1] < numMax[1] && num[1] < end) { callback(num[1], 2); num[1]++; }
+					if (num[2] < numMax[2] && num[2] < end) { callback(num[2], 3); num[2]++; }
+					if (num[3] < numMax[3] && num[3] < end) { callback(num[3], 4); num[3]++; }
+					if (num[4] < numMax[4] && num[4] < end) { callback(num[4], 5); num[4]++; }
+					if (num[5] < numMax[5] && num[5] < end) { callback(num[5], 6); num[5]++; }
+					if (num[6] < numMax[6] && num[6] < end) { callback(num[6], 7); num[6]++; }
+					if (num[7] < numMax[7] && num[7] < end) { callback(num[7], 8); num[7]++; }
+					if (num[8] < numMax[8] && num[8] < end) { callback(num[8], 9); num[8]++; }
+					if (num[9] < numMax[9] && num[9] < end) { callback(num[9], 10); num[9]++; }
+					if (num[10] < numMax[10] && num[10] < end) { callback(num[10], 11); num[10]++; }
+					if (num[11] < numMax[11] && num[11] < end) { callback(num[11], 12); num[11]++; }
+					if (num[12] < numMax[12] && num[12] < end) { callback(num[12], 13); num[12]++; }
+					if (num[13] < numMax[13] && num[13] < end) { callback(num[13], 14); num[13]++; }
+					if (num[14] < numMax[14] && num[14] < end) { callback(num[14], 15); num[14]++; }
+					if (num[15] < numMax[15] && num[15] < end) { callback(num[15], 16); num[15]++; }
+					if (num[16] < numMax[16] && num[16] < end) { callback(num[16], 17); num[16]++; }
+					if (num[17] < numMax[17] && num[17] < end) { callback(num[17], 18); num[17]++; }
+					if (num[18] < numMax[18] && num[18] < end) { callback(num[18], 19); num[18]++; }
+					if (num[19] < numMax[19] && num[19] < end) { callback(num[19], 20); num[19]++; }
+
+				}
+			};
+
 		}
 
 	}
@@ -9356,7 +9412,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var x = this.axis.x;
             var y = this.axis.y;
 
-            var func = _.loop10(i);
+            var func = _.loop20(i);
 
             func(function(i) {
                 var data = axisData[i],
@@ -11469,14 +11525,14 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
             var tpl = path.template(width, height);
 
-            var count = 10;
+            var count = 20;
             var list = [];
 
             for(var i = 1; i <= count; i++) {
                 list[i] = this.chart.svg.pathSymbol(opt);
             }
 
-            var loop = _.loop10(points[0].x.length);
+            var loop = _.loop20(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
                 var target = this.chart.get("series", this.brush.target[i]),
