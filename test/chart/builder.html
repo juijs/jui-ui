@@ -13,6 +13,7 @@
 <script src="../../js/util/math.js"></script>
 <script src="../../js/util/svg.js"></script>
 <script src="../../js/util/color.js"></script>
+<script src="../../js/chart/axis.js"></script>
 <script src="../../js/chart/builder.js"></script>
 <script src="../../js/chart/theme/jennifer.js"></script>
 
@@ -23,19 +24,7 @@ jui.ready([ "util.base", "chart.builder" ], function(_, chart) {
     QUnit.testStart(function() {
         c = chart("#chart", {
             width: 400,
-            height : 400,
-            axis : {
-                data : [
-                    { name : 2, value : 15 },
-                    { name : -15, value : 6 },
-                    { name : 8, value : 10 },
-                    { name : 18, value : 5 }
-                ]
-            },
-            series : {
-                name : { text : "이름" },
-                value : { text : "값" }
-            }
+            height : 400
         });
     });
 

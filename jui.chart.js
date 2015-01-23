@@ -5415,6 +5415,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {string|function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
+            if(_.typeCheck("string", textOrCallback)) {
+                var regex = /{([^{}]+)}/g,
+                    result = textOrCallback.match(regex);
+
+                if(result != null) {
+                    for(var i = 0; i < result.length; i++) {
+                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
+                        textOrCallback = textOrCallback.replace(result[i], unicode);
+                    }
+                }
+            }
+
             var el = this.svg.text(_.extend({
                 "font-family": this.theme("fontFamily"),
                 "font-size": this.theme("fontSize"),
@@ -5422,6 +5434,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }, attr), textOrCallback);
 
             return el;
+        }
+
+        /**
+         * CSS의 SVG 아이콘을 가져오는 메소드
+         *
+         * @param key
+         * @returns {*}
+         */
+        this.icon = function(key) {
+            if(key.indexOf(".") == -1) return null;
+
+            var keySet = key.split("."),
+                module = jui.include("chart.icon." + keySet[0]);
+
+            return module[keySet[1]];
         }
 
         /**
@@ -5742,7 +5769,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg   */
     	fontColor : "#333333",
         /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana",
+		fontFamily : "arial,Tahoma,verdana,icojui",
         /** @cfg   */
         colors : themeColors,
 
@@ -5942,7 +5969,7 @@ jui.define("chart.theme.gradient", [], function() {
         backgroundColor : "white",
         fontSize : "11px",
         fontColor : "#666",
-        fontFamily : "arial,Tahoma,verdana",
+        fontFamily : "arial,Tahoma,verdana,icojui",
         colors : themeColors,
 
         // grid styles
@@ -6060,7 +6087,7 @@ jui.define("chart.theme.dark", [], function() {
     	backgroundColor : "#222222",
     	fontSize : "12px",
     	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana",
+		fontFamily : "arial,Tahoma,verdana,icojui",
         colors : themeColors,
 
         // grid styles
@@ -6174,7 +6201,7 @@ jui.define("chart.theme.pastel", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif,icojui",
 		colors : themeColors,
 
 		// grid styles
@@ -6295,7 +6322,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Base Font Color  */
         fontColor : "#333333",
         /** Base Font Family */
-        fontFamily : "arial,Tahoma,verdana",
+        fontFamily : "arial,Tahoma,verdana,icojui",
         /** Color List  */
         colors : themeColors,
 
@@ -14203,7 +14230,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     "font-family": "icojui",
                     "font-weight": "bold",
                     "font-size": "16px"
-                }, "\ue63a");
+                }, "{jennifer.gear} test {jennifer.left}");
 
                 chart.text({
                     x: 0,

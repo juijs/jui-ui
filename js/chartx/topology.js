@@ -54,7 +54,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     "font-family": "icojui",
                     "font-weight": "bold",
                     "font-size": "16px"
-                }, "\ue63a");
+                }, "{jennifer.gear} test {jennifer.left}");
 
                 chart.text({
                     x: 0,
