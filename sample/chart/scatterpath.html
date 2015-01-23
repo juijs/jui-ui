@@ -19,7 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time", "util.base" ], function(chart, theme, time, _) {
-        var maxValue = 500000
+        var maxValue = 300000
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -36,7 +36,7 @@
         var data = [];
         var index = maxValue;
 
-        var func = _.loop20(maxValue);
+        var func = _.loop5(maxValue);
 
         func(function(i) {
             data.push({
@@ -107,7 +107,12 @@
         });
 
         var tim = setInterval(function() {
-            c.get('axis', 0).update(data = changeData(data));
+            data = changeData(data)
+
+            _.runtime("test", function() {
+                c.get('axis', 0).update(data);
+            })
+
             //c.render();
             //c.svg.exportCanvas($("#chartCanvas")[0]);
 
