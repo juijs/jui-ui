@@ -80,6 +80,7 @@
 	 *
 	 * 0.0.1 형식의 키 문자열을 제어하는 클래스
 	 *
+	 * @private
 	 * @constructor
 	 */
 	var IndexParser = function() {
