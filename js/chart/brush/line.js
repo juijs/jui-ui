@@ -70,23 +70,20 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawTooltip = function(g, pos, index) {
+        this.createTooltip = function(g, pos, index) {
             var display = this.brush.display;
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    var tooltip = this.drawItem(g, null, {
-                        fill: this.color(index),
-                        stroke: circleColor,
-                        opacity: 1
-                    }).tooltip;
+                    var minmax = this.drawTooltip(this.color(index), circleColor, 1);
+                    minmax.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
 
-                    tooltip.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
+                    g.append(minmax.tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
-                    this.lineList[index].tooltip = tooltip;
+                    this.lineList[index].tooltip = minmax;
                 }
             }
         }
@@ -108,7 +105,7 @@ jui.define("chart.brush.line", [], function() {
 
                 // Max & Min 툴팁 추가
                 if(this.brush.display != null) {
-                    this.drawTooltip(g, path[k], k);
+                    this.createTooltip(g, path[k], k);
                 }
 
                 // 액티브 이벤트 설정
@@ -171,8 +168,7 @@ jui.define("chart.brush.line", [], function() {
             symbol: "normal", // normal, curve, step
             display: null,
             active: null,
-            activeEvent: null, // or click, mouseover, ...
-            items: [ "tooltip" ]
+            activeEvent: null // or click, mouseover, ...
         };
     }
 

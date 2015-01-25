@@ -64,9 +64,57 @@
         { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_1" ] }
     ];
 
-    jui.ready([ "chartx.topology", "util.base" ], function(chart, _) {
-        c = chart("#chart", {
-            data: data
+    var edgeData = [
+        { key: "1000_1:1000_2", count: 3, time: 1000 },
+        { key: "1000_2:1000_3", count: 3, time: 1000 },
+        { key: "1000_2:1000_4", count: 3, time: 1000 },
+        { key: "1000_3:1_2_3_4", count: 3, time: 1000 },
+        { key: "1000_3:1000_2", count: 3, time: 1000 },
+        { key: "1000_4:1_2_3_4", count: 3, time: 1000 }
+    ];
+
+    jui.ready([ "chart.builder", "util.base" ], function(builder, _) {
+        c = builder("#chart", {
+            padding: 5,
+            axis: {
+                c: {
+                    type: "panel"
+                },
+                data: data
+            },
+            brush: {
+                type: "topology.node",
+                edgeData: edgeData,
+                edgeText: function(data, align) {
+                    var text = "총 응답시간/개수 : " + data.time + "/" + data.count;
+
+                    if(align == "end") {
+                        text = text + " →";
+                    } else {
+                        text = "← " + text;
+                    }
+
+                    return text;
+                },
+                tooltipTitle: function(data) {
+                    return data.join(" → ");
+                },
+                tooltipText: function(data) {
+                    return "총 응답시간/개수 : " + data.time + "/" + data.count;
+                },
+                nodeColor: "purple",
+                nodeText: function() {
+                    return "{jennifer.gear}";
+                }
+            },
+            widget: {
+                type: "topology.ctrl"
+            },
+            event: {
+                "topology.edge": function(data, e) {
+                    console.log(data);
+                }
+            }
         });
     });
 </script>
