@@ -1132,10 +1132,10 @@
         makeIndex : function(data, keyField) {
             var list = {};
             
-            var func = this.loop(data.length);
+            var func = this.loopArray(data);
             
-            func(function(i, group) {
-                var value = data[i][keyField];
+            func(function(d, i, group) {
+                var value = d[keyField];
                 
                 if (typeof list[value] == 'undefined') {
                     list[value] = [];
