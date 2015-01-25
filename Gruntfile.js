@@ -98,6 +98,7 @@ module.exports = function(grunt) {
         "js/chart/brush/splitarea.js",
         "js/chart/brush/rangecolumn.js",
         "js/chart/brush/rangebar.js",
+        "js/chart/brush/topology.node.js",
         "js/chart/brush/focus.js", // brush supporter
         "js/chart/brush/pin.js",  // brush supporter
 
@@ -109,10 +110,10 @@ module.exports = function(grunt) {
         "js/chart/widget/scroll.js",
         "js/chart/widget/zoom.js",
         "js/chart/widget/cross.js",
+        "js/chart/widget/topology.ctrl.js",
 
         // chart wrapper
-        "js/chartx/realtime.js",
-        "js/chartx/topology.js"
+        "js/chartx/realtime.js"
     ]
 
     grunt.initConfig({
