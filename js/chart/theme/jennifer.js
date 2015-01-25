@@ -162,6 +162,16 @@ jui.define("chart.theme.jennifer", [], function() {
         pinBorderColor : "#FF7800",
         /** @cfg */
         pinBorderWidth : 0.7,
+
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+
         /** @cfg */
         titleFontColor : "#333",
         /** @cfg */

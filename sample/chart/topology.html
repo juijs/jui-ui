@@ -74,7 +74,11 @@
                 data: data
             },
             brush: {
-                type: "topology.node"
+                type: "topology.node",
+                nodeColor: "purple",
+                nodeText: function() {
+                    return "{jennifer.gear}";
+                }
             },
             widget: {
                 type: "topology.ctrl"

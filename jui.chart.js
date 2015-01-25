@@ -5761,6 +5761,16 @@ jui.define("chart.theme.jennifer", [], function() {
         pinBorderColor : "#FF7800",
         /** @cfg */
         pinBorderWidth : 0.7,
+
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+
         /** @cfg */
         titleFontColor : "#333",
         /** @cfg */
@@ -12889,7 +12899,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
-            g, r = 20, point = 3;
+            g, r, point = 3;
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
             var a = x1 - x2,
@@ -12923,30 +12933,35 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return chart.svg.group({
                 index: index
             }, function() {
+                var color =_.typeCheck("function", brush.nodeColor) ?
+                        brush.nodeColor(data) : (brush.nodeColor || self.color(0));
+                var text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
+
                 chart.svg.circle({
                     r: r,
-                    fill: self.color(0),
+                    fill: color,
                     cursor: "pointer"
                 });
 
                 chart.text({
                     x: 0,
                     y: 6,
-                    fill: "white",
+                    fill: chart.theme("topologyNodeFontColor"),
+                    "font-size": chart.theme("topologyNodeFontSize"),
                     "font-weight": "bold",
-                    "font-size": "16px",
                     "text-anchor": "middle",
                     cursor: "pointer"
-                }, "{jennifer.gear}");
+                }, text);
 
                 chart.text({
                     x: 0,
                     y: r + 13,
+                    fill: chart.theme("topologyNodeTitleColor"),
+                    "font-size": chart.theme("topologyNodeTitleSize"),
                     "text-anchor": "middle",
-                    "font-weight": "bold",
                     cursor: "pointer"
-                }, data.name);
-            }).translate(data.x, data.y);
+                }, data[brush.name]);
+            }).translate(data[brush.x], data[brush.y]);
         }
 
         function createEdges() {
@@ -12957,30 +12972,31 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 var node = chart.svg.group({}, function() {
                     var line = chart.svg.group();
 
-                    line.append(chart.svg.circle({
-                        fill: "#a9a9a9",
-                        stroke: "white",
-                        "stroke-width": 2,
-                        r: point,
-                        cx: out_xy.x,
-                        cy: out_xy.y
-                    }));
-
                     if(!edge.connect()) {
                         line.append(chart.svg.line({
                             x1: in_xy.x,
                             y1: in_xy.y,
                             x2: out_xy.x,
                             y2: out_xy.y,
-                            stroke: self.color(1),
+                            stroke: chart.theme("topologyEdgeColor"),
                             "stroke-width": 1
                         }));
                     }
+
+                    line.append(chart.svg.circle({
+                        fill: chart.theme("topologyEdgeColor"),
+                        stroke: chart.theme("backgroundColor"),
+                        "stroke-width": 2,
+                        r: point,
+                        cx: out_xy.x,
+                        cy: out_xy.y
+                    }));
 
                     if(out_xy.x > in_xy.x) {
                         chart.svg.text({
                             x: out_xy.x - 15,
                             y: out_xy.y + 15,
+                            fill: chart.theme("topologyEdgeTitleColor"),
                             "font-size": "10px",
                             "text-anchor": "end"
                         }, "총 응답시간/건수 : 3,200ms/3 ->")
@@ -12989,6 +13005,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                         chart.svg.text({
                             x: out_xy.x + 5,
                             y: out_xy.y - 10,
+                            fill: chart.theme("topologyEdgeTitleColor"),
                             "font-size": "10px"
                         }, "<- 총 응답시간/건수 : 3,200ms/3")
                             .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
@@ -13000,13 +13017,13 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function setDataEdges(data, index) {
-            var targetKey = data.outgoing[index],
+            var targetKey = data[brush.outgoing][index],
                 target = self.getData(getDataIndex(targetKey));
 
             var dist = r + point + 1,
-                in_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(dist)),
-                out_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(dist)),
-                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+                in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
+                out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
+                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -13017,11 +13034,12 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         this.drawBefore = function() {
             g = chart.svg.group();
+            r = chart.theme("topologyNodeRadius");
         }
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                for(var j = 0; j < data.outgoing.length; j++) {
+                for(var j = 0; j < data[brush.outgoing].length; j++) {
                     // 엣지 데이터 생성
                     setDataEdges(data, j);
                 }
@@ -13036,6 +13054,22 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             });
 
             return g;
+        }
+    }
+
+    TopologyNode.setup = function() {
+        return {
+            // options
+            edges: [],
+            nodeColor: null,
+            nodeText: null,
+
+            // key mapping options
+            key: "key",
+            name: "name",
+            x: "x",
+            y: "y",
+            outgoing: "outgoing"
         }
     }
 
