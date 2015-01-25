@@ -155,6 +155,20 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         pinBorderWidth : 0.7,
         /** */
+
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
+
         // widget styles
 
         titleFontColor : "#333",

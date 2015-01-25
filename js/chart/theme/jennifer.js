@@ -171,6 +171,10 @@ jui.define("chart.theme.jennifer", [], function() {
         topologyEdgeColor : "#a9a9a9",
         topologyEdgeTitleColor : "black",
         topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
 
         /** @cfg */
         titleFontColor : "#333",

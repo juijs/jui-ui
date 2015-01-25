@@ -4425,6 +4425,59 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return callback.apply(this.chart, arguments);
         }
+
+        /**
+         * 말풍선 그리그 메소드
+         *
+         * @param type
+         * @param w
+         * @param h
+         * @param anchor
+         * @returns {string}
+         */
+        this.balloonPoints = function(type, w, h, anchor) {
+            var points = [];
+
+            if(type == "top") {
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ (w / 2) + (anchor / 2), h ].join(","));
+                points.push([ (w / 2), h + anchor ].join(","));
+                points.push([ (w / 2) - (anchor / 2), h ].join(","))
+                points.push([ 0, h ].join(","));
+                points.push([ 0, 0 ].join(","));
+            } else if(type == "bottom") {
+                points.push([ 0, anchor ].join(","));
+                points.push([ (w / 2) - (anchor / 2), anchor ].join(","));
+                points.push([ (w / 2), 0 ].join(","));
+                points.push([ (w / 2) + (anchor / 2), anchor ].join(","));
+                points.push([ w, anchor ].join(","));
+                points.push([ w, anchor + h ].join(","))
+                points.push([ 0, anchor + h ].join(","));
+                points.push([ 0, anchor ].join(","));
+            } else if(type == "left") {
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, (h / 2) - (anchor / 2) ].join(","));
+                points.push([ w + anchor, (h / 2) ].join(","));
+                points.push([ w, (h / 2) + (anchor / 2) ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ 0, h ].join(","));
+                points.push([ 0, 0 ].join(","));
+            } else if(type == "right") {
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ 0, h ].join(","));
+                points.push([ 0, (h / 2) + (anchor / 2) ].join(","));
+                points.push([ 0 - anchor, (h / 2) ].join(","));
+                points.push([ 0, (h / 2) - (anchor / 2) ].join(","));
+                points.push([ 0, 0 ].join(","));
+            }
+
+            return points.join(" ");
+        }
 	}
 
     Draw.setup = function() {
@@ -5770,6 +5823,10 @@ jui.define("chart.theme.jennifer", [], function() {
         topologyEdgeColor : "#a9a9a9",
         topologyEdgeTitleColor : "black",
         topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
 
         /** @cfg */
         titleFontColor : "#333",
@@ -5912,6 +5969,18 @@ jui.define("chart.theme.gradient", [], function() {
         pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
 
         // widget styles
         titleFontColor : "#333",
@@ -6030,6 +6099,18 @@ jui.define("chart.theme.dark", [], function() {
         pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "#222222",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "#c5c5c5",
+        topologyEdgeColor : "#FF7800",
+        topologyEdgeTitleColor : "#c5c5c5",
+        topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "#222222",
+        topologyTooltipBorderColor : "#FF7800",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "#c5c5c5",
 
         // widget styles
         titleFontColor : "#ffffff",
@@ -6144,6 +6225,18 @@ jui.define("chart.theme.pastel", [], function() {
 		pinFontSize : "10px",
 		pinBorderColor : "#FF7800",
 		pinBorderWidth : 0.7,
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
 
         // widget styles
         titleFontColor : "#333",
@@ -6327,6 +6420,20 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         pinBorderWidth : 0.7,
         /** */
+
+        topologyNodeRadius : 20,
+        topologyNodeFontSize : "16px",
+        topologyNodeFontColor : "white",
+        topologyNodeTitleSize : "12px",
+        topologyNodeTitleColor : "black",
+        topologyEdgeColor : "#a9a9a9",
+        topologyEdgeTitleColor : "black",
+        topologyActiveEdgeColor : "purple",
+        topologyTooltipBackgroundColor : "white",
+        topologyTooltipBorderColor : "#aaaaaa",
+        topologyTooltipFontSize : "11px",
+        topologyTooltipFontColor : "black",
+
         // widget styles
 
         titleFontColor : "#333",
@@ -12885,7 +12992,9 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
-            g, r, point = 3;
+            g, r, tooltip,
+            point = 3, // 엣지 포인트
+            textY = 14, padding = 7, anchor = 7; // 엣지 툴팁
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
             var a = x1 - x2,
@@ -12923,6 +13032,38 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }
 
             return null;
+        }
+
+        function getTooltipData(edges) {
+            var data = [];
+
+            for(var i = 0; i < edges.length; i++) {
+                for(var j = 0; j < brush.edgeData.length; j++) {
+                    if(edges[i].key() == brush.edgeData[j].key) {
+                        data.push(brush.edgeData[j]);
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        function getTooltipTitle(key) {
+            var title = [],
+                keys = key.split(":");
+
+            self.eachData(function(i, data) {
+                if(data.key == keys[0]) {
+                   title[0] = data.name;
+                }
+
+                if(data.key == keys[1]) {
+                    title[1] = data.name;
+                }
+            });
+
+            if(title.length > 0) return title;
+            return key;
         }
 
         function createNodes(index, data) {
@@ -12974,11 +13115,10 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function createEdgeLine(edge, in_xy, out_xy) {
-            var g = chart.svg.group(),
-                line = null, circle = null;
+            var g = chart.svg.group();
 
             if(!edge.connect()) {
-                g.append(line = chart.svg.line({
+                g.append(chart.svg.line({
                     cursor: "pointer",
                     x1: in_xy.x,
                     y1: in_xy.y,
@@ -12999,7 +13139,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }));
 
             g.on("click", function(e) {
-                onEdgeActiveHanlder(edge);
+                onEdgeActiveHanlder(edge, e);
             });
 
             edge.element(g);
@@ -13037,7 +13177,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 }
 
                 text.on("click", function(e) {
-                    onEdgeActiveHanlder(edge);
+                    onEdgeActiveHanlder(edge, e);
                 })
             }
 
@@ -13060,7 +13200,60 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             edges.add(edge);
         }
 
-        function onEdgeActiveHanlder(edge) {
+        function showTooltip(edge, edgeData) {
+            if(!_.typeCheck("function", brush.tooltipTitle) ||
+                !_.typeCheck("function", brush.tooltipText)) return;
+
+            var rect = tooltip.get(0),
+                text = tooltip.get(1);
+
+            var in_xy = edge.get("in_xy"),
+                out_xy = edge.get("out_xy"),
+                align = (out_xy.x > in_xy.x) ? "bottom" : "top",
+                w = brush.tooltipWidth,
+                h = brush.tooltipHeight * edgeData.length;
+
+            // 텍스트 초기화
+            rect.attr({ points: "" });
+            text.element.textContent = "";
+
+            for(var i = 0; i < edgeData.length; i++) {
+                var title = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
+                    contents = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
+                    y = (textY * i) + (padding * 2) + ((align == "bottom") ? anchor : 0);
+
+                // 여백 주기
+                if(i == 1) y += textY + padding;
+
+                text.element.appendChild(title);
+                text.element.appendChild(contents);
+
+                title.setAttribute("x", padding);
+                title.setAttribute("y", y);
+                title.setAttribute("font-weight", "bold");
+                title.textContent = brush.tooltipTitle(getTooltipTitle(edgeData[i].key));
+
+                contents.setAttribute("x", padding);
+                contents.setAttribute("y", y + textY);
+                contents.textContent = brush.tooltipText(edgeData[i]);
+            }
+
+            text.attr({ x: w / 2 });
+            rect.attr({ points: self.balloonPoints(align, w, h, anchor) });
+            tooltip.attr({ visibility: "visible" });
+
+            if(align == "bottom") {
+                tooltip.rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                tooltip.translate(out_xy.x - w, out_xy.y + anchor);
+            } else {
+                tooltip.rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+                tooltip.translate(out_xy.x, out_xy.y - anchor - h);
+            }
+        }
+
+        function onEdgeActiveHanlder(edge, e) {
+            var tmpEdges = [];
+
             edges.each(function(newEdge) {
                 var elem = newEdge.element(),
                     circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
@@ -13073,18 +13266,51 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                         line.attr({ stroke: activeColor });
                     }
                     circle.attr({ fill: activeColor });
+
+                    // 툴팁에 보여지는 데이터 설정
+                    if(edge.key() == newEdge.key()) {
+                        if(edges.is(edge.reverseKey())) {
+                            tmpEdges.push(edges.get(edge.reverseKey()));
+                        }
+
+                        tmpEdges.push(edge);
+                    }
                 } else {
                     if(line != null) {
-                        line.attr({stroke: color});
+                        line.attr({ stroke: color });
                     }
                     circle.attr({ fill: color });
                 }
             });
+
+            var edgeTooltipData = getTooltipData(tmpEdges);
+
+            // 엣지 툴팁 보이기
+            showTooltip(edge, edgeTooltipData);
+
+            // 커스텀 이벤트 호출
+            chart.emit("topology.edge", [ edgeTooltipData, e ]);
         }
 
         this.drawBefore = function() {
             g = chart.svg.group();
             r = chart.theme("topologyNodeRadius");
+
+            tooltip = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                chart.svg.polygon({
+                    fill: chart.theme("topologyTooltipBackgroundColor"),
+                    stroke: chart.theme("topologyTooltipBorderColor"),
+                    "stroke-width": 1
+                });
+
+                chart.text({
+                    "font-size": chart.theme("topologyTooltipFontSize"),
+                    "fill": chart.theme("topologyTooltipFontColor"),
+                    y: textY
+                });
+            });
         }
 
         this.draw = function() {
@@ -13114,7 +13340,10 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             nodeText: null,
             edgeData: [],
             edgeText: null,
-            edgeTooltip: null,
+            tooltipTitle: null,
+            tooltipText: null,
+            tooltipWidth: 150,
+            tooltipHeight: 40,
 
             // key mapping options
             name: "name",
@@ -13304,49 +13533,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
         this.drawAfter = function(obj) {
             obj.attr({ "class": "widget widget-" + this.widget.type });
-        }
-
-        this.balloonPoints = function(type, w, h, anchor) {
-            var points = [];
-
-            if(type == "top") {
-                points.push([ 0, 0 ].join(","));
-                points.push([ w, 0 ].join(","));
-                points.push([ w, h ].join(","));
-                points.push([ (w / 2) + (anchor / 2), h ].join(","));
-                points.push([ (w / 2), h + anchor ].join(","));
-                points.push([ (w / 2) - (anchor / 2), h ].join(","))
-                points.push([ 0, h ].join(","));
-            } else if(type == "bottom") {
-                points.push([ 0, anchor ].join(","));
-                points.push([ (w / 2) - (anchor / 2), anchor ].join(","));
-                points.push([ (w / 2), 0 ].join(","));
-                points.push([ (w / 2) + (anchor / 2), anchor ].join(","));
-                points.push([ w, anchor ].join(","));
-                points.push([ w, anchor + h ].join(","))
-                points.push([ 0, anchor + h ].join(","));
-            } else if(type == "left") {
-                points.push([ 0, 0 ].join(","));
-                points.push([ w, 0 ].join(","));
-                points.push([ w, (h / 2) - (anchor / 2) ].join(","));
-                points.push([ w + anchor, (h / 2) ].join(","));
-                points.push([ w, (h / 2) + (anchor / 2) ].join(","));
-                points.push([ w, h ].join(","));
-                points.push([ 0, h ].join(","));
-            } else if(type == "right") {
-                points.push([ 0, 0 ].join(","));
-                points.push([ w, 0 ].join(","));
-                points.push([ w, h ].join(","));
-                points.push([ 0, h ].join(","));
-                points.push([ 0, (h / 2) + (anchor / 2) ].join(","));
-                points.push([ 0 - anchor, (h / 2) ].join(","));
-                points.push([ 0, (h / 2) - (anchor / 2) ].join(","));
-            }
-
-            // Firefox 처리 (시작점과 끝점 연결)
-            points.push([ 0, 0 ].join(","));
-
-            return points.join(" ");
         }
 
         this.eachBrush = function(callback) {

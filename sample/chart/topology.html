@@ -96,6 +96,12 @@
 
                     return text;
                 },
+                tooltipTitle: function(data) {
+                    return data.join(" → ");
+                },
+                tooltipText: function(data) {
+                    return "총 응답시간/개수 : " + data.time + "/" + data.count;
+                },
                 nodeColor: "purple",
                 nodeText: function() {
                     return "{jennifer.gear}";
@@ -103,6 +109,11 @@
             },
             widget: {
                 type: "topology.ctrl"
+            },
+            event: {
+                "topology.edge": function(data, e) {
+                    console.log(data);
+                }
             }
         });
     });
