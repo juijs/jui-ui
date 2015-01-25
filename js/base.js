@@ -1082,7 +1082,71 @@
 				}
 			};
 
-		}
+		},
+        
+		/**
+		 * @method loopArray
+		 *
+		 * 배열을 사용해서 최적화된 루프로 생성한다.
+         *  
+		 *
+		 * @param {Array} data 루프로 생성될 배열
+		 * @param {Object} [context=null]
+         * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
+		 */
+		loopArray : function(data, context) {
+            var total = data.length;
+			var start = 0;
+			var end = total;
+
+			var unit = Math.ceil(total/5);
+
+			return function(callback) {
+
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
+				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+
+				while(first < firstMax && first < end) {
+					callback.call(context, data[first], first, 1); first++;
+					if (second < secondMax && second < end) { callback.call(context, data[second], second, 2); second++; }
+					if (third < thirdMax && third < end) { callback.call(context, data[third], third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback.call(context, data[fourth], fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback.call(context, data[fifth], fifth, 5); fifth++; }
+				}
+			};
+
+		},
+
+        /**
+         * @method makeIndex 
+         * 
+         * 배열의 키 기반 인덱스를 생성한다.
+         * 
+         * 개별 값 별로 멀티 인덱스를 생성한다.
+         *  
+         * @param {Array} data
+         * @param {String} keyField
+         * @param {Boolean} unique
+         * @return {Object} 생성된 인덱스  
+         */
+        makeIndex : function(data, keyField) {
+            var list = {};
+            
+            var func = this.loop(data.length);
+            
+            func(function(i, group) {
+                var value = data[i][keyField];
+                
+                if (typeof list[value] == 'undefined') {
+                    list[value] = [];
+                }
+                
+                list[value].push(i);
+                
+            })
+            
+            return list; 
+        }
 
 	}
 

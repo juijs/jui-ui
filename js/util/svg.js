@@ -661,17 +661,17 @@ jui.define("util.svg",
                 var child = target.childrens[i];
 
                 if(child) {
-                    if(child.parent == target) {
-                        target.element.appendChild(child.element);
+                    if(child.childrens.length > 0) {
+                        appendAll(child);
                     }
-
+                    
                     // PathElement & PathSymbolElement & PathRectElement & PolyElement auto join
                     if(child instanceof PathElement || child instanceof PolyElement) {
                         child.join();
                     }
 
-                    if(child.childrens.length > 0) {
-                        appendAll(child);
+                    if(child.parent == target) {
+                        target.element.appendChild(child.element);
                     }
                 }
             }
