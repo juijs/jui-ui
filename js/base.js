@@ -1061,6 +1061,8 @@
 		 * 최적화된 루프 생성 (5단계로 나눔)
 		 *
 		 * @param {Number} total
+         * @param {Object} [context=null]
+         * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
 		 */
 		loop : function(total, context) {
 			var start = 0;
@@ -1126,7 +1128,6 @@
          *  
          * @param {Array} data
          * @param {String} keyField
-         * @param {Boolean} unique
          * @return {Object} 생성된 인덱스  
          */
         makeIndex : function(data, keyField) {
