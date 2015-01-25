@@ -9034,26 +9034,64 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             obj.translate(this.chart.area("x"), this.chart.area("y")); // 브러쉬일 경우, 기본 좌표 설정
         }
 
-        this.drawItem = function(group, data, options) {
-            var returnObject = {};
-            for(var i = 0, len = this.brush.items.length; i < len; i++) {
-                var type = this.brush.items[i],
-                    ItemClass = jui.include("chart.brush.item." + type);
+        this.drawTooltip = function(fill, stroke, opacity) {
+            var self = this,
+                tooltip = null;
 
-                if (ItemClass) {
-                    var itemObject = new ItemClass();
-                    itemObject.chart = this.chart;
-                    itemObject.data = data;
-                    itemObject.group = group;
-                    itemObject.item = options || {};
+            function draw() {
+                return self.chart.svg.group({ "visibility" : "hidden" }, function() {
+                    self.chart.text({
+                        "text-anchor" : "middle",
+                        "font-weight" : self.chart.theme("tooltipPointFontWeight"),
+                        opacity: opacity
+                    });
 
-                    returnObject[type] = itemObject.render();
+                    self.chart.svg.circle({
+                        r: self.chart.theme("tooltipPointRadius"),
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity,
+                        "stroke-width": self.chart.theme("tooltipPointBorderWidth")
+                    });
+                });
+            }
+
+            function show(orient, x, y, value) {
+                var text = tooltip.get(0);
+                text.element.textContent = value;
+
+                if(orient == "left") {
+                    text.attr({ x: -7, y: 4, "text-anchor": "end" });
+                } else if(orient == "right") {
+                    text.attr({ x: 7, y: 4, "text-anchor": "start" });
+                } else if(orient == "bottom") {
+                    text.attr({ y: 16 });
                 } else {
-                    throw new Error("JUI_CRITICAL_ERR: '" + type + "' brush item is not exists");
+                    text.attr({ y: -7 });
+                }
+
+                tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
+                tooltip.translate(x, y);
+            }
+
+            // 툴팁 생성
+            tooltip = draw();
+
+            return {
+                tooltip: tooltip,
+                control: show,
+                style: function(fill, stroke, opacity) {
+                    tooltip.get(0).attr({
+                        opacity: opacity
+                    });
+
+                    tooltip.get(1).attr({
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity
+                    })
                 }
             }
-            
-            return returnObject;
         }
 
         /**
@@ -9368,66 +9406,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
-
-        this.createTooltip = function(fill, stroke, opacity) {
-            var self = this,
-                tooltip = null;
-
-            function draw() {
-                return self.chart.svg.group({ "visibility" : "hidden" }, function() {
-                    self.chart.text({
-                        "text-anchor" : "middle",
-                        "font-weight" : self.chart.theme("tooltipPointFontWeight"),
-                        opacity: opacity
-                    });
-
-                    self.chart.svg.circle({
-                        r: self.chart.theme("tooltipPointRadius"),
-                        fill: fill,
-                        stroke: stroke,
-                        opacity: opacity,
-                        "stroke-width": self.chart.theme("tooltipPointBorderWidth")
-                    });
-                });
-            }
-
-            function show(orient, x, y, value) {
-                var text = tooltip.get(0);
-                text.element.textContent = value;
-
-                if(orient == "left") {
-                    text.attr({ x: -7, y: 4, "text-anchor": "end" });
-                } else if(orient == "right") {
-                    text.attr({ x: 7, y: 4, "text-anchor": "start" });
-                } else if(orient == "bottom") {
-                    text.attr({ y: 16 });
-                } else {
-                    text.attr({ y: -7 });
-                }
-
-                tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
-                tooltip.translate(x, y);
-            }
-
-            // 툴팁 생성
-            tooltip = draw();
-
-            return {
-                tooltip: tooltip,
-                control: show,
-                style: function(fill, stroke, opacity) {
-                    tooltip.get(0).attr({
-                        opacity: opacity
-                    });
-
-                    tooltip.get(1).attr({
-                        fill: fill,
-                        stroke: stroke,
-                        opacity: opacity
-                    })
-                }
-            }
-        }
 	}
 
     CoreBrush.setup = function() {
@@ -9532,7 +9510,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			this.active = this.createTooltip();
+			this.active = this.drawTooltip();
             group.append(this.active.tooltip);
 
 			for (var i = 0; i < this.barList.length; i++) {
@@ -9540,7 +9518,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					r.minmax = this.createTooltip(r.color, style.circleColor, 1);
+					r.minmax = this.drawTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
                     group.append(r.minmax.tooltip);
 				}
@@ -10765,14 +10743,14 @@ jui.define("chart.brush.line", [], function() {
             return p;
         }
 
-        this.drawTooltip = function(g, pos, index) {
+        this.createTooltip = function(g, pos, index) {
             var display = this.brush.display;
 
             for (var i = 0; i < pos.x.length; i++) {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    var minmax = this.createTooltip(this.color(index), circleColor, 1);
+                    var minmax = this.drawTooltip(this.color(index), circleColor, 1);
                     minmax.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
 
                     g.append(minmax.tooltip);
@@ -10800,7 +10778,7 @@ jui.define("chart.brush.line", [], function() {
 
                 // Max & Min 툴팁 추가
                 if(this.brush.display != null) {
-                    this.drawTooltip(g, path[k], k);
+                    this.createTooltip(g, path[k], k);
                 }
 
                 // 액티브 이벤트 설정
@@ -12870,7 +12848,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
     }
 
     var Edge = function(start, end, in_xy, out_xy) {
-        var connect = false;
+        var connect = false, element = null;
 
         this.key = function() {
             return start + ":" + end;
@@ -12886,6 +12864,14 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }
 
             connect = is;
+        }
+
+        this.element = function(elem) {
+            if(arguments.length == 0) {
+                return element;
+            }
+
+            element = elem;
         }
 
         this.get = function(type) {
@@ -12929,6 +12915,16 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return index;
         }
 
+        function getEdgeData(key) {
+            for(var i = 0; i < brush.edgeData.length; i++) {
+                if(brush.edgeData[i].key == key) {
+                    return brush.edgeData[i];
+                }
+            }
+
+            return null;
+        }
+
         function createNodes(index, data) {
             return chart.svg.group({
                 index: index
@@ -12969,51 +12965,83 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 var in_xy = edge.get("in_xy"),
                     out_xy = edge.get("out_xy");
 
-                var node = chart.svg.group({}, function() {
-                    var line = chart.svg.group();
-
-                    if(!edge.connect()) {
-                        line.append(chart.svg.line({
-                            x1: in_xy.x,
-                            y1: in_xy.y,
-                            x2: out_xy.x,
-                            y2: out_xy.y,
-                            stroke: chart.theme("topologyEdgeColor"),
-                            "stroke-width": 1
-                        }));
-                    }
-
-                    line.append(chart.svg.circle({
-                        fill: chart.theme("topologyEdgeColor"),
-                        stroke: chart.theme("backgroundColor"),
-                        "stroke-width": 2,
-                        r: point,
-                        cx: out_xy.x,
-                        cy: out_xy.y
-                    }));
-
-                    if(out_xy.x > in_xy.x) {
-                        chart.svg.text({
-                            x: out_xy.x - 15,
-                            y: out_xy.y + 15,
-                            fill: chart.theme("topologyEdgeTitleColor"),
-                            "font-size": "10px",
-                            "text-anchor": "end"
-                        }, "총 응답시간/건수 : 3,200ms/3 ->")
-                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
-                    } else {
-                        chart.svg.text({
-                            x: out_xy.x + 5,
-                            y: out_xy.y - 10,
-                            fill: chart.theme("topologyEdgeTitleColor"),
-                            "font-size": "10px"
-                        }, "<- 총 응답시간/건수 : 3,200ms/3")
-                            .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
-                    }
-                });
+                var node = chart.svg.group();
+                node.append(createEdgeLine(edge, in_xy, out_xy));
+                node.append(createEdgeText(edge, in_xy, out_xy));
 
                 g.append(node);
             });
+        }
+
+        function createEdgeLine(edge, in_xy, out_xy) {
+            var g = chart.svg.group(),
+                line = null, circle = null;
+
+            if(!edge.connect()) {
+                g.append(line = chart.svg.line({
+                    cursor: "pointer",
+                    x1: in_xy.x,
+                    y1: in_xy.y,
+                    x2: out_xy.x,
+                    y2: out_xy.y,
+                    stroke: chart.theme("topologyEdgeColor"),
+                    "stroke-width": 1
+                }));
+            }
+
+            g.append(chart.svg.circle({
+                fill: chart.theme("topologyEdgeColor"),
+                stroke: chart.theme("backgroundColor"),
+                "stroke-width": 2,
+                r: point,
+                cx: out_xy.x,
+                cy: out_xy.y
+            }));
+
+            g.on("click", function(e) {
+                onEdgeActiveHanlder(edge);
+            });
+
+            edge.element(g);
+
+            return g;
+        }
+
+        function createEdgeText(edge, in_xy, out_xy) {
+            var text = null;
+            var edgeAlign = (out_xy.x > in_xy.x) ? "end" : "start",
+                edgeText = _.typeCheck("function", brush.edgeText) ?
+                    brush.edgeText(getEdgeData(edge.key()), edgeAlign) : null;
+
+            if(edgeText != null) {
+                if (edgeAlign == "end") {
+                    text = chart.svg.text({
+                        x: out_xy.x - 15,
+                        y: out_xy.y + 15,
+                        cursor: "pointer",
+                        fill: chart.theme("topologyEdgeTitleColor"),
+                        "font-size": "10px",
+                        "text-anchor": edgeAlign
+                    }, edgeText)
+                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                } else {
+                    text = chart.svg.text({
+                        x: out_xy.x + 5,
+                        y: out_xy.y - 10,
+                        cursor: "pointer",
+                        fill: chart.theme("topologyEdgeTitleColor"),
+                        "font-size": "10px",
+                        "text-anchor": edgeAlign
+                    }, edgeText)
+                        .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+                }
+
+                text.on("click", function(e) {
+                    onEdgeActiveHanlder(edge);
+                })
+            }
+
+            return text;
         }
 
         function setDataEdges(data, index) {
@@ -13023,13 +13051,35 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
                 out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
-                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
             }
 
             edges.add(edge);
+        }
+
+        function onEdgeActiveHanlder(edge) {
+            edges.each(function(newEdge) {
+                var elem = newEdge.element(),
+                    circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
+                    line = (elem.childrens.length == 2) ? elem.get(0) : null,
+                    color = chart.theme("topologyEdgeColor"),
+                    activeColor = chart.theme("topologyActiveEdgeColor");
+
+                if(edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key()) {
+                    if(line != null) {
+                        line.attr({ stroke: activeColor });
+                    }
+                    circle.attr({ fill: activeColor });
+                } else {
+                    if(line != null) {
+                        line.attr({stroke: color});
+                    }
+                    circle.attr({ fill: color });
+                }
+            });
         }
 
         this.drawBefore = function() {
@@ -13059,13 +13109,14 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     TopologyNode.setup = function() {
         return {
-            // options
-            edges: [],
+            // topology options
             nodeColor: null,
             nodeText: null,
+            edgeData: [],
+            edgeText: null,
+            edgeTooltip: null,
 
             // key mapping options
-            key: "key",
             name: "name",
             x: "x",
             y: "y",
@@ -14234,27 +14285,31 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         }
 
         function setBrushEvent() {
-            var root = chart.svg.root.childrens[0].childrens[2];
+            chart.svg.root.get(0).each(function(i, brush) {
+                var cls = brush.attr("class");
 
-            root.each(function(i, node) {
-                var index = parseInt(node.attr("index"));
+                if(cls && cls.indexOf("topology.node") != -1) {
+                    brush.each(function(i, node) {
+                        var index = parseInt(node.attr("index"));
 
-                if(!isNaN(index)) {
-                    var data = axis.data[index];
+                        if(!isNaN(index)) {
+                            var data = axis.data[index];
 
-                    (function (key, data) {
-                        node.on("mousedown", function (e) {
-                            if (_.typeCheck("string", targetKey)) return;
+                            (function (key, data) {
+                                node.on("mousedown", function (e) {
+                                    if (_.typeCheck("string", targetKey)) return;
 
-                            targetKey = key;
-                            startX = data.x;
-                            startY = data.y;
+                                    targetKey = key;
+                                    startX = data.x;
+                                    startY = data.y;
 
-                            // 선택한 노드 맨 마지막으로 이동
-                            var target = axis.data.splice(index, 1);
-                            axis.data.push(target[0]);
-                        });
-                    })(data.key, data);
+                                    // 선택한 노드 맨 마지막으로 이동
+                                    var target = axis.data.splice(index, 1);
+                                    axis.data.push(target[0]);
+                                });
+                            })(data.key, data);
+                        }
+                    });
                 }
             });
         }

@@ -30,7 +30,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
     }
 
     var Edge = function(start, end, in_xy, out_xy) {
-        var connect = false;
+        var connect = false, element = null;
 
         this.key = function() {
             return start + ":" + end;
@@ -46,6 +46,14 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }
 
             connect = is;
+        }
+
+        this.element = function(elem) {
+            if(arguments.length == 0) {
+                return element;
+            }
+
+            element = elem;
         }
 
         this.get = function(type) {
@@ -89,6 +97,16 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return index;
         }
 
+        function getEdgeData(key) {
+            for(var i = 0; i < brush.edgeData.length; i++) {
+                if(brush.edgeData[i].key == key) {
+                    return brush.edgeData[i];
+                }
+            }
+
+            return null;
+        }
+
         function createNodes(index, data) {
             return chart.svg.group({
                 index: index
@@ -129,51 +147,83 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 var in_xy = edge.get("in_xy"),
                     out_xy = edge.get("out_xy");
 
-                var node = chart.svg.group({}, function() {
-                    var line = chart.svg.group();
-
-                    if(!edge.connect()) {
-                        line.append(chart.svg.line({
-                            x1: in_xy.x,
-                            y1: in_xy.y,
-                            x2: out_xy.x,
-                            y2: out_xy.y,
-                            stroke: chart.theme("topologyEdgeColor"),
-                            "stroke-width": 1
-                        }));
-                    }
-
-                    line.append(chart.svg.circle({
-                        fill: chart.theme("topologyEdgeColor"),
-                        stroke: chart.theme("backgroundColor"),
-                        "stroke-width": 2,
-                        r: point,
-                        cx: out_xy.x,
-                        cy: out_xy.y
-                    }));
-
-                    if(out_xy.x > in_xy.x) {
-                        chart.svg.text({
-                            x: out_xy.x - 15,
-                            y: out_xy.y + 15,
-                            fill: chart.theme("topologyEdgeTitleColor"),
-                            "font-size": "10px",
-                            "text-anchor": "end"
-                        }, "총 응답시간/건수 : 3,200ms/3 ->")
-                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
-                    } else {
-                        chart.svg.text({
-                            x: out_xy.x + 5,
-                            y: out_xy.y - 10,
-                            fill: chart.theme("topologyEdgeTitleColor"),
-                            "font-size": "10px"
-                        }, "<- 총 응답시간/건수 : 3,200ms/3")
-                            .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
-                    }
-                });
+                var node = chart.svg.group();
+                node.append(createEdgeLine(edge, in_xy, out_xy));
+                node.append(createEdgeText(edge, in_xy, out_xy));
 
                 g.append(node);
             });
+        }
+
+        function createEdgeLine(edge, in_xy, out_xy) {
+            var g = chart.svg.group(),
+                line = null, circle = null;
+
+            if(!edge.connect()) {
+                g.append(line = chart.svg.line({
+                    cursor: "pointer",
+                    x1: in_xy.x,
+                    y1: in_xy.y,
+                    x2: out_xy.x,
+                    y2: out_xy.y,
+                    stroke: chart.theme("topologyEdgeColor"),
+                    "stroke-width": 1
+                }));
+            }
+
+            g.append(chart.svg.circle({
+                fill: chart.theme("topologyEdgeColor"),
+                stroke: chart.theme("backgroundColor"),
+                "stroke-width": 2,
+                r: point,
+                cx: out_xy.x,
+                cy: out_xy.y
+            }));
+
+            g.on("click", function(e) {
+                onEdgeActiveHanlder(edge);
+            });
+
+            edge.element(g);
+
+            return g;
+        }
+
+        function createEdgeText(edge, in_xy, out_xy) {
+            var text = null;
+            var edgeAlign = (out_xy.x > in_xy.x) ? "end" : "start",
+                edgeText = _.typeCheck("function", brush.edgeText) ?
+                    brush.edgeText(getEdgeData(edge.key()), edgeAlign) : null;
+
+            if(edgeText != null) {
+                if (edgeAlign == "end") {
+                    text = chart.svg.text({
+                        x: out_xy.x - 15,
+                        y: out_xy.y + 15,
+                        cursor: "pointer",
+                        fill: chart.theme("topologyEdgeTitleColor"),
+                        "font-size": "10px",
+                        "text-anchor": edgeAlign
+                    }, edgeText)
+                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                } else {
+                    text = chart.svg.text({
+                        x: out_xy.x + 5,
+                        y: out_xy.y - 10,
+                        cursor: "pointer",
+                        fill: chart.theme("topologyEdgeTitleColor"),
+                        "font-size": "10px",
+                        "text-anchor": edgeAlign
+                    }, edgeText)
+                        .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+                }
+
+                text.on("click", function(e) {
+                    onEdgeActiveHanlder(edge);
+                })
+            }
+
+            return text;
         }
 
         function setDataEdges(data, index) {
@@ -183,13 +233,35 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
                 out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
-                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
             }
 
             edges.add(edge);
+        }
+
+        function onEdgeActiveHanlder(edge) {
+            edges.each(function(newEdge) {
+                var elem = newEdge.element(),
+                    circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
+                    line = (elem.childrens.length == 2) ? elem.get(0) : null,
+                    color = chart.theme("topologyEdgeColor"),
+                    activeColor = chart.theme("topologyActiveEdgeColor");
+
+                if(edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key()) {
+                    if(line != null) {
+                        line.attr({ stroke: activeColor });
+                    }
+                    circle.attr({ fill: activeColor });
+                } else {
+                    if(line != null) {
+                        line.attr({stroke: color});
+                    }
+                    circle.attr({ fill: color });
+                }
+            });
         }
 
         this.drawBefore = function() {
@@ -219,13 +291,14 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     TopologyNode.setup = function() {
         return {
-            // options
-            edges: [],
+            // topology options
             nodeColor: null,
             nodeText: null,
+            edgeData: [],
+            edgeText: null,
+            edgeTooltip: null,
 
             // key mapping options
-            key: "key",
             name: "name",
             x: "x",
             y: "y",

@@ -35,27 +35,31 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         }
 
         function setBrushEvent() {
-            var root = chart.svg.root.childrens[0].childrens[2];
+            chart.svg.root.get(0).each(function(i, brush) {
+                var cls = brush.attr("class");
 
-            root.each(function(i, node) {
-                var index = parseInt(node.attr("index"));
+                if(cls && cls.indexOf("topology.node") != -1) {
+                    brush.each(function(i, node) {
+                        var index = parseInt(node.attr("index"));
 
-                if(!isNaN(index)) {
-                    var data = axis.data[index];
+                        if(!isNaN(index)) {
+                            var data = axis.data[index];
 
-                    (function (key, data) {
-                        node.on("mousedown", function (e) {
-                            if (_.typeCheck("string", targetKey)) return;
+                            (function (key, data) {
+                                node.on("mousedown", function (e) {
+                                    if (_.typeCheck("string", targetKey)) return;
 
-                            targetKey = key;
-                            startX = data.x;
-                            startY = data.y;
+                                    targetKey = key;
+                                    startX = data.x;
+                                    startY = data.y;
 
-                            // 선택한 노드 맨 마지막으로 이동
-                            var target = axis.data.splice(index, 1);
-                            axis.data.push(target[0]);
-                        });
-                    })(data.key, data);
+                                    // 선택한 노드 맨 마지막으로 이동
+                                    var target = axis.data.splice(index, 1);
+                                    axis.data.push(target[0]);
+                                });
+                            })(data.key, data);
+                        }
+                    });
                 }
             });
         }

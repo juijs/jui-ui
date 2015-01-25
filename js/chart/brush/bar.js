@@ -79,7 +79,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			this.active = this.createTooltip();
+			this.active = this.drawTooltip();
             group.append(this.active.tooltip);
 
 			for (var i = 0; i < this.barList.length; i++) {
@@ -87,7 +87,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					r.minmax = this.createTooltip(r.color, style.circleColor, 1);
+					r.minmax = this.drawTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
                     group.append(r.minmax.tooltip);
 				}
