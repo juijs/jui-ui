@@ -110,8 +110,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
+            
+            if (typeof attr == 'undefined' || !attr) return;
+            
             if(typeof attr == "string") {
-                return this.attributes[attr];
+                return this.attributes[attr] || this.element.getAttribute(attr);
             }
 
             for(var k in attr) {
@@ -120,7 +123,7 @@ jui.define("util.svg.element", [], function() {
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, attr[k]);
+                    this.element.setAttribute(k, attr[k]);
                 }
             }
 

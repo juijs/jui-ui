@@ -19,7 +19,7 @@
 
 <script>
     jui.ready([ "chart.builder", "chart.theme.jennifer", "util.time", "util.base" ], function(chart, theme, time, _) {
-        var maxValue = 30000
+        var maxValue = 30000;
         var start = new Date();
         var end = time.add(start, time.hours, 5);
 
@@ -103,16 +103,18 @@
                 colors : [ theme.colors[2] ]
             }]
         });
+        //c.svg.exportCanvas($("#chartCanvas")[0]);
 
         var tim = setInterval(function() {
             _.runtime("test", function() {
                 data = changeData(data)
 
                 c.get('axis', 0).update(data);
+                //c.svg.exportCanvas($("#chartCanvas")[0]);
             })
 
             //c.render();
-            //c.svg.exportCanvas($("#chartCanvas")[0]);
+            
 
         }, 1000);
 

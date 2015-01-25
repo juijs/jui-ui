@@ -504,7 +504,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
-                height: _options.height
+                height: _options.height,
+                'buffered-rendering' : 'dynamic'
             });
 
             // 차트 기본 렌더링

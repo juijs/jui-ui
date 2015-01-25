@@ -10,9 +10,9 @@ jui.define("chart.brush.path", [], function() {
 	var PathBrush = function(chart, axis, brush) {
 
 		this.draw = function() {
-			var g = chart.svg.group();
+			var g = this.chart.svg.group();
 			
-			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
+			for(var ti = 0, len = this.brush.target.length; ti < len; ti++) {
 				var color = this.color(ti);
 
 				var path = chart.svg.path({
@@ -25,10 +25,10 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				this.eachData(function(i, data) {
-					var obj = axis.c(i, data[brush.target[ti]]),
+					var obj = this.axis.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
-	
+
 					if (i == 0) {
 						path.MoveTo(x, y);
 					} else {

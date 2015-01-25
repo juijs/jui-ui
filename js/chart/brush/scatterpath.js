@@ -54,6 +54,8 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
             for(var i = 1; i <= count; i++) {
                 g.append(list[i]);
             }
+            
+            path.remove();
 
             return g;
         }

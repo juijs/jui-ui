@@ -1062,7 +1062,7 @@
 		 *
 		 * @param {Number} total
 		 */
-		loop : function(total) {
+		loop : function(total, context) {
 			var start = 0;
 			var end = total;
 
@@ -1074,11 +1074,11 @@
 				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first, 1); first++;
-					if (second < secondMax && second < end) { callback(second, 2); second++; }
-					if (third < thirdMax && third < end) { callback(third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
+					callback.call(context, first, 1); first++;
+					if (second < secondMax && second < end) { callback.call(context, second, 2); second++; }
+					if (third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
 				}
 			};
 

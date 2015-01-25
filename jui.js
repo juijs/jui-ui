@@ -1062,7 +1062,7 @@
 		 *
 		 * @param {Number} total
 		 */
-		loop : function(total) {
+		loop : function(total, context) {
 			var start = 0;
 			var end = total;
 
@@ -1074,11 +1074,11 @@
 				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
-					callback(first, 1); first++;
-					if (second < secondMax && second < end) { callback(second, 2); second++; }
-					if (third < thirdMax && third < end) { callback(third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback(fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback(fifth, 5); fifth++; }
+					callback.call(context, first, 1); first++;
+					if (second < secondMax && second < end) { callback.call(context, second, 2); second++; }
+					if (third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
+					if (fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
+					if (fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
 				}
 			};
 
@@ -3140,8 +3140,11 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
+            
+            if (typeof attr == 'undefined' || !attr) return;
+            
             if(typeof attr == "string") {
-                return this.attributes[attr];
+                return this.attributes[attr] || this.element.getAttribute(attr);
             }
 
             for(var k in attr) {
@@ -3150,7 +3153,7 @@ jui.define("util.svg.element", [], function() {
                 if(k.indexOf("xlink:") != -1) {
                     this.element.setAttributeNS("http://www.w3.org/1999/xlink", k, attr[k]);
                 } else {
-                    this.element.setAttributeNS(null, k, attr[k]);
+                    this.element.setAttribute(k, attr[k]);
                 }
             }
 
@@ -11880,7 +11883,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
-                height: _options.height
+                height: _options.height,
+                'buffered-rendering' : 'dynamic'
             });
 
             // 차트 기본 렌더링
@@ -14451,7 +14455,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 	var RadarGrid = function() {
 		var self = this,
 			position = [];
-		var domain = [] ;
 
 		function drawCircle(root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -14520,7 +14523,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 				var height = Math.abs(obj.y1) - Math.abs(obj.y2),
 					pos = height * rate,
-					unit = 2 * Math.PI / domain.length;
+					unit = 2 * Math.PI / self.domain.length;
 
 				var cx = obj.x1,
 					cy = obj.y1,
@@ -14528,11 +14531,13 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 					x = 0;
 
                 var o = math.rotate(x, y, unit * index);
-
-                return {
+                
+                var result = {
                     x : dx + cx + o.x,
                     y : dy + cy + o.y
                 }
+
+                return result;
             }
         }
 
@@ -14900,7 +14905,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					x2 : (grid.line) ? -this.axis.area('width') : bar,
+					x2 : (this.grid.line) ? -this.axis.area('width') : bar,
 					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -17621,9 +17626,9 @@ jui.define("chart.brush.path", [], function() {
 	var PathBrush = function(chart, axis, brush) {
 
 		this.draw = function() {
-			var g = chart.svg.group();
+			var g = this.chart.svg.group();
 			
-			for(var ti = 0, len = brush.target.length; ti < len; ti++) {
+			for(var ti = 0, len = this.brush.target.length; ti < len; ti++) {
 				var color = this.color(ti);
 
 				var path = chart.svg.path({
@@ -17636,10 +17641,10 @@ jui.define("chart.brush.path", [], function() {
 				g.append(path);
 	
 				this.eachData(function(i, data) {
-					var obj = axis.c(i, data[brush.target[ti]]),
+					var obj = this.axis.c(i, data[brush.target[ti]]),
 						x = obj.x - chart.area("x"),
 						y = obj.y - chart.area("y");
-	
+
 					if (i == 0) {
 						path.MoveTo(x, y);
 					} else {
@@ -18227,6 +18232,8 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
             for(var i = 1; i <= count; i++) {
                 g.append(list[i]);
             }
+            
+            path.remove();
 
             return g;
         }

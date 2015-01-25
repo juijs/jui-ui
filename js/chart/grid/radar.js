@@ -3,7 +3,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 	var RadarGrid = function() {
 		var self = this,
 			position = [];
-		var domain = [] ;
 
 		function drawCircle(root, centerX, centerY, x, y, count) {
 			var r = Math.abs(y),
@@ -72,7 +71,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 				var height = Math.abs(obj.y1) - Math.abs(obj.y2),
 					pos = height * rate,
-					unit = 2 * Math.PI / domain.length;
+					unit = 2 * Math.PI / self.domain.length;
 
 				var cx = obj.x1,
 					cy = obj.y1,
@@ -80,11 +79,13 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 					x = 0;
 
                 var o = math.rotate(x, y, unit * index);
-
-                return {
+                
+                var result = {
                     x : dx + cx + o.x,
                     y : dy + cy + o.y
                 }
+
+                return result;
             }
         }
 
