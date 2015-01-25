@@ -79,20 +79,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			this.active = this.drawItem(group).tooltip;
+			this.active = this.createTooltip();
+            group.append(this.active.tooltip);
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					r.minmax = this.drawItem(group, null, {
-						fill: r.color,
-						stroke: style.circleColor,
-						opacity: 1
-					}).tooltip;
-
+					r.minmax = this.createTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
+                    group.append(r.minmax.tooltip);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
@@ -219,8 +216,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
             /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
 			activeEvent: null, // or click, mouseover, ...
             /** @cfg {String} [display=null]  'max', 'min' */
-			display: null, // or max, min
-			items: [ "tooltip" ]
+			display: null // or max, min
 		};
 	}
 

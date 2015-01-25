@@ -16013,6 +16013,66 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
+
+        this.createTooltip = function(fill, stroke, opacity) {
+            var self = this,
+                tooltip = null;
+
+            function draw() {
+                return self.chart.svg.group({ "visibility" : "hidden" }, function() {
+                    self.chart.text({
+                        "text-anchor" : "middle",
+                        "font-weight" : self.chart.theme("tooltipPointFontWeight"),
+                        opacity: opacity
+                    });
+
+                    self.chart.svg.circle({
+                        r: self.chart.theme("tooltipPointRadius"),
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity,
+                        "stroke-width": self.chart.theme("tooltipPointBorderWidth")
+                    });
+                });
+            }
+
+            function show(orient, x, y, value) {
+                var text = tooltip.get(0);
+                text.element.textContent = value;
+
+                if(orient == "left") {
+                    text.attr({ x: -7, y: 4, "text-anchor": "end" });
+                } else if(orient == "right") {
+                    text.attr({ x: 7, y: 4, "text-anchor": "start" });
+                } else if(orient == "bottom") {
+                    text.attr({ y: 16 });
+                } else {
+                    text.attr({ y: -7 });
+                }
+
+                tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
+                tooltip.translate(x, y);
+            }
+
+            // 툴팁 생성
+            tooltip = draw();
+
+            return {
+                tooltip: tooltip,
+                control: show,
+                style: function(fill, stroke, opacity) {
+                    tooltip.get(0).attr({
+                        opacity: opacity
+                    });
+
+                    tooltip.get(1).attr({
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity
+                    })
+                }
+            }
+        }
 	}
 
     CoreBrush.setup = function() {
@@ -16030,8 +16090,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true,
-            items : []
+            clip: true
         }
     }
 
@@ -16118,20 +16177,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			// 액티브 툴팁 생성
-			this.active = this.drawItem(group).tooltip;
+			this.active = this.createTooltip();
+            group.append(this.active.tooltip);
 
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
 				// Max & Min 툴팁 생
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
-					r.minmax = this.drawItem(group, null, {
-						fill: r.color,
-						stroke: style.circleColor,
-						opacity: 1
-					}).tooltip;
-
+					r.minmax = this.createTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
+                    group.append(r.minmax.tooltip);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
@@ -16258,8 +16314,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
             /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
 			activeEvent: null, // or click, mouseover, ...
             /** @cfg {String} [display=null]  'max', 'min' */
-			display: null, // or max, min
-			items: [ "tooltip" ]
+			display: null // or max, min
 		};
 	}
 
@@ -17362,16 +17417,13 @@ jui.define("chart.brush.line", [], function() {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    var tooltip = this.drawItem(g, null, {
-                        fill: this.color(index),
-                        stroke: circleColor,
-                        opacity: 1
-                    }).tooltip;
+                    var minmax = this.createTooltip(this.color(index), circleColor, 1);
+                    minmax.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
 
-                    tooltip.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
+                    g.append(minmax.tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
-                    this.lineList[index].tooltip = tooltip;
+                    this.lineList[index].tooltip = minmax;
                 }
             }
         }
@@ -17456,8 +17508,7 @@ jui.define("chart.brush.line", [], function() {
             symbol: "normal", // normal, curve, step
             display: null,
             active: null,
-            activeEvent: null, // or click, mouseover, ...
-            items: [ "tooltip" ]
+            activeEvent: null // or click, mouseover, ...
         };
     }
 
@@ -19583,81 +19634,6 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.item.core", [ "jquery", "util.base" ], function($, _) {
-
-	var CoreBrushItem = function() {
-        this.drawAfter = function(obj) {
-
-        }
-	}
-
-	return CoreBrushItem;
-}, "chart.draw"); 
-jui.define("chart.brush.item.tooltip", [], function() {
-
-	var TooltipBrushItem = function() {
-        var self = this,
-            tooltip = null;
-
-        function createTooltip(fill, stroke, opacity) {
-            return self.chart.svg.group({ "visibility" : "hidden" }, function() {
-                self.chart.text({
-                    "text-anchor" : "middle",
-                    "font-weight" : self.chart.theme("tooltipPointFontWeight"),
-                    opacity: opacity
-                });
-
-                self.chart.svg.circle({
-                    r: self.chart.theme("tooltipPointRadius"),
-                    fill: fill,
-                    stroke: stroke,
-                    opacity: opacity,
-                    "stroke-width": self.chart.theme("tooltipPointBorderWidth")
-                });
-            });
-        }
-
-        function showTooltip(orient, x, y, value) {
-            var text = tooltip.get(0);
-            text.element.textContent = value;
-
-            if(orient == "left") {
-                text.attr({ x: -7, y: 4, "text-anchor": "end" });
-            } else if(orient == "right") {
-                text.attr({ x: 7, y: 4, "text-anchor": "start" });
-            } else if(orient == "bottom") {
-                text.attr({ y: 16 });
-            } else {
-                text.attr({ y: -7 });
-            }
-
-            tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
-            tooltip.translate(x, y);
-        }
-
-        this.draw = function() {
-            tooltip = createTooltip(this.item.fill, this.item.stroke, this.item.opacity);
-            this.group.append(tooltip);
-
-            return {
-                control: showTooltip,
-                style: function(fill, stroke, opacity) {
-                    tooltip.get(0).attr({
-                        opacity: opacity
-                    });
-
-                    tooltip.get(1).attr({
-                        fill: fill,
-                        stroke: stroke,
-                        opacity: opacity
-                    })
-                }
-            }
-        }
-	}
-
-	return TooltipBrushItem;
-}, "chart.brush.item.core");
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 

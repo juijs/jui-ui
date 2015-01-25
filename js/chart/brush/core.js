@@ -383,6 +383,66 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
+
+        this.createTooltip = function(fill, stroke, opacity) {
+            var self = this,
+                tooltip = null;
+
+            function draw() {
+                return self.chart.svg.group({ "visibility" : "hidden" }, function() {
+                    self.chart.text({
+                        "text-anchor" : "middle",
+                        "font-weight" : self.chart.theme("tooltipPointFontWeight"),
+                        opacity: opacity
+                    });
+
+                    self.chart.svg.circle({
+                        r: self.chart.theme("tooltipPointRadius"),
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity,
+                        "stroke-width": self.chart.theme("tooltipPointBorderWidth")
+                    });
+                });
+            }
+
+            function show(orient, x, y, value) {
+                var text = tooltip.get(0);
+                text.element.textContent = value;
+
+                if(orient == "left") {
+                    text.attr({ x: -7, y: 4, "text-anchor": "end" });
+                } else if(orient == "right") {
+                    text.attr({ x: 7, y: 4, "text-anchor": "start" });
+                } else if(orient == "bottom") {
+                    text.attr({ y: 16 });
+                } else {
+                    text.attr({ y: -7 });
+                }
+
+                tooltip.attr({ visibility: (value != 0) ? "visible" : "hidden" });
+                tooltip.translate(x, y);
+            }
+
+            // 툴팁 생성
+            tooltip = draw();
+
+            return {
+                tooltip: tooltip,
+                control: show,
+                style: function(fill, stroke, opacity) {
+                    tooltip.get(0).attr({
+                        opacity: opacity
+                    });
+
+                    tooltip.get(1).attr({
+                        fill: fill,
+                        stroke: stroke,
+                        opacity: opacity
+                    })
+                }
+            }
+        }
 	}
 
     CoreBrush.setup = function() {
@@ -400,8 +460,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true,
-            items : []
+            clip: true
         }
     }
 

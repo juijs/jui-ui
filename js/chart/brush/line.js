@@ -77,16 +77,13 @@ jui.define("chart.brush.line", [], function() {
                 if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
                     var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
-                    var tooltip = this.drawItem(g, null, {
-                        fill: this.color(index),
-                        stroke: circleColor,
-                        opacity: 1
-                    }).tooltip;
+                    var minmax = this.createTooltip(this.color(index), circleColor, 1);
+                    minmax.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
 
-                    tooltip.control(orient, pos.x[i], pos.y[i], this.format(pos.value[i]));
+                    g.append(minmax.tooltip);
 
                     // 컬럼 상태 설정 (툴팁)
-                    this.lineList[index].tooltip = tooltip;
+                    this.lineList[index].tooltip = minmax;
                 }
             }
         }
@@ -171,8 +168,7 @@ jui.define("chart.brush.line", [], function() {
             symbol: "normal", // normal, curve, step
             display: null,
             active: null,
-            activeEvent: null, // or click, mouseover, ...
-            items: [ "tooltip" ]
+            activeEvent: null // or click, mouseover, ...
         };
     }
 
