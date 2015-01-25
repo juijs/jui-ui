@@ -20955,31 +20955,44 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     out_xy = edge.get("out_xy");
 
                 var node = chart.svg.group({}, function() {
+                    var line = chart.svg.group();
+
+                    line.append(chart.svg.circle({
+                        fill: "#a9a9a9",
+                        stroke: "white",
+                        "stroke-width": 2,
+                        r: point,
+                        cx: out_xy.x,
+                        cy: out_xy.y
+                    }));
+
                     if(!edge.connect()) {
-                        chart.svg.line({
+                        line.append(chart.svg.line({
                             x1: in_xy.x,
                             y1: in_xy.y,
                             x2: out_xy.x,
                             y2: out_xy.y,
                             stroke: self.color(1),
                             "stroke-width": 1
-                        });
+                        }));
                     }
 
-                    chart.svg.circle({
-                        fill: "black",
-                        r: point,
-                        cx: out_xy.x,
-                        cy: out_xy.y
-                    });
-
-                    chart.svg.text({
-                        x: out_xy.x - 15,
-                        y: out_xy.y + 15,
-                        "font-size": "12px",
-                        "text-anchor": "end"
-                    }, "총 응답시간/건수 : 3,200ms/3 ->")
-                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                    if(out_xy.x > in_xy.x) {
+                        chart.svg.text({
+                            x: out_xy.x - 15,
+                            y: out_xy.y + 15,
+                            "font-size": "10px",
+                            "text-anchor": "end"
+                        }, "총 응답시간/건수 : 3,200ms/3 ->")
+                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                    } else {
+                        chart.svg.text({
+                            x: out_xy.x + 5,
+                            y: out_xy.y - 10,
+                            "font-size": "10px"
+                        }, "<- 총 응답시간/건수 : 3,200ms/3")
+                            .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+                    }
                 });
 
                 g.append(node);
@@ -20990,7 +21003,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var targetKey = data.outgoing[index],
                 target = self.getData(getDataIndex(targetKey));
 
-            var dist = r + point,
+            var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, data.x, data.y, -(dist)),
                 out_xy = getDistanceXY(data.x, data.y, target.x, target.y, -(dist)),
                 edge = new Edge(data.key, targetKey, in_xy, out_xy);
@@ -21021,12 +21034,6 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             this.eachData(function(i, data) {
                 g.append(createNodes(i, data));
             });
-
-            console.log("----------------------");
-            var list = edges.list();
-            for(var i = 0; i < list.length; i++) {
-                console.log(list[i].key() + ":" + list[i].connect());
-            }
 
             return g;
         }
