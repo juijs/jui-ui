@@ -52,11 +52,11 @@
     }
 
     var data = [
-        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [ "1000_2" ] },
-        { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_3", "1000_4" ] },
-        { key: "1000_3", name: "W3", type: 1, x: 500, y: 100, outgoing: [ "1_2_3_4", "1000_2" ] },
-        { key: "1000_4", name: "W4", type: 1, x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
-        { key: "1_2_3_4", name: "Oracle", type: 2, x: 700, y: 200, outgoing: [] }
+        { key: "1000_1", name: "W1", type: "was", x: 100, y: 100, outgoing: [ "1000_2" ] },
+        { key: "1000_2", name: "W2", type: "was", x: 100, y: 200, outgoing: [ "1000_3", "1000_4" ] },
+        { key: "1000_3", name: "W3", type: "was", x: 500, y: 100, outgoing: [ "1_2_3_4", "1000_2" ] },
+        { key: "1000_4", name: "W4", type: "was", x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
+        { key: "1_2_3_4", name: "Oracle", type: "db", x: 700, y: 200, outgoing: [] }
     ];
 
     var data2 = [
@@ -86,7 +86,7 @@
                 type: "topology.node",
                 edgeData: edgeData,
                 edgeText: function(data, align) {
-                    var text = "총 응답시간/개수 : " + data.time + "/" + data.count;
+                    var text = data.time + "/" + data.count;
 
                     if(align == "end") {
                         text = text + " →";
@@ -96,12 +96,21 @@
 
                     return text;
                 },
-                tooltipTitle: function(data) {
+                tooltipTitle: function(data, align) {
+                    if(align == "start") {
+                        return data.reverse().join(" ← ");
+                    }
+
                     return data.join(" → ");
                 },
                 tooltipText: function(data) {
                     return "총 응답시간/개수 : " + data.time + "/" + data.count;
                 },
+                /*/
+                nodeImage: function(data) {
+                    return "resource/" + data.type + ".png";
+                },
+                /**/
                 nodeColor: "purple",
                 nodeText: function() {
                     return "{jennifer.gear}";
