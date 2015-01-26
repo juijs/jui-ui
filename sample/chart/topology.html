@@ -75,6 +75,7 @@
 
     jui.ready([ "chart.builder", "util.base" ], function(builder, _) {
         c = builder("#chart", {
+            theme: "jennifer",
             padding: 5,
             axis: {
                 c: {
@@ -116,11 +117,10 @@
                     if(data.type == "server") {
                         return "{jennifer.server}";
                     } else if(data.type == "was") {
-                        return "{jennifer.agent}";
+                        return "{jennifer.was}";
                     } else {
                         return "{jennifer.db}";
                     }
-
                 }
             },
             widget: {

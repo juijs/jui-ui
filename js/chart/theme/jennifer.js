@@ -170,9 +170,9 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyNodeFontColor : "white",
         /** @cfg */
-        topologyNodeTitleSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "8pt", // 12px
         /** @cfg */
-        topologyNodeTitleColor : "#333",
+        topologyNodeTitleFontColor : "#333",
         /** @cfg */
         topologyEdgeColor : "#b2b2b2",
         /** @cfg */

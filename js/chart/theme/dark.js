@@ -90,17 +90,19 @@ jui.define("chart.theme.dark", [], function() {
         pinFontSize : "10px",
         pinBorderColor : "#FF7800",
         pinBorderWidth : 0.7,
-        topologyNodeRadius : 20,
-        topologyNodeFontSize : "16px",
-        topologyNodeFontColor : "#222222",
-        topologyNodeTitleSize : "12px",
-        topologyNodeTitleColor : "#c5c5c5",
-        topologyEdgeColor : "#FF7800",
-        topologyEdgeTitleColor : "#c5c5c5",
-        topologyActiveEdgeColor : "purple",
+
+        topologyNodeRadius : 12.5,
+        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontColor : "#c5c5c5",
+        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontColor : "#c5c5c5",
+        topologyEdgeColor : "#b2b2b2",
+        topologyActiveEdgeColor : "#905ed1",
+        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontColor : "#c5c5c5",
         topologyTooltipBackgroundColor : "#222222",
-        topologyTooltipBorderColor : "#FF7800",
-        topologyTooltipFontSize : "11px",
+        topologyTooltipBorderColor : "#ccc",
+        topologyTooltipFontSize : "8pt", // 11px
         topologyTooltipFontColor : "#c5c5c5",
 
         // widget styles

@@ -156,18 +156,19 @@ jui.define("chart.theme.pattern", [], function() {
         pinBorderWidth : 0.7,
         /** */
 
-        topologyNodeRadius : 20,
-        topologyNodeFontSize : "16px",
+        topologyNodeRadius : 12.5,
+        topologyNodeFontSize : "11pt", // 14px
         topologyNodeFontColor : "white",
-        topologyNodeTitleSize : "12px",
-        topologyNodeTitleColor : "black",
-        topologyEdgeColor : "#a9a9a9",
-        topologyEdgeTitleColor : "black",
-        topologyActiveEdgeColor : "purple",
+        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontColor : "#333",
+        topologyEdgeColor : "#b2b2b2",
+        topologyActiveEdgeColor : "#905ed1",
+        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
-        topologyTooltipBorderColor : "#aaaaaa",
-        topologyTooltipFontSize : "11px",
-        topologyTooltipFontColor : "black",
+        topologyTooltipBorderColor : "#ccc",
+        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontColor : "#333",
 
         // widget styles
 

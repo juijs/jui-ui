@@ -176,8 +176,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 chart.text({
                     x: 0,
                     y: r + 13,
-                    fill: chart.theme("topologyNodeTitleColor"),
-                    "font-size": chart.theme("topologyNodeTitleSize"),
+                    fill: chart.theme("topologyNodeTitleFontColor"),
+                    "font-size": chart.theme("topologyNodeTitleFontSize"),
                     "font-weight": "bold",
                     "text-anchor": "middle",
                     cursor: "pointer"
