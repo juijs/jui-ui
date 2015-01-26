@@ -163,18 +163,32 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         pinBorderWidth : 0.7,
 
-        topologyNodeRadius : 20,
-        topologyNodeFontSize : "16px",
+        /** @cfg */
+        topologyNodeRadius : 12.5,
+        /** @cfg */
+        topologyNodeFontSize : "11pt", // 14px
+        /** @cfg */
         topologyNodeFontColor : "white",
-        topologyNodeTitleSize : "12px",
-        topologyNodeTitleColor : "black",
-        topologyEdgeColor : "#a9a9a9",
-        topologyEdgeTitleColor : "black",
-        topologyActiveEdgeColor : "purple",
+        /** @cfg */
+        topologyNodeTitleSize : "8pt", // 12px
+        /** @cfg */
+        topologyNodeTitleColor : "#333",
+        /** @cfg */
+        topologyEdgeColor : "#b2b2b2",
+        /** @cfg */
+        topologyActiveEdgeColor : "#905ed1",
+        /** @cfg */
+        topologyEdgeFontSize : "8pt", // 11px
+        /** @cfg */
+        topologyEdgeFontColor : "#666",
+        /** @cfg */
         topologyTooltipBackgroundColor : "white",
-        topologyTooltipBorderColor : "#aaaaaa",
-        topologyTooltipFontSize : "11px",
-        topologyTooltipFontColor : "black",
+        /** @cfg */
+        topologyTooltipBorderColor : "#ccc",
+        /** @cfg */
+        topologyTooltipFontSize : "8pt", // 11px
+        /** @cfg */
+        topologyTooltipFontColor : "#333",
 
         /** @cfg */
         titleFontColor : "#333",

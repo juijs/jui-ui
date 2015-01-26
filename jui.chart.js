@@ -5884,18 +5884,32 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         pinBorderWidth : 0.7,
 
-        topologyNodeRadius : 20,
-        topologyNodeFontSize : "16px",
+        /** @cfg */
+        topologyNodeRadius : 12.5,
+        /** @cfg */
+        topologyNodeFontSize : "11pt", // 14px
+        /** @cfg */
         topologyNodeFontColor : "white",
-        topologyNodeTitleSize : "12px",
-        topologyNodeTitleColor : "black",
-        topologyEdgeColor : "#a9a9a9",
-        topologyEdgeTitleColor : "black",
-        topologyActiveEdgeColor : "purple",
+        /** @cfg */
+        topologyNodeTitleSize : "8pt", // 12px
+        /** @cfg */
+        topologyNodeTitleColor : "#333",
+        /** @cfg */
+        topologyEdgeColor : "#b2b2b2",
+        /** @cfg */
+        topologyActiveEdgeColor : "#905ed1",
+        /** @cfg */
+        topologyEdgeFontSize : "8pt", // 11px
+        /** @cfg */
+        topologyEdgeFontColor : "#666",
+        /** @cfg */
         topologyTooltipBackgroundColor : "white",
-        topologyTooltipBorderColor : "#aaaaaa",
-        topologyTooltipFontSize : "11px",
-        topologyTooltipFontColor : "black",
+        /** @cfg */
+        topologyTooltipBorderColor : "#ccc",
+        /** @cfg */
+        topologyTooltipFontSize : "8pt", // 11px
+        /** @cfg */
+        topologyTooltipFontColor : "#333",
 
         /** @cfg */
         titleFontColor : "#333",
@@ -6635,6 +6649,9 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"server" : "\ue63b",
+		"db" : "\ue63c",
+		"agent" : "\ue63d",
 		"minus" : "\ue63a",
 		"label" : "\ue639",
 		"stoppage" : "\ue637",
@@ -13135,7 +13152,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function createNodes(index, data) {
-            return chart.svg.group({
+            var node = chart.svg.group({
                 index: index
             }, function() {
                 var color =_.typeCheck("function", brush.nodeColor) ?
@@ -13165,7 +13182,6 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                         y: 6,
                         fill: chart.theme("topologyNodeFontColor"),
                         "font-size": chart.theme("topologyNodeFontSize"),
-                        "font-weight": "bold",
                         "text-anchor": "middle",
                         cursor: "pointer"
                     }, text);
@@ -13176,10 +13192,17 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     y: r + 13,
                     fill: chart.theme("topologyNodeTitleColor"),
                     "font-size": chart.theme("topologyNodeTitleSize"),
+                    "font-weight": "bold",
                     "text-anchor": "middle",
                     cursor: "pointer"
                 }, data[brush.name]);
             }).translate(data[brush.x], data[brush.y]);
+
+            node.on("click", function(e) {
+                chart.emit("topology.nodeclick", [ data, e ]);
+            });
+
+            return node;
         }
 
         function createEdges() {
@@ -13231,35 +13254,38 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         function createEdgeText(edge, in_xy, out_xy) {
             var text = null;
             var edgeAlign = (out_xy.x > in_xy.x) ? "end" : "start",
-                edgeText = _.typeCheck("function", brush.edgeText) ?
-                    brush.edgeText(getEdgeData(edge.key()), edgeAlign) : null;
+                edgeData = getEdgeData(edge.key());
 
-            if(edgeText != null) {
-                if (edgeAlign == "end") {
-                    text = chart.svg.text({
-                        x: out_xy.x - 15,
-                        y: out_xy.y + 15,
-                        cursor: "pointer",
-                        fill: chart.theme("topologyEdgeTitleColor"),
-                        "font-size": "10px",
-                        "text-anchor": edgeAlign
-                    }, edgeText)
-                        .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
-                } else {
-                    text = chart.svg.text({
-                        x: out_xy.x + 5,
-                        y: out_xy.y - 10,
-                        cursor: "pointer",
-                        fill: chart.theme("topologyEdgeTitleColor"),
-                        "font-size": "10px",
-                        "text-anchor": edgeAlign
-                    }, edgeText)
-                        .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+            if(edgeData != null) {
+                var edgeText = _.typeCheck("function", brush.edgeText) ? brush.edgeText(edgeData, edgeAlign) : null;
+
+                if (edgeText != null) {
+                    if (edgeAlign == "end") {
+                        text = chart.svg.text({
+                            x: out_xy.x - 15,
+                            y: out_xy.y + 15,
+                            cursor: "pointer",
+                            fill: chart.theme("topologyEdgeFontColor"),
+                            "font-size": chart.theme("topologyEdgeFontSize"),
+                            "text-anchor": edgeAlign
+                        }, edgeText)
+                            .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
+                    } else {
+                        text = chart.svg.text({
+                            x: out_xy.x + 5,
+                            y: out_xy.y - 10,
+                            cursor: "pointer",
+                            fill: chart.theme("topologyEdgeFontColor"),
+                            "font-size": chart.theme("topologyEdgeFontSize"),
+                            "text-anchor": edgeAlign
+                        }, edgeText)
+                            .rotate(math.degree(in_xy.angle), out_xy.x, out_xy.y);
+                    }
+
+                    text.on("click", function (e) {
+                        onEdgeActiveHanlder(edge, e);
+                    });
                 }
-
-                text.on("click", function(e) {
-                    onEdgeActiveHanlder(edge, e);
-                });
             }
 
             return text;
@@ -13281,7 +13307,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             edges.add(edge);
         }
 
-        function showTooltip(edge) {
+        function showTooltip(edge, e) {
             if(!_.typeCheck("function", brush.tooltipTitle) ||
                 !_.typeCheck("function", brush.tooltipText)) return;
 
@@ -13297,43 +13323,46 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 out_xy = edge.get("out_xy"),
                 align = (out_xy.x > in_xy.x) ? "end" : "start";
 
-            // 엘리먼트 생성 및 추가
-            var title = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
-                contents = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
-                y = (padding * 2) + ((align == "end") ? anchor : 0);
+            // 커스텀 이벤트 발생
+            chart.emit("topology.edgeclick", [ edge_data, e ]);
 
-            text.element.appendChild(title);
-            text.element.appendChild(contents);
+            if(edge_data != null) {
+                // 엘리먼트 생성 및 추가
+                var title = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
+                    contents = document.createElementNS("http://www.w3.org/2000/svg", "tspan"),
+                    y = (padding * 2) + ((align == "end") ? anchor : 0);
 
-            title.setAttribute("x", padding);
-            title.setAttribute("y", y);
-            title.setAttribute("font-weight", "bold");
-            title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
+                text.element.appendChild(title);
+                text.element.appendChild(contents);
 
-            contents.setAttribute("x", padding);
-            contents.setAttribute("y", y + textY);
-            contents.textContent = brush.tooltipText(edge_data, align);
+                title.setAttribute("x", padding);
+                title.setAttribute("y", y);
+                title.setAttribute("font-weight", "bold");
+                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
 
-            // 엘리먼트 위치 설정
-            var size = text.size(),
-                w = size.width + padding * 2,
-                h = size.height + padding * 2,
-                x = out_xy.x - (w / 2) + (anchor / 2) + (point / 2);
+                contents.setAttribute("x", padding);
+                contents.setAttribute("y", y + textY);
+                contents.textContent = brush.tooltipText(edge_data, align);
 
-            text.attr({ x: w / 2 });
-            rect.attr({ points: self.balloonPoints((align == "end") ? "bottom" : "top", w, h, anchor) });
-            tooltip.attr({ visibility: "visible" });
+                // 엘리먼트 위치 설정
+                var size = text.size(),
+                    w = size.width + padding * 2,
+                    h = size.height + padding * 2,
+                    x = out_xy.x - (w / 2) + (anchor / 2) + (point / 2);
 
-            if(align == "end") {
-                tooltip.translate(x, out_xy.y + (anchor / 2) + point);
-            } else {
-                tooltip.translate(x, out_xy.y - anchor - h + point);
+                text.attr({ x: w / 2 });
+                rect.attr({ points: self.balloonPoints((align == "end") ? "bottom" : "top", w, h, anchor) });
+                tooltip.attr({ visibility: "visible" });
+
+                if(align == "end") {
+                    tooltip.translate(x, out_xy.y + (anchor / 2) + point);
+                } else {
+                    tooltip.translate(x, out_xy.y - anchor - h + point);
+                }
             }
         }
 
         function onEdgeActiveHanlder(edge, e) {
-            var tmpEdges = [];
-
             edges.each(function(newEdge) {
                 var elem = newEdge.element(),
                     circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
@@ -13343,7 +13372,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
                 if(edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key()) {
                     if(line != null) {
-                        line.attr({ stroke: activeColor });
+                        line.attr({ stroke: activeColor, "stroke-width": 2 });
                     }
                     circle.attr({ fill: activeColor });
 
@@ -13354,7 +13383,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     }
                 } else {
                     if(line != null) {
-                        line.attr({ stroke: color });
+                        line.attr({ stroke: color, "stroke-width": 1 });
                     }
                     circle.attr({ fill: color });
                 }

@@ -55,7 +55,7 @@
         { key: "1000_1", name: "W1", type: "was", x: 100, y: 100, outgoing: [ "1000_2" ] },
         { key: "1000_2", name: "W2", type: "was", x: 100, y: 200, outgoing: [ "1000_3", "1000_4" ] },
         { key: "1000_3", name: "W3", type: "was", x: 500, y: 100, outgoing: [ "1_2_3_4", "1000_2" ] },
-        { key: "1000_4", name: "W4", type: "was", x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
+        { key: "1000_4", name: "W4", type: "server", x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
         { key: "1_2_3_4", name: "Oracle", type: "db", x: 700, y: 200, outgoing: [] }
     ];
 
@@ -111,16 +111,28 @@
                     return "resource/" + data.type + ".png";
                 },
                 /**/
-                nodeColor: "purple",
-                nodeText: function() {
-                    return "{jennifer.gear}";
+                nodeColor: "#729ff1",
+                nodeText: function(data) {
+                    if(data.type == "server") {
+                        return "{jennifer.server}";
+                    } else if(data.type == "was") {
+                        return "{jennifer.agent}";
+                    } else {
+                        return "{jennifer.db}";
+                    }
+
                 }
             },
             widget: {
                 type: "topology.ctrl"
             },
             event: {
-                "topology.edge": function(data, e) {
+                "topology.edgeclick": function(data, e) {
+                    console.log("edgeclick ---------------------");
+                    console.log(data);
+                },
+                "topology.nodeclick": function(data, e) {
+                    console.log("nodeclick ---------------------");
                     console.log(data);
                 }
             }

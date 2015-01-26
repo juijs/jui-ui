@@ -1503,6 +1503,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.jui .icon-server:before {
+  content: "\e63b";
+}
+.jui .icon-db:before {
+  content: "\e63c";
+}
+.jui .icon-agent:before {
+  content: "\e63d";
+}
 .jui .icon-minus:before {
   content: "\e63a";
 }

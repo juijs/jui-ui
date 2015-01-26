@@ -1,5 +1,8 @@
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"server" : "\ue63b",
+		"db" : "\ue63c",
+		"agent" : "\ue63d",
 		"minus" : "\ue63a",
 		"label" : "\ue639",
 		"stoppage" : "\ue637",
