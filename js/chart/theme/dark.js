@@ -92,17 +92,17 @@ jui.define("chart.theme.dark", [], function() {
         pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "#c5c5c5",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         topologyNodeTitleFontColor : "#c5c5c5",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#c5c5c5",
         topologyTooltipBackgroundColor : "#222222",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#c5c5c5",
 
         // widget styles

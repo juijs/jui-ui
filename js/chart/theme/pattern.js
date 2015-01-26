@@ -157,17 +157,17 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#333",
 
         // widget styles

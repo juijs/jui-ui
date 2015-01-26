@@ -12542,11 +12542,11 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyNodeRadius : 12.5,
         /** @cfg */
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         /** @cfg */
         topologyNodeFontColor : "white",
         /** @cfg */
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         /** @cfg */
         topologyNodeTitleFontColor : "#333",
         /** @cfg */
@@ -12554,7 +12554,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyActiveEdgeColor : "#905ed1",
         /** @cfg */
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
         /** @cfg */
@@ -12562,7 +12562,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyTooltipBorderColor : "#ccc",
         /** @cfg */
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         /** @cfg */
         topologyTooltipFontColor : "#333",
 
@@ -12709,17 +12709,17 @@ jui.define("chart.theme.gradient", [], function() {
         pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px", // 14px
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px", // 12px
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#333",
 
         // widget styles
@@ -12841,17 +12841,17 @@ jui.define("chart.theme.dark", [], function() {
         pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "#c5c5c5",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         topologyNodeTitleFontColor : "#c5c5c5",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#c5c5c5",
         topologyTooltipBackgroundColor : "#222222",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#c5c5c5",
 
         // widget styles
@@ -12969,17 +12969,17 @@ jui.define("chart.theme.pastel", [], function() {
 		pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#333",
 
         // widget styles
@@ -13166,17 +13166,17 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         topologyTooltipFontColor : "#333",
 
         // widget styles
@@ -19767,7 +19767,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var index = null;
 
             for(var i = 0; i < axis.data.length; i++) {
-                if(axis.data[i].key == key) {
+                if(axis.data[i][brush.key] == key) {
                     index = i;
                     break;
                 }
@@ -19778,7 +19778,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         function getEdgeData(key) {
             for(var i = 0; i < brush.edgeData.length; i++) {
-                if(brush.edgeData[i].key == key) {
+                if(brush.edgeData[i][brush.key] == key) {
                     return brush.edgeData[i];
                 }
             }
@@ -19788,7 +19788,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         function getTooltipData(edge) {
             for(var j = 0; j < brush.edgeData.length; j++) {
-                if(edge.key() == brush.edgeData[j].key) {
+                if(edge.key() == brush.edgeData[j][brush.key]) {
                     return brush.edgeData[j];
                 }
             }
@@ -19801,11 +19801,11 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 keys = key.split(":");
 
             self.eachData(function(i, data) {
-                if(data.key == keys[0]) {
+                if(data[brush.key] == keys[0]) {
                    title[0] = data.name;
                 }
 
-                if(data.key == keys[1]) {
+                if(data[brush.key] == keys[1]) {
                     title[1] = data.name;
                 }
             });
@@ -19961,7 +19961,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
                 out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
-                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -20001,7 +20001,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 title.setAttribute("x", padding);
                 title.setAttribute("y", y);
                 title.setAttribute("font-weight", "bold");
-                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
+                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data[brush.key]), align);
 
                 contents.setAttribute("x", padding);
                 contents.setAttribute("y", y + textY);
@@ -20108,6 +20108,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             tooltipHeight: 40,
 
             // key mapping options
+            key: "key",
             name: "name",
             x: "x",
             y: "y",

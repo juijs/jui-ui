@@ -90,7 +90,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var index = null;
 
             for(var i = 0; i < axis.data.length; i++) {
-                if(axis.data[i].key == key) {
+                if(axis.data[i][brush.key] == key) {
                     index = i;
                     break;
                 }
@@ -101,7 +101,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         function getEdgeData(key) {
             for(var i = 0; i < brush.edgeData.length; i++) {
-                if(brush.edgeData[i].key == key) {
+                if(brush.edgeData[i][brush.key] == key) {
                     return brush.edgeData[i];
                 }
             }
@@ -111,7 +111,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         function getTooltipData(edge) {
             for(var j = 0; j < brush.edgeData.length; j++) {
-                if(edge.key() == brush.edgeData[j].key) {
+                if(edge.key() == brush.edgeData[j][brush.key]) {
                     return brush.edgeData[j];
                 }
             }
@@ -124,11 +124,11 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 keys = key.split(":");
 
             self.eachData(function(i, data) {
-                if(data.key == keys[0]) {
+                if(data[brush.key] == keys[0]) {
                    title[0] = data.name;
                 }
 
-                if(data.key == keys[1]) {
+                if(data[brush.key] == keys[1]) {
                     title[1] = data.name;
                 }
             });
@@ -284,7 +284,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
                 out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
-                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -324,7 +324,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 title.setAttribute("x", padding);
                 title.setAttribute("y", y);
                 title.setAttribute("font-weight", "bold");
-                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
+                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data[brush.key]), align);
 
                 contents.setAttribute("x", padding);
                 contents.setAttribute("y", y + textY);
@@ -431,6 +431,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             tooltipHeight: 40,
 
             // key mapping options
+            key: "key",
             name: "name",
             x: "x",
             y: "y",

@@ -166,11 +166,11 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyNodeRadius : 12.5,
         /** @cfg */
-        topologyNodeFontSize : "11pt", // 14px
+        topologyNodeFontSize : "14px",
         /** @cfg */
         topologyNodeFontColor : "white",
         /** @cfg */
-        topologyNodeTitleFontSize : "8pt", // 12px
+        topologyNodeTitleFontSize : "12px",
         /** @cfg */
         topologyNodeTitleFontColor : "#333",
         /** @cfg */
@@ -178,7 +178,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyActiveEdgeColor : "#905ed1",
         /** @cfg */
-        topologyEdgeFontSize : "8pt", // 11px
+        topologyEdgeFontSize : "11px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
         /** @cfg */
@@ -186,7 +186,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyTooltipBorderColor : "#ccc",
         /** @cfg */
-        topologyTooltipFontSize : "8pt", // 11px
+        topologyTooltipFontSize : "11px",
         /** @cfg */
         topologyTooltipFontColor : "#333",
 
