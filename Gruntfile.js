@@ -193,15 +193,13 @@ module.exports = function(grunt) {
 
     require("load-grunt-tasks")(grunt);
 
-    grunt.registerTask('icon', 'SVG Icon Build', function() {
-        var done = this.async();
+    grunt.registerTask("icon", "SVG Icon Build", function() {
+        var content = fs.readFileSync(grunt.config("icon.css"), { encoding : "utf8" }),
+            obj = css.parse(content),
+            icons = [];
 
-        var content = fs.readFileSync(grunt.config("icon.css"), { encoding : 'utf8' });
-        var obj = css.parse(content);
-
-        var icons = [];
         obj.stylesheet.rules.forEach(function(item) {
-            if (item.declarations && item.declarations[0] && item.declarations[0].property == 'content') {
+            if (item.declarations && item.declarations[0] && item.declarations[0].property == "content") {
                 var obj = {
                     name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
                     content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
@@ -219,7 +217,7 @@ module.exports = function(grunt) {
         fs.writeFileSync(grunt.config("icon.dist"), new Buffer(str));
 
         grunt.log.writeln("File " + grunt.config("icon.dist") + " created.");
-    })
+    });
 
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.registerTask("js", [ "concat", "uglify" ]);
