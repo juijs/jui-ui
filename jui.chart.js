@@ -5541,9 +5541,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트 영역을 해당 스케일에 맞게 확대함
+         * 차트의 줌인/줌아웃 상태를 설정
          *
-         * @param step
+         * @param scale
+         * @returns {number}
          */
         this.scale = function(scale) {
             if(scale < 0) return;
@@ -5553,13 +5554,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.root.each(function(i, elem) {
                 elem.scale(_scale);
             });
+
+            return _scale;
         }
 
         /**
-         * 차트의 특정 영역을 보여줌
+         * 차트의 보이는 영역을 변경
          *
          * @param x
          * @param y
+         * @returns {{x: number, y: number}}
          */
         this.viewBox = function(x, y) {
             var area = this.area();
@@ -5573,6 +5577,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.root.attr({
                 viewBox: _xbox + " " + _ybox + " " + area.width + " " + area.height
             });
+
+            return {
+                x: _xbox,
+                y: _ybox
+            }
         }
 
         /**
@@ -14581,12 +14590,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
 
-    var TopologyController = function(chart, axis, widget) {
+    var TopologyControlWidget = function(chart, axis, widget) {
         var targetKey, startX, startY;
         var renderWait = false;
+        var scale = 1, boxX = 0, boxY = 0;
 
         function initDragEvent() {
-            chart.on("chart.mousemove", function (e) {
+            chart.on("chart.mousemove", function(e) {
                 if(!_.typeCheck("string", targetKey)) return;
 
                 var data = axis.data[getDataIndex(targetKey)];
@@ -14615,6 +14625,54 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             }
         }
 
+        function initZoomEvent() {
+            $(chart.root).bind("mousewheel DOMMouseScroll", function(e){
+                if(e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
+                    if(scale < 2) {
+                        scale += 0.1;
+                    }
+                } else {
+                    if(scale > 0.5) {
+                        scale -= 0.1;
+                    }
+                }
+
+                chart.scale(scale);
+                return false;
+            });
+        }
+
+        function initMoveEvent() {
+            var startX = null, startY = null;
+
+            chart.on("chart.mousedown", function(e) {
+                if(_.typeCheck("string", targetKey)) return;
+                if(startX != null || startY != null) return;
+
+                startX = boxX + e.x;
+                startY = boxY + e.y;
+            });
+
+            chart.on("chart.mousemove", function(e) {
+                if(startX == null || startY == null) return;
+
+                var xy = chart.viewBox(startX - e.x, startY - e.y);
+                boxX = xy.x;
+                boxY = xy.y;
+            });
+
+            chart.on("chart.mouseup", endMoveAction);
+            chart.on("bg.mouseup", endMoveAction);
+            chart.on("bg.mouseout", endMoveAction);
+
+            function endMoveAction(e) {
+                if(startX == null || startY == null) return;
+
+                startX = null;
+                startY = null;
+            }
+        }
+
         function setBrushEvent() {
             chart.svg.root.get(0).each(function(i, brush) {
                 var cls = brush.attr("class");
@@ -14627,7 +14685,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                             var data = axis.data[index];
 
                             (function (key, data) {
-                                node.on("mousedown", function (e) {
+                                node.on("mousedown", function(e) {
                                     if (_.typeCheck("string", targetKey)) return;
 
                                     targetKey = key;
@@ -14659,6 +14717,15 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
+            if(widget.zoom) {
+                initZoomEvent();
+            }
+
+            if(widget.move) {
+                initMoveEvent();
+                chart.svg.root.attr({ cursor: "move" });
+            }
+
             initDragEvent();
             setBrushEvent();
 
@@ -14666,7 +14733,14 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         }
     }
 
-    return TopologyController;
+    TopologyControlWidget.setup = function() {
+        return {
+            move: false,
+            zoom: false
+        }
+    }
+
+    return TopologyControlWidget;
 }, "chart.widget.core");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 

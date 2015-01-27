@@ -752,9 +752,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트 영역을 해당 스케일에 맞게 확대함
+         * 차트의 줌인/줌아웃 상태를 설정
          *
-         * @param step
+         * @param scale
+         * @returns {number}
          */
         this.scale = function(scale) {
             if(scale < 0) return;
@@ -764,13 +765,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.root.each(function(i, elem) {
                 elem.scale(_scale);
             });
+
+            return _scale;
         }
 
         /**
-         * 차트의 특정 영역을 보여줌
+         * 차트의 보이는 영역을 변경
          *
          * @param x
          * @param y
+         * @returns {{x: number, y: number}}
          */
         this.viewBox = function(x, y) {
             var area = this.area();
@@ -784,6 +788,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.root.attr({
                 viewBox: _xbox + " " + _ybox + " " + area.width + " " + area.height
             });
+
+            return {
+                x: _xbox,
+                y: _ybox
+            }
         }
 
         /**
