@@ -215,7 +215,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     x2: out_xy.x,
                     y2: out_xy.y,
                     stroke: chart.theme("topologyEdgeColor"),
-                    "stroke-width": 1
+                    "stroke-width": 1,
+                    "shape-rendering": "geometricPrecision"
                 }));
             }
 
@@ -248,8 +249,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 if (edgeText != null) {
                     if (edgeAlign == "end") {
                         text = chart.svg.text({
-                            x: out_xy.x - 15,
-                            y: out_xy.y + 15,
+                            x: out_xy.x - 9,
+                            y: out_xy.y + 13,
                             cursor: "pointer",
                             fill: chart.theme("topologyEdgeFontColor"),
                             "font-size": chart.theme("topologyEdgeFontSize"),
@@ -258,8 +259,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                             .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
                     } else {
                         text = chart.svg.text({
-                            x: out_xy.x + 5,
-                            y: out_xy.y - 10,
+                            x: out_xy.x + 8,
+                            y: out_xy.y - 7,
                             cursor: "pointer",
                             fill: chart.theme("topologyEdgeFontColor"),
                             "font-size": chart.theme("topologyEdgeFontSize"),
@@ -327,7 +328,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data[brush.key]), align);
 
                 contents.setAttribute("x", padding);
-                contents.setAttribute("y", y + textY);
+                contents.setAttribute("y", y + textY + (padding / 2));
                 contents.textContent = brush.tooltipText(edge_data, align);
 
                 // 엘리먼트 위치 설정

@@ -11489,6 +11489,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _axis = [], _brush = [], _widget = [], _defs = null;
         var _padding, _series, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
+        var _scale = 1;
 
         /**
          * @method caculate
@@ -11768,10 +11769,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     offsetX = e.pageX - pos.left,
                     offsetY = e.pageY - pos.top;
 
-                e.bgX = offsetX;
-                e.bgY = offsetY;
-                e.chartX = offsetX - self.padding("left");
-                e.chartY = offsetY - self.padding("top");
+                e.bgX = offsetX / _scale;
+                e.bgY = offsetY / _scale;
+                e.chartX = (offsetX - self.padding("left")) / _scale;
+                e.chartY = (offsetY - self.padding("top")) / _scale;
 
                 if(e.chartX < 0) return;
                 if(e.chartX > self.area("width")) return;
@@ -12306,6 +12307,38 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         this.isRender = function() {
             return (!_initialize) ? true : _options.render;
+        }
+
+        /**
+         * 차트 영역을 해당 스케일에 맞게 확대함
+         *
+         * @param step
+         */
+        this.zoomIn = function(step) {
+            var step = (!step) ? 0.1 : step;
+
+            if(_scale > 2) _scale = 2;
+            else _scale += step;
+
+            this.svg.root.each(function(i, elem) {
+                elem.scale(_scale);
+            });
+        }
+
+        /**
+         * 차트 영역을 해당 스케일에 맞게 축소함
+         *
+         * @param step
+         */
+        this.zoomOut = function(step) {
+            var step = (!step) ? 0.1 : step;
+
+            if(_scale < 0.5) _scale = 0.5;
+            else _scale -= step;
+
+            this.svg.root.each(function(i, elem) {
+                elem.scale(_scale);
+            });
         }
     }
 
@@ -19892,7 +19925,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     x2: out_xy.x,
                     y2: out_xy.y,
                     stroke: chart.theme("topologyEdgeColor"),
-                    "stroke-width": 1
+                    "stroke-width": 1,
+                    "shape-rendering": "geometricPrecision"
                 }));
             }
 
@@ -19925,8 +19959,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 if (edgeText != null) {
                     if (edgeAlign == "end") {
                         text = chart.svg.text({
-                            x: out_xy.x - 15,
-                            y: out_xy.y + 15,
+                            x: out_xy.x - 9,
+                            y: out_xy.y + 13,
                             cursor: "pointer",
                             fill: chart.theme("topologyEdgeFontColor"),
                             "font-size": chart.theme("topologyEdgeFontSize"),
@@ -19935,8 +19969,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                             .rotate(math.degree(out_xy.angle), out_xy.x, out_xy.y);
                     } else {
                         text = chart.svg.text({
-                            x: out_xy.x + 5,
-                            y: out_xy.y - 10,
+                            x: out_xy.x + 8,
+                            y: out_xy.y - 7,
                             cursor: "pointer",
                             fill: chart.theme("topologyEdgeFontColor"),
                             "font-size": chart.theme("topologyEdgeFontSize"),
@@ -20004,7 +20038,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data[brush.key]), align);
 
                 contents.setAttribute("x", padding);
-                contents.setAttribute("y", y + textY);
+                contents.setAttribute("y", y + textY + (padding / 2));
                 contents.textContent = brush.tooltipText(edge_data, align);
 
                 // 엘리먼트 위치 설정
