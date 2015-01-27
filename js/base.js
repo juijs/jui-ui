@@ -471,7 +471,9 @@
 		},
 		/**
 		 * @method inherit
-		 * implements inherit for object
+         *
+		 * 프로토타입 기반의 상속 제공 
+         *  
 		 * @param {Function} ctor base Class
 		 * @param {Function} superCtor super Class
 		 */
@@ -544,7 +546,7 @@
 		/**
 		 * @method clone
 		 * implements object clone
-		 * @param obj
+		 * @param {Array/Object} obj 복사할 객체
 		 * @return {Array}
 		 */
 		clone: function(obj) {
@@ -681,7 +683,7 @@
 		 * check data  type
 		 * @param {String} t  type string
 		 * @param {Object} v value object
-		 * @returns {*}
+		 * @return {Boolean}
 		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {

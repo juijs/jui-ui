@@ -3,7 +3,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	/**
 	 * @class uix.autocomplete
      * 
-     * Auto Complete
+     * 자동 완성 컴포넌트
      * 
      * @extends core
      * @requires jquery
