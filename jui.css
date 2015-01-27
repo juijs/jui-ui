@@ -6581,7 +6581,7 @@
 .jui .panel > .foot {
   height: 31px;
   line-height: 30px;
-  padding: 4px 15px;
+  padding: 2px 15px;
 }
 .jui .panel > .body {
   padding: 15px;
@@ -6677,8 +6677,12 @@
   padding-left: 0px;
   line-height: normal;
 }
+.jui .panel > .head > .tab > li a,
+.jui .panel > .foot > .tab > li a {
+  height: 14px;
+}
 .jui .panel > .foot > .tab {
-  margin-top: -5px;
+  margin-top: -3px;
 }
 .jui .panel-close > .head {
   -webkit-border-bottom-right-radius: 5px;
@@ -6698,7 +6702,7 @@
 .jui .panel-normal > .foot {
   height: 31px;
   line-height: 30px;
-  padding: 4px 15px;
+  padding: 2px 15px;
 }
 .jui .panel-normal > .body {
   padding: 15px;
