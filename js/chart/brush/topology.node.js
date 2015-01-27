@@ -420,6 +420,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     TopologyNode.setup = function() {
         return {
+            clip: false,
+
             // topology options
             nodeImage: null,
             nodeColor: null,

@@ -11489,7 +11489,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _axis = [], _brush = [], _widget = [], _defs = null;
         var _padding, _series, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
-        var _scale = 1;
+        var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
         /**
          * @method caculate
@@ -11769,10 +11769,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     offsetX = e.pageX - pos.left,
                     offsetY = e.pageY - pos.top;
 
-                e.bgX = offsetX / _scale;
-                e.bgY = offsetY / _scale;
-                e.chartX = (offsetX - self.padding("left")) / _scale;
-                e.chartY = (offsetY - self.padding("top")) / _scale;
+                e.bgX = (offsetX + _xbox) / _scale;
+                e.bgY = (offsetY + _ybox) / _scale;
+                e.chartX = (offsetX - self.padding("left") + _xbox) / _scale;
+                e.chartY = (offsetY - self.padding("top") + _ybox) / _scale;
 
                 if(e.chartX < 0) return;
                 if(e.chartX > self.area("width")) return;
@@ -12196,6 +12196,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
+         * 차트 영역을 해당 스케일에 맞게 확대함
+         *
+         * @param step
+         */
+        this.scale = function(scale) {
+            if(scale < 0) return;
+
+            _scale = scale;
+
+            this.svg.root.each(function(i, elem) {
+                elem.scale(_scale);
+            });
+        }
+
+        /**
+         * 차트의 특정 영역을 보여줌
+         *
+         * @param x
+         * @param y
+         */
+        this.viewBox = function(x, y) {
+            var area = this.area();
+
+            if(Math.abs(x) > area.width || !_.typeCheck("number", x)) return;
+            if(Math.abs(y) > area.height || !_.typeCheck("number", y)) return;
+
+            _xbox = x;
+            _ybox = y;
+
+            this.svg.root.attr({
+                viewBox: _xbox + " " + _ybox + " " + area.width + " " + area.height
+            });
+        }
+
+        /**
          * @method render 
          *
          * chart render 함수 재정의
@@ -12308,41 +12343,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         this.isRender = function() {
             return (!_initialize) ? true : _options.render;
         }
-
-        /**
-         * 차트 영역을 해당 스케일에 맞게 확대함
-         *
-         * @param step
-         */
-        this.zoomIn = function(step) {
-            var step = (!step) ? 0.1 : step;
-
-            if(_scale > 2) _scale = 2;
-            else _scale += step;
-
-            this.svg.root.each(function(i, elem) {
-                elem.scale(_scale);
-            });
-        }
-
-        /**
-         * 차트 영역을 해당 스케일에 맞게 축소함
-         *
-         * @param step
-         */
-        this.zoomOut = function(step) {
-            var step = (!step) ? 0.1 : step;
-
-            if(_scale < 0.5) _scale = 0.5;
-            else _scale -= step;
-
-            this.svg.root.each(function(i, elem) {
-                elem.scale(_scale);
-            });
-        }
     }
-
-
 
     UI.setup = function() {
         return {
@@ -20130,6 +20131,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
     TopologyNode.setup = function() {
         return {
+            clip: false,
+
             // topology options
             nodeImage: null,
             nodeColor: null,
