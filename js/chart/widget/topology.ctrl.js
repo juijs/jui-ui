@@ -9,9 +9,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             chart.on("chart.mousemove", function(e) {
                 if(!_.typeCheck("string", targetKey)) return;
 
-                var data = axis.data[getDataIndex(targetKey)];
-                data.x = startX + (e.chartX - startX);
-                data.y = startY + (e.chartY - startY);
+                var xy = axis.c(targetKey);
+                xy.setX(startX + (e.chartX - startX));
+                xy.setY(startY + (e.chartY - startY));
 
                 if(renderWait === false) {
                     setTimeout(function () {
@@ -94,36 +94,23 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                         if(!isNaN(index)) {
                             var data = axis.data[index];
 
-                            (function (key, data) {
+                            (function (key) {
                                 node.on("mousedown", function(e) {
                                     if (_.typeCheck("string", targetKey)) return;
 
+                                    var xy = axis.c(key);
                                     targetKey = key;
-                                    startX = data.x;
-                                    startY = data.y;
+                                    startX = xy.x;
+                                    startY = xy.y;
 
                                     // 선택한 노드 맨 마지막으로 이동
-                                    var target = axis.data.splice(index, 1);
-                                    axis.data.push(target[0]);
+                                    xy.moveLast();
                                 });
-                            })(data.key, data);
+                            })(data.key);
                         }
                     });
                 }
             });
-        }
-
-        function getDataIndex(key) {
-            var index = null;
-
-            for(var i = 0; i < axis.data.length; i++) {
-                if(axis.data[i].key == key) {
-                    index = i;
-                    break;
-                }
-            }
-
-            return index;
         }
 
         this.draw = function() {

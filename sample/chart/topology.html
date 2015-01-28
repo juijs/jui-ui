@@ -52,15 +52,15 @@
     }
 
     var data = [
-        { key: "1000_1", name: "W1", type: "was", x: 100, y: 100, outgoing: [ "1000_2" ] },
-        { key: "1000_2", name: "W2", type: "was", x: 100, y: 200, outgoing: [ "1000_3", "1000_4" ] },
-        { key: "1000_3", name: "W3", type: "was", x: 500, y: 100, outgoing: [ "1_2_3_4", "1000_2" ] },
-        { key: "1000_4", name: "W4", type: "server", x: 400, y: 150, outgoing: [ "1_2_3_4" ] },
-        { key: "1_2_3_4", name: "Oracle", type: "db", x: 700, y: 200, outgoing: [] }
+        { key: "1000_1", name: "W1", type: "was", outgoing: [ "1000_2" ] },
+        { key: "1000_2", name: "W2", type: "was", outgoing: [ "1000_3", "1000_4" ] },
+        { key: "1000_3", name: "W3", type: "was", outgoing: [ "1_2_3_4", "1000_2" ] },
+        { key: "1000_4", name: "W4", type: "server", outgoing: [ "1_2_3_4" ] },
+        { key: "1_2_3_4", name: "Oracle", type: "db", outgoing: [] }
     ];
 
     var data2 = [
-        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [ "1000_2" ] },
+        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [] },
         { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_1" ] }
     ];
 
@@ -79,7 +79,7 @@
             padding: 5,
             axis: {
                 c: {
-                    type: "panel"
+                    type: "topology.table"
                 },
                 data: data
             },

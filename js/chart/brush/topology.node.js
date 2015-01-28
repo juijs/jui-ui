@@ -1,35 +1,5 @@
-jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_, math) {
-    var EdgeManager = function() {
-        var list = [],
-            cache = {};
-
-        this.add = function(edge) {
-            cache[edge.key()] = edge;
-            list.push(edge);
-        }
-
-        this.get = function(key) {
-            return cache[key];
-        }
-
-        this.is = function(key) {
-            return (cache[key]) ? true : false;
-        }
-
-        this.list = function() {
-            return list;
-        }
-
-        this.each = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
-
-            for(var i = 0; i < list.length; i++) {
-                callback.call(this, list[i]);
-            }
-        }
-    }
-
-    var Edge = function(start, end, in_xy, out_xy) {
+jui.define("chart.brush.topology.edge", [], function() {
+    var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
 
         this.key = function() {
@@ -64,6 +34,47 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
     }
 
+    return TopologyEdge;
+});
+
+jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
+    var TopologyEdgeManager = function() {
+        var list = [],
+            cache = {};
+
+        this.add = function(edge) {
+            cache[edge.key()] = edge;
+            list.push(edge);
+        }
+
+        this.get = function(key) {
+            return cache[key];
+        }
+
+        this.is = function(key) {
+            return (cache[key]) ? true : false;
+        }
+
+        this.list = function() {
+            return list;
+        }
+
+        this.each = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            for(var i = 0; i < list.length; i++) {
+                callback.call(this, list[i]);
+            }
+        }
+    }
+
+    return TopologyEdgeManager;
+});
+
+jui.define("chart.brush.topology.node",
+    [ "util.base", "util.math", "chart.brush.topology.edge", "chart.brush.topology.edgemanager" ],
+    function(_, math, Edge, EdgeManager) {
+
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
@@ -86,22 +97,9 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             }
         }
 
-        function getDataIndex(key) {
-            var index = null;
-
-            for(var i = 0; i < axis.data.length; i++) {
-                if(axis.data[i][brush.key] == key) {
-                    index = i;
-                    break;
-                }
-            }
-
-            return index;
-        }
-
         function getEdgeData(key) {
             for(var i = 0; i < brush.edgeData.length; i++) {
-                if(brush.edgeData[i][brush.key] == key) {
+                if(brush.edgeData[i].key == key) {
                     return brush.edgeData[i];
                 }
             }
@@ -111,7 +109,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         function getTooltipData(edge) {
             for(var j = 0; j < brush.edgeData.length; j++) {
-                if(edge.key() == brush.edgeData[j][brush.key]) {
+                if(edge.key() == brush.edgeData[j].key) {
                     return brush.edgeData[j];
                 }
             }
@@ -124,11 +122,11 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 keys = key.split(":");
 
             self.eachData(function(i, data) {
-                if(data[brush.key] == keys[0]) {
+                if(data.key == keys[0]) {
                    title[0] = data.name;
                 }
 
-                if(data[brush.key] == keys[1]) {
+                if(data.key == keys[1]) {
                     title[1] = data.name;
                 }
             });
@@ -138,6 +136,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
         }
 
         function createNodes(index, data) {
+            var xy = axis.c(index);
+
             var node = chart.svg.group({
                 index: index
             }, function() {
@@ -181,8 +181,8 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                     "font-weight": "bold",
                     "text-anchor": "middle",
                     cursor: "pointer"
-                }, data[brush.name]);
-            }).translate(data[brush.x], data[brush.y]);
+                }, data.name);
+            }).translate(xy.x, xy.y);
 
             node.on("click", function(e) {
                 chart.emit("topology.nodeclick", [ data, e ]);
@@ -278,14 +278,16 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             return text;
         }
 
-        function setDataEdges(data, index) {
-            var targetKey = data[brush.outgoing][index],
-                target = self.getData(getDataIndex(targetKey));
+        function setDataEdges(index, targetIndex) {
+            var data = self.getData(index),
+                targetKey = data.outgoing[targetIndex],
+                target = axis.c(targetKey),
+                xy = axis.c(index);
 
             var dist = r + point + 1,
-                in_xy = getDistanceXY(target.x, target.y, data[brush.x], data[brush.y], -(dist)),
-                out_xy = getDistanceXY(data[brush.x], data[brush.y], target.x, target.y, -(dist)),
-                edge = new Edge(data[brush.key], targetKey, in_xy, out_xy);
+                in_xy = getDistanceXY(target.x, target.y, xy.x, xy.y, -(dist)),
+                out_xy = getDistanceXY(xy.x, xy.y, target.x, target.y, -(dist)),
+                edge = new Edge(data.key, targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -325,7 +327,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
                 title.setAttribute("x", padding);
                 title.setAttribute("y", y);
                 title.setAttribute("font-weight", "bold");
-                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data[brush.key]), align);
+                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
 
                 contents.setAttribute("x", padding);
                 contents.setAttribute("y", y + textY + (padding / 2));
@@ -400,9 +402,9 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                for(var j = 0; j < data[brush.outgoing].length; j++) {
+                for(var j = 0; j < data.outgoing.length; j++) {
                     // 엣지 데이터 생성
-                    setDataEdges(data, j);
+                    setDataEdges(i, j);
                 }
             });
 
@@ -431,14 +433,7 @@ jui.define("chart.brush.topology.node", [ "util.base", "util.math" ], function(_
             tooltipTitle: null,
             tooltipText: null,
             tooltipWidth: 150,
-            tooltipHeight: 40,
-
-            // key mapping options
-            key: "key",
-            name: "name",
-            x: "x",
-            y: "y",
-            outgoing: "outgoing"
+            tooltipHeight: 40
         }
     }
 

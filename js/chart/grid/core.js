@@ -116,18 +116,21 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @param {String} cls 
          * @param {Grid} grid 
          */		
-		this.drawGrid = function(cls) {
+		this.drawGrid = function() {
 			// create group
-			var root = this.chart.svg.group();
+			var root = this.chart.svg.group(),
+                func = this[this.grid.orient];
 
 			// render axis
-			this[this.grid.orient].call(this, root);
+            if(_.typeCheck("function", func)) {
+                func.call(this, root);
+            }
 
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
 			// hide grid 
-			if (this.grid.hide) {
+			if(this.grid.hide) {
 				root.attr({ display : "none" })
 			}
 
