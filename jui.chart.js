@@ -5939,7 +5939,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyNodeFontColor : "white",
         /** @cfg */
-        topologyNodeTitleFontSize : "12px",
+        topologyNodeTitleFontSize : "11px",
         /** @cfg */
         topologyNodeTitleFontColor : "#333",
         /** @cfg */
@@ -6102,9 +6102,9 @@ jui.define("chart.theme.gradient", [], function() {
         pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "14px", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "12px", // 12px
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
@@ -6236,7 +6236,7 @@ jui.define("chart.theme.dark", [], function() {
         topologyNodeRadius : 12.5,
         topologyNodeFontSize : "14px",
         topologyNodeFontColor : "#c5c5c5",
-        topologyNodeTitleFontSize : "12px",
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#c5c5c5",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
@@ -6364,7 +6364,7 @@ jui.define("chart.theme.pastel", [], function() {
         topologyNodeRadius : 12.5,
         topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "12px",
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
@@ -6561,7 +6561,7 @@ jui.define("chart.theme.pattern", [], function() {
         topologyNodeRadius : 12.5,
         topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "12px",
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",

@@ -94,9 +94,9 @@ jui.define("chart.theme.gradient", [], function() {
         pinBorderWidth : 0.7,
 
         topologyNodeRadius : 12.5,
-        topologyNodeFontSize : "14px", // 14px
+        topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "12px", // 12px
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",

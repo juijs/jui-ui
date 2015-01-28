@@ -159,7 +159,7 @@ jui.define("chart.theme.pattern", [], function() {
         topologyNodeRadius : 12.5,
         topologyNodeFontSize : "14px",
         topologyNodeFontColor : "white",
-        topologyNodeTitleFontSize : "12px",
+        topologyNodeTitleFontSize : "11px",
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
