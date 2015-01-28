@@ -9246,7 +9246,9 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
      * @extends chart.grid.core
      */
     var TopologyTableGrid = function() {
-        var self = this;
+        var self = this,
+            area, size, data_cnt,
+            cache = {};
 
         function getDataIndex(key) {
             var index = null,
@@ -9262,13 +9264,59 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
             return index;
         }
 
-        function initPositionXY() {
-            var area = self.chart.area();
+        function initDefaultXY() {
+            var row_cnt = Math.floor(area.height / size),
+                col_cnt = Math.floor(area.width / size),
+                col_step = Math.floor(col_cnt / data_cnt),
+                col_index = 0;
 
-            for(var i = 0, len = self.axis.data.length; i < len; i++) {
+            for(var i = 0; i < data_cnt; i++) {
+                var x = 0, y = 0;
+
+                if(i % 2 == 0) {
+                    x = col_index * size;
+                    y = getRandomRowIndex(row_cnt) * size;
+
+                    col_index += col_step;
+                } else {
+                    x = (col_cnt - col_index) * size;
+                    y = getRandomRowIndex(row_cnt) * size;
+                }
+
                 self.axis.cacheXY[i] = {
-                    x: Math.floor(Math.random() * area.width),
-                    y: Math.floor(Math.random() * area.height)
+                    x: x + size,
+                    y: y + (size / 2)
+                };
+            }
+
+            function getRandomRowIndex() {
+                var row_index = Math.floor(Math.random() * row_cnt);
+
+                if(cache[row_index]) {
+                    var cnt = 0;
+                    for(var k in cache) { cnt++; }
+
+                    if(cnt < row_cnt) {
+                        return getRandomRowIndex(row_cnt);
+                    } else {
+                        cache = {};
+                    }
+                } else {
+                    cache[row_index] = true;
+                }
+
+                return row_index;
+            }
+        }
+
+        function initRandomXY() {
+            for(var i = 0; i < data_cnt; i++) {
+                var x = Math.floor(Math.random() * (area.width - size)),
+                    y = Math.floor(Math.random() * (area.height - size));
+
+                self.axis.cacheXY[i] = {
+                    x: x,
+                    y: y
                 };
             }
         }
@@ -9280,10 +9328,19 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
          *
          */
         this.drawBefore = function() {
+            area = this.chart.area();
+            size = this.grid.cellSize;
+            data_cnt = this.axis.data.length;
+
             // 최초 한번만 데이터 생성
             if(!this.axis.cacheXY) {
                 this.axis.cacheXY = [];
-                initPositionXY();
+
+                if(this.grid.position == "random") {
+                    initRandomXY();
+                } else {
+                    initDefaultXY();
+                }
             }
 
             /**
@@ -9329,6 +9386,13 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid();
+        }
+    }
+
+    TopologyTableGrid.setup = function() {
+        return {
+            position: "default", // or random
+            cellSize: 50
         }
     }
     
