@@ -1,5 +1,16 @@
 jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
+    /**
+     * @class chart.axis
+     *
+     * Axis 를 관리하는 클래스
+     *
+     * * x 축
+     * * y 축
+     * * area { x, y, width, height}
+     * * data Axis 에 적용될 데이타
+     *
+     */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
         var _area = {};
@@ -212,14 +223,23 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     Axis.setup = function() {
         return {
+            /** @cfg {chart.grid.core} [x=null]  x축 그리드 */
             x: null,
+            /** @cfg {chart.grid.core} [y=null]  y축 그리드 */
             y: null,
+            /** @cfg {chart.grid.core} [c=null]  커스텀 그리드 */
             c: null,
+            /** @cfg {Array} [data=[]]  Axis 에서 사용할 data  */
             data: [],
+            /** @cfg {Array} [origin=[]]  원본 data  */
             origin: [],
+            /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
             area: {},
+            /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
             buffer: 10000,
+            /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
             shift: 1,
+            /** @cfg {Number} [page=1]  현재 표시될 페이지 */
             page: 1
         }
     }

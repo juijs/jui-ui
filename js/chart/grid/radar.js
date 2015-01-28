@@ -1,5 +1,12 @@
 jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
+	/**
+	 * @class chart.grid.radar
+	 *
+	 * Radar 형태의 그리드
+	 *
+	 * @extends chart.grid.core
+	 */
 	var RadarGrid = function() {
 		var self = this,
 			position = [];
