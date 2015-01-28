@@ -94,7 +94,7 @@ jui.define("chart.theme.pastel", [], function() {
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",

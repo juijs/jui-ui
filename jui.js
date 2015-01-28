@@ -12602,7 +12602,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyActiveEdgeColor : "#905ed1",
         /** @cfg */
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
         /** @cfg */
@@ -12763,7 +12763,7 @@ jui.define("chart.theme.gradient", [], function() {
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
@@ -12895,7 +12895,7 @@ jui.define("chart.theme.dark", [], function() {
         topologyNodeTitleFontColor : "#c5c5c5",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#c5c5c5",
         topologyTooltipBackgroundColor : "#222222",
         topologyTooltipBorderColor : "#ccc",
@@ -13023,7 +13023,7 @@ jui.define("chart.theme.pastel", [], function() {
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
@@ -13220,7 +13220,7 @@ jui.define("chart.theme.pattern", [], function() {
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",

@@ -98,7 +98,7 @@ jui.define("chart.theme.dark", [], function() {
         topologyNodeTitleFontColor : "#c5c5c5",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#c5c5c5",
         topologyTooltipBackgroundColor : "#222222",
         topologyTooltipBorderColor : "#ccc",

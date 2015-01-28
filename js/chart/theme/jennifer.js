@@ -178,7 +178,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         topologyActiveEdgeColor : "#905ed1",
         /** @cfg */
-        topologyEdgeFontSize : "11px",
+        topologyEdgeFontSize : "10px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
         /** @cfg */
