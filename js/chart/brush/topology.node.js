@@ -118,20 +118,22 @@ jui.define("chart.brush.topology.node",
         }
 
         function getTooltipTitle(key) {
-            var title = [],
+            var names = [],
                 keys = key.split(":");
 
             self.eachData(function(i, data) {
+                var title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "";
+
                 if(data.key == keys[0]) {
-                   title[0] = data.name;
+                    names[0] = title || data.key;
                 }
 
                 if(data.key == keys[1]) {
-                    title[1] = data.name;
+                    names[1] = title || data.key;
                 }
             });
 
-            if(title.length > 0) return title;
+            if(names.length > 0) return names;
             return key;
         }
 
@@ -143,7 +145,8 @@ jui.define("chart.brush.topology.node",
             }, function() {
                 var color =_.typeCheck("function", brush.nodeColor) ?
                         brush.nodeColor(data) : (brush.nodeColor || self.color(0));
-                var text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
+                var title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "",
+                    text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
 
                 if(_.typeCheck("function", brush.nodeImage)) {
                     chart.svg.image({
@@ -173,15 +176,17 @@ jui.define("chart.brush.topology.node",
                     }, text);
                 }
 
-                chart.text({
-                    x: 0,
-                    y: r + 13,
-                    fill: chart.theme("topologyNodeTitleFontColor"),
-                    "font-size": chart.theme("topologyNodeTitleFontSize"),
-                    "font-weight": "bold",
-                    "text-anchor": "middle",
-                    cursor: "pointer"
-                }, data.name);
+                if(title && title != "") {
+                    chart.text({
+                        x: 0,
+                        y: r + 13,
+                        fill: chart.theme("topologyNodeTitleFontColor"),
+                        "font-size": chart.theme("topologyNodeTitleFontSize"),
+                        "font-weight": "bold",
+                        "text-anchor": "middle",
+                        cursor: "pointer"
+                    }, title);
+                }
             }).translate(xy.x, xy.y);
 
             node.on("click", function(e) {
@@ -334,9 +339,10 @@ jui.define("chart.brush.topology.node",
                 contents.textContent = brush.tooltipText(edge_data, align);
 
                 // 엘리먼트 위치 설정
-                var size = text.size(),
-                    w = size.width + padding * 2,
-                    h = size.height + padding * 2,
+                var scale = chart.scale(),
+                    size = text.size(),
+                    w = (size.width + padding * 2) / scale,
+                    h = (size.height + padding * 2) / scale,
                     x = out_xy.x - (w / 2) + (anchor / 2) + (point / 2);
 
                 text.attr({ x: w / 2 });
@@ -425,15 +431,14 @@ jui.define("chart.brush.topology.node",
             clip: false,
 
             // topology options
+            nodeTitle: null,
+            nodeText: null,
             nodeImage: null,
             nodeColor: null,
-            nodeText: null,
             edgeData: [],
             edgeText: null,
             tooltipTitle: null,
-            tooltipText: null,
-            tooltipWidth: 150,
-            tooltipHeight: 40
+            tooltipText: null
         }
     }
 

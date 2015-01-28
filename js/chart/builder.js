@@ -758,10 +758,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {number}
          */
         this.scale = function(scale) {
-            if(scale < 0) return;
+            if(!scale || scale < 0) return _scale;
 
             _scale = scale;
-
             this.svg.root.each(function(i, elem) {
                 elem.scale(_scale);
             });
@@ -777,10 +776,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {{x: number, y: number}}
          */
         this.viewBox = function(x, y) {
-            var area = this.area();
+            var area = this.area(),
+                xy = {
+                    x: _xbox,
+                    y: _ybox
+                };
 
-            if(Math.abs(x) > area.width || !_.typeCheck("number", x)) return;
-            if(Math.abs(y) > area.height || !_.typeCheck("number", y)) return;
+            if(Math.abs(x) > area.width || !_.typeCheck("number", x)) return xy;
+            if(Math.abs(y) > area.height || !_.typeCheck("number", y)) return xy;
 
             _xbox = x;
             _ybox = y;
