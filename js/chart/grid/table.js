@@ -67,9 +67,9 @@ jui.define("chart.grid.table", [  ], function() {
          * @method draw
          *
          *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
+         * @return {Object}
+         * @return {util.scale} return.scale  return scale be used in grid
+         * @return {SVGElement} return.root grid root element
          * @protected
          */
         this.draw = function() {

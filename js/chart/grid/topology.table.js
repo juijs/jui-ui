@@ -3,7 +3,7 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
     /**
      * @class chart.grid.topology.table
      *
-     * implements default panel grid
+     * 토폴로지 배치를 위한 grid
      *
      * @extends chart.grid.core
      */
@@ -141,8 +141,8 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
          *
          *
          * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
+         * @returns {util.scale} return.scale  return scale be used in grid
+         * @returns {SVGElement} return.root grid root element
          * @protected
          */
         this.draw = function() {

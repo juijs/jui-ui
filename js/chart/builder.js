@@ -656,13 +656,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @method theme
          * theme 의 요소에 대한 값 구하기
          *
-         *      @example
+         * ```
          *      // theme 전체 객체 얻어오기
          *      var theme = chart.theme();
          *      // 부분 속성 얻어오기
          *      var fontColor = chart.theme("fontColor");
          *      // 값 비교해서 얻어오기
          *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
+         * ```
          */
         this.theme = function(key, value, value2) {
             if(arguments.length == 0) {
@@ -938,12 +939,19 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
+            /** @cfg {Object} series 각각의 필드에 대한 메타 정보 */
             series: {},
+            /** @cfg {Array} brush 그려질 브러쉬 목록 */
             brush: [],
+            /** @cfg {Array} widget 그려질 위젯 목록 */
             widget: [],
+            /** @cfg {Array} axis 그려질 Axis 목록 */
             axis: [],
+
             bind: null,
+            /** @cfg {Function} [format=null] 빌더에서 공통으로 사용할 format 함수 정의 */
             format: null,
+            /** @cfg {Boolean} [render=true] */
             render: true
         }
     }
@@ -956,19 +964,91 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @event chart_click
-     * Fired when chart is clicked on.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_rclick
-     * Fired when chart is right clicked on.
+     * 실제 이벤트 이름은 chart.click 사용된다.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_rclick
-     * Fired when chart bg is right clicked on.
+     * 실제 이벤트 이름은 bg.rclick 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_rclick
+     * 실제 이벤트 이름은 chart.rclick 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_dblclick
+     * 실제 이벤트 이름은 bg.dblclick 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_dblclick
+     * 실제 이벤트 이름은 chart.dblclick 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_mousemove
+     * 실제 이벤트 이름은 bg.mousemove 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_mousemove
+     * 실제 이벤트 이름은 chart.mousemove 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_mousedown
+     * 실제 이벤트 이름은 bg.mousedown 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_mousedown
+     * 실제 이벤트 이름은 chart.mousedown 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_mouseup
+     * 실제 이벤트 이름은 bg.mouseup 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_mouseup
+     * 실제 이벤트 이름은 chart.mouseup 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_mouseover
+     * 실제 이벤트 이름은 bg.mouseover 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_mouseover
+     * 실제 이벤트 이름은 chart.mouseover 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_mouseout
+     * 실제 이벤트 이름은 bg.mouseout 사용된다.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event chart_mouseout
+     * 실제 이벤트 이름은 chart.mouseout 사용된다.
      * @param {jQueryEvent} e The event object.
      */
 
