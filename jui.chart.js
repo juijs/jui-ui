@@ -9386,7 +9386,7 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
 
                     col_index += col_step;
                 } else {
-                    x = (col_cnt - col_index) * size;
+                    x = (col_cnt - col_index) * size + size;
                     y = getRandomRowIndex(row_cnt) * size;
                 }
 
@@ -9436,14 +9436,14 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
          */
         this.drawBefore = function() {
             area = this.chart.area();
-            size = this.grid.cellSize;
+            size = this.grid.space;
             data_cnt = this.axis.data.length;
 
             // 최초 한번만 데이터 생성
             if(!this.axis.cacheXY) {
                 this.axis.cacheXY = [];
 
-                if(this.grid.position == "random") {
+                if(this.grid.sort == "random") {
                     initRandomXY();
                 } else {
                     initDefaultXY();
@@ -9498,8 +9498,8 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
 
     TopologyTableGrid.setup = function() {
         return {
-            position: "default", // or random
-            cellSize: 50
+            sort: null, // or random
+            space: 50
         }
     }
     
