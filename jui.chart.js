@@ -9377,20 +9377,28 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
                 col_step = Math.floor(col_cnt / data_cnt),
                 col_index = 0;
 
+            var left = -1,
+                right = data_cnt;
+
             for(var i = 0; i < data_cnt; i++) {
-                var x = 0, y = 0;
+                var x = 0, y = 0, index = 0;
 
                 if(i % 2 == 0) {
                     x = col_index * size;
                     y = getRandomRowIndex(row_cnt) * size;
-
                     col_index += col_step;
+
+                    left += 1;
+                    index = left;
                 } else {
                     x = (col_cnt - col_index) * size + size;
                     y = getRandomRowIndex(row_cnt) * size;
+
+                    right -=1;
+                    index = right;
                 }
 
-                self.axis.cacheXY[i] = {
+                self.axis.cacheXY[index] = {
                     x: x + size,
                     y: y + (size / 2)
                 };
