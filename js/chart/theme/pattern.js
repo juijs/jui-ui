@@ -69,7 +69,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         barActiveBackgroundColor : "#06d9b6",
         /** */
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         /** */
         barDisableBackgroundOpacity : 0.4,
         /** */
@@ -113,7 +113,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineDisableBorderOpacity : 0.3,
         /** */
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         /** */
         lineSplitBorderColor : null,
         /** */
@@ -165,6 +165,7 @@ jui.define("chart.theme.pattern", [], function() {
         topologyActiveEdgeColor : "#905ed1",
         topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
+        topologyEdgePointRadius : 3,
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
         topologyTooltipFontSize : "11px",

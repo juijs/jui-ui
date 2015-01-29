@@ -77,7 +77,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         barBorderRadius : 3,
         /** @cfg */        
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         /** @cfg */
         barDisableBackgroundOpacity : 0.4,
         /** @cfg */        
@@ -121,7 +121,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         /** @cfg */
         lineSplitBorderColor : null,
         /** @cfg */
@@ -181,6 +181,8 @@ jui.define("chart.theme.jennifer", [], function() {
         topologyEdgeFontSize : "10px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
+        /** @cfg */
+        topologyEdgePointRadius : 3,
         /** @cfg */
         topologyTooltipBackgroundColor : "white",
         /** @cfg */

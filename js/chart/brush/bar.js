@@ -16,7 +16,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				borderOpacity: this.chart.theme("barBorderOpacity"),
 				borderRadius: this.chart.theme("barBorderRadius"),
 				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
-				circleColor: this.chart.theme("barCircleBorderColor")
+				circleColor: this.chart.theme("barPointBorderColor")
 			}
 		}
 

@@ -5641,6 +5641,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // SVG 메인/서브 렌더링
             this.svg.render(isAll);
 
+            // 커스텀 이벤트 발생
+            this.emit("render", [ _initialize ]);
+
             // 초기화 설정
             _initialize = true;
         }
@@ -5716,7 +5719,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 렌더링 상태 확인
+         * 차트의 자동 렌더링 여부 확인
+         * false일 경우, 수동으로 render 메소드를 호출해줘야 함
          *
          * @returns {boolean}
          */
@@ -5946,7 +5950,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         barBorderRadius : 3,
         /** @cfg */        
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         /** @cfg */
         barDisableBackgroundOpacity : 0.4,
         /** @cfg */        
@@ -5990,7 +5994,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         /** @cfg */
         lineSplitBorderColor : null,
         /** @cfg */
@@ -6050,6 +6054,8 @@ jui.define("chart.theme.jennifer", [], function() {
         topologyEdgeFontSize : "10px",
         /** @cfg */
         topologyEdgeFontColor : "#666",
+        /** @cfg */
+        topologyEdgePointRadius : 3,
         /** @cfg */
         topologyTooltipBackgroundColor : "white",
         /** @cfg */
@@ -6157,7 +6163,7 @@ jui.define("chart.theme.gradient", [], function() {
         barBorderOpacity : 0,
         barBorderRadius : 3,
         barActiveBackgroundColor : "linear(top) #3aedcf,0.9 #06d9b6",
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         barDisableBackgroundOpacity : 0.4,
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
@@ -6179,7 +6185,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
         lineDisableBorderOpacity : 0.3,
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
         pathBackgroundOpacity : 0.5,
@@ -6210,6 +6216,7 @@ jui.define("chart.theme.gradient", [], function() {
         topologyActiveEdgeColor : "#905ed1",
         topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
+        topologyEdgePointRadius : 3,
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
         topologyTooltipFontSize : "11px",
@@ -6289,7 +6296,7 @@ jui.define("chart.theme.dark", [], function() {
         barBorderOpacity : 0,
         barBorderRadius : 3,
         barActiveBackgroundColor : "#fc6d65",
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         barDisableBackgroundOpacity : 0.4,
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
@@ -6311,7 +6318,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
         lineDisableBorderOpacity : 0.3,
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         lineSplitBorderColor : null,
         lineSplitBorderOpacity : 0.5,
         pathBackgroundOpacity : 0.2,
@@ -6342,6 +6349,7 @@ jui.define("chart.theme.dark", [], function() {
         topologyActiveEdgeColor : "#905ed1",
         topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#c5c5c5",
+        topologyEdgePointRadius : 3,
         topologyTooltipBackgroundColor : "#222222",
         topologyTooltipBorderColor : "#ccc",
         topologyTooltipFontSize : "11px",
@@ -6417,7 +6425,7 @@ jui.define("chart.theme.pastel", [], function() {
 		barBorderOpacity : 0,
 		barBorderRadius : 3,
 		barActiveBackgroundColor : "#ffb9ce",
-		barCircleBorderColor : "#ebebeb",
+		barPointBorderColor : "#ebebeb",
 		barDisableBackgroundOpacity : 0.4,
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
@@ -6439,7 +6447,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
 		lineDisableBorderOpacity : 0.3,
-		lineCircleBorderColor : "white",
+		linePointBorderColor : "white",
 		lineSplitBorderColor : null,
 		lineSplitBorderOpacity : 0.5,
 		pathBackgroundOpacity : 0.5,
@@ -6470,6 +6478,7 @@ jui.define("chart.theme.pastel", [], function() {
         topologyActiveEdgeColor : "#905ed1",
         topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
+        topologyEdgePointRadius : 3,
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
         topologyTooltipFontSize : "11px",
@@ -6571,7 +6580,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         barActiveBackgroundColor : "#06d9b6",
         /** */
-        barCircleBorderColor : "white",
+        barPointBorderColor : "white",
         /** */
         barDisableBackgroundOpacity : 0.4,
         /** */
@@ -6615,7 +6624,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineDisableBorderOpacity : 0.3,
         /** */
-        lineCircleBorderColor : "white",
+        linePointBorderColor : "white",
         /** */
         lineSplitBorderColor : null,
         /** */
@@ -6667,6 +6676,7 @@ jui.define("chart.theme.pattern", [], function() {
         topologyActiveEdgeColor : "#905ed1",
         topologyEdgeFontSize : "10px",
         topologyEdgeFontColor : "#666",
+        topologyEdgePointRadius : 3,
         topologyTooltipBackgroundColor : "white",
         topologyTooltipBorderColor : "#ccc",
         topologyTooltipFontSize : "11px",
@@ -9937,6 +9947,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
+
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, true);
+        }
 	}
 
     CoreBrush.setup = function() {
@@ -9978,7 +9992,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				borderOpacity: this.chart.theme("barBorderOpacity"),
 				borderRadius: this.chart.theme("barBorderRadius"),
 				disableOpacity: this.chart.theme("barDisableBackgroundOpacity"),
-				circleColor: this.chart.theme("barCircleBorderColor")
+				circleColor: this.chart.theme("barPointBorderColor")
 			}
 		}
 
@@ -11334,7 +11348,7 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawBefore = function() {
             g = this.chart.svg.group();
-            circleColor = this.chart.theme("lineCircleBorderColor");
+            circleColor = this.chart.theme("linePointBorderColor");
             disableOpacity = this.chart.theme("lineDisableBorderOpacity");
             lineBorderWidth = this.chart.theme("lineBorderWidth");
         }
@@ -13431,8 +13445,7 @@ jui.define("chart.brush.topology.node",
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
-            g, r, tooltip,
-            point = 3, // 엣지 포인트
+            g, tooltip, r, point,
             textY = 14, padding = 7, anchor = 7; // 엣지 툴팁
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
@@ -13718,7 +13731,7 @@ jui.define("chart.brush.topology.node",
                     color = chart.theme("topologyEdgeColor"),
                     activeColor = chart.theme("topologyActiveEdgeColor");
 
-                if(edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key()) {
+                if(edge != null && (edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key())) {
                     if(line != null) {
                         line.attr({ stroke: activeColor, "stroke-width": 2 });
                     }
@@ -13741,6 +13754,7 @@ jui.define("chart.brush.topology.node",
         this.drawBefore = function() {
             g = chart.svg.group();
             r = chart.theme("topologyNodeRadius");
+            point = chart.theme("topologyEdgePointRadius");
 
             tooltip = chart.svg.group({
                 visibility: "hidden"
@@ -13775,6 +13789,22 @@ jui.define("chart.brush.topology.node",
                 g.append(createNodes(i, data));
             });
 
+            // 툴팁 숨기기 이벤트 (차트 배경 클릭시)
+            this.on("chart.mousedown", function(e) {
+                if(chart.svg.root.element == e.target) {
+                    onEdgeActiveHanlder(null, e);
+                    tooltip.attr({ visibility: "hidden" });
+                }
+            });
+
+            // 액티브 엣지 선택 (렌더링 이후에 설정)
+            if(_.typeCheck("string", brush.activeEdge)) {
+                this.on("render", function() {
+                    var edge = edges.get(brush.activeEdge);
+                    onEdgeActiveHanlder(edge);
+                });
+            }
+
             return g;
         }
     }
@@ -13791,7 +13821,8 @@ jui.define("chart.brush.topology.node",
             edgeData: [],
             edgeText: null,
             tooltipTitle: null,
-            tooltipText: null
+            tooltipText: null,
+            activeEdge: null
         }
     }
 

@@ -421,6 +421,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
+
+        this.on = function(type, callback) {
+            return this.chart.on(type, callback, true);
+        }
 	}
 
     CoreBrush.setup = function() {

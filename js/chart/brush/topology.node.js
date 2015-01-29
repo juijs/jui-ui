@@ -78,8 +78,7 @@ jui.define("chart.brush.topology.node",
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
-            g, r, tooltip,
-            point = 3, // 엣지 포인트
+            g, tooltip, r, point,
             textY = 14, padding = 7, anchor = 7; // 엣지 툴팁
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
@@ -365,7 +364,7 @@ jui.define("chart.brush.topology.node",
                     color = chart.theme("topologyEdgeColor"),
                     activeColor = chart.theme("topologyActiveEdgeColor");
 
-                if(edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key()) {
+                if(edge != null && (edge.key() == newEdge.key() || edge.reverseKey() == newEdge.key())) {
                     if(line != null) {
                         line.attr({ stroke: activeColor, "stroke-width": 2 });
                     }
@@ -388,6 +387,7 @@ jui.define("chart.brush.topology.node",
         this.drawBefore = function() {
             g = chart.svg.group();
             r = chart.theme("topologyNodeRadius");
+            point = chart.theme("topologyEdgePointRadius");
 
             tooltip = chart.svg.group({
                 visibility: "hidden"
@@ -422,6 +422,22 @@ jui.define("chart.brush.topology.node",
                 g.append(createNodes(i, data));
             });
 
+            // 툴팁 숨기기 이벤트 (차트 배경 클릭시)
+            this.on("chart.mousedown", function(e) {
+                if(chart.svg.root.element == e.target) {
+                    onEdgeActiveHanlder(null, e);
+                    tooltip.attr({ visibility: "hidden" });
+                }
+            });
+
+            // 액티브 엣지 선택 (렌더링 이후에 설정)
+            if(_.typeCheck("string", brush.activeEdge)) {
+                this.on("render", function() {
+                    var edge = edges.get(brush.activeEdge);
+                    onEdgeActiveHanlder(edge);
+                });
+            }
+
             return g;
         }
     }
@@ -438,7 +454,8 @@ jui.define("chart.brush.topology.node",
             edgeData: [],
             edgeText: null,
             tooltipTitle: null,
-            tooltipText: null
+            tooltipText: null,
+            activeEdge: null
         }
     }
 

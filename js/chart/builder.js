@@ -830,6 +830,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // SVG 메인/서브 렌더링
             this.svg.render(isAll);
 
+            // 커스텀 이벤트 발생
+            this.emit("render", [ _initialize ]);
+
             // 초기화 설정
             _initialize = true;
         }
@@ -905,7 +908,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 렌더링 상태 확인
+         * 차트의 자동 렌더링 여부 확인
+         * false일 경우, 수동으로 render 메소드를 호출해줘야 함
          *
          * @returns {boolean}
          */

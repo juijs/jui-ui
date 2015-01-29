@@ -130,7 +130,7 @@ jui.define("chart.brush.line", [], function() {
 
         this.drawBefore = function() {
             g = this.chart.svg.group();
-            circleColor = this.chart.theme("lineCircleBorderColor");
+            circleColor = this.chart.theme("linePointBorderColor");
             disableOpacity = this.chart.theme("lineDisableBorderOpacity");
             lineBorderWidth = this.chart.theme("lineBorderWidth");
         }
