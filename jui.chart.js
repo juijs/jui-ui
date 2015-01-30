@@ -13797,9 +13797,11 @@ jui.define("chart.brush.topology.node",
 
             // 액티브 엣지 선택 (렌더링 이후에 설정)
             if(_.typeCheck("string", brush.activeEdge)) {
-                this.on("render", function() {
-                    var edge = edges.get(brush.activeEdge);
-                    onEdgeActiveHanlder(edge);
+                this.on("render", function(init) {
+                    if(!init) {
+                        var edge = edges.get(brush.activeEdge);
+                        onEdgeActiveHanlder(edge);
+                    }
                 });
             }
 
