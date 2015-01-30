@@ -5287,9 +5287,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
             }
 
-            // UI 바인딩 설정
+            // UI 바인딩 설정 (차후에 변경, 현재는 첫번째 엑시스로 고정)
             if(_.typeCheck("object", _options.bind)) {
-                self.bindUI(_options.bind);
+                self.bindUI(0, _options.bind);
             }
 
             // Draw 옵션 설정
@@ -5331,7 +5331,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @method get  
          * get option's property of chart builder 
          *
-         * @param {String} type "axis", "brush", "widget"
+         * @param {String} type "axis", "brush", "widget", "series", "padding", "area"
          * @param {String} key  property name
          */
         this.get = function(type, key) {
@@ -5339,7 +5339,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 axis: _axis,
                 brush: _brush,
                 widget: _widget,
-                series: _series
+                series: _series,
+                padding: _padding,
+                area: _area
             };
 
             if(obj[type][key]) {
@@ -5350,7 +5352,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 영역요소 반환
+         * 차트의 엑시스 객체를 반환
+         *
+         * @param key
+         * @returns {Array}
+         */
+        this.axis = function(key) {
+            return _.typeCheck("undefined", _axis[key]) ? _axis : _axis[key];
+        }
+
+        /**
+         * 차트의 영역 요소 반환
          *
          * @param key (width | height | x | y | x2 | y2)
          * @returns {*}
@@ -5360,16 +5372,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 여백요소 반환
+         * 차트의 여백 요소 반환
          * @param key (top | left | bottom | right)
          * @returns {*}
          */
         this.padding = function(key) {
-            if(_padding[key]) {
-                return _padding[key];
-            }
-
-            return _padding;
+            return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
         }
 
         /**
@@ -5519,7 +5527,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          *
          * @param {object} bind   uix.table, uix.xtable 객체 사용
          */
-        this.bindUI = function(uiObj) {
+        this.bindUI = function(axisIndex, uiObj) {
             var self = this;
 
             if(uiObj.module.type == "uix.table") {
@@ -5529,22 +5537,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 uiObj.callAfter("insert", updateTable);
                 uiObj.callAfter("remove", updateTable);
             } else if(uiObj.module.type == "uix.xtable") {
-                uiObj.callAfter("update", updateXTable);
-                uiObj.callAfter("sort", updateXTable);
+                uiObj.callAfter("update", updateTable);
+                uiObj.callAfter("sort", updateTable);
             }
 
             function updateTable() {
-                var data = [];
-
-                for (var i = 0; i < uiObj.count(); i++) {
-                    data.push(uiObj.get(i).data);
-                }
-
-                self.update(data);
-            }
-
-            function updateXTable() {
-                self.update(uiObj.listData());
+                self.axis(axisIndex).update(uiObj.listData());
             }
         }
 
