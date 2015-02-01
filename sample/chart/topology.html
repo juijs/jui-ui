@@ -2,11 +2,10 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="charset=utf-8;"/>
-    <link rel="stylesheet" href="../../jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
 </head>
-<body class="jui">
+<body>
 
 <div id="chart"></div>
 
@@ -75,6 +74,7 @@
 
     jui.ready([ "chart.builder", "util.base" ], function(builder, _) {
         c = builder("#chart", {
+            iconPath: "../../img/icon-list",
             theme: "jennifer",
             padding: 5,
             axis: {

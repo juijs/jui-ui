@@ -4809,8 +4809,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
     return Axis;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis", "util.svg.element" ],
-    function($, _, SVGUtil, ColorUtil, Axis, SVGElement) {
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
+    function($, _, SVGUtil, ColorUtil, Axis) {
 
     /**
      * Common Logic
@@ -4838,6 +4838,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         win_width = $(window).width();
     }, 300);
+
 
     /**
      * @class chart.builder
@@ -5306,6 +5307,32 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
+        function setChartIcons() {
+            var path = _options.iconPath;
+            if($(".jui").size() > 0 || path == null) return;
+
+            var iconList = [
+                "url(" + path + ".eot) format('embedded-opentype')",
+                "url(" + path + ".woff) format('woff')",
+                "url(" + path + ".ttf) format('truetype')",
+                "url(" + path + ".svg) format('svg')"
+            ],
+            fontFace = "font-family: icojui; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+
+            (function(rule) {
+                var sheet = (function() {
+                    var style = document.createElement("style");
+
+                    style.appendChild(document.createTextNode(""));
+                    document.head.appendChild(style);
+
+                    return style.sheet;
+                })();
+
+                sheet.insertRule(rule, 0);
+            })("@font-face {" + fontFace + "}");
+        }
+
         this.init = function() {
             // 기본 옵션 설정
             setDefaultOptions(this);
@@ -5325,6 +5352,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 차트 이벤트 설정
             setChartEvent(this);
+
+            // 아이콘 폰트 설정
+            setChartIcons();
         }
 
         /**
@@ -5765,7 +5795,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             /** @cfg {Function} [format=null] 빌더에서 공통으로 사용할 format 함수 정의 */
             format: null,
             /** @cfg {Boolean} [render=true] */
-            render: true
+            render: true,
+
+            /** @cfg {String} */
+            iconPath: null
         }
     }
 
@@ -5865,7 +5898,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      * @param {jQueryEvent} e The event object.
      */
 
-        
     return UI;
 });
 
