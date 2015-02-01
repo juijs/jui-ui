@@ -16,7 +16,9 @@ jui.define("chart.brush.column", [], function() {
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
+
 			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            col_width = (col_width < 0) ? 0 : col_width;
 		}
 
 		this.draw = function() {

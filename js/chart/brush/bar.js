@@ -69,7 +69,9 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
+
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            bar_height = (bar_height < 0) ? 0 : bar_height;
 		}
 
 		this.drawETC = function(group) {

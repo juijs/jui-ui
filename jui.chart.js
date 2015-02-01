@@ -10075,7 +10075,9 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
+
 			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            bar_height = (bar_height < 0) ? 0 : bar_height;
 		}
 
 		this.drawETC = function(group) {
@@ -10247,7 +10249,9 @@ jui.define("chart.brush.column", [], function() {
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
+
 			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            col_width = (col_width < 0) ? 0 : col_width;
 		}
 
 		this.draw = function() {
