@@ -154,8 +154,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "top", // or bottom, left, right
+            /** @cfg {Boolean} [all=false] */
             all: false,
+            /** @cfg {Function} [format=false] */
             format: null
         };
     }

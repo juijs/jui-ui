@@ -143,7 +143,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
     Draw.setup = function() {
         return {
+            /** @cfg {String} [type=null] */
             type: null,
+            /** @cfg {Boolean} [animate=false] */
             animate: false
         }
     }

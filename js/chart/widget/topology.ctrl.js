@@ -1,5 +1,12 @@
 jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.widget.topology.ctrl 
+     * 
+     * 토폴로지 이벤트 핸들러
+     * 
+     * @extends chart.widget.core 
+     */
     var TopologyControlWidget = function(chart, axis, widget) {
         var targetKey, startX, startY;
         var renderWait = false;
@@ -132,7 +139,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
 
     TopologyControlWidget.setup = function() {
         return {
+            /** @cfg {Boolean} [move=false] */
             move: false,
+            /** @cfg {Boolean} [zoom=false] */
             zoom: false
         }
     }

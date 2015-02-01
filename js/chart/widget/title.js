@@ -61,11 +61,17 @@ jui.define("chart.widget.title", [], function() {
 
     TitleWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "top", // or bottom
+            /** @cfg {"start"/"center"/"end" } */
             align: "center", // or start, end
+            /** @cfg {String} text 표시될 타이틀 */
             text: "",
+            /** @cfg {Number} [dx=0] x 축과의 거리  */
             dx: 0,
+            /** @cfg {Number} [dy=0] y 축과의 거리  */
             dy: 0,
+            /** @cfg {Number} [size=null] */
             size: null
         }
     }

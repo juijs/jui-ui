@@ -865,32 +865,71 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _initialize = true;
         }
 
-        /**
+        /*
          * Brush & Widget 관련 메소드
          *
          */
 
+        /**
+         * @method addBrush 
+         * 
+         * 동적으로 브러쉬를 추가한다. 
+         *  
+         * @param {Object} brush
+         */
         this.addBrush = function(brush) {
             _options.brush.push(brush);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method removeBrush 
+         * 
+         * 특정 브러쉬를 삭제한다. 
+         * @param {Number} index
+         */
         this.removeBrush = function(index) {
             _options.brush.splice(index, 1);
             if(this.isRender()) this.render();
         }
+        /**
+         * @method updateBrush 
+         * 특정 브러쉬를 업데이트 한다.  
+         * @param {Number} index
+         * @param {Object} brush
+         */
         this.updateBrush = function(index, brush) {
             _.extend(_options.brush[index], brush);
             if(this.isRender()) this.render();
         }
 
+        /**
+         * @method addWidget 
+         * 동적으로 위젯을 추가한다. 
+         * 
+         * @param {Object} widget
+         */
         this.addWidget = function(widget) {
             _options.widget.push(widget);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method removeWidget 
+         * 특정 위젯을 삭제한다.  
+         * @param {Number} index
+         */
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method updateWidget
+         * 특정 위젯을 업데이트한다.
+         * @param {Number} index
+         * @param {Object} widget
+         */
         this.updateWidget = function(index, widget) {
             _.extend(_options.widget[index], widget);
             if(this.isRender()) this.render();

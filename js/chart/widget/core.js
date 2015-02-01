@@ -23,10 +23,19 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return list;
         }
 
+        /**
+         * @method drawAfter  
+         * @param {Object} obj
+         */
         this.drawAfter = function(obj) {
             obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 
+        /**
+         * @method eachBrush 
+         * traverse each brush 
+         * @param {Function} callback
+         */
         this.eachBrush = function(callback) {
             if(!_.typeCheck("function", callback)) return;
             var list = getIndexArray(this.widget.brush);
@@ -36,6 +45,13 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method listBrush 
+         * 
+         * 연결된 브러쉬 객체 목록을 가지고 온다. 
+         *  
+         * @returns {Array}
+         */
         this.listBrush = function() {
             var list = getIndexArray(this.widget.brush),
                 result = [];
@@ -47,10 +63,24 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return result;
         }
 
+        /**
+         * @method getBrush 
+         * 연결된 브러쉬를 가지고 온다. 
+         *  
+         * @param {Number} index 
+         * @returns {*}
+         */
         this.getBrush = function(index) {
             return this.listBrush()[index];
         }
 
+        /**
+         * @method existBrush 
+         * 연결된 브러쉬가 존재하는지 체크한다.
+         *
+         * @param {Number} index
+         * @returns {Boolean}
+         */
         this.existBrush = function(index) {
             var list = getIndexArray(this.widget.brush);
 

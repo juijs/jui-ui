@@ -182,9 +182,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     LegendWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "bottom",
+            /** @cfg {"start"/"center"/"end" } */
             align: "center", // or start, end
+            /** @cfg {Boolean} [filter=false] */
             filter: false,
+            /** @cfg {Boolean} [brushSync=false] */
             brushSync: false
         };
     }

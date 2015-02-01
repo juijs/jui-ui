@@ -131,7 +131,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             // Grid 및 Area 설정
             self.reload(cloneAxis);
         }
-        
+
+        /**
+         * @method reload
+         * 
+         * Axis 의 x,y,z 축을 다시 생성한다. 
+         * * * 
+         * @param {Object} options
+         */
         this.reload = function(options) {
             _.extend(this, {
                 x : options.x,
@@ -147,16 +154,39 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
         }
-        
+
+        /**
+         * @method area
+         *
+         * Axis 의 표시 영역을 리턴한다. 
+         *  
+         * @param {"x"/"y"/"width"/'height"/null} key  area's key
+         * @return {Number/Object} key 가 있으면 해당 key 의 value 를 리턴한다. 없으면 전체 area 객체를 리턴한다.
+         */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
+        /**
+         * @method updateGrid 
+         * 
+         * grid 정보를 업데이트 한다.  
+         *  
+         * @param {"x"/"y"/"c"} type
+         * @param {Object} grid
+         */
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method update 
+         * 
+         * data 를 업데이트 한다.
+         *  
+         * @param {Array} data
+         */
         this.update = function(data) {
             this.origin = data;
             this.page = 1;
@@ -166,6 +196,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             this.screen(1);
         }
 
+        /**
+         * @method screen 
+         * 
+         * 화면상에 보여줄 데이타를 페이징한다.  
+         *  
+         * @param {Number} pNo 페이지 번호 
+         */
         this.screen = function(pNo) {
             page(pNo);
 
@@ -174,6 +211,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method next 
+         * 
+         */
         this.next = function() {
             var dataList = this.origin,
                 limit = this.buffer,
@@ -191,6 +232,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method prev  
+         */
         this.prev = function() {
             var dataList = this.origin,
                 limit = this.buffer,
@@ -207,6 +251,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method zoom 
+         * 
+         * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
+         *  *  
+         * @param {Number} start
+         * @param {Number} end
+         */
         this.zoom = function(start, end) {
             if(start == end) return;
 

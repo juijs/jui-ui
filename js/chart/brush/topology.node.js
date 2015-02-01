@@ -1,4 +1,10 @@
 jui.define("chart.brush.topology.edge", [], function() {
+    /**
+     * @class chart.brush.topology.edge 
+     * 
+     * 토폴로지 Edge 표현 객체  
+     * 
+     */
     var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
 
@@ -38,6 +44,10 @@ jui.define("chart.brush.topology.edge", [], function() {
 });
 
 jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
+    /**
+     * @class chart.brush.topology.edgemananger 
+     * 토폴로지 Edge 관리자
+     */
     var TopologyEdgeManager = function() {
         var list = [],
             cache = {};
@@ -75,6 +85,11 @@ jui.define("chart.brush.topology.node",
     [ "util.base", "util.math", "chart.brush.topology.edge", "chart.brush.topology.edgemanager" ],
     function(_, math, Edge, EdgeManager) {
 
+    /**
+     * @class chart.brush.topology.node
+     * 토폴로지를 표시할 Node 객체  
+     * @extends chart.brush.core 
+     */
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
@@ -446,6 +461,7 @@ jui.define("chart.brush.topology.node",
 
     TopologyNode.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] 클립 여부*/
             clip: false,
 
             // topology options
