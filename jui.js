@@ -2049,6 +2049,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
+        
+        this.find = function(selector) {
+            return this.$root.find(selector);
+        }
 
         /**
          * @method destroy
@@ -2084,6 +2088,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
+                mainObj.init.prototype.$root = $(this);
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
@@ -6795,12 +6800,13 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
         function setTitleEvent(self) {
             $title.each(function(i) {
                 self.addEvent(this, "click", function(e) {
-                    if($(this).hasClass("active")) {
+                    if($(this).hasClass("active") && self.options.autoFold) {
                         $(this).removeClass("active");
                         $content.hide();
+                        self.emit("fold", [ i, e ] );
                     } else {
                         showTitle(i);
-                        self.emit("change", [ i, e ]);
+                        self.emit("open", [ i, e ]);
                     }
                 });
             });
@@ -6828,7 +6834,8 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
-            index: null
+            index: null,
+            autoFold: false
         }
     }
 
