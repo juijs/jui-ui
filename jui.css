@@ -1021,7 +1021,7 @@
 .jui .dropdown > .anchor,
 .jui .combo > .anchor {
   left: 30px !important;
-  top: -8px !important;
+  top: -9px !important;
   z-index: 1001 !important;
 }
 .jui .dropup > .anchor-right,
@@ -7322,6 +7322,274 @@
   text-align: right;
   border-right: 1px solid #8c4fdf;
   border-left-width: 0;
+}
+.jui .accordion {
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  font-size: 12px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  color: #333;
+  border-style: solid;
+  border-color: #d1d1d1;
+  -webkit-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+}
+.jui .accordion > * {
+  width: auto;
+}
+.jui .accordion > .title {
+  font-weight: bold;
+  cursor: pointer;
+}
+.jui .accordion > *:first-child {
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+}
+.jui .accordion > *:last-child {
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.jui .accordion.accordion-white {
+  color: #333;
+  border-style: solid;
+  border-color: #d1d1d1;
+  -webkit-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+}
+.jui .accordion.accordion-white > *:not(:last-child) {
+  border-bottom: 1px solid #d1d1d1;
+}
+.jui .accordion.accordion-white > .title {
+  background-color: #fefefe;
+  background-image: -moz-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -o-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -ms-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+}
+.jui .accordion.accordion-white > .title:hover {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -o-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+}
+.jui .accordion.accordion-white > .title.active {
+  background-color: #fff;
+  background-image: none;
+  cursor: default;
+}
+.jui .accordion.accordion-white > .content {
+  -webkit-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+}
+.jui .accordion > *:not(:last-child) {
+  border-bottom: 1px solid #d1d1d1;
+}
+.jui .accordion > .title {
+  background-color: #fefefe;
+  background-image: -moz-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -o-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -ms-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+}
+.jui .accordion > .title:hover {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -o-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+}
+.jui .accordion > .title.active {
+  background-color: #fff;
+  background-image: none;
+  cursor: default;
+}
+.jui .accordion > .content {
+  -webkit-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+}
+.jui .accordion > * {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.jui .accordion > .title {
+  height: 34px;
+  line-height: 34px;
+}
+.jui .accordion > .title > [class^="icon-"] {
+  float: right;
+  font-size: 18px;
+  margin-top: 7px;
+}
+.jui .accordion > .content {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.jui .accordion-classic {
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  color: #333;
+  border-style: solid;
+  border-color: #d1d1d1;
+  -webkit-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+}
+.jui .accordion-classic > *:first-child {
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+}
+.jui .accordion-classic > *:last-child {
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.jui .accordion-classic.accordion-white {
+  color: #333;
+  border-style: solid;
+  border-color: #d1d1d1;
+  -webkit-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0px 5px rgba(0,0,0,0.1);
+}
+.jui .accordion-classic.accordion-white > *:not(:last-child) {
+  border-bottom: 1px solid #d1d1d1;
+}
+.jui .accordion-classic.accordion-white > .title {
+  background-color: #fefefe;
+  background-image: -moz-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -o-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -ms-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+}
+.jui .accordion-classic.accordion-white > .title:hover {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -o-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+}
+.jui .accordion-classic.accordion-white > .title.active {
+  background-color: #fff;
+  background-image: none;
+  cursor: default;
+}
+.jui .accordion-classic.accordion-white > .content {
+  -webkit-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+}
+.jui .accordion-classic > *:not(:last-child) {
+  border-bottom: 1px solid #d1d1d1;
+}
+.jui .accordion-classic > .title {
+  background-color: #fefefe;
+  background-image: -moz-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -o-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  background-image: -ms-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+}
+.jui .accordion-classic > .title:hover {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -o-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #e9e9e9 100%);
+}
+.jui .accordion-classic > .title.active {
+  background-color: #fff;
+  background-image: none;
+  cursor: default;
+}
+.jui .accordion-classic > .content {
+  -webkit-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
+}
+.jui .accordion-simple {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.jui .accordion-simple > .title {
+  background-color: #fafafa;
+  background-image: none;
+}
+.jui .accordion-simple > .title:hover:not(.active) {
+  background-color: #f5f5f5;
+  background-image: none;
+}
+.jui .accordion-simple.accordion-white {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.jui .accordion-normal > * {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.jui .accordion-normal > .title {
+  height: 34px;
+  line-height: 34px;
+}
+.jui .accordion-normal > .title > [class^="icon-"] {
+  float: right;
+  font-size: 18px;
+  margin-top: 7px;
+}
+.jui .accordion-normal > .content {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.jui .accordion-large > .title {
+  height: 46px;
+  line-height: 46px;
+}
+.jui .accordion-large > .title > [class^="icon-"] {
+  margin-top: 12px;
 }
 .jui label,
 .jui input,

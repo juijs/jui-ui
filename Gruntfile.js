@@ -1,5 +1,6 @@
-var css = require('css');
-var fs = require('fs');
+var css = require("css"),
+    fs = require("fs");
+
 module.exports = function(grunt) {
     var base_src = [
         // core
@@ -24,6 +25,7 @@ module.exports = function(grunt) {
         "js/ui/paging.js",
         "js/ui/tooltip.js",
         "js/ui/layout.js",
+        "js/ui/accordion.js",
 
         "js/uix/autocomplete.js",
         "js/uix/tab.js",
@@ -194,6 +196,7 @@ module.exports = function(grunt) {
 
     require("load-grunt-tasks")(grunt);
 
+    // 커스텀 빌드 모듈
     grunt.registerTask("icon", "SVG Icon Build", function() {
         var content = fs.readFileSync(grunt.config("icon.css"), { encoding : "utf8" }),
             obj = css.parse(content),

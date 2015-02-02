@@ -6766,6 +6766,74 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 	
 });
 
+jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
+
+    /**
+     * @class ui.accordion
+     * @extends core
+     * @alias Accordion
+     * @requires jquery
+     *
+     */
+    var UI = function() {
+        var activeIndex = 0;
+
+        var $title = null,
+            $content = null;
+
+        function showTitle(index) {
+            $title.each(function(i) {
+                if(index == i) {
+                    $(this).addClass("active");
+                    $content.insertAfter(this).show();
+                } else {
+                    $(this).removeClass("active");
+                }
+            });
+        }
+
+        function setTitleEvent(self) {
+            $title.each(function(i) {
+                self.addEvent(this, "click", function(e) {
+                    if($(this).hasClass("active")) {
+                        $(this).removeClass("active");
+                        $content.hide();
+                    } else {
+                        showTitle(i);
+                        self.emit("change", [ i, e ]);
+                    }
+                });
+            });
+        }
+
+        this.init = function() {
+            var opts = this.options;
+
+            $title = $(this.root).find(".title");
+            $content = $(this.root).find(".content");
+
+            if(_.typeCheck("integer", opts.index)) {
+                showTitle(opts.index);
+            } else {
+                $content.hide();
+            }
+
+            setTitleEvent(this);
+        }
+
+        this.activeIndex = function() {
+            return activeIndex;
+        }
+    }
+
+    UI.setup = function() {
+        return {
+            index: null
+        }
+    }
+
+    return UI;
+});
 jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
@@ -11207,7 +11275,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
     Draw.setup = function() {
         return {
+            /** @cfg {String} [type=null] */
             type: null,
+            /** @cfg {Boolean} [animate=false] */
             animate: false
         }
     }
@@ -11348,7 +11418,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             // Grid 및 Area 설정
             self.reload(cloneAxis);
         }
-        
+
+        /**
+         * @method reload
+         * 
+         * Axis 의 x,y,z 축을 다시 생성한다. 
+         * * * 
+         * @param {Object} options
+         */
         this.reload = function(options) {
             _.extend(this, {
                 x : options.x,
@@ -11364,16 +11441,39 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
         }
-        
+
+        /**
+         * @method area
+         *
+         * Axis 의 표시 영역을 리턴한다. 
+         *  
+         * @param {"x"/"y"/"width"/'height"/null} key  area's key
+         * @return {Number/Object} key 가 있으면 해당 key 의 value 를 리턴한다. 없으면 전체 area 객체를 리턴한다.
+         */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
+        /**
+         * @method updateGrid 
+         * 
+         * grid 정보를 업데이트 한다.  
+         *  
+         * @param {"x"/"y"/"c"} type
+         * @param {Object} grid
+         */
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method update 
+         * 
+         * data 를 업데이트 한다.
+         *  
+         * @param {Array} data
+         */
         this.update = function(data) {
             this.origin = data;
             this.page = 1;
@@ -11383,6 +11483,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             this.screen(1);
         }
 
+        /**
+         * @method screen 
+         * 
+         * 화면상에 보여줄 데이타를 페이징한다.  
+         *  
+         * @param {Number} pNo 페이지 번호 
+         */
         this.screen = function(pNo) {
             page(pNo);
 
@@ -11391,6 +11498,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method next 
+         * 
+         */
         this.next = function() {
             var dataList = this.origin,
                 limit = this.buffer,
@@ -11408,6 +11519,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method prev  
+         */
         this.prev = function() {
             var dataList = this.origin,
                 limit = this.buffer,
@@ -11424,6 +11538,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        /**
+         * @method zoom 
+         * 
+         * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
+         *  *  
+         * @param {Number} start
+         * @param {Number} end
+         */
         this.zoom = function(start, end) {
             if(start == end) return;
 
@@ -12331,32 +12453,71 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _initialize = true;
         }
 
-        /**
+        /*
          * Brush & Widget 관련 메소드
          *
          */
 
+        /**
+         * @method addBrush 
+         * 
+         * 동적으로 브러쉬를 추가한다. 
+         *  
+         * @param {Object} brush
+         */
         this.addBrush = function(brush) {
             _options.brush.push(brush);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method removeBrush 
+         * 
+         * 특정 브러쉬를 삭제한다. 
+         * @param {Number} index
+         */
         this.removeBrush = function(index) {
             _options.brush.splice(index, 1);
             if(this.isRender()) this.render();
         }
+        /**
+         * @method updateBrush 
+         * 특정 브러쉬를 업데이트 한다.  
+         * @param {Number} index
+         * @param {Object} brush
+         */
         this.updateBrush = function(index, brush) {
             _.extend(_options.brush[index], brush);
             if(this.isRender()) this.render();
         }
 
+        /**
+         * @method addWidget 
+         * 동적으로 위젯을 추가한다. 
+         * 
+         * @param {Object} widget
+         */
         this.addWidget = function(widget) {
             _options.widget.push(widget);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method removeWidget 
+         * 특정 위젯을 삭제한다.  
+         * @param {Number} index
+         */
         this.removeWidget = function(index) {
             _options.widget.splice(index, 1);
             if(this.isRender()) this.render();
         }
+
+        /**
+         * @method updateWidget
+         * 특정 위젯을 업데이트한다.
+         * @param {Number} index
+         * @param {Object} widget
+         */
         this.updateWidget = function(index, widget) {
             _.extend(_options.widget[index], widget);
             if(this.isRender()) this.render();
@@ -20055,6 +20216,12 @@ jui.define("chart.brush.rangebar", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.topology.edge", [], function() {
+    /**
+     * @class chart.brush.topology.edge 
+     * 
+     * 토폴로지 Edge 표현 객체  
+     * 
+     */
     var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
 
@@ -20094,6 +20261,10 @@ jui.define("chart.brush.topology.edge", [], function() {
 });
 
 jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
+    /**
+     * @class chart.brush.topology.edgemananger 
+     * 토폴로지 Edge 관리자
+     */
     var TopologyEdgeManager = function() {
         var list = [],
             cache = {};
@@ -20131,6 +20302,11 @@ jui.define("chart.brush.topology.node",
     [ "util.base", "util.math", "chart.brush.topology.edge", "chart.brush.topology.edgemanager" ],
     function(_, math, Edge, EdgeManager) {
 
+    /**
+     * @class chart.brush.topology.node
+     * 토폴로지를 표시할 Node 객체  
+     * @extends chart.brush.core 
+     */
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
             edges = new EdgeManager(),
@@ -20502,6 +20678,7 @@ jui.define("chart.brush.topology.node",
 
     TopologyNode.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] 클립 여부*/
             clip: false,
 
             // topology options
@@ -20695,10 +20872,19 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return list;
         }
 
+        /**
+         * @method drawAfter  
+         * @param {Object} obj
+         */
         this.drawAfter = function(obj) {
             obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 
+        /**
+         * @method eachBrush 
+         * traverse each brush 
+         * @param {Function} callback
+         */
         this.eachBrush = function(callback) {
             if(!_.typeCheck("function", callback)) return;
             var list = getIndexArray(this.widget.brush);
@@ -20708,6 +20894,13 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method listBrush 
+         * 
+         * 연결된 브러쉬 객체 목록을 가지고 온다. 
+         *  
+         * @returns {Array}
+         */
         this.listBrush = function() {
             var list = getIndexArray(this.widget.brush),
                 result = [];
@@ -20719,10 +20912,24 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return result;
         }
 
+        /**
+         * @method getBrush 
+         * 연결된 브러쉬를 가지고 온다. 
+         *  
+         * @param {Number} index 
+         * @returns {*}
+         */
         this.getBrush = function(index) {
             return this.listBrush()[index];
         }
 
+        /**
+         * @method existBrush 
+         * 연결된 브러쉬가 존재하는지 체크한다.
+         *
+         * @param {Number} index
+         * @returns {Boolean}
+         */
         this.existBrush = function(index) {
             var list = getIndexArray(this.widget.brush);
 
@@ -20913,8 +21120,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "top", // or bottom, left, right
+            /** @cfg {Boolean} [all=false] */
             all: false,
+            /** @cfg {Function} [format=false] */
             format: null
         };
     }
@@ -20984,11 +21194,17 @@ jui.define("chart.widget.title", [], function() {
 
     TitleWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "top", // or bottom
+            /** @cfg {"start"/"center"/"end" } */
             align: "center", // or start, end
+            /** @cfg {String} text 표시될 타이틀 */
             text: "",
+            /** @cfg {Number} [dx=0] x 축과의 거리  */
             dx: 0,
+            /** @cfg {Number} [dy=0] y 축과의 거리  */
             dy: 0,
+            /** @cfg {Number} [size=null] */
             size: null
         }
     }
@@ -21179,9 +21395,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     LegendWidget.setup = function() {
         return {
+            /** @cfg {"bottom"/"top"/"left"/"right" } */
             orient: "bottom",
+            /** @cfg {"start"/"center"/"end" } */
             align: "center", // or start, end
+            /** @cfg {Boolean} [filter=false] */
             filter: false,
+            /** @cfg {Boolean} [brushSync=false] */
             brushSync: false
         };
     }
@@ -21600,6 +21820,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 }, "chart.widget.core");
 jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
 
+    /**
+     * @class chart.widget.topology.ctrl 
+     * 
+     * 토폴로지 이벤트 핸들러
+     * 
+     * @extends chart.widget.core 
+     */
     var TopologyControlWidget = function(chart, axis, widget) {
         var targetKey, startX, startY;
         var renderWait = false;
@@ -21732,7 +21959,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
 
     TopologyControlWidget.setup = function() {
         return {
+            /** @cfg {Boolean} [move=false] */
             move: false,
+            /** @cfg {Boolean} [zoom=false] */
             zoom: false
         }
     }
