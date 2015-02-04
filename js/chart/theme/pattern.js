@@ -83,6 +83,12 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         pieBorderWidth : 1,
         /** */
+        pieOuterFontSize : "11px",
+        /** */
+        pieOuterLineColor : "#a9a9a9",
+        /** */
+        pieOuterLineSize : 8,
+        /** */
         donutBorderColor : "white",
         /** */
         donutBorderWidth : 1,

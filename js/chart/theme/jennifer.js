@@ -87,9 +87,15 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */        
         gaugeFontColor : "#666666",
         /** @cfg */        
-    	pieBorderColor : "white",
+    	pieBorderColor : null,
         /** @cfg */        
         pieBorderWidth : 1,
+        /** @cfg */
+        pieOuterFontSize : "11px",
+        /** @cfg */
+        pieOuterLineColor : "#a9a9a9",
+        /** @cfg */
+        pieOuterLineSize : 8,
         /** @cfg */
         donutBorderColor : "white",
         /** @cfg */
