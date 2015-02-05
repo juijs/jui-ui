@@ -9,6 +9,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 		var g;
 		var zeroX, height, half_height, bar_height;
 
+        /**
+         * bar style 을 얻어온다. 
+         *  
+         * @return {Object} bar 에 관련된 스타일을 리턴한다. 
+         * @return {String} return.borderColor  
+         * @return {Number} return.borderWidth  
+         * @return {Number} return.borderOpacity  
+         * @return {Number} return.borderRadius  
+         * @return {Number} return.disableOpacity  
+         * @return {String} return.circleColor  
+         */
 		this.getBarStyle = function() {
 			return {
 				borderColor: this.chart.theme("barBorderColor"),
@@ -20,6 +31,18 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
+        /**
+         * @method getBarElement 
+         *  
+         * 특정 위치에 맞는 bar element 를 생성한다. 
+         *  
+         * @param {Number} dataIndex
+         * @param {Number} targetIndex
+         * @param {Object} info
+         * @param {Number} info.width bar 넓이
+         * @param {Number} info.height bar 높이
+         * @return {util.svg.element}
+         */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
 				color = this.color(targetIndex),
@@ -50,6 +73,13 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			return r;
 		}
 
+        /**
+         * @method setActiveEffect 
+         * 
+         * 활성화(active)된 영역 표시   
+         *  
+         * @param {Number} r
+         */
 		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
 				cols = this.barList;
@@ -64,6 +94,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
+        /**
+         * @method drawBefore 
+         * 
+         * @protected 
+         */
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			zeroX = axis.x(0);
@@ -74,6 +109,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
             bar_height = (bar_height < 0) ? 0 : bar_height;
 		}
 
+        /**
+         * @method drawETC
+         * 
+         * @param {util.svg.element} group
+         */
 		this.drawETC = function(group) {
 			if(!_.typeCheck("array", this.barList)) return;
 
@@ -207,11 +247,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [minValue=0] */
+            /** @cfg {Number} [minValue=0] 표시 최소 값, minValue 보다 작으면 minValue 를 기준으로 그린다. */
 			minValue: 0,
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] 바깥쪽 여백  */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] 안쪽 여백 */
 			innerPadding: 1,
             /** @cfg {Number} [active=null] */
 			active: null,

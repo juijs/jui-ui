@@ -87,10 +87,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
-				value = (data[this.brush.target] || data.value) || 0,
-				max = (data[this.brush.max] || data.max) || 100,
-				min = (data[this.brush.min] || data.min) || 0,
-				unit = (data[this.brush.unit] || data.unit) || "";
+				value = this.field(data, 'value', 0),
+				max = this.field(data, 'max', 100),
+				min = this.field(data, 'min', 0),
+				unit = this.field(data, 'unit');
 
 
 			var rate = (value - min) / (max - min),
@@ -131,21 +131,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
 			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
 
-
-            // draw item 
-			this.drawItem(group, data, {
-				width : width,
-				height : height,
-				startAngle : brush.startAngle,
-				endAngle : currentAngle,
-                outerRadius : outerRadius,
-                innerRadius : innerRadius,
-                size : brush.size,
-				centerX : centerX,
-				centerY : centerY
-			});
-
-
 			return group;
 		}
 
@@ -176,8 +161,8 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			startAngle: 0,
             /** @cfg {Number} [endAngle=360]  */
 			endAngle: 360,
-            /** @cfg {String} [unitText=""]  */
-			unitText: ""
+            /** @cfg {String} [unit=""]  단위 텍스트 */
+			unit: ""
 		};
 	}
 

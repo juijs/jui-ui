@@ -91,6 +91,18 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
+        /**
+         * @method drawTextOuter 
+         * 
+         * 바깥쪽 선이 있는 Text 표시
+         *  
+         * @param {Number} centerX
+         * @param {Number} centerY
+         * @param {Number} centerAngle
+         * @param {Number} outerRadius
+         * @param {String} text 표시될 텍스트
+         * @return {util.svg.element}
+         */
         this.drawTextOuter = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
@@ -136,7 +148,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
-            clip: false,
+            clip : false,
+            /** @cfg {Boolean} showText 텍스트 보이기 여부 설정*/
             showText: false
         }
     }

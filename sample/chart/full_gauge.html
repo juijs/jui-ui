@@ -41,18 +41,16 @@
             height : 400,
             theme : "jennifer",
             axis : {
-                c : { type : 'panel'},
                 data : [
                     { title : 'Overall Visits', value : 292, max : 300, min : 0, unit : "k" }
                 ]
                 
             },
             brush : {
-                type : 'gauge',
+                type : 'fullgauge',
                 size : 30,
                 startAngle : -120,
-                animate : true,
-                items : [ 'circle', 'arrow' ]
+                animate : true
             }
         });
 	})

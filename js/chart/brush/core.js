@@ -205,7 +205,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return tg + minRadius;
         }
 
-        /**
+        /*
          * 차트 데이터 핸들링 함수
          *
          */
@@ -415,6 +415,14 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method color
+         *  
+         * chart.color() 를 쉽게 사용할 수 있게 만든 유틸리티 함수 
+         *  
+         * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
+         * @returns {*}
+         */
         this.color = function(key) {
             if (typeof key == 'string') {
                 return this.chart.color(0, { colors : [key] });
@@ -422,8 +430,37 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.color(key, this.brush);
         }
 
+        /**
+         * @method on 
+         * 
+         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수 
+         * 
+         * @param {String} type event name 
+         * @param {Function} callback
+         * @return {*}
+         */
         this.on = function(type, callback) {
             return this.chart.on(type, callback, true);
+        }
+
+        /**
+         * @method field 
+         * 
+         * 객체에서 특정 필드 값을 가지고 온다. 
+         * 
+         * * this.brush.{FieldString} 이 설정 되어 있으면 하나의 키값으로 인지하고 값을 가지고 온다.
+         * * this.brush.{FieldString} 이 없으면  data.{FieldString} 으로 값을 가지고 온다.
+         *  
+         * @param {Object} data row data 
+         * @param {String} fieldString 필드 이름 
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.field = function(data, fieldString, defaultValue) {
+            if (typeof defaultValue == 'undefined') {
+                defaultValue = '';
+            }
+            return data[this.brush[fieldString]] || data[fieldString] || defaultValue;
         }
 	}
 

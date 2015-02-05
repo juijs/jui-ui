@@ -13,14 +13,16 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 
         /**
          * @method drawDonut 
-         *  
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @param {Number} innerRadius
-         * @param {Number} outerRadius
-         * @param {Number} startAngle
-         * @param {Number} endAngle
-         * @param {Object} attr
+         * 
+         * donut 을 그린다.
+         *   
+         * @param {Number} centerX 중앙 위치 x
+         * @param {Number} centerY 중앙 위치 y
+         * @param {Number} innerRadius 안쪽 반지름
+         * @param {Number} outerRadius 바깥쪽 반지름
+         * @param {Number} startAngle 시작 지점 각도
+         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
+         * @param {Object} attr donut 설정될 svg 속성 리스트
          * @param {Boolean} hasCircle
          * @return {util.svg.element}
          */

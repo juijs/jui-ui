@@ -465,14 +465,23 @@ jui.define("chart.brush.topology.node",
             clip: false,
 
             // topology options
+            /** @cfg {Function} [nodeTitle=null] */
             nodeTitle: null,
+            /** @cfg {Function} [nodeText=null] */
             nodeText: null,
+            /** @cfg {Function} [nodeImage=null] */
             nodeImage: null,
+            /** @cfg {Function/String} [nodeColor=null] */
             nodeColor: null,
+            /** @cfg {Array} [edgeData=[]] */
             edgeData: [],
+            /** @cfg {String} [edgeText=null] */
             edgeText: null,
+            /** @cfg {Function} [tooltipTitle=null] */
             tooltipTitle: null,
+            /** @cfg {Function} [tooltipText=null] */
             tooltipText: null,
+            /** @cfg {String} [activeEdge=null] */
             activeEdge: null
         }
     }

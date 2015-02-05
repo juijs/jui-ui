@@ -11,10 +11,10 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.getTargetData = function(data) {
             var target = {
-                low: data[this.brush.low],
-                high: data[this.brush.high],
-                open: data[this.brush.open],
-                close: data[this.brush.close]
+                low: this.field(data, 'low', 0),
+                high: this.field(data, 'high', 0),
+                open: this.field(data, 'open', 0),
+                close: this.field(data, 'close', 0)
             };
 
             return target;
