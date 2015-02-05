@@ -12823,9 +12823,13 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */        
         gaugeFontColor : "#666666",
         /** @cfg */
-        fullgaugeFontSize : "20px",
+        gaugeFontSize : "20px",
         /** @cfg */
-        fullgaugeFontWeight : "bold",
+        gaugeFontWeight : "bold",
+        /** @cfg */
+        gaugeTitleFontSize : "12px",
+        /** @cfg */
+        gaugeTitleFontWeight : "normal",
         /** @cfg */
     	pieBorderColor : null,
         /** @cfg */        
@@ -13041,8 +13045,10 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
-        fullgaugeFontSize : "20px",
-        fullgaugeFontWeight : "bold",
+        gaugeFontSize : "20px",
+        gaugeFontWeight : "bold",
+        gaugeTitleFontSize : "12px",
+        gaugeTitleFontWeight : "normal",
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13179,8 +13185,10 @@ jui.define("chart.theme.dark", [], function() {
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",
-        fullgaugeFontSize : "20px",
-        fullgaugeFontWeight : "bold",
+        gaugeFontSize : "20px",
+        gaugeFontWeight : "bold",
+        gaugeTitleFontSize : "12px",
+        gaugeTitleFontWeight : "normal",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13313,8 +13321,10 @@ jui.define("chart.theme.pastel", [], function() {
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
-        fullgaugeFontSize : "20px",
-        fullgaugeFontWeight : "bold",
+        gaugeFontSize : "20px",
+        gaugeFontWeight : "bold",
+        gaugeTitleFontSize : "12px",
+        gaugeTitleFontWeight : "normal",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13478,9 +13488,13 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         gaugeFontColor : "#666666",
         /** */
-        fullgaugeFontSize : "20px",
+        gaugeFontSize : "20px",
         /** */
-        fullgaugeFontWeight : "bold",
+        gaugeFontWeight : "bold",
+        /** */
+        gaugeTitleFontSize : "12px",
+        /** */
+        gaugeTitleFontWeight : "normal",
         /** */
         pieBorderColor : "white",
         /** */
@@ -19688,8 +19702,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
             g.append(chart.text({
                 "text-anchor" : "middle",
-                "font-size" : chart.theme("fullgaugeFontSize"),
-                "font-weight" : chart.theme("fullgaugeFontWeight"),
+                "font-size" : chart.theme("gaugeFontSize"),
+                "font-weight" : chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
             }, value + unit).scale(textScale));
@@ -19698,10 +19712,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         function createTitle(title, dx, dy) {
-            var g = chart.svg.group().translate(centerX + dx, centerY + dy);
+            var g = chart.svg.group().translate(centerX + dx, centerY + dy),
+                anchor = (dx == 0) ? "middle" : ((dx < 0) ? "end" : "start");
 
             g.append(chart.text({
-                "text-anchor" : "middle",
+                "text-anchor" : anchor,
+                "font-size" : chart.theme("gaugeTitleFontSize"),
+                "font-weight" : chart.theme("gaugeTitleFontWeight"),
                 y: textY
             }, title).scale(textScale));
 
@@ -19738,12 +19755,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
 				stroke : chart.theme("gaugeBackgroundColor"),
-				fill : 'transparent'
+				fill : "transparent"
 			}));
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
 				stroke : this.color(0),
-				fill : 'transparent'
+				fill : "transparent"
 			}));
 
             if(brush.showText) {

@@ -87,9 +87,13 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */        
         gaugeFontColor : "#666666",
         /** @cfg */
-        fullgaugeFontSize : "20px",
+        gaugeFontSize : "20px",
         /** @cfg */
-        fullgaugeFontWeight : "bold",
+        gaugeFontWeight : "bold",
+        /** @cfg */
+        gaugeTitleFontSize : "12px",
+        /** @cfg */
+        gaugeTitleFontWeight : "normal",
         /** @cfg */
     	pieBorderColor : null,
         /** @cfg */        
