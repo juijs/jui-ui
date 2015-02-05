@@ -49,10 +49,10 @@
     ];
 
     var dataSource2 = [
-        { title : 'Overall Visits', value : 192, max : 200, min : 0, unit : "k" },
-        { title : 'New Visits', value : 66, max : 100, min : 0, unit : "%" },
-        { title : 'Mobile Visits', value : 75, max : 100, min : 0, unit : "%" },
-        { title : 'Desktop Visits', value : 25, max : 100, min : 0, unit : "%" }
+        { text : 'Overall Visits', value : 192, max : 200, min : 0, unit : "k" },
+        { text : 'New Visits', value : 66, max : 100, min : 0, unit : "%" },
+        { text : 'Mobile Visits', value : 75, max : 100, min : 0, unit : "%" },
+        { text : 'Desktop Visits', value : 25, max : 100, min : 0, unit : "%" }
     ]
 
     jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
@@ -88,7 +88,10 @@
                     columns : 4
                 },
                 data : dataSource2,
-                area : { height : '30%', y : '70%'}
+                area : { height : '30%', y : '70%'},
+                keymap : {
+                    text : "title"
+                }
             }],
             series : {
                 value : {

@@ -16,8 +16,7 @@ jui.define("chart.brush.ohlc", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = this.getTargetData(data),
-                    startX = axis.x(i);
+                var startX = axis.x(i);
 
                 var open = data.open,
                     close = data.close,

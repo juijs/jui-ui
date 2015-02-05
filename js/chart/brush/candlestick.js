@@ -9,17 +9,6 @@ jui.define("chart.brush.candlestick", [], function() {
     var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
-        this.getTargetData = function(data) {
-            var target = {
-                low: data[this.brush.low],
-                high: data[this.brush.high],
-                open: data[this.brush.open],
-                close: data[this.brush.close]
-            };
-
-            return target;
-        }
-
         this.drawBefore = function() {
             g = this.chart.svg.group();
             width = this.axis.x.rangeBand();
@@ -29,8 +18,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = this.getTargetData(data),
-                    startX = this.axis.x(i),
+                var startX = this.axis.x(i),
                     r = null,
                     l = null;
 
@@ -86,19 +74,6 @@ jui.define("chart.brush.candlestick", [], function() {
             });
 
             return g;
-        }
-    }
-
-    CandleStickBrush.setup = function() {
-        return {
-            /** @cfg {String} [low=low] a field for low value   */ 
-            low: "low",
-            /** @cfg {String} [high=high] a field for high value   */
-            high: "high",
-            /** @cfg {String} [open=open] a field for open value   */
-            open: "open",
-            /** @cfg {String} [close=close] a field for close value   */
-            close: "close"
         }
     }
 

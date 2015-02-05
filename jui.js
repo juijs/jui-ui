@@ -17760,17 +17760,6 @@ jui.define("chart.brush.candlestick", [], function() {
     var CandleStickBrush = function() {
         var g, width = 0, barWidth = 0, barPadding = 0;
 
-        this.getTargetData = function(data) {
-            var target = {
-                low: data[this.brush.low],
-                high: data[this.brush.high],
-                open: data[this.brush.open],
-                close: data[this.brush.close]
-            };
-
-            return target;
-        }
-
         this.drawBefore = function() {
             g = this.chart.svg.group();
             width = this.axis.x.rangeBand();
@@ -17780,8 +17769,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = this.getTargetData(data),
-                    startX = this.axis.x(i),
+                var startX = this.axis.x(i),
                     r = null,
                     l = null;
 
@@ -17840,19 +17828,6 @@ jui.define("chart.brush.candlestick", [], function() {
         }
     }
 
-    CandleStickBrush.setup = function() {
-        return {
-            /** @cfg {String} [low=low] a field for low value   */ 
-            low: "low",
-            /** @cfg {String} [high=high] a field for high value   */
-            high: "high",
-            /** @cfg {String} [open=open] a field for open value   */
-            open: "open",
-            /** @cfg {String} [close=close] a field for close value   */
-            close: "close"
-        }
-    }
-
     return CandleStickBrush;
 }, "chart.brush.core");
 
@@ -17874,8 +17849,7 @@ jui.define("chart.brush.ohlc", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var data = this.getTargetData(data),
-                    startX = axis.x(i);
+                var startX = axis.x(i);
 
                 var open = data.open,
                     close = data.close,
@@ -19757,11 +19731,11 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = (data[ this.brush.value ] || data.value) || 0,
-                title = (data[ this.brush.title ] || data.title) || "",
-				max = (data[ this.brush.max ] || data.max) || 100,
-				min = (data[ this.brush.min ] || data.min) || 0,
-				unit = (data[ this.brush.unit ] || data.unit) || "";
+				value = data.value || 0,
+                title =data.title || "",
+				max = data.max || 100,
+				min =data.min || 0,
+				unit = data.unit || "";
 
 			var rate = (value - min) / (max - min),
 				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
@@ -19823,12 +19797,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0,
-            title: "title",
-			min: "min",
-			max: "max",
-			value: "value",
-            unit: "unit"
+            titleY: 0
 		};
 	}
 

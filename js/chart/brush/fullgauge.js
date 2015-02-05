@@ -39,11 +39,11 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = (data[ this.brush.value ] || data.value) || 0,
-                title = (data[ this.brush.title ] || data.title) || "",
-				max = (data[ this.brush.max ] || data.max) || 100,
-				min = (data[ this.brush.min ] || data.min) || 0,
-				unit = (data[ this.brush.unit ] || data.unit) || "";
+				value = data.value || 0,
+                title =data.title || "",
+				max = data.max || 100,
+				min =data.min || 0,
+				unit = data.unit || "";
 
 			var rate = (value - min) / (max - min),
 				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
@@ -105,12 +105,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0,
-            title: "title",
-			min: "min",
-			max: "max",
-			value: "value",
-            unit: "unit"
+            titleY: 0
 		};
 	}
 
