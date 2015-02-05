@@ -40,9 +40,12 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
-            axis[k].orient = axis[k].orient || ((k == "x") ? "bottom" : "left");
 
-            if (k == 'c') {
+            if (k == "x") {
+                axis[k].orient = axis[k].orient == 'top' ? 'top' : 'bottom';
+            } else if (k == 'y') {
+                axis[k].orient = axis[k].orient == 'right' ? 'right' : 'left';
+            } else if (k == 'c') {
                 axis[k].type = axis[k].type || 'panel';
                 axis[k].orient = 'custom';
             }

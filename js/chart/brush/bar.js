@@ -217,7 +217,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			active: null,
             /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
 			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {String} [display=null]  'max', 'min' */
+            /** @cfg {"max"/"min"} [display=null]  'max', 'min' */
 			display: null // or max, min
 		};
 	}
