@@ -4610,6 +4610,24 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             return value;
         }
+
+        function getData(data) {
+            var keymap = cloneAxis.keymap,
+                keys = Object.keys(cloneAxis.keymap);
+
+            if(keys.length > 0) {
+                for(var i = 0, len = data.length; i < len; i++) {
+                    for(var j = 0, len2 = keys.length; j < len2; j++) {
+                        var k = keys[j];
+
+                        data[i][keymap[k]] = data[i][k];
+                        delete data[i][k];
+                    }
+                }
+            }
+
+            return data;
+        }
         
         function drawGridType(axis, k) {
             if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
@@ -4694,7 +4712,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
         function init() {
             _.extend(self, {
-                data : cloneAxis.data,
+                data : getData(cloneAxis.data),
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
@@ -4767,7 +4785,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Array} data
          */
         this.update = function(data) {
-            this.origin = data;
+            this.origin = getData(data);
             this.page = 1;
             this.start = 0;
             this.end = 0;
@@ -4864,6 +4882,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             data: [],
             /** @cfg {Array} [origin=[]]  원본 data  */
             origin: [],
+            /** @cfg {Object} [keymap={}] 데이터 키-맵 */
+            keymap: {},
             /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
             area: {},
             /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
@@ -4925,7 +4945,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
         var _padding, _series, _area,  _theme, _hash = {};
-        var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
+        var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
         /**
@@ -5220,12 +5240,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function resetCustomEvent(self) {
-            for(var i = 0; i < _handler.length; i++) {
-                self.off(_handler[i]);
+        function resetCustomEvent(self, isAll) {
+            for(var i = 0; i < _handler.render.length; i++) {
+                self.off(_handler.render[i]);
             }
+            _handler.render = [];
 
-            _handler = [];
+            if(isAll === true) {
+                for(var i = 0; i < _handler.renderAll.length; i++) {
+                    self.off(_handler.renderAll[i]);
+                }
+                _handler.renderAll = [];
+            }
         }
 
         function createGradient(self, obj, hashKey) {
@@ -5653,11 +5679,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param type
          * @param callback
          */
-        this.on = function(type, callback, isReset) {
+        this.on = function(type, callback, resetType) {
             if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
 
             this.event.push({ type: type.toLowerCase(), callback: callback  });
-            if(isReset === true) _handler.push(callback);
+
+            // 브러쉬나 위젯에서 설정한 이벤트 핸들러만 추가
+            if(resetType == "render" || resetType == "renderAll") {
+                _handler[resetType].push(callback);
+            }
         }
 
         /**
@@ -5718,7 +5748,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.reset(isAll);
 
             // chart 이벤트 초기화 (삭제 대상)
-            resetCustomEvent(this);
+            resetCustomEvent(this, isAll);
 
             // chart 영역 계산
             calculate(this);
@@ -10136,7 +10166,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.on = function(type, callback) {
-            return this.chart.on(type, callback, true);
+            return this.chart.on(type, callback, "render");
         }
 	}
 
@@ -14342,7 +14372,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.on = function(type, callback) {
-            return this.chart.on(type, callback, this.isRender());
+            return this.chart.on(type, callback, (this.isRender() ? "render" : "renderAll"));
         }
 	}
 
@@ -14975,7 +15005,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 isMove = false;
                 if(thumbWidth == 0) return;
 
-                var tick = axis.area("width") / (axis.end - axis.start),
+                var tick = chart.area("width") / (axis.end - axis.start),
                     x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left"),
                     start = Math.floor(x / tick) + axis.start,
                     end = Math.ceil((x + Math.abs(thumbWidth)) / tick) + axis.start;
@@ -15229,12 +15259,13 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
      * @extends chart.widget.core 
      */
     var TopologyControlWidget = function(chart, axis, widget) {
+        var self = this;
         var targetKey, startX, startY;
         var renderWait = false;
         var scale = 1, boxX = 0, boxY = 0;
 
         function initDragEvent() {
-            chart.on("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(!_.typeCheck("string", targetKey)) return;
 
                 var xy = axis.c(targetKey);
@@ -15253,9 +15284,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 }
             });
 
-            chart.on("chart.mouseup", endDragAction);
-            chart.on("bg.mouseup", endDragAction);
-            chart.on("bg.mouseout", endDragAction);
+            self.on("chart.mouseup", endDragAction);
+            self.on("bg.mouseup", endDragAction);
+            self.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
                 if(!_.typeCheck("string", targetKey)) return;
@@ -15283,7 +15314,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         function initMoveEvent() {
             var startX = null, startY = null;
 
-            chart.on("chart.mousedown", function(e) {
+            self.on("chart.mousedown", function(e) {
                 if(_.typeCheck("string", targetKey)) return;
                 if(startX != null || startY != null) return;
 
@@ -15291,7 +15322,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 startY = boxY + e.y;
             });
 
-            chart.on("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(startX == null || startY == null) return;
 
                 var xy = chart.viewBox(startX - e.x, startY - e.y);
@@ -15299,9 +15330,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 boxY = xy.y;
             });
 
-            chart.on("chart.mouseup", endMoveAction);
-            chart.on("bg.mouseup", endMoveAction);
-            chart.on("bg.mouseout", endMoveAction);
+            self.on("chart.mouseup", endMoveAction);
+            self.on("bg.mouseup", endMoveAction);
+            self.on("bg.mouseout", endMoveAction);
 
             function endMoveAction(e) {
                 if(startX == null || startY == null) return;

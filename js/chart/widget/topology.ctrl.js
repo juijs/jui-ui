@@ -8,12 +8,13 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
      * @extends chart.widget.core 
      */
     var TopologyControlWidget = function(chart, axis, widget) {
+        var self = this;
         var targetKey, startX, startY;
         var renderWait = false;
         var scale = 1, boxX = 0, boxY = 0;
 
         function initDragEvent() {
-            chart.on("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(!_.typeCheck("string", targetKey)) return;
 
                 var xy = axis.c(targetKey);
@@ -32,9 +33,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 }
             });
 
-            chart.on("chart.mouseup", endDragAction);
-            chart.on("bg.mouseup", endDragAction);
-            chart.on("bg.mouseout", endDragAction);
+            self.on("chart.mouseup", endDragAction);
+            self.on("bg.mouseup", endDragAction);
+            self.on("bg.mouseout", endDragAction);
 
             function endDragAction(e) {
                 if(!_.typeCheck("string", targetKey)) return;
@@ -62,7 +63,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
         function initMoveEvent() {
             var startX = null, startY = null;
 
-            chart.on("chart.mousedown", function(e) {
+            self.on("chart.mousedown", function(e) {
                 if(_.typeCheck("string", targetKey)) return;
                 if(startX != null || startY != null) return;
 
@@ -70,7 +71,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 startY = boxY + e.y;
             });
 
-            chart.on("chart.mousemove", function(e) {
+            self.on("chart.mousemove", function(e) {
                 if(startX == null || startY == null) return;
 
                 var xy = chart.viewBox(startX - e.x, startY - e.y);
@@ -78,9 +79,9 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                 boxY = xy.y;
             });
 
-            chart.on("chart.mouseup", endMoveAction);
-            chart.on("bg.mouseup", endMoveAction);
-            chart.on("bg.mouseout", endMoveAction);
+            self.on("chart.mouseup", endMoveAction);
+            self.on("bg.mouseup", endMoveAction);
+            self.on("bg.mouseout", endMoveAction);
 
             function endMoveAction(e) {
                 if(startX == null || startY == null) return;

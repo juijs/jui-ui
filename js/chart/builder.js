@@ -45,7 +45,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
         var _padding, _series, _area,  _theme, _hash = {};
-        var _initialize = false, _options = null, _handler = []; // 리셋 대상 커스텀 이벤트 핸들러
+        var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
         /**
@@ -340,12 +340,18 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function resetCustomEvent(self) {
-            for(var i = 0; i < _handler.length; i++) {
-                self.off(_handler[i]);
+        function resetCustomEvent(self, isAll) {
+            for(var i = 0; i < _handler.render.length; i++) {
+                self.off(_handler.render[i]);
             }
+            _handler.render = [];
 
-            _handler = [];
+            if(isAll === true) {
+                for(var i = 0; i < _handler.renderAll.length; i++) {
+                    self.off(_handler.renderAll[i]);
+                }
+                _handler.renderAll = [];
+            }
         }
 
         function createGradient(self, obj, hashKey) {
@@ -773,11 +779,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param type
          * @param callback
          */
-        this.on = function(type, callback, isReset) {
+        this.on = function(type, callback, resetType) {
             if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
 
             this.event.push({ type: type.toLowerCase(), callback: callback  });
-            if(isReset === true) _handler.push(callback);
+
+            // 브러쉬나 위젯에서 설정한 이벤트 핸들러만 추가
+            if(resetType == "render" || resetType == "renderAll") {
+                _handler[resetType].push(callback);
+            }
         }
 
         /**
@@ -838,7 +848,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg.reset(isAll);
 
             // chart 이벤트 초기화 (삭제 대상)
-            resetCustomEvent(this);
+            resetCustomEvent(this, isAll);
 
             // chart 영역 계산
             calculate(this);
