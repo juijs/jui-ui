@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
@@ -36,14 +36,15 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
+            padding: 60,
             width: 400,
             height : 400,
             theme : "jennifer",
-            axis : [{
+            axis : {
                 data : [
                     { yellow : 46, red : 15, black : 18, blue : 10 }
                 ]
-            }],
+            },
             series : {
                 yellow : { text : "노랑" },
                 red : { text : "빨강" },
@@ -51,7 +52,8 @@
                 blue : { text : "파랑" }
             },
             brush : [{
-                type : "donut"
+                type : "donut",
+                showText : true
             }],
             widget : [{
                 type : "legend"
@@ -59,7 +61,7 @@
                 type : "tooltip"
             }]
         });
-	})
+    })
 </script>
 
 

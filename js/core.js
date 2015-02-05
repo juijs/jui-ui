@@ -397,6 +397,18 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         var vo = null;
 
         /**
+         * @method find
+         *
+         * 루트에 포함되는 하위 엘리먼트를 가져온다.
+         *
+         * @param selector
+         * @returns {*|jQuery}
+         */
+        this.find = function(selector) {
+            return $(this.root).find(selector);
+        }
+
+        /**
          * @method emit
          * 
          * 커스텀 이벤트 발생시키는 메소드
@@ -602,10 +614,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
-        
-        this.find = function(selector) {
-            return this.$root.find(selector);
-        }
 
         /**
          * @method destroy
@@ -641,7 +649,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
-                mainObj.init.prototype.$root = $(this);
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event

@@ -87,7 +87,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			for (var i = 0; i < this.barList.length; i++) {
 				var r = this.barList[i];
 
-				// Max & Min 툴팁 생
+				// Max & Min 툴팁 생성
 				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
 					r.minmax = this.drawTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));

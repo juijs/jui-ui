@@ -6,37 +6,41 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	 * @extends chart.brush.fullgauge
 	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
-		var self = this;
-        var w, centerX, centerY, outerRadius, innerRadius;
+		var self = this, textY = 5;
+        var w, centerX, centerY, outerRadius, innerRadius, textScale;
 
 		function createText(value, unit) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
-			if (brush.showText) {
-				g.append(chart.svg.text({
-					x : 0,
-					y : 10,
-					"text-anchor" : "middle",
-					"font-family" : chart.theme("fontFamily"),
-					"font-size" : "1.5em",
-					"font-weight" : 1000,
-					"fill" : self.color(0)
-				}, value + unit));
-			}
+            g.append(chart.text({
+                "text-anchor" : "middle",
+                "font-size" : chart.theme("fullgaugeFontSize"),
+                "font-weight" : chart.theme("fullgaugeFontWeight"),
+                "fill" : self.color(0),
+                y: textY
+            }, value + unit).scale(textScale));
 
 			return g;
 		}
 
-        this.drawBefore = function() {
+        function createTitle(title, dx, dy) {
+            var g = chart.svg.group().translate(centerX + dx, centerY + dy);
 
+            g.append(chart.text({
+                "text-anchor" : "middle",
+                y: textY
+            }, title).scale(textScale));
+
+            return g;
         }
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = (data[this.brush.target] || data.value) || 0,
-				max = (data[this.brush.max] || data.max) || 100,
-				min = (data[this.brush.min] || data.min) || 0,
-				unit = (data[this.brush.unit] || data.unit) || "";
+				value = (data[ this.brush.value ] || data.value) || 0,
+                title = (data[ this.brush.title ] || data.title) || "",
+				max = (data[ this.brush.max ] || data.max) || 100,
+				min = (data[ this.brush.min ] || data.min) || 0,
+				unit = (data[ this.brush.unit ] || data.unit) || "";
 
 			var rate = (value - min) / (max - min),
 				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
@@ -56,6 +60,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			centerY = height / 2 + y;
 			outerRadius = w - brush.size;
 			innerRadius = outerRadius - brush.size;
+            textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
 				stroke : chart.theme("gaugeBackgroundColor"),
@@ -67,7 +72,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				fill : 'transparent'
 			}));
 
-			group.append(createText(value, unit));
+            if(brush.showText) {
+                group.append(createText(value, unit));
+            }
+
+            if(title != "") {
+                group.append(createTitle(title, brush.titleX, brush.titleY));
+            }
 
 			return group;
 		}
@@ -86,13 +97,17 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	FullGaugeBrush.setup = function() {
 		return {
+            size: 60,
+            startAngle: 0,
+            endAngle: 300,
+            showText: true,
+            titleX: 0,
+            titleY: 0,
+            title: "title",
 			min: "min",
 			max: "max",
 			value: "value",
-			size: 60,
-			startAngle: 0,
-			endAngle: 300,
-			showText: true
+            unit: "unit"
 		};
 	}
 

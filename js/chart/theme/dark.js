@@ -52,6 +52,8 @@ jui.define("chart.theme.dark", [], function() {
     	gaugeBackgroundColor : "#3e3e3e",
         gaugeArrowColor : "#a6a6a6",
         gaugeFontColor : "#c5c5c5",
+        fullgaugeFontSize : "20px",
+        fullgaugeFontWeight : "bold",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",

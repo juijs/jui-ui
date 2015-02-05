@@ -54,6 +54,8 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeBackgroundColor : "#ececec",
         gaugeArrowColor : "#666666",
         gaugeFontColor : "#666666",
+        fullgaugeFontSize : "20px",
+        fullgaugeFontWeight : "bold",
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",

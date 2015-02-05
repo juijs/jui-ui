@@ -60,22 +60,12 @@
                 //buffer : 5,
                 data : dataSource
             },
-            series : {
-                l: {
-                    type: "low"
-                },
-                h: {
-                    type: "high"
-                },
-                o: {
-                    type: "open"
-                },
-                c: {
-                    type: "close"
-                }
-            },
             brush : [{
-                type : 'candlestick'
+                type : 'candlestick',
+                low: "l",
+                high: "h",
+                open: "o",
+                close: "c"
             }],
             widget : [{
                 type : "zoom"

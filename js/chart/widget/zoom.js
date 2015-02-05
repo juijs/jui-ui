@@ -50,7 +50,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 isMove = false;
                 if(thumbWidth == 0) return;
 
-                var tick = chart.area("width") / (axis.end - axis.start),
+                var tick = axis.area("width") / (axis.end - axis.start),
                     x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - chart.padding("left"),
                     start = Math.floor(x / tick) + axis.start,
                     end = Math.ceil((x + Math.abs(thumbWidth)) / tick) + axis.start;

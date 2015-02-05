@@ -8,8 +8,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
      * @extends chart.brush.core
 	 */
 	var PieBrush = function(chart, axis, brush) {
-        var self = this, g;
-        var centerX, centerY, outerRadius;
+        var self = this, textY = 3;
+        var g, centerX, centerY, outerRadius;
 
 		function createPie(startAngle, endAngle, color) {
 			var pie = chart.svg.group(),
@@ -74,11 +74,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 					endAngle = all * (value / max),
                     pie = createPie(startAngle, endAngle, self.color(i));
 
-                if(brush.showText == "outer") {
+                if(brush.showText) {
                     var series = chart.get("series", target[i]),
                         dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
                         cText = _.typeCheck("function", brush.format) ? brush.format(target[i], value) : dText,
-                        outer = self.drawTextOuter(startAngle + (endAngle / 2) - 90, cText);
+                        outer = self.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
 
                     self.addEvent(outer, index, i);
                     g.append(outer);
@@ -91,14 +91,16 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-        this.drawTextOuter = function(centerAngle, text) {
+        this.drawTextOuter = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
                 r = outerRadius * 1.2,
-                x = centerX + (Math.cos(math.radian(centerAngle)) * r),
-                y = centerY + (Math.sin(math.radian(centerAngle)) * r),
+                cx = centerX + (Math.cos(math.radian(centerAngle)) * outerRadius),
+                cy = centerY + (Math.sin(math.radian(centerAngle)) * outerRadius),
+                tx = centerX + (Math.cos(math.radian(centerAngle)) * r),
+                ty = centerY + (Math.sin(math.radian(centerAngle)) * r),
                 isLeft = (centerAngle + 90 > 180) ? true : false,
-                ex = (isLeft) ? x - dist : x + dist;
+                ex = (isLeft) ? tx - dist : tx + dist;
 
             return c.svg.group({}, function() {
                 var path = c.svg.path({
@@ -107,15 +109,15 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                     "stroke-width": 0.7
                 });
 
-                path.MoveTo(centerX, centerY)
-                    .LineTo(x, y)
-                    .LineTo(ex, y);
+                path.MoveTo(cx, cy)
+                    .LineTo(tx, ty)
+                    .LineTo(ex, ty);
 
                 c.text({
                     "font-size": c.theme("pieOuterFontSize"),
                     "text-anchor": (isLeft) ? "end" : "start",
-                    "alignment-baseline": "middle"
-                }, text).translate(ex + (isLeft ? -3 : 3), y);
+                    y: textY
+                }, text).translate(ex + (isLeft ? -3 : 3), ty);
             });
         }
 
@@ -135,7 +137,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
     PieBrush.setup = function() {
         return {
             clip: false,
-            showText: null // outer, inner
+            showText: false
         }
     }
 

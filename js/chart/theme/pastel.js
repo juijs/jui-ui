@@ -48,6 +48,8 @@ jui.define("chart.theme.pastel", [], function() {
 		gaugeBackgroundColor : "#f5f5f5",
         gaugeArrowColor : "gray",
 		gaugeFontColor : "#666666",
+        fullgaugeFontSize : "20px",
+        fullgaugeFontWeight : "bold",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : "11px",

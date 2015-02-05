@@ -86,7 +86,11 @@ jui.define("chart.theme.jennifer", [], function() {
         gaugeArrowColor : "#666666",
         /** @cfg */        
         gaugeFontColor : "#666666",
-        /** @cfg */        
+        /** @cfg */
+        fullgaugeFontSize : "20px",
+        /** @cfg */
+        fullgaugeFontWeight : "bold",
+        /** @cfg */
     	pieBorderColor : null,
         /** @cfg */        
         pieBorderWidth : 1,

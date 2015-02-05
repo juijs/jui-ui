@@ -78,11 +78,11 @@ module.exports = function(grunt) {
         "js/chart/brush/bubble.js",
         "js/chart/brush/candlestick.js",
         "js/chart/brush/ohlc.js",
-        "js/chart/brush/donut.js",
         "js/chart/brush/equalizer.js",
         "js/chart/brush/line.js",
         "js/chart/brush/path.js",
         "js/chart/brush/pie.js",
+        "js/chart/brush/donut.js", // extends pie
         "js/chart/brush/clock.js",
         "js/chart/brush/scatter.js",
         "js/chart/brush/scatterpath.js",
