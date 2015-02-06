@@ -8,8 +8,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      * @extends chart.draw
      * @requires jquery
      * @requires util.base
+     * @property {chart.builder} chart
+     * @property {chart.axis} axis
      */
 	var CoreBrush = function() {
+        
 
         function getMinMaxValue(data, target) {
             var seriesList = {},

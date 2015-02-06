@@ -5,7 +5,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
      * 
      * implements donut brush 
      *  
-     * @extends chart.brush.core  
+     * @extends chart.brush.pie
      * 
      */
 	var DonutBrush = function() {
