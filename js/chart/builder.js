@@ -539,7 +539,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
                 height: _options.height,
-                'buffered-rendering' : 'dynamic'
+                "buffered-rendering" : "dynamic"
             });
 
             // 차트 기본 렌더링
@@ -654,7 +654,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 현재 text 관련 theme 가 정해진 text element 생성
+         * 아이콘 유니코드를 가져오는 함수
+         *
+         * @param key
+         */
+        this.icon = function(key) {
+            return jui.include("chart.icon." + _options.icon.type)[key];
+        }
+
+        /**
+         * 텍스트 엘리먼트 생성하는 함수, 아이콘 키를 유니코드로 자동으로 파싱해준다.
          *
          * @param {object} attr
          * @param {string|function} textOrCallback
@@ -666,21 +675,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                 if(result != null) {
                     for(var i = 0; i < result.length; i++) {
-                        var key = result[i].substring(1, result[i].length - 1),
-                            unicode = jui.include("chart.icon." + _options.icon.type)[key];
-
-                        textOrCallback = textOrCallback.replace(result[i], unicode);
+                        var key = result[i].substring(1, result[i].length - 1);
+                        textOrCallback = textOrCallback.replace(result[i], this.icon(key));
                     }
                 }
             }
 
-            var el = this.svg.text(_.extend({
-                "font-family": this.theme("fontFamily") + "," + _options.icon.type,
-                "font-size": this.theme("fontSize"),
-                "fill": this.theme("fontColor")
-            }, attr), textOrCallback);
-
-            return el;
+            return this.svg.text(attr, textOrCallback || "");
         }
 
         /**
@@ -847,8 +848,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             drawBrush(this);
             drawWidget(this, isAll);
 
-            // SVG 태그 백그라운드 테마 설정
+            // SVG 기본 테마 설정
             this.svg.root.css({
+                "font-family": this.theme("fontFamily") + "," + _options.icon.type,
+                "font-size": this.theme("fontSize"),
+                fill: this.theme("fontColor"),
                 background: this.theme("backgroundColor")
             });
 

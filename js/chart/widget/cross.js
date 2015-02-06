@@ -48,8 +48,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             points: self.balloonPoints("left", tw, th, ta)
                         });
 
-                        chart.svg.text({
-                            "font-family": chart.theme("fontFamily"),
+                        chart.text({
                             "font-size": chart.theme("crossBalloonFontSize"),
                             "fill": chart.theme("crossBalloonFontColor"),
                             "text-anchor": "middle",
@@ -77,8 +76,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             points: self.balloonPoints("bottom", tw, th, ta)
                         });
 
-                        chart.svg.text({
-                            "font-family": chart.theme("fontFamily"),
+                        chart.text({
                             "font-size": chart.theme("crossBalloonFontSize"),
                             "fill": chart.theme("crossBalloonFontColor"),
                             "text-anchor": "middle",

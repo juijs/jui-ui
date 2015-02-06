@@ -41,7 +41,6 @@ jui.define("chart.widget.title", [], function() {
                 x : x + widget.dx,
                 y : y + widget.dy,
                 "text-anchor" : anchor,
-                "font-family" : chart.theme("fontFamily"),
                 "font-size" : widget.size || chart.theme("titleFontSize"),
                 "font-weight" : chart.theme("titleFontWeight"),
                 "fill" : chart.theme("titleFontColor")

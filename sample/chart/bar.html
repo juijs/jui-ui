@@ -36,6 +36,9 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
+            icon: {
+                path: "../../img/icon-list"
+            },
             width: 400,
             height : 400,
             axis : [
@@ -62,7 +65,12 @@
             widget : [
             	{ type : 'title', text: "test" },
             	{ type : 'legend' },
-                { type : 'tooltip', all : true }
+                {
+                    type : 'tooltip',
+                    format : function(k, v) {
+                        return this.icon("gear") + " " + v;
+                    }
+                }
             ],
             brush : {
                 type : 'bar',

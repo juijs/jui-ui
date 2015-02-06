@@ -75,13 +75,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                     pie = createPie(startAngle, endAngle, self.color(i));
 
                 if(brush.showText) {
-                    var series = chart.get("series", target[i]),
-                        dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = (brush.format) ? self.format(target[i], value) : dText,
-                        text = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
+                    var text = self.getFormatText(target[i], value),
+                        elem = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
-                    self.addEvent(text, index, i);
-                    g.append(text);
+                    self.addEvent(elem, index, i);
+                    g.append(elem);
                 }
 
                 self.addEvent(pie, index, i);
@@ -90,6 +88,21 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 				startAngle += endAngle;
 			}
 		}
+
+        this.getFormatText = function(target, value) {
+            var series = this.chart.get("series", target),
+                key = (series.text) ? series.text : target;
+
+            if(typeof(this.brush.format) == "function") {
+                return this.format(key, value);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + this.format(value);
+            }
+        }
 
         this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,

@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+    <link rel="stylesheet" href="../../jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
@@ -45,17 +46,11 @@
                     { yellow : 46, red : 15, black : 18, blue : 10 }
                 ]
             },
-            series : {
-                yellow : { text : "노랑" },
-                red : { text : "빨강" },
-                black : { text : "검정" },
-                blue : { text : "파랑" }
-            },
             brush : [{
                 type : "pie",
                 showText : true,
                 format : function(k, v) {
-                    return k + "-" + v;
+                    return this.icon("check") + k + ": " + v;
                 }
             }],
             widget : [{
