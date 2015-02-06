@@ -2098,9 +2098,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
                 // Public Properties
                 mainObj.init.prototype = mainObj;
+                /** @property {String/HTMLElement} selector */
                 mainObj.init.prototype.selector = $root.selector;
+                /** @property {HTMLElement} root */
                 mainObj.init.prototype.root = this;
-                mainObj.init.prototype.$root = $(this);
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
@@ -4565,6 +4566,20 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return points.join(" ");
         }
+
+        /**
+         * @method getValue
+         *
+         * chart.axis.getValue alias
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            return this.axis.getValue(data, fieldString, defaultValue);
+        }
 	}
 
     Draw.setup = function() {
@@ -4597,10 +4612,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         var _area = {};
 
         function caculatePanel(a) {
-            a.x = getValue(a.x, chart.area('width'));
-            a.y = getValue(a.y, chart.area('height'));
-            a.width = getValue(a.width, chart.area('width'));
-            a.height = getValue(a.height, chart.area('height'));
+            a.x = getRate(a.x, chart.area('width'));
+            a.y = getRate(a.y, chart.area('height'));
+            a.width = getRate(a.width, chart.area('width'));
+            a.height = getRate(a.height, chart.area('height'));
 
             a.x2 = a.x + a.width;
             a.y2 = a.y + a.height;
@@ -4608,7 +4623,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return a;
         }
 
-        function getValue(value, max) {
+        function getRate(value, max) {
             if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
                 return max * (parseFloat(value.replace("%", "")) /100);
             }
@@ -4616,6 +4631,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return value;
         }
 
+        /*
         function getData(data) {
             var keymap = cloneAxis.keymap,
                 keys = Object.keys(cloneAxis.keymap);
@@ -4633,7 +4649,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             return data;
         }
-        
+        */
         function drawGridType(axis, k) {
             if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
 
@@ -4717,7 +4733,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
         function init() {
             _.extend(self, {
-                data : getData(cloneAxis.data),
+                data : cloneAxis.data,
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
@@ -4732,6 +4748,29 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // Grid 및 Area 설정
             self.reload(cloneAxis);
+        }
+
+        /**
+         * @method getValue
+         *
+         * 특정 필드의 값을 맵핑해서 가지고 온다.
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            
+            if (typeof data[cloneAxis.keymap[fieldString]] != 'undefined') {
+                return data[cloneAxis.keymap[fieldString]];
+            }
+            
+            if (typeof data[fieldString] != 'undefined') {
+                return data[fieldString];
+            }
+            
+            return typeof defaultValue == 'undefined' ? "" : defaultValue;
         }
 
         /**
@@ -4792,7 +4831,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Array} data
          */
         this.update = function(data) {
-            this.origin = getData(data);
+            this.origin = data;
             this.page = 1;
             this.start = 0;
             this.end = 0;
@@ -10198,25 +10237,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.on(type, callback, "render");
         }
 
-        /**
-         * @method getValue
-         * 
-         * 객체에서 특정 필드 값을 가지고 온다. 
-         * 
-         * * this.brush.{FieldString} 이 설정 되어 있으면 하나의 키값으로 인지하고 값을 가지고 온다.
-         * * this.brush.{FieldString} 이 없으면  data.{FieldString} 으로 값을 가지고 온다.
-         *  
-         * @param {Object} data row data 
-         * @param {String} fieldString 필드 이름 
-         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
-         * @return {Mixed}
-         */
-        this.getValue = function(data, fieldString, defaultValue) {
-            if (typeof defaultValue == 'undefined') {
-                defaultValue = '';
-            }
-            return data[this.brush.keymap[fieldString]] || data[fieldString] || defaultValue;
-        }
 	}
 
     CoreBrush.setup = function() {
@@ -11121,7 +11141,8 @@ jui.define("chart.brush.candlestick", [], function() {
     /**
      * @class chart.brush.candlestick 
      * 
-     * implements candlestick brush 
+     * implements candlestick brush
+     *
      * @extends chart.brush.core
      */
     var CandleStickBrush = function() {
@@ -11199,10 +11220,11 @@ jui.define("chart.brush.candlestick", [], function() {
             return g;
         }
     }
-    
+
+
     CandleStickBrush.setup = function() {
         return {
-            /** @cfg {Object} keymap */
+            /** @cfg {Object} keymap   axis's keymap */
             keymap : {
                 /** @cfg {String} [keymap.open='open'] */
                 "open": "open",
@@ -14037,14 +14059,14 @@ jui.define("chart.brush.topology.node",
 
         function setDataEdges(index, targetIndex) {
             var data = self.getData(index),
-                targetKey = data.outgoing[targetIndex],
+                targetKey = self.getValue(data, 'outgoing', [])[targetIndex],
                 target = axis.c(targetKey),
                 xy = axis.c(index);
 
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, xy.x, xy.y, -(dist)),
                 out_xy = getDistanceXY(xy.x, xy.y, target.x, target.y, -(dist)),
-                edge = new Edge(data.key, targetKey, in_xy, out_xy);
+                edge = new Edge(self.getValue(data, 'key'), targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -15459,7 +15481,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                                     // 선택한 노드 맨 마지막으로 이동
                                     xy.moveLast();
                                 });
-                            })(data.key);
+                            })(self.getValue(data, 'key'));
                         }
                     });
                 }

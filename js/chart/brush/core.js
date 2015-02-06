@@ -443,25 +443,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.on(type, callback, "render");
         }
 
-        /**
-         * @method getValue
-         * 
-         * 객체에서 특정 필드 값을 가지고 온다. 
-         * 
-         * * this.brush.{FieldString} 이 설정 되어 있으면 하나의 키값으로 인지하고 값을 가지고 온다.
-         * * this.brush.{FieldString} 이 없으면  data.{FieldString} 으로 값을 가지고 온다.
-         *  
-         * @param {Object} data row data 
-         * @param {String} fieldString 필드 이름 
-         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
-         * @return {Mixed}
-         */
-        this.getValue = function(data, fieldString, defaultValue) {
-            if (typeof defaultValue == 'undefined') {
-                defaultValue = '';
-            }
-            return data[this.brush.keymap[fieldString]] || data[fieldString] || defaultValue;
-        }
 	}
 
     CoreBrush.setup = function() {

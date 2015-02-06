@@ -139,6 +139,20 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return points.join(" ");
         }
+
+        /**
+         * @method getValue
+         *
+         * chart.axis.getValue alias
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            return this.axis.getValue(data, fieldString, defaultValue);
+        }
 	}
 
     Draw.setup = function() {

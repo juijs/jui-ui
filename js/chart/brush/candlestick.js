@@ -3,7 +3,8 @@ jui.define("chart.brush.candlestick", [], function() {
     /**
      * @class chart.brush.candlestick 
      * 
-     * implements candlestick brush 
+     * implements candlestick brush
+     *
      * @extends chart.brush.core
      */
     var CandleStickBrush = function() {
@@ -81,10 +82,11 @@ jui.define("chart.brush.candlestick", [], function() {
             return g;
         }
     }
-    
+
+
     CandleStickBrush.setup = function() {
         return {
-            /** @cfg {Object} keymap */
+            /** @cfg {Object} keymap   axis's keymap */
             keymap : {
                 /** @cfg {String} [keymap.open='open'] */
                 "open": "open",

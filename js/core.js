@@ -651,7 +651,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
                 // Public Properties
                 mainObj.init.prototype = mainObj;
+                /** @property {String/HTMLElement} selector */
                 mainObj.init.prototype.selector = $root.selector;
+                /** @property {HTMLElement} root */
                 mainObj.init.prototype.root = this;
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};

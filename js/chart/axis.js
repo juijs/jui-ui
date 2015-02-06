@@ -16,10 +16,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         var _area = {};
 
         function caculatePanel(a) {
-            a.x = getValue(a.x, chart.area('width'));
-            a.y = getValue(a.y, chart.area('height'));
-            a.width = getValue(a.width, chart.area('width'));
-            a.height = getValue(a.height, chart.area('height'));
+            a.x = getRate(a.x, chart.area('width'));
+            a.y = getRate(a.y, chart.area('height'));
+            a.width = getRate(a.width, chart.area('width'));
+            a.height = getRate(a.height, chart.area('height'));
 
             a.x2 = a.x + a.width;
             a.y2 = a.y + a.height;
@@ -27,7 +27,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return a;
         }
 
-        function getValue(value, max) {
+        function getRate(value, max) {
             if(_.typeCheck("string", value) && value.indexOf("%") > -1) {
                 return max * (parseFloat(value.replace("%", "")) /100);
             }
@@ -35,6 +35,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return value;
         }
 
+        /*
         function getData(data) {
             var keymap = cloneAxis.keymap,
                 keys = Object.keys(cloneAxis.keymap);
@@ -52,7 +53,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             return data;
         }
-        
+        */
         function drawGridType(axis, k) {
             if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
 
@@ -136,7 +137,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
         function init() {
             _.extend(self, {
-                data : getData(cloneAxis.data),
+                data : cloneAxis.data,
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
@@ -151,6 +152,29 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // Grid 및 Area 설정
             self.reload(cloneAxis);
+        }
+
+        /**
+         * @method getValue
+         *
+         * 특정 필드의 값을 맵핑해서 가지고 온다.
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            
+            if (typeof data[cloneAxis.keymap[fieldString]] != 'undefined') {
+                return data[cloneAxis.keymap[fieldString]];
+            }
+            
+            if (typeof data[fieldString] != 'undefined') {
+                return data[fieldString];
+            }
+            
+            return typeof defaultValue == 'undefined' ? "" : defaultValue;
         }
 
         /**
@@ -211,7 +235,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Array} data
          */
         this.update = function(data) {
-            this.origin = getData(data);
+            this.origin = data;
             this.page = 1;
             this.start = 0;
             this.end = 0;
