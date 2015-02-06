@@ -18296,11 +18296,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                 if(brush.showText) {
                     var series = chart.get("series", target[i]),
                         dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", brush.format) ? brush.format(target[i], value) : dText,
-                        outer = self.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
+                        cText = (brush.format) ? self.format(target[i], value) : dText,
+                        text = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
 
-                    self.addEvent(outer, index, i);
-                    g.append(outer);
+                    self.addEvent(text, index, i);
+                    g.append(text);
                 }
 
                 self.addEvent(pie, index, i);
@@ -18310,7 +18310,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-        this.drawTextOuter = function(centerX, centerY, centerAngle, outerRadius, text) {
+        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
                 r = outerRadius * 1.2,
@@ -18356,7 +18356,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
     PieBrush.setup = function() {
         return {
             clip: false,
-            showText: false
+            showText: false,
+            format: null
         }
     }
 
@@ -18491,11 +18492,11 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
                 if(this.brush.showText) {
                     var series = this.chart.get("series", target[i]),
                         dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", this.brush.format) ? this.brush.format(target[i], value) : dText,
-                        outer = this.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, cText);
+                        cText = (this.brush.format) ? this.format(target[i], value) : dText,
+                        text = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, cText);
 
-                    this.addEvent(outer, 0, i);
-                    group.append(outer);
+                    this.addEvent(text, 0, i);
+                    group.append(text);
                 }
 
                 this.addEvent(g, 0, i);

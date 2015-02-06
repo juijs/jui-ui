@@ -53,7 +53,10 @@
             },
             brush : [{
                 type : "pie",
-                showText : true
+                showText : true,
+                format : function(k, v) {
+                    return k + "-" + v;
+                }
             }],
             widget : [{
                 type : "legend"
