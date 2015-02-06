@@ -20,7 +20,7 @@ jui.define("chart.theme.pastel", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif,icojui",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
 		colors : themeColors,
 
 		// grid styles

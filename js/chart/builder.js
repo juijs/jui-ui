@@ -502,17 +502,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function setChartIcons() {
-            var path = _options.iconPath;
-            if($(".jui").size() > 0 || path == null) return;
+        function setChartIcons(self) {
+            var icon = _options.icon;
+            if($(".jui").size() > 0 || icon.path == null) return;
 
             var iconList = [
-                "url(" + path + ".eot) format('embedded-opentype')",
-                "url(" + path + ".woff) format('woff')",
-                "url(" + path + ".ttf) format('truetype')",
-                "url(" + path + ".svg) format('svg')"
+                "url(" + icon.path + ".eot) format('embedded-opentype')",
+                "url(" + icon.path + ".woff) format('woff')",
+                "url(" + icon.path + ".ttf) format('truetype')",
+                "url(" + icon.path + ".svg) format('svg')"
             ],
-            fontFace = "font-family: icojui; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
 
             (function(rule) {
                 var sheet = (function() {
@@ -549,7 +549,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setChartEvent(this);
 
             // 아이콘 폰트 설정
-            setChartIcons();
+            setChartIcons(this);
         }
 
         /**
@@ -673,7 +673,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             var el = this.svg.text(_.extend({
-                "font-family": this.theme("fontFamily"),
+                "font-family": this.theme("fontFamily") + "," + _options.icon.type,
                 "font-size": this.theme("fontSize"),
                 "fill": this.theme("fontColor")
             }, attr), textOrCallback);
@@ -688,12 +688,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {*}
          */
         this.icon = function(key) {
-            if(key.indexOf(".") == -1) return null;
+            var icon = _options.icon;
+            if(icon.path == null) return;
 
-            var keySet = key.split("."),
-                module = jui.include("chart.icon." + keySet[0]);
-
-            return module[keySet[1]];
+            return jui.include("chart.icon." + icon.type)[key];
         }
 
         /**
@@ -814,7 +812,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param y
          * @returns {{x: number, y: number}}
          */
-        this.viewBox = function(x, y) {
+        this.view = function(x, y) {
             var area = this.area(),
                 xy = {
                     x: _xbox,
@@ -1035,8 +1033,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             /** @cfg {Boolean} [render=true] */
             render: true,
 
-            /** @cfg {String} */
-            iconPath: null
+            /** @cfg {Object} */
+            icon: {
+                type: "jennifer",
+                path: null
+            }
         }
     }
 

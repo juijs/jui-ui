@@ -74,7 +74,10 @@
 
     jui.ready([ "chart.builder", "util.base" ], function(builder, _) {
         c = builder("#chart", {
-            iconPath: "../../img/icon-list",
+            icon: {
+                type: "jennifer",
+                path: "../../img/icon-list"
+            },
             theme: "jennifer",
             padding: 5,
             axis: {
@@ -115,11 +118,11 @@
                 nodeColor: "#729ff1",
                 nodeText: function(data) {
                     if(data.type == "server") {
-                        return "{jennifer.server}";
+                        return "{server}";
                     } else if(data.type == "was") {
-                        return "{jennifer.was}";
+                        return "{was}";
                     } else {
-                        return "{jennifer.db}";
+                        return "{db}";
                     }
                 },
                 nodeTitle: function(data) {

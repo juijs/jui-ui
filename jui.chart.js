@@ -4737,6 +4737,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Object} options
          */
         this.reload = function(options) {
+            var area = chart.area();
+
             _.extend(this, {
                 x : options.x,
                 y : options.y,
@@ -4744,7 +4746,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             });
 
             _area = caculatePanel(_.extend(options.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+                x: 0, y: 0 , width: area.width, height: area.height
             }, true));
 
             this.x = drawGridType(this, "x");
@@ -5402,17 +5404,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function setChartIcons() {
-            var path = _options.iconPath;
-            if($(".jui").size() > 0 || path == null) return;
+        function setChartIcons(self) {
+            var icon = _options.icon;
+            if($(".jui").size() > 0 || icon.path == null) return;
 
             var iconList = [
-                "url(" + path + ".eot) format('embedded-opentype')",
-                "url(" + path + ".woff) format('woff')",
-                "url(" + path + ".ttf) format('truetype')",
-                "url(" + path + ".svg) format('svg')"
+                "url(" + icon.path + ".eot) format('embedded-opentype')",
+                "url(" + icon.path + ".woff) format('woff')",
+                "url(" + icon.path + ".ttf) format('truetype')",
+                "url(" + icon.path + ".svg) format('svg')"
             ],
-            fontFace = "font-family: icojui; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
 
             (function(rule) {
                 var sheet = (function() {
@@ -5449,7 +5451,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setChartEvent(this);
 
             // 아이콘 폰트 설정
-            setChartIcons();
+            setChartIcons(this);
         }
 
         /**
@@ -5573,7 +5575,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
 
             var el = this.svg.text(_.extend({
-                "font-family": this.theme("fontFamily"),
+                "font-family": this.theme("fontFamily") + "," + _options.icon.type,
                 "font-size": this.theme("fontSize"),
                 "fill": this.theme("fontColor")
             }, attr), textOrCallback);
@@ -5588,12 +5590,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @returns {*}
          */
         this.icon = function(key) {
-            if(key.indexOf(".") == -1) return null;
+            var icon = _options.icon;
+            if(icon.path == null) return;
 
-            var keySet = key.split("."),
-                module = jui.include("chart.icon." + keySet[0]);
-
-            return module[keySet[1]];
+            return jui.include("chart.icon." + icon.type)[key];
         }
 
         /**
@@ -5714,7 +5714,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param y
          * @returns {{x: number, y: number}}
          */
-        this.viewBox = function(x, y) {
+        this.view = function(x, y) {
             var area = this.area(),
                 xy = {
                     x: _xbox,
@@ -5935,8 +5935,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             /** @cfg {Boolean} [render=true] */
             render: true,
 
-            /** @cfg {String} */
-            iconPath: null
+            /** @cfg {Object} */
+            icon: {
+                type: "jennifer",
+                path: null
+            }
         }
     }
 
@@ -6078,7 +6081,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg   */
     	fontColor : "#333333",
         /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         /** @cfg   */
         colors : themeColors,
 
@@ -6322,7 +6325,7 @@ jui.define("chart.theme.gradient", [], function() {
         backgroundColor : "white",
         fontSize : "11px",
         fontColor : "#666",
-        fontFamily : "arial,Tahoma,verdana,icojui",
+        fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
@@ -6462,7 +6465,7 @@ jui.define("chart.theme.dark", [], function() {
     	backgroundColor : "#222222",
     	fontSize : "12px",
     	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
@@ -6598,7 +6601,7 @@ jui.define("chart.theme.pastel", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif,icojui",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
 		colors : themeColors,
 
 		// grid styles
@@ -6741,7 +6744,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Base Font Color  */
         fontColor : "#333333",
         /** Base Font Family */
-        fontFamily : "arial,Tahoma,verdana,icojui",
+        fontFamily : "arial,Tahoma,verdana",
         /** Color List  */
         colors : themeColors,
 
@@ -15294,7 +15297,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             self.on("chart.mousemove", function(e) {
                 if(startX == null || startY == null) return;
 
-                var xy = chart.viewBox(startX - e.x, startY - e.y);
+                var xy = chart.view(startX - e.x, startY - e.y);
                 boxX = xy.x;
                 boxY = xy.y;
             });

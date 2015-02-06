@@ -24,7 +24,7 @@ jui.define("chart.theme.dark", [], function() {
     	backgroundColor : "#222222",
     	fontSize : "12px",
     	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
