@@ -504,7 +504,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         function setChartIcons(self) {
             var icon = _options.icon;
-            if($(".jui").size() > 0 || icon.path == null) return;
+            if(!_.typeCheck("string", icon.path)) return;
 
             var iconList = [
                 "url(" + icon.path + ".eot) format('embedded-opentype')",
@@ -666,7 +666,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                 if(result != null) {
                     for(var i = 0; i < result.length; i++) {
-                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
+                        var key = result[i].substring(1, result[i].length - 1),
+                            unicode = jui.include("chart.icon." + _options.icon.type)[key];
+
                         textOrCallback = textOrCallback.replace(result[i], unicode);
                     }
                 }
@@ -679,19 +681,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }, attr), textOrCallback);
 
             return el;
-        }
-
-        /**
-         * CSS의 SVG 아이콘을 가져오는 메소드
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.icon = function(key) {
-            var icon = _options.icon;
-            if(icon.path == null) return;
-
-            return jui.include("chart.icon." + icon.type)[key];
         }
 
         /**

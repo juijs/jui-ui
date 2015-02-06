@@ -5406,7 +5406,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         function setChartIcons(self) {
             var icon = _options.icon;
-            if($(".jui").size() > 0 || icon.path == null) return;
+            if(!_.typeCheck("string", icon.path)) return;
 
             var iconList = [
                 "url(" + icon.path + ".eot) format('embedded-opentype')",
@@ -5568,7 +5568,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                 if(result != null) {
                     for(var i = 0; i < result.length; i++) {
-                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
+                        var key = result[i].substring(1, result[i].length - 1),
+                            unicode = jui.include("chart.icon." + _options.icon.type)[key];
+
                         textOrCallback = textOrCallback.replace(result[i], unicode);
                     }
                 }
@@ -5581,19 +5583,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }, attr), textOrCallback);
 
             return el;
-        }
-
-        /**
-         * CSS의 SVG 아이콘을 가져오는 메소드
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.icon = function(key) {
-            var icon = _options.icon;
-            if(icon.path == null) return;
-
-            return jui.include("chart.icon." + icon.type)[key];
         }
 
         /**
@@ -7034,69 +7023,79 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"report-build" : "\ue648",
 		"ws" : "\ue600",
 		"was" : "\ue601",
-		"upload" : "\ue602",
-		"unorderedlist" : "\ue603",
-		"underline" : "\ue604",
-		"trashcan" : "\ue605",
-		"textcolor" : "\ue606",
-		"text" : "\ue607",
-		"table" : "\ue608",
-		"stoppage" : "\ue609",
-		"stop" : "\ue60a",
-		"server" : "\ue60b",
-		"search" : "\ue60c",
-		"save" : "\ue60d",
-		"right" : "\ue60e",
-		"return" : "\ue60f",
-		"resize" : "\ue610",
-		"refresh2" : "\ue611",
-		"refresh" : "\ue612",
-		"realtime" : "\ue613",
-		"printer" : "\ue614",
-		"preview" : "\ue615",
-		"plus" : "\ue616",
-		"play" : "\ue617",
-		"pause" : "\ue618",
-		"orderedlist" : "\ue619",
-		"new-window" : "\ue61a",
-		"more" : "\ue61b",
-		"minus" : "\ue61c",
-		"loading" : "\ue61d",
-		"link" : "\ue61e",
-		"left" : "\ue61f",
-		"label" : "\ue620",
-		"italic" : "\ue621",
-		"image" : "\ue622",
-		"html" : "\ue623",
-		"home" : "\ue624",
-		"hide" : "\ue625",
-		"help" : "\ue626",
-		"gear" : "\ue627",
-		"exit" : "\ue628",
-		"edit" : "\ue629",
-		"download" : "\ue62a",
-		"document" : "\ue62b",
-		"db" : "\ue62c",
-		"dashboardlist" : "\ue62d",
-		"close" : "\ue62e",
-		"chevron-right" : "\ue62f",
-		"chevron-left" : "\ue630",
-		"checkmark" : "\ue631",
-		"check" : "\ue632",
-		"chart" : "\ue633",
-		"caution" : "\ue634",
-		"calendar" : "\ue635",
-		"bold" : "\ue636",
-		"arrow3" : "\ue637",
-		"arrow2" : "\ue638",
-		"arrow1" : "\ue639",
-		"align-right" : "\ue63a",
-		"align-left" : "\ue63b",
-		"align-center" : "\ue63c",
-		"add-dir2" : "\ue63d",
-		"add-dir" : "\ue63e"
+		"user" : "\ue602",
+		"upload" : "\ue603",
+		"unorderedlist" : "\ue604",
+		"underline" : "\ue605",
+		"trashcan" : "\ue606",
+		"tool" : "\ue607",
+		"textcolor" : "\ue608",
+		"text" : "\ue609",
+		"table" : "\ue60a",
+		"stoppage" : "\ue60b",
+		"stop" : "\ue60c",
+		"server" : "\ue60d",
+		"search" : "\ue60e",
+		"save" : "\ue60f",
+		"rule" : "\ue610",
+		"right" : "\ue611",
+		"return" : "\ue612",
+		"resize" : "\ue613",
+		"report-link" : "\ue614",
+		"refresh2" : "\ue615",
+		"refresh" : "\ue616",
+		"realtime" : "\ue617",
+		"profile" : "\ue618",
+		"printer" : "\ue619",
+		"preview" : "\ue61a",
+		"plus" : "\ue61b",
+		"play" : "\ue61c",
+		"pause" : "\ue61d",
+		"orderedlist" : "\ue61e",
+		"new-window" : "\ue61f",
+		"more" : "\ue620",
+		"monitoring" : "\ue621",
+		"minus" : "\ue622",
+		"loading" : "\ue623",
+		"link" : "\ue624",
+		"left" : "\ue625",
+		"label" : "\ue626",
+		"jennifer-server" : "\ue627",
+		"italic" : "\ue628",
+		"image" : "\ue629",
+		"html" : "\ue62a",
+		"home" : "\ue62b",
+		"hide" : "\ue62c",
+		"help" : "\ue62d",
+		"gear" : "\ue62e",
+		"exit" : "\ue62f",
+		"edit" : "\ue630",
+		"download" : "\ue631",
+		"document" : "\ue632",
+		"device" : "\ue633",
+		"db" : "\ue634",
+		"dashboardlist" : "\ue635",
+		"close" : "\ue636",
+		"chevron-right" : "\ue637",
+		"chevron-left" : "\ue638",
+		"checkmark" : "\ue639",
+		"check" : "\ue63a",
+		"chart" : "\ue63b",
+		"caution" : "\ue63c",
+		"caution2" : "\ue63d",
+		"calendar" : "\ue63e",
+		"bold" : "\ue63f",
+		"arrow3" : "\ue640",
+		"arrow2" : "\ue641",
+		"arrow1" : "\ue642",
+		"align-right" : "\ue643",
+		"align-left" : "\ue644",
+		"align-center" : "\ue645",
+		"add-dir2" : "\ue646",
+		"add-dir" : "\ue647"
 	}
 });
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
