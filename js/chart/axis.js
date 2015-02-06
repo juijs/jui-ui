@@ -161,6 +161,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Object} options
          */
         this.reload = function(options) {
+            var area = chart.area();
+
             _.extend(this, {
                 x : options.x,
                 y : options.y,
@@ -168,7 +170,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             });
 
             _area = caculatePanel(_.extend(options.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+                x: 0, y: 0 , width: area.width, height: area.height
             }, true));
 
             this.x = drawGridType(this, "x");

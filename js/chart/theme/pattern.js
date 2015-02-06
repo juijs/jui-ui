@@ -27,7 +27,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Base Font Color  */
         fontColor : "#333333",
         /** Base Font Family */
-        fontFamily : "arial,Tahoma,verdana,icojui",
+        fontFamily : "arial,Tahoma,verdana",
         /** Color List  */
         colors : themeColors,
 

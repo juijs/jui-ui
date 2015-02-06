@@ -36,6 +36,14 @@ jui.ready([ "ui.datepicker" ], function(datepicker) {
         assert.ok(d1.getFormat() == "2014/01/08", "날짜 선택 확인");
     });
 
+    QUnit.test("달력 시간 테스트", function(assert) {
+        var d = d1.getDate();
+
+        assert.ok(d.getHours() == 0, "시 확인");
+        assert.ok(d.getMinutes() == 0, "분 확인");
+        assert.ok(d.getSeconds() == 0, "초 확인");
+    });
+
     QUnit.done(function() {
         $(d1.root).remove();
     });

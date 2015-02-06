@@ -78,7 +78,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
  				group.append(chart.text({
 					x : width + 4,
 					y : 11,
-                    "font-family" : chart.theme("fontFamily"),
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"

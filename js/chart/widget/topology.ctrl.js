@@ -74,7 +74,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             self.on("chart.mousemove", function(e) {
                 if(startX == null || startY == null) return;
 
-                var xy = chart.viewBox(startX - e.x, startY - e.y);
+                var xy = chart.view(startX - e.x, startY - e.y);
                 boxX = xy.x;
                 boxY = xy.y;
             });

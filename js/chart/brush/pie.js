@@ -75,13 +75,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                     pie = createPie(startAngle, endAngle, self.color(i));
 
                 if(brush.showText) {
-                    var series = chart.get("series", target[i]),
-                        dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", brush.format) ? brush.format(target[i], value) : dText,
-                        outer = self.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
+                    var text = self.getFormatText(target[i], value),
+                        elem = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
-                    self.addEvent(outer, index, i);
-                    g.append(outer);
+                    self.addEvent(elem, index, i);
+                    g.append(elem);
                 }
 
                 self.addEvent(pie, index, i);
@@ -91,19 +89,22 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-        /**
-         * @method drawTextOuter 
-         * 
-         * 바깥쪽 선이 있는 Text 표시
-         *  
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @param {Number} centerAngle
-         * @param {Number} outerRadius
-         * @param {String} text 표시될 텍스트
-         * @return {util.svg.element}
-         */
-        this.drawTextOuter = function(centerX, centerY, centerAngle, outerRadius, text) {
+        this.getFormatText = function(target, value) {
+            var series = this.chart.get("series", target),
+                key = (series.text) ? series.text : target;
+
+            if(typeof(this.brush.format) == "function") {
+                return this.format(key, value);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + this.format(value);
+            }
+        }
+
+        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
                 r = outerRadius * 1.2,
@@ -148,9 +149,9 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
-            clip : false,
-            /** @cfg {Boolean} showText 텍스트 보이기 여부 설정*/
-            showText: false
+            clip: false,
+            showText: false,
+            format: null
         }
     }
 

@@ -126,13 +126,11 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 				});
 
                 if(this.brush.showText) {
-                    var series = this.chart.get("series", target[i]),
-                        dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", this.brush.format) ? this.brush.format(target[i], value) : dText,
-                        outer = this.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, cText);
+                    var text = this.getFormatText(target[i], value),
+                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, text);
 
-                    this.addEvent(outer, 0, i);
-                    group.append(outer);
+                    this.addEvent(elem, 0, i);
+                    group.append(elem);
                 }
 
                 this.addEvent(g, 0, i);

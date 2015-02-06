@@ -25,7 +25,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         function getFormat(key, value, data) {
             if(typeof(widget.format) == "function") {
-                return widget.format.apply(self.chart, [ key, value, data ]);
+                return self.format(key, value, data);
             } else {
                 if (!value) {
                     return key;
@@ -88,8 +88,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     "stroke-width": 1
                 });
 
-                text = chart.svg.text({
-                    "font-family": chart.theme("fontFamily"),
+                text = chart.text({
                     "font-size": chart.theme("tooltipFontSize"),
                     "fill": chart.theme("tooltipFontColor"),
                     y: textY

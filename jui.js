@@ -5029,6 +5029,15 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 });
 jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
+    function getStartDate(date) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+
+        return date;
+    }
+
     /**
      * @class ui.datepicker
      * implements date picker
@@ -5071,6 +5080,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             } else if(opts.type == "yearly") {
                 selDate = new Date(no + "/01/01");
             }
+
+            // 0시 0분 0초 0밀리 초로 설정
+            selDate = getStartDate(selDate);
         }
 
         function getCalendarDate(self) {
@@ -5085,8 +5097,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         	} else if(opts.type == "yearly") {
         		tmpDate = new Date();
         	}
-        	
-        	return tmpDate;
+
+        	return getStartDate(tmpDate);
         }
 
         function getCalendarHtml(self, obj) {
@@ -5164,8 +5176,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             for(var i = start; i < 42; i++) {
                 if(no <= ldate) {
+                    var type = "";
+
+                    if(d.getMonth() + 1 == m && d.getDate() == no) {
+                        type = "now";
+                    }
+
+                    if(selDate != null) {
+                        if(selDate.getFullYear() == y && selDate.getMonth() + 1 == m && selDate.getDate() == no) {
+                            type = "active";
+                        }
+                    }
+
                     nums[i] = no;
-                    objs[i] = { type: (d.getMonth() + 1 == m && d.getDate() == no) ? "now": "", no: nums[i] };
+                    objs[i] = { type: type, no: nums[i] };
                     no++;
                 } else {
                     nums[i] = no - ldate;
@@ -5184,8 +5208,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             var d = new Date();
 
             for(var i = 1; i <= 12; i++) {
+                var type = "";
+
+                if(d.getFullYear() == y && d.getMonth() + 1 == i) {
+                    type = "now";
+                }
+
+                if(selDate != null) {
+                    if(selDate.getFullYear() == y && selDate.getMonth() + 1 == i) {
+                        type = "active";
+                    }
+                }
+
                 nums.push(i);
-                objs.push({ type: (d.getFullYear() == year && d.getMonth() + 1 == i) ? "now": "", no: i });
+                objs.push({ type: type, no: i });
             }
 
             return { objs: objs, nums: nums };
@@ -5199,8 +5235,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             var d = new Date();
 
             for(var i = startYear; i < startYear + 12; i++) {
+                var type = "";
+
+                if(d.getFullYear() == i) {
+                    type = "now";
+                }
+
+                if(selDate != null) {
+                    if(selDate.getFullYear() == i) {
+                        type = "active";
+                    }
+                }
+
                 nums.push(i);
-                objs.push({ type: (d.getFullYear() == i) ? "now": "", no: i });
+                objs.push({ type: type, no: i });
             }
 
             return { objs: objs, nums: nums };
@@ -5333,11 +5381,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
     }
 
     UI.setup = function() {
+        var now = getStartDate(new Date());
+
         return {
             type: "daily",
             titleFormat: "yyyy.MM",
             format: "yyyy-MM-dd",
-            date: new Date(),
+            date: now,
             animate: false // @Deprecated
         };
     }
@@ -7454,9 +7504,10 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
             if(!isUpdate) setIndex(rownum); // 노드 인덱스 설정
 
             if(this.element != null) {
-                var newElem = getElement();
+                var newElem = getElement(),
+                    clsValue = $(this.element).attr("class");
 
-                $(newElem).insertAfter(this.element);
+                $(newElem).addClass(clsValue).insertAfter(this.element);
                 $(this.element).remove();
 
                 this.element = newElem;
@@ -11462,6 +11513,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Object} options
          */
         this.reload = function(options) {
+            var area = chart.area();
+
             _.extend(this, {
                 x : options.x,
                 y : options.y,
@@ -11469,7 +11522,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             });
 
             _area = caculatePanel(_.extend(options.area, {
-                x: 0, y: 0 , width: chart.area("width"), height: chart.area("height")
+                x: 0, y: 0 , width: area.width, height: area.height
             }, true));
 
             this.x = drawGridType(this, "x");
@@ -12127,17 +12180,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function setChartIcons() {
-            var path = _options.iconPath;
-            if($(".jui").size() > 0 || path == null) return;
+        function setChartIcons(self) {
+            var icon = _options.icon;
+            if(!_.typeCheck("string", icon.path)) return;
 
             var iconList = [
-                "url(" + path + ".eot) format('embedded-opentype')",
-                "url(" + path + ".woff) format('woff')",
-                "url(" + path + ".ttf) format('truetype')",
-                "url(" + path + ".svg) format('svg')"
+                "url(" + icon.path + ".eot) format('embedded-opentype')",
+                "url(" + icon.path + ".woff) format('woff')",
+                "url(" + icon.path + ".ttf) format('truetype')",
+                "url(" + icon.path + ".svg) format('svg')"
             ],
-            fontFace = "font-family: icojui; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
 
             (function(rule) {
                 var sheet = (function() {
@@ -12164,7 +12217,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
                 height: _options.height,
-                'buffered-rendering' : 'dynamic'
+                "buffered-rendering" : "dynamic"
             });
 
             // 차트 기본 렌더링
@@ -12174,7 +12227,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setChartEvent(this);
 
             // 아이콘 폰트 설정
-            setChartIcons();
+            setChartIcons(this);
         }
 
         /**
@@ -12279,7 +12332,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 현재 text 관련 theme 가 정해진 text element 생성
+         * 아이콘 유니코드를 가져오는 함수
+         *
+         * @param key
+         */
+        this.icon = function(key) {
+            return jui.include("chart.icon." + _options.icon.type)[key];
+        }
+
+        /**
+         * 텍스트 엘리먼트 생성하는 함수, 아이콘 키를 유니코드로 자동으로 파싱해준다.
          *
          * @param {object} attr
          * @param {string|function} textOrCallback
@@ -12291,34 +12353,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                 if(result != null) {
                     for(var i = 0; i < result.length; i++) {
-                        var unicode = this.icon(result[i].substring(1, result[i].length - 1));
-                        textOrCallback = textOrCallback.replace(result[i], unicode);
+                        var key = result[i].substring(1, result[i].length - 1);
+                        textOrCallback = textOrCallback.replace(result[i], this.icon(key));
                     }
                 }
             }
 
-            var el = this.svg.text(_.extend({
-                "font-family": this.theme("fontFamily"),
-                "font-size": this.theme("fontSize"),
-                "fill": this.theme("fontColor")
-            }, attr), textOrCallback);
-
-            return el;
-        }
-
-        /**
-         * CSS의 SVG 아이콘을 가져오는 메소드
-         *
-         * @param key
-         * @returns {*}
-         */
-        this.icon = function(key) {
-            if(key.indexOf(".") == -1) return null;
-
-            var keySet = key.split("."),
-                module = jui.include("chart.icon." + keySet[0]);
-
-            return module[keySet[1]];
+            return this.svg.text(attr, textOrCallback || "");
         }
 
         /**
@@ -12439,7 +12480,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param y
          * @returns {{x: number, y: number}}
          */
-        this.viewBox = function(x, y) {
+        this.view = function(x, y) {
             var area = this.area(),
                 xy = {
                     x: _xbox,
@@ -12485,8 +12526,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             drawBrush(this);
             drawWidget(this, isAll);
 
-            // SVG 태그 백그라운드 테마 설정
+            // SVG 기본 테마 설정
             this.svg.root.css({
+                "font-family": this.theme("fontFamily") + "," + _options.icon.type,
+                "font-size": this.theme("fontSize"),
+                fill: this.theme("fontColor"),
                 background: this.theme("backgroundColor")
             });
 
@@ -12660,8 +12704,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             /** @cfg {Boolean} [render=true] */
             render: true,
 
-            /** @cfg {String} */
-            iconPath: null
+            /** @cfg {Object} */
+            icon: {
+                type: "jennifer",
+                path: null
+            }
         }
     }
 
@@ -12803,7 +12850,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg   */
     	fontColor : "#333333",
         /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         /** @cfg   */
         colors : themeColors,
 
@@ -13047,7 +13094,7 @@ jui.define("chart.theme.gradient", [], function() {
         backgroundColor : "white",
         fontSize : "11px",
         fontColor : "#666",
-        fontFamily : "arial,Tahoma,verdana,icojui",
+        fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
@@ -13187,7 +13234,7 @@ jui.define("chart.theme.dark", [], function() {
     	backgroundColor : "#222222",
     	fontSize : "12px",
     	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
         // grid styles
@@ -13323,7 +13370,7 @@ jui.define("chart.theme.pastel", [], function() {
 		backgroundColor : "white",
 		fontSize : "11px",
 		fontColor : "#333333",
-		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif,icojui",
+		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
 		colors : themeColors,
 
 		// grid styles
@@ -13466,7 +13513,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Base Font Color  */
         fontColor : "#333333",
         /** Base Font Family */
-        fontFamily : "arial,Tahoma,verdana,icojui",
+        fontFamily : "arial,Tahoma,verdana",
         /** Color List  */
         colors : themeColors,
 
@@ -13756,69 +13803,80 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"ws" : "\ue600",
-		"was" : "\ue601",
-		"upload" : "\ue602",
-		"unorderedlist" : "\ue603",
-		"underline" : "\ue604",
-		"trashcan" : "\ue605",
-		"textcolor" : "\ue606",
-		"text" : "\ue607",
-		"table" : "\ue608",
-		"stoppage" : "\ue609",
-		"stop" : "\ue60a",
-		"server" : "\ue60b",
-		"search" : "\ue60c",
-		"save" : "\ue60d",
-		"right" : "\ue60e",
-		"return" : "\ue60f",
-		"resize" : "\ue610",
-		"refresh2" : "\ue611",
-		"refresh" : "\ue612",
-		"realtime" : "\ue613",
-		"printer" : "\ue614",
-		"preview" : "\ue615",
-		"plus" : "\ue616",
-		"play" : "\ue617",
+		"menu" : "\ue600",
+		"report-build" : "\ue601",
+		"jennifer-server" : "\ue602",
+		"user" : "\ue603",
+		"rule" : "\ue604",
+		"profile" : "\ue605",
+		"monitoring" : "\ue606",
+		"device" : "\ue607",
+		"caution2" : "\ue608",
+		"tool" : "\ue609",
+		"report-link" : "\ue60a",
+		"was" : "\ue60b",
+		"ws" : "\ue60c",
+		"server" : "\ue60d",
+		"db" : "\ue60e",
+		"minus" : "\ue60f",
+		"label" : "\ue610",
+		"checkmark" : "\ue611",
+		"stoppage" : "\ue612",
+		"align-right" : "\ue613",
+		"caution" : "\ue614",
+		"return" : "\ue615",
+		"loading" : "\ue616",
+		"plus" : "\ue617",
 		"pause" : "\ue618",
-		"orderedlist" : "\ue619",
-		"new-window" : "\ue61a",
-		"more" : "\ue61b",
-		"minus" : "\ue61c",
-		"loading" : "\ue61d",
-		"link" : "\ue61e",
-		"left" : "\ue61f",
-		"label" : "\ue620",
-		"italic" : "\ue621",
-		"image" : "\ue622",
-		"html" : "\ue623",
-		"home" : "\ue624",
-		"hide" : "\ue625",
-		"help" : "\ue626",
-		"gear" : "\ue627",
-		"exit" : "\ue628",
-		"edit" : "\ue629",
-		"download" : "\ue62a",
-		"document" : "\ue62b",
-		"db" : "\ue62c",
-		"dashboardlist" : "\ue62d",
-		"close" : "\ue62e",
-		"chevron-right" : "\ue62f",
-		"chevron-left" : "\ue630",
-		"checkmark" : "\ue631",
-		"check" : "\ue632",
-		"chart" : "\ue633",
-		"caution" : "\ue634",
-		"calendar" : "\ue635",
-		"bold" : "\ue636",
-		"arrow3" : "\ue637",
-		"arrow2" : "\ue638",
-		"arrow1" : "\ue639",
-		"align-right" : "\ue63a",
-		"align-left" : "\ue63b",
-		"align-center" : "\ue63c",
-		"add-dir2" : "\ue63d",
-		"add-dir" : "\ue63e"
+		"play" : "\ue619",
+		"resize" : "\ue61a",
+		"right" : "\ue61b",
+		"left" : "\ue61c",
+		"bold" : "\ue61d",
+		"chart" : "\ue61e",
+		"document" : "\ue61f",
+		"link" : "\ue620",
+		"more" : "\ue621",
+		"arrow3" : "\ue622",
+		"arrow1" : "\ue623",
+		"arrow2" : "\ue624",
+		"textcolor" : "\ue625",
+		"text" : "\ue626",
+		"refresh" : "\ue627",
+		"chevron-right" : "\ue628",
+		"chevron-left" : "\ue629",
+		"align-center" : "\ue62a",
+		"align-left" : "\ue62b",
+		"preview" : "\ue62c",
+		"close" : "\ue62d",
+		"exit" : "\ue62e",
+		"image" : "\ue62f",
+		"dashboardlist" : "\ue630",
+		"add-dir" : "\ue631",
+		"add-dir2" : "\ue632",
+		"calendar" : "\ue633",
+		"check" : "\ue634",
+		"download" : "\ue635",
+		"edit" : "\ue636",
+		"gear" : "\ue637",
+		"help" : "\ue638",
+		"hide" : "\ue639",
+		"home" : "\ue63a",
+		"html" : "\ue63b",
+		"italic" : "\ue63c",
+		"new-window" : "\ue63d",
+		"orderedlist" : "\ue63e",
+		"printer" : "\ue63f",
+		"realtime" : "\ue640",
+		"refresh2" : "\ue641",
+		"save" : "\ue642",
+		"search" : "\ue643",
+		"stop" : "\ue644",
+		"table" : "\ue645",
+		"trashcan" : "\ue646",
+		"underline" : "\ue647",
+		"unorderedlist" : "\ue648",
+		"upload" : "\ue649"
 	}
 });
 jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
@@ -18292,13 +18350,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                     pie = createPie(startAngle, endAngle, self.color(i));
 
                 if(brush.showText) {
-                    var series = chart.get("series", target[i]),
-                        dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", brush.format) ? brush.format(target[i], value) : dText,
-                        outer = self.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, cText);
+                    var text = self.getFormatText(target[i], value),
+                        elem = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
-                    self.addEvent(outer, index, i);
-                    g.append(outer);
+                    self.addEvent(elem, index, i);
+                    g.append(elem);
                 }
 
                 self.addEvent(pie, index, i);
@@ -18308,7 +18364,22 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-        this.drawTextOuter = function(centerX, centerY, centerAngle, outerRadius, text) {
+        this.getFormatText = function(target, value) {
+            var series = this.chart.get("series", target),
+                key = (series.text) ? series.text : target;
+
+            if(typeof(this.brush.format) == "function") {
+                return this.format(key, value);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + this.format(value);
+            }
+        }
+
+        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
                 r = outerRadius * 1.2,
@@ -18354,7 +18425,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
     PieBrush.setup = function() {
         return {
             clip: false,
-            showText: false
+            showText: false,
+            format: null
         }
     }
 
@@ -18487,13 +18559,11 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 				});
 
                 if(this.brush.showText) {
-                    var series = this.chart.get("series", target[i]),
-                        dText = ((series.text != "") ? series.text : target[i]) + ": " + value,
-                        cText = _.typeCheck("function", this.brush.format) ? this.brush.format(target[i], value) : dText,
-                        outer = this.drawTextOuter(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, cText);
+                    var text = this.getFormatText(target[i], value),
+                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, text);
 
-                    this.addEvent(outer, 0, i);
-                    group.append(outer);
+                    this.addEvent(elem, 0, i);
+                    group.append(elem);
                 }
 
                 this.addEvent(g, 0, i);
@@ -19526,7 +19596,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				x : 0,
 				y : (brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
-				"font-family" : chart.theme("fontFamily"),
 				"font-size" : "3em",
 				"font-weight" : 1000,
 				"fill" : self.color(0)
@@ -19537,7 +19606,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
-                    "font-family" : chart.theme("fontFamily"),
 					"font-size" : "1.5em",
 					"font-weight" : 500,
 					"fill" : chart.theme("gaugeFontColor")
@@ -19558,7 +19626,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : chart.theme("fontFamily"),
 				"fill" : chart.theme("gaugeFontColor")
             }, min + ""));
 
@@ -19570,7 +19637,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-                "font-family" : chart.theme("fontFamily"),
 				"fill" : chart.theme("gaugeFontColor")
             }, max + ""));
 
@@ -21116,7 +21182,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         function getFormat(key, value, data) {
             if(typeof(widget.format) == "function") {
-                return widget.format.apply(self.chart, [ key, value, data ]);
+                return self.format(key, value, data);
             } else {
                 if (!value) {
                     return key;
@@ -21179,8 +21245,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     "stroke-width": 1
                 });
 
-                text = chart.svg.text({
-                    "font-family": chart.theme("fontFamily"),
+                text = chart.text({
                     "font-size": chart.theme("tooltipFontSize"),
                     "fill": chart.theme("tooltipFontColor"),
                     y: textY
@@ -21299,7 +21364,6 @@ jui.define("chart.widget.title", [], function() {
                 x : x + widget.dx,
                 y : y + widget.dy,
                 "text-anchor" : anchor,
-                "font-family" : chart.theme("fontFamily"),
                 "font-size" : widget.size || chart.theme("titleFontSize"),
                 "font-weight" : chart.theme("titleFontWeight"),
                 "fill" : chart.theme("titleFontColor")
@@ -21416,7 +21480,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
  				group.append(chart.text({
 					x : width + 4,
 					y : 11,
-                    "font-family" : chart.theme("fontFamily"),
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
@@ -21835,8 +21898,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             points: self.balloonPoints("left", tw, th, ta)
                         });
 
-                        chart.svg.text({
-                            "font-family": chart.theme("fontFamily"),
+                        chart.text({
                             "font-size": chart.theme("crossBalloonFontSize"),
                             "fill": chart.theme("crossBalloonFontColor"),
                             "text-anchor": "middle",
@@ -21864,8 +21926,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             points: self.balloonPoints("bottom", tw, th, ta)
                         });
 
-                        chart.svg.text({
-                            "font-family": chart.theme("fontFamily"),
+                        chart.text({
                             "font-size": chart.theme("crossBalloonFontSize"),
                             "fill": chart.theme("crossBalloonFontColor"),
                             "text-anchor": "middle",
@@ -22019,7 +22080,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             self.on("chart.mousemove", function(e) {
                 if(startX == null || startY == null) return;
 
-                var xy = chart.viewBox(startX - e.x, startY - e.y);
+                var xy = chart.view(startX - e.x, startY - e.y);
                 boxX = xy.x;
                 boxY = xy.y;
             });

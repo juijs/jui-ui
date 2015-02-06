@@ -37,7 +37,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg   */
     	fontColor : "#333333",
         /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana,icojui",
+		fontFamily : "arial,Tahoma,verdana",
         /** @cfg   */
         colors : themeColors,
 
