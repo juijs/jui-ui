@@ -450,11 +450,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
     CoreBrush.setup = function() {
         return {
 
-            /**
-             * @property {chart.builder} chart
-             * @property {chart.axis} axis
-             * @property {Object} brush
-             */
+            /** @property {chart.builder} chart */
+            /** @property {chart.axis} axis */
+            /** @property {Object} brush */
             
             /** @cfg {Array} [target=null] 적용될 필드 리스트  */
             target: null,
