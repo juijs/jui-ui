@@ -97,6 +97,11 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 	}
 
     CoreWidget.setup = function() {
+
+        /** @property {chart.builder} chart */
+        /** @property {chart.axis} axis */
+        /** @property {Object} widget */
+        
         return {
             /**
              * @cfg {Number} [brush=0] selected brush index  
