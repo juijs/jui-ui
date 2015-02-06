@@ -150,9 +150,10 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
             if(!isUpdate) setIndex(rownum); // 노드 인덱스 설정
 
             if(this.element != null) {
-                var newElem = getElement();
+                var newElem = getElement(),
+                    clsValue = $(this.element).attr("class");
 
-                $(newElem).insertAfter(this.element);
+                $(newElem).addClass(clsValue).insertAfter(this.element);
                 $(this.element).remove();
 
                 this.element = newElem;
