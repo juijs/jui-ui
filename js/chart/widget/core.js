@@ -92,7 +92,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.on = function(type, callback) {
-            return this.chart.on(type, callback, this.isRender());
+            return this.chart.on(type, callback, (this.isRender() ? "render" : "renderAll"));
         }
 	}
 

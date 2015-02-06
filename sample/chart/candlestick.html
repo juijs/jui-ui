@@ -82,30 +82,32 @@
                     domain: [ 20, 30 ],
                     step: 5,
                     line : true
+                },
+                keymap : {
+                    l: "low",
+                    h: "high",
+                    o: "open",
+                    c: "close"
                 }
             }
 
             ],
             series : {
-                l: {
+                low: {
                     text: "최저"
                 },
-                h: {
+                high: {
                     text: "최고"
                 },
-                o: {
+                open: {
                     text: "시작"
                 },
-                c: {
+                close: {
                     text: "종료"
                 }
             },
             brush : [{
-                type : "candlestick",
-                low : "l",
-                high : "h",
-                open : "o",
-                close : "c"
+                type : "candlestick"
             }],
             widget : [{
                 type : "scroll"
