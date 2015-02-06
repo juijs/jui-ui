@@ -1,5 +1,6 @@
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"menu" : "\ue600",
 		"report-build" : "\ue648",
 		"ws" : "\ue600",
 		"was" : "\ue601",

@@ -1503,6 +1503,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.jui .icon-menu:before {
+  content: "\e600";
+}
 .jui .icon-report-build:before {
   content: "\e648";
 }
