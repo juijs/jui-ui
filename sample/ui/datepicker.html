@@ -1,0 +1,113 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Button</title>
+
+<link rel="stylesheet" href="../../../custom/menual.css" />
+<link rel="stylesheet" href="../../jui.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/ui/datepicker.js"></script>
+
+<script>
+    jui.ready([ "ui.datepicker" ], function(datepicker) {
+        datepicker1 = datepicker("#datepicker1", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker2 = datepicker("#datepicker2", {
+            type: "monthly",
+            titleFormat: "yyyy",
+            format: "yyyy/MM",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker3 = datepicker("#datepicker3", {
+            type: "yearly",
+            titleFormat: "yyyy",
+            format: "yyyy",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+    });
+</script>
+
+</head>
+<body class="jui">
+
+<div id="datepicker1" class="datepicker">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+<br/>
+<div id="datepicker2" class="datepicker datepicker-large">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+    </table>
+</div>
+<br/>
+<div id="datepicker3" class="datepicker datepicker-large">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+    </table>
+</div>
+
+<script data-jui="#datepicker1" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker2" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !>월</td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker3" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !>년</td>
+        <! } !>
+    </tr>
+</script>
+
+</body>
+</html>

@@ -1,5 +1,14 @@
 jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
+    function getStartDate(date) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+
+        return date;
+    }
+
     /**
      * @class ui.datepicker
      * implements date picker
@@ -42,6 +51,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             } else if(opts.type == "yearly") {
                 selDate = new Date(no + "/01/01");
             }
+
+            // 0시 0분 0초 0밀리 초로 설정
+            selDate = getStartDate(selDate);
         }
 
         function getCalendarDate(self) {
@@ -56,8 +68,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         	} else if(opts.type == "yearly") {
         		tmpDate = new Date();
         	}
-        	
-        	return tmpDate;
+
+        	return getStartDate(tmpDate);
         }
 
         function getCalendarHtml(self, obj) {
@@ -135,8 +147,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             for(var i = start; i < 42; i++) {
                 if(no <= ldate) {
+                    var type = "";
+
+                    if(d.getMonth() + 1 == m && d.getDate() == no) {
+                        type = "now";
+                    }
+
+                    if(selDate != null) {
+                        if(selDate.getFullYear() == y && selDate.getMonth() + 1 == m && selDate.getDate() == no) {
+                            type = "active";
+                        }
+                    }
+
                     nums[i] = no;
-                    objs[i] = { type: (d.getMonth() + 1 == m && d.getDate() == no) ? "now": "", no: nums[i] };
+                    objs[i] = { type: type, no: nums[i] };
                     no++;
                 } else {
                     nums[i] = no - ldate;
@@ -155,8 +179,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             var d = new Date();
 
             for(var i = 1; i <= 12; i++) {
+                var type = "";
+
+                if(d.getFullYear() == y && d.getMonth() + 1 == i) {
+                    type = "now";
+                }
+
+                if(selDate != null) {
+                    if(selDate.getFullYear() == y && selDate.getMonth() + 1 == i) {
+                        type = "active";
+                    }
+                }
+
                 nums.push(i);
-                objs.push({ type: (d.getFullYear() == year && d.getMonth() + 1 == i) ? "now": "", no: i });
+                objs.push({ type: type, no: i });
             }
 
             return { objs: objs, nums: nums };
@@ -170,8 +206,20 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             var d = new Date();
 
             for(var i = startYear; i < startYear + 12; i++) {
+                var type = "";
+
+                if(d.getFullYear() == i) {
+                    type = "now";
+                }
+
+                if(selDate != null) {
+                    if(selDate.getFullYear() == i) {
+                        type = "active";
+                    }
+                }
+
                 nums.push(i);
-                objs.push({ type: (d.getFullYear() == i) ? "now": "", no: i });
+                objs.push({ type: type, no: i });
             }
 
             return { objs: objs, nums: nums };
@@ -304,11 +352,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
     }
 
     UI.setup = function() {
+        var now = getStartDate(new Date());
+
         return {
             type: "daily",
             titleFormat: "yyyy.MM",
             format: "yyyy-MM-dd",
-            date: new Date(),
+            date: now,
             animate: false // @Deprecated
         };
     }
