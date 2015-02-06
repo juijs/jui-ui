@@ -653,7 +653,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
-                mainObj.init.prototype.$root = $(this);
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
