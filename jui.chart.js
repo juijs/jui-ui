@@ -2061,6 +2061,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
+        
+        this.find = function(selector) {
+            return this.$root.find(selector);
+        }
 
         /**
          * @method destroy
@@ -2096,6 +2100,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype = mainObj;
                 mainObj.init.prototype.selector = $root.selector;
                 mainObj.init.prototype.root = this;
+                mainObj.init.prototype.$root = $(this);
                 mainObj.init.prototype.options = opts;
                 mainObj.init.prototype.tpl = {};
                 mainObj.init.prototype.event = new Array(); // Custom Event
@@ -9955,7 +9960,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return tg + minRadius;
         }
 
-        /**
+        /*
          * 차트 데이터 핸들링 함수
          *
          */
@@ -10165,6 +10170,14 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method color
+         *  
+         * chart.color() 를 쉽게 사용할 수 있게 만든 유틸리티 함수 
+         *  
+         * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
+         * @returns {*}
+         */
         this.color = function(key) {
             if (typeof key == 'string') {
                 return this.chart.color(0, { colors : [key] });
@@ -10172,8 +10185,37 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             return this.chart.color(key, this.brush);
         }
 
+        /**
+         * @method on 
+         * 
+         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수 
+         * 
+         * @param {String} type event name 
+         * @param {Function} callback
+         * @return {*}
+         */
         this.on = function(type, callback) {
             return this.chart.on(type, callback, "render");
+        }
+
+        /**
+         * @method getValue
+         * 
+         * 객체에서 특정 필드 값을 가지고 온다. 
+         * 
+         * * this.brush.{FieldString} 이 설정 되어 있으면 하나의 키값으로 인지하고 값을 가지고 온다.
+         * * this.brush.{FieldString} 이 없으면  data.{FieldString} 으로 값을 가지고 온다.
+         *  
+         * @param {Object} data row data 
+         * @param {String} fieldString 필드 이름 
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            if (typeof defaultValue == 'undefined') {
+                defaultValue = '';
+            }
+            return data[this.brush.keymap[fieldString]] || data[fieldString] || defaultValue;
         }
 	}
 
@@ -10192,7 +10234,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true
+            clip: true,
+
+            /** @cfg {Object} [keymap={}] 특정 필드 이름으로 값을 매칭 시킴 */
+            keymap : {}
         }
     }
 
@@ -10209,6 +10254,17 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 		var g;
 		var zeroX, height, half_height, bar_height;
 
+        /**
+         * bar style 을 얻어온다. 
+         *  
+         * @return {Object} bar 에 관련된 스타일을 리턴한다. 
+         * @return {String} return.borderColor  
+         * @return {Number} return.borderWidth  
+         * @return {Number} return.borderOpacity  
+         * @return {Number} return.borderRadius  
+         * @return {Number} return.disableOpacity  
+         * @return {String} return.circleColor  
+         */
 		this.getBarStyle = function() {
 			return {
 				borderColor: this.chart.theme("barBorderColor"),
@@ -10220,6 +10276,18 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
+        /**
+         * @method getBarElement 
+         *  
+         * 특정 위치에 맞는 bar element 를 생성한다. 
+         *  
+         * @param {Number} dataIndex
+         * @param {Number} targetIndex
+         * @param {Object} info
+         * @param {Number} info.width bar 넓이
+         * @param {Number} info.height bar 높이
+         * @return {util.svg.element}
+         */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
 				color = this.color(targetIndex),
@@ -10250,6 +10318,13 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			return r;
 		}
 
+        /**
+         * @method setActiveEffect 
+         * 
+         * 활성화(active)된 영역 표시   
+         *  
+         * @param {Number} r
+         */
 		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
 				cols = this.barList;
@@ -10264,6 +10339,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
+        /**
+         * @method drawBefore 
+         * 
+         * @protected 
+         */
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			zeroX = axis.x(0);
@@ -10274,6 +10354,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
             bar_height = (bar_height < 0) ? 0 : bar_height;
 		}
 
+        /**
+         * @method drawETC
+         * 
+         * @param {util.svg.element} group
+         */
 		this.drawETC = function(group) {
 			if(!_.typeCheck("array", this.barList)) return;
 
@@ -10407,11 +10492,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [minValue=0] */
+            /** @cfg {Number} [minValue=0] 표시 최소 값, minValue 보다 작으면 minValue 를 기준으로 그린다. */
 			minValue: 0,
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] 바깥쪽 여백  */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] 안쪽 여백 */
 			innerPadding: 1,
             /** @cfg {Number} [active=null] */
 			active: null,
@@ -11054,15 +11139,20 @@ jui.define("chart.brush.candlestick", [], function() {
                 var startX = this.axis.x(i),
                     r = null,
                     l = null;
+                
+                var high = this.getValue(data, 'high', 0),
+                    low = this.getValue(data, 'low', 0),
+                    open = this.getValue(data, 'open', 0),
+                    close = this.getValue(data, 'close', 0);
 
-                if(data.open > data.close) { // 시가가 종가보다 높을 때 (Red)
-                    var y = this.axis.y(data.open);
+                if(open > close) { // 시가가 종가보다 높을 때 (Red)
+                    var y = this.axis.y(open);
 
                     l = this.chart.svg.line({
                         x1: startX,
-                        y1: this.axis.y(data.high),
+                        y1: this.axis.y(high),
                         x2: startX,
-                        y2: this.axis.y(data.low),
+                        y2: this.axis.y(low),
                         stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
@@ -11071,20 +11161,20 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(this.axis.y(data.close) - y),
+                        height : Math.abs(this.axis.y(close) - y),
                         fill : this.chart.theme("candlestickInvertBackgroundColor"),
                         stroke: this.chart.theme("candlestickInvertBorderColor"),
                         "stroke-width": 1
                     });
 
                 } else {
-                    var y = this.axis.y(data.close);
+                    var y = this.axis.y(close);
 
                     l = this.chart.svg.line({
                         x1: startX,
-                        y1: this.axis.y(data.high),
+                        y1: this.axis.y(high),
                         x2: startX,
-                        y2: this.axis.y(data.low),
+                        y2: this.axis.y(low),
                         stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width":1
                     });
@@ -11093,7 +11183,7 @@ jui.define("chart.brush.candlestick", [], function() {
                         x : startX - barPadding,
                         y : y,
                         width : barWidth,
-                        height : Math.abs(this.axis.y(data.open) - y),
+                        height : Math.abs(this.axis.y(open) - y),
                         fill : this.chart.theme("candlestickBackgroundColor"),
                         stroke: this.chart.theme("candlestickBorderColor"),
                         "stroke-width": 1
@@ -11107,6 +11197,22 @@ jui.define("chart.brush.candlestick", [], function() {
             });
 
             return g;
+        }
+    }
+    
+    CandleStickBrush.setup = function() {
+        return {
+            /** @cfg {Object} keymap */
+            keymap : {
+                /** @cfg {String} [keymap.open='open'] */
+                "open": "open",
+                /** @cfg {String} [keymap.low='low'] */
+                "low" : "low",
+                /** @cfg {String} [keymap.high='high'] */
+                "high" : "high",
+                /** @cfg {String} [keymap.close='close'] */
+                "close" : "close"
+            }
         }
     }
 
@@ -11133,10 +11239,10 @@ jui.define("chart.brush.ohlc", [], function() {
             this.eachData(function(i, data) {
                 var startX = axis.x(i);
 
-                var open = data.open,
-                    close = data.close,
-                    low = data.low,
-                    high = data.high;
+                var high = this.getValue(data, 'high', 0),
+                    low = this.getValue(data, 'low', 0),
+                    open = this.getValue(data, 'open', 0),
+                    close = this.getValue(data, 'close', 0);
 
                 var color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
 
@@ -11648,8 +11754,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
             clip: false,
+            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
             showText: false,
+            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
             format: null
         }
     }
@@ -11672,14 +11781,16 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 
         /**
          * @method drawDonut 
-         *  
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @param {Number} innerRadius
-         * @param {Number} outerRadius
-         * @param {Number} startAngle
-         * @param {Number} endAngle
-         * @param {Object} attr
+         * 
+         * donut 을 그린다.
+         *   
+         * @param {Number} centerX 중앙 위치 x
+         * @param {Number} centerY 중앙 위치 y
+         * @param {Number} innerRadius 안쪽 반지름
+         * @param {Number} outerRadius 바깥쪽 반지름
+         * @param {Number} startAngle 시작 지점 각도
+         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
+         * @param {Object} attr donut 설정될 svg 속성 리스트
          * @param {Boolean} hasCircle
          * @return {util.svg.element}
          */
@@ -12883,10 +12994,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
-				value = (data[this.brush.target] || data.value) || 0,
-				max = (data[this.brush.max] || data.max) || 100,
-				min = (data[this.brush.min] || data.min) || 0,
-				unit = (data[this.brush.unit] || data.unit) || "";
+				value = this.getValue(data, 'value', 0),
+				max = this.getValue(data, 'max', 100),
+				min = this.getValue(data, 'min', 0),
+				unit = this.getValue(data, 'unit');
 
 
 			var rate = (value - min) / (max - min),
@@ -12927,21 +13038,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
 			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
 
-
-            // draw item 
-			this.drawItem(group, data, {
-				width : width,
-				height : height,
-				startAngle : brush.startAngle,
-				endAngle : currentAngle,
-                outerRadius : outerRadius,
-                innerRadius : innerRadius,
-                size : brush.size,
-				centerX : centerX,
-				centerY : centerY
-			});
-
-
 			return group;
 		}
 
@@ -12960,20 +13056,23 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
-            /** @cfg {String} [min=min] a field for min value */
-			min: "min",
-            /** @cfg {String} [max=max] a field for max value */
-			max: "max",
-            /** @cfg {String} [value=value] a field for value */
-			value: "value",
             /** @cfg {Number} [size=30] stroke width  */
 			size: 30,
             /** @cfg {Number} [startAngle=0] start point */
 			startAngle: 0,
             /** @cfg {Number} [endAngle=360]  */
 			endAngle: 360,
-            /** @cfg {String} [unitText=""]  */
-			unitText: ""
+            /** @cfg {Object} keymap */
+            keymap : {
+                /** @cfg {String} [keymap.value='value'] */
+                "value" : "value",
+                /** @cfg {String} [keymap.max='max'] */
+                "max" : "max",
+                /** @cfg {String} [keymap.min='min'] */
+                "min" : "min",
+                /** @cfg {String} [keymap.unit='unit'] */
+                "unit" : "unit"
+            }
 		};
 	}
 
@@ -13021,14 +13120,14 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = data.value || 0,
-                title =data.title || "",
-				max = data.max || 100,
-				min =data.min || 0,
-				unit = data.unit || "";
+				value = this.getValue(data, 'value', 0),
+                title = this.getValue(data, 'title'),
+				max =   this.getValue(data, 'max', 100),
+				min =   this.getValue(data, 'min', 0),
+				unit =  this.getValue(data, 'unit');
 
 			var rate = (value - min) / (max - min),
-				currentAngle = Math.abs(brush.startAngle - brush.endAngle) * rate;
+				currentAngle = brush.endAngle * rate;
 
 			if (brush.endAngle >= 360) {
 				brush.endAngle = 359.99999;
@@ -13087,7 +13186,14 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0
+            titleY: 0, 
+            keymap : {
+                "value" : "value",
+                "max" : "max",
+                "min" : "min",
+                "title" : "title",
+                "unit" : "unit"
+            }
 		};
 	}
 
@@ -14097,14 +14203,23 @@ jui.define("chart.brush.topology.node",
             clip: false,
 
             // topology options
+            /** @cfg {Function} [nodeTitle=null] */
             nodeTitle: null,
+            /** @cfg {Function} [nodeText=null] */
             nodeText: null,
+            /** @cfg {Function} [nodeImage=null] */
             nodeImage: null,
+            /** @cfg {Function/String} [nodeColor=null] */
             nodeColor: null,
+            /** @cfg {Array} [edgeData=[]] */
             edgeData: [],
+            /** @cfg {String} [edgeText=null] */
             edgeText: null,
+            /** @cfg {Function} [tooltipTitle=null] */
             tooltipTitle: null,
+            /** @cfg {Function} [tooltipText=null] */
             tooltipText: null,
+            /** @cfg {String} [activeEdge=null] */
             activeEdge: null
         }
     }

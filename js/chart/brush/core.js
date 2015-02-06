@@ -444,7 +444,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
-         * @method field 
+         * @method getValue
          * 
          * 객체에서 특정 필드 값을 가지고 온다. 
          * 
@@ -456,11 +456,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
          * @return {Mixed}
          */
-        this.field = function(data, fieldString, defaultValue) {
+        this.getValue = function(data, fieldString, defaultValue) {
             if (typeof defaultValue == 'undefined') {
                 defaultValue = '';
             }
-            return data[this.brush[fieldString]] || data[fieldString] || defaultValue;
+            return data[this.brush.keymap[fieldString]] || data[fieldString] || defaultValue;
         }
 	}
 
@@ -479,7 +479,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true
+            clip: true,
+
+            /** @cfg {Object} [keymap={}] 특정 필드 이름으로 값을 매칭 시킴 */
+            keymap : {}
         }
     }
 

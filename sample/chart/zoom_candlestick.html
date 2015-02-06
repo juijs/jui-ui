@@ -59,16 +59,16 @@
                     line : true 
                 },
                 //buffer : 5,
-                data : dataSource,
-                keymap : {
-                    l: "low",
-                    h: "high",
-                    o: "open",
-                    c: "close"
-                }
+                data : dataSource
             },
             brush : [{
-                type : 'candlestick'
+                type : 'candlestick',
+                keymap : {
+                    low: "l",
+                    high: "h",
+                    open: "o",
+                    close: "c"
+                }
             }],
             widget : [{
                 type : "zoom"

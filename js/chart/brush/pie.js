@@ -149,8 +149,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
             clip: false,
+            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
             showText: false,
+            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
             format: null
         }
     }

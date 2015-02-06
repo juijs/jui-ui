@@ -81,12 +81,6 @@
                     domain: [ 20, 30 ],
                     step: 5,
                     line : true 
-                },
-                keymap : {
-                    l: "low",
-                    h: "high",
-                    o: "open",
-                    c: "close"
                 }
             },
             series : {
@@ -104,7 +98,13 @@
                 }
             },
             brush : [{
-                type : "ohlc"
+                type : "ohlc",
+                keymap : {
+                    low: "l",
+                    high: "h",
+                    open: "o",
+                    close: "c"
+                }
             }],
             event: {
                 click: function(obj, e) {

@@ -82,12 +82,6 @@
                     domain: [ 20, 30 ],
                     step: 5,
                     line : true
-                },
-                keymap : {
-                    l: "low",
-                    h: "high",
-                    o: "open",
-                    c: "close"
                 }
             }
 
@@ -107,7 +101,13 @@
                 }
             },
             brush : [{
-                type : "candlestick"
+                type : "candlestick",
+                keymap : {
+                    low: "l",
+                    high: "h",
+                    open: "o",
+                    close: "c"
+                }
             }],
             widget : [{
                 type : "scroll"

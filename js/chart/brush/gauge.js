@@ -83,10 +83,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
-				value = this.field(data, 'value', 0),
-				max = this.field(data, 'max', 100),
-				min = this.field(data, 'min', 0),
-				unit = this.field(data, 'unit');
+				value = this.getValue(data, 'value', 0),
+				max = this.getValue(data, 'max', 100),
+				min = this.getValue(data, 'min', 0),
+				unit = this.getValue(data, 'unit');
 
 
 			var rate = (value - min) / (max - min),
@@ -145,20 +145,23 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
-            /** @cfg {String} [min=min] a field for min value */
-			min: "min",
-            /** @cfg {String} [max=max] a field for max value */
-			max: "max",
-            /** @cfg {String} [value=value] a field for value */
-			value: "value",
             /** @cfg {Number} [size=30] stroke width  */
 			size: 30,
             /** @cfg {Number} [startAngle=0] start point */
 			startAngle: 0,
             /** @cfg {Number} [endAngle=360]  */
 			endAngle: 360,
-            /** @cfg {String} [unit=""]  단위 텍스트 */
-			unit: ""
+            /** @cfg {Object} keymap */
+            keymap : {
+                /** @cfg {String} [keymap.value='value'] */
+                "value" : "value",
+                /** @cfg {String} [keymap.max='max'] */
+                "max" : "max",
+                /** @cfg {String} [keymap.min='min'] */
+                "min" : "min",
+                /** @cfg {String} [keymap.unit='unit'] */
+                "unit" : "unit"
+            }
 		};
 	}
 
