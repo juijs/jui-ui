@@ -255,6 +255,20 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method getValue
+         *
+         * chart.axis.getValue alias
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            return this.axis.getValue(data, fieldString, defaultValue);
+        }
+
+        /**
          * 
          * @method getXY
          *
@@ -467,10 +481,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true,
-
-            /** @cfg {Object} [keymap={}] 특정 필드 이름으로 값을 매칭 시킴 */
-            keymap : {}
+            clip: true
         }
     }
 

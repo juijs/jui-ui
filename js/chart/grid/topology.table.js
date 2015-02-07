@@ -17,7 +17,7 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
                 data = self.axis.data;
 
             for(var i = 0, len = data.length; i < len; i++) {
-                if(data[i].key == key) {
+                if(self.axis.getValue(data[i], "key") == key) {
                     index = i;
                     break;
                 }

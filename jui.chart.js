@@ -4566,20 +4566,6 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return points.join(" ");
         }
-
-        /**
-         * @method getValue
-         *
-         * chart.axis.getValue alias
-         *
-         * @param {Object} data row data
-         * @param {String} fieldString 필드 이름
-         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
-         * @return {Mixed}
-         */
-        this.getValue = function(data, fieldString, defaultValue) {
-            return this.axis.getValue(data, fieldString, defaultValue);
-        }
 	}
 
     Draw.setup = function() {
@@ -7344,6 +7330,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 	}
 
 	CoreGrid.setup = function() {
+
+        /** @property {chart.builder} chart */
+        /** @property {chart.axis} axis */
+        /** @property {Object} grid */
+        
 		return {
             /**
              * @cfg {Number} [extend=null] extend grid's option
@@ -9640,7 +9631,7 @@ jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
                 data = self.axis.data;
 
             for(var i = 0, len = data.length; i < len; i++) {
-                if(data[i].key == key) {
+                if(self.axis.getValue(data[i], "key") == key) {
                     index = i;
                     break;
                 }
@@ -9804,6 +9795,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var CoreBrush = function() {
+        
 
         function getMinMaxValue(data, target) {
             var seriesList = {},
@@ -10048,6 +10040,20 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method getValue
+         *
+         * chart.axis.getValue alias
+         *
+         * @param {Object} data row data
+         * @param {String} fieldString 필드 이름
+         * @param {String/Number/Boolean/Object} [defaultValue=''] 기본값
+         * @return {Mixed}
+         */
+        this.getValue = function(data, fieldString, defaultValue) {
+            return this.axis.getValue(data, fieldString, defaultValue);
+        }
+
+        /**
          * 
          * @method getXY
          *
@@ -10239,8 +10245,14 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
 	}
 
+
     CoreBrush.setup = function() {
         return {
+
+            /** @property {chart.builder} chart */
+            /** @property {chart.axis} axis */
+            /** @property {Object} brush */
+            
             /** @cfg {Array} [target=null] 적용될 필드 리스트  */
             target: null,
             /** @cfg {Array} [colors=null]
@@ -10254,10 +10266,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
             index: null,
             /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
-            clip: true,
-
-            /** @cfg {Object} [keymap={}] 특정 필드 이름으로 값을 매칭 시킴 */
-            keymap : {}
+            clip: true
         }
     }
 
@@ -11160,11 +11169,11 @@ jui.define("chart.brush.candlestick", [], function() {
                 var startX = this.axis.x(i),
                     r = null,
                     l = null;
-                
-                var high = this.getValue(data, 'high', 0),
-                    low = this.getValue(data, 'low', 0),
-                    open = this.getValue(data, 'open', 0),
-                    close = this.getValue(data, 'close', 0);
+
+                var high = this.getValue(data, "high", 0),
+                    low = this.getValue(data, "low", 0),
+                    open = this.getValue(data, "open", 0),
+                    close = this.getValue(data, "close", 0);
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
                     var y = this.axis.y(open);
@@ -11261,10 +11270,10 @@ jui.define("chart.brush.ohlc", [], function() {
             this.eachData(function(i, data) {
                 var startX = axis.x(i);
 
-                var high = this.getValue(data, 'high', 0),
-                    low = this.getValue(data, 'low', 0),
-                    open = this.getValue(data, 'open', 0),
-                    close = this.getValue(data, 'close', 0);
+                var high = this.getValue(data, "high", 0),
+                    low = this.getValue(data, "low", 0),
+                    open = this.getValue(data, "open", 0),
+                    close = this.getValue(data, "close", 0);
 
                 var color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
 
@@ -11795,7 +11804,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
      * 
      * implements donut brush 
      *  
-     * @extends chart.brush.core  
+     * @extends chart.brush.pie
      * 
      */
 	var DonutBrush = function() {
@@ -13104,9 +13113,9 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	/**
-	 * @class chart.brush.fullgage
+	 * @class chart.brush.fullgauge
 	 * implements full gauge brush
-	 * @extends chart.brush.fullgauge
+	 * @extends chart.brush.donut
 	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this, textY = 5;
@@ -13142,11 +13151,11 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = this.getValue(data, 'value', 0),
-                title = this.getValue(data, 'title'),
-				max =   this.getValue(data, 'max', 100),
-				min =   this.getValue(data, 'min', 0),
-				unit =  this.getValue(data, 'unit');
+				value = this.getValue(data, "value", 0),
+                title = this.getValue(data, "title"),
+				max =   this.getValue(data, "max", 100),
+				min =   this.getValue(data, "min", 0),
+				unit =  this.getValue(data, "unit");
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;
@@ -14059,14 +14068,14 @@ jui.define("chart.brush.topology.node",
 
         function setDataEdges(index, targetIndex) {
             var data = self.getData(index),
-                targetKey = self.getValue(data, 'outgoing', [])[targetIndex],
+                targetKey = self.getValue(data, "outgoing", [])[targetIndex],
                 target = axis.c(targetKey),
                 xy = axis.c(index);
 
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, xy.x, xy.y, -(dist)),
                 out_xy = getDistanceXY(xy.x, xy.y, target.x, target.y, -(dist)),
-                edge = new Edge(self.getValue(data, 'key'), targetKey, in_xy, out_xy);
+                edge = new Edge(self.getValue(data, "key"), targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);
@@ -14498,6 +14507,11 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 	}
 
     CoreWidget.setup = function() {
+
+        /** @property {chart.builder} chart */
+        /** @property {chart.axis} axis */
+        /** @property {Object} widget */
+        
         return {
             /**
              * @cfg {Number} [brush=0] selected brush index  
@@ -15481,7 +15495,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                                     // 선택한 노드 맨 마지막으로 이동
                                     xy.moveLast();
                                 });
-                            })(self.getValue(data, 'key'));
+                            })(self.axis.getValue(data, "key"));
                         }
                     });
                 }

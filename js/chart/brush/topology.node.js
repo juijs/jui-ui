@@ -299,14 +299,14 @@ jui.define("chart.brush.topology.node",
 
         function setDataEdges(index, targetIndex) {
             var data = self.getData(index),
-                targetKey = self.getValue(data, 'outgoing', [])[targetIndex],
+                targetKey = self.getValue(data, "outgoing", [])[targetIndex],
                 target = axis.c(targetKey),
                 xy = axis.c(index);
 
             var dist = r + point + 1,
                 in_xy = getDistanceXY(target.x, target.y, xy.x, xy.y, -(dist)),
                 out_xy = getDistanceXY(xy.x, xy.y, target.x, target.y, -(dist)),
-                edge = new Edge(self.getValue(data, 'key'), targetKey, in_xy, out_xy);
+                edge = new Edge(self.getValue(data, "key"), targetKey, in_xy, out_xy);
 
             if(edges.is(edge.reverseKey())) {
                 edge.connect(true);

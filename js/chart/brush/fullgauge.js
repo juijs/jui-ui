@@ -39,11 +39,11 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 		this.drawUnit = function(index, data, group) {
 			var obj = axis.c(index),
-				value = this.getValue(data, 'value', 0),
-                title = this.getValue(data, 'title'),
-				max =   this.getValue(data, 'max', 100),
-				min =   this.getValue(data, 'min', 0),
-				unit =  this.getValue(data, 'unit');
+				value = this.getValue(data, "value", 0),
+                title = this.getValue(data, "title"),
+				max =   this.getValue(data, "max", 100),
+				min =   this.getValue(data, "min", 0),
+				unit =  this.getValue(data, "unit");
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;

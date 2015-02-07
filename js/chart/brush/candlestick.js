@@ -22,11 +22,11 @@ jui.define("chart.brush.candlestick", [], function() {
                 var startX = this.axis.x(i),
                     r = null,
                     l = null;
-                
-                var high = this.getValue(data, 'high', 0),
-                    low = this.getValue(data, 'low', 0),
-                    open = this.getValue(data, 'open', 0),
-                    close = this.getValue(data, 'close', 0);
+
+                var high = this.getValue(data, "high", 0),
+                    low = this.getValue(data, "low", 0),
+                    open = this.getValue(data, "open", 0),
+                    close = this.getValue(data, "close", 0);
 
                 if(open > close) { // 시가가 종가보다 높을 때 (Red)
                     var y = this.axis.y(open);

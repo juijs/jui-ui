@@ -114,7 +114,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
                                     // 선택한 노드 맨 마지막으로 이동
                                     xy.moveLast();
                                 });
-                            })(self.getValue(data, 'key'));
+                            })(self.axis.getValue(data, "key"));
                         }
                     });
                 }

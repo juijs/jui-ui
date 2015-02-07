@@ -18,10 +18,10 @@ jui.define("chart.brush.ohlc", [], function() {
             this.eachData(function(i, data) {
                 var startX = axis.x(i);
 
-                var high = this.getValue(data, 'high', 0),
-                    low = this.getValue(data, 'low', 0),
-                    open = this.getValue(data, 'open', 0),
-                    close = this.getValue(data, 'close', 0);
+                var high = this.getValue(data, "high", 0),
+                    low = this.getValue(data, "low", 0),
+                    open = this.getValue(data, "open", 0),
+                    close = this.getValue(data, "close", 0);
 
                 var color = (open > close) ? chart.theme("ohlcInvertBorderColor") : chart.theme("ohlcBorderColor");
 
