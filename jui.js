@@ -4788,9 +4788,13 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		
 		function setEventKeydown(self) {
 			if(!self.options.keydown) return;
+
+            // 기본 상태 처리
+            index = self.options.index;
+            selectItem(self);
 			
 			self.addEvent(window, "keydown", function(e) {
-				if(self.type == "hide") return;
+				if(self.type == "fold") return;
 				var $list = ui_list["drop"].children("li");
 				
 				if(e.which == 38) { // up
@@ -4819,7 +4823,6 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				
 				if(e.which == 13) { // enter
 					$list.eq(index).trigger("click");
-					index = -1;
 				}
 			});
 		}
@@ -4906,7 +4909,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			if(opts.height > 0) {
 				$combo_drop.css({ "maxHeight": opts.height, "overflow": "auto" });
 			}
-			
+
 			// Show
 			this.addEvent($combo_click, "click", function(e) {
 				if (_.isTouch) {
