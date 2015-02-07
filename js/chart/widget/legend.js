@@ -55,23 +55,26 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             var self = this,
                 arr = [],
                 data = brush.target,
-                count = data.length;
+                count = data.length,
+                iconSize = 0;
 			
 			for(var i = 0; i < count; i++) {
-                var target = brush.target[i],
+                var group = chart.svg.group(),
+                    target = brush.target[i],
                     text = chart.get("series", target).text || target;
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),
                     height = width;
-								 
-				var group = chart.svg.group();
-				
+
+                // 아이콘 사이즈
+                if(i == 0) iconSize = width;
+
 				group.append(chart.svg.rect({
 					x: 0, 
 					y : 0, 
-					width: width, 
-					height : height,
+					width: iconSize,
+					height : iconSize,
 					fill : chart.color(i, brush)
 				}));
 				
