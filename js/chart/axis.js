@@ -35,27 +35,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return value;
         }
 
-        /*
-        function getData(data) {
-            var keymap = cloneAxis.keymap,
-                keys = Object.keys(cloneAxis.keymap);
-
-            if(keys.length > 0) {
-                for(var i = 0, len = data.length; i < len; i++) {
-                    for(var j = 0, len2 = keys.length; j < len2; j++) {
-                        var k = keys[j];
-
-                        data[i][keymap[k]] = data[i][k];
-                        delete data[i][k];
-                    }
-                }
-            }
-
-            return data;
-        }
-        */
         function drawGridType(axis, k) {
-            if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
