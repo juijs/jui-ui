@@ -1,5 +1,6 @@
-(function(exports, $) {
+(function(exports, nodeGlobal, window, $) {
 	var global = { jquery: $ }, globalFunc = {};
+    var navigator = window.navigator;
 
 	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
 	var globalOpts = {
@@ -1212,7 +1213,7 @@
 	 *
 	 * @singleton
 	 */
-	exports.jui = {
+	exports.jui = nodeGlobal.jui =  {
 
 		/**
 		 * @method ready
@@ -1444,4 +1445,4 @@
 			return globalOpts;
 		}
 	};
-})(window, jQuery || $);
+})(exports || window, global, window, jQuery || $);

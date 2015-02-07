@@ -1,5 +1,6 @@
-(function(exports, $) {
+(function(exports, nodeGlobal, window, $) {
 	var global = { jquery: $ }, globalFunc = {};
+    var navigator = window.navigator;
 
 	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
 	var globalOpts = {
@@ -1212,7 +1213,7 @@
 	 *
 	 * @singleton
 	 */
-	exports.jui = {
+	exports.jui = nodeGlobal.jui =  {
 
 		/**
 		 * @method ready
@@ -1444,7 +1445,8 @@
 			return globalOpts;
 		}
 	};
-})(window, jQuery || $);
+})(exports || window, global, window, jQuery || $);
+
 jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     /**
@@ -3325,6 +3327,9 @@ jui.define("util.svg.element", [], function() {
                 for (var i = 0; i < width_list.length; i++) {
                     size.width += parseFloat(computedStyle[width_list[i]]);
                 }
+
+                size.width = size.width || this.element.getAttribute('width');
+                size.height = size.height || this.element.getAttribute('height');
             } else {
                 size.width = rect.width;
                 size.height = rect.height;
@@ -4425,6 +4430,7 @@ jui.define("util.svg",
 
     return SVG;
 });
+
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
@@ -4617,27 +4623,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return value;
         }
 
-        /*
-        function getData(data) {
-            var keymap = cloneAxis.keymap,
-                keys = Object.keys(cloneAxis.keymap);
-
-            if(keys.length > 0) {
-                for(var i = 0, len = data.length; i < len; i++) {
-                    for(var j = 0, len2 = keys.length; j < len2; j++) {
-                        var k = keys[j];
-
-                        data[i][keymap[k]] = data[i][k];
-                        delete data[i][k];
-                    }
-                }
-            }
-
-            return data;
-        }
-        */
         function drawGridType(axis, k) {
-            if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};

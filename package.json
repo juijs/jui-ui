@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/seogi1004/jui.git"
@@ -72,5 +73,9 @@
       ],
       "exports": "jui"
     }
+  },
+  "dependencies": {
+    "jsdom": "~3.1.0",
+    "jquery": "~2.1.3"
   }
 }
