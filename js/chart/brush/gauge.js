@@ -83,10 +83,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
-				value = this.getValue(data, 'value', 0),
-				max = this.getValue(data, 'max', 100),
-				min = this.getValue(data, 'min', 0),
-				unit = this.getValue(data, 'unit');
+				value = this.getValue(data, "value", 0),
+				max = this.getValue(data, "max", 100),
+				min = this.getValue(data, "min", 0),
+				unit = this.getValue(data, "unit");
 
 
 			var rate = (value - min) / (max - min),
@@ -150,18 +150,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             /** @cfg {Number} [startAngle=0] start point */
 			startAngle: 0,
             /** @cfg {Number} [endAngle=360]  */
-			endAngle: 360,
-            /** @cfg {Object} keymap */
-            keymap : {
-                /** @cfg {String} [keymap.value='value'] */
-                "value" : "value",
-                /** @cfg {String} [keymap.max='max'] */
-                "max" : "max",
-                /** @cfg {String} [keymap.min='min'] */
-                "min" : "min",
-                /** @cfg {String} [keymap.unit='unit'] */
-                "unit" : "unit"
-            }
+			endAngle: 360
 		};
 	}
 

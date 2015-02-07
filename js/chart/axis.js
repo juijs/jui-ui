@@ -165,16 +165,17 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @return {Mixed}
          */
         this.getValue = function(data, fieldString, defaultValue) {
-            
-            if (typeof data[cloneAxis.keymap[fieldString]] != 'undefined') {
-                return data[cloneAxis.keymap[fieldString]];
+            var value = data[cloneAxis.keymap[fieldString]];
+            if (!_.typeCheck("undefined", value)) {
+                return value;
+            }
+
+            value = data[fieldString];
+            if (!_.typeCheck("undefined", value)) {
+                return value;
             }
             
-            if (typeof data[fieldString] != 'undefined') {
-                return data[fieldString];
-            }
-            
-            return typeof defaultValue == 'undefined' ? "" : defaultValue;
+            return defaultValue;
         }
 
         /**

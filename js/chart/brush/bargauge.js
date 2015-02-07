@@ -37,9 +37,7 @@ jui.define("chart.brush.bargauge", [], function() {
 			}
 
 			this.eachData(function(i, data) {
-                var g = chart.svg.group({
-                    "class" : "bar"
-                });
+                var g = chart.svg.group();
                 
                 g.append(chart.text({
                     x : x,

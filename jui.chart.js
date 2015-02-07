@@ -4747,16 +4747,17 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @return {Mixed}
          */
         this.getValue = function(data, fieldString, defaultValue) {
-            
-            if (typeof data[cloneAxis.keymap[fieldString]] != 'undefined') {
-                return data[cloneAxis.keymap[fieldString]];
+            var value = data[cloneAxis.keymap[fieldString]];
+            if (!_.typeCheck("undefined", value)) {
+                return value;
+            }
+
+            value = data[fieldString];
+            if (!_.typeCheck("undefined", value)) {
+                return value;
             }
             
-            if (typeof data[fieldString] != 'undefined') {
-                return data[fieldString];
-            }
-            
-            return typeof defaultValue == 'undefined' ? "" : defaultValue;
+            return defaultValue;
         }
 
         /**
@@ -11230,23 +11231,6 @@ jui.define("chart.brush.candlestick", [], function() {
         }
     }
 
-
-    CandleStickBrush.setup = function() {
-        return {
-            /** @cfg {Object} keymap   axis's keymap */
-            keymap : {
-                /** @cfg {String} [keymap.open='open'] */
-                "open": "open",
-                /** @cfg {String} [keymap.low='low'] */
-                "low" : "low",
-                /** @cfg {String} [keymap.high='high'] */
-                "high" : "high",
-                /** @cfg {String} [keymap.close='close'] */
-                "close" : "close"
-            }
-        }
-    }
-
     return CandleStickBrush;
 }, "chart.brush.core");
 
@@ -12471,9 +12455,7 @@ jui.define("chart.brush.bargauge", [], function() {
 			}
 
 			this.eachData(function(i, data) {
-                var g = chart.svg.group({
-                    "class" : "bar"
-                });
+                var g = chart.svg.group();
                 
                 g.append(chart.text({
                     x : x,
@@ -12571,23 +12553,17 @@ jui.define("chart.brush.circlegauge", [], function() {
      * @extends chart.brush.core 
      */
 	var CircleGaugeBrush = function(chart, axis, brush) {
+        var group;
         var w, centerX, centerY, outerRadius;
 
-		this.drawBefore = function() {
+        this.drawUnit = function(i, data) {
+            var obj = axis.c(i),
+                value = this.getValue(data, "value", 0),
+                max = this.getValue(data, "max", 100),
+                min = this.getValue(data, "min", 0);
 
-		}
-
-        this.drawUnit = function(i, data, group) {
-
-            var obj = axis.c(index),
-                value = (data[this.brush.target] || data.value) || 0,
-                max = (data[this.brush.max] || data.max) || 100,
-                min = (data[this.brush.min] || data.min) || 0;
-
-
-            var rate = (value - min) / (max - min);
-
-            var width = obj.width,
+            var rate = (value - min) / (max - min),
+                width = obj.width,
                 height = obj.height,
                 x = obj.x,
                 y = obj.y;
@@ -12597,8 +12573,6 @@ jui.define("chart.brush.circlegauge", [], function() {
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             outerRadius = w;
-
-            var group = chart.svg.group();
 
             group.append(chart.svg.circle({
                 cx : centerX,
@@ -12617,32 +12591,23 @@ jui.define("chart.brush.circlegauge", [], function() {
             }));
 
             this.addEvent(group, null, null);
-
         }
         
 		this.draw = function() {
-
-            var group = chart.svg.group();
+            group = chart.svg.group();
 
             this.eachData(function(i, data) {
-                this.drawUnit(i, data, group);
+                this.drawUnit(i, data);
             });
 
             return group;
-
-
 		}
 	}
 
     CircleGaugeBrush.setup = function() {
         return {
-            /** @cfg {String} [min=min] a field for min */
-            min: 'min',
-            /** @cfg {String} [max=max] a field for max */
-            max: 'max',
-            /** @cfg {String} [value=value] a field for value */
-            value: 'value'
-        };
+            clip: false
+        }
     }
 
 	return CircleGaugeBrush;
@@ -13025,10 +12990,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
          */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
-				value = this.getValue(data, 'value', 0),
-				max = this.getValue(data, 'max', 100),
-				min = this.getValue(data, 'min', 0),
-				unit = this.getValue(data, 'unit');
+				value = this.getValue(data, "value", 0),
+				max = this.getValue(data, "max", 100),
+				min = this.getValue(data, "min", 0),
+				unit = this.getValue(data, "unit");
 
 
 			var rate = (value - min) / (max - min),
@@ -13092,18 +13057,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             /** @cfg {Number} [startAngle=0] start point */
 			startAngle: 0,
             /** @cfg {Number} [endAngle=360]  */
-			endAngle: 360,
-            /** @cfg {Object} keymap */
-            keymap : {
-                /** @cfg {String} [keymap.value='value'] */
-                "value" : "value",
-                /** @cfg {String} [keymap.max='max'] */
-                "max" : "max",
-                /** @cfg {String} [keymap.min='min'] */
-                "min" : "min",
-                /** @cfg {String} [keymap.unit='unit'] */
-                "unit" : "unit"
-            }
+			endAngle: 360
 		};
 	}
 
@@ -13217,14 +13171,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0, 
-            keymap : {
-                "value" : "value",
-                "max" : "max",
-                "min" : "min",
-                "title" : "title",
-                "unit" : "unit"
-            }
+            titleY: 0
 		};
 	}
 

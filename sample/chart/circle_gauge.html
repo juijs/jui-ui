@@ -38,11 +38,15 @@
             width: 400,
             height : 400,
             theme : "jennifer",
+            axis : {
+                data : [{
+                    value : 50,
+                    min : 0,
+                    max : 100
+                }]
+            },
             brush : {
-                type : 'circlegauge',
-                value : 50,
-                min : 0,
-                max : 100
+                type : "circlegauge"
             },
             widget : {
                 type : "tooltip"

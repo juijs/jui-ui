@@ -105,14 +105,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0, 
-            keymap : {
-                "value" : "value",
-                "max" : "max",
-                "min" : "min",
-                "title" : "title",
-                "unit" : "unit"
-            }
+            titleY: 0
 		};
 	}
 

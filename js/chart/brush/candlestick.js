@@ -83,22 +83,5 @@ jui.define("chart.brush.candlestick", [], function() {
         }
     }
 
-
-    CandleStickBrush.setup = function() {
-        return {
-            /** @cfg {Object} keymap   axis's keymap */
-            keymap : {
-                /** @cfg {String} [keymap.open='open'] */
-                "open": "open",
-                /** @cfg {String} [keymap.low='low'] */
-                "low" : "low",
-                /** @cfg {String} [keymap.high='high'] */
-                "high" : "high",
-                /** @cfg {String} [keymap.close='close'] */
-                "close" : "close"
-            }
-        }
-    }
-
     return CandleStickBrush;
 }, "chart.brush.core");
