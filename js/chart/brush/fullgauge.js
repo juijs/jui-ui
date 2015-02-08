@@ -7,7 +7,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this, textY = 5;
-        var w, centerX, centerY, outerRadius, innerRadius, textScale;
+        var group, w, centerX, centerY, outerRadius, innerRadius, textScale;
 
 		function createText(value, index) {
 			var g = chart.svg.group().translate(centerX, centerY);
@@ -37,7 +37,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             return g;
         }
 
-		this.drawUnit = function(index, data, group) {
+		this.drawUnit = function(index, data) {
 			var obj = axis.c(index),
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
@@ -86,14 +86,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group();
+			group = chart.svg.group();
 
 			this.eachData(function(i, data) {
-				this.drawUnit(i, data, group);
+				this.drawUnit(i, data);
 			});
 
 			return group;
-
 		}
 	}
 

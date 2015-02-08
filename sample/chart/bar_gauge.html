@@ -52,7 +52,10 @@
             },
             brush : [{
                 type : 'bargauge',
-                size : 18
+                size : 18,
+                format : function(v) {
+                    return v + "%";
+                }
             }],
             widget : {
                 type : "tooltip"

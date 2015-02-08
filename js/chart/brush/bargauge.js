@@ -24,9 +24,11 @@ jui.define("chart.brush.bargauge", [], function() {
 			this.eachData(function(i, data) {
                 var g = chart.svg.group(),
                     v = this.getValue(data, "value", 0),
-                    t = this.getValue(data, "title", "");
-                
-                var value = v * width / 100,
+                    t = this.getValue(data, "title", ""),
+                    max = this.getValue(data, "max", 100),
+                    min = this.getValue(data, "min", 0);
+
+                var value = (width / (max - min)) * v,
                     startX = x + brush.cut,
                     textY = (y + brush.size / 2 + brush.cut) - 1;
 
