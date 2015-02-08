@@ -102,7 +102,7 @@ jui.define("chart.theme.jennifer", [], function() {
         bargaugeFontColor : "#333333",
 
         /** @cfg */
-    	pieBorderColor : null,
+    	pieBorderColor : "#ececec",
         /** @cfg */        
         pieBorderWidth : 1,
         /** @cfg */

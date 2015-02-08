@@ -6149,7 +6149,7 @@ jui.define("chart.theme.jennifer", [], function() {
         bargaugeFontColor : "#333333",
 
         /** @cfg */
-    	pieBorderColor : null,
+    	pieBorderColor : "#ececec",
         /** @cfg */        
         pieBorderWidth : 1,
         /** @cfg */
@@ -9545,19 +9545,17 @@ jui.define("chart.grid.overlap", [  ], function() {
     var OverlapGrid = function() {
         var size, widthUnit, heightUnit, width, height ;
 
-        this.custom = function(chart, g) {
+        this.custom = function() {
             for(var i = 0, len = this.axis.data.length; i < len; i++) {
                 var obj = this.scale(i);
 
-                obj.x -= this.axis.area('x');
-                obj.y -= this.axis.area('y');
+                obj.x -= this.axis.area("x");
+                obj.y -= this.axis.area("y");
 
-                var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'tranparent',
-                    stroke : "white"
+                this.chart.svg.rect($.extend(obj, {
+                    fill : "transparent",
+                    stroke : "transparent"
                 }));
-
-                //g.append(rect);
             }
         }
 
