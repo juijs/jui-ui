@@ -675,9 +675,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                         textOrCallback = textOrCallback.replace(result[i], this.icon(key));
                     }
                 }
+            } else if(_.typeCheck("undefined", textOrCallback)) {
+                textOrCallback = "";
             }
 
-            return this.svg.text(attr, textOrCallback || "");
+            return this.svg.text(attr, textOrCallback);
         }
 
         /**
