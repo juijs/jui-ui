@@ -19272,8 +19272,10 @@ jui.define("chart.brush.bargauge", [], function() {
         return {
             /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
-            /** @cfg {Number} [size=20]  bar gauge item height */
-            size: 20
+            /** @cfg {Number} [size=20] bar gauge item height */
+            size: 20,
+            /** @cfg {Function} [format=null] bar gauge format callback */
+            format: null
         };
     }
 
@@ -19812,7 +19814,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		var self = this, textY = 5;
         var w, centerX, centerY, outerRadius, innerRadius, textScale;
 
-		function createText(value, unit) {
+		function createText(value) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
             g.append(chart.text({
@@ -19821,7 +19823,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "font-weight" : chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
-            }, value + unit).scale(textScale));
+            }, self.format(value)).scale(textScale));
 
 			return g;
 		}
@@ -19845,8 +19847,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
 				max =   this.getValue(data, "max", 100),
-				min =   this.getValue(data, "min", 0),
-				unit =  this.getValue(data, "unit");
+				min =   this.getValue(data, "min", 0);
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;
@@ -19879,7 +19880,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
             if(brush.showText) {
-                group.append(createText(value, unit));
+                group.append(createText(value));
             }
 
             if(title != "") {
@@ -19908,7 +19909,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0
+            titleY: 0,
+            format: null
 		};
 	}
 

@@ -76,8 +76,10 @@ jui.define("chart.brush.bargauge", [], function() {
         return {
             /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
-            /** @cfg {Number} [size=20]  bar gauge item height */
-            size: 20
+            /** @cfg {Number} [size=20] bar gauge item height */
+            size: 20,
+            /** @cfg {Function} [format=null] bar gauge format callback */
+            format: null
         };
     }
 
