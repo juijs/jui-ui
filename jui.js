@@ -19225,7 +19225,6 @@ jui.define("chart.brush.bargauge", [], function() {
                     min = this.getValue(data, "min", 0);
 
                 var value = (width / (max - min)) * v,
-                    startX = x + brush.cut,
                     textY = (y + brush.size / 2 + brush.cut) - 1;
 
                 g.append(chart.svg.rect({
@@ -19237,7 +19236,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 }));
                 
                 g.append(chart.svg.rect({
-                    x : startX,
+                    x : x,
                     y : y,
                     width: value,
                     height : brush.size,
@@ -19245,7 +19244,7 @@ jui.define("chart.brush.bargauge", [], function() {
                 }));
 
                 g.append(chart.text({
-                    x : startX + brush.cut,
+                    x : x + brush.cut,
                     y : textY,
                     "text-anchor" : "start",
                     "font-size" : chart.theme("bargaugeFontSize"),
