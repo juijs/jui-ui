@@ -1,4 +1,4 @@
-(function(exports, nodeGlobal, window, $) {
+(function(exports, nodeGlobal, window, $) {  
 	var global = { jquery: $ }, globalFunc = {};
     var navigator = window.navigator;
 
