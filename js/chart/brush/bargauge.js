@@ -60,7 +60,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     "text-anchor" : "end",
                     "font-size" : chart.theme("bargaugeFontSize"),
                     fill : chart.theme("bargaugeFontColor")
-                }, this.format(v)));
+                }, this.format(v, i)));
 
                 this.addEvent(g, i, null);
                 group.append(g);

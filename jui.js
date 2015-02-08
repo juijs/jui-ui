@@ -19256,7 +19256,7 @@ jui.define("chart.brush.bargauge", [], function() {
                     "text-anchor" : "end",
                     "font-size" : chart.theme("bargaugeFontSize"),
                     fill : chart.theme("bargaugeFontColor")
-                }, this.format(v)));
+                }, this.format(v, i)));
 
                 this.addEvent(g, i, null);
                 group.append(g);
@@ -19814,7 +19814,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		var self = this, textY = 5;
         var w, centerX, centerY, outerRadius, innerRadius, textScale;
 
-		function createText(value) {
+		function createText(value, index) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
             g.append(chart.text({
@@ -19823,7 +19823,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "font-weight" : chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
-            }, self.format(value)).scale(textScale));
+            }, self.format(value, index)).scale(textScale));
 
 			return g;
 		}
@@ -19846,8 +19846,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			var obj = axis.c(index),
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
-				max =   this.getValue(data, "max", 100),
-				min =   this.getValue(data, "min", 0);
+				max = this.getValue(data, "max", 100),
+				min = this.getValue(data, "min", 0);
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;
@@ -19880,7 +19880,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
             if(brush.showText) {
-                group.append(createText(value));
+                group.append(createText(value, index));
             }
 
             if(title != "") {
