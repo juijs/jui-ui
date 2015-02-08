@@ -210,6 +210,9 @@ jui.define("util.svg.element", [], function() {
                 for (var i = 0; i < width_list.length; i++) {
                     size.width += parseFloat(computedStyle[width_list[i]]);
                 }
+
+                size.width = size.width || this.element.getAttribute('width');
+                size.height = size.height || this.element.getAttribute('height');
             } else {
                 size.width = rect.width;
                 size.height = rect.height;
