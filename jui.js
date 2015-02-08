@@ -11396,27 +11396,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return value;
         }
 
-        /*
-        function getData(data) {
-            var keymap = cloneAxis.keymap,
-                keys = Object.keys(cloneAxis.keymap);
-
-            if(keys.length > 0) {
-                for(var i = 0, len = data.length; i < len; i++) {
-                    for(var j = 0, len2 = keys.length; j < len2; j++) {
-                        var k = keys[j];
-
-                        data[i][keymap[k]] = data[i][k];
-                        delete data[i][k];
-                    }
-                }
-            }
-
-            return data;
-        }
-        */
         function drawGridType(axis, k) {
-            if((k == 'x' || k == 'y') && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -12185,14 +12166,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var padding = _options.padding;
 
             // 패딩 옵션 설정
-            if(padding == "empty") {
-                _padding = { left: 0, right: 0, bottom: 0, top: 0 };
+            if(_.typeCheck("integer", padding)) {
+                _padding = { left: padding, right: padding, bottom: padding, top: padding };
             } else {
-                if(_.typeCheck("integer", padding)) {
-                    _padding = { left: padding, right: padding, bottom: padding, top: padding };
-                } else {
-                    _padding = padding;
-                }
+                _padding = padding;
             }
 
             // UI 바인딩 설정 (차후에 변경, 현재는 첫번째 엑시스로 고정)
@@ -12942,6 +12919,13 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         gaugeTitleFontWeight : "normal",
         /** @cfg */
+        bargaugeBackgroundColor : "#ececec",
+        /** @cfg */
+        bargaugeFontSize : "11px",
+        /** @cfg */
+        bargaugeFontColor : "#333333",
+
+        /** @cfg */
     	pieBorderColor : null,
         /** @cfg */        
         pieBorderWidth : 1,
@@ -13160,6 +13144,9 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#ececec",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#333333",
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13300,6 +13287,9 @@ jui.define("chart.theme.dark", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#3e3e3e",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#c5c5c5",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13436,6 +13426,9 @@ jui.define("chart.theme.pastel", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#f5f5f5",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#333333",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -13608,6 +13601,12 @@ jui.define("chart.theme.pattern", [], function() {
         gaugeTitleFontWeight : "normal",
         /** */
         pieBorderColor : "white",
+        /** */
+        bargaugeBackgroundColor : "#ececec",
+        /** */
+        bargaugeFontSize : "11px",
+        /** */
+        bargaugeFontColor : "#333333",
         /** */
         pieBorderWidth : 1,
         /** */
@@ -19205,61 +19204,35 @@ jui.define("chart.brush.bargauge", [], function() {
 	var BarGaugeBrush = function(chart, axis, brush) {
 
         /**
-         * @method drawBefore
-         * 
-         * @protected
-         */
-        this.drawBefore = function() {
-
-        }
-
-        /**
          * @method draw
          * 
          * @protected
          * @return {TransformElement}
          */
 		this.draw = function() {
-            var obj = axis.c(),
+            var group = chart.svg.group();
+
+            var obj = axis.c(0),
                 width = obj.width,
                 x = obj.x,
                 y = obj.y;
 
-			var group = chart.svg.group();
-
-			if (brush.split) {
-				var max = width;
-			} else {
-				var max = width;
-			}
-
 			this.eachData(function(i, data) {
-                var g = chart.svg.group();
+                var g = chart.svg.group(),
+                    v = this.getValue(data, "value", 0),
+                    t = this.getValue(data, "title", "");
                 
-                g.append(chart.text({
-                    x : x,
-                    y : y + brush.size / 2 + brush.cut,
-                    "text-anchor" : "end",
-                    fill : this.color(i)
-                }, data[brush.title] || ""))
-                
+                var value = v * width / 100,
+                    startX = x + brush.cut,
+                    textY = (y + brush.size / 2 + brush.cut) - 1;
+
                 g.append(chart.svg.rect({
                     x : x + brush.cut,
                     y : y,
-                    width: max,
+                    width: width,
                     height : brush.size,
-                    fill : chart.theme("gaugeBackgroundColor")
+                    fill : chart.theme("bargaugeBackgroundColor")
                 }));
-                
-                var value = (data.value)  * max / 100,
-                    ex = (100 - data.value)  * max / 100,
-                    startX = x + brush.cut;
-                
-                if (brush.align == "center") {
-                	startX += (max/2 - value/2);
-                } else if (brush.align == "right") {
-                	startX += max - value; 
-                }
                 
                 g.append(chart.svg.rect({
                     x : startX,
@@ -19269,34 +19242,25 @@ jui.define("chart.brush.bargauge", [], function() {
                     fill : chart.color(i, brush)
                 }));
 
-                if (brush.split) {
-                	var textX = x + value + brush.cut * 2 + ex,
-                        textAlign = "start",
-                        textColor = chart.color(i, brush);
-                } else {
-                	var textX = x + brush.cut * 2,
-                        textAlign = "start",
-                        textColor = "white";
-                	
-                	if (this.align == "center") {
-                		textX = x + brush.cut + max / 2;
-                		textAlign = "middle";
-                	} else if (brush.align == "right") {
-                		textX = x + max;
-                		textAlign = "end";                		
-                	}
-                }
+                g.append(chart.text({
+                    x : startX + brush.cut,
+                    y : textY,
+                    "text-anchor" : "start",
+                    "font-size" : chart.theme("bargaugeFontSize"),
+                    fill : chart.theme("bargaugeFontColor")
+                }, t));
                 
                 g.append(chart.text({
-                    x : textX,
-                    y : y + brush.size / 2 + brush.cut,
-                    "text-anchor" : textAlign,
-                    fill : textColor
-                }, brush.format ? brush.format(data.value) : data.value + "%"))
+                    x : width - brush.cut,
+                    y : textY,
+                    "text-anchor" : "end",
+                    "font-size" : chart.theme("bargaugeFontSize"),
+                    fill : chart.theme("bargaugeFontColor")
+                }, this.format(v)));
 
                 this.addEvent(g, i, null);
                 group.append(g);
-                
+
                 y += brush.size + brush.cut;
 			});
 
@@ -19309,13 +19273,7 @@ jui.define("chart.brush.bargauge", [], function() {
             /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
             /** @cfg {Number} [size=20]  bar gauge item height */
-            size: 20,
-            /** @cfg {Boolean} [split=false] */
-            split: false,
-            /** @cfg {String} [align=left] bar gauge align  */
-            align: "left",
-            /** @cfg {String} [title=title]  a field for title */
-            title: "title"
+            size: 20
         };
     }
 
