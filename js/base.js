@@ -1445,4 +1445,4 @@
 			return globalOpts;
 		}
 	};
-})(exports || window, global, window, jQuery || $);
+})(typeof exports !== 'undefined' ? exports :  window, typeof global !== 'undefined' ? global : window, window, jQuery || $);

@@ -1445,7 +1445,7 @@
 			return globalOpts;
 		}
 	};
-})(exports || window, global, window, jQuery || $);
+})(typeof exports !== 'undefined' ? exports :  window, typeof global !== 'undefined' ? global : window, window, jQuery || $);
 
 jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
@@ -5393,14 +5393,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var padding = _options.padding;
 
             // 패딩 옵션 설정
-            if(padding == "empty") {
-                _padding = { left: 0, right: 0, bottom: 0, top: 0 };
+            if(_.typeCheck("integer", padding)) {
+                _padding = { left: padding, right: padding, bottom: padding, top: padding };
             } else {
-                if(_.typeCheck("integer", padding)) {
-                    _padding = { left: padding, right: padding, bottom: padding, top: padding };
-                } else {
-                    _padding = padding;
-                }
+                _padding = padding;
             }
 
             // UI 바인딩 설정 (차후에 변경, 현재는 첫번째 엑시스로 고정)
@@ -5599,9 +5595,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                         textOrCallback = textOrCallback.replace(result[i], this.icon(key));
                     }
                 }
+            } else if(_.typeCheck("undefined", textOrCallback)) {
+                textOrCallback = "";
             }
 
-            return this.svg.text(attr, textOrCallback || "");
+            return this.svg.text(attr, textOrCallback);
         }
 
         /**
@@ -6150,7 +6148,14 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         gaugeTitleFontWeight : "normal",
         /** @cfg */
-    	pieBorderColor : null,
+        bargaugeBackgroundColor : "#ececec",
+        /** @cfg */
+        bargaugeFontSize : "11px",
+        /** @cfg */
+        bargaugeFontColor : "#333333",
+
+        /** @cfg */
+    	pieBorderColor : "#ececec",
         /** @cfg */        
         pieBorderWidth : 1,
         /** @cfg */
@@ -6368,6 +6373,9 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#ececec",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#333333",
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -6508,6 +6516,9 @@ jui.define("chart.theme.dark", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#3e3e3e",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#c5c5c5",
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -6644,6 +6655,9 @@ jui.define("chart.theme.pastel", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        bargaugeBackgroundColor : "#f5f5f5",
+        bargaugeFontSize : "11px",
+        bargaugeFontColor : "#333333",
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : "11px",
@@ -6816,6 +6830,12 @@ jui.define("chart.theme.pattern", [], function() {
         gaugeTitleFontWeight : "normal",
         /** */
         pieBorderColor : "white",
+        /** */
+        bargaugeBackgroundColor : "#ececec",
+        /** */
+        bargaugeFontSize : "11px",
+        /** */
+        bargaugeFontColor : "#333333",
         /** */
         pieBorderWidth : 1,
         /** */
@@ -9531,19 +9551,17 @@ jui.define("chart.grid.overlap", [  ], function() {
     var OverlapGrid = function() {
         var size, widthUnit, heightUnit, width, height ;
 
-        this.custom = function(chart, g) {
+        this.custom = function() {
             for(var i = 0, len = this.axis.data.length; i < len; i++) {
                 var obj = this.scale(i);
 
-                obj.x -= this.axis.area('x');
-                obj.y -= this.axis.area('y');
+                obj.x -= this.axis.area("x");
+                obj.y -= this.axis.area("y");
 
-                var rect = chart.svg.rect($.extend(obj, {
-                    fill : 'tranparent',
-                    stroke : "white"
+                this.chart.svg.rect($.extend(obj, {
+                    fill : "transparent",
+                    stroke : "transparent"
                 }));
-
-                //g.append(rect);
             }
         }
 
@@ -12413,98 +12431,64 @@ jui.define("chart.brush.bargauge", [], function() {
 	var BarGaugeBrush = function(chart, axis, brush) {
 
         /**
-         * @method drawBefore
-         * 
-         * @protected
-         */
-        this.drawBefore = function() {
-
-        }
-
-        /**
          * @method draw
          * 
          * @protected
          * @return {TransformElement}
          */
 		this.draw = function() {
-            var obj = axis.c(),
+            var group = chart.svg.group();
+
+            var obj = axis.c(0),
                 width = obj.width,
                 x = obj.x,
                 y = obj.y;
 
-			var group = chart.svg.group();
-
-			if (brush.split) {
-				var max = width;
-			} else {
-				var max = width;
-			}
-
 			this.eachData(function(i, data) {
-                var g = chart.svg.group();
-                
-                g.append(chart.text({
-                    x : x,
-                    y : y + brush.size / 2 + brush.cut,
-                    "text-anchor" : "end",
-                    fill : this.color(i)
-                }, data[brush.title] || ""))
-                
+                var g = chart.svg.group(),
+                    v = this.getValue(data, "value", 0),
+                    t = this.getValue(data, "title", ""),
+                    max = this.getValue(data, "max", 100),
+                    min = this.getValue(data, "min", 0);
+
+                var value = (width / (max - min)) * v,
+                    textY = (y + brush.size / 2 + brush.cut) - 1;
+
                 g.append(chart.svg.rect({
                     x : x + brush.cut,
                     y : y,
-                    width: max,
+                    width: width,
                     height : brush.size,
-                    fill : chart.theme("gaugeBackgroundColor")
+                    fill : chart.theme("bargaugeBackgroundColor")
                 }));
                 
-                var value = (data.value)  * max / 100,
-                    ex = (100 - data.value)  * max / 100,
-                    startX = x + brush.cut;
-                
-                if (brush.align == "center") {
-                	startX += (max/2 - value/2);
-                } else if (brush.align == "right") {
-                	startX += max - value; 
-                }
-                
                 g.append(chart.svg.rect({
-                    x : startX,
+                    x : x,
                     y : y,
                     width: value,
                     height : brush.size,
                     fill : chart.color(i, brush)
                 }));
 
-                if (brush.split) {
-                	var textX = x + value + brush.cut * 2 + ex,
-                        textAlign = "start",
-                        textColor = chart.color(i, brush);
-                } else {
-                	var textX = x + brush.cut * 2,
-                        textAlign = "start",
-                        textColor = "white";
-                	
-                	if (this.align == "center") {
-                		textX = x + brush.cut + max / 2;
-                		textAlign = "middle";
-                	} else if (brush.align == "right") {
-                		textX = x + max;
-                		textAlign = "end";                		
-                	}
-                }
+                g.append(chart.text({
+                    x : x + brush.cut,
+                    y : textY,
+                    "text-anchor" : "start",
+                    "font-size" : chart.theme("bargaugeFontSize"),
+                    fill : chart.theme("bargaugeFontColor")
+                }, t));
                 
                 g.append(chart.text({
-                    x : textX,
-                    y : y + brush.size / 2 + brush.cut,
-                    "text-anchor" : textAlign,
-                    fill : textColor
-                }, brush.format ? brush.format(data.value) : data.value + "%"))
+                    x : width - brush.cut,
+                    y : textY,
+                    "text-anchor" : "end",
+                    "font-size" : chart.theme("bargaugeFontSize"),
+                    fill : chart.theme("bargaugeFontColor")
+                }, this.format(v, i)));
 
                 this.addEvent(g, i, null);
                 group.append(g);
-                
+
                 y += brush.size + brush.cut;
 			});
 
@@ -12516,14 +12500,10 @@ jui.define("chart.brush.bargauge", [], function() {
         return {
             /** @cfg {Number} [cut=5] bar gauge item padding */
             cut: 5,
-            /** @cfg {Number} [size=20]  bar gauge item height */
+            /** @cfg {Number} [size=20] bar gauge item height */
             size: 20,
-            /** @cfg {Boolean} [split=false] */
-            split: false,
-            /** @cfg {String} [align=left] bar gauge align  */
-            align: "left",
-            /** @cfg {String} [title=title]  a field for title */
-            title: "title"
+            /** @cfg {Function} [format=null] bar gauge format callback */
+            format: null
         };
     }
 
@@ -13060,9 +13040,9 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this, textY = 5;
-        var w, centerX, centerY, outerRadius, innerRadius, textScale;
+        var group, w, centerX, centerY, outerRadius, innerRadius, textScale;
 
-		function createText(value, unit) {
+		function createText(value, index) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
             g.append(chart.text({
@@ -13071,7 +13051,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "font-weight" : chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
-            }, value + unit).scale(textScale));
+            }, self.format(value, index)).scale(textScale));
 
 			return g;
 		}
@@ -13090,13 +13070,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             return g;
         }
 
-		this.drawUnit = function(index, data, group) {
+		this.drawUnit = function(index, data) {
 			var obj = axis.c(index),
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
-				max =   this.getValue(data, "max", 100),
-				min =   this.getValue(data, "min", 0),
-				unit =  this.getValue(data, "unit");
+				max = this.getValue(data, "max", 100),
+				min = this.getValue(data, "min", 0);
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;
@@ -13129,7 +13108,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
             if(brush.showText) {
-                group.append(createText(value, unit));
+                group.append(createText(value, index));
             }
 
             if(title != "") {
@@ -13140,14 +13119,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group();
+			group = chart.svg.group();
 
 			this.eachData(function(i, data) {
-				this.drawUnit(i, data, group);
+				this.drawUnit(i, data);
 			});
 
 			return group;
-
 		}
 	}
 
@@ -13158,7 +13136,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0
+            titleY: 0,
+            format: null
 		};
 	}
 

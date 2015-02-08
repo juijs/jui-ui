@@ -473,14 +473,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var padding = _options.padding;
 
             // 패딩 옵션 설정
-            if(padding == "empty") {
-                _padding = { left: 0, right: 0, bottom: 0, top: 0 };
+            if(_.typeCheck("integer", padding)) {
+                _padding = { left: padding, right: padding, bottom: padding, top: padding };
             } else {
-                if(_.typeCheck("integer", padding)) {
-                    _padding = { left: padding, right: padding, bottom: padding, top: padding };
-                } else {
-                    _padding = padding;
-                }
+                _padding = padding;
             }
 
             // UI 바인딩 설정 (차후에 변경, 현재는 첫번째 엑시스로 고정)
@@ -679,9 +675,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                         textOrCallback = textOrCallback.replace(result[i], this.icon(key));
                     }
                 }
+            } else if(_.typeCheck("undefined", textOrCallback)) {
+                textOrCallback = "";
             }
 
-            return this.svg.text(attr, textOrCallback || "");
+            return this.svg.text(attr, textOrCallback);
         }
 
         /**

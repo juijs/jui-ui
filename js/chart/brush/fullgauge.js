@@ -7,9 +7,9 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	 */
 	var FullGaugeBrush = function(chart, axis, brush) {
 		var self = this, textY = 5;
-        var w, centerX, centerY, outerRadius, innerRadius, textScale;
+        var group, w, centerX, centerY, outerRadius, innerRadius, textScale;
 
-		function createText(value, unit) {
+		function createText(value, index) {
 			var g = chart.svg.group().translate(centerX, centerY);
 
             g.append(chart.text({
@@ -18,7 +18,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "font-weight" : chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
-            }, value + unit).scale(textScale));
+            }, self.format(value, index)).scale(textScale));
 
 			return g;
 		}
@@ -37,13 +37,12 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             return g;
         }
 
-		this.drawUnit = function(index, data, group) {
+		this.drawUnit = function(index, data) {
 			var obj = axis.c(index),
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
-				max =   this.getValue(data, "max", 100),
-				min =   this.getValue(data, "min", 0),
-				unit =  this.getValue(data, "unit");
+				max = this.getValue(data, "max", 100),
+				min = this.getValue(data, "min", 0);
 
 			var rate = (value - min) / (max - min),
 				currentAngle = brush.endAngle * rate;
@@ -76,7 +75,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
             if(brush.showText) {
-                group.append(createText(value, unit));
+                group.append(createText(value, index));
             }
 
             if(title != "") {
@@ -87,14 +86,13 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
 		this.draw = function() {
-			var group = chart.svg.group();
+			group = chart.svg.group();
 
 			this.eachData(function(i, data) {
-				this.drawUnit(i, data, group);
+				this.drawUnit(i, data);
 			});
 
 			return group;
-
 		}
 	}
 
@@ -105,7 +103,8 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
             endAngle: 300,
             showText: true,
             titleX: 0,
-            titleY: 0
+            titleY: 0,
+            format: null
 		};
 	}
 

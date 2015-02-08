@@ -50,7 +50,10 @@
                 size : 30,
                 startAngle : -120,
                 titleY : 25,
-                animate : true
+                animate : true,
+                format : function(v) {
+                    return v + "k";
+                }
             }
         });
 	})
