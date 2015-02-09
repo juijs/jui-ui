@@ -9,8 +9,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
      * 
      */
 	var DonutBrush = function() {
-        var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
-
+        
         /**
          * @method drawDonut 
          * 
@@ -83,64 +82,58 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 			return g;
 		}
 
-        this.drawBefore = function() {
-            var width = this.chart.area('width'),
-                height = this.chart.area('height'),
+
+        this.drawUnit = function (index, data, g) {
+            var obj = this.axis.c(index);
+
+            var width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y,
                 min = width;
 
-            if(height < min) {
+            if (height < min) {
                 min = height;
             }
 
             // center
-            w = min / 2;
-            centerX = width / 2;
-            centerY = height / 2;
-            startY = -w;
-            startX = 0;
-            outerRadius = Math.abs(startY) - this.brush.size;
-            innerRadius = outerRadius - this.brush.size;
-        }
+            var centerX = width / 2 + x;
+            var centerY = height / 2 + y;
+            var outerRadius = min / 2 - this.brush.size/2;
+            var innerRadius = outerRadius - this.brush.size;
 
-		this.draw = function() {
-			var group = this.chart.svg.group();
+            var target = this.brush.target,
+                all = 360,
+                startAngle = 0,
+                max = 0;
 
-			var target = this.brush.target,
-				data = this.getData(0);
+            for (var i = 0; i < target.length; i++) {
+                max += data[target[i]];
+            }
 
-			var all = 360,
-				startAngle = 0,
-				max = 0;
-
-			for(var i = 0; i < target.length; i++) {
-				max += data[target[i]];
-			}
-
-			for(var i = 0; i < target.length; i++) {
-				var value = data[target[i]],
-					endAngle = all * (value / max);
-
-				var g = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
-					fill : 'transparent',
-					stroke : this.color(i)
-				});
+            for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
+                    donut = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+                        stroke : this.color(i),
+                        fill : 'transparent'
+                    });
 
                 if(this.brush.showText) {
                     var text = this.getFormatText(target[i], value),
-                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius + this.brush.size / 2, text);
+                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text, 1.25);
 
-                    this.addEvent(elem, 0, i);
-                    group.append(elem);
+                    this.addEvent(elem, index, i);
+                    g.append(elem);
                 }
 
-                this.addEvent(g, 0, i);
-				group.append(g);
+                this.addEvent(donut, index, i);
+                g.append(donut);
 
-				startAngle += endAngle;
-			}
+                startAngle += endAngle;
+            }
+        }        
 
-            return group;
-		}
 	}
 
 	DonutBrush.setup = function() {

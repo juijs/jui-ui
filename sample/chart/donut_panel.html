@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body >
+
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
+
+<script>
+    $(function() {
+        $("#codemirror").val($("#script_code").html());
+
+        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+    })
+
+</script>
+
+<script id="script_code">
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+
+            series : {
+                yellow : { text : "노랑" },
+                red : { text : "빨강" },
+                black : { text : "검정" },
+                blue : { text : "파랑" }
+            },
+
+            axis : {
+                c : {
+                    type : "panel"
+                },
+                area : { x : '50%', width : '50%' },
+                data : [
+                    { yellow : 46, red : 15, black : 18, blue : 10 }
+                ]
+            },
+
+            brush : [{
+                type : "donut",
+                size : 20
+            }],
+            widget : [{
+                type : "legend"
+            }, {
+                type : "tooltip"
+            }]
+        });
+	})
+</script>
+
+
+</body>
+</html>

@@ -69,11 +69,12 @@ jui.define("chart.grid.overlap", [  ], function() {
             return this.drawGrid("overlap");
         }
 
-        OverlapGrid.setup = function() {
-            return {
-                /** @cfg {Number} [size=null] 분할할 개수  */
-                count : null
-            }
+    }
+
+    OverlapGrid.setup = function() {
+        return {
+            /** @cfg {Number} [size=null] 분할할 개수  */
+            count : null
         }
     }
     

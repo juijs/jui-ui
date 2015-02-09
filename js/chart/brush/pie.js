@@ -7,16 +7,16 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 	 *
      * @extends chart.brush.core
 	 */
-	var PieBrush = function(chart, axis, brush) {
+	var PieBrush = function() {
         var self = this, textY = 3;
-        var g, centerX, centerY, outerRadius;
+        var g;
 
-		function createPie(startAngle, endAngle, color) {
-			var pie = chart.svg.group(),
-				path = chart.svg.path({
+		this.drawPie = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
+			var pie = this.chart.svg.group(),
+				path = this.chart.svg.path({
                     fill : color,
-                    stroke : chart.theme("pieBorderColor") || color,
-                    "stroke-width" : chart.theme("pieBorderWidth")
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
                 });
 
 			// 바깥 지름 부터 그림
@@ -42,8 +42,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			return pie;
 		}
 
-		function createUnit(index, data) {
-			var obj = axis.c(index);
+		this.drawUnit = function (index, data, g) {
+			var obj = this.axis.c(index);
 
 			var width = obj.width,
                 height = obj.height,
@@ -56,11 +56,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 
 			// center
-			centerX = width / 2 + x;
-			centerY = height / 2 + y;
-			outerRadius = min / 2;
+			var centerX = width / 2 + x;
+			var centerY = height / 2 + y;
+			var outerRadius = min / 2;
 
-			var target = brush.target,
+			var target = this.brush.target,
 				all = 360,
 				startAngle = 0,
 				max = 0;
@@ -72,13 +72,13 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			for (var i = 0; i < target.length; i++) {
 				var value = data[target[i]],
 					endAngle = all * (value / max),
-                    pie = createPie(startAngle, endAngle, self.color(i));
+                    pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
 
-                if(brush.showText) {
-                    var text = self.getFormatText(target[i], value),
-                        elem = self.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
+                if(this.brush.showText) {
+                    var text = this.getFormatText(target[i], value, max),
+                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
-                    self.addEvent(elem, index, i);
+                    this.addEvent(elem, index, i);
                     g.append(elem);
                 }
 
@@ -104,10 +104,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
             }
         }
 
-        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
+        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text, rate) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
-                r = outerRadius * 1.2,
+                rate = rate || 1.2,
+                r = outerRadius * rate,
                 cx = centerX + (Math.cos(math.radian(centerAngle)) * outerRadius),
                 cy = centerY + (Math.sin(math.radian(centerAngle)) * outerRadius),
                 tx = centerX + (Math.cos(math.radian(centerAngle)) * r),
@@ -140,7 +141,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				createUnit(i, data);
+				this.drawUnit(i, data, g);
 			});
 
             return g;
