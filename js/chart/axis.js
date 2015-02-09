@@ -15,7 +15,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         var self = this;
         var _area = {};
 
-        function caculatePanel(a) {
+        function caculatePanel(a, padding) {
+
             a.x = getRate(a.x, chart.area('width'));
             a.y = getRate(a.y, chart.area('height'));
             a.width = getRate(a.width, chart.area('width'));
@@ -23,6 +24,16 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             a.x2 = a.x + a.width;
             a.y2 = a.y + a.height;
+            
+            // 패딩 개념 추가 
+            a.x += padding.left || 0;
+            a.y += padding.top || 0;
+            
+            a.x2 -= padding.right || 0;
+            a.y2 -= padding.bottom || 0;
+            
+            a.width = a.x2 - a.x;
+            a.height = a.y2 - a.y;
 
             return a;
         }
@@ -177,7 +188,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: area.width, height: area.height
-            }, true));
+            }, true), options.padding || {});
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
@@ -318,6 +329,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             keymap: {},
             /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
             area: {},
+            /** @cfg {Object} [padding={}] Axis 의 패딩 설정 */
+            padding : {},
             /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
             buffer: 10000,
             /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
