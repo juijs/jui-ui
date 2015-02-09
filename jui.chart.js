@@ -1,5 +1,6 @@
-(function(exports, $) {
+(function(exports, nodeGlobal, window, $) {  
 	var global = { jquery: $ }, globalFunc = {};
+    var navigator = window.navigator;
 
 	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
 	var globalOpts = {
@@ -1212,7 +1213,7 @@
 	 *
 	 * @singleton
 	 */
-	exports.jui = {
+	exports.jui = nodeGlobal.jui =  {
 
 		/**
 		 * @method ready
@@ -1444,7 +1445,8 @@
 			return globalOpts;
 		}
 	};
-})(window, jQuery || $);
+})(typeof exports !== 'undefined' ? exports :  window, typeof global !== 'undefined' ? global : window, window, jQuery || $);
+
 jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     /**
@@ -3325,6 +3327,9 @@ jui.define("util.svg.element", [], function() {
                 for (var i = 0; i < width_list.length; i++) {
                     size.width += parseFloat(computedStyle[width_list[i]]);
                 }
+
+                size.width = size.width || this.element.getAttribute('width');
+                size.height = size.height || this.element.getAttribute('height');
             } else {
                 size.width = rect.width;
                 size.height = rect.height;
@@ -4425,6 +4430,7 @@ jui.define("util.svg",
 
     return SVG;
 });
+
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
