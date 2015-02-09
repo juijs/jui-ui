@@ -65,7 +65,7 @@ module.exports = function(grunt) {
         "js/chart/grid/panel.js",
         "js/chart/grid/table.js",
         "js/chart/grid/overlap.js",
-        "js/chart/grid/topology.table.js",
+        "js/chart/grid/topologytable.js",
 
         // chart.brush
         "js/chart/brush/core.js",
@@ -101,7 +101,7 @@ module.exports = function(grunt) {
         "js/chart/brush/splitarea.js",
         "js/chart/brush/rangecolumn.js",
         "js/chart/brush/rangebar.js",
-        "js/chart/brush/topology.node.js",
+        "js/chart/brush/topologynode.js",
         "js/chart/brush/focus.js", // brush supporter
         "js/chart/brush/pin.js",  // brush supporter
 
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
         "js/chart/widget/scroll.js",
         "js/chart/widget/zoom.js",
         "js/chart/widget/cross.js",
-        "js/chart/widget/topology.ctrl.js",
+        "js/chart/widget/topologyctrl.js",
 
         // chart wrapper
         "js/chartx/realtime.js"

@@ -9619,10 +9619,10 @@ jui.define("chart.grid.overlap", [  ], function() {
     return OverlapGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
+jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.grid.topology.table
+     * @class chart.grid.topologytable
      *
      * 토폴로지 배치를 위한 grid
      *
@@ -13675,9 +13675,9 @@ jui.define("chart.brush.rangebar", [], function() {
 	return RangeBarBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.topology.edge", [], function() {
+jui.define("chart.brush.topologynode.edge", [], function() {
     /**
-     * @class chart.brush.topology.edge 
+     * @class chart.brush.topologynode.edge
      * 
      * 토폴로지 Edge 표현 객체  
      * 
@@ -13720,9 +13720,9 @@ jui.define("chart.brush.topology.edge", [], function() {
     return TopologyEdge;
 });
 
-jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
+jui.define("chart.brush.topologynode.edgemanager", [ "util.base" ], function(_) {
     /**
-     * @class chart.brush.topology.edgemananger 
+     * @class chart.brush.topologynode.edgemananger
      * 토폴로지 Edge 관리자
      */
     var TopologyEdgeManager = function() {
@@ -13758,12 +13758,12 @@ jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
     return TopologyEdgeManager;
 });
 
-jui.define("chart.brush.topology.node",
-    [ "util.base", "util.math", "chart.brush.topology.edge", "chart.brush.topology.edgemanager" ],
+jui.define("chart.brush.topologynode",
+    [ "util.base", "util.math", "chart.brush.topologynode.edge", "chart.brush.topologynode.edgemanager" ],
     function(_, math, Edge, EdgeManager) {
 
     /**
-     * @class chart.brush.topology.node
+     * @class chart.brush.topologynode
      * 토폴로지를 표시할 Node 객체  
      * @extends chart.brush.core 
      */
@@ -15290,10 +15290,10 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     return CrossWidget;
 }, "chart.widget.core");
-jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
+jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.widget.topology.ctrl 
+     * @class chart.widget.topologyctrl
      * 
      * 토폴로지 이벤트 핸들러
      * 
@@ -15387,7 +15387,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             chart.svg.root.get(0).each(function(i, brush) {
                 var cls = brush.attr("class");
 
-                if(cls && cls.indexOf("topology.node") != -1) {
+                if(cls && cls.indexOf("topologynode") != -1) {
                     brush.each(function(i, node) {
                         var index = parseInt(node.attr("index"));
 

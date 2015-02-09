@@ -1,7 +1,7 @@
-jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
+jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.widget.topology.ctrl 
+     * @class chart.widget.topologyctrl
      * 
      * 토폴로지 이벤트 핸들러
      * 
@@ -95,7 +95,7 @@ jui.define("chart.widget.topology.ctrl", [ "util.base" ], function(_) {
             chart.svg.root.get(0).each(function(i, brush) {
                 var cls = brush.attr("class");
 
-                if(cls && cls.indexOf("topology.node") != -1) {
+                if(cls && cls.indexOf("topologynode") != -1) {
                     brush.each(function(i, node) {
                         var index = parseInt(node.attr("index"));
 

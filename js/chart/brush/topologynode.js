@@ -1,6 +1,6 @@
-jui.define("chart.brush.topology.edge", [], function() {
+jui.define("chart.brush.topologynode.edge", [], function() {
     /**
-     * @class chart.brush.topology.edge 
+     * @class chart.brush.topologynode.edge
      * 
      * 토폴로지 Edge 표현 객체  
      * 
@@ -43,9 +43,9 @@ jui.define("chart.brush.topology.edge", [], function() {
     return TopologyEdge;
 });
 
-jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
+jui.define("chart.brush.topologynode.edgemanager", [ "util.base" ], function(_) {
     /**
-     * @class chart.brush.topology.edgemananger 
+     * @class chart.brush.topologynode.edgemananger
      * 토폴로지 Edge 관리자
      */
     var TopologyEdgeManager = function() {
@@ -81,12 +81,12 @@ jui.define("chart.brush.topology.edgemanager", [ "util.base" ], function(_) {
     return TopologyEdgeManager;
 });
 
-jui.define("chart.brush.topology.node",
-    [ "util.base", "util.math", "chart.brush.topology.edge", "chart.brush.topology.edgemanager" ],
+jui.define("chart.brush.topologynode",
+    [ "util.base", "util.math", "chart.brush.topologynode.edge", "chart.brush.topologynode.edgemanager" ],
     function(_, math, Edge, EdgeManager) {
 
     /**
-     * @class chart.brush.topology.node
+     * @class chart.brush.topologynode
      * 토폴로지를 표시할 Node 객체  
      * @extends chart.brush.core 
      */
