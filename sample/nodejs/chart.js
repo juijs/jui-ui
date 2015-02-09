@@ -1,4 +1,4 @@
-var jui = require('../../index');
+var jui = require('../../jui.node');
 var fs = require('fs');
 
 var chart = jui.create("chart.builder", $("<div></div>"), {

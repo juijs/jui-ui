@@ -1,4 +1,4 @@
-(function(exports, nodeGlobal, window, $) {  
+(function($, window, nodeGlobal) {
 	var global = { jquery: $ }, globalFunc = {};
     var navigator = window.navigator;
 
@@ -1213,7 +1213,7 @@
 	 *
 	 * @singleton
 	 */
-	exports.jui = nodeGlobal.jui =  {
+	window.jui = nodeGlobal.jui = {
 
 		/**
 		 * @method ready
@@ -1445,4 +1445,4 @@
 			return globalOpts;
 		}
 	};
-})(typeof exports !== 'undefined' ? exports :  window, typeof global !== 'undefined' ? global : window, window, jQuery || $);
+})(jQuery || $, window, (typeof global !== "undefined") ? global : window);
