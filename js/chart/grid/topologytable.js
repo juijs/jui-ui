@@ -1,7 +1,7 @@
-jui.define("chart.grid.topology.table", [ "util.base" ], function(_) {
+jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.grid.topology.table
+     * @class chart.grid.topologytable
      *
      * 토폴로지 배치를 위한 grid
      *

@@ -81,12 +81,12 @@
             padding: 5,
             axis: {
                 c: {
-                    type: "topology.table"
+                    type: "topologytable"
                 },
                 data: data
             },
             brush: {
-                type: "topology.node",
+                type: "topologynode",
                 edgeData: edgeData,
                 edgeText: function(data, align) {
                     var text = data.time + "/" + data.count;
@@ -130,7 +130,7 @@
                 activeEdge: "1000_2:1000_3"
             },
             widget: {
-                type: "topology.ctrl",
+                type: "topologyctrl",
                 zoom: true,
                 move: true
             },
