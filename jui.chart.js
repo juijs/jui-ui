@@ -4602,6 +4602,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
         var _area = {};
+        var _clipId = "";
 
         function caculatePanel(a, padding) {
 
@@ -4733,6 +4734,28 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             // Grid 및 Area 설정
             self.reload(cloneAxis);
         }
+        
+        function createClipPath() {
+            if (self.clipPath) {
+                self.clipPath.remove();
+                self.clipPath = null;
+            }
+            
+            _clipId = _.createId("clip-id-");
+            
+            self.clipPath = chart.svg.clipPath({
+                id: _clipId
+            }, function() {
+                chart.svg.rect({
+                    x: _area.x,
+                    y: _area.y,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+            
+            chart.addDefs(self.clipPath);
+        }
 
         /**
          * @method getValue
@@ -4781,8 +4804,22 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
+            
+            createClipPath();
         }
 
+        /**
+         * @method getClipId 
+         * 
+         * axis 의 clipId 를 가지고 온다.  
+         * brush core 에서 자신의 영역을 클립하기 위해서 사용한다.
+         *  
+         * @returns {string}
+         */
+        this.getClipId = function() {
+            return _clipId;
+        }
+        
         /**
          * @method area
          *
@@ -5038,18 +5075,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @private
          */
         function drawDefs(self) {
-            _defs = self.svg.defs(function() {
-                self.svg.clipPath({
-                    id: "clip-id-" + self.timestamp
-                }, function() {
-                    self.svg.rect({
-                        x: 0,
-                        y: 0,
-                        width: self.area("width"),
-                        height: self.area("height")
-                    });
-                });
-            });
+            _defs = self.svg.defs();
+        }
+        
+        function addDefs(dom) {
+            _defs.append(dom);
+            
         }
 
         /**
@@ -5479,6 +5510,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 아이콘 폰트 설정
             setChartIcons(this);
+        }
+        
+        this.addDefs = function(dom) {
+            addDefs(dom);
         }
 
         /**
@@ -9848,7 +9883,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
         this.drawAfter = function(obj) {
             if(this.brush.clip !== false) {
-                obj.attr({ "clip-path" : "url(#clip-id-" + this.chart.timestamp + ")" });
+                obj.attr({ "clip-path" : "url(#" + this.axis.getClipId() + ")" });
             }
 
             obj.attr({ "class": "brush brush-" + this.brush.type });

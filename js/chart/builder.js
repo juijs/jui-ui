@@ -105,18 +105,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @private
          */
         function drawDefs(self) {
-            _defs = self.svg.defs(function() {
-                self.svg.clipPath({
-                    id: "clip-id-" + self.timestamp
-                }, function() {
-                    self.svg.rect({
-                        x: 0,
-                        y: 0,
-                        width: self.area("width"),
-                        height: self.area("height")
-                    });
-                });
-            });
+            _defs = self.svg.defs();
+        }
+        
+        function addDefs(dom) {
+            _defs.append(dom);
+            
         }
 
         /**
@@ -546,6 +540,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 아이콘 폰트 설정
             setChartIcons(this);
+        }
+        
+        this.addDefs = function(dom) {
+            addDefs(dom);
         }
 
         /**
