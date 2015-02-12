@@ -422,14 +422,19 @@ jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
         }
 
         this.length = function() {
-            var key = _.createId(),
-                d = orders.join(" "),
-                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+            var id = _.createId(),
+                d = orders.join(" ");
 
-            $("body").append($dummy.find("path").attr("d", d).end());
+            var svg = document.createElement("svg"),
+                path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-            var length = $("#" + key)[0].getTotalLength();
-            $dummy.remove();
+            path.setAttributeNS(null, "id", id);
+            path.setAttributeNS(null, "d", d);
+            svg.appendChild(path);
+
+            document.body.appendChild(svg);
+            var length = document.getElementById(id).getTotalLength();
+            document.body.removeChild(svg);
 
             return length;
         }
@@ -765,7 +770,7 @@ jui.define("util.svg",
                 name = name.split(".")[0];
             }
 
-            var a = document.createElement('a');
+            var a = document.createElement("a");
             a.download = (name) ? name + ".svg" : "svg.svg";
             a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
 

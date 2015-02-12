@@ -3539,14 +3539,19 @@ jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
         }
 
         this.length = function() {
-            var key = _.createId(),
-                d = orders.join(" "),
-                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+            var id = _.createId(),
+                d = orders.join(" ");
 
-            $("body").append($dummy.find("path").attr("d", d).end());
+            var svg = document.createElement("svg"),
+                path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-            var length = $("#" + key)[0].getTotalLength();
-            $dummy.remove();
+            path.setAttributeNS(null, "id", id);
+            path.setAttributeNS(null, "d", d);
+            svg.appendChild(path);
+
+            document.body.appendChild(svg);
+            var length = document.getElementById(id).getTotalLength();
+            document.body.removeChild(svg);
 
             return length;
         }
@@ -3882,7 +3887,7 @@ jui.define("util.svg",
                 name = name.split(".")[0];
             }
 
-            var a = document.createElement('a');
+            var a = document.createElement("a");
             a.download = (name) ? name + ".svg" : "svg.svg";
             a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
 
@@ -15570,13 +15575,15 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                         realtime : true,
                         format : opts.axis.format,
                         key : opts.axis.key,
-                        line : opts.axis.xline
+                        line : opts.axis.xline,
+                        hide : opts.axis.xhide
                     },
                     y : {
                         type : "range",
                         domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
-                        line : opts.axis.yline
+                        line : opts.axis.yline,
+                        hide : opts.axis.yhide
                     },
                     buffer: opts.period * 60
                 }
@@ -15675,6 +15682,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 ystep : 10,
                 xline : true,
                 yline : true,
+                xhide : false,
+                yhide : false,
                 data : []
             },
 

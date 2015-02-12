@@ -79,13 +79,15 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                         realtime : true,
                         format : opts.axis.format,
                         key : opts.axis.key,
-                        line : opts.axis.xline
+                        line : opts.axis.xline,
+                        hide : opts.axis.xhide
                     },
                     y : {
                         type : "range",
                         domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
-                        line : opts.axis.yline
+                        line : opts.axis.yline,
+                        hide : opts.axis.yhide
                     },
                     buffer: opts.period * 60
                 }
@@ -184,6 +186,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 ystep : 10,
                 xline : true,
                 yline : true,
+                xhide : false,
+                yhide : false,
                 data : []
             },
 
