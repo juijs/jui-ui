@@ -5429,7 +5429,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         function setThemeStyle(theme, options) {
             if(_.typeCheck("string", theme)) {
-                _theme = _.extend(jui.include("chart.theme." + theme), options);
+                _theme = _.extend(options, jui.include("chart.theme." + theme), true);
             } else if(_.typeCheck("object", theme)) {
                 _theme = _.extend(_theme, theme);
             }
