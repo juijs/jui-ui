@@ -11952,6 +11952,47 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			return pie;
 		}
 
+		this.drawPie3d = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
+			var pie = this.chart.svg.group(),
+				path = this.chart.svg.path({
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+                startY = obj.y;
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			pie.translate(centerX, centerY);
+
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
+
+            var y = obj.y + 10;
+            var x = obj.x;
+
+            var targetX = startX;
+            var targetY = startY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
+
+            pie.append(path);
+
+			return pie;
+		}
+
 		this.drawUnit = function (index, data, g) {
 			var obj = this.axis.c(index);
 
@@ -11980,11 +12021,16 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = data[target[i]],
-					endAngle = all * (value / max),
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
                     pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
 
-                if(this.brush.showText) {
+                if (this.brush['3d']) {
+                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i+1));
+                    g.append(pie3d);
+                }
+
+                if (this.brush.showText) {
                     var text = this.getFormatText(target[i], value, max),
                         elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
@@ -11993,7 +12039,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                 }
 
                 self.addEvent(pie, index, i);
-				g.append(pie);
+                g.append(pie);
 
 				startAngle += endAngle;
 			}
@@ -12065,14 +12111,16 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
             /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
             showText: false,
             /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
-            format: null
+            format: null,
+            /** @cfg {Boolean} [3d=false] 3d 지원 여부 체크 */
+            "3d" : false
         }
     }
 
 	return PieBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.donut", [ "util.base", "util.math", "util.svg" ], function(_, math, SVG) {
+jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) {
 
     /**
      * @class chart.brush.donut 
@@ -12083,29 +12131,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.svg" ], functi
      * 
      */
 	var DonutBrush = function() {
-
-
-        this.drawBefore = function() {
-            this.super('drawBefore');
-
-            // add filter
-            this.chart.addDefs(SVG.createElement({
-                type : 'filter', attr : {
-                    id : 'test-filter'
-                },
-                children : [
-                    { type : 'feGaussianBlur', attr : { in : 'SourceAlpha', stdDeviation : "2" } },
-                    { type : 'feOffset', attr : { dx : "5", dy : "5", result : "offsetblur" } },
-                    { type : 'feFlood', attr : { 'flood-color' : '#7977C2' } },
-                    { type : 'feComposite', attr : { 'in2' : 'offsetblur', operator : "in" } },
-                    { type : 'feMerge', children : [
-                        { type : "feMergeNode" },
-                        { type : "feMergeNode", attr : {  in : "SourceGraphic" }}
-                    ]}
-                ]
-            }));
-        }
-
+        
         /**
          * @method drawDonut 
          * 
@@ -12214,10 +12240,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.svg" ], functi
                         stroke : this.color(i),
                         fill : 'transparent'
                     });
-
-                donut.attr({
-                    'filter' : 'url(#test-filter)'
-                });
 
                 if(this.brush.showText) {
                     var text = this.getFormatText(target[i], value),
