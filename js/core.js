@@ -665,7 +665,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
-                    if(selector == $(this).data("jui") || selector == $(this).data("vo")) {
+                    if(selector == $(this).data("jui") || selector == $(this).data("vo") || selector instanceof HTMLElement) {
                         var tplName = $(this).data("tpl");
 
                         if(tplName == "") {

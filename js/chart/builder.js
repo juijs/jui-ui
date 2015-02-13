@@ -397,9 +397,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     patternElement = patternElement.call(patternElement);
                 }
 
-                if (!patternElement.attr('id')) {
-                    patternElement.attr({id : obj})
+                // json 객체를 svg element 로 변환
+                if (patternElement.attr && !patternElement.attr.id) {
+                    patternElement.attr.id = obj;
                 }
+
+                patternElement = SVGUtil.createElement(patternElement);
 
                 _defs.append(patternElement);
                 

@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "css": "^2.1.0",
+    "datauri": "^0.6.0",
     "grunt": "~0.4.4",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.5.0",

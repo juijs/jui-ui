@@ -1,7 +1,9 @@
 var css = require("css"),
-    fs = require("fs");
+    fs = require("fs")
+    datauri = require('datauri');
 
 module.exports = function(grunt) {
+
     var base_src = [
         // core
         "js/base.js",
@@ -50,6 +52,7 @@ module.exports = function(grunt) {
 
         // chart.pattern 
         "js/chart/pattern/white.js",
+        "js/chart/pattern/jennifer.js",
 
         // chart.icon
         "js/chart/icon/jennifer.js",
@@ -191,10 +194,43 @@ module.exports = function(grunt) {
             css : "jui.css",
             dist : "js/chart/icon/jennifer.js"
         },
+        pattern : {
+            src : "img/pattern/*.png",
+            dist : "js/chart/pattern/jennifer.js"
+        },
         pkg: grunt.file.readJSON("package.json")
     });
 
     require("load-grunt-tasks")(grunt);
+
+    grunt.registerTask("pattern", "Image Patter Build", function() {
+        var arr = grunt.file.expand(grunt.config('pattern.src'));
+
+        var list = {
+
+        };
+        arr.forEach(function(it) {
+
+            var filename = it.split("/").pop().replace(".png", "").replace("JUI_Pattern_", "");
+
+            var obj = {
+                type : 'pattern',
+                    attr: { id: 'pattern-jennifer-' + filename, width: 12, height: 12, patternUnits: "userSpaceOnUse" },
+                children : [
+                    { type : 'image' , attr : { "xlink:href" : datauri(it), width: 12, height : 12}}
+                ]
+            }
+
+            list[filename] = obj;
+        })
+
+        var str = 'jui.define("chart.pattern.jennifer", [], function() {\n' + '\treturn ' + JSON.stringify(list, null, 4)+ "\n" + "});";
+
+        fs.writeFileSync(grunt.config("pattern.dist"), new Buffer(str));
+
+        grunt.log.writeln("File " + grunt.config("pattern.dist") + " created.");
+
+    });
 
     // 커스텀 빌드 모듈
     grunt.registerTask("icon", "SVG Icon Build", function() {
@@ -225,7 +261,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.registerTask("js", [ "concat", "uglify" ]);
-    grunt.registerTask("css", [ "less", "cssmin", "icon" ]);
+    grunt.registerTask("css", [ "less", "cssmin", "icon", "pattern" ]);
     grunt.registerTask("test", [ "qunit" ]);
     grunt.registerTask("default", [ "css", "test", "js" ]);
 };

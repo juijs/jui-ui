@@ -1,22 +1,18 @@
 jui.define("chart.theme.pattern", [], function() {
 
     var themeColors = [
-        "pattern-white-rect1",
-        "pattern-white-rect2",
-        "pattern-white-rect3",
-        "pattern-white-rect4",
-        "#f94590",
-        "#8bccf9",
-        "#9228e4",
-        "#06d9b6",
-        "#fc6d65",
-        "#f199ff",
-        "#c8f21d",
-        "#16a6e5",
-        "#00ba60",
-        "#91f2a1",
-        "#fc9765",
-        "#f21d4f"
+        "pattern-jennifer-01",
+        "pattern-jennifer-02",
+        "pattern-jennifer-03",
+        "pattern-jennifer-04",
+        "pattern-jennifer-05",
+        "pattern-jennifer-06",
+        "pattern-jennifer-07",
+        "pattern-jennifer-08",
+        "pattern-jennifer-09",
+        "pattern-jennifer-10",
+        "pattern-jennifer-11",
+        "pattern-jennifer-12"
     ];
 
     return {

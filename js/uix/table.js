@@ -470,7 +470,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             rows.push(row);
 
             // 실제 HTML에 추가
-            $obj.tbody.append(row.element);
+            $obj.tbodyElement.appendChild(row.element);
 
             // Column 배열 세팅
             initColumnRows("append", row);
@@ -1265,6 +1265,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};
+
+            $obj.tbodyElement = $obj.tbody[0];
 			
 			// UITable 객체 생성
 			this.uit = new Base({

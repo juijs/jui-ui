@@ -1205,7 +1205,6 @@
         return modules;
     }
 
-
 	/**
 	 * @class jui
 	 *
@@ -1288,6 +1287,7 @@
                 type: name,
                 "class": uiFunc
             });
+
 		},
 
         /**
@@ -2114,7 +2114,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
-                    if(selector == $(this).data("jui") || selector == $(this).data("vo")) {
+                    if(selector == $(this).data("jui") || selector == $(this).data("vo") || selector instanceof HTMLElement) {
                         var tplName = $(this).data("tpl");
 
                         if(tplName == "") {
@@ -7844,7 +7844,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             rows.push(row);
 
             // 실제 HTML에 추가
-            $obj.tbody.append(row.element);
+            $obj.tbodyElement.appendChild(row.element);
 
             // Column 배열 세팅
             initColumnRows("append", row);
@@ -8639,6 +8639,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};
+
+            $obj.tbodyElement = $obj.tbody[0];
 			
 			// UITable 객체 생성
 			this.uit = new Base({
@@ -12151,9 +12153,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     patternElement = patternElement.call(patternElement);
                 }
 
-                if (!patternElement.attr('id')) {
-                    patternElement.attr({id : obj})
+                // json 객체를 svg element 로 변환
+                if (patternElement.attr && !patternElement.attr.id) {
+                    patternElement.attr.id = obj;
                 }
+
+                patternElement = SVGUtil.createElement(patternElement);
 
                 _defs.append(patternElement);
                 
@@ -13575,22 +13580,18 @@ jui.define("chart.theme.pastel", [], function() {
 jui.define("chart.theme.pattern", [], function() {
 
     var themeColors = [
-        "pattern-white-rect1",
-        "pattern-white-rect2",
-        "pattern-white-rect3",
-        "pattern-white-rect4",
-        "#f94590",
-        "#8bccf9",
-        "#9228e4",
-        "#06d9b6",
-        "#fc6d65",
-        "#f199ff",
-        "#c8f21d",
-        "#16a6e5",
-        "#00ba60",
-        "#91f2a1",
-        "#fc9765",
-        "#f21d4f"
+        "pattern-jennifer-01",
+        "pattern-jennifer-02",
+        "pattern-jennifer-03",
+        "pattern-jennifer-04",
+        "pattern-jennifer-05",
+        "pattern-jennifer-06",
+        "pattern-jennifer-07",
+        "pattern-jennifer-08",
+        "pattern-jennifer-09",
+        "pattern-jennifer-10",
+        "pattern-jennifer-11",
+        "pattern-jennifer-12"
     ];
 
     return {
@@ -13803,14 +13804,14 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
     function CreateCirclePattern (id, size) {
         size = parseInt(size || 1);
-        var el = SVG.createElement({
+        var el = {
             type : "pattern",
             attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
             children : [
                 { type : 'rect', attr : { width : 10, height : 10, fill : '#ffffff' }},
                 { type : 'circle', attr : { cx : size, cy : size, r : size,  fill : '#000000' }}
             ]
-        });
+        };
 
         return el; 
     }
@@ -13825,7 +13826,7 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
          *
          * @return {util.svg.element}
          */
-        circle : SVG.createElement({
+        circle : {
             type: "pattern",
             attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
             children: [
@@ -13835,7 +13836,7 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
                 { type: 'circle', attr: { cx: 10.5, cy: 12.5, r: 1.8, fill: '#393939' }},
                 { type: 'circle', attr: { cx: 10.5, cy: 11.3, r: 1.8, fill: 'black' }}
             ]
-        }),
+        },
         
         /**
          * @method rect
@@ -13844,14 +13845,14 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
          * 
          * @return {util.svg.element}
          */        
-        rect : SVG.createElement({
+        rect : {
             type: "pattern",
             attr: { id: 'pattern-white-rect', width: 20, height: 20, patternUnits: "userSpaceOnUse" },
             children: [
                 { type: 'rect', attr: { width: 20, height: 20, fill: '#00a9f1' }},
                 { type: 'rect', attr: { width: 20, height: 10, fill: '#26baf4' }}
             ]
-        }),
+        },
 
         circle1 : function() { return CreateCirclePattern.call(this, 1, 1); },
         circle2 : function() { return CreateCirclePattern.call(this, 2, 1.5); },
@@ -13862,39 +13863,271 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
         circle7 : function() { return CreateCirclePattern.call(this, 7, 4); },
         circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); },
 
-        rect1 : SVG.createElement({
+        rect1 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect1', width: 70, height: 70, patternUnits: "userSpaceOnUse" },
             children : [
                 { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iI2JiZDgxNyI+PC9yZWN0Pgo8ZyB0cmFuc2Zvcm09InJvdGF0ZSg0NSkiPgo8cmVjdCB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPHJlY3QgeT0iLTUwIiB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPC9nPgo8L3N2Zz4=", width: 70, height : 70}}
             ]
-        }),
-        rect2 : SVG.createElement({
+        },
+        rect2 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect2', width: 56, height: 100, patternUnits: "userSpaceOnUse", patternTransform : "rotate(45)" },
             children : [
                 { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjhkMjAzIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZjYyOSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZTUwMyIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+Cjwvc3ZnPg==", width: 56, height : 100}}
             ]
-        }),
-        rect3 : SVG.createElement({
+        },
+        rect3 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect3', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "scale(2)" },
             children : [
                 { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
             ]
-        }),
-        rect4 : SVG.createElement({
+        },
+        rect4 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect4', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "skewX(45)" },
             children : [
                 { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
             ]
-        })
+        }
 
     }
     
 })
 
+jui.define("chart.pattern.jennifer", [], function() {
+	return {
+    "10": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-10",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjEBRg6GhgcHFgUFLAxQYAaTkFzlvDQuIAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "11": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-11",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABJJREFUCNdjMDZgOHOAAQxwsQF00wXOMquS/QAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "12": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-12",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABBJREFUCNdj+P8BioAABxsAU88RaA20zg0AAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "01": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-01",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABVJREFUCNdjKC9g+P+B4e4FIImLDQBPxxNXosybYgAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "02": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-02",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABNJREFUCNdj6GhgAAIlBSCBiw0AUpID3xszyekAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "03": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-03",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQzwMACirge9PFNsFQAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "04": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-04",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAaGRkWFhUIIaslAAAAAXRSTlMAQObYZgAAACFJREFUCNdj6HBpYQABjw4wDeS7QPgtENrFxQNCe3SAKAC36AapdMh8ewAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "05": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-05",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA1JREFUCNdjWLWAIAIAFt8Ped1+QPcAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "06": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-06",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQjwkgDijAubMqjSSAAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "07": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-07",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAAAAAMDAwvehODAAAAAXRSTlMAQObYZgAAAA5JREFUCNdjmDJlCikYAPO/FNGPw+TMAAAAAElFTkSuQmCC",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "08": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-08",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjKC9gePeA4e4Fht0bcLEBM1MRaPwhp7AAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "09": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-09",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjePeAobyAYfcGhrsXcLEBOSARaPIjMTsAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    }
+}
+});
 jui.define("chart.icon.jennifer", [], function() {
 	return {
 		"menu" : "\ue600",
@@ -18620,7 +18853,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 	return PieBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.donut", [ "util.base", "util.math", "util.svg" ], function(_, math, SVG) {
 
     /**
      * @class chart.brush.donut 
@@ -18631,7 +18864,29 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
      * 
      */
 	var DonutBrush = function() {
-        
+
+
+        this.drawBefore = function() {
+            this.super('drawBefore');
+
+            // add filter
+            this.chart.addDefs(SVG.createElement({
+                type : 'filter', attr : {
+                    id : 'test-filter'
+                },
+                children : [
+                    { type : 'feGaussianBlur', attr : { in : 'SourceAlpha', stdDeviation : "2" } },
+                    { type : 'feOffset', attr : { dx : "5", dy : "5", result : "offsetblur" } },
+                    { type : 'feFlood', attr : { 'flood-color' : '#7977C2' } },
+                    { type : 'feComposite', attr : { 'in2' : 'offsetblur', operator : "in" } },
+                    { type : 'feMerge', children : [
+                        { type : "feMergeNode" },
+                        { type : "feMergeNode", attr : {  in : "SourceGraphic" }}
+                    ]}
+                ]
+            }));
+        }
+
         /**
          * @method drawDonut 
          * 
@@ -18740,6 +18995,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
                         stroke : this.color(i),
                         fill : 'transparent'
                     });
+
+                donut.attr({
+                    'filter' : 'url(#test-filter)'
+                });
 
                 if(this.brush.showText) {
                     var text = this.getFormatText(target[i], value),
