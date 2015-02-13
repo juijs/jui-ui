@@ -1,6 +1,6 @@
 var css = require("css"),
     fs = require("fs")
-    datauri = require('datauri');
+    datauri = require("datauri");
 
 module.exports = function(grunt) {
 
@@ -204,20 +204,17 @@ module.exports = function(grunt) {
     require("load-grunt-tasks")(grunt);
 
     grunt.registerTask("pattern", "Image Patter Build", function() {
-        var arr = grunt.file.expand(grunt.config('pattern.src'));
+        var arr = grunt.file.expand(grunt.config('pattern.src')),
+            list = {};
 
-        var list = {
-
-        };
         arr.forEach(function(it) {
-
-            var filename = it.split("/").pop().replace(".png", "").replace("JUI_Pattern_", "");
+            var filename = it.split("/").pop().replace(".png", "").replace("pattern_", "");
 
             var obj = {
-                type : 'pattern',
-                    attr: { id: 'pattern-jennifer-' + filename, width: 12, height: 12, patternUnits: "userSpaceOnUse" },
+                type : "pattern",
+                    attr: { id: "pattern-jennifer-" + filename, width: 12, height: 12, patternUnits: "userSpaceOnUse" },
                 children : [
-                    { type : 'image' , attr : { "xlink:href" : datauri(it), width: 12, height : 12}}
+                    { type : "image" , attr : { "xlink:href" : datauri(it), width: 12, height : 12 } }
                 ]
             }
 
