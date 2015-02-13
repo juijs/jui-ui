@@ -455,12 +455,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             return createGradient(self, parsedColor, color);
         }
 
-        function setThemeStyle(theme, options) {
+        function setThemeStyle(theme) {
+            var style = {},
+                newStyle = {};
+
+            // 테마를 하나의 객체로 Merge
             if(_.typeCheck("string", theme)) {
-                _theme = _.extend(options, jui.include("chart.theme." + theme), true);
+                _.extend(style, jui.include("chart.theme." + theme));
             } else if(_.typeCheck("object", theme)) {
-                _theme = _.extend(_theme, theme);
+                _.extend(style, theme);
             }
+
+            // 빌더 스타일 옵션 Merge
+            _.extend(style, _options.style);
+
+            // 최종 렌더링에 적용되는 객체
+            _theme = _.extend(newStyle, style);
         }
 
         function setDefaultOptions(self) {
@@ -526,7 +536,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setDefaultOptions(this);
 
             // 차트 테마 설정 (+옵션 스타일)
-            setThemeStyle(_options.theme, _options.style);
+            setThemeStyle(_options.theme);
 
             // svg 기본 객체 생성
             this.svg = new SVGUtil(this.root, {
@@ -942,7 +952,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param themeName
          */
         this.setTheme = function(theme) {
-            setThemeStyle(theme, _options.style);
+            setThemeStyle(theme);
             if(this.isRender()) this.render(true);
         }
 
