@@ -2975,6 +2975,24 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
+		lighten : function(color, rate) {
+			color = color.replace(/[^0-9a-f]/gi, '');
+			rate = rate || 0;
+
+			var rgb = "#", c, i;
+			for (i = 0; i < 6; i += 2) {
+				c = parseInt(color.substr(i,2), 16);
+				c = Math.round(Math.min(Math.max(0, c + (c * rate)), 255)).toString(16);
+				rgb += ("00"+c).substr(c.length);
+			}
+
+			return rgb;
+		},
+
+		darken : function(color, rate) {
+			return this.lighten(color, -rate)
+		},
+
 		/**
 		 * @method parse
 		 *
@@ -11918,7 +11936,7 @@ jui.define("chart.brush.path", [], function() {
 	return PathBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], function(_, math, ColorUtil) {
 
 	/**
 	 * @class chart.brush.pie
@@ -11962,6 +11980,47 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			return pie;
 		}
 
+		this.drawPie3d = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
+			var pie = this.chart.svg.group(),
+				path = this.chart.svg.path({
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+                startY = obj.y;
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			pie.translate(centerX, centerY);
+
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
+
+            pie.append(path);
+
+			return pie;
+		}
+
 		this.drawUnit = function (index, data, g) {
 			var obj = this.axis.c(index);
 
@@ -11990,11 +12049,24 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = data[target[i]],
-					endAngle = all * (value / max),
+                var value = data[target[i]],
+                    endAngle = all * (value / max);
+
+                if (this.brush['3d']) {
+                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, ColorUtil.darken(this.color(i), 0.5));
+                    g.append(pie3d);
+                }
+
+				startAngle += endAngle;
+			}
+
+            startAngle = 0;
+			for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
                     pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
 
-                if(this.brush.showText) {
+                if (this.brush.showText) {
                     var text = this.getFormatText(target[i], value, max),
                         elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
@@ -12003,7 +12075,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                 }
 
                 self.addEvent(pie, index, i);
-				g.append(pie);
+
+                g.append(pie);
 
 				startAngle += endAngle;
 			}
@@ -12075,14 +12148,16 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
             /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
             showText: false,
             /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
-            format: null
+            format: null,
+            /** @cfg {Boolean} [3d=false] 3d 지원 여부 체크 */
+            "3d" : false
         }
     }
 
 	return PieBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], function(_, math, ColorUtil) {
 
     /**
      * @class chart.brush.donut 
@@ -12166,6 +12241,139 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 			return g;
 		}
 
+        /**
+         * @method drawDonut3d
+         *
+         * donut 을 그린다.
+         *
+         * @param {Number} centerX 중앙 위치 x
+         * @param {Number} centerY 중앙 위치 y
+         * @param {Number} innerRadius 안쪽 반지름
+         * @param {Number} outerRadius 바깥쪽 반지름
+         * @param {Number} startAngle 시작 지점 각도
+         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
+         * @param {Object} attr donut 설정될 svg 속성 리스트
+         * @param {Boolean} hasCircle
+         * @return {util.svg.element}
+         */
+		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
+		    hasCircle = hasCircle || false;
+
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+                dist = Math.abs(outerRadius - innerRadius);
+
+            outerRadius += dist/2;
+            innerRadius = outerRadius - dist;
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+
+			var innerObj = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				innerStartX = innerObj.x,
+				innerStartY = innerObj.y;
+
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+			innerObj = math.rotate(innerStartX, innerStartY, math.radian(endAngle));
+
+			// 중심점 이동
+			g.translate(centerX, centerY);
+
+			// outer arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var innerY = innerObj.y + 10;
+            var innerX = innerObj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            var innerTargetX = innerStartX + 5;
+            var innerTargetY = innerStartY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
+            g.append(path);
+
+            // 안쪽 면 그리기
+            var innerPath = this.chart.svg.path(attr);
+            // 시작 하는 위치로 옮김
+            innerPath.MoveTo(innerStartX, innerStartY);
+            innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 1, innerObj.x, innerObj.y);
+            innerPath.LineTo(innerX, innerY);
+            innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, innerTargetX, innerTargetY);
+            innerPath.ClosePath();
+            g.append(innerPath);
+
+
+			return g;
+		}
+
+		this.drawDonut3dBlock = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
+		    hasCircle = hasCircle || false;
+
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+                dist = Math.abs(outerRadius - innerRadius);
+
+            outerRadius += dist/2;
+            innerRadius = outerRadius - dist;
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+
+			var innerObj = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				innerStartX = innerObj.x,
+				innerStartY = innerObj.y;
+
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+			innerObj = math.rotate(innerStartX, innerStartY, math.radian(endAngle));
+
+			// 중심점 이동
+			g.translate(centerX, centerY);
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var innerY = innerObj.y + 10;
+            var innerX = innerObj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            var innerTargetX = innerStartX + 5;
+            var innerTargetY = innerStartY + 10;
+
+
+            // 왼쪽면 그리기
+            var rect = this.chart.svg.path(attr);
+            rect.MoveTo(obj.x, obj.y).LineTo(x, y).LineTo(innerX, innerY).LineTo(innerObj.x, innerObj.y).ClosePath();
+            g.append(rect);
+
+			return g;
+		}
+
 
         this.drawUnit = function (index, data, g) {
             var obj = this.axis.c(index);
@@ -12195,6 +12403,34 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
                 max += data[target[i]];
             }
 
+            if (this.brush['3d']) {
+
+                // 화면 블럭 그리기
+                for (var i = 0; i < target.length; i++) {
+                    var value = data[target[i]],
+                        endAngle = all * (value / max),
+                        donut3d = this.drawDonut3dBlock(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+                            fill : ColorUtil.darken(this.color(i), 0.5)
+                        }, i == target.length - 1);
+                    g.append(donut3d);
+
+                    startAngle += endAngle;
+                }
+
+                startAngle = 0;
+                for (var i = 0; i < target.length; i++) {
+                    var value = data[target[i]],
+                        endAngle = all * (value / max),
+                        donut3d = this.drawDonut3d(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+                            fill : ColorUtil.darken(this.color(i), 0.5)
+                        }, i == target.length - 1);
+                    g.append(donut3d);
+
+                    startAngle += endAngle;
+                }
+            }
+
+            startAngle = 0;
             for (var i = 0; i < target.length; i++) {
                 var value = data[target[i]],
                     endAngle = all * (value / max),
