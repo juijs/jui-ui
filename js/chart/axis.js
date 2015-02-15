@@ -13,8 +13,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {};
-        var _clipId = "";
+        var _grid = {}, _area = {}, _clipId = "";
 
         function caculatePanel(a, padding) {
 
@@ -78,6 +77,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+
+            // 그리드 객체 참조
+            _grid[k] = obj;
 
             var elem = obj.render();
 
@@ -245,6 +247,17 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method get
+         *
+         * Axis 의 옵션 정보를 리턴한다.
+         *
+         * @param key
+         */
+        this.get = function(key) {
+            return cloneAxis[key] || cloneAxis;
+        }
+
+        /**
          * @method updateGrid 
          * 
          * grid 정보를 업데이트 한다.  
@@ -255,6 +268,18 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
+        }
+
+        /**
+         * @method getGrid
+         *
+         * 실제 생성된 그리드 객체를 가져온다.
+         *
+         * @param type
+         * @returns {*|{}}
+         */
+        this.getGrid = function(type) {
+            return _grid[type] || _grid;
         }
 
         /**
@@ -346,7 +371,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-        
+
         init();
     }
 
@@ -373,7 +398,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
             shift: 1,
             /** @cfg {Number} [page=1]  현재 표시될 페이지 */
-            page: 1
+            page: 1,
+
+            angle: 0,
+            depth: 0
         }
     }
 

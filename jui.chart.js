@@ -4624,8 +4624,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {};
-        var _clipId = "";
+        var _grid = {}, _area = {}, _clipId = "";
 
         function caculatePanel(a, padding) {
 
@@ -4689,6 +4688,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+
+            // 그리드 객체 참조
+            _grid[k] = obj;
 
             var elem = obj.render();
 
@@ -4856,6 +4858,17 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method get
+         *
+         * Axis 의 옵션 정보를 리턴한다.
+         *
+         * @param key
+         */
+        this.get = function(key) {
+            return cloneAxis[key] || cloneAxis;
+        }
+
+        /**
          * @method updateGrid 
          * 
          * grid 정보를 업데이트 한다.  
@@ -4866,6 +4879,18 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
+        }
+
+        /**
+         * @method getGrid
+         *
+         * 실제 생성된 그리드 객체를 가져온다.
+         *
+         * @param type
+         * @returns {*|{}}
+         */
+        this.getGrid = function(type) {
+            return _grid[type] || _grid;
         }
 
         /**
@@ -4957,7 +4982,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-        
+
         init();
     }
 
@@ -4984,7 +5009,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
             shift: 1,
             /** @cfg {Number} [page=1]  현재 표시될 페이지 */
-            page: 1
+            page: 1,
+
+            angle: 0,
+            depth: 0
         }
     }
 
@@ -7453,10 +7481,10 @@ jui.define("chart.icon.jennifer", [], function() {
 		"upload" : "\ue649"
 	}
 });
-jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 	/**
 	 * @class chart.grid.core
-     * Grid Core 객체 
+     * Grid Core 객체
 	 * @extends chart.draw
      * @abstract
 	 */
@@ -7464,24 +7492,24 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method drawAfter
-         * 
          *
-         *  
+         *
+         *
          * @param {Object} obj
-         * @protected 
+         * @protected
          */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
 		}
 
 		/**
-		 * @method wrapper  
-         * scale wrapper 
-		 * 
-		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
-		 * 
-		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
-		 * 
+		 * @method wrapper
+         * scale wrapper
+		 *
+		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수
+		 *
+		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리
+		 *
 		 *      @example
 		 *      // 그리드 속성에 키가 없을 때
 		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
@@ -7489,17 +7517,17 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 *      grid { key : "field" }
 		 *      scale(0)			// field 값으로 scale 설정 (range, date)
          *
-		 * @protected 
+		 * @protected
 		 */
 		this.wrapper = function(scale, key) {
 			return scale;
 		}
-		
+
 		/**
-         * @method axisLine  
+         * @method axisLine
 		 * theme 이 적용된  axis line 리턴
-		 * @param {ChartBuilder} chart 
-         * @param {Object} attr  
+		 * @param {ChartBuilder} chart
+         * @param {Object} attr
 		 */
 		this.axisLine = function(attr) {
 			return this.chart.svg.line($.extend({
@@ -7514,9 +7542,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * @method line 
+		 * @method line
          * theme 이 적용된  line 리턴
-         * @protected 
+         * @protected
          * @param {ChartBuilder} chart
          * @param {Object} attr
 		 */
@@ -7525,7 +7553,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
-				y2 : 0,				
+				y2 : 0,
 				stroke : this.color("gridBorderColor"),
 				"stroke-width" : this.chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : this.chart.theme("gridBorderDashArray"),
@@ -7534,7 +7562,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * @method color 
+         * @method color
          * grid 에서 color 를 위한 유틸리티 함수
          * @param theme
          * @return {Mixed}
@@ -7568,9 +7596,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @protected
          * @param {chart.builder} chart
          * @param {String} orient
-         * @param {String} cls 
-         * @param {Grid} grid 
-         */		
+         * @param {String} cls
+         * @param {Grid} grid
+         */
 		this.drawGrid = function() {
 			// create group
 			var root = this.chart.svg.group(),
@@ -7584,7 +7612,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
-			// hide grid 
+			// hide grid
 			if(this.grid.hide) {
 				root.attr({ display : "none" })
 			}
@@ -7622,30 +7650,45 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getGridSize
-         *  
-         * get real size of grid 
+         *
+         * get real size of grid
 		 *
 		 * @param {chart.builder} chart
 		 * @param {Strng} orient
-		 * @param {Object} grid             그리드 옵션 
+		 * @param {Object} grid             그리드 옵션
 		 * @return {Object}
          * @return {Number} return.start    시작 지점
          * @return {Number} return.size     그리드 넓이 또는 높이
          * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function() {
-			var width = this.axis.area('width'),
-				height = this.axis.area('height'),
-				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area('y') : this.axis.area('x'),
+			var width = this.axis.area("width"),
+				height = this.axis.area("height"),
+				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area("y") : this.axis.area("x"),
 				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
+                depth = this.axis.get("depth"),
+                angle = this.axis.get("angle"),
 				start = axis,
-				size = max;
+				size = max,
+                end = start + size;
 
-			return {
-				start: start,
-				size: size,
-				end: start + size
-			}
+            var radian = math.radian(360 - angle),
+                x2 = Math.cos(radian) * depth,
+                y2 = Math.sin(radian) * depth;
+
+            if(this.grid.orient == "left" || this.grid.orient == "right") {
+                return {
+                    start: start - y2,
+                    size: size - y2,
+                    end: end
+                }
+            } else {
+                return {
+                    start: start,
+                    size: size - x2,
+                    end: end - x2
+                }
+            }
 		}
 	}
 
@@ -7654,7 +7697,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} grid */
-        
+
 		return {
             /**
              * @cfg {Number} [extend=null] extend grid's option
@@ -7665,7 +7708,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
 			orient: null,
-            
+
             /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
 			hide: false,
 
@@ -9931,98 +9974,18 @@ jui.define("chart.grid.overlap", [  ], function() {
     return OverlapGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
+jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) {
 
     /**
-     * @class chart.grid.topologytable
+     * @class chart.grid.grid3d
      *
      * 토폴로지 배치를 위한 grid
      *
      * @extends chart.grid.core
      */
-    var TopologyTableGrid = function() {
-        var self = this,
-            area, size, data_cnt,
-            cache = {};
-
-        function getDataIndex(key) {
-            var index = null,
-                data = self.axis.data;
-
-            for(var i = 0, len = data.length; i < len; i++) {
-                if(self.axis.getValue(data[i], "key") == key) {
-                    index = i;
-                    break;
-                }
-            }
-
-            return index;
-        }
-
-        function initDefaultXY() {
-            var row_cnt = Math.floor(area.height / size),
-                col_cnt = Math.floor(area.width / size),
-                col_step = Math.floor(col_cnt / data_cnt),
-                col_index = 0;
-
-            var left = -1,
-                right = data_cnt;
-
-            for(var i = 0; i < data_cnt; i++) {
-                var x = 0, y = 0, index = 0;
-
-                if(i % 2 == 0) {
-                    x = col_index * size;
-                    y = getRandomRowIndex(row_cnt) * size;
-                    col_index += col_step;
-
-                    left += 1;
-                    index = left;
-                } else {
-                    x = (col_cnt - col_index) * size + size;
-                    y = getRandomRowIndex(row_cnt) * size;
-
-                    right -=1;
-                    index = right;
-                }
-
-                self.axis.cacheXY[index] = {
-                    x: x + size,
-                    y: y + (size / 2)
-                };
-            }
-
-            function getRandomRowIndex() {
-                var row_index = Math.floor(Math.random() * row_cnt);
-
-                if(cache[row_index]) {
-                    var cnt = 0;
-                    for(var k in cache) { cnt++; }
-
-                    if(cnt < row_cnt) {
-                        return getRandomRowIndex(row_cnt);
-                    } else {
-                        cache = {};
-                    }
-                } else {
-                    cache[row_index] = true;
-                }
-
-                return row_index;
-            }
-        }
-
-        function initRandomXY() {
-            for(var i = 0; i < data_cnt; i++) {
-                var x = Math.floor(Math.random() * (area.width - size)),
-                    y = Math.floor(Math.random() * (area.height - size));
-
-                self.axis.cacheXY[i] = {
-                    x: x,
-                    y: y
-                };
-            }
-        }
+    var Grid3D = function() {
+        var depth = 0,
+            angle = 0;
 
         /**
          * @method drawBefore
@@ -10031,20 +9994,8 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
          *
          */
         this.drawBefore = function() {
-            area = this.chart.area();
-            size = this.grid.space;
-            data_cnt = this.axis.data.length;
-
-            // 최초 한번만 데이터 생성
-            if(!this.axis.cacheXY) {
-                this.axis.cacheXY = [];
-
-                if(this.grid.sort == "random") {
-                    initRandomXY();
-                } else {
-                    initDefaultXY();
-                }
-            }
+            depth = this.axis.get("depth");
+            angle = this.axis.get("angle");
 
             /**
              * @method scale
@@ -10054,27 +10005,71 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
              */
             this.scale = (function() {
                 return function(index) {
-                    var index = (_.typeCheck("string", index)) ? getDataIndex(index) : index;
 
-                    var func = {
-                        setX: function(value) {
-                            self.axis.cacheXY[index].x = value;
-                        },
-                        setY: function(value) {
-                            self.axis.cacheXY[index].y = value;
-                        },
-                        moveLast: function() {
-                            var target1 = self.axis.cacheXY.splice(index, 1);
-                            self.axis.cacheXY.push(target1[0]);
-
-                            var target2 = self.axis.data.splice(index, 1);
-                            self.axis.data.push(target2[0]);
-                        }
-                    }
-
-                    return _.extend(func, self.axis.cacheXY[index]);
                 }
             })(this.axis);
+        }
+
+        this.drawGridXY = function(x, y) {
+            var g = this.chart.svg.group(),
+                radian = math.radian(360 - angle),
+                x2 = Math.cos(radian) * depth;
+
+            // Y축 그리기
+            for(var i = 0; i < y.values.length; i++) {
+                var y2 = y.values[i] + Math.sin(radian) * depth;
+
+                g.append(this.line({
+                    x1 : 0,
+                    y1 : y.values[i],
+                    x2 : x2,
+                    y2 : y2
+                }));
+
+                g.append(this.line({
+                    x1 : x2,
+                    y1 : y2,
+                    x2 : this.axis.area("width"),
+                    y2 : y2
+                }));
+
+                // X축 그리기
+                if(i == 0) {
+                    var gg = this.chart.svg.group(),
+                        yy2 = y.values[y.values.length - 1] + Math.sin(radian) * depth;
+
+                    for(var j = 0; j < x.points.length; j++) {
+                        var now = this.axis.x(0) + x.points[j],
+                            xx2 = now + Math.cos(radian) * depth;
+
+                        gg.append(this.line({
+                            x1: now,
+                            y1: y.values[i],
+                            x2: xx2,
+                            y2 : y2
+                        }));
+
+                        gg.append(this.line({
+                            x1: xx2,
+                            y1: y2,
+                            x2: xx2,
+                            y2: yy2
+                        }));
+                    }
+
+                    // 첫번째 라인 그리기
+                    gg.append(this.line({
+                        x1: x2,
+                        y1: y2,
+                        x2: x2,
+                        y2: yy2
+                    }));
+
+                    g.append(gg);
+                }
+            }
+
+            return g;
         }
 
         /**
@@ -10087,19 +10082,22 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
          * @protected
          */
         this.draw = function() {
-            this.grid.hide = true;
-            return this.drawGrid();
+            var x = this.axis.getGrid("x"),
+                y = this.axis.getGrid("y"),
+                grid = this.drawGrid();
+
+            grid.root.append(this.drawGridXY(x, y));
+
+            return grid;
         }
     }
 
-    TopologyTableGrid.setup = function() {
+    Grid3D.setup = function() {
         return {
-            sort: null, // or random
-            space: 50
         }
     }
     
-    return TopologyTableGrid;
+    return Grid3D;
 }, "chart.grid.core");
 
 jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {

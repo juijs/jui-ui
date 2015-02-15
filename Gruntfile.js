@@ -68,7 +68,7 @@ module.exports = function(grunt) {
         "js/chart/grid/panel.js",
         "js/chart/grid/table.js",
         "js/chart/grid/overlap.js",
-        "js/chart/grid/topologytable.js",
+        "js/chart/grid/grid3d.js",
 
         // chart.brush
         "js/chart/brush/core.js",
