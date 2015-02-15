@@ -1,5 +1,10 @@
 jui.define("chart.theme.pattern", [], function() {
 
+    /**
+     * @class chart.theme.pattern
+     * Pattern Theme
+     * @singleton
+     */
     var themeColors = [
         "pattern-jennifer-01",
         "pattern-jennifer-02",
