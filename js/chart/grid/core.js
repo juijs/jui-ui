@@ -187,11 +187,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
                 angle = this.axis.get("angle"),
 				start = axis,
 				size = max,
-                end = start + size;
+                end = start + size,
+                x2 = 0,
+                y2 = 0;
 
-            var radian = math.radian(360 - angle),
+            if(depth > 0 || angle > 0) {
+                var radian = math.radian(360 - angle);
                 x2 = Math.cos(radian) * depth,
                 y2 = Math.sin(radian) * depth;
+            }
 
             if(this.grid.orient == "left" || this.grid.orient == "right") {
                 return {

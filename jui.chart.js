@@ -4749,7 +4749,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 shift : cloneAxis.shift,
                 page : cloneAxis.page
             });
-            
+
             // 원본 데이터 설정
             self.origin = self.data;
 
@@ -4865,7 +4865,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param key
          */
         this.get = function(key) {
-            return cloneAxis[key] || cloneAxis;
+            return cloneAxis[key];
         }
 
         /**
@@ -5010,8 +5010,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             shift: 1,
             /** @cfg {Number} [page=1]  현재 표시될 페이지 */
             page: 1,
-
+            /** @cfg {Number} [angle=0]  3d 차트 축의 각도 */
             angle: 0,
+            /** @cfg {Number} [depth=0]  3d 차트 축의 깊이 */
             depth: 0
         }
     }
@@ -7670,11 +7671,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
                 angle = this.axis.get("angle"),
 				start = axis,
 				size = max,
-                end = start + size;
+                end = start + size,
+                x2 = 0,
+                y2 = 0;
 
-            var radian = math.radian(360 - angle),
+            if(depth > 0 || angle > 0) {
+                var radian = math.radian(360 - angle);
                 x2 = Math.cos(radian) * depth,
                 y2 = Math.sin(radian) * depth;
+            }
 
             if(this.grid.orient == "left" || this.grid.orient == "right") {
                 return {
