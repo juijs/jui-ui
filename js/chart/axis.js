@@ -253,8 +253,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          *
          * @param key
          */
-        this.get = function(key) {
-            return cloneAxis[key];
+        this.get = function(type) {
+            var obj = {
+                grid: _grid,
+                area: _area
+            };
+
+            return obj[type] || cloneAxis[type];
         }
 
         /**
@@ -268,18 +273,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
-        }
-
-        /**
-         * @method getGrid
-         *
-         * 실제 생성된 그리드 객체를 가져온다.
-         *
-         * @param type
-         * @returns {*|{}}
-         */
-        this.getGrid = function(type) {
-            return _grid[type] || _grid;
         }
 
         /**

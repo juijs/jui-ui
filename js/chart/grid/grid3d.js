@@ -106,11 +106,14 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
-            var x = this.axis.getGrid("x"),
-                y = this.axis.getGrid("y"),
-                grid = this.drawGrid();
+            var x = this.axis.get("x"),
+                y = this.axis.get("y"),
+                xyObj = this.axis.get("grid");
 
-            grid.root.append(this.drawGridXY(x, y));
+            var grid = this.drawGrid();
+            if(x.orient == "bottom" && y.orient == "left") {
+                grid.root.append(this.drawGridXY(xyObj.x, xyObj.y));
+            }
 
             return grid;
         }

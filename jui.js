@@ -11643,8 +11643,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          *
          * @param key
          */
-        this.get = function(key) {
-            return cloneAxis[key];
+        this.get = function(type) {
+            var obj = {
+                grid: _grid,
+                area: _area
+            };
+
+            return obj[type] || cloneAxis[type];
         }
 
         /**
@@ -11658,18 +11663,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
-        }
-
-        /**
-         * @method getGrid
-         *
-         * 실제 생성된 그리드 객체를 가져온다.
-         *
-         * @param type
-         * @returns {*|{}}
-         */
-        this.getGrid = function(type) {
-            return _grid[type] || _grid;
         }
 
         /**
@@ -14442,37 +14435,40 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
          * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function() {
-			var width = this.axis.area("width"),
-				height = this.axis.area("height"),
-				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area("y") : this.axis.area("x"),
-				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
+            var orient = this.grid.orient,
+                area = this.axis.area();
+
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
                 depth = this.axis.get("depth"),
                 angle = this.axis.get("angle"),
 				start = axis,
 				size = max,
-                end = start + size,
-                x2 = 0,
-                y2 = 0;
+                end = start + size;
+
+            var result = {
+                start: start,
+                size: size,
+                end: end
+            };
 
             if(depth > 0 || angle > 0) {
-                var radian = math.radian(360 - angle);
-                x2 = Math.cos(radian) * depth,
-                y2 = Math.sin(radian) * depth;
+                var radian = math.radian(360 - angle),
+                    x2 = Math.cos(radian) * depth,
+                    y2 = Math.sin(radian) * depth;
+
+                if(orient == "left") {
+                    result.start = result.start - y2;
+                    result.size = result.size - y2;
+                } else if(orient == "bottom") {
+                    result.end = result.end - x2;
+                    result.size = result.size - x2;
+                }
             }
 
-            if(this.grid.orient == "left" || this.grid.orient == "right") {
-                return {
-                    start: start - y2,
-                    size: size - y2,
-                    end: end
-                }
-            } else {
-                return {
-                    start: start,
-                    size: size - x2,
-                    end: end - x2
-                }
-            }
+            return result;
 		}
 	}
 
@@ -16866,11 +16862,14 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
-            var x = this.axis.getGrid("x"),
-                y = this.axis.getGrid("y"),
-                grid = this.drawGrid();
+            var x = this.axis.get("x"),
+                y = this.axis.get("y"),
+                xyObj = this.axis.get("grid");
 
-            grid.root.append(this.drawGridXY(x, y));
+            var grid = this.drawGrid();
+            if(x.orient == "bottom" && y.orient == "left") {
+                grid.root.append(this.drawGridXY(xyObj.x, xyObj.y));
+            }
 
             return grid;
         }

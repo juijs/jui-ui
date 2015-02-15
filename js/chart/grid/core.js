@@ -179,37 +179,40 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
          * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function() {
-			var width = this.axis.area("width"),
-				height = this.axis.area("height"),
-				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area("y") : this.axis.area("x"),
-				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
+            var orient = this.grid.orient,
+                area = this.axis.area();
+
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
                 depth = this.axis.get("depth"),
                 angle = this.axis.get("angle"),
 				start = axis,
 				size = max,
-                end = start + size,
-                x2 = 0,
-                y2 = 0;
+                end = start + size;
+
+            var result = {
+                start: start,
+                size: size,
+                end: end
+            };
 
             if(depth > 0 || angle > 0) {
-                var radian = math.radian(360 - angle);
-                x2 = Math.cos(radian) * depth,
-                y2 = Math.sin(radian) * depth;
+                var radian = math.radian(360 - angle),
+                    x2 = Math.cos(radian) * depth,
+                    y2 = Math.sin(radian) * depth;
+
+                if(orient == "left") {
+                    result.start = result.start - y2;
+                    result.size = result.size - y2;
+                } else if(orient == "bottom") {
+                    result.end = result.end - x2;
+                    result.size = result.size - x2;
+                }
             }
 
-            if(this.grid.orient == "left" || this.grid.orient == "right") {
-                return {
-                    start: start - y2,
-                    size: size - y2,
-                    end: end
-                }
-            } else {
-                return {
-                    start: start,
-                    size: size - x2,
-                    end: end - x2
-                }
-            }
+            return result;
 		}
 	}
 
