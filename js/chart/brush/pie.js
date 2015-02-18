@@ -12,8 +12,25 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
         var g;
 
 		this.drawPie = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
-			var pie = this.chart.svg.group(),
-				path = this.chart.svg.path({
+            
+			var pie = this.chart.svg.group();
+
+            if (endAngle == 360) { // if pie is full size, draw a circle as pie brush
+                
+                var circle = this.chart.svg.circle({
+                    cx : centerX,
+                    cy : centerY,
+                    r : outerRadius,
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+                pie.append(circle);
+                return pie; 
+
+            }            
+            
+            var path = this.chart.svg.path({
                     fill : color,
                     stroke : this.chart.theme("pieBorderColor") || color,
                     "stroke-width" : this.chart.theme("pieBorderWidth")
