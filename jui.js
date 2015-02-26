@@ -15224,7 +15224,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 			this.grid.max = max;
 			this.grid.min = min;
-			domain = [this.grid.min, this.grid.max];
+			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
 				this.grid.step = step.call(this.chart, domain);
