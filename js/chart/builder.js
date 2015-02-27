@@ -865,7 +865,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          *
          * @param elem
          */
-        this.addDefs = function(elem) {
+        this.addClipPath = function(elem) {
             _defs.append(elem);
         }
 

@@ -11421,7 +11421,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _grid = {}, _area = {}, _clipId = "";
+        var _grid = {}, _area = {}, _clipId = "", _clipPath = null;
 
         function caculatePanel(a, padding) {
 
@@ -11558,14 +11558,14 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
         
         function createClipPath() {
-            if (self.clipPath) {
-                self.clipPath.remove();
-                self.clipPath = null;
+            if (_clipPath) {
+                _clipPath.remove();
+                _clipPath = null;
             }
             
             _clipId = _.createId("clip-id-");
-            
-            self.clipPath = chart.svg.clipPath({
+
+            _clipPath = chart.svg.clipPath({
                 id: _clipId
             }, function() {
                 chart.svg.rect({
@@ -11576,7 +11576,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 });
             });
             
-            chart.addDefs(self.clipPath);
+            chart.addClipPath(_clipPath);
         }
 
         /**
@@ -12677,7 +12677,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          *
          * @param elem
          */
-        this.addDefs = function(elem) {
+        this.addClipPath = function(elem) {
             _defs.append(elem);
         }
 
