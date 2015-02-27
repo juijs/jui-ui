@@ -5127,23 +5127,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
+            // defs 엘리먼트 생성
+            _defs = self.svg.defs();
+
             // 해쉬 코드 초기화
             _hash = {};
-        }
-
-        /**
-         * @method drawDefs
-         * define svg default pattern, clipPath, Symbol  
-         * @param {chart.builder} self
-         * @private
-         */
-        function drawDefs(self) {
-            _defs = self.svg.defs();
-        }
-        
-        function addDefs(dom) {
-            _defs.append(dom);
-            
         }
 
         /**
@@ -5381,7 +5369,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function createGradient(self, obj, hashKey) {
+        function createGradient(obj, hashKey) {
             if(!_.typeCheck("undefined", hashKey) && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
             }
@@ -5402,7 +5390,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             return "url(#" + id + ")";
         }
         
-        function createPattern(self, obj) {
+        function createPattern(obj) {
             if (_.typeCheck("string", obj)) {
                 obj = obj.replace("url(#", "").replace(")", "");
 
@@ -5460,22 +5448,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function createColor(self, color) {
+        function createColor(color) {
             if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
             if(_.typeCheck("object", color)) {
                 
-                if (color.type == 'pattern') {
-                    return createPattern(self, color);
+                if (color.type == "pattern") {
+                    return createPattern(color);
                 } else {
-                    return createGradient(self, color);
+                    return createGradient(color);
                 }
             }
             
-            if (typeof color == 'string') {
-                var url = createPattern(self, color);
+            if (typeof color == "string") {
+                var url = createPattern(color);
                 if (url) {
                     return url; 
                 }
@@ -5485,7 +5473,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             if(parsedColor == color)
                 return color;
 
-            return createGradient(self, parsedColor, color);
+            return createGradient(parsedColor, color);
         }
 
         function setThemeStyle(theme) {
@@ -5538,7 +5526,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function setChartIcons(self) {
+        function setChartIcons() {
             var icon = _options.icon;
             if(!_.typeCheck("string", icon.path)) return;
 
@@ -5585,13 +5573,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setChartEvent(this);
 
             // 아이콘 폰트 설정
-            setChartIcons(this);
+            setChartIcons();
         }
         
-        this.addDefs = function(dom) {
-            addDefs(dom);
-        }
-
         /**
          * @method get  
          * get option's property of chart builder 
@@ -5690,7 +5674,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
-            return createColor(this, color);
+            return createColor(color);
         }
 
         /**
@@ -5744,7 +5728,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return _theme;
             } else if(arguments.length == 1) {
                 if(key.indexOf("Color") > -1 && _theme[key] != null) {
-                    return createColor(this, _theme[key]);
+                    return createColor(_theme[key]);
                 }
 
                 return _theme[key];
@@ -5752,7 +5736,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var val = (key) ? value : value2;
 
                 if(val.indexOf("Color") > -1 && _theme[val] != null) {
-                    return createColor(this, _theme[val]);
+                    return createColor(_theme[val]);
                 }
 
                 return _theme[val];
@@ -5885,7 +5869,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // chart 관련된 요소 draw
             drawBefore(this);
-            drawDefs(this);
             drawAxis(this);
             drawBrush(this);
             drawWidget(this, isAll);
@@ -5906,6 +5889,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 초기화 설정
             _initialize = true;
+        }
+
+        /**
+         * @method addDefs
+         *
+         * defs 엘리먼트의 자식 노드를 추가한다.
+         *
+         * @param elem
+         */
+        this.addDefs = function(elem) {
+            _defs.append(elem);
         }
 
         /*
