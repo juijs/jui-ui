@@ -168,7 +168,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 });
             });
             
-            chart.addClipPath(_clipPath);
+            chart.appendDefs(_clipPath);
         }
 
         /**

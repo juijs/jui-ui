@@ -859,13 +859,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * @method addDefs
+         * @method appendDefs
          *
          * defs 엘리먼트의 자식 노드를 추가한다.
          *
          * @param elem
          */
-        this.addClipPath = function(elem) {
+        this.appendDefs = function(elem) {
             _defs.append(elem);
         }
 
