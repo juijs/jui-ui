@@ -171,8 +171,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setIndex
-		 * check button by index
-		 * @param {Array} indexList  index list for button check
+		 * @param {Array} indexList index list for button check
+         *
+         * Selects a button of a specified index.
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -185,8 +186,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setValue
-		 * check button by value
 		 * @param valueList value list for button check
+         *
+         * Selects a button with a specified value
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -199,8 +201,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getData
-		 * get data
 		 * @return {Array}
+         *
+         * Gets the data of the button currently selected
 		 */
 		this.getData = function() {
 			return ui_list[this.options.type].data;
@@ -208,9 +211,10 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getValue
-		 * get selected value list
 		 * @return {Array}  return value list if it is check button
 		 * @return {Object}  return one value if it is radio button
+         *
+         * Gets the value of the button currently selected
 		 */
 		this.getValue = function() {
             var data = this.getData();
@@ -230,7 +234,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method reload
-		 * reload button data
+         *
+		 * Re-defines the button UI
 		 */
 		this.reload = function() {
 			ui_list[this.options.type]._setting("init");
@@ -241,23 +246,31 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
         return {
 			/**
 			 * @cfg {String} [type="radio"]
-			 * button type
+             * Determines whether to use a radio/check button
 			 */
 			type: "radio",
 
 			/**
 			 * @cfg
-			 * selected index
+			 * Determines an initial selection button with a specified index
 			 */
 			index: 0,
 
 			/**
 			 * @cfg
-			 * selected value
+			 * Determines an initial selection button with a specified value
 			 */
 			value: ""
         }
     }
+
+    /**
+     * @event change
+     * @param {Object} data Data of the selected button
+     * @param {jQueryEvent} e The event object
+     *
+     * Event that occurs when clicking on a button
+     */
 	
 	return UI;
 });
