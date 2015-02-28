@@ -53,12 +53,12 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             axis[k] = axis[k]  || {};
 
             if (k == "x") {
-                axis[k].orient = axis[k].orient == 'top' ? 'top' : 'bottom';
-            } else if (k == 'y') {
-                axis[k].orient = axis[k].orient == 'right' ? 'right' : 'left';
-            } else if (k == 'c') {
-                axis[k].type = axis[k].type || 'panel';
-                axis[k].orient = 'custom';
+                axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
+            } else if (k == "y") {
+                axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "c") {
+                axis[k].type = axis[k].type || "panel";
+                axis[k].orient = "custom";
             }
 
             // 다른 그리드 옵션을 사용함

@@ -186,10 +186,8 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
         }
         
 		this.drawUnit = function(index, data, group) {
-            
-            var obj = this.axis.c(index);
-            
-            var width = obj.width,
+            var obj = this.axis.c(index),
+                width = obj.width,
                 height = obj.height,
                 x = obj.x,
                 y = obj.y;
@@ -199,12 +197,11 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             
-            var date = new Date();
-            
-            var hour = typeof data[this.brush.hour] == 'undefined' ? date.getHours() : data[this.brush.hour];
-            var minute = typeof data[this.brush.minute] == 'undefined' ?  date.getMinutes() : data[this.brush.minute];
-            var second = typeof data[this.brush.second] == 'undefined' ?  date.getSeconds() : data[this.brush.second];
-            var millis = typeof data[this.brush.second]  == 'undefined' ?  date.getMilliseconds() : 0;
+            var date = new Date(),
+                hour = this.getValue(data, "hour", date.getHours()),
+                minute = this.getValue(data, "minute", date.getMinutes()),
+                second = this.getValue(data, "second", date.getSeconds()),
+                millis = date.getMilliseconds();
 
             group.append(this.drawOuterCircle(w, centerX, centerY));
             group.append(this.drawInnerCircle(w, centerX, centerY));
@@ -217,12 +214,7 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             return group; 
 		}
 
-        this.drawBefore = function() {
-
-        }
-
         this.draw = function() {
-
             var group = this.chart.svg.group();
 
             this.eachData(function(i, data) {
@@ -230,16 +222,7 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             });
 
             return group;
-
         }
-	}
-
-	ClockBrush.setup = function() {
-		return {
-            hour : "hour",
-            minute : "minute",
-            second : "second"
-		};
 	}
 
 	return ClockBrush;
