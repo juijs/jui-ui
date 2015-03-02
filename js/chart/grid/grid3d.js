@@ -41,68 +41,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             })(this.axis);
         }
 
-        this.drawGridXY = function(x, y) {
-            var g = this.chart.svg.group(),
-                radian = math.radian(360 - angle),
-                x2 = Math.cos(radian) * depth;
-
-            // Y축 그리기
-            for(var i = 0; i < y.values.length; i++) {
-                var y2 = y.values[i] + Math.sin(radian) * depth;
-
-                g.append(this.line({
-                    x1 : 0,
-                    y1 : y.values[i],
-                    x2 : x2,
-                    y2 : y2
-                }));
-
-                g.append(this.line({
-                    x1 : x2,
-                    y1 : y2,
-                    x2 : this.axis.area("width"),
-                    y2 : y2
-                }));
-
-                // X축 그리기
-                if(i == 0) {
-                    var gg = this.chart.svg.group(),
-                        yy2 = y.values[y.values.length - 1] + Math.sin(radian) * depth;
-
-                    for(var j = 0; j < x.points.length; j++) {
-                        var now = this.axis.x(0) + x.points[j],
-                            xx2 = now + Math.cos(radian) * depth;
-
-                        gg.append(this.line({
-                            x1: now,
-                            y1: y.values[i],
-                            x2: xx2,
-                            y2 : y2
-                        }));
-
-                        gg.append(this.line({
-                            x1: xx2,
-                            y1: y2,
-                            x2: xx2,
-                            y2: yy2
-                        }));
-                    }
-
-                    // 첫번째 라인 그리기
-                    gg.append(this.line({
-                        x1: x2,
-                        y1: y2,
-                        x2: x2,
-                        y2: yy2
-                    }));
-
-                    g.append(gg);
-                }
-            }
-
-            return g;
-        }
-
         /**
          * @method draw
          *
@@ -113,16 +51,71 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
-            var x = this.axis.get("x"),
-                y = this.axis.get("y"),
-                xyObj = this.axis.get("grid");
+            var radian = math.radian(360 - angle),
+                y2 = Math.sin(radian) * depth,
+                x2 = Math.cos(radian) * depth;
 
-            var grid = this.drawGrid();
-            if(x.orient == "bottom" && y.orient == "left") {
-                grid.root.append(this.drawGridXY(xyObj.x, xyObj.y));
-            }
+            this.axis.y.root.each(function(i, elem) {
+                if(i == 0) {
+                    self.axis.y.root.append(self.line({
+                        x1 : x2,
+                        y1 : 0,
+                        x2 : x2,
+                        y2 : y2 + elem.attributes.y2
+                    }));
+                } else {
+                    // X축 라인 속성 가져오기
+                    var xAttr = self.axis.x.root.get(0).attributes;
 
-            return grid;
+                    elem.append(self.line({
+                        x1 : 0,
+                        y1 : 0,
+                        x2 : x2,
+                        y2 : y2
+                    }));
+
+                    elem.append(self.line({
+                        x1 : x2,
+                        y1 : y2,
+                        x2 : x2 + xAttr.x2,
+                        y2 : y2
+                    }));
+                }
+            });
+
+            this.axis.x.root.each(function(i, elem) {
+                var attr = (i == 0) ? elem.attributes : elem.get(0).attributes,
+                    y2 = attr.y1 + Math.sin(radian) * depth,
+                    x2 = attr.x1 + Math.cos(radian) * depth;
+
+                if(i == 0) {
+                    self.axis.x.root.append(self.line({
+                        x1 : x2,
+                        y1 : y2,
+                        x2 : x2 + attr.x2,
+                        y2 : y2
+                    }));
+                } else if(i > 1) {
+                    // Y축 라인 속성 가져오기
+                    var yAttr = self.axis.y.root.get(0).attributes;
+
+                    elem.append(self.line({
+                        x1 : attr.x1,
+                        y1 : attr.y1,
+                        x2 : x2,
+                        y2 : y2
+                    }));
+
+                    elem.append(self.line({
+                        x1 : x2,
+                        y1 : -yAttr.y1,
+                        x2 : x2,
+                        y2 : -yAttr.y2
+                    }));
+                }
+            });
+
+            return this.drawGrid();
         }
     }
 

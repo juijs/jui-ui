@@ -13,7 +13,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _grid = {}, _area = {}, _clipId = "", _clipPath = null;
+        var _area = {}, _clipId = "", _clipPath = null;
 
         function caculatePanel(a, padding) {
 
@@ -78,26 +78,24 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.axis = axis;
             obj.grid = axis[k];
 
-            // 그리드 객체 참조
-            _grid[k] = obj;
-
             var elem = obj.render();
 
             // 그리드 별 위치 선정하기
             if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area('x') + self.area("x") - axis[k].dist, chart.area('y'));
+                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area('x') + self.area("x2") + axis[k].dist, chart.area('y'));
+                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y2") + axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
             } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y") - axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
             } else {
                 // custom
-                if(elem.root) elem.root.translate(chart.area('x') + self.area("x"), chart.area('y') + self.area('y'));
+                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             }
 
             elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
 
             return elem.scale;
         }
@@ -223,18 +221,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
-         * @method getClipId 
-         * 
-         * axis 의 clipId 를 가지고 온다.  
-         * brush core 에서 자신의 영역을 클립하기 위해서 사용한다.
-         *  
-         * @returns {string}
-         */
-        this.getClipId = function() {
-            return _clipId;
-        }
-        
-        /**
          * @method area
          *
          * Axis 의 표시 영역을 리턴한다. 
@@ -255,8 +241,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.get = function(type) {
             var obj = {
-                grid: _grid,
-                area: _area
+                area: _area,
+                clipId: _clipId
             };
 
             return obj[type] || cloneAxis[type];
