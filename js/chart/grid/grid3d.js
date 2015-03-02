@@ -8,7 +8,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
      * @extends chart.grid.core
      */
     var Grid3D = function() {
-        var depth = 0,
+        var self = this,
+            depth = 0,
             angle = 0;
 
         /**
@@ -28,8 +29,14 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                return function(index) {
+                var radian = math.radian(360 - angle),
+                    y2 = Math.sin(radian) * depth;
 
+                return function(index, value) {
+                    return {
+                        x: self.axis.x(index),
+                        y: self.axis.y(value)
+                    }
                 }
             })(this.axis);
         }
@@ -121,6 +128,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     Grid3D.setup = function() {
         return {
+            step: 1
         }
     }
     
