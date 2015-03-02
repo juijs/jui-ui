@@ -17814,12 +17814,12 @@ jui.define("chart.brush.column3d", [], function() {
                 for(var j = 0; j < brush.target.length; j++) {
                     var xy = axis.c(i, data[brush.target[j]]);
 
-                    this.chart.svg.circle({
+                    g.append(this.chart.svg.circle({
                         r: 2,
                         fill: this.color(j),
                         cx: xy.x,
                         cy: xy.y
-                    });
+                    }));
                 }
 			});
 
