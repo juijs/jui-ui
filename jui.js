@@ -12345,22 +12345,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         function setThemeStyle(theme) {
-            var style = {},
-                newStyle = {};
+            var style = {};
 
             // 테마를 하나의 객체로 Merge
             if(_.typeCheck("string", theme)) {
                 _.extend(style, jui.include("chart.theme." + theme));
+                _.extend(style, _options.style);
             } else if(_.typeCheck("object", theme)) {
+                _.extend(_theme, _options.style);
                 _.extend(_theme, theme);
                 _.extend(style, _theme);
             }
 
-            // 빌더 스타일 옵션 Merge
-            _.extend(style, _options.style);
-
             // 최종 렌더링에 적용되는 객체
-            _theme = _.extend(newStyle, style);
+            _theme = style;
         }
 
         function setDefaultOptions(self) {
