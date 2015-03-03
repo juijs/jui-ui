@@ -1451,11 +1451,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class core.UIManager
-     * UI에 관련된 기본 로직 클래스 
-     *
      * @private
      * @singleton
-     *  
      */
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1463,10 +1460,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method add
+         * Adds a component object created
          *
-         * 생성된 instance 를 추가
-         *
-         * @param {Object} uiIns
+         * @param {Object} ui instance
          */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
@@ -1474,12 +1470,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method emit
+         * Generates a custom event to an applicable component
          *
-         * 커스텀 이벤트 실행
-         *
-         * @param {String} key  selector
-         * @param {String} type  이벤트 이름
-         * @param {Array} args  이벤트에 전달될 파라미터
+         * @param {String} key (selector or ui type)
+         * @param {String} eventType
+         * @param {Array} arguments
          */
         this.emit = function(key, type, args) {
             var targets = [];
@@ -1503,11 +1498,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method get
+         * Gets a component currently created
          *
-         * 객체 가지고 오기
-         *
-         * @param {String/Integer} key 패키지 명 또는 인스턴스 index
-         * @returns {Object/Array} 생성된 객체 또는 리스트
+         * @param {Integer/String}
+         * @returns {Object/Array}
          */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
@@ -1538,8 +1532,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method getAll
-         *
-         * 모든 인스턴스 리스트
+         * Gets all components currently created
          *
          * @return {Array}
          */
@@ -1549,11 +1542,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method remove
-         *
-         * 인스턴스 삭제
+         * Removes a component object in an applicable index from the list
          *
          * @param {Integer} index
-         * @return {Object}  removed instance;
+         * @return {Object} removed instance
          */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
@@ -1561,20 +1553,31 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method shift
+         * Removes the last component object from the list
+         *
+         * @return {Object} removed instance
+         */
         this.shift = function() {
             return instances.shift();
         }
 
+        /**
+         * @method pop
+         * Removes the first component object from the list
+         *
+         * @return {Object} removed instance
+         */
         this.pop = function() {
             return instances.pop();
         }
 
         /**
          * @method size
+         * Gets the number of objects currently created
          *
-         * 인스턴스 길이 얻어오기
-         *
-         * @return {Number} 인스턴스 길이
+         * @return {Number}
          */
 		this.size = function() {
 			return instances.length;
@@ -1583,13 +1586,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method debug
          *
-         * 디버그 코드 삽입
-         *
-         * @param {Object} uiObj
+         * @param {Object} ui instance
          * @param {Number} i
          * @param {Number} j
-         * @param {Function} callback  디버그시 실행될 함수
-         *
+         * @param {Function} callback
          */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
@@ -1642,7 +1642,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 				}
 			}
 		}
-		
+
+        /**
+         * @method debugAll
+         * debugs all component objects currently existing
+         *
+         * @param {Function} callback
+         */
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
 				var uiList = instances[i];
@@ -1655,8 +1661,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		
         /**
          * @method addClass
+         * Adds a component class
          *
-         * @param {String} uiCls
+         * @param {Object} ui class
          */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
@@ -1664,6 +1671,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method getClass
+         * Gets a component class
          *
          * @param {String/Integer} key
          * @return {Object}
@@ -1681,20 +1689,25 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			
 			return null;
 		}
-		
+
+        /**
+         * @method getClassAll
+         * Gets all component classes
+         *
+         * @return {Array}
+         */
 		this.getClassAll = function() {
 			return classes;
 		}
 
         /**
          * @method create
+         * It is possible to create a component dynamically after the ready point
          *
-         * UI 객체 동적 생성 메소드
-         *
-         * @param {String} type  모듈 이름
-         * @param {String/Object} selector   jquery selector or dom element
-         * @param {Object} options  객체 생성시 필요한 옵션
-         * @return {Object} 생성된 JUI 객체
+         * @param {String} ui type
+         * @param {String/DOMElement} selector
+         * @param {Object} options
+         * @return {Object}
          */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
@@ -1810,11 +1823,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-
-    /**
-     * UIManager에서 관리되는 객체
-     * 객체 생성 정보와 목록을 가지고 있음
-     */
     var UICoreSet = function(type, selector, options, list) {
         this.type = type;
         this.selector = selector;
@@ -1847,10 +1855,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method find
+         * Get the child element of the root element
          *
-         * 루트에 포함되는 하위 엘리먼트를 가져온다.
-         *
-         * @param selector
+         * @param {String/HTMLElement} selector
          * @returns {*|jQuery}
          */
         this.find = function(selector) {
@@ -1859,12 +1866,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method emit
-         * 
-         * 커스텀 이벤트 발생시키는 메소드
+         * Generates a custom event. The first parameter is the type of a custom event. A function defined as an option or on method is called
          *
-         * @param {String} type 발생시킬 이벤트
-         * @param {Function} args 이벤트 핸들러에 넘기는 값
-         * @return {Mixed} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
+         * @param {String} event type
+         * @param {Function} arguments
+         * @return {Mixed}
          */
         this.emit = function(type, args) {
             if(typeof(type) != "string") return;
@@ -1884,9 +1890,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method on
-         * 이벤트를 리스너에 등록한다.
-         * @param {String} type 이벤트 이름
-         * @param {Function} callback 실행할 콜백 함수
+         * A callback function defined as an on method is run when an emit method is called
+         *
+         * @param {String} event type
+         * @param {Function} callback
          */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
@@ -1895,8 +1902,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method off
-         * 등록된 이벤트를 삭제한다.
-         * @param {String} type 이벤트 이름
+         * Removes a custom event of an applicable type or callback handler
+         *
+         * @param {String} event type
          */
         this.off = function(type) {
             var event = [];
@@ -1915,7 +1923,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addEvent
-         * 커스텀 이벤트 등록
+         * Defines a browser event of a DOM element
+         *
+         * @param {String/HTMLElement} selector
+         * @param {String} dom event type
+         * @param {Function} calback
          */
         this.addEvent = function() {
             this.listen.add(arguments);
@@ -1923,9 +1935,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addTrigger
-         * 트리거 등록
-         * @param selector
-         * @param type
+         * Generates an applicable event to a DOM element
+         *
+         * @param {String/HTMLElement} selector
+         * @param {String} domEventType
          */
         this.addTrigger = function(selector, type) {
             this.listen.trigger(selector, type);
@@ -1933,9 +1946,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addValid
-         * Validation 추가
-         * @param name
-         * @param params
+         * Check the parameter type of a UI method and generates an alarm when a wrong value is entered
+         *
+         * @param {String} method name
+         * @param {Array} arguments
          */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
@@ -1956,8 +1970,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method callBefore
-         * @param {String} name
+         * Sets a callback function that is called before a UI method is run
+         *
+         * @param {String} method name
          * @param {Function} callback
+         * @return {Mixed}
          */
         this.callBefore = function(name, callback) {
             if(!this.__proto__) return;
@@ -1977,6 +1994,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callAfter
+         * Sets a callback function that is called after a UI method is run
+         *
+         * @param {String} method name
+         * @param {Function} callback
+         * @return {Mixed}
+         */
         this.callAfter = function(name, callback) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
@@ -1994,6 +2019,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callDelay
+         * Sets a callback function and the delay time before/after a UI method is run
+         *
+         * @param {String} method name
+         * @param {Function} callback
+         */
         this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
             if(!this.__proto__) return;
 
@@ -2028,15 +2060,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method setTpl
-         * tpl 을 설정한다.
-         * @param {String} name tpl 이름
-         * @param {String} html tpl string
+         * Dynamically defines the template method of a UI
+         *
+         * @param {String} template name
+         * @param {String} template markup
          */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
         }
 
         /**
+         * @method setVo
+         * Dynamically defines the template method of a UI
+         *
          * @deprecated
          */
         this.setVo = function() { // @Deprecated
@@ -2050,7 +2086,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method setOption
-         * 옵션을 설정한다.
+         * Dynamically defines the options of a UI
+         *
          * @param {String} key
          * @param {Mixed} value
          */
@@ -2063,14 +2100,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
-        
-        this.find = function(selector) {
-            return this.$root.find(selector);
-        }
 
         /**
          * @method destroy
-         * 생성된 객체를 메모리에서 삭제한다.
+         * Removes all events set in a UI obejct and the DOM element
+         *
          */
         this.destroy = function() {
             if(!this.__proto__) return;
@@ -2104,12 +2138,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.selector = $root.selector;
                 /** @property {HTMLElement} root */
                 mainObj.init.prototype.root = this;
+                /** @property {Object} options */
                 mainObj.init.prototype.options = opts;
+                /** @property {Object} template */
                 mainObj.init.prototype.tpl = {};
+                /** @property {Array} custom event */
                 mainObj.init.prototype.event = new Array(); // Custom Event
+                /** @property {Object} dom event */
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
+                /** @property {Integer} timestamp */
                 mainObj.init.prototype.timestamp = new Date().getTime();
+                /** @property {Integer} index */
                 mainObj.init.prototype.index = index;
+                /** @property {Class} ui module */
                 mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
@@ -2174,13 +2215,21 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.setup = function() {
         return {
-            /** @cfg {Object} [tpl={}]  템플릿 리스트  */
-            tpl: {},
-            /** @cfg {Object} [event={}]  이벤트 리스트  */
-            event: {},
             /**
              * @cfg {Object} [tpl={}]
-             * 템플릿 리스트
+             * Defines a template markup to be used in a UI
+             */
+            tpl: {},
+
+            /**
+             * @cfg {Object} [event={}]
+             * Defines a DOM event to be used in a UI
+             */
+            event: {},
+
+            /**
+             * @cfg {Object} [vo=null]
+             * Configures a binding object of a markup
              *
              * @deprecated
              */
