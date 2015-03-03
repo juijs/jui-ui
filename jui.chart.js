@@ -5519,7 +5519,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             if(_.typeCheck("string", theme)) {
                 _.extend(style, jui.include("chart.theme." + theme));
             } else if(_.typeCheck("object", theme)) {
-                _.extend(style, theme);
+                _.extend(_theme, theme);
+                _.extend(style, _theme);
             }
 
             // 빌더 스타일 옵션 Merge
