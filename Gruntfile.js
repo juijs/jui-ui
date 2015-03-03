@@ -37,6 +37,13 @@ module.exports = function(grunt) {
         "js/uix/xtable.js"
     ];
 
+    var table_src = [
+        "js/ui/dropdown.js",
+        "js/uix/table.js",
+        "js/uix/tree.js",
+        "js/uix/xtable.js"
+    ];
+
     var chart_src = [
         // chart (core)
         "js/chart/draw.js",
@@ -153,10 +160,17 @@ module.exports = function(grunt) {
                 src : base_src.concat(ui_src, chart_src),
                 dest : "jui.js"
             },
-
-
-
-            // jui all 
+            // jui component
+            comp : {
+                src : base_src.concat(ui_src),
+                dest : "jui.comp.js"
+            },
+            // jui table, tree, xtable
+            table : {
+                src : base_src.concat(table_src),
+                dest : "jui.table.js"
+            },
+            // jui chart
             chart : {
                 src : base_src.concat(chart_src),
                 dest : "jui.chart.js"
@@ -167,6 +181,16 @@ module.exports = function(grunt) {
             dist : {
                 files : {
                     "jui.min.js" : [ "jui.js" ]
+                }
+            },
+            comp : {
+                files : {
+                    "jui.comp.min.js" : [ "jui.comp.js" ]
+                }
+            },
+            table : {
+                files : {
+                    "jui.table.min.js" : [ "jui.table.js" ]
                 }
             },
             chart : {

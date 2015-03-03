@@ -11419,7 +11419,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 
     /**
      * @class chart.axis
