@@ -40,22 +40,6 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		var index = -1;
 
 		/**
-		 * @event click
-		 * Fire when element is clicked on.
-		 * @param {Data} data clicked data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-
-		/**
-		 * @event change
-		 * Fire when element is changed.
-		 * @param {Data} data changed data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-					
-		/**
 		 * Private Methods
 		 * 
 		 */
@@ -264,7 +248,8 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setIndex
-		 * set selected index
+		 * Selects a button of a specified index
+         *
 		 * @param {Number} index
 		 */
 		this.setIndex = function(index) {
@@ -272,23 +257,51 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("change", [ ui_data ]);
 		}
 
+        /**
+         * @method setValue
+         * Selects a button having a specified value
+         *
+         * @param {Mixed} value
+         */
 		this.setValue = function(value) {
 			load("value", value);
 			this.emit("change", [ ui_data ]);
 		}
-		
+
+        /**
+         * @method getData
+         * Gets the data of the button currently selected
+         *
+         * @return {Object}
+         */
 		this.getData = function() {
 			return ui_data;
 		}
-		
+
+        /**
+         * @method getValue
+         * Gets the value of the button currently selected
+         *
+         * @return {Mixed}
+         */
 		this.getValue = function() {
 			return (ui_data != null) ? ui_data["value"] : null;
 		}
 
+        /**
+         * @method getText
+         * Gets the markup text of the button currently selected
+         *
+         * @return {String}
+         */
 		this.getText = function() {
 			return (ui_data != null) ? ui_data["text"] : null;
 		}
-		
+
+        /**
+         * @method open
+         * Shows the element list of a combo box
+         */
 		this.open = function(e) {
 			ui_list["toggle"].addClass("active");
 			ui_list["drop"].outerWidth(ui_list["root"].outerWidth() - 1);
@@ -307,7 +320,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("open", e);
 			this.type = "open";
 		}
-		
+
+        /**
+         * @method fold
+         * Hides the element list of a combo box
+         */
 		this.fold = function() {
 			ui_list["drop"].hide();
 			ui_list["toggle"].removeClass("active");
@@ -319,7 +336,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("fold");
 			this.type = "fold";
 		}
-		
+
+        /**
+         * @method reload
+         * Re-defines a combo box
+         */
 		this.reload = function() {
 			if(this.options.value != "") {
 				load("value", this.options.value);
@@ -335,14 +356,51 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [index=0]
+             * Determines an initial selection button with a specified index
+             */
 			index: 0,
+
+            /**
+             * @cfg {String} [value=0]
+             * Determines an initial selection button with a specified value
+             */
 			value: "",
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Determines the horizontal size of a combo box
+             */
 			width: 0,
+
+            /**
+             * @cfg {Integer} [height=100]
+             * Determines an initial selection button with a specified value
+             */
 			height: 100,
+
+            /**
+             * @cfg {Boolean} [keydown=false]
+             * It is possible to select a node using the keyboard
+             */
 			keydown: false,
+
+            /**
+             * @cfg {"top"/"bottom"} [position="bottom"]
+             * It is possible to determine an initial selection button with a specified value
+             */
 			position: "bottom"
         }
     }
+
+    /**
+     * @event change
+     * Event which occurs when selecting a combo box
+     *
+     * @param {Data} data changed data
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
