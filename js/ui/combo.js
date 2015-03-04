@@ -1,9 +1,5 @@
 jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var call_list = jui.get("ui.combo");
 		
@@ -384,7 +380,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
      * @event change
      * Event which occurs when selecting a combo box
      *
-     * @param {Data} data changed data
+     * @param {Object} data changed data
      * @param {EventObject} e The event object
      */
 	

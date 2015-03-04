@@ -2,24 +2,17 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	
 	/**
 	 * @class uix.autocomplete
-     * 
-     * 자동 완성 컴포넌트
-     * 
+     * Auto complete component that shows a list of keywords containing the input value when inputting a string in a text box
+     *
      * @extends core
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-	 * 
 	 */
 	var UI = function() {
 		var ddUi = null, target = null,
             words = [], list = [];
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createDropdown(self, words) {
 			if(words.length == 0) {
 				if(ddUi) ddUi.hide();
@@ -77,13 +70,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var opts = this.options;
 			
@@ -95,12 +82,24 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
             // 단어 업데이트
             this.update(opts.words);
-		}		
-		
+		}
+
+        /**
+         * @method update
+         * Updates words subject to autofill
+         *
+         * @param {Array} words
+         */
 		this.update = function(newWords) {
 			words = newWords;
 		}
 
+        /**
+         * @method list
+         * Gets filtered words subject to autofill
+         *
+         * @return {Array} words
+         */
         this.list = function() {
             return list;
         }
@@ -108,10 +107,26 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=null]
+             * Designates a target selector when an autofill route is not a target
+             */
 			target: null,
+
+            /**
+             * @cfg {Array} words
+             * Designates words subject to autofill
+             */
 			words: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when you click on a dropdown that shows a word list
+     *
+     * @param {String} word Changed word
+     */
 	
 	return UI;
 });
