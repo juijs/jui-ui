@@ -2,7 +2,8 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.layout
-     * implements layout
+     * Layout can split the screen into areas and each area will be resizable
+     *
      * @extends core
      * @alias Layout
      * @requires jquery
@@ -233,12 +234,6 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
             self.resize();
         }
 	
-	
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			var $root, $top, $left, $right, $bottom, $center;
@@ -287,7 +282,11 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
  
 			return this; 			
 		}
-		
+
+        /**
+         * @method resize
+         * Resets the layout
+         */
 		this.resize = function() {
 			var $obj = null, $option = null;
             var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
@@ -476,14 +475,58 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String} [barColor="#d6d6d6"]
+             * Determines the color of the resizing bar
+             */
 			barColor : '#d6d6d6',
+
+            /**
+             * @cfg {Integer} [barSize=3]
+             * Determines the size of the resizing bar
+             */
 			barSize : 3,
+
+            /**
+             * @cfg {Integer} [width=null]
+             * Determines the container area value
+             */
 			width	: null,
+
+            /**
+             * @cfg {Integer} [height=null]
+             * Determines the container height value
+             */
 			height	: null,
+
+            /**
+             * @cfg {Object} top
+             * Configures options for the top area
+             */
 			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} left
+             * Configures options for the left area
+             */
 			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} right
+             * Configures options for the right area
+             */
 			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} bottom
+             * Configures options for the bottom area
+             */
 			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} center
+             * Configures options for the center area
+             */
 			center	: { el : null }
         }
     }

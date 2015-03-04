@@ -1,9 +1,5 @@
 jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var win_width = 0;
 	
 	_.resize(function() {
@@ -25,7 +21,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.modal
-     * implements modal window
+     * Developed as a separate component so that the modal, which is used in UI components such as window or loading, can be used more universally
+     *
      * @extends core
      * @alias Modal
      * @requires jquery
@@ -37,11 +34,6 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		var uiObj = null, uiTarget = null;
 		var x = 0, y = 0, z_index = 5000;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setPrevStatus(self) {
 			uiObj = { 
 				"position": $(self.root).css("position"),
@@ -119,13 +111,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
 
@@ -137,7 +123,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			// 타입 프로퍼티 설정
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method hide
+         * Hides a modal
+         */
 		this.hide = function() {
 			var opts = this.options;
 
@@ -157,7 +147,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a modal
+         */
 		this.show = function() {
 			var opts = this.options,
 				info = getModalInfo(this);
@@ -178,6 +172,10 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			this.type = "show";
 		}
 
+        /**
+         * @method resize
+         * Re-adjust the location of a modal
+         */
         this.resize = function() {
             var info = getModalInfo(this);
 
@@ -196,12 +194,41 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a modal
+             */
 			color: "black",
+
+            /**
+             * @cfg {Float} [opacity=0.4]
+             * Sets the transparency of a modal
+             */
 			opacity: 0.4,
+
+            /**
+             * @cfg {String/DOMElement} [target="body"]
+             * Sets a selector on which a modal is shown
+             */
 			target: "body",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Determines the sequence (index) of a modal
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [clone=false]
+             * Copies an existing modal and shows it
+             */
 			clone: false,
-			autoHide: true // 자신을 클릭했을 경우, hide
+
+            /**
+             * @cfg {Boolean} [autoHide=true]
+             * Automatically hides a modal when clicking on it
+             */
+			autoHide: true
         }
     }
 	
