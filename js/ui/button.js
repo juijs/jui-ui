@@ -69,15 +69,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
 
-		// Private
-		/**
-		 * @private
-		 * @method _setting
-		 * @param type
-		 * @param e
-		 * @param order
-		 * @private
-		 */
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
@@ -126,8 +117,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 	/**
 	 * @class ui.button
-	 * implements checkbox, radio button
-     *
 	 * @extends core
 	 * @alias Button
 	 * @requires jquery
@@ -136,9 +125,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 	var UI = function() {
 		var ui_list = {};
 
-		/**
-		 * @constructor
-		 */
 		this.init = function() {
             var self = this, opts = this.options;
 			
@@ -157,7 +143,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
          * Selects a button of a specified index
          *
-		 * @param {Array} indexList index list for button check
+		 * @param {Array} Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -172,7 +158,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setValue
          * Selects a button with a specified value
          *
-		 * @param valueList value list for button check
+		 * @param Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -197,8 +183,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method getValue
          * Gets the value of the button currently selected
          *
-		 * @return {Array}  return value list if it is check button
-		 * @return {Object}  return one value if it is radio button
+		 * @return {Array} Values
+		 * @return {Object} Value
 		 */
 		this.getValue = function() {
             var data = this.getData();
@@ -234,13 +220,13 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			type: "radio",
 
 			/**
-			 * @cfg
+			 * @cfg {Integer} [index=0]
 			 * Determines an initial selection button with a specified index
 			 */
 			index: 0,
 
 			/**
-			 * @cfg
+			 * @cfg {String} [index=""]
 			 * Determines an initial selection button with a specified value
 			 */
 			value: ""
