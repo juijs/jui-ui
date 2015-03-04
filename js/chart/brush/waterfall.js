@@ -104,11 +104,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
-			/** @cfg {Boolean} [line=true] */
+			/** @cfg {Boolean} [line=true] Connects with a line between columns of a waterfall.*/
 			line: true,
-			/** @cfg {Boolean} [end=false] */
+			/** @cfg {Boolean} [end=false] Sets effects for the last column of a waterfall.*/
 			end: false,
-			/** @cfg {Boolean} [outerPadding=5] */
+			/** @cfg {Boolean} [outerPadding=5] Determines the outer margin of a waterfall.*/
 			outerPadding: 5
 		};
 	}

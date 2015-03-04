@@ -145,11 +145,11 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
-            /** @cfg {Number} [size=30] stroke width  */
+            /** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
 			size: 30,
-            /** @cfg {Number} [startAngle=0] start point */
+            /** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
 			startAngle: 0,
-            /** @cfg {Number} [endAngle=360]  */
+            /** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
 			endAngle: 360
 		};
 	}

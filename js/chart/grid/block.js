@@ -2,13 +2,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
     /**
      * @class chart.grid.block
-     * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * Implements Block Grid
      * 
      *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
      * 
-     * domain 을 배열로 지정하면 해단 개수만큼 그리드의 영역이 설정된다.
-     *
-     * @extends chart.grid.core  
+     * @extends chart.grid.core
      */
 	var BlockGrid = function() {
         /**
@@ -309,13 +307,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
-            /** @cfg {String/Array/Function} [domain=null] */
+            /** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-            /** @cfg {Boolean} [reverse=false] */
+            /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {Number} [max=10] */
+            /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
 			max: 10,
-            /** @cfg {Boolean} [full=false] */
+            /** @cfg {Boolean} [full=false] Determines whether to expand the reference coordinates to the entire range.*/
 			full: false
 		};
 	}

@@ -88,11 +88,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		return {
             /** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
-            /** @cfg {Number} [active=null] active data index  */
-			active: null,
-            /** @cfg {Number} [activeEvent=null] active event name (click or mouseover ...) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {Boolean} [showText=false] */
+            /** @cfg {Boolean} [showText=false] Configures settings to let the percent text of a full stack bar revealed. */
 			showText: false
 		};
 	}

@@ -76,13 +76,13 @@ jui.define("chart.brush.equalizer", [], function() {
 
     EqualizerBrush.setup = function() {
         return {
-            /** @cfg {Number} [innerPadding=10] */
+            /** @cfg {Number} [innerPadding=10] Determines the inner margin of an equalizer.*/
             innerPadding: 10,
-            /** @cfg {Number} [outerPadding=15] */
+            /** @cfg {Number} [outerPadding=15] Determines the outer margin of an equalizer. */
             outerPadding: 15,
-            /** @cfg {Number} [unit=5] */
+            /** @cfg {Number} [unit=5] Determines the reference value that represents the color.*/
             unit: 5,
-            /** @cfg {Number} [gap=5] */
+            /** @cfg {Number} [gap=5] Determines the number of columns in an equalizer - expressed as a color.*/
             gap: 5
         };
     }

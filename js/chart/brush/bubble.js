@@ -108,9 +108,9 @@ jui.define("chart.brush.bubble", [], function() {
 
     BubbleBrush.setup = function() {
         return {
-            /** @cfg {Number} [min=5] */
+            /** @cfg {Number} [min=5] Determines the minimum size of a bubble. */
             min: 5,
-            /** @cfg {Number} [max=5] */
+            /** @cfg {Number} [max=30] Determines the maximum size of a bubble.*/
             max: 30
         };
     }

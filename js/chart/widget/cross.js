@@ -142,11 +142,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     CrossWidget.setup = function() {
         return {
             /**
-             * @cfg {Function} [xFormat=null] callback function for x format
+             * @cfg {Function} [xFormat=null] Sets the format for the value on the X axis shown on the tooltip.
              */            
             xFormat: null,
             /**
-             * @cfg {Function} [yFormat=null] callback function for y format
+             * @cfg {Function} [yFormat=null] Sets the format for the value on the Y axis shown on the tooltip.
              */
             yFormat: null
         };

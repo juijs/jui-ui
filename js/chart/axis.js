@@ -336,7 +336,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
          * @method zoom 
          * 
          * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
-         *  *  
+         *
          * @param {Number} start
          * @param {Number} end
          */
@@ -355,32 +355,39 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     }
 
     Axis.setup = function() {
+
         return {
-            /** @cfg {chart.grid.core} [x=null]  x축 그리드 */
+            /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
-            /** @cfg {chart.grid.core} [y=null]  y축 그리드 */
+            /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
-            /** @cfg {chart.grid.core} [c=null]  커스텀 그리드 */
+            /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
-            /** @cfg {Array} [data=[]]  Axis 에서 사용할 data  */
+            /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
-            /** @cfg {Array} [origin=[]]  원본 data  */
+            /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */
             origin: [],
-            /** @cfg {Object} [keymap={}] 데이터 키-맵 */
+            /** @cfg {Object} [keymap={}] grid's data key map  */
             keymap: {},
-            /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
+            /** @cfg {Object} [area={}]  set area(x, y, width, height) of axis */
             area: {},
-            /** @cfg {Object} [padding={}] Axis 의 패딩 설정 */
+            /**
+             * @cfg  {Object} padding axis padding
+             * @cfg  {Number} [padding.top=0] axis's top padding
+             * @cfg  {Number} [padding.bottom=0] axis's bottom padding
+             * @cfg  {Number} [padding.left=0] axis's left padding
+             * @cfg  {Number} [padding.right=0] axis's right padding
+             */
             padding : {},
-            /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
+            /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
-            /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
+            /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
-            /** @cfg {Number} [page=1]  현재 표시될 페이지 */
+            /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
             page: 1,
-            /** @cfg {Number} [angle=0]  3d 차트 축의 각도 */
+            /** @cfg {Number} [angle=0]  Set angle of 3d chart */
             angle: 0,
-            /** @cfg {Number} [depth=0]  3d 차트 축의 깊이 */
+            /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
             depth: 0
         }
     }

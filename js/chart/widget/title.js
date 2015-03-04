@@ -60,17 +60,17 @@ jui.define("chart.widget.title", [], function() {
 
     TitleWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } [orient="top"]  Determines the side on which the tool tip is displayed (top, bottom, left, right). */
             orient: "top", // or bottom
-            /** @cfg {"start"/"center"/"end" } */
-            align: "center", // or start, end
-            /** @cfg {String} text 표시될 타이틀 */
+            /** @cfg {"start"/"center"/"end" } [align="center"] Aligns the title message (center, start, end).*/
+            align: "center",
+            /** @cfg {String} [text=""] Sets the title message. */
             text: "",
-            /** @cfg {Number} [dx=0] x 축과의 거리  */
+            /** @cfg {Number} [dx=0] Moves the x coordinate by a set value from the location where the chart is drawn.  */
             dx: 0,
-            /** @cfg {Number} [dy=0] y 축과의 거리  */
+            /** @cfg {Number} [dy=0] Moves the y coordinate by a set value from the location where the chart is drawn. */
             dy: 0,
-            /** @cfg {Number} [size=null] */
+            /** @cfg {Number} [size=null] Sets the title message size. */
             size: null
         }
     }

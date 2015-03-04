@@ -467,20 +467,16 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @property {chart.builder} chart */
             /** @property {chart.axis} axis */
             /** @property {Object} brush */
-            
-            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
+
+            /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
-            /** @cfg {Array} [colors=null]
-             * 필드 리스트마다 적용될 색상
-             *
-             * colors 는 theme 보다 우선순위를 가진다.
-             */
+            /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
-            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
+            /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
             axis: 0,
-            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
+            /** @cfg {Integer} [index=null] [Read Only] Sequence index on which brush is drawn. */
             index: null,
-            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
+            /** @cfg {boolean} [clip=true] If the brush is drawn outside of the chart, cut the area. */
             clip: true
         }
     }

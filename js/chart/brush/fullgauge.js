@@ -98,12 +98,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	FullGaugeBrush.setup = function() {
 		return {
-            size: 60,
-            startAngle: 0,
-            endAngle: 300,
+			/** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
+			size: 60,
+			/** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
+			startAngle: 0,
+			/** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
+			endAngle: 360,
+			/** @cfg {Boolean} [showText=true] */
             showText: true,
+			/** @cfg {Number} [titleX=0] */
             titleX: 0,
+			/** @cfg {Number} [titleY=0]  */
             titleY: 0,
+			/** @cfg {Function} [format=null] */
             format: null
 		};
 	}

@@ -165,10 +165,14 @@ jui.define("chart.brush.line", [], function() {
 
     LineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step). */
             symbol: "normal", // normal, curve, step
-            display: null,
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
             active: null,
-            activeEvent: null // or click, mouseover, ...
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            display: null
         };
     }
 

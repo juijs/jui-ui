@@ -247,18 +247,18 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [minValue=0] 표시 최소 값, minValue 보다 작으면 minValue 를 기준으로 그린다. */
+            /** @cfg {Number} [minValue=0] Sets the minimum value as it is not possible to draw a bar when the value is 0. */
 			minValue: 0,
-            /** @cfg {Number} [outerPadding=2] 바깥쪽 여백  */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] 안쪽 여백 */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1,
-            /** @cfg {Number} [active=null] */
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
 			active: null,
-            /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {"max"/"min"} [display=null]  'max', 'min' */
-			display: null // or max, min
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+			activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+			display: null
 		};
 	}
 

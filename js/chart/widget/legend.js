@@ -184,13 +184,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     LegendWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Sets the location where the label is displayed (top, bottom). */
             orient: "bottom",
-            /** @cfg {"start"/"center"/"end" } */
+            /** @cfg {"start"/"center"/"end" } Aligns the label (center, start, end). */
             align: "center", // or start, end
-            /** @cfg {Boolean} [filter=false] */
+            /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
-            /** @cfg {Boolean} [brushSync=false] */
+            /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
     }
