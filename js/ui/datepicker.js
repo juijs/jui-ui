@@ -234,8 +234,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method page
          * Outputs a calendar that fits the year/month entered
          *
-         * @param {Integer} Year
-         * @param {Integer} Month
+         * @param {Integer} year
+         * @param {Integer} month
          */
         this.page = function(y, m) {
             if(arguments.length == 0) return;
@@ -348,7 +348,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method addTime
          * Selects a date corresponding to the time added to the currently selected date
          *
-         * @param {"Integer"/"Date"} Timestamp or Date
+         * @param {"Integer"/"Date"} time Timestamp or Date
          */
         this.addTime = function(time) {
         	selDate = new Date(this.getTime() + time);
@@ -379,7 +379,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method getFormat
          * Gets a date string that fits the format entered
          *
-         * @return {String} Formatted date string
+         * @return {String} format Formatted date string
          */
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);

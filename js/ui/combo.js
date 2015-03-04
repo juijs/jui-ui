@@ -236,7 +236,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
 		 * Selects a button of a specified index
          *
-		 * @param {Number} Index
+		 * @param {Number} index
 		 */
 		this.setIndex = function(index) {
 			load("index", index);
@@ -247,7 +247,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
          * @method setValue
          * Selects a button having a specified value
          *
-         * @param {Mixed} Value
+         * @param {Mixed} value
          */
 		this.setValue = function(value) {
 			load("value", value);

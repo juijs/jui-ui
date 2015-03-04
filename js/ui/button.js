@@ -143,7 +143,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
          * Selects a button of a specified index
          *
-		 * @param {Array} Index for button check
+		 * @param {Array} indexList Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -158,7 +158,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setValue
          * Selects a button with a specified value
          *
-		 * @param Values for button check
+		 * @param {Array} valueList Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
