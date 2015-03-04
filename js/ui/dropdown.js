@@ -1,9 +1,5 @@
 jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var dd = getDropdown();
 		
@@ -49,20 +45,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     /**
      * @class ui.dropdown
-     * implements dropdown menu
+     * Dropdown is a UI component that is frequently used in multiple UI components such as combo box, navigation, table, ect
+     *
      * @extends core
-     * @alias DropDown
+     * @alias Dropdown
      * @requires jquery
      *
      */
 	var UI = function() {
 		var ui_list = null, index = -1;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setEventNodes(self) {
 			var $list = $(ui_list.menu).find("li");
 			
@@ -125,12 +117,6 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			}
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var opts = this.options;
 			
@@ -180,7 +166,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
 			this.type = "hide"; // 기본 타입 설정
 		}
-		
+
+        /**
+         * @method update
+         * Changes the dropdown list
+         *
+         * @param {Array} nodes Dropdown list
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -192,14 +184,25 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method hide
+         * Hides the dropdown
+         */
 		this.hide = function() {
 			ui_list.root.hide();
 			
 			this.emit("hide");
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a dropdown at the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.show = function(x, y) {
 			hideAll();
 			
@@ -217,12 +220,26 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			this.emit("show");
 			this.type = "show";
 		}
-		
+
+        /**
+         * @method move
+         * Moves a dropdown to the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.move = function(x, y) {
 			ui_list.root.css("left", x);
 			ui_list.root.css("top", y);
 		}
-		
+
+        /**
+         * @method wheel
+         * Changes a selected node upwards when the key is set to -1, or downwards when the key is set to 1. If the key is set to 0, the speciified node is selected
+         *
+         * @param {Integer} key
+         * @param {Function} callback
+         */
 		this.wheel = function(key, callback) {
 			if(!this.options.keydown) return;
 			
@@ -260,7 +277,11 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				if(callback) callback();
 			}
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the dropdown list
+         */
 		this.reload = function() {
 			this.init();
 			this.emit("reload");
@@ -269,15 +290,72 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Boolean} [close=true]
+             * Closes the Auto when clicking on the dropdown list
+             */
 			close: true,
+
+            /**
+             * @cfg {Boolean} [keydown=false]
+             * It is possible to choose anything on the dropdown list with the arrow keys on the keyboard
+             */
 			keydown: false,
+
+            /**
+             * @cfg {Integer} [left=0]
+             * Sets the X coordinate of the dropdown list
+             */
 			left: 0,
+
+            /**
+             * @cfg {Integer} [top=0]
+             * Sets the Y coordinate of the dropdown list
+             */
 			top: 0,
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Determines the horizontal size of a dropdown list
+             */
 			width: 0,
+
+            /**
+             * @cfg {Integer} [height=0]
+             * Determines the vertical size of a dropdown list
+             */
 			height: 0,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a dropdown list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when anything on the dropdown list is selected
+     *
+     * @param {Object} data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event show
+     * Event that occurs when a dropdown is shown
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a dropdown is hidden
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when a dropdown is reloaded
+     */
 	
 	return UI;
 });
