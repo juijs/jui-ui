@@ -10,7 +10,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
     var Grid3D = function() {
         var self = this,
             depth = 0,
-            angle = 0;
+            angle = 0,
+            split = 0;
 
         /**
          * @method drawBefore
@@ -21,6 +22,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
         this.drawBefore = function() {
             depth = this.axis.get("depth");
             angle = this.axis.get("angle");
+            split = depth / this.grid.step;
 
             /**
              * @method scale
@@ -29,13 +31,26 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle),
-                    y2 = Math.sin(radian) * depth;
+                var radian = math.radian(360 - angle);
 
-                return function(index, value) {
+                return function(x, y, z) {
+                    var z = (!z) ? 0 : z,
+                        c = split * z;
+
+                    if(z > 0) {
+                        return {
+                            x: self.axis.x(x) + Math.cos(radian) * c,
+                            y: self.axis.y(y) + Math.sin(radian) * c,
+                            depth: split,
+                            angle: angle
+                        }
+                    }
+
                     return {
-                        x: self.axis.x(index),
-                        y: self.axis.y(value)
+                        x: self.axis.x(x),
+                        y: self.axis.y(y),
+                        depth: split,
+                        angle: angle
                     }
                 }
             })(this.axis);

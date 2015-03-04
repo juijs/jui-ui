@@ -10075,7 +10075,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
     var Grid3D = function() {
         var self = this,
             depth = 0,
-            angle = 0;
+            angle = 0,
+            split = 0;
 
         /**
          * @method drawBefore
@@ -10086,6 +10087,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
         this.drawBefore = function() {
             depth = this.axis.get("depth");
             angle = this.axis.get("angle");
+            split = depth / this.grid.step;
 
             /**
              * @method scale
@@ -10094,13 +10096,26 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle),
-                    y2 = Math.sin(radian) * depth;
+                var radian = math.radian(360 - angle);
 
-                return function(index, value) {
+                return function(x, y, z) {
+                    var z = (!z) ? 0 : z,
+                        c = split * z;
+
+                    if(z > 0) {
+                        return {
+                            x: self.axis.x(x) + Math.cos(radian) * c,
+                            y: self.axis.y(y) + Math.sin(radian) * c,
+                            depth: split,
+                            angle: angle
+                        }
+                    }
+
                     return {
-                        x: self.axis.x(index),
-                        y: self.axis.y(value)
+                        x: self.axis.x(x),
+                        y: self.axis.y(y),
+                        depth: split,
+                        angle: angle
                     }
                 }
             })(this.axis);
@@ -11069,28 +11084,21 @@ jui.define("chart.brush.column3d", [], function() {
      */
 	var Column3DBrush = function(chart, axis, brush) {
 		var g;
-		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
-
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
                 for(var j = 0; j < brush.target.length; j++) {
-                    var xy = axis.c(i, data[brush.target[j]]);
+                    var xy = axis.c(i, data[brush.target[j]], j);
 
                     g.append(this.chart.svg.circle({
-                        r: 2,
+                        r: 3,
                         fill: this.color(j),
-                        cx: xy.x,
-                        cy: xy.y
+                        cx: xy.x + 1.5,
+                        cy: xy.y + 1.5
                     }));
                 }
 			});

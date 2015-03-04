@@ -9,28 +9,21 @@ jui.define("chart.brush.column3d", [], function() {
      */
 	var Column3DBrush = function(chart, axis, brush) {
 		var g;
-		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
-
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
                 for(var j = 0; j < brush.target.length; j++) {
-                    var xy = axis.c(i, data[brush.target[j]]);
+                    var xy = axis.c(i, data[brush.target[j]], j);
 
                     g.append(this.chart.svg.circle({
-                        r: 2,
+                        r: 3,
                         fill: this.color(j),
-                        cx: xy.x,
-                        cy: xy.y
+                        cx: xy.x + 1.5,
+                        cy: xy.y + 1.5
                     }));
                 }
 			});
