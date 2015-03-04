@@ -32,13 +32,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     /**
      * @class chart.builder
      *
-     * implements chart builder
+     * Implements chart builder
      *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
      * @requires util.svg
      * @requires util.color
+     * @requires chart.axis
      * @requires jquery
      *
      */
@@ -51,7 +52,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method caculate
          * 
-         * chart 기본 영역 계산
+         * caculate chart's default area
          *
          * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
          *
@@ -177,7 +178,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * implements widget draw 
          *  
          * @param {chart.builder} self
-         * @param {Boolean} isAll  whether redraw widget 
+         * @param {Boolean} isAll  Whether redraw widget
          * @private  
          */
         function drawWidget(self, isAll) {
@@ -526,6 +527,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setThemeStyle(_options.theme);
 
             // svg 기본 객체 생성
+            /** @property {chart.svg} svg Refers to an SVG utility object. */
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
                 height: _options.height,
@@ -544,10 +546,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         
         /**
          * @method get  
-         * get option's property of chart builder 
          *
-         * @param {String} type "axis", "brush", "widget", "series", "padding", "area"
-         * @param {String} key  property name
+         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         *
+         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {String} key  Property name
+         * @return {Mixed/Object}
          */
         this.get = function(type, key) {
             var obj = {
@@ -567,40 +571,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 엑시스 객체를 반환
+         * Gets the axis object of that index.
          *
-         * @param key
-         * @returns {Array}
+         * @param {Number} key
+         * @returns {Array/Object}
          */
         this.axis = function(key) {
             return _.typeCheck("undefined", _axis[key]) ? _axis : _axis[key];
         }
 
         /**
-         * 차트의 영역 요소 반환
+         * Gets a calculated value for a chart area (type: width, height, x, y, x2, y2)).
          *
-         * @param key (width | height | x | y | x2 | y2)
-         * @returns {*}
+         * @param {String} key
+         * @return {Number/Object}
          */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         /**
-         * 차트의 여백 요소 반환
-         * @param key (top | left | bottom | right)
-         * @returns {*}
+         * Gets the top, bottom, left and right margin values.
+         *
+         * @param {"top"/"left"/"bottom"/"right"} key
+         * @return {Number/Object}
          */
         this.padding = function(key) {
             return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
         }
 
         /**
-         * 브러쉬 컬러 관련 함수
+         * Gets a color defined in the theme or the color set.
          *
-         * @param dataIndex
-         * @param brush
-         * @returns {*}
+         * @param {Number} i
+         * @param {chart.brush.core} brush
+         * @return {String} Selected color string
          */
         this.color = function(i, brush) {
             var color;
@@ -644,19 +649,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 아이콘 유니코드를 가져오는 함수
+         * Gets the unicode string of the icon.
          *
-         * @param key
+         * @param {String} key  icon's alias
          */
         this.icon = function(key) {
             return jui.include("chart.icon." + _options.icon.type)[key];
         }
 
         /**
-         * 텍스트 엘리먼트 생성하는 함수, 아이콘 키를 유니코드로 자동으로 파싱해준다.
+         * Creates a text element to which a theme is applied.
          *
-         * @param {object} attr
-         * @param {string|function} textOrCallback
+         * Also it support icon string
+         *
+         * @param {Object} attr
+         * @param {String|Function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
@@ -678,15 +685,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method theme
-         * theme 의 요소에 대한 값 구하기
+         *
+         * Gets a value for the theme element applied to the current chart.
          *
          * ```
-         *      // theme 전체 객체 얻어오기
+         *      // get all theme property
          *      var theme = chart.theme();
-         *      // 부분 속성 얻어오기
+         *      // get a part of theme
          *      var fontColor = chart.theme("fontColor");
-         *      // 값 비교해서 얻어오기
-         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
+         *      // get selected value of theme
+         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // if isSelected is true, return 'selectedFontColor' else return 'fontColor'
          * ```
          */
         this.theme = function(key, value, value2) {
@@ -710,8 +718,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
+         * Returns a value from the format callback function of a defined option.
          *
+         * @param {Function} format
+         * @return {Mixed}
          */
         this.format = function() {
             if(arguments.length == 0) return;
@@ -727,10 +737,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method bindUI 
          * 
-         * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
-         * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+         * Binds data used in a uix.table or the uix.xtable.
          *
-         * @param {object} bind   uix.table, uix.xtable 객체 사용
+         * @param {Number} axisIndex
+         * @param {Object} uiObj
          */
         this.bindUI = function(axisIndex, uiObj) {
             var self = this;
@@ -754,10 +764,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method on
          * 
-         * 차트에서 사용할 커스텀 이벤트 핸들러
+         * A callback function defined as an on method is run when an emit method is called.
          *
-         * @param type
-         * @param callback
+         * @param {String} type Event's name
+         * @param {Function} callback
+         * @param {"render"/"renderAll"/undefined} resetType
          */
         this.on = function(type, callback, resetType) {
             if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
@@ -771,10 +782,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 줌인/줌아웃 상태를 설정
+         * Change the scale of the chart.
          *
-         * @param scale
-         * @returns {number}
+         * @param {Number} scale
+         * @return {Number}
          */
         this.scale = function(scale) {
             if(!scale || scale < 0) return _scale;
@@ -788,11 +799,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 보이는 영역을 변경
+         * Change the view of the chart.
          *
-         * @param x
-         * @param y
-         * @returns {{x: number, y: number}}
+         * @param {Number} x
+         * @param {Number} y
+         * @return {Object}
+         * @return {Number} return.x
+         * @return {Number} return.y
          */
         this.view = function(x, y) {
             var area = this.area(),
@@ -820,8 +833,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method render 
          *
-         * chart render 함수 재정의
+         * Renders all draw objects.
          *
+         * @param {Boolean} isAll
          */
         this.render = function(isAll) {
             // SVG 메인 리셋
@@ -860,9 +874,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method appendDefs
          *
-         * defs 엘리먼트의 자식 노드를 추가한다.
+         * Add the child element in defs tag.
          *
-         * @param elem
+         * @param {chart.svg.element} elem
          */
         this.appendDefs = function(elem) {
             _defs.append(elem);
@@ -876,7 +890,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method addBrush 
          * 
-         * 동적으로 브러쉬를 추가한다. 
+         * Adds a brush and performs rendering again.
          *  
          * @param {Object} brush
          */
@@ -888,7 +902,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method removeBrush 
          * 
-         * 특정 브러쉬를 삭제한다. 
+         * Deletes the brush of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeBrush = function(index) {
@@ -897,7 +911,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
         /**
          * @method updateBrush 
-         * 특정 브러쉬를 업데이트 한다.  
+         * Updates the brush of a specified index and performs rendering again.
          * @param {Number} index
          * @param {Object} brush
          */
@@ -908,7 +922,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method addWidget 
-         * 동적으로 위젯을 추가한다. 
+         * Adds a widget and performs rendering again.
          * 
          * @param {Object} widget
          */
@@ -919,7 +933,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method removeWidget 
-         * 특정 위젯을 삭제한다.  
+         * Deletes the widget of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeWidget = function(index) {
@@ -929,7 +943,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method updateWidget
-         * 특정 위젯을 업데이트한다.
+         * Updates the widget of a specified index and performs rendering again
          * @param {Number} index
          * @param {Object} widget
          */
@@ -940,9 +954,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
 
         /**
-         * 테마 변경 후 차트 렌더링
+         * Changes a chart to a specified theme and renders the chart again.
          *
-         * @param themeName
+         * @param {String/Object} theme
          */
         this.setTheme = function(theme) {
             setThemeStyle(theme);
@@ -950,10 +964,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 사이즈 조정 후 차트 렌더링
+         * Changes the size of a chart to the specified area and height then performs rendering.
          *
-         * @param {integer} width
-         * @param {integer} height
+         * @param {Number} width
+         * @param {Number} height
          */
         this.setSize = function(width, height) {
             if(arguments.length == 2) {
@@ -966,9 +980,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트가 풀-사이즈인지 확인
+         * Returns true if the horizontal or vertical size of the chart is 100%.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isFullSize = function() {
             if(_options.width == "100%" || _options.height == "100%")
@@ -978,10 +992,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 자동 렌더링 여부 확인
-         * false일 경우, 수동으로 render 메소드를 호출해줘야 함
+         * Returns the values of rendering options and, if the rendering option is false, does not render the chart again when a method is called.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isRender = function() {
             return (!_initialize) ? true : _options.render;
@@ -1013,22 +1026,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series 각각의 필드에 대한 메타 정보 */
+            /** @cfg {Object} series Sets additional information for a specific data property. */
             series: {},
-            /** @cfg {Array} brush 그려질 브러쉬 목록 */
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
-            /** @cfg {Array} widget 그려질 위젯 목록 */
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
             widget: [],
-            /** @cfg {Array} axis 그려질 Axis 목록 */
+            /** @cfg {Array} [axis=[]] Determines a axis to be added to a chart. */
             axis: [],
 
+            /** @cfg {Object} [bind=null] Sets a component objects to be bind.*/
             bind: null,
-            /** @cfg {Function} [format=null] 빌더에서 공통으로 사용할 format 함수 정의 */
+            /** @cfg {Function} [format=null] Sets a format callback function to be used in a grid/brush/widget. */
             format: null,
-            /** @cfg {Boolean} [render=true] */
+            /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
 
-            /** @cfg {Object} */
+            /**
+             * @cfg {Object} icon Icon-related settings available in the chart.
+             * @cfg {String} [icon.type="jennifer"]
+             * @cfg {String} [icon.path=null]
+             */
             icon: {
                 type: "jennifer",
                 path: null
@@ -1038,97 +1056,113 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @event bg_click
-     * 실제 이벤트 이름은 bg.click 사용된다.
+     * Real name ``` bg.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_click
-     * 실제 이벤트 이름은 chart.click 사용된다.
+     * Real name ``` chart.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_rclick
-     * 실제 이벤트 이름은 bg.rclick 사용된다.
+     * Real name ``` bg.rclick ```
+     * Event that occurs when right clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_rclick
-     * 실제 이벤트 이름은 chart.rclick 사용된다.
+     * Real name ``` chart.rclick ```
+     * Event that occurs when right clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_dblclick
-     * 실제 이벤트 이름은 bg.dblclick 사용된다.
+     * Real name ``` bg.dblclick ```
+     * Event that occurs when clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_dblclick
-     * 실제 이벤트 이름은 chart.dblclick 사용된다.
+     * Real name ``` chart.dblclick ```
+     * Event that occurs when double clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousemove
-     * 실제 이벤트 이름은 bg.mousemove 사용된다.
+     * Real name ``` bg.mousemove```
+     * Event that occurs when moving the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousemove
-     * 실제 이벤트 이름은 chart.mousemove 사용된다.
+     * Real name ``` chart.mousemove ```
+     * Event that occurs when moving the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousedown
-     * 실제 이벤트 이름은 bg.mousedown 사용된다.
+     * Real name ``` bg.mousedown ```
+     * Event that occurs when left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousedown
-     * 실제 이벤트 이름은 chart.mousedown 사용된다.
+     * Real name ``` chart.mousedown ```
+     * Event that occurs when left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseup
-     * 실제 이벤트 이름은 bg.mouseup 사용된다.
+     * Real name ``` bg.mouseup ```
+     * Event that occurs after left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseup
-     * 실제 이벤트 이름은 chart.mouseup 사용된다.
+     * Real name ``` chart.mouseup ```
+     * Event that occurs after left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseover
-     * 실제 이벤트 이름은 bg.mouseover 사용된다.
+     * Real name ``` bg.mouseover ```
+     * Event that occurs when placing the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseover
-     * 실제 이벤트 이름은 chart.mouseover 사용된다.
+     * Real name ``` chart.mouseover ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseout
-     * 실제 이벤트 이름은 bg.mouseout 사용된다.
+     * Real name ``` bg.mouseout ```
+     * Event that occurs when moving the mouse out of a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseout
-     * 실제 이벤트 이름은 chart.mouseout 사용된다.
+     * Real name ``` chart.mouseout ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
