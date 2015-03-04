@@ -422,5 +422,27 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         };
     }
 
+    /**
+     * @event select
+     * Event that occurs when selecting a specific date
+     *
+     * @param {String} value Formatted date string
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event prev
+     * Event that occurs when clicking on the previous button
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event next
+     * Event that occurs when clicking on the next button
+     *
+     * @param {EventObject} e The event object
+     */
+
     return UI;
 });
