@@ -2,21 +2,16 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     /**
      * @class ui.paging
-     * implements pagination
+     * Paging component that can be applied to a screen with tables or various other data
+     *
      * @extends core
      * @alias Paging
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
 		var $main = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function setEventAction(self) {
 			self.addEvent($(self.root).find(".prev"), "click", function(e) {
 				self.prev();
@@ -79,12 +74,6 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			setPageStyle(self, activePage);
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -97,7 +86,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			
 			return this;
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the number of specified data records, or reloads the initially configured number of data records if there is no parameter
+         *
+         * @param {Integer} count Data total count
+         */
 		this.reload = function(count) {
 			var count = (!count) ? this.options.count : count;
 			
@@ -107,7 +102,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			changePage(this, activePage);
 			this.emit("reload");
 		}
-		
+
+        /**
+         * @method page
+         * Changes to a specified page number, and gets the currently enabled page number if there is no parameter
+         *
+         * @param {Integer} pNo Page number
+         */
 		this.page = function(pNo) {
 			if(!pNo) return activePage;
 			
@@ -115,18 +116,34 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			this.emit("page", [ activePage ]);
 		}
 
+        /**
+         * @method next
+         * Changes to the next page
+         */
 		this.next = function() {
 			this.page(activePage + 1);
 		}
-		
+
+        /**
+         * @method prev
+         * Changes to the previous page
+         */
 		this.prev = function() {
 			this.page(activePage - 1);
 		}
-		
+
+        /**
+         * @method first
+         * Changes to the first page
+         */
 		this.first = function() {
 			this.page(1);
 		}
 
+        /**
+         * @method last
+         * Changes to the last page
+         */
 		this.last = function() {
 			this.page(lastPage);
 		}
@@ -134,11 +151,37 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-			count: 0,		// 데이터 전체 개수
-			pageCount: 10,	// 한페이지당 데이터 개수
-			screenCount: 5	// 페이지 개수
+            /**
+             * @cfg {Integer} [count=0]
+             * Total number of data records subject to paging)
+             */
+			count: 0,
+
+            /**
+             * @cfg {Integer} [pageCount=10]
+             * Number of data records per page
+             */
+			pageCount: 10,
+
+            /**
+             * @cfg {Integer} [screenCount=5]
+             * Number of pages shown on the paging screen
+             */
+			screenCount: 5
         }
     }
+
+    /**
+     * @event page
+     * Event that occurs when the page is changed
+     *
+     * @param {Integer} page Active page number
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when the page is reloaded
+     */
 	
 	return UI;
 });
