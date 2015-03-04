@@ -77,8 +77,10 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * Draw 객체 기본 포맷 메소드
+         * @method format
+         * Get a default format callback of draw object.
          *
+         * @return {Function}
          */
         this.format = function() {
             var draw = this.grid || this.brush || this.widget,
@@ -88,13 +90,15 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method balloonPoints
+         *
          * 말풍선 그리그 메소드
          *
-         * @param type
-         * @param w
-         * @param h
-         * @param anchor
-         * @returns {string}
+         * @param {String} type
+         * @param {Number} w
+         * @param {Number} h
+         * @param {Number} anchor
+         * @return {String}
          */
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
