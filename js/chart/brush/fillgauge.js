@@ -144,12 +144,19 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
     FillGaugeBrush.setup = function() {
         return {
+            /** @cfg {Number} [min=0] Determines the minimum size of a fill gauge.*/
             min: 0,
+            /** @cfg {Number} [max=100] Determines the maximum size of a fill gauge.*/
             max: 100,
+            /** @cfg {Number} [value=0] Determines the value of a fill gauge. */
             value: 0,
+            /** @cfg {String} [shape="circle"] Determines the shape of a fill gauge (circle, rectangle).*/
             shape: "circle", // or rectangle
+            /** @cfg {String} [direction="vertical"] Determines the direction in which a fill gauge is to be filled (vertical, horizontal). */
             direction: "vertical",
+            /** @cfg {String} [svg=""] Sets the shape of a fill gauge with a specified URL as an SVG tag. */
             svg: "",
+            /** @cfg {String} [path=""] Sets the shape of a fill gauge with a specified pass tag.*/
             path: ""
         };
     }

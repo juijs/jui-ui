@@ -282,19 +282,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
-            /** @cfg {Array} [domain=null] */
+            /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Array} [step=[]] */
+            /** @cfg {Array} [step=[]] Sets the interval of the scale displayed on a grid.*/
 			step: [],
-            /** @cfg {Number} [min=null] min timestamp  */
+            /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
-            /** @cfg {Number} [max=null] max timestamp  */
+            /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
 			max: null,
-            /** @cfg {Boolean} [reverse=false]  */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {String} [key=null] a field for value  */
+            /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {Boolean} [realtime=false]  */
+            /** @cfg {Boolean} [realtime=false] Determines whether to use as a real-time grid. */
 			realtime: false
 		};
 	}

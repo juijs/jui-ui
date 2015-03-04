@@ -224,28 +224,29 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 		return {
             /**
-             * @cfg {Number} [extend=null] extend grid's option
+             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
              */
 			extend:	null,
-            /**  @cfg {Number} [dist=0] 그리는 좌표로부터 떨어지는 거리  */
+            /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
 
-			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
 
-            /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
+            /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
 
-            /** @cfg {String/Object/Number} [color=null] 그리드의 라인 색깔 */
+            /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
-            /** @cfg {String} [title=null] */
+            /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
 			title: null,
-            /** @cfg {Boolean} [hide=false] */
+            /** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
+			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
             baseline : true,
-            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
+            /** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
-            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
+            /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
 			textRotate : null
 		};
 	}

@@ -140,11 +140,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] Determines the shape of a (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Boolean} [clip=false] */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };
     }

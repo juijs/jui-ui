@@ -85,9 +85,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
-            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
             symbol: "normal", // normal, curve, step
-            /** @cfg {Number} [split=null] 분리될 위치  */
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
             split: null
         };
     }

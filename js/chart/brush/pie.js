@@ -222,13 +222,13 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
     PieBrush.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
-            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
+            /** @cfg {Boolean} [showText=false] Set the text appear.  */
             showText: false,
-            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
+            /** @cfg {Function} [format=null] Returns a value from the format callback function of a defined option. */
             format: null,
-            /** @cfg {Boolean} [3d=false] 3d 지원 여부 체크 */
+            /** @cfg {Boolean} [3d=false] check 3d support */
             "3d" : false
         }
     }

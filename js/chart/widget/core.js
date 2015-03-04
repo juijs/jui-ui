@@ -101,14 +101,15 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} widget */
-        
+        /** @property {Number} index [Read Only] Index which shows the sequence how a widget is drawn. */
+
         return {
             /**
-             * @cfg {Number} [brush=0] selected brush index  
+             * @cfg {Number} [brush=0] Specifies a brush index for which a widget is used.
              */
             brush: 0,
             /**
-             * @cfg {Boolean} [render=false] check whether widget redraw
+             * @cfg {Boolean} [render=false] Determines whether a widget is to be rendered.
              */            
             render: false,
             /**

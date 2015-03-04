@@ -153,11 +153,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
-            orient: "top", // or bottom, left, right
-            /** @cfg {Boolean} [all=false] */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Determines the side on which the tool tip is displayed (top, bottom, left, right). */
+            orient: "top",
+            /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
-            /** @cfg {Function} [format=false] */
+            /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null
         };
     }

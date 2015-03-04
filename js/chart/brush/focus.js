@@ -75,10 +75,10 @@ jui.define("chart.brush.focus", [], function() {
 
 	FocusBrush.setup = function() {
 		return {
-			/** @cfg {Integer} [start=-1] */
+			/** @cfg {Integer} [start=-1] Sets a focus start index.*/
 			start: -1,
 
-			/** @cfg {Integer} [end=-1] */
+			/** @cfg {Integer} [end=-1] Sets a focus end index. */
 			end: -1
 		};
 	}

@@ -61,6 +61,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     CircleGaugeBrush.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         }
     }

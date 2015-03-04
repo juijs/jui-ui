@@ -161,7 +161,9 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     TopologyTableGrid.setup = function() {
         return {
+            /** @cfg {String} [sort=null]  */
             sort: null, // or random
+            /** @cfg {Number} [space=50]  */
             space: 50
         }
     }

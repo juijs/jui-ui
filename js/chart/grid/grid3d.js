@@ -121,6 +121,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     Grid3D.setup = function() {
         return {
+            /** @cfg {Number} [step=1] */
             step: 1
         }
     }

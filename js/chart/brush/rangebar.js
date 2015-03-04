@@ -63,9 +63,9 @@ jui.define("chart.brush.rangebar", [], function() {
 
 	RangeBarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar. */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1
 		};
 	}
