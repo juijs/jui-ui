@@ -1462,7 +1462,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method add
          * Adds a component object created
          *
-         * @param {Object} UI instance
+         * @param {Object} ui UI instance
          */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
@@ -1472,9 +1472,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event to an applicable component
          *
-         * @param {String} Key (selector or ui type)
-         * @param {String} Event type
-         * @param {Array} Arguments
+         * @param {String} key Selector or UI type
+         * @param {String} type Event type
+         * @param {Array} args Event arguments
          */
         this.emit = function(key, type, args) {
             var targets = [];
@@ -1500,7 +1500,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method get
          * Gets a component currently created
          *
-         * @param {Integer/String} Key
+         * @param {Integer/String} key
          * @returns {Object/Array} UI instance
          */
 		this.get = function(key) {
@@ -1544,7 +1544,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method remove
          * Removes a component object in an applicable index from the list
          *
-         * @param {Integer} Index
+         * @param {Integer} index
          * @return {Object} Removed instance
          */
         this.remove = function(index) {
@@ -1557,7 +1557,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method shift
          * Removes the last component object from the list
          *
-         * @return {Object} removed instance
+         * @return {Object} Removed instance
          */
         this.shift = function() {
             return instances.shift();
@@ -1586,10 +1586,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method debug
          *
-         * @param {Object} UI instance
+         * @param {Object} uiObj UI instance
          * @param {Number} i
          * @param {Number} j
-         * @param {Function} Callback
+         * @param {Function} callback
          */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
@@ -1647,7 +1647,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method debugAll
          * debugs all component objects currently existing
          *
-         * @param {Function} Callback
+         * @param {Function} callback
          */
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
@@ -1663,7 +1663,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addClass
          * Adds a component class
          *
-         * @param {Object} UI Class
+         * @param {Object} uiCls UI Class
          */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
@@ -1673,7 +1673,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method getClass
          * Gets a component class
          *
-         * @param {String/Integer} Key
+         * @param {String/Integer} key
          * @return {Object}
          */
 		this.getClass = function(key) {
@@ -1704,9 +1704,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method create
          * It is possible to create a component dynamically after the ready point
          *
-         * @param {String} UI type
-         * @param {String/DOMElement} Selector
-         * @param {Object} Options
+         * @param {String} type UI type
+         * @param {String/DOMElement} selector
+         * @param {Object} options
          * @return {Object}
          */
         this.create = function(type, selector, options) {
@@ -1722,11 +1722,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIListener = function() {
 		var list = [];
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function settingEventAnimation(e) {
 			var pfx = [ "webkit", "moz", "MS", "o", "" ];
 			
@@ -1770,10 +1766,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}[type];
 		}
 		
-		/**
-		 * Public Methods
-		 * 
-		 */
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
@@ -1867,8 +1859,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event. The first parameter is the type of a custom event. A function defined as an option or on method is called
          *
-         * @param {String} Event type
-         * @param {Function} Arguments
+         * @param {String} type Event type
+         * @param {Function} args Event Arguments
          * @return {Mixed}
          */
         this.emit = function(type, args) {
@@ -1891,8 +1883,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method on
          * A callback function defined as an on method is run when an emit method is called
          *
-         * @param {String} Event type
-         * @param {Function} Callback
+         * @param {String} type Event type
+         * @param {Function} callback
          */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
@@ -1903,7 +1895,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method off
          * Removes a custom event of an applicable type or callback handler
          *
-         * @param {String} Event type
+         * @param {String} type Event type
          */
         this.off = function(type) {
             var event = [];
@@ -1924,9 +1916,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addEvent
          * Defines a browser event of a DOM element
          *
-         * @param {String/HTMLElement} Selector
-         * @param {String} Dom event type
-         * @param {Function} Callback
+         * @param {String/HTMLElement} selector
+         * @param {String} type Dom event type
+         * @param {Function} callback
          */
         this.addEvent = function() {
             this.listen.add(arguments);
@@ -1947,8 +1939,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addValid
          * Check the parameter type of a UI method and generates an alarm when a wrong value is entered
          *
-         * @param {String} Method name
-         * @param {Array} Arguments
+         * @param {String} name Method name
+         * @param {Array} params Parameters
          */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
@@ -1971,8 +1963,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callBefore
          * Sets a callback function that is called before a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          * @return {Mixed}
          */
         this.callBefore = function(name, callback) {
@@ -1997,8 +1989,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callAfter
          * Sets a callback function that is called after a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          * @return {Mixed}
          */
         this.callAfter = function(name, callback) {
@@ -2022,8 +2014,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callDelay
          * Sets a callback function and the delay time before/after a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          */
         this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
             if(!this.__proto__) return;
@@ -2061,8 +2053,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setTpl
          * Dynamically defines the template method of a UI
          *
-         * @param {String} Template name
-         * @param {String} Template markup
+         * @param {String} name Template name
+         * @param {String} html Template markup
          */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
@@ -2087,8 +2079,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setOption
          * Dynamically defines the options of a UI
          *
-         * @param {String} Key
-         * @param {Mixed} Value
+         * @param {String} key
+         * @param {Mixed} value
          */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
@@ -4665,7 +4657,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
          * Selects a button of a specified index
          *
-		 * @param {Array} Index for button check
+		 * @param {Array} indexList Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -4680,7 +4672,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setValue
          * Selects a button with a specified value
          *
-		 * @param Values for button check
+		 * @param {Array} valueList Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -4766,11 +4758,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 	return UI;
 });
 jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var call_list = jui.get("ui.combo");
 		
@@ -5003,7 +4991,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
 		 * Selects a button of a specified index
          *
-		 * @param {Number} Index
+		 * @param {Number} index
 		 */
 		this.setIndex = function(index) {
 			load("index", index);
@@ -5014,7 +5002,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
          * @method setValue
          * Selects a button having a specified value
          *
-         * @param {Mixed} Value
+         * @param {Mixed} value
          */
 		this.setValue = function(value) {
 			load("value", value);
@@ -5151,7 +5139,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
      * @event change
      * Event which occurs when selecting a combo box
      *
-     * @param {Data} data changed data
+     * @param {Object} data changed data
      * @param {EventObject} e The event object
      */
 	
@@ -5393,8 +5381,8 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method page
          * Outputs a calendar that fits the year/month entered
          *
-         * @param {Integer} Year
-         * @param {Integer} Month
+         * @param {Integer} year
+         * @param {Integer} month
          */
         this.page = function(y, m) {
             if(arguments.length == 0) return;
@@ -5507,7 +5495,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method addTime
          * Selects a date corresponding to the time added to the currently selected date
          *
-         * @param {"Integer"/"Date"} Timestamp or Date
+         * @param {"Integer"/"Date"} time Timestamp or Date
          */
         this.addTime = function(time) {
         	selDate = new Date(this.getTime() + time);
@@ -5538,7 +5526,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * @method getFormat
          * Gets a date string that fits the format entered
          *
-         * @return {String} Formatted date string
+         * @return {String} format Formatted date string
          */
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
@@ -5581,14 +5569,32 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         };
     }
 
+    /**
+     * @event select
+     * Event that occurs when selecting a specific date
+     *
+     * @param {String} value Formatted date string
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event prev
+     * Event that occurs when clicking on the previous button
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event next
+     * Event that occurs when clicking on the next button
+     *
+     * @param {EventObject} e The event object
+     */
+
     return UI;
 });
 jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var dd = getDropdown();
 		
@@ -5634,20 +5640,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     /**
      * @class ui.dropdown
-     * implements dropdown menu
+     * Dropdown is a UI component that is frequently used in multiple UI components such as combo box, navigation, table, ect
+     *
      * @extends core
-     * @alias DropDown
+     * @alias Dropdown
      * @requires jquery
      *
      */
 	var UI = function() {
 		var ui_list = null, index = -1;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setEventNodes(self) {
 			var $list = $(ui_list.menu).find("li");
 			
@@ -5710,12 +5712,6 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			}
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var opts = this.options;
 			
@@ -5765,7 +5761,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
 			this.type = "hide"; // 기본 타입 설정
 		}
-		
+
+        /**
+         * @method update
+         * Changes the dropdown list
+         *
+         * @param {Array} nodes Dropdown list
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -5777,14 +5779,25 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method hide
+         * Hides the dropdown
+         */
 		this.hide = function() {
 			ui_list.root.hide();
 			
 			this.emit("hide");
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a dropdown at the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.show = function(x, y) {
 			hideAll();
 			
@@ -5802,12 +5815,26 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			this.emit("show");
 			this.type = "show";
 		}
-		
+
+        /**
+         * @method move
+         * Moves a dropdown to the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.move = function(x, y) {
 			ui_list.root.css("left", x);
 			ui_list.root.css("top", y);
 		}
-		
+
+        /**
+         * @method wheel
+         * Changes a selected node upwards when the key is set to -1, or downwards when the key is set to 1. If the key is set to 0, the speciified node is selected
+         *
+         * @param {Integer} key
+         * @param {Function} callback
+         */
 		this.wheel = function(key, callback) {
 			if(!this.options.keydown) return;
 			
@@ -5845,7 +5872,11 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				if(callback) callback();
 			}
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the dropdown list
+         */
 		this.reload = function() {
 			this.init();
 			this.emit("reload");
@@ -5854,24 +5885,77 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Boolean} [close=true]
+             * Closes the Auto when clicking on the dropdown list
+             */
 			close: true,
+
+            /**
+             * @cfg {Boolean} [keydown=false]
+             * It is possible to choose anything on the dropdown list with the arrow keys on the keyboard
+             */
 			keydown: false,
+
+            /**
+             * @cfg {Integer} [left=0]
+             * Sets the X coordinate of the dropdown list
+             */
 			left: 0,
+
+            /**
+             * @cfg {Integer} [top=0]
+             * Sets the Y coordinate of the dropdown list
+             */
 			top: 0,
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Determines the horizontal size of a dropdown list
+             */
 			width: 0,
+
+            /**
+             * @cfg {Integer} [height=0]
+             * Determines the vertical size of a dropdown list
+             */
 			height: 0,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a dropdown list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when anything on the dropdown list is selected
+     *
+     * @param {Object} data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event show
+     * Event that occurs when a dropdown is shown
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a dropdown is hidden
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when a dropdown is reloaded
+     */
 	
 	return UI;
 });
 jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var win_width = 0;
 	
 	_.resize(function() {
@@ -5893,7 +5977,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.modal
-     * implements modal window
+     * Developed as a separate component so that the modal, which is used in UI components such as window or loading, can be used more universally
+     *
      * @extends core
      * @alias Modal
      * @requires jquery
@@ -5905,11 +5990,6 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		var uiObj = null, uiTarget = null;
 		var x = 0, y = 0, z_index = 5000;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setPrevStatus(self) {
 			uiObj = { 
 				"position": $(self.root).css("position"),
@@ -5987,13 +6067,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
 
@@ -6005,7 +6079,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			// 타입 프로퍼티 설정
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method hide
+         * Hides a modal
+         */
 		this.hide = function() {
 			var opts = this.options;
 
@@ -6025,7 +6103,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a modal
+         */
 		this.show = function() {
 			var opts = this.options,
 				info = getModalInfo(this);
@@ -6046,6 +6128,10 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			this.type = "show";
 		}
 
+        /**
+         * @method resize
+         * Re-adjust the location of a modal
+         */
         this.resize = function() {
             var info = getModalInfo(this);
 
@@ -6064,12 +6150,41 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a modal
+             */
 			color: "black",
+
+            /**
+             * @cfg {Float} [opacity=0.4]
+             * Sets the transparency of a modal
+             */
 			opacity: 0.4,
+
+            /**
+             * @cfg {String/DOMElement} [target="body"]
+             * Sets a selector on which a modal is shown
+             */
 			target: "body",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Determines the sequence (index) of a modal
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [clone=false]
+             * Copies an existing modal and shows it
+             */
 			clone: false,
-			autoHide: true // 자신을 클릭했을 경우, hide
+
+            /**
+             * @cfg {Boolean} [autoHide=true]
+             * Automatically hides a modal when clicking on it
+             */
+			autoHide: true
         }
     }
 	
@@ -6080,7 +6195,8 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     /**
      * @class ui.notify
-     * implements notify layer
+     * Notify component that provides an alarm function for when a serious problem or event occurs
+     *
      * @extends core
      * @alias Notify
      * @requires jquery
@@ -6089,11 +6205,6 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var UI = function() {
     	var $container = null,
             paddingPos = null;
-    	
-        /**
-         * Public Methods
-         *
-         */
 
         this.init = function() {
             var opts = this.options;
@@ -6131,6 +6242,13 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             return this;
         }
 
+        /**
+         * @method add
+         * Adds a notice message. The value passed is the data object shown by the notice template
+         *
+         * @param {Object} data
+         * @param {Integer} timeout
+         */
         this.add = function(data, timeout) {
             var self = this, 
             	opts = this.options,
@@ -6191,7 +6309,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
                 return (opts.position.indexOf("top-") != -1) ? true : false;
             }
         }
-        
+
+        /**
+         * @method reset
+         * Removes all notice messages that are enabled
+         */
         this.reset = function() {
         	$container.empty();
         }
@@ -6199,15 +6321,76 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-            padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-            distance: 5, // 알림끼리의 간격
-            timeout: 3000, // 0이면 사라지지 않음
+            /**
+             * @cfg {"top"/"top-lefet"/"top-right"/"bottom"/"bottom-left"/"bottom-right"} [position="top-right"]
+             * Designates the location where a notice message is added
+             */
+            position: "top-right",
+
+            /**
+             * @cfg {Integer} [padding=12]
+             * Determines the margin value of a notice message (the margin value may be in object form rather than a numeric value)
+             */
+            padding: DEF_PADDING,
+
+            /**
+             * @cfg {Integer} [distance=5]
+             * Determines each margin value when there are multiple notice messages
+             */
+            distance: 5,
+
+            /**
+             * @cfg {Integer} [timeout=3000]
+             * Determines the duration for which a notice message is displayed (the message does not disappear when the value is 0)
+             */
+            timeout: 3000,
+
+            /**
+             * @cfg {Integer} [showDuration=500]
+             * Determines the duration of an effect when a notice message is shown
+             */
             showDuration: 500,
+
+            /**
+             * @cfg {Integer} [hideDuration=500]
+             * Determines the duration of an effect when a notice message disappears
+             */
             hideDuration: 500,
+
+            /**
+             * @cfg {String} [showEasing="swing"]
+             * Determines an effect when a notice message is shown (see CSS3 specifications)
+             */
             showEasing: "swing",
+
+            /**
+             * @cfg {String} [hideEasing="linear"]
+             * Determines an effect when a notice message disappears (see CSS3 specifications)
+             */
             hideEasing: "linear"
         };
+
+        /**
+         * @event select
+         * Event that occurs when a notice message is clicked
+         *
+         * @param {Object} data
+         * @param {EventObject} e The event object
+         */
+
+        /**
+         * @event show
+         * Event that occurs when a notice message is shown
+         *
+         * @param {Object} data
+         */
+
+        /**
+         * @event hide
+         * Event that occurs when a notice message is hidden
+         *
+         * @param {Object} data
+         */
     }
 
     return UI;
@@ -6216,21 +6399,16 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     /**
      * @class ui.paging
-     * implements pagination
+     * Paging component that can be applied to a screen with tables or various other data
+     *
      * @extends core
      * @alias Paging
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
 		var $main = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function setEventAction(self) {
 			self.addEvent($(self.root).find(".prev"), "click", function(e) {
 				self.prev();
@@ -6293,12 +6471,6 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			setPageStyle(self, activePage);
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -6311,7 +6483,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			
 			return this;
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the number of specified data records, or reloads the initially configured number of data records if there is no parameter
+         *
+         * @param {Integer} count Data total count
+         */
 		this.reload = function(count) {
 			var count = (!count) ? this.options.count : count;
 			
@@ -6321,7 +6499,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			changePage(this, activePage);
 			this.emit("reload");
 		}
-		
+
+        /**
+         * @method page
+         * Changes to a specified page number, and gets the currently enabled page number if there is no parameter
+         *
+         * @param {Integer} pNo Page number
+         */
 		this.page = function(pNo) {
 			if(!pNo) return activePage;
 			
@@ -6329,18 +6513,34 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			this.emit("page", [ activePage ]);
 		}
 
+        /**
+         * @method next
+         * Changes to the next page
+         */
 		this.next = function() {
 			this.page(activePage + 1);
 		}
-		
+
+        /**
+         * @method prev
+         * Changes to the previous page
+         */
 		this.prev = function() {
 			this.page(activePage - 1);
 		}
-		
+
+        /**
+         * @method first
+         * Changes to the first page
+         */
 		this.first = function() {
 			this.page(1);
 		}
 
+        /**
+         * @method last
+         * Changes to the last page
+         */
 		this.last = function() {
 			this.page(lastPage);
 		}
@@ -6348,11 +6548,37 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-			count: 0,		// 데이터 전체 개수
-			pageCount: 10,	// 한페이지당 데이터 개수
-			screenCount: 5	// 페이지 개수
+            /**
+             * @cfg {Integer} [count=0]
+             * Total number of data records subject to paging)
+             */
+			count: 0,
+
+            /**
+             * @cfg {Integer} [pageCount=10]
+             * Number of data records per page
+             */
+			pageCount: 10,
+
+            /**
+             * @cfg {Integer} [screenCount=5]
+             * Number of pages shown on the paging screen
+             */
+			screenCount: 5
         }
     }
+
+    /**
+     * @event page
+     * Event that occurs when the page is changed
+     *
+     * @param {Integer} page Active page number
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when the page is reloaded
+     */
 	
 	return UI;
 });
@@ -6360,21 +6586,16 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     /**
      * @class ui.tooltip
-     * implements tooltip
+     * Tooltip component can be applied to 4 locations, namely top/bottom/left/right, and a relate message can be entered in the title properties
+     *
      * @extends core
      * @alias Tooltip
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var $tooltip = null;
 		var pos = {}, title = "", delay = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createTooltip(self, msg) {
             // 메시지 템플릿 적용
 			$tooltip = $(self.tpl.item({
@@ -6453,12 +6674,6 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 				
@@ -6498,6 +6713,12 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
 		}
 
+        /**
+         * @method update
+         * Changes the content of a tooltip
+         *
+         * @param {String} text
+         */
         this.update = function(newTitle) {
             title = newTitle;
         }
@@ -6505,14 +6726,54 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a tooltip
+             */
             color: "black",
+
+            /**
+             * @cfg {"top"/"bottom"/"left"/"right"} [position="top"]
+             * Determines the location where a tooltip is shown
+             */
             position: "top",
+
+            /**
+             * @cfg {Integer} [width=150]
+             * Determines the horizontal size of a tooltip
+             */
             width: 150,
+
+            /**
+             * @cfg {"left"/"right"/"center"} [align="left"]
+             * Determines the alignment state inside a tooltip
+             */
             align: "left",
+
+            /**
+             * @cfg {Integer} [delay=0]
+             * Determines the event time when a tooltip is shown
+             */
             delay: 0,
+
+            /**
+             * @cfg {String} [showType="mouseover"]
+             * Determines the type of event that triggers a tooltip
+             */
             showType: "mouseover",
+
+            /**
+             * @cfg {String} [hideType="mouseout"]
+             * Determines the type of event that hides a tooltip
+             */
             hideType: "mouseout",
+
+            /**
+             * @cfg {String} [title=""]
+             * Sets the content of a tooltip (referring to the title properties in markup)
+             */
             title: "",
+
             tpl: {
                 item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
                 "<div class='anchor'></div><div class='message'><!= message !></div>" +
@@ -6520,6 +6781,21 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
     }
+
+    /**
+     * @event show
+     * Event that occurs when a tooltip is shown
+     *
+     * @param {DOMElement} tooltip
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a tooltip is hidden
+     *
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -6527,7 +6803,8 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.layout
-     * implements layout
+     * Layout can split the screen into areas and each area will be resizable
+     *
      * @extends core
      * @alias Layout
      * @requires jquery
@@ -6758,12 +7035,6 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
             self.resize();
         }
 	
-	
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			var $root, $top, $left, $right, $bottom, $center;
@@ -6812,7 +7083,11 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
  
 			return this; 			
 		}
-		
+
+        /**
+         * @method resize
+         * Resets the layout
+         */
 		this.resize = function() {
 			var $obj = null, $option = null;
             var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
@@ -7001,14 +7276,58 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String} [barColor="#d6d6d6"]
+             * Determines the color of the resizing bar
+             */
 			barColor : '#d6d6d6',
+
+            /**
+             * @cfg {Integer} [barSize=3]
+             * Determines the size of the resizing bar
+             */
 			barSize : 3,
+
+            /**
+             * @cfg {Integer} [width=null]
+             * Determines the container area value
+             */
 			width	: null,
+
+            /**
+             * @cfg {Integer} [height=null]
+             * Determines the container height value
+             */
 			height	: null,
+
+            /**
+             * @cfg {Object} top
+             * Configures options for the top area
+             */
 			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} left
+             * Configures options for the left area
+             */
 			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} right
+             * Configures options for the right area
+             */
 			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} bottom
+             * Configures options for the bottom area
+             */
 			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} center
+             * Configures options for the center area
+             */
 			center	: { el : null }
         }
     }
@@ -7121,24 +7440,17 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	
 	/**
 	 * @class uix.autocomplete
-     * 
-     * 자동 완성 컴포넌트
-     * 
+     * Auto complete component that shows a list of keywords containing the input value when inputting a string in a text box
+     *
      * @extends core
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-	 * 
 	 */
 	var UI = function() {
 		var ddUi = null, target = null,
             words = [], list = [];
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createDropdown(self, words) {
 			if(words.length == 0) {
 				if(ddUi) ddUi.hide();
@@ -7196,13 +7508,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var opts = this.options;
 			
@@ -7214,12 +7520,24 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
             // 단어 업데이트
             this.update(opts.words);
-		}		
-		
+		}
+
+        /**
+         * @method update
+         * Updates words subject to autofill
+         *
+         * @param {Array} words
+         */
 		this.update = function(newWords) {
 			words = newWords;
 		}
 
+        /**
+         * @method list
+         * Gets filtered words subject to autofill
+         *
+         * @return {Array} words
+         */
         this.list = function() {
             return list;
         }
@@ -7227,10 +7545,26 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=null]
+             * Designates a target selector when an autofill route is not a target
+             */
 			target: null,
+
+            /**
+             * @cfg {Array} words
+             * Designates words subject to autofill
+             */
 			words: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when you click on a dropdown that shows a word list
+     *
+     * @param {String} word Changed word
+     */
 	
 	return UI;
 });
@@ -7238,13 +7572,11 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     /**
      * @class uix.tab
-     * implements tab controller
      * @extends core
      * @alias Tab
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-     *
      */
 	var UI = function() {
 		var ui_menu = null,
@@ -7252,12 +7584,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 		var menuIndex = -1, // menu index
 			activeIndex = 0;
-		
-			
-		/**
-		 * Private Methods
-		 * 
-		 */
 		
 		function hideAll(self) {
 			var $list = $(self.root).children("li");
@@ -7419,12 +7745,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			changeTab(self, $list.index($node));
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -7450,7 +7770,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 					event: {
 						change: function(data, e) {
 							hideMenu(self);
-							self.emit("changeMenu", [ data, e ]);
+							self.emit("changemenu", [ data, e ]);
 						},
 						hide: function() {
 							hideMenu(self);
@@ -7461,7 +7781,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			return this;
 		}
-		
+
+        /**
+         * @method update
+         * Changes the tab list
+         *
+         * @param {Array} nodes
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -7473,7 +7799,14 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method insert
+         * Adds a tab at a specified index
+         *
+         * @param {Integer} index
+         * @param {Object} node
+         */
 		this.insert = function(index, node) {
 			if(!this.tpl.node) return;
 			
@@ -7488,7 +7821,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method append
+         * Adds a tab to the last node
+         *
+         * @param {Object} node
+         */
 		this.append = function(node) {
 			if(!this.tpl.node) return;
 
@@ -7503,19 +7842,38 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method prepend
+         * Adds a tab to the first node
+         *
+         * @param {Object} node
+         */
 		this.prepend = function(node) {
 			if(!this.tpl.node) return;
 
 			$(this.root).prepend(this.tpl.node(node));
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method remove
+         * Removes a tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.remove = function(index) {
 			$(this.root).children("li").eq(index).remove();
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method move
+         * Changes a specified tab to a tab at a target index
+         *
+         * @param {Integer} index
+         * @param {Integer} targetIndex
+         */
 		this.move = function(index, targetIndex) {
 			if(index == targetIndex) return;
 			
@@ -7539,7 +7897,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			activeIndex = targetIndex;
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method show
+         * Enables the tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.show = function(index) {
             if(index == menuIndex || index == activeIndex) return;
 
@@ -7554,7 +7918,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			changeTab(this, index);
 		}
-		
+
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled tab
+         *
+         * @return {Integer}
+         */
 		this.activeIndex = function() {
 			return activeIndex;
 		}
@@ -7562,12 +7932,87 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=""]
+             * Determines a selector in the area to become the content of a tab
+             */
 			target: "",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Sets an enabled tab
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [drag=false]
+             * Changes the tab location through dragging
+             */
 			drag: false,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a tab list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when a tab is enabled
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event click
+     * Event that occurs when a tab is mouse clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event rclick
+     * Event that occurs when a tab is mouse right clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event menu
+     * Event which occurs when tab menu shown
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event changemenu
+     * Event that occurs when a dropdown is selected
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragstart
+     * Event that occurs when a tab starts to move
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragend
+     * Event that occurs when the movement of a tab is completed
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });

@@ -31,6 +31,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "text-anchor" : anchor,
                 "font-size" : chart.theme("gaugeTitleFontSize"),
                 "font-weight" : chart.theme("gaugeTitleFontWeight"),
+                fill : chart.theme("gaugeTitleFontColor"),
                 y: textY
             }, title).scale(textScale));
 

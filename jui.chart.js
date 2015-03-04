@@ -1462,7 +1462,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method add
          * Adds a component object created
          *
-         * @param {Object} UI instance
+         * @param {Object} ui UI instance
          */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
@@ -1472,9 +1472,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event to an applicable component
          *
-         * @param {String} Key (selector or ui type)
-         * @param {String} Event type
-         * @param {Array} Arguments
+         * @param {String} key Selector or UI type
+         * @param {String} type Event type
+         * @param {Array} args Event arguments
          */
         this.emit = function(key, type, args) {
             var targets = [];
@@ -1500,7 +1500,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method get
          * Gets a component currently created
          *
-         * @param {Integer/String} Key
+         * @param {Integer/String} key
          * @returns {Object/Array} UI instance
          */
 		this.get = function(key) {
@@ -1544,7 +1544,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method remove
          * Removes a component object in an applicable index from the list
          *
-         * @param {Integer} Index
+         * @param {Integer} index
          * @return {Object} Removed instance
          */
         this.remove = function(index) {
@@ -1557,7 +1557,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method shift
          * Removes the last component object from the list
          *
-         * @return {Object} removed instance
+         * @return {Object} Removed instance
          */
         this.shift = function() {
             return instances.shift();
@@ -1586,10 +1586,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method debug
          *
-         * @param {Object} UI instance
+         * @param {Object} uiObj UI instance
          * @param {Number} i
          * @param {Number} j
-         * @param {Function} Callback
+         * @param {Function} callback
          */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
@@ -1647,7 +1647,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method debugAll
          * debugs all component objects currently existing
          *
-         * @param {Function} Callback
+         * @param {Function} callback
          */
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
@@ -1663,7 +1663,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addClass
          * Adds a component class
          *
-         * @param {Object} UI Class
+         * @param {Object} uiCls UI Class
          */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
@@ -1673,7 +1673,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method getClass
          * Gets a component class
          *
-         * @param {String/Integer} Key
+         * @param {String/Integer} key
          * @return {Object}
          */
 		this.getClass = function(key) {
@@ -1704,9 +1704,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method create
          * It is possible to create a component dynamically after the ready point
          *
-         * @param {String} UI type
-         * @param {String/DOMElement} Selector
-         * @param {Object} Options
+         * @param {String} type UI type
+         * @param {String/DOMElement} selector
+         * @param {Object} options
          * @return {Object}
          */
         this.create = function(type, selector, options) {
@@ -1722,11 +1722,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIListener = function() {
 		var list = [];
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function settingEventAnimation(e) {
 			var pfx = [ "webkit", "moz", "MS", "o", "" ];
 			
@@ -1770,10 +1766,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}[type];
 		}
 		
-		/**
-		 * Public Methods
-		 * 
-		 */
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
@@ -1867,8 +1859,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event. The first parameter is the type of a custom event. A function defined as an option or on method is called
          *
-         * @param {String} Event type
-         * @param {Function} Arguments
+         * @param {String} type Event type
+         * @param {Function} args Event Arguments
          * @return {Mixed}
          */
         this.emit = function(type, args) {
@@ -1891,8 +1883,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method on
          * A callback function defined as an on method is run when an emit method is called
          *
-         * @param {String} Event type
-         * @param {Function} Callback
+         * @param {String} type Event type
+         * @param {Function} callback
          */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
@@ -1903,7 +1895,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method off
          * Removes a custom event of an applicable type or callback handler
          *
-         * @param {String} Event type
+         * @param {String} type Event type
          */
         this.off = function(type) {
             var event = [];
@@ -1924,9 +1916,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addEvent
          * Defines a browser event of a DOM element
          *
-         * @param {String/HTMLElement} Selector
-         * @param {String} Dom event type
-         * @param {Function} Callback
+         * @param {String/HTMLElement} selector
+         * @param {String} type Dom event type
+         * @param {Function} callback
          */
         this.addEvent = function() {
             this.listen.add(arguments);
@@ -1947,8 +1939,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addValid
          * Check the parameter type of a UI method and generates an alarm when a wrong value is entered
          *
-         * @param {String} Method name
-         * @param {Array} Arguments
+         * @param {String} name Method name
+         * @param {Array} params Parameters
          */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
@@ -1971,8 +1963,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callBefore
          * Sets a callback function that is called before a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          * @return {Mixed}
          */
         this.callBefore = function(name, callback) {
@@ -1997,8 +1989,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callAfter
          * Sets a callback function that is called after a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          * @return {Mixed}
          */
         this.callAfter = function(name, callback) {
@@ -2022,8 +2014,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callDelay
          * Sets a callback function and the delay time before/after a UI method is run
          *
-         * @param {String} Method name
-         * @param {Function} Callback
+         * @param {String} name Method name
+         * @param {Function} callback
          */
         this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
             if(!this.__proto__) return;
@@ -2061,8 +2053,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setTpl
          * Dynamically defines the template method of a UI
          *
-         * @param {String} Template name
-         * @param {String} Template markup
+         * @param {String} name Template name
+         * @param {String} html Template markup
          */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
@@ -2087,8 +2079,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setOption
          * Dynamically defines the options of a UI
          *
-         * @param {String} Key
-         * @param {Mixed} Value
+         * @param {String} key
+         * @param {Mixed} value
          */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
@@ -4599,8 +4591,10 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * Draw 객체 기본 포맷 메소드
+         * @method format
+         * Get a default format callback of draw object.
          *
+         * @return {Function}
          */
         this.format = function() {
             var draw = this.grid || this.brush || this.widget,
@@ -4610,13 +4604,15 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method balloonPoints
+         *
          * 말풍선 그리그 메소드
          *
-         * @param type
-         * @param w
-         * @param h
-         * @param anchor
-         * @returns {string}
+         * @param {String} type
+         * @param {Number} w
+         * @param {Number} h
+         * @param {Number} anchor
+         * @return {String}
          */
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
@@ -4665,9 +4661,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
     Draw.setup = function() {
         return {
-            /** @cfg {String} [type=null] */
+            /** @cfg {String} [type=null] Specifies the type of a widget/brush/grid to be added.*/
             type: null,
-            /** @cfg {Boolean} [animate=false] */
+            /** @cfg {Boolean} [animate=false] Run the animation effect.*/
             animate: false
         }
     }
@@ -5013,7 +5009,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
          * @method zoom 
          * 
          * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
-         *  *  
+         *
          * @param {Number} start
          * @param {Number} end
          */
@@ -5032,32 +5028,39 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     }
 
     Axis.setup = function() {
+
         return {
-            /** @cfg {chart.grid.core} [x=null]  x축 그리드 */
+            /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
-            /** @cfg {chart.grid.core} [y=null]  y축 그리드 */
+            /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
-            /** @cfg {chart.grid.core} [c=null]  커스텀 그리드 */
+            /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
-            /** @cfg {Array} [data=[]]  Axis 에서 사용할 data  */
+            /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
-            /** @cfg {Array} [origin=[]]  원본 data  */
+            /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */
             origin: [],
-            /** @cfg {Object} [keymap={}] 데이터 키-맵 */
+            /** @cfg {Object} [keymap={}] grid's data key map  */
             keymap: {},
-            /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
+            /** @cfg {Object} [area={}]  set area(x, y, width, height) of axis */
             area: {},
-            /** @cfg {Object} [padding={}] Axis 의 패딩 설정 */
+            /**
+             * @cfg  {Object} padding axis padding
+             * @cfg  {Number} [padding.top=0] axis's top padding
+             * @cfg  {Number} [padding.bottom=0] axis's bottom padding
+             * @cfg  {Number} [padding.left=0] axis's left padding
+             * @cfg  {Number} [padding.right=0] axis's right padding
+             */
             padding : {},
-            /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
+            /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
-            /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
+            /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
-            /** @cfg {Number} [page=1]  현재 표시될 페이지 */
+            /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
             page: 1,
-            /** @cfg {Number} [angle=0]  3d 차트 축의 각도 */
+            /** @cfg {Number} [angle=0]  Set angle of 3d chart */
             angle: 0,
-            /** @cfg {Number} [depth=0]  3d 차트 축의 깊이 */
+            /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
             depth: 0
         }
     }
@@ -5099,13 +5102,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     /**
      * @class chart.builder
      *
-     * implements chart builder
+     * Implements chart builder
      *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
      * @requires util.svg
      * @requires util.color
+     * @requires chart.axis
      * @requires jquery
      *
      */
@@ -5118,7 +5122,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method caculate
          * 
-         * chart 기본 영역 계산
+         * caculate chart's default area
          *
          * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
          *
@@ -5244,7 +5248,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * implements widget draw 
          *  
          * @param {chart.builder} self
-         * @param {Boolean} isAll  whether redraw widget 
+         * @param {Boolean} isAll  Whether redraw widget
          * @private  
          */
         function drawWidget(self, isAll) {
@@ -5593,6 +5597,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setThemeStyle(_options.theme);
 
             // svg 기본 객체 생성
+            /** @property {chart.svg} svg Refers to an SVG utility object. */
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
                 height: _options.height,
@@ -5611,10 +5616,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         
         /**
          * @method get  
-         * get option's property of chart builder 
          *
-         * @param {String} type "axis", "brush", "widget", "series", "padding", "area"
-         * @param {String} key  property name
+         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         *
+         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {String} key  Property name
+         * @return {Mixed/Object}
          */
         this.get = function(type, key) {
             var obj = {
@@ -5634,40 +5641,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 엑시스 객체를 반환
+         * Gets the axis object of that index.
          *
-         * @param key
-         * @returns {Array}
+         * @param {Number} key
+         * @returns {Array/Object}
          */
         this.axis = function(key) {
             return _.typeCheck("undefined", _axis[key]) ? _axis : _axis[key];
         }
 
         /**
-         * 차트의 영역 요소 반환
+         * Gets a calculated value for a chart area (type: width, height, x, y, x2, y2)).
          *
-         * @param key (width | height | x | y | x2 | y2)
-         * @returns {*}
+         * @param {String} key
+         * @return {Number/Object}
          */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         /**
-         * 차트의 여백 요소 반환
-         * @param key (top | left | bottom | right)
-         * @returns {*}
+         * Gets the top, bottom, left and right margin values.
+         *
+         * @param {"top"/"left"/"bottom"/"right"} key
+         * @return {Number/Object}
          */
         this.padding = function(key) {
             return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
         }
 
         /**
-         * 브러쉬 컬러 관련 함수
+         * Gets a color defined in the theme or the color set.
          *
-         * @param dataIndex
-         * @param brush
-         * @returns {*}
+         * @param {Number} i
+         * @param {chart.brush.core} brush
+         * @return {String} Selected color string
          */
         this.color = function(i, brush) {
             var color;
@@ -5711,19 +5719,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 아이콘 유니코드를 가져오는 함수
+         * Gets the unicode string of the icon.
          *
-         * @param key
+         * @param {String} key  icon's alias
          */
         this.icon = function(key) {
             return jui.include("chart.icon." + _options.icon.type)[key];
         }
 
         /**
-         * 텍스트 엘리먼트 생성하는 함수, 아이콘 키를 유니코드로 자동으로 파싱해준다.
+         * Creates a text element to which a theme is applied.
          *
-         * @param {object} attr
-         * @param {string|function} textOrCallback
+         * Also it support icon string
+         *
+         * @param {Object} attr
+         * @param {String|Function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
@@ -5745,15 +5755,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method theme
-         * theme 의 요소에 대한 값 구하기
+         *
+         * Gets a value for the theme element applied to the current chart.
          *
          * ```
-         *      // theme 전체 객체 얻어오기
+         *      // get all theme property
          *      var theme = chart.theme();
-         *      // 부분 속성 얻어오기
+         *      // get a part of theme
          *      var fontColor = chart.theme("fontColor");
-         *      // 값 비교해서 얻어오기
-         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
+         *      // get selected value of theme
+         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // if isSelected is true, return 'selectedFontColor' else return 'fontColor'
          * ```
          */
         this.theme = function(key, value, value2) {
@@ -5777,8 +5788,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
+         * Returns a value from the format callback function of a defined option.
          *
+         * @param {Function} format
+         * @return {Mixed}
          */
         this.format = function() {
             if(arguments.length == 0) return;
@@ -5794,10 +5807,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method bindUI 
          * 
-         * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
-         * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+         * Binds data used in a uix.table or the uix.xtable.
          *
-         * @param {object} bind   uix.table, uix.xtable 객체 사용
+         * @param {Number} axisIndex
+         * @param {Object} uiObj
          */
         this.bindUI = function(axisIndex, uiObj) {
             var self = this;
@@ -5821,10 +5834,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method on
          * 
-         * 차트에서 사용할 커스텀 이벤트 핸들러
+         * A callback function defined as an on method is run when an emit method is called.
          *
-         * @param type
-         * @param callback
+         * @param {String} type Event's name
+         * @param {Function} callback
+         * @param {"render"/"renderAll"/undefined} resetType
          */
         this.on = function(type, callback, resetType) {
             if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
@@ -5838,10 +5852,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 줌인/줌아웃 상태를 설정
+         * Change the scale of the chart.
          *
-         * @param scale
-         * @returns {number}
+         * @param {Number} scale
+         * @return {Number}
          */
         this.scale = function(scale) {
             if(!scale || scale < 0) return _scale;
@@ -5855,11 +5869,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 보이는 영역을 변경
+         * Change the view of the chart.
          *
-         * @param x
-         * @param y
-         * @returns {{x: number, y: number}}
+         * @param {Number} x
+         * @param {Number} y
+         * @return {Object}
+         * @return {Number} return.x
+         * @return {Number} return.y
          */
         this.view = function(x, y) {
             var area = this.area(),
@@ -5887,8 +5903,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method render 
          *
-         * chart render 함수 재정의
+         * Renders all draw objects.
          *
+         * @param {Boolean} isAll
          */
         this.render = function(isAll) {
             // SVG 메인 리셋
@@ -5927,9 +5944,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method appendDefs
          *
-         * defs 엘리먼트의 자식 노드를 추가한다.
+         * Add the child element in defs tag.
          *
-         * @param elem
+         * @param {chart.svg.element} elem
          */
         this.appendDefs = function(elem) {
             _defs.append(elem);
@@ -5943,7 +5960,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method addBrush 
          * 
-         * 동적으로 브러쉬를 추가한다. 
+         * Adds a brush and performs rendering again.
          *  
          * @param {Object} brush
          */
@@ -5955,7 +5972,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method removeBrush 
          * 
-         * 특정 브러쉬를 삭제한다. 
+         * Deletes the brush of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeBrush = function(index) {
@@ -5964,7 +5981,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
         /**
          * @method updateBrush 
-         * 특정 브러쉬를 업데이트 한다.  
+         * Updates the brush of a specified index and performs rendering again.
          * @param {Number} index
          * @param {Object} brush
          */
@@ -5975,7 +5992,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method addWidget 
-         * 동적으로 위젯을 추가한다. 
+         * Adds a widget and performs rendering again.
          * 
          * @param {Object} widget
          */
@@ -5986,7 +6003,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method removeWidget 
-         * 특정 위젯을 삭제한다.  
+         * Deletes the widget of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeWidget = function(index) {
@@ -5996,7 +6013,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method updateWidget
-         * 특정 위젯을 업데이트한다.
+         * Updates the widget of a specified index and performs rendering again
          * @param {Number} index
          * @param {Object} widget
          */
@@ -6007,9 +6024,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
 
         /**
-         * 테마 변경 후 차트 렌더링
+         * Changes a chart to a specified theme and renders the chart again.
          *
-         * @param themeName
+         * @param {String/Object} theme
          */
         this.setTheme = function(theme) {
             setThemeStyle(theme);
@@ -6017,10 +6034,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 사이즈 조정 후 차트 렌더링
+         * Changes the size of a chart to the specified area and height then performs rendering.
          *
-         * @param {integer} width
-         * @param {integer} height
+         * @param {Number} width
+         * @param {Number} height
          */
         this.setSize = function(width, height) {
             if(arguments.length == 2) {
@@ -6033,9 +6050,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트가 풀-사이즈인지 확인
+         * Returns true if the horizontal or vertical size of the chart is 100%.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isFullSize = function() {
             if(_options.width == "100%" || _options.height == "100%")
@@ -6045,10 +6062,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 자동 렌더링 여부 확인
-         * false일 경우, 수동으로 render 메소드를 호출해줘야 함
+         * Returns the values of rendering options and, if the rendering option is false, does not render the chart again when a method is called.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isRender = function() {
             return (!_initialize) ? true : _options.render;
@@ -6080,22 +6096,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series 각각의 필드에 대한 메타 정보 */
+            /** @cfg {Object} series Sets additional information for a specific data property. */
             series: {},
-            /** @cfg {Array} brush 그려질 브러쉬 목록 */
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
-            /** @cfg {Array} widget 그려질 위젯 목록 */
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
             widget: [],
-            /** @cfg {Array} axis 그려질 Axis 목록 */
+            /** @cfg {Array} [axis=[]] Determines a axis to be added to a chart. */
             axis: [],
 
+            /** @cfg {Object} [bind=null] Sets a component objects to be bind.*/
             bind: null,
-            /** @cfg {Function} [format=null] 빌더에서 공통으로 사용할 format 함수 정의 */
+            /** @cfg {Function} [format=null] Sets a format callback function to be used in a grid/brush/widget. */
             format: null,
-            /** @cfg {Boolean} [render=true] */
+            /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
 
-            /** @cfg {Object} */
+            /**
+             * @cfg {Object} icon Icon-related settings available in the chart.
+             * @cfg {String} [icon.type="jennifer"]
+             * @cfg {String} [icon.path=null]
+             */
             icon: {
                 type: "jennifer",
                 path: null
@@ -6105,97 +6126,113 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @event bg_click
-     * 실제 이벤트 이름은 bg.click 사용된다.
+     * Real name ``` bg.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_click
-     * 실제 이벤트 이름은 chart.click 사용된다.
+     * Real name ``` chart.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_rclick
-     * 실제 이벤트 이름은 bg.rclick 사용된다.
+     * Real name ``` bg.rclick ```
+     * Event that occurs when right clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_rclick
-     * 실제 이벤트 이름은 chart.rclick 사용된다.
+     * Real name ``` chart.rclick ```
+     * Event that occurs when right clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_dblclick
-     * 실제 이벤트 이름은 bg.dblclick 사용된다.
+     * Real name ``` bg.dblclick ```
+     * Event that occurs when clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_dblclick
-     * 실제 이벤트 이름은 chart.dblclick 사용된다.
+     * Real name ``` chart.dblclick ```
+     * Event that occurs when double clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousemove
-     * 실제 이벤트 이름은 bg.mousemove 사용된다.
+     * Real name ``` bg.mousemove```
+     * Event that occurs when moving the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousemove
-     * 실제 이벤트 이름은 chart.mousemove 사용된다.
+     * Real name ``` chart.mousemove ```
+     * Event that occurs when moving the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousedown
-     * 실제 이벤트 이름은 bg.mousedown 사용된다.
+     * Real name ``` bg.mousedown ```
+     * Event that occurs when left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousedown
-     * 실제 이벤트 이름은 chart.mousedown 사용된다.
+     * Real name ``` chart.mousedown ```
+     * Event that occurs when left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseup
-     * 실제 이벤트 이름은 bg.mouseup 사용된다.
+     * Real name ``` bg.mouseup ```
+     * Event that occurs after left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseup
-     * 실제 이벤트 이름은 chart.mouseup 사용된다.
+     * Real name ``` chart.mouseup ```
+     * Event that occurs after left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseover
-     * 실제 이벤트 이름은 bg.mouseover 사용된다.
+     * Real name ``` bg.mouseover ```
+     * Event that occurs when placing the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseover
-     * 실제 이벤트 이름은 chart.mouseover 사용된다.
+     * Real name ``` chart.mouseover ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseout
-     * 실제 이벤트 이름은 bg.mouseout 사용된다.
+     * Real name ``` bg.mouseout ```
+     * Event that occurs when moving the mouse out of a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseout
-     * 실제 이벤트 이름은 chart.mouseout 사용된다.
+     * Real name ``` chart.mouseout ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
@@ -6298,6 +6335,8 @@ jui.define("chart.theme.jennifer", [], function() {
         gaugeTitleFontSize : "12px",
         /** @cfg */
         gaugeTitleFontWeight : "normal",
+        /** @cfg */
+        gaugeTitleFontColor : "#333",
         /** @cfg */
         bargaugeBackgroundColor : "#ececec",
         /** @cfg */
@@ -6524,6 +6563,7 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#333",
         bargaugeBackgroundColor : "#ececec",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#333333",
@@ -6667,6 +6707,7 @@ jui.define("chart.theme.dark", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#c5c5c5",
         bargaugeBackgroundColor : "#3e3e3e",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#c5c5c5",
@@ -6806,6 +6847,7 @@ jui.define("chart.theme.pastel", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#333",
         bargaugeBackgroundColor : "#f5f5f5",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#333333",
@@ -6980,6 +7022,8 @@ jui.define("chart.theme.pattern", [], function() {
         gaugeTitleFontSize : "12px",
         /** */
         gaugeTitleFontWeight : "normal",
+        /** */
+        gaugeTitleFontColor : "#333",
         /** */
         pieBorderColor : "white",
         /** */
@@ -7751,28 +7795,29 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 		return {
             /**
-             * @cfg {Number} [extend=null] extend grid's option
+             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
              */
 			extend:	null,
-            /**  @cfg {Number} [dist=0] 그리는 좌표로부터 떨어지는 거리  */
+            /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
 
-			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
 
-            /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
+            /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
 
-            /** @cfg {String/Object/Number} [color=null] 그리드의 라인 색깔 */
+            /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
-            /** @cfg {String} [title=null] */
+            /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
 			title: null,
-            /** @cfg {Boolean} [hide=false] */
+            /** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
+			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
             baseline : true,
-            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
+            /** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
-            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
+            /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
 			textRotate : null
 		};
 	}
@@ -7783,13 +7828,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
     /**
      * @class chart.grid.block
-     * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * Implements Block Grid
      * 
      *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
      * 
-     * domain 을 배열로 지정하면 해단 개수만큼 그리드의 영역이 설정된다.
-     *
-     * @extends chart.grid.core  
+     * @extends chart.grid.core
      */
 	var BlockGrid = function() {
         /**
@@ -8090,13 +8133,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
-            /** @cfg {String/Array/Function} [domain=null] */
+            /** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-            /** @cfg {Boolean} [reverse=false] */
+            /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {Number} [max=10] */
+            /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
 			max: 10,
-            /** @cfg {Boolean} [full=false] */
+            /** @cfg {Boolean} [full=false] Determines whether to expand the reference coordinates to the entire range.*/
 			full: false
 		};
 	}
@@ -8388,19 +8431,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
-            /** @cfg {Array} [domain=null] */
+            /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Array} [step=[]] */
+            /** @cfg {Array} [step=[]] Sets the interval of the scale displayed on a grid.*/
 			step: [],
-            /** @cfg {Number} [min=null] min timestamp  */
+            /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
-            /** @cfg {Number} [max=null] max timestamp  */
+            /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
 			max: null,
-            /** @cfg {Boolean} [reverse=false]  */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {String} [key=null] a field for value  */
+            /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {Boolean} [realtime=false]  */
+            /** @cfg {Boolean} [realtime=false] Determines whether to use as a real-time grid. */
 			realtime: false
 		};
 	}
@@ -8818,13 +8861,21 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	RadarGrid.setup = function() {
 		return {
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
+			/** @cfg {Number} [max=null] Sets the maximum value of a grid. */
 			max: 100,
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
             step : 10,
+			/** @cfg {Boolean} [line=true] Determines whether to display a line on the axis background. */
 			line: true,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
+			/** @cfg {Boolean} [extra=false] Leaves a certain spacing distance from the grid start point and displays a line where the spacing ends. */
 			extra: false,
+			/** @cfg {"radial"/"circle"} [shape="radial"] Determines the shape of a grid (radial, circle). */
 			shape: "radial" // or circle
 		};
 	}
@@ -9183,15 +9234,15 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 	RangeGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-			/** @cfg {Number} [step=10] 나누는 숫자 */
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
 			step: 10,
-			/** @cfg {Number} [min=0] 최소값 설정 */
+			/** @cfg {Number} [min=0] Sets the minimum value of a grid.  */
 			min: 0,
-			/** @cfg {Number} [max=0] 최대값 설정 */
+			/** @cfg {Number} [max=0] Sets the maximum value of a grid. */
 			max: 0,
-			/** @cfg {Number} [unit=null] 단계별 사이즈  */
+			/** @cfg {Number} [unit=null] Multiplies the axis value to be displayed.  */
 			unit: null,
 			/**
 			 * @cfg {Boolean} [clamp=true]
@@ -9200,19 +9251,13 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
 			 */
 			clamp : true,
-			/**
-			 * @cfg {Boolean} [reverse=false]
-			 *
-			 * 도메인을 거꾸로 정렬한다.
-			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
-			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
-			 */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-			/** @cfg {String} [key=null] a field for value */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
-			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
+			/** @cfg {Boolean} [nice=false] Automatically sets the value of a specific section.  */
 			nice: false
 		};
 	}
@@ -9552,15 +9597,15 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	RuleGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-			/** @cfg {Number} [step=10] 나누는 숫자 */
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
 			step: 10,
-			/** @cfg {Number} [min=0] 최소값 설정 */
+			/** @cfg {Number} [min=0] Sets the minimum value of a grid.  */
 			min: 0,
-			/** @cfg {Number} [max=0] 최대값 설정 */
+			/** @cfg {Number} [max=0] Sets the maximum value of a grid. */
 			max: 0,
-			/** @cfg {Number} [unit=null] 단계별 사이즈  */
+			/** @cfg {Number} [unit=null] Multiplies the axis value to be displayed.  */
 			unit: null,
 			/**
 			 * @cfg {Boolean} [clamp=true]
@@ -9569,23 +9614,17 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
 			 */
 			clamp : true,
-			/**
-			 * @cfg {Boolean} [reverse=false]
-			 *
-			 * 도메인을 거꾸로 정렬한다.
-			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
-			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
-			 */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-			/** @cfg {String} [key=null] a field for value */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
-			/** @cfg {Boolean} [hideZero=false] 0(zero) value 화면에서 보이지 않기 */
+			/** @cfg {Boolean} [hideZero=false] Determines whether to show '0' displayed on the grid. */
 			hideZero: false,
-			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
+			/** @cfg {Boolean} [nice=false] Automatically sets the value of a specific section.  */
 			nice: false,
-			/** @cfg {Boolean} [center=false] 가운데로 그리드 이동  */
+			/** @cfg {Boolean} [center=false] Place the reference axis in the middle.  */
 			center: false
 
 		};
@@ -9843,7 +9882,7 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     OverlapGrid.setup = function() {
         return {
-            /** @cfg {Number} [size=null] 분할할 개수  */
+            /** @cfg {Number} [count=null] Splited count  */
             count : null
         }
     }
@@ -10014,7 +10053,9 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     TopologyTableGrid.setup = function() {
         return {
+            /** @cfg {String} [sort=null]  */
             sort: null, // or random
+            /** @cfg {Number} [space=50]  */
             space: 50
         }
     }
@@ -10145,6 +10186,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     Grid3D.setup = function() {
         return {
+            /** @cfg {Number} [step=1] */
             step: 1
         }
     }
@@ -10621,20 +10663,16 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @property {chart.builder} chart */
             /** @property {chart.axis} axis */
             /** @property {Object} brush */
-            
-            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
+
+            /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
-            /** @cfg {Array} [colors=null]
-             * 필드 리스트마다 적용될 색상
-             *
-             * colors 는 theme 보다 우선순위를 가진다.
-             */
+            /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
-            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
+            /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
             axis: 0,
-            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
+            /** @cfg {Integer} [index=null] [Read Only] Sequence index on which brush is drawn. */
             index: null,
-            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
+            /** @cfg {boolean} [clip=true] If the brush is drawn outside of the chart, cut the area. */
             clip: true
         }
     }
@@ -10890,18 +10928,18 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [minValue=0] 표시 최소 값, minValue 보다 작으면 minValue 를 기준으로 그린다. */
+            /** @cfg {Number} [minValue=0] Sets the minimum value as it is not possible to draw a bar when the value is 0. */
 			minValue: 0,
-            /** @cfg {Number} [outerPadding=2] 바깥쪽 여백  */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] 안쪽 여백 */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1,
-            /** @cfg {Number} [active=null] */
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
 			active: null,
-            /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {"max"/"min"} [display=null]  'max', 'min' */
-			display: null // or max, min
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+			activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+			display: null
 		};
 	}
 
@@ -11184,12 +11222,8 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
-			/** @cfg {Number} [outerPadding=15] */
-			outerPadding: 15,
-			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
-			active: null,
-			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
-			activeEvent: null // or click, mouseover, ...
+			/** @cfg {Number} [outerPadding=15] Determines the outer margin of a stack bar. */
+			outerPadding: 15
 		};
 	}
 
@@ -11346,11 +11380,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		return {
             /** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
-            /** @cfg {Number} [active=null] active data index  */
-			active: null,
-            /** @cfg {Number} [activeEvent=null] active event name (click or mouseover ...) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {Boolean} [showText=false] */
+            /** @cfg {Boolean} [showText=false] Configures settings to let the percent text of a full stack bar revealed. */
 			showText: false
 		};
 	}
@@ -11549,9 +11579,9 @@ jui.define("chart.brush.bubble", [], function() {
 
     BubbleBrush.setup = function() {
         return {
-            /** @cfg {Number} [min=5] */
+            /** @cfg {Number} [min=5] Determines the minimum size of a bubble. */
             min: 5,
-            /** @cfg {Number} [max=5] */
+            /** @cfg {Number} [max=30] Determines the maximum size of a bubble.*/
             max: 30
         };
     }
@@ -11792,13 +11822,13 @@ jui.define("chart.brush.equalizer", [], function() {
 
     EqualizerBrush.setup = function() {
         return {
-            /** @cfg {Number} [innerPadding=10] */
+            /** @cfg {Number} [innerPadding=10] Determines the inner margin of an equalizer.*/
             innerPadding: 10,
-            /** @cfg {Number} [outerPadding=15] */
+            /** @cfg {Number} [outerPadding=15] Determines the outer margin of an equalizer. */
             outerPadding: 15,
-            /** @cfg {Number} [unit=5] */
+            /** @cfg {Number} [unit=5] Determines the reference value that represents the color.*/
             unit: 5,
-            /** @cfg {Number} [gap=5] */
+            /** @cfg {Number} [gap=5] Determines the number of columns in an equalizer - expressed as a color.*/
             gap: 5
         };
     }
@@ -11973,10 +12003,14 @@ jui.define("chart.brush.line", [], function() {
 
     LineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step). */
             symbol: "normal", // normal, curve, step
-            display: null,
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
             active: null,
-            activeEvent: null // or click, mouseover, ...
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            display: null
         };
     }
 
@@ -12254,13 +12288,13 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
     PieBrush.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
-            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
+            /** @cfg {Boolean} [showText=false] Set the text appear.  */
             showText: false,
-            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
+            /** @cfg {Function} [format=null] Returns a value from the format callback function of a defined option. */
             format: null,
-            /** @cfg {Boolean} [3d=false] 3d 지원 여부 체크 */
+            /** @cfg {Boolean} [3d=false] check 3d support */
             "3d" : false
         }
     }
@@ -12949,11 +12983,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] Determines the shape of a (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Boolean} [clip=false] */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };
     }
@@ -13029,11 +13063,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     ScatterPathBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] Determines the shape of a starter (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
+            /** @cfg {Number} [strokeWidth=1] Set the line thickness of a starter. */
             strokeWidth : 1
         };
     }
@@ -13117,9 +13151,9 @@ jui.define("chart.brush.bargauge", [], function() {
 
     BarGaugeBrush.setup = function() {
         return {
-            /** @cfg {Number} [cut=5] bar gauge item padding */
+            /** @cfg {Number} [cut=5] Determines the spacing of a bar gauge. */
             cut: 5,
-            /** @cfg {Number} [size=20] bar gauge item height */
+            /** @cfg {Number} [size=20] Determines the size of a bar gauge. */
             size: 20,
             /** @cfg {Function} [format=null] bar gauge format callback */
             format: null
@@ -13192,6 +13226,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     CircleGaugeBrush.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         }
     }
@@ -13345,12 +13380,19 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
     FillGaugeBrush.setup = function() {
         return {
+            /** @cfg {Number} [min=0] Determines the minimum size of a fill gauge.*/
             min: 0,
+            /** @cfg {Number} [max=100] Determines the maximum size of a fill gauge.*/
             max: 100,
+            /** @cfg {Number} [value=0] Determines the value of a fill gauge. */
             value: 0,
+            /** @cfg {String} [shape="circle"] Determines the shape of a fill gauge (circle, rectangle).*/
             shape: "circle", // or rectangle
+            /** @cfg {String} [direction="vertical"] Determines the direction in which a fill gauge is to be filled (vertical, horizontal). */
             direction: "vertical",
+            /** @cfg {String} [svg=""] Sets the shape of a fill gauge with a specified URL as an SVG tag. */
             svg: "",
+            /** @cfg {String} [path=""] Sets the shape of a fill gauge with a specified pass tag.*/
             path: ""
         };
     }
@@ -13638,11 +13680,11 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
-            /** @cfg {Number} [size=30] stroke width  */
+            /** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
 			size: 30,
-            /** @cfg {Number} [startAngle=0] start point */
+            /** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
 			startAngle: 0,
-            /** @cfg {Number} [endAngle=360]  */
+            /** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
 			endAngle: 360
 		};
 	}
@@ -13683,6 +13725,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
                 "text-anchor" : anchor,
                 "font-size" : chart.theme("gaugeTitleFontSize"),
                 "font-weight" : chart.theme("gaugeTitleFontWeight"),
+                fill : chart.theme("gaugeTitleFontColor"),
                 y: textY
             }, title).scale(textScale));
 
@@ -13750,12 +13793,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	FullGaugeBrush.setup = function() {
 		return {
-            size: 60,
-            startAngle: 0,
-            endAngle: 300,
+			/** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
+			size: 60,
+			/** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
+			startAngle: 0,
+			/** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
+			endAngle: 360,
+			/** @cfg {Boolean} [showText=true] */
             showText: true,
+			/** @cfg {Number} [titleX=0] */
             titleX: 0,
+			/** @cfg {Number} [titleY=0]  */
             titleY: 0,
+			/** @cfg {Function} [format=null] */
             format: null
 		};
 	}
@@ -13848,19 +13898,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
-			/** @cfg {Number} [min=0] */
+			/** @cfg {Number} [min=0] Determines the minimum value of a stack gauge.*/
 			min: 0,
-			/** @cfg {Number} [max=100] */
+			/** @cfg {Number} [max=100] Determines the maximum value of a stack gauge.*/
 			max: 100,
-			/** @cfg {Number} [cut=5] */
+			/** @cfg {Number} [cut=5] Determines the bar spacing of a stack gauge.*/
 			cut: 5,
-			/** @cfg {Number} [size=24] */
+			/** @cfg {Number} [size=24] Determines the bar size of a stack gauge.*/
 			size: 24,
-			/** @cfg {Number} [startAngle=-180] */
+			/** @cfg {Number} [startAngle=-180] Determines the start angle of a stack gauge.*/
 			startAngle: -180,
-			/** @cfg {Number} [endAngle=360] */
+			/** @cfg {Number} [endAngle=360] Determines the end angle of a stack gauge.*/
 			endAngle: 360,
-			/** @cfg {String} [title="title"] */
+			/** @cfg {String} [title="title"] Sets a data key to be configured as the title of a stack gauge.*/
 			title: "title"
 		};
 	}
@@ -13974,11 +14024,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
-			/** @cfg {Boolean} [line=true] */
+			/** @cfg {Boolean} [line=true] Connects with a line between columns of a waterfall.*/
 			line: true,
-			/** @cfg {Boolean} [end=false] */
+			/** @cfg {Boolean} [end=false] Sets effects for the last column of a waterfall.*/
 			end: false,
-			/** @cfg {Boolean} [outerPadding=5] */
+			/** @cfg {Boolean} [outerPadding=5] Determines the outer margin of a waterfall.*/
 			outerPadding: 5
 		};
 	}
@@ -14073,9 +14123,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
-            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
             symbol: "normal", // normal, curve, step
-            /** @cfg {Number} [split=null] 분리될 위치  */
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
             split: null
         };
     }
@@ -14214,9 +14264,9 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 	RangeColumnBrush.setup = function() {
 		return {
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a column. */
             outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a column. */
             innerPadding: 1
 		};
 	}
@@ -14289,9 +14339,9 @@ jui.define("chart.brush.rangebar", [], function() {
 
 	RangeBarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar. */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1
 		};
 	}
@@ -14388,7 +14438,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * 토폴로지를 표시할 Node 객체  
+     * TopologyNode Class
      * @extends chart.brush.core 
      */
     var TopologyNode = function(chart, axis, brush) {
@@ -14762,7 +14812,7 @@ jui.define("chart.brush.topologynode",
 
     TopologyNode.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 클립 여부*/
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
 
             // topology options
@@ -14866,10 +14916,10 @@ jui.define("chart.brush.focus", [], function() {
 
 	FocusBrush.setup = function() {
 		return {
-			/** @cfg {Integer} [start=-1] */
+			/** @cfg {Integer} [start=-1] Sets a focus start index.*/
 			start: -1,
 
-			/** @cfg {Integer} [end=-1] */
+			/** @cfg {Integer} [end=-1] Sets a focus end index. */
 			end: -1
 		};
 	}
@@ -14929,7 +14979,7 @@ jui.define("chart.brush.pin", [], function() {
         return {
             /** @cfg {Number} [size=6] */
             size: 6,
-            /** @cfg {Number} [split=0] */
+            /** @cfg {Number} [split=0] Determines a location where a pin is displayed (data index). */
             split: 0,
             /** @cfg {Boolean} [showValue=false] */
             showValue: false,
@@ -15043,14 +15093,15 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} widget */
-        
+        /** @property {Number} index [Read Only] Index which shows the sequence how a widget is drawn. */
+
         return {
             /**
-             * @cfg {Number} [brush=0] selected brush index  
+             * @cfg {Number} [brush=0] Specifies a brush index for which a widget is used.
              */
             brush: 0,
             /**
-             * @cfg {Boolean} [render=false] check whether widget redraw
+             * @cfg {Boolean} [render=false] Determines whether a widget is to be rendered.
              */            
             render: false,
             /**
@@ -15217,11 +15268,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
-            orient: "top", // or bottom, left, right
-            /** @cfg {Boolean} [all=false] */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Determines the side on which the tool tip is displayed (top, bottom, left, right). */
+            orient: "top",
+            /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
-            /** @cfg {Function} [format=false] */
+            /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null
         };
     }
@@ -15290,17 +15341,17 @@ jui.define("chart.widget.title", [], function() {
 
     TitleWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } [orient="top"]  Determines the side on which the tool tip is displayed (top, bottom, left, right). */
             orient: "top", // or bottom
-            /** @cfg {"start"/"center"/"end" } */
-            align: "center", // or start, end
-            /** @cfg {String} text 표시될 타이틀 */
+            /** @cfg {"start"/"center"/"end" } [align="center"] Aligns the title message (center, start, end).*/
+            align: "center",
+            /** @cfg {String} [text=""] Sets the title message. */
             text: "",
-            /** @cfg {Number} [dx=0] x 축과의 거리  */
+            /** @cfg {Number} [dx=0] Moves the x coordinate by a set value from the location where the chart is drawn.  */
             dx: 0,
-            /** @cfg {Number} [dy=0] y 축과의 거리  */
+            /** @cfg {Number} [dy=0] Moves the y coordinate by a set value from the location where the chart is drawn. */
             dy: 0,
-            /** @cfg {Number} [size=null] */
+            /** @cfg {Number} [size=null] Sets the title message size. */
             size: null
         }
     }
@@ -15493,13 +15544,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     LegendWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Sets the location where the label is displayed (top, bottom). */
             orient: "bottom",
-            /** @cfg {"start"/"center"/"end" } */
+            /** @cfg {"start"/"center"/"end" } Aligns the label (center, start, end). */
             align: "center", // or start, end
-            /** @cfg {Boolean} [filter=false] */
+            /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
-            /** @cfg {Boolean} [brushSync=false] */
+            /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
     }
@@ -15902,11 +15953,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     CrossWidget.setup = function() {
         return {
             /**
-             * @cfg {Function} [xFormat=null] callback function for x format
+             * @cfg {Function} [xFormat=null] Sets the format for the value on the X axis shown on the tooltip.
              */            
             xFormat: null,
             /**
-             * @cfg {Function} [yFormat=null] callback function for y format
+             * @cfg {Function} [yFormat=null] Sets the format for the value on the Y axis shown on the tooltip.
              */
             yFormat: null
         };
@@ -16056,9 +16107,9 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     TopologyControlWidget.setup = function() {
         return {
-            /** @cfg {Boolean} [move=false] */
+            /** @cfg {Boolean} [move=false] Set to be moved to see the point of view of the topology map. */
             move: false,
-            /** @cfg {Boolean} [zoom=false] */
+            /** @cfg {Boolean} [zoom=false] Set the zoom-in / zoom-out features of the topology map. */
             zoom: false
         }
     }
@@ -16216,35 +16267,49 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            /** @cfg {String/Number} [width="100%"] 차트 기본 넓이 */
-            width : "100%",
-            /** @cfg {String/Number} [height="100%"] 차트 기본 높이 */
-            height : "100%",
 
-            /** @cfg {Object} padding 차트 여백 */
-            padding : {
-                /** @cfg {Number} [padding.left=50] */
-                left : 50 ,
-                /** @cfg {Number} [padding.right=50] */
-                right : 50,
-                /** @cfg {Number} [padding.bottom=50] */
-                bottom : 50,
-                /** @cfg {Number} [padding.top=50] */
-                top : 50
+            /** @cfg  {String/Number} [width="100%"] chart width */
+            width: "100%", // chart 기본 넓이
+            /** @cfg  {String/Number} [height="100%"] chart height */
+            height: "100%", // chart 기본 높이
+            /**
+             * @cfg  {Object} padding chart padding
+             * @cfg  {Number} [padding.top=50] chart padding
+             * @cfg  {Number} [padding.bottom=50] chart padding
+             * @cfg  {Number} [padding.left=50] chart padding
+             * @cfg  {Number} [padding.right=50] chart padding
+             */
+            padding: {
+                top: 50,
+                bottom: 50,
+                left: 50,
+                right: 50
             },
 
-            /** @cfg {String} [theme=jennifer] 기본 테마 jennifer */
-            theme : "jennifer",
-            /** @cfg {Object} [style={}]  */
-            style : {},
-            /** @cfg {Object} [series={}] */
-            series : {},
-            /** @cfg {Array} [brush=[]]  */
-            brush : [],
-            /** @cfg {Array} [widget=[]] */
-            widget : [],
+            /** @cfg  {String} [theme=jennifer] chart theme  */
+            theme: "jennifer",
+            /** @cfg  {Object} style chart custom theme  */
+            style: {},
+            /** @cfg {Object} series Sets additional information for a specific data property. */
+            series: {},
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
+            brush: [],
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
+            widget: [],
 
-            /** @cfg {Object} axis  그리드 에 관한 설정 */
+            /**
+             * @cfg {Object} axis  Determines a axis to be added to a chart
+             * @cfg {Array/Function/String} [domain=null]
+             * @cfg {String} [format="hh:mm"]
+             * @cfg {String} [key="time"]
+             * @cfg {Number} [xstep=1] Set a step of x grid(date).
+             * @cfg {Number} [ystep=10] Set a step of y grid(range).
+             * @cfg {Boolean} [xline=true] Set a line option of x grid.
+             * @cfg {Boolean} [yline=true] Set a line option of y grid.
+             * @cfg {Boolean} [xhide=true] Set a hide option of x grid.
+             * @cfg {Boolean} [yhide=true] Set a hide option of y grid.
+             * @cfg {Array} [data=[]] Sets the row set data which constitute a chart.
+             */
             axis : {
                 domain : null,
                 format : "hh:mm",
@@ -16258,11 +16323,11 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 data : []
             },
 
-            /** @cfg {Number} [interval=1] 리얼타임 움직이는 시간 간격(초단위) */
-            interval : 1, // 초
+            /** @cfg {Number} [interval=1] Set moving time interval(in seconds) */
+            interval : 1, // second
 
-            /** @cfg {Number} [interval=1] 리얼타임 전체 시작과 끝 기간 (분단위) */
-            period : 5 // 분
+            /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
+            period : 5 // minute
         }
     }
 

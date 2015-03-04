@@ -58,6 +58,7 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#333",
         bargaugeBackgroundColor : "#ececec",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#333333",

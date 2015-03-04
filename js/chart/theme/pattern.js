@@ -88,6 +88,8 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         gaugeTitleFontWeight : "normal",
         /** */
+        gaugeTitleFontColor : "#333",
+        /** */
         pieBorderColor : "white",
         /** */
         bargaugeBackgroundColor : "#ececec",
