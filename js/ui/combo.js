@@ -24,14 +24,9 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/**
-	 *
-	 * Combo Class
-	 *
-	 * 		@example
-	 * 		var combo = ui.combo("#root");
-	 *
 	 * @class ui.combo
 	 * @extends core
+     * @alias Combo Box
 	 * @requires jquery
 	 * @requires util.base
 	 */
@@ -39,10 +34,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		var ui_list = null, ui_data = null;
 		var index = -1;
 
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function load(type, data) {
 			var $combo_root = ui_list["root"],
 				$combo_text = ui_list["text"],
@@ -171,13 +163,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -250,7 +236,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
 		 * Selects a button of a specified index
          *
-		 * @param {Number} index
+		 * @param {Number} Index
 		 */
 		this.setIndex = function(index) {
 			load("index", index);
@@ -261,7 +247,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
          * @method setValue
          * Selects a button having a specified value
          *
-         * @param {Mixed} value
+         * @param {Mixed} Value
          */
 		this.setValue = function(value) {
 			load("value", value);

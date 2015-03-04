@@ -1462,7 +1462,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method add
          * Adds a component object created
          *
-         * @param {Object} ui instance
+         * @param {Object} UI instance
          */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
@@ -1472,9 +1472,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event to an applicable component
          *
-         * @param {String} key (selector or ui type)
-         * @param {String} eventType
-         * @param {Array} arguments
+         * @param {String} Key (selector or ui type)
+         * @param {String} Event type
+         * @param {Array} Arguments
          */
         this.emit = function(key, type, args) {
             var targets = [];
@@ -1500,8 +1500,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method get
          * Gets a component currently created
          *
-         * @param {Integer/String}
-         * @returns {Object/Array}
+         * @param {Integer/String} Key
+         * @returns {Object/Array} UI instance
          */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
@@ -1534,7 +1534,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method getAll
          * Gets all components currently created
          *
-         * @return {Array}
+         * @return {Array} UI instances
          */
 		this.getAll = function() {
 			return instances;
@@ -1544,8 +1544,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method remove
          * Removes a component object in an applicable index from the list
          *
-         * @param {Integer} index
-         * @return {Object} removed instance
+         * @param {Integer} Index
+         * @return {Object} Removed instance
          */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
@@ -1567,7 +1567,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method pop
          * Removes the first component object from the list
          *
-         * @return {Object} removed instance
+         * @return {Object} Removed instance
          */
         this.pop = function() {
             return instances.pop();
@@ -1586,10 +1586,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method debug
          *
-         * @param {Object} ui instance
+         * @param {Object} UI instance
          * @param {Number} i
          * @param {Number} j
-         * @param {Function} callback
+         * @param {Function} Callback
          */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
@@ -1647,7 +1647,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method debugAll
          * debugs all component objects currently existing
          *
-         * @param {Function} callback
+         * @param {Function} Callback
          */
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
@@ -1663,7 +1663,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addClass
          * Adds a component class
          *
-         * @param {Object} ui class
+         * @param {Object} UI Class
          */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
@@ -1673,7 +1673,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method getClass
          * Gets a component class
          *
-         * @param {String/Integer} key
+         * @param {String/Integer} Key
          * @return {Object}
          */
 		this.getClass = function(key) {
@@ -1704,9 +1704,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method create
          * It is possible to create a component dynamically after the ready point
          *
-         * @param {String} ui type
-         * @param {String/DOMElement} selector
-         * @param {Object} options
+         * @param {String} UI type
+         * @param {String/DOMElement} Selector
+         * @param {Object} Options
          * @return {Object}
          */
         this.create = function(type, selector, options) {
@@ -1845,10 +1845,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	/** 
 	 * @class core
-     * 각각의 UI별 공통 메소드 (메모리 공유)
-	 * 예를 들어 테이블 UI 객체일 경우에 해당되는 모든 요소는 UI 객체에 공유된다.
-     * @alias UICore
+     * Core classes for all of the components
      *
+     * @alias UICore
 	 */
 	var UICore = function() {
         var vo = null;
@@ -1857,7 +1856,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method find
          * Get the child element of the root element
          *
-         * @param {String/HTMLElement} selector
+         * @param {String/HTMLElement} Selector
          * @returns {*|jQuery}
          */
         this.find = function(selector) {
@@ -1868,8 +1867,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method emit
          * Generates a custom event. The first parameter is the type of a custom event. A function defined as an option or on method is called
          *
-         * @param {String} event type
-         * @param {Function} arguments
+         * @param {String} Event type
+         * @param {Function} Arguments
          * @return {Mixed}
          */
         this.emit = function(type, args) {
@@ -1892,8 +1891,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method on
          * A callback function defined as an on method is run when an emit method is called
          *
-         * @param {String} event type
-         * @param {Function} callback
+         * @param {String} Event type
+         * @param {Function} Callback
          */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
@@ -1904,7 +1903,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method off
          * Removes a custom event of an applicable type or callback handler
          *
-         * @param {String} event type
+         * @param {String} Event type
          */
         this.off = function(type) {
             var event = [];
@@ -1925,9 +1924,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addEvent
          * Defines a browser event of a DOM element
          *
-         * @param {String/HTMLElement} selector
-         * @param {String} dom event type
-         * @param {Function} calback
+         * @param {String/HTMLElement} Selector
+         * @param {String} Dom event type
+         * @param {Function} Callback
          */
         this.addEvent = function() {
             this.listen.add(arguments);
@@ -1937,8 +1936,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addTrigger
          * Generates an applicable event to a DOM element
          *
-         * @param {String/HTMLElement} selector
-         * @param {String} domEventType
+         * @param {String/HTMLElement} Selector
+         * @param {String} Dom event type
          */
         this.addTrigger = function(selector, type) {
             this.listen.trigger(selector, type);
@@ -1948,8 +1947,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method addValid
          * Check the parameter type of a UI method and generates an alarm when a wrong value is entered
          *
-         * @param {String} method name
-         * @param {Array} arguments
+         * @param {String} Method name
+         * @param {Array} Arguments
          */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
@@ -1972,8 +1971,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callBefore
          * Sets a callback function that is called before a UI method is run
          *
-         * @param {String} method name
-         * @param {Function} callback
+         * @param {String} Method name
+         * @param {Function} Callback
          * @return {Mixed}
          */
         this.callBefore = function(name, callback) {
@@ -1998,8 +1997,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callAfter
          * Sets a callback function that is called after a UI method is run
          *
-         * @param {String} method name
-         * @param {Function} callback
+         * @param {String} Method name
+         * @param {Function} Callback
          * @return {Mixed}
          */
         this.callAfter = function(name, callback) {
@@ -2023,8 +2022,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method callDelay
          * Sets a callback function and the delay time before/after a UI method is run
          *
-         * @param {String} method name
-         * @param {Function} callback
+         * @param {String} Method name
+         * @param {Function} Callback
          */
         this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
             if(!this.__proto__) return;
@@ -2062,8 +2061,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setTpl
          * Dynamically defines the template method of a UI
          *
-         * @param {String} template name
-         * @param {String} template markup
+         * @param {String} Template name
+         * @param {String} Template markup
          */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
@@ -2088,8 +2087,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
          * @method setOption
          * Dynamically defines the options of a UI
          *
-         * @param {String} key
-         * @param {Mixed} value
+         * @param {String} Key
+         * @param {Mixed} Value
          */
         this.setOption = function(key, value) {
             if(typeof(key) == "object") {
@@ -2140,17 +2139,17 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.root = this;
                 /** @property {Object} options */
                 mainObj.init.prototype.options = opts;
-                /** @property {Object} template */
+                /** @property {Object} tpl Templates */
                 mainObj.init.prototype.tpl = {};
-                /** @property {Array} custom event */
+                /** @property {Array} event Custom events */
                 mainObj.init.prototype.event = new Array(); // Custom Event
-                /** @property {Object} dom event */
+                /** @property {Object} listen Dom events */
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
-                /** @property {Integer} timestamp */
+                /** @property {Integer} timestamp UI Instance creation time*/
                 mainObj.init.prototype.timestamp = new Date().getTime();
-                /** @property {Integer} index */
+                /** @property {Integer} index Index of UI instance*/
                 mainObj.init.prototype.index = index;
-                /** @property {Class} ui module */
+                /** @property {Class} module Module class */
                 mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
@@ -4592,15 +4591,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
 
-		// Private
-		/**
-		 * @private
-		 * @method _setting
-		 * @param type
-		 * @param e
-		 * @param order
-		 * @private
-		 */
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
@@ -4649,8 +4639,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 	/**
 	 * @class ui.button
-	 * implements checkbox, radio button
-     *
 	 * @extends core
 	 * @alias Button
 	 * @requires jquery
@@ -4659,9 +4647,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 	var UI = function() {
 		var ui_list = {};
 
-		/**
-		 * @constructor
-		 */
 		this.init = function() {
             var self = this, opts = this.options;
 			
@@ -4680,7 +4665,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
          * Selects a button of a specified index
          *
-		 * @param {Array} indexList index list for button check
+		 * @param {Array} Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -4695,7 +4680,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method setValue
          * Selects a button with a specified value
          *
-		 * @param valueList value list for button check
+		 * @param Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -4720,8 +4705,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 * @method getValue
          * Gets the value of the button currently selected
          *
-		 * @return {Array}  return value list if it is check button
-		 * @return {Object}  return one value if it is radio button
+		 * @return {Array} Values
+		 * @return {Object} Value
 		 */
 		this.getValue = function() {
             var data = this.getData();
@@ -4757,13 +4742,13 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 			type: "radio",
 
 			/**
-			 * @cfg
+			 * @cfg {Integer} [index=0]
 			 * Determines an initial selection button with a specified index
 			 */
 			index: 0,
 
 			/**
-			 * @cfg
+			 * @cfg {String} [index=""]
 			 * Determines an initial selection button with a specified value
 			 */
 			value: ""
@@ -4806,14 +4791,9 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/**
-	 *
-	 * Combo Class
-	 *
-	 * 		@example
-	 * 		var combo = ui.combo("#root");
-	 *
 	 * @class ui.combo
 	 * @extends core
+     * @alias Combo Box
 	 * @requires jquery
 	 * @requires util.base
 	 */
@@ -4821,10 +4801,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		var ui_list = null, ui_data = null;
 		var index = -1;
 
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function load(type, data) {
 			var $combo_root = ui_list["root"],
 				$combo_text = ui_list["text"],
@@ -4953,13 +4930,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -5032,7 +5003,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		 * @method setIndex
 		 * Selects a button of a specified index
          *
-		 * @param {Number} index
+		 * @param {Number} Index
 		 */
 		this.setIndex = function(index) {
 			load("index", index);
@@ -5043,7 +5014,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
          * @method setValue
          * Selects a button having a specified value
          *
-         * @param {Mixed} value
+         * @param {Mixed} Value
          */
 		this.setValue = function(value) {
 			load("value", value);
@@ -5199,12 +5170,10 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.datepicker
-     * implements date picker
      * @extends core
-     * @alias DatePicker
+     * @alias Date Picker
      * @requires jquery
      * @requires util.base
-     *
      */
     var UI = function() {
     	var year = null, month = null, date = null,
@@ -5212,10 +5181,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var $head = null, $body = null;
 
 
-        /**
-         * Private Methods
-         *
-         */
         function setCalendarEvent(self) {
             self.addEvent($head.children(".prev"), "click", function(e) {
                 self.prev(e);
@@ -5413,12 +5378,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             return { objs: objs, nums: nums };
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
-
         this.init = function() {
             $head = $(this.root).children(".head");
             $body = $(this.root).children(".body");
@@ -5429,7 +5388,14 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             // 기본 날짜 설정
             this.select(this.options.date);
         }
-        
+
+        /**
+         * @method page
+         * Outputs a calendar that fits the year/month entered
+         *
+         * @param {Integer} Year
+         * @param {Integer} Month
+         */
         this.page = function(y, m) {
             if(arguments.length == 0) return;
             var opts = this.options;
@@ -5455,6 +5421,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             $head.children(".title").html(_.dateFormat(getCalendarDate(this), opts.titleFormat));
         }
 
+        /**
+         * @method prev
+         * Outputs a calendar that fits the previous year/month
+         *
+         */
         this.prev = function(e) {
             var opts = this.options;
 
@@ -5471,7 +5442,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             
             this.emit("prev", [ e ]);
         }
-        
+
+        /**
+         * @method next
+         * Outputs a calendar that fits the next year/month
+         *
+         */
         this.next = function(e) {
             var opts = this.options;
 
@@ -5488,7 +5464,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             this.emit("next", [ e ]);
         }
-        
+
+        /**
+         * @method select
+         * Selects today if there is no value, or selects a date applicable to a timestamp or year/month/date
+         *
+         * @param {"year"/"month"/"date"/"timestamp"/"Date"}
+         */
         this.select = function() {
         	var opts = this.options,
         		args = arguments;
@@ -5520,20 +5502,44 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 this.addTrigger(items[y], "click");
             }
         }
-        
+
+        /**
+         * @method addTime
+         * Selects a date corresponding to the time added to the currently selected date
+         *
+         * @param {"Integer"/"Date"} Timestamp or Date
+         */
         this.addTime = function(time) {
         	selDate = new Date(this.getTime() + time);
         	this.select(this.getTime());
         }
 
+        /**
+         * @method getDate
+         * Gets the value of the date currently selected
+         *
+         * @return {Date} Date object
+         */
         this.getDate = function() {
             return selDate;
         }
 
+        /**
+         * @method getTime
+         * Gets the timestamp value of the date currently selected
+         *
+         * @return {Integer} Timestamp
+         */
         this.getTime = function() {
             return selDate.getTime();
         }
 
+        /**
+         * @method getFormat
+         * Gets a date string that fits the format entered
+         *
+         * @return {String} Formatted date string
+         */
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
@@ -5543,11 +5549,35 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var now = getStartDate(new Date());
 
         return {
+            /**
+             * @cfg {"daily"/"monthly"/"yearly"} [type="daily"]
+             * Determines the type of a calendar
+             */
             type: "daily",
+
+            /**
+             * @cfg {String} [titleFormat="yyyy.MM"]
+             * Title format of a calendar
+             */
             titleFormat: "yyyy.MM",
+
+            /**
+             * @cfg {String} [format="yyyy-MM-dd"]
+             * Format of the date handed over when selecting a specific date
+             */
             format: "yyyy-MM-dd",
+
+            /**
+             * @cfg {Date} [date="now"]
+             * Selects a specific date as a basic
+             */
             date: now,
-            animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * @deprecated
+             */
+            animate: false
         };
     }
 
@@ -6994,7 +7024,6 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
      * @extends core
      * @alias Accordion
      * @requires jquery
-     *
      */
     var UI = function() {
         var activeIndex = 0;
@@ -7043,6 +7072,12 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             setTitleEvent(this);
         }
 
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled node
+         *
+         * @return {Integer} Index
+         */
         this.activeIndex = function() {
             return activeIndex;
         }
@@ -7050,10 +7085,35 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [index=null]
+             * Sets an enabled node
+             */
             index: null,
+
+            /**
+             * @cfg {Boolean} [autoFold=false]
+             * When you click on a node, the node folding
+             */
             autoFold: false
         }
     }
+
+    /**
+     * @event open
+     * When a node is opened, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
+
+    /**
+     * @event fold
+     * When a node is closed, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
 
     return UI;
 });
