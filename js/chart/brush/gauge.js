@@ -7,18 +7,18 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
      *  
      * @extends chart.brush.donut
      */
-	var GaugeBrush = function(chart, axis, brush) {
+	var GaugeBrush = function() {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
         function createText(startAngle, endAngle, min, max, value, unit) {
-			var g = chart.svg.group({
+			var g = self.chart.svg.group({
 				"class" : "gauge text"
 			}).translate(centerX, centerY);
 
-			g.append(chart.svg.text({
+			g.append(self.chart.svg.text({
 				x : 0,
-				y : (brush.arrow) ? 70 : 10,
+				y : (self.brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
 				"font-size" : "3em",
 				"font-weight" : 1000,
@@ -26,13 +26,13 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			}, value + ""));
 
 			if (unit != "") {
-				g.append(chart.text({
+				g.append(self.chart.text({
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
 					"font-size" : "1.5em",
 					"font-weight" : 500,
-					"fill" : chart.theme("gaugeFontColor")
+					"fill" : self.chart.theme("gaugeFontColor")
 				}, unit))
 			}
 
@@ -46,22 +46,22 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             startX = obj.x;
             startY = obj.y;
 
-            g.append(chart.text({
+            g.append(self.chart.text({
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-				"fill" : chart.theme("gaugeFontColor")
+				"fill" : self.chart.theme("gaugeFontColor")
             }, min + ""));
 
 			// max
 			// outer arc 에 대한 지점 설정
             var obj = math.rotate(startX, startY, math.radian(endAngle));
     
-            g.append(chart.text({
+            g.append(self.chart.text({
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-				"fill" : chart.theme("gaugeFontColor")
+				"fill" : self.chart.theme("gaugeFontColor")
             }, max + ""));
 
 			return g;
@@ -88,16 +88,18 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				min = this.getValue(data, "min", 0),
 				unit = this.getValue(data, "unit");
 
+			var startAngle = this.brush.startAngle;
+			var endAngle = this.brush.endAngle;
 
-			var rate = (value - min) / (max - min),
-				currentAngle = brush.endAngle * rate;
-
-			if (brush.endAngle >= 360) {
-				brush.endAngle = 359.99999;
+			if (endAngle >= 360) {
+				endAngle = 359.99999;
 			}
 
-			if (currentAngle > brush.endAngle) {
-				currentAngle = brush.endAngle;
+			var rate = (value - min) / (max - min),
+				currentAngle = endAngle * rate;
+
+			if (currentAngle > endAngle) {
+				currentAngle = endAngle;
 			}
 
 			var width = obj.width,
@@ -109,23 +111,23 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			w = Math.min(width, height) / 2;
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
-			outerRadius = w - brush.size/2;
-			innerRadius = outerRadius - brush.size;
+			outerRadius = w - this.brush.size/2;
+			innerRadius = outerRadius - this.brush.size;
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				fill : "transparent",
-				stroke : chart.theme("gaugeBackgroundColor")
+				stroke : this.chart.theme("gaugeBackgroundColor")
 			}));
 
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
 				fill : "transparent",
 				stroke : this.color(0)
 			}));
 
 
 			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
-			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
+			group.append(createText(startAngle, endAngle, min, max, value, unit));
 
 			return group;
 		}
