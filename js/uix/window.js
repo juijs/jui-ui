@@ -2,7 +2,8 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
     /**
      * @class uix.window
-     * implements Window Component
+     * The window is a layer component that can replace pop-ups
+     *
      * @extends core
      * @alias Window
      * @requires jquery
@@ -18,22 +19,11 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			info = {},
 			ui_modal = null;
 
-		
-		/**
-		 * Private Methods
-		 *
-		 */
 		function setBodyResize() {
 			var bottom = (info.$foot.length < 1) ? 5 : info.$foot.outerHeight();
 			info.$body.outerHeight(info.$root.outerHeight() - info.$head.outerHeight() - bottom);
 		}
-		
-		
-		/**
-		 * Public Methods
-		 *
-		 */
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -135,7 +125,11 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 				ui_modal = modal(self.root, $.extend({ autoHide: false }, modalOpts));
 			}
 		}
-		
+
+        /**
+         * @method hide
+         * Hides a window
+         */
 		this.hide = function() {
 			if(ui_modal) ui_modal.hide();
 			else info.$root.hide();
@@ -143,7 +137,14 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			this.emit("hide");
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a window at specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.show = function(x, y) {
 			if(ui_modal) ui_modal.show();
 			else info.$root.show();
@@ -155,31 +156,65 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
 			setBodyResize();
 		}
-		
+
+        /**
+         * @method move
+         * Moves a window at specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.move = function(x, y) {
 			info.$root.css("left", x);
 			info.$root.css("top", y);
 		}
-		
+
+        /**
+         * @method update
+         * Changes the markup in the body area of a window
+         *
+         * @param {String} html
+         */
 		this.update = function(html) {
 			info.$body.empty().html(html);
 		}
-		
+
+        /**
+         * @method setTitle
+         * Changes the markup of the title tag in the head area of a window
+         *
+         * @param {String} title
+         */
 		this.setTitle = function(html) {
 			info.$head.find(".title").empty().html(html);
 		}
-		
+
+        /**
+         * @method setSize
+         * Changes the horizontal/vertical size of a window
+         *
+         * @param {Integer} width
+         * @param {Integer} height
+         */
 		this.setSize = function(w, h) {
 			info.$root.width(w);
 			info.$root.height(h);
 			
 			setBodyResize();
 		}
-		
+
+        /**
+         * @method resize
+         * Designates a scroll area if there is a lot of content in the window body area
+         */
 		this.resize = function() {
 			setBodyResize();
 		}
 
+        /**
+         * @method resizeModal
+         * Re-adjust the location of a modal window
+         */
         this.resizeModal = function() {
             if(!ui_modal) return;
 
@@ -189,19 +224,99 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [width=400]
+             * Determines the horizontal size of a window
+             */
 			width: 400,
+
+            /**
+             * @cfg {Integer} [height=300]
+             * Determines the height of a window
+             */
 			height: 300,
+
+            /**
+             * @cfg {String/Integer} [left="auto"]
+             * Determines the X coordinate of a window
+             */
 			left: "auto",
+
+            /**
+             * @cfg {String/Integer} [top="auto"]
+             * Determines the Y coordinate of a window
+             */
 			top: "auto",
+
+            /**
+             * @cfg {String/Integer} [right="auto"]
+             * Determines the X coordinate based on the right side of a window
+             */
 			right: "auto",
+
+            /**
+             * @cfg {String/Integer} [bottom="auto"]
+             * Determines the Y coordinate based on the bottom side of a window
+             */
 			bottom: "auto",
+
+            /**
+             * @cfg {Boolean} [modal=false]
+             * Applies a modal UI to a window
+             */
 			modal: false,
+
+            /**
+             * @cfg {Boolean} [move=true]
+             * It is possible to move a window
+             */
 			move: true,
+
+            /**
+             * @cfg {Boolean} [resize=true]
+             * It is possible to resize a window
+             */
 			resize: true,
+
+            /**
+             * @cfg {Integer} [modalIndex=0]
+             * Determines the z-index property of a modal UI
+             */
 			modalIndex: 0,
-			animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * Determines whether to use the animation effect of a UI
+             *
+             * @deprecated
+             */
+			animate: false
         }
     }
+
+    /**
+     * @event show
+     * Event that occurs when a window is shown
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a window is hidden
+     */
+
+    /**
+     * @event move
+     * Event that occurs when a window is moved
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event resize
+     * Event that occurs when a window is resized
+     *
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
