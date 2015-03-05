@@ -19,6 +19,8 @@ jui.define("chart.brush.column3d", [], function() {
                 for(var j = 0; j < brush.target.length; j++) {
                     var xy = axis.c(i, data[brush.target[j]], j);
 
+                    console.log(axis.c.depth, axis.c.angle, xy.x, xy.y);
+
                     g.append(this.chart.svg.circle({
                         r: 3,
                         fill: this.color(j),

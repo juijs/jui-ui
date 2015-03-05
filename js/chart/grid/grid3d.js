@@ -11,7 +11,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
         var self = this,
             depth = 0,
             angle = 0,
-            split = 0;
+            split = 0,
+            step = 0;
 
         /**
          * @method drawBefore
@@ -20,9 +21,12 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          *
          */
         this.drawBefore = function() {
+            var domain = this.grid.domain;
+
             depth = this.axis.get("depth");
             angle = this.axis.get("angle");
-            split = depth / this.grid.step;
+            step = _.typeCheck("array", domain) ? domain.length : 1;
+            split = depth / step;
 
             /**
              * @method scale
@@ -34,26 +38,25 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
                 var radian = math.radian(360 - angle);
 
                 return function(x, y, z) {
-                    var z = (!z) ? 0 : z,
-                        c = split * z;
+                    if(z == undefined || step == 1) {
+                        return {
+                            x: self.axis.x(x),
+                            y: self.axis.y(y)
+                        }
+                    } else {
+                        var z = (z == undefined) ? 0 : z,
+                            c = split * z;
 
-                    if(z > 0) {
                         return {
                             x: self.axis.x(x) + Math.cos(radian) * c,
-                            y: self.axis.y(y) + Math.sin(radian) * c,
-                            depth: split,
-                            angle: angle
+                            y: self.axis.y(y) + Math.sin(radian) * c
                         }
-                    }
-
-                    return {
-                        x: self.axis.x(x),
-                        y: self.axis.y(y),
-                        depth: split,
-                        angle: angle
                     }
                 }
             })(this.axis);
+
+            this.scale.depth = split;
+            this.scale.angle = angle;
         }
 
         /**
@@ -103,14 +106,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
                     y2 = attr.y1 + Math.sin(radian) * depth,
                     x2 = attr.x1 + Math.cos(radian) * depth;
 
-                if(i == 0) {
-                    self.axis.x.root.append(self.line({
-                        x1 : x2,
-                        y1 : y2,
-                        x2 : x2 + attr.x2,
-                        y2 : y2
-                    }));
-                } else if(i > 1) {
+                if(i > 1) {
                     // Y축 라인 속성 가져오기
                     var yAttr = self.axis.y.root.get(0).attributes;
 
@@ -136,8 +132,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     Grid3D.setup = function() {
         return {
-            /** @cfg {Number} [step=1] */
-            step: 1
+            /** @cfg {Array} [domain=null] */
+            domain: null
         }
     }
     
