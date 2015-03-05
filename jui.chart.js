@@ -3721,42 +3721,6 @@ jui.define("util.svg.element.path.rect", [ "util.math" ], function(math) {
                 .ClosePath()
                 .join();
         }
-
-        this.rect3d = function(width, height, degree, depth) {
-            var radian = math.radian(degree),
-                x1 = 0, y1 = 0,
-                w1 = width, h1 = height;
-
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1;
-
-            var w2 = width + x2,
-                h2 = height + y2;
-
-            var g = svg.group({
-                width: w2,
-                height: h2
-            }, function() {
-                this.MoveTo(x2, x1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .LineTo(x1, y2);
-
-                this.MoveTo(x1, y2)
-                    .LineTo(x1, h2)
-                    .LineTo(w1, h2)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-
-                this.MoveTo(w1, h2)
-                    .LineTo(w2, h1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-            });
-
-            return g;
-        }
     }
 
     return PathRectElement;
@@ -3788,9 +3752,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
+    function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
 
     /**
      * @class util.svg
@@ -4512,6 +4476,59 @@ jui.define("util.svg",
     return SVG;
 });
 
+jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ], function(_, math, color, SVGUtil) {
+    var SVG3D = function(rootElem, rootAttr) {
+        var svg = new SVGUtil(rootElem, rootAttr);
+
+        // SVG 유틸 상속
+        this.__proto__ = svg;
+
+        // 3D 사각형 그리기
+        this.__proto__["rect3d"] = function(fill, width, height, angle, depth) {
+            var radian = math.radian(angle),
+                x1 = 0,
+                y1 = 0,
+                w1 = width,
+                h1 = height;
+
+            var x2 = (Math.cos(radian) * depth) + x1,
+                y2 = (Math.sin(radian) * depth) + y1,
+                w2 = width + x2,
+                h2 = height + y2;
+
+            var g = svg.group({
+                width: w2,
+                height: h2
+            }, function() {
+                svg.path({
+                    fill: color.lighten(fill, 0.15)
+                }).MoveTo(x2, x1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .LineTo(x1, y2);
+
+                svg.path({
+                    fill: fill
+                }).MoveTo(x1, y2)
+                    .LineTo(x1, h2)
+                    .LineTo(w1, h2)
+                    .LineTo(w1, y2);
+
+                svg.path({
+                    fill: color.darken(fill, 0.2)
+                }).MoveTo(w1, h2)
+                    .LineTo(w2, h1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2);
+            });
+
+            return g;
+        }
+    }
+
+    return SVG3D;
+});
+
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
@@ -5068,7 +5085,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     return Axis;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
     /**
@@ -10100,7 +10117,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle);
+                var radian = math.radian(360 - angle),
+                    top = Math.sin(radian) * split;
 
                 return function(x, y, z) {
                     if(z == undefined || step == 1) {
@@ -10114,7 +10132,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
                         return {
                             x: self.axis.x(x) + Math.cos(radian) * c,
-                            y: self.axis.y(y) + Math.sin(radian) * c
+                            y: (self.axis.y(y) + Math.sin(radian) * c) + top
                         }
                     }
                 }
@@ -10426,13 +10444,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param {Function} callback
          */
-        this.eachData = function(callback) {
+        this.eachData = function(callback, reverse) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
-
-            for(var index = 0, len = list.length; index < len; index++) {
-                callback.call(this, index, list[index]);
+            if(reverse === true) {
+                for(var len = list.length - 1; len >= 0; len--) {
+                    callback.call(this, len, list[len]);
+                }
+            } else {
+                for(var index = 0, len = list.length; index < len; index++) {
+                    callback.call(this, index, list[index]);
+                }
             }
         }
 
@@ -11080,30 +11103,43 @@ jui.define("chart.brush.column3d", [], function() {
      */
 	var Column3DBrush = function(chart, axis, brush) {
 		var g;
+        var width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+            width = axis.x.rangeBand() - brush.outerPadding;
 		}
 
 		this.draw = function() {
-			this.eachData(function(i, data) {
+            this.eachData(function(i, data) {
                 for(var j = 0; j < brush.target.length; j++) {
-                    var xy = axis.c(i, data[brush.target[j]], j);
+                    var value = data[brush.target[j]],
+                        xy = axis.c(i, value, j),
+                        zeroXY = axis.c(i, 0, j);
 
-                    console.log(axis.c.depth, axis.c.angle, xy.x, xy.y);
+                    var startY = xy.y,
+                        height = Math.abs(zeroXY.y - startY),
+                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.angle, axis.c.depth - brush.innerPadding);
 
-                    g.append(this.chart.svg.circle({
-                        r: 3,
-                        fill: this.color(j),
-                        cx: xy.x + 1.5,
-                        cy: xy.y + 1.5
-                    }));
+                    r.translate(xy.x - width / 2, startY);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
                 }
-			});
+            }, true);
 
             return g;
 		}
 	}
+
+    Column3DBrush.setup = function() {
+        return {
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar */
+            outerPadding: 3,
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar */
+            innerPadding: 3
+        };
+    }
 
 	return Column3DBrush;
 }, "chart.brush.core");

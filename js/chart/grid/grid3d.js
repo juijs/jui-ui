@@ -35,7 +35,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle);
+                var radian = math.radian(360 - angle),
+                    top = Math.sin(radian) * split;
 
                 return function(x, y, z) {
                     if(z == undefined || step == 1) {
@@ -49,7 +50,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
                         return {
                             x: self.axis.x(x) + Math.cos(radian) * c,
-                            y: self.axis.y(y) + Math.sin(radian) * c
+                            y: (self.axis.y(y) + Math.sin(radian) * c) + top
                         }
                     }
                 }

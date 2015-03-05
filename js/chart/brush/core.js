@@ -219,13 +219,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param {Function} callback
          */
-        this.eachData = function(callback) {
+        this.eachData = function(callback, reverse) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
-
-            for(var index = 0, len = list.length; index < len; index++) {
-                callback.call(this, index, list[index]);
+            if(reverse === true) {
+                for(var len = list.length - 1; len >= 0; len--) {
+                    callback.call(this, len, list[len]);
+                }
+            } else {
+                for(var index = 0, len = list.length; index < len; index++) {
+                    callback.call(this, index, list[index]);
+                }
             }
         }
 

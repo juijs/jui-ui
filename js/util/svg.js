@@ -528,42 +528,6 @@ jui.define("util.svg.element.path.rect", [ "util.math" ], function(math) {
                 .ClosePath()
                 .join();
         }
-
-        this.rect3d = function(width, height, degree, depth) {
-            var radian = math.radian(degree),
-                x1 = 0, y1 = 0,
-                w1 = width, h1 = height;
-
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1;
-
-            var w2 = width + x2,
-                h2 = height + y2;
-
-            var g = svg.group({
-                width: w2,
-                height: h2
-            }, function() {
-                this.MoveTo(x2, x1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .LineTo(x1, y2);
-
-                this.MoveTo(x1, y2)
-                    .LineTo(x1, h2)
-                    .LineTo(w1, h2)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-
-                this.MoveTo(w1, h2)
-                    .LineTo(w2, h1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-            });
-
-            return g;
-        }
     }
 
     return PathRectElement;
@@ -595,9 +559,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
+    function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
 
     /**
      * @class util.svg
