@@ -18554,43 +18554,50 @@ jui.define("chart.brush.column", [], function() {
 	return ColumnBrush;
 }, "chart.brush.bar");
 
-jui.define("chart.brush.column3d", [ "util.math" ], function(math) {
+jui.define("chart.brush.column3d", [], function() {
 
     /**
      * @class chart.brush.column3d
-     *
-     * implements column brush
-     *
-     * @extends chart.brush.bar
+     * @extends chart.brush.core
      */
 	var Column3DBrush = function(chart, axis, brush) {
 		var g;
-        var width;
+        var width, col_width;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-            width = axis.x.rangeBand() - brush.outerPadding;
+            width = axis.x.rangeBand();
+            col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            col_width = (col_width < 0) ? 0 : col_width;
 		}
 
 		this.draw = function() {
             var count = brush.target.length;
 
             this.eachData(function(i, data) {
+                var zeroXY = axis.c(i, 0),
+                    startX = zeroXY.x - (width - brush.outerPadding * 2) / 2;
+
                 for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
-                        xy = axis.c(i, value, j, count),
-                        zeroXY = axis.c(i, 0, j, count);
+                        xy = axis.c(i, value);
 
-                    var startY = xy.y,
-                        height = Math.abs(zeroXY.y - startY),
-                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - brush.innerPadding);
+                    var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = chart.svg.rect3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
 
-                    r.translate(xy.x - (width / 2), startY - (Math.sin(axis.c.radian) * brush.innerPadding));
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(startX, startY);
 
                     // 그룹에 컬럼 엘리먼트 추가
-                    g.prepend(r);
+                    g.append(r);
+
+                    startX += col_width + brush.innerPadding;
                 }
-            }, true);
+            });
 
             return g;
 		}
@@ -18598,10 +18605,8 @@ jui.define("chart.brush.column3d", [ "util.math" ], function(math) {
 
     Column3DBrush.setup = function() {
         return {
-            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar */
-            outerPadding: 3,
-            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar */
-            innerPadding: 3
+            outerPadding: 10,
+            innerPadding: 5
         };
     }
 
@@ -18795,6 +18800,60 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 	return ColumnStackBrush;
 }, "chart.brush.stackbar");
+
+jui.define("chart.brush.stackcolumn3d", [ "util.math" ], function(math) {
+
+    /**
+     * @class chart.brush.stackcolumn3d
+     *
+     * implements column brush
+     *
+     * @extends chart.brush.bar
+     */
+    var StackColumn3DBrush = function(chart, axis, brush) {
+        var g;
+        var width;
+
+        this.drawBefore = function() {
+            g = chart.svg.group();
+            width = axis.x.rangeBand() - brush.outerPadding * 2;
+        }
+
+        this.draw = function() {
+            var count = brush.target.length;
+
+            this.eachData(function(i, data) {
+                for(var j = 0; j < count; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(i, value, j, count),
+                        zeroXY = axis.c(i, 0, j, count),
+                        padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
+
+                    var startX = xy.x - (width / 2),
+                        startY = xy.y - (Math.sin(axis.c.radian) * padding),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+
+                    r.translate(startX, startY);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
+                }
+            }, true);
+
+            return g;
+        }
+    }
+
+    StackColumn3DBrush.setup = function() {
+        return {
+            outerPadding: 5,
+            innerPadding: 5
+        };
+    }
+
+    return StackColumn3DBrush;
+}, "chart.brush.core");
 
 jui.define("chart.brush.fullstackbar", [], function() {
 
