@@ -4501,21 +4501,24 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                 height: h2
             }, function() {
                 svg.path({
-                    fill: color.lighten(fill, 0.15)
+                    fill: color.lighten(fill, 0.15),
+                    stroke: color.lighten(fill, 0.15)
                 }).MoveTo(x2, x1)
                     .LineTo(w2, y1)
                     .LineTo(w1, y2)
                     .LineTo(x1, y2);
 
                 svg.path({
-                    fill: fill
+                    fill: fill,
+                    stroke: fill
                 }).MoveTo(x1, y2)
                     .LineTo(x1, h2)
                     .LineTo(w1, h2)
                     .LineTo(w1, y2);
 
                 svg.path({
-                    fill: color.darken(fill, 0.2)
+                    fill: color.darken(fill, 0.2),
+                    stroke: color.darken(fill, 0.2)
                 }).MoveTo(w1, h2)
                     .LineTo(w2, h1)
                     .LineTo(w2, y1)
