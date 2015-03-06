@@ -385,8 +385,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             shift: 1,
             /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
             page: 1,
-            /** @cfg {Number} [angle=0]  Set angle of 3d chart */
-            angle: 0,
+
+            /** @cfg {Number} [degree=0]  Set degree of 3d chart */
+            degree: 0,
             /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
             depth: 0
         }

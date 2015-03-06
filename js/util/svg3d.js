@@ -6,8 +6,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
         this.__proto__ = svg;
 
         // 3D 사각형 그리기
-        this.__proto__["rect3d"] = function(fill, width, height, angle, depth) {
-            var radian = math.radian(angle),
+        this.rect3d = function(fill, width, height, degree, depth) {
+            var radian = math.radian(degree),
                 x1 = 0,
                 y1 = 0,
                 w1 = width,

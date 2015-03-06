@@ -1,4 +1,4 @@
-jui.define("chart.brush.column3d", [], function() {
+jui.define("chart.brush.column3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.column3d
@@ -17,17 +17,19 @@ jui.define("chart.brush.column3d", [], function() {
 		}
 
 		this.draw = function() {
+            var count = brush.target.length;
+
             this.eachData(function(i, data) {
-                for(var j = 0; j < brush.target.length; j++) {
+                for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
-                        xy = axis.c(i, value, j),
-                        zeroXY = axis.c(i, 0, j);
+                        xy = axis.c(i, value, j, count),
+                        zeroXY = axis.c(i, 0, j, count);
 
                     var startY = xy.y,
                         height = Math.abs(zeroXY.y - startY),
-                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.angle, axis.c.depth - brush.innerPadding);
+                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - brush.innerPadding);
 
-                    r.translate(xy.x - width / 2, startY);
+                    r.translate(xy.x - (width / 2), startY - (Math.sin(axis.c.radian) * brush.innerPadding));
 
                     // 그룹에 컬럼 엘리먼트 추가
                     g.prepend(r);

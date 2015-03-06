@@ -4484,8 +4484,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
         this.__proto__ = svg;
 
         // 3D 사각형 그리기
-        this.__proto__["rect3d"] = function(fill, width, height, angle, depth) {
-            var radian = math.radian(angle),
+        this.rect3d = function(fill, width, height, degree, depth) {
+            var radian = math.radian(degree),
                 x1 = 0,
                 y1 = 0,
                 w1 = width,
@@ -5075,8 +5075,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             shift: 1,
             /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
             page: 1,
-            /** @cfg {Number} [angle=0]  Set angle of 3d chart */
-            angle: 0,
+
+            /** @cfg {Number} [degree=0]  Set degree of 3d chart */
+            degree: 0,
             /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
             depth: 0
         }
@@ -7775,7 +7776,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				axis = (orient == "left" || orient == "right") ? area.y : area.x,
 				max = (orient == "left" || orient == "right") ? height : width,
                 depth = this.axis.get("depth"),
-                angle = this.axis.get("angle"),
+                degree = this.axis.get("degree"),
 				start = axis,
 				size = max,
                 end = start + size;
@@ -7786,8 +7787,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
                 end: end
             };
 
-            if(depth > 0 || angle > 0) {
-                var radian = math.radian(360 - angle),
+            if(depth > 0 || degree > 0) {
+                var radian = math.radian(360 - degree),
                     x2 = Math.cos(radian) * depth,
                     y2 = Math.sin(radian) * depth;
 
@@ -10092,9 +10093,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
     var Grid3D = function() {
         var self = this,
             depth = 0,
-            angle = 0,
-            split = 0,
-            step = 0;
+            degree = 0,
+            radian = 0;
 
         /**
          * @method drawBefore
@@ -10103,12 +10103,9 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          *
          */
         this.drawBefore = function() {
-            var domain = this.grid.domain;
-
             depth = this.axis.get("depth");
-            angle = this.axis.get("angle");
-            step = _.typeCheck("array", domain) ? domain.length : 1;
-            split = depth / step;
+            degree = this.axis.get("degree");
+            radian = math.radian(360 - degree);
 
             /**
              * @method scale
@@ -10117,29 +10114,33 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle),
-                    top = Math.sin(radian) * split;
+                return function(x, y, z, count) {
+                    var step = _.typeCheck("integer", count) ? count : 1,
+                        split = depth / step;
 
-                return function(x, y, z) {
                     if(z == undefined || step == 1) {
                         return {
                             x: self.axis.x(x),
-                            y: self.axis.y(y)
+                            y: self.axis.y(y),
+                            depth: split
                         }
                     } else {
                         var z = (z == undefined) ? 0 : z,
-                            c = split * z;
+                            c = split * z,
+                            top = Math.sin(radian) * split;
 
                         return {
                             x: self.axis.x(x) + Math.cos(radian) * c,
-                            y: (self.axis.y(y) + Math.sin(radian) * c) + top
+                            y: (self.axis.y(y) + Math.sin(radian) * c) + top,
+                            depth: split
                         }
                     }
                 }
             })(this.axis);
 
-            this.scale.depth = split;
-            this.scale.angle = angle;
+            this.scale.depth = depth;
+            this.scale.degree = degree;
+            this.scale.radian = radian;
         }
 
         /**
@@ -10152,8 +10153,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
-            var radian = math.radian(360 - angle),
-                y2 = Math.sin(radian) * depth,
+            var y2 = Math.sin(radian) * depth,
                 x2 = Math.cos(radian) * depth;
 
             this.axis.y.root.each(function(i, elem) {
@@ -11092,7 +11092,7 @@ jui.define("chart.brush.column", [], function() {
 	return ColumnBrush;
 }, "chart.brush.bar");
 
-jui.define("chart.brush.column3d", [], function() {
+jui.define("chart.brush.column3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.column3d
@@ -11111,17 +11111,19 @@ jui.define("chart.brush.column3d", [], function() {
 		}
 
 		this.draw = function() {
+            var count = brush.target.length;
+
             this.eachData(function(i, data) {
-                for(var j = 0; j < brush.target.length; j++) {
+                for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
-                        xy = axis.c(i, value, j),
-                        zeroXY = axis.c(i, 0, j);
+                        xy = axis.c(i, value, j, count),
+                        zeroXY = axis.c(i, 0, j, count);
 
                     var startY = xy.y,
                         height = Math.abs(zeroXY.y - startY),
-                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.angle, axis.c.depth - brush.innerPadding);
+                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - brush.innerPadding);
 
-                    r.translate(xy.x - width / 2, startY);
+                    r.translate(xy.x - (width / 2), startY - (Math.sin(axis.c.radian) * brush.innerPadding));
 
                     // 그룹에 컬럼 엘리먼트 추가
                     g.prepend(r);

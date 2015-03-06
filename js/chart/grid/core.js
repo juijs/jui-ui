@@ -187,7 +187,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				axis = (orient == "left" || orient == "right") ? area.y : area.x,
 				max = (orient == "left" || orient == "right") ? height : width,
                 depth = this.axis.get("depth"),
-                angle = this.axis.get("angle"),
+                degree = this.axis.get("degree"),
 				start = axis,
 				size = max,
                 end = start + size;
@@ -198,8 +198,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
                 end: end
             };
 
-            if(depth > 0 || angle > 0) {
-                var radian = math.radian(360 - angle),
+            if(depth > 0 || degree > 0) {
+                var radian = math.radian(360 - degree),
                     x2 = Math.cos(radian) * depth,
                     y2 = Math.sin(radian) * depth;
 

@@ -10,9 +10,8 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
     var Grid3D = function() {
         var self = this,
             depth = 0,
-            angle = 0,
-            split = 0,
-            step = 0;
+            degree = 0,
+            radian = 0;
 
         /**
          * @method drawBefore
@@ -21,12 +20,9 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          *
          */
         this.drawBefore = function() {
-            var domain = this.grid.domain;
-
             depth = this.axis.get("depth");
-            angle = this.axis.get("angle");
-            step = _.typeCheck("array", domain) ? domain.length : 1;
-            split = depth / step;
+            degree = this.axis.get("degree");
+            radian = math.radian(360 - degree);
 
             /**
              * @method scale
@@ -35,29 +31,33 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
              *
              */
             this.scale = (function() {
-                var radian = math.radian(360 - angle),
-                    top = Math.sin(radian) * split;
+                return function(x, y, z, count) {
+                    var step = _.typeCheck("integer", count) ? count : 1,
+                        split = depth / step;
 
-                return function(x, y, z) {
                     if(z == undefined || step == 1) {
                         return {
                             x: self.axis.x(x),
-                            y: self.axis.y(y)
+                            y: self.axis.y(y),
+                            depth: split
                         }
                     } else {
                         var z = (z == undefined) ? 0 : z,
-                            c = split * z;
+                            c = split * z,
+                            top = Math.sin(radian) * split;
 
                         return {
                             x: self.axis.x(x) + Math.cos(radian) * c,
-                            y: (self.axis.y(y) + Math.sin(radian) * c) + top
+                            y: (self.axis.y(y) + Math.sin(radian) * c) + top,
+                            depth: split
                         }
                     }
                 }
             })(this.axis);
 
-            this.scale.depth = split;
-            this.scale.angle = angle;
+            this.scale.depth = depth;
+            this.scale.degree = degree;
+            this.scale.radian = radian;
         }
 
         /**
@@ -70,8 +70,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
-            var radian = math.radian(360 - angle),
-                y2 = Math.sin(radian) * depth,
+            var y2 = Math.sin(radian) * depth,
                 x2 = Math.cos(radian) * depth;
 
             this.axis.y.root.each(function(i, elem) {
