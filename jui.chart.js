@@ -4528,6 +4528,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
             return g;
         }
     }
+  
+    SVG3D.createElement = SVGUtil.createElement;
 
     return SVG3D;
 });
@@ -13882,7 +13884,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
 				fill : "transparent",
-				stroke : this.color(0)
+				stroke : this.color(index)
 			}));
 
 
@@ -13999,7 +14001,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
-				stroke : this.color(0),
+				stroke : this.color(index),
 				fill : "transparent"
 			}));
 

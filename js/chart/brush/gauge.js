@@ -122,7 +122,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
 				fill : "transparent",
-				stroke : this.color(0)
+				stroke : this.color(index)
 			}));
 
 
