@@ -1,19 +1,19 @@
-jui.define("chart.brush.stackcolumn3d", [ "util.math" ], function(math) {
+jui.define("chart.brush.stackbar3d", [ "util.math" ], function(math) {
 
     /**
-     * @class chart.brush.stackcolumn3d
+     * @class chart.brush.stackbar3d
      *
      * implements column brush
      *
      * @extends chart.brush.bar
      */
-    var StackColumn3DBrush = function(chart, axis, brush) {
+    var StackBar3DBrush = function(chart, axis, brush) {
         var g;
-        var width;
+        var height;
 
         this.drawBefore = function() {
             g = chart.svg.group();
-            width = axis.x.rangeBand() - brush.outerPadding * 2;
+            height = axis.y.rangeBand() - brush.outerPadding * 2;
         }
 
         this.draw = function() {
@@ -22,36 +22,35 @@ jui.define("chart.brush.stackcolumn3d", [ "util.math" ], function(math) {
             this.eachData(function(i, data) {
                 for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
-                        xy = axis.c(i, value, j, count),
-                        zeroXY = axis.c(i, 0, j, count),
+                        xy = axis.c(value, i, j, count),
+                        zeroXY = axis.c(0, i, j, count),
                         padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
 
-                    var startX = xy.x - (width / 2),
-                        startY = xy.y - (Math.sin(axis.c.radian) * padding),
-                        height = Math.abs(zeroXY.y - xy.y),
+                    var startY = xy.y - (height / 2) + (padding / 2),
+                        width = Math.abs(zeroXY.x - xy.x),
                         r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
                     }
 
-                    r.translate(startX, startY);
+                    r.translate(zeroXY.x, startY);
 
                     // 그룹에 컬럼 엘리먼트 추가
                     g.prepend(r);
                 }
-            }, true);
+            });
 
             return g;
         }
     }
 
-    StackColumn3DBrush.setup = function() {
+    StackBar3DBrush.setup = function() {
         return {
             outerPadding: 5,
             innerPadding: 5
         };
     }
 
-    return StackColumn3DBrush;
+    return StackBar3DBrush;
 }, "chart.brush.core");
