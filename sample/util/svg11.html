@@ -18,14 +18,22 @@
 <script>
 
 jui.ready([ "util.svg3d" ], function(SVGUtil) {
-    svg = new SVGUtil($("#svg").get(0), { width: 1300, height: 500 });
+    svg = new SVGUtil($("#svg").get(0), { width: 1300, height: 200 });
     r = svg.rect3d("#CC0000", 50, 100, 30, 100);
     svg.render();
+
+    svg2 = new SVGUtil($("#svg2").get(0), { width: 1300, height: 200 });
+    r = svg2.cylinder3d("#CC0000", 50, 100, 30);
+    svg2.render();
 });
 </script>
 </head>
 <body class="jui">
     <h3>SVG 1</h3>
     <div id="svg"></div>
+    <br/>
+
+    <h3>SVG 2</h3>
+    <div id="svg2"></div>
 </body>
 </html>
