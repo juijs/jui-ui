@@ -10985,64 +10985,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 	return BarBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.bar3d", [], function() {
-
-    /**
-     * @class chart.brush.bar3d
-     * @extends chart.brush.core
-     */
-	var Bar3DBrush = function(chart, axis, brush) {
-		var g;
-        var height, col_height;
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-            height = axis.y.rangeBand();
-            col_height = (height - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_height = (col_height < 0) ? 0 : col_height;
-		}
-
-		this.draw = function() {
-            var count = brush.target.length;
-
-            this.eachData(function(i, data) {
-                var zeroXY = axis.c(0, i),
-                    startY = zeroXY.y - (height - brush.outerPadding * 2) / 2;
-
-                for(var j = 0; j < count; j++) {
-                    var value = data[brush.target[j]],
-                        xy = axis.c(value, i),
-                        top = Math.sin(axis.c.radian) * xy.depth,
-                        width = Math.abs(zeroXY.x - xy.x),
-                        r = chart.svg.rect3d(this.color(j), width, col_height, axis.c.degree, xy.depth);
-
-                    if(value != 0) {
-                        this.addEvent(r, i, j);
-                    }
-
-                    r.translate(zeroXY.x, startY + top);
-
-                    // 그룹에 컬럼 엘리먼트 추가
-                    g.prepend(r);
-
-                    startY += col_height + brush.innerPadding;
-                }
-            });
-
-            return g;
-		}
-	}
-
-    Bar3DBrush.setup = function() {
-        return {
-            outerPadding: 10,
-            innerPadding: 5
-        };
-    }
-
-	return Bar3DBrush;
-}, "chart.brush.core");
-
 jui.define("chart.brush.column", [], function() {
 
     /**
@@ -11154,6 +11096,64 @@ jui.define("chart.brush.column", [], function() {
 
 	return ColumnBrush;
 }, "chart.brush.bar");
+
+jui.define("chart.brush.bar3d", [], function() {
+
+    /**
+     * @class chart.brush.bar3d
+     * @extends chart.brush.core
+     */
+	var Bar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, col_height;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            col_height = (height - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            col_height = (col_height < 0) ? 0 : col_height;
+		}
+
+		this.draw = function() {
+            var count = brush.target.length;
+
+            this.eachData(function(i, data) {
+                var zeroXY = axis.c(0, i),
+                    startY = zeroXY.y - (height - brush.outerPadding * 2) / 2;
+
+                for(var j = 0; j < count; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = Math.abs(zeroXY.x - xy.x),
+                        r = chart.svg.rect3d(this.color(j), width, col_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
+
+                    startY += col_height + brush.innerPadding;
+                }
+            });
+
+            return g;
+		}
+	}
+
+    Bar3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            innerPadding: 5
+        };
+    }
+
+	return Bar3DBrush;
+}, "chart.brush.core");
 
 jui.define("chart.brush.column3d", [], function() {
 
@@ -11511,6 +11511,127 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	return ColumnStackBrush;
 }, "chart.brush.stackbar");
 
+jui.define("chart.brush.stackbar3d", [], function() {
+
+    /**
+     * @class chart.brush.stackbar3d
+     * @extends chart.brush.core
+     */
+	var StackBar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, bar_height;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            bar_height = height - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startY = axis.c(0, i).y - bar_height / 2,
+                    col_width = 0;
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = Math.abs(zeroXY.x - xy.x),
+                        r = chart.svg.rect3d(this.color(j), width, bar_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x + col_width, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.append(r);
+
+                    col_width += width;
+                }
+
+                if(value != 0) {
+                    this.addEvent(group, i, j);
+                }
+
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    StackBar3DBrush.setup = function() {
+        return {
+            outerPadding: 10
+        };
+    }
+
+	return StackBar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.stackcolumn3d", [], function() {
+
+    /**
+     * @class chart.brush.stackcolumn3d
+     * @extends chart.brush.core
+     */
+	var StackColumn3DBrush = function(chart, axis, brush) {
+		var g;
+        var width, bar_width;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            width = axis.x.rangeBand();
+            bar_width = width - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startX = axis.c(i, 0).x - bar_width / 2,
+                    col_height = 0;
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(i, value);
+
+                    var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+
+                    r.translate(startX, startY - col_height);
+                    group.append(r);
+
+                    col_height += height;
+                }
+
+                if(value != 0) {
+                    this.addEvent(group, i, j);
+                }
+
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    StackColumn3DBrush.setup = function() {
+        return {
+            outerPadding: 10
+        };
+    }
+
+	return StackColumn3DBrush;
+}, "chart.brush.core");
+
 jui.define("chart.brush.fullstackbar", [], function() {
 
     /**
@@ -11629,7 +11750,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		}
 
 		this.draw = function() {
-			var chart_height = chart.area("height");
+			var chart_height = axis.area("height");
 
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
@@ -11689,6 +11810,162 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 	return FullStackColumnBrush;
 }, "chart.brush.fullstackbar");
+
+jui.define("chart.brush.fullstackbar3d", [], function() {
+
+    /**
+     * @class chart.brush.fullstackbar3d
+     * @extends chart.brush.core
+     */
+	var FullStackBar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, bar_height;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            bar_height = height - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+        this.drawText = function(percent, x, y) {
+            var text = this.chart.text({
+                x : x,
+                y : y,
+                "text-anchor" : "middle"
+            }, percent + "%");
+
+            return text;
+        }
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startY = axis.c(0, i).y - bar_height / 2,
+                    col_width = 0,
+                    sum = 0,
+                    list = [];
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var width = data[brush.target[j]];
+
+                    sum += width;
+                    list.push(width);
+                }
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = axis.x.rate(list[j], sum),
+                        r = chart.svg.rect3d(this.color(j), width, bar_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x + col_width, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    group.append(r);
+
+                    // 퍼센트 노출 옵션 설정
+                    if(brush.showText) {
+                        var p = Math.round((list[j] / sum) * axis.x.max()),
+                            x = col_width + width / 2,
+                            y = startY + bar_height / 2 + 5;
+
+                        group.append(this.drawText(p, x, y));
+                    }
+
+                    col_width += width;
+                }
+
+                this.addEvent(group, i, j);
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    FullStackBar3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            showText: false
+        };
+    }
+
+	return FullStackBar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.fullstackcolumn3d", [], function() {
+
+    /**
+     * @class chart.brush.fullstackcolumn3d
+     * @extends chart.brush.core
+     */
+	var FullStackColumn3DBrush = function(chart, axis, brush) {
+		var g;
+        var width, bar_width;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            width = axis.x.rangeBand();
+            bar_width = width - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startX = axis.c(i, 0).x - bar_width / 2,
+                    startY = zeroXY.y,
+                    sum = 0,
+                    list = [];
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var height = data[brush.target[j]];
+
+                    sum += height;
+                    list.push(height);
+                }
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(i, value),
+                        top = Math.sin(axis.c.radian) * xy.depth;
+
+                    var height = zeroXY.y - axis.y.rate(list[j], sum),
+                        r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+
+                    r.translate(startX, startY - height + top);
+                    group.append(r);
+
+                    // 퍼센트 노출 옵션 설정
+                    if(brush.showText) {
+                        var p = Math.round((list[j] / sum) * axis.y.max()),
+                            x = startX + bar_width / 2,
+                            y = startY - height / 2 + 6;
+
+                        group.append(this.drawText(p, x, y));
+                    }
+
+                    startY -= height;
+                }
+
+                this.addEvent(group, i, j);
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+	return FullStackColumn3DBrush;
+}, "chart.brush.fullstackbar3d");
 
 jui.define("chart.brush.bubble", [], function() {
 

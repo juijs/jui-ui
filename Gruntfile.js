@@ -82,15 +82,19 @@ module.exports = function(grunt) {
         // chart.brush
         "js/chart/brush/core.js",
         "js/chart/brush/bar.js",
-        "js/chart/brush/bar3d.js",
         "js/chart/brush/column.js", // extends bar
+        "js/chart/brush/bar3d.js",
         "js/chart/brush/column3d.js",
         "js/chart/brush/clusterbar3d.js",
         "js/chart/brush/clustercolumn3d.js",
         "js/chart/brush/stackbar.js", // extends bar
         "js/chart/brush/stackcolumn.js", // extends stackbar
+        "js/chart/brush/stackbar3d.js",
+        "js/chart/brush/stackcolumn3d.js",
         "js/chart/brush/fullstackbar.js", // extends stackbar
         "js/chart/brush/fullstackcolumn.js", // extends fullstackbar
+        "js/chart/brush/fullstackbar3d.js",
+        "js/chart/brush/fullstackcolumn3d.js",
         "js/chart/brush/bubble.js",
         "js/chart/brush/candlestick.js",
         "js/chart/brush/ohlc.js",
