@@ -287,8 +287,8 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.registerTask("js", [ "concat", "uglify" ]);
-    grunt.registerTask("css", [ "less", "cssmin", "icon", "pattern" ]);
+    grunt.registerTask("js", [ "icon", "pattern", "concat", "uglify" ]);
+    grunt.registerTask("css", [ "less", "cssmin" ]);
     grunt.registerTask("test", [ "qunit" ]);
     grunt.registerTask("default", [ "css", "test", "js" ]);
 };

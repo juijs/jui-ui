@@ -78,7 +78,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			}));
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
-				stroke : this.color(0),
+				stroke : this.color(index),
 				fill : "transparent"
 			}));
 
