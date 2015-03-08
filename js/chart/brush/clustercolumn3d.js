@@ -1,13 +1,10 @@
-jui.define("chart.brush.stackcolumn3d", [ "util.math" ], function(math) {
+jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
     /**
-     * @class chart.brush.stackcolumn3d
-     *
-     * implements column brush
-     *
+     * @class chart.brush.clustercolumn3d
      * @extends chart.brush.bar
      */
-    var StackColumn3DBrush = function(chart, axis, brush) {
+    var ClusterColumn3DBrush = function(chart, axis, brush) {
         var g;
         var width;
 
@@ -46,12 +43,12 @@ jui.define("chart.brush.stackcolumn3d", [ "util.math" ], function(math) {
         }
     }
 
-    StackColumn3DBrush.setup = function() {
+    ClusterColumn3DBrush.setup = function() {
         return {
             outerPadding: 5,
             innerPadding: 5
         };
     }
 
-    return StackColumn3DBrush;
+    return ClusterColumn3DBrush;
 }, "chart.brush.core");

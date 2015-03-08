@@ -85,10 +85,10 @@ module.exports = function(grunt) {
         "js/chart/brush/bar3d.js",
         "js/chart/brush/column.js", // extends bar
         "js/chart/brush/column3d.js",
+        "js/chart/brush/clusterbar3d.js",
+        "js/chart/brush/clustercolumn3d.js",
         "js/chart/brush/stackbar.js", // extends bar
-        "js/chart/brush/stackbar3d.js",
         "js/chart/brush/stackcolumn.js", // extends stackbar
-        "js/chart/brush/stackcolumn3d.js",
         "js/chart/brush/fullstackbar.js", // extends stackbar
         "js/chart/brush/fullstackcolumn.js", // extends fullstackbar
         "js/chart/brush/bubble.js",
