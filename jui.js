@@ -4491,8 +4491,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                 w1 = width,
                 h1 = height;
 
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1,
+            var x2 = Math.cos(radian) * depth,
+                y2 = Math.sin(radian) * depth,
                 w2 = width + x2,
                 h2 = height + y2;
 
@@ -4526,9 +4526,11 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
         }
 
         // 3D 타원 그리기
-        this.cylinder3d = function(fill, width, height, depth) {
-            var r = width / 2,
-                d = depth / 2,
+        this.cylinder3d = function(fill, width, height, degree, depth) {
+            var radian = math.radian(degree),
+                r = width / 2,
+                l = (Math.cos(radian) * depth) / 2,
+                d = (Math.sin(radian) * depth) / 2,
                 key = _.createId("cylinder3d");
 
             var g = svg.group({}, function() {
@@ -4540,7 +4542,7 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     ry: d,
                     cx: r,
                     cy: height
-                });
+                }).translate(l, d);
 
                 svg.path({
                     fill: "url(#" + key + ")",
@@ -4550,7 +4552,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     .LineTo(0, height)
                     .Arc(r, d, 0, 0, 0, width, height)
                     .LineTo(width, d)
-                    .Arc(r, d, 0, 0, 1, 0, d);
+                    .Arc(r, d, 0, 0, 1, 0, d)
+                    .translate(l, d);
 
                 svg.ellipse({
                     fill: color.lighten(fill, 0.2),
@@ -4560,7 +4563,7 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     ry: d,
                     cx: r,
                     cy: d
-                });
+                }).translate(l, d);
 
                 svg.linearGradient({
                     id: key,
@@ -18705,12 +18708,18 @@ jui.define("chart.brush.column3d", [], function() {
                     startX = zeroXY.x - (width - brush.outerPadding * 2) / 2;
 
                 for(var j = 0; j < count; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value);
 
                     var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
-                        height = Math.abs(zeroXY.y - xy.y),
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        r = chart.svg.cylinder3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
+                    }
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -18731,6 +18740,7 @@ jui.define("chart.brush.column3d", [], function() {
 
     Column3DBrush.setup = function() {
         return {
+            symbol: "rectangle", // or cylinder
             outerPadding: 10,
             innerPadding: 5
         };
@@ -18813,15 +18823,21 @@ jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
             this.eachData(function(i, data) {
                 for(var j = 0; j < count; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value, j, count),
                         zeroXY = axis.c(i, 0, j, count),
                         padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
 
                     var startX = xy.x - (width / 2),
                         startY = xy.y - (Math.sin(axis.c.radian) * padding),
-                        height = Math.abs(zeroXY.y - xy.y),
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        r = chart.svg.cylinder3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+                    }
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -18840,6 +18856,7 @@ jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
     ClusterColumn3DBrush.setup = function() {
         return {
+            symbol: "rectangle",
             outerPadding: 5,
             innerPadding: 5
         };
@@ -19124,12 +19141,20 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
                     col_height = 0;
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]],
-                        xy = axis.c(i, value);
+                    var r = null,
+                        value = data[brush.target[j]],
+                        xy = axis.c(i, value),
+                        top = Math.sin(axis.c.radian) * xy.depth;
 
-                    var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
-                        height = Math.abs(zeroXY.y - xy.y),
+                    var startY = xy.y + top,
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        var h = (j > 0) ? height - top : height;
+                        r = chart.svg.cylinder3d(this.color(j), bar_width, h, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+                    }
 
                     r.translate(startX, startY - col_height);
                     group.append(r);
@@ -19150,6 +19175,7 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
 
     StackColumn3DBrush.setup = function() {
         return {
+            symbol: "rectangle",
             outerPadding: 10
         };
     }
@@ -19459,12 +19485,18 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                 }
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value),
-                        top = Math.sin(axis.c.radian) * xy.depth;
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        height = zeroXY.y - axis.y.rate(list[j], sum);
 
-                    var height = zeroXY.y - axis.y.rate(list[j], sum),
+                    if(brush.symbol == "cylinder") {
+                        var h = (j > 0) ? height - top : height;
+                        r = chart.svg.cylinder3d(this.color(j), bar_width, h, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+                    }
 
                     r.translate(startX, startY - height + top);
                     group.append(r);
@@ -19474,6 +19506,11 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                         var p = Math.round((list[j] / sum) * axis.y.max()),
                             x = startX + bar_width / 2,
                             y = startY - height / 2 + 6;
+
+                        if(brush.symbol == "cylinder") {
+                            x += (Math.cos(axis.c.radian) * xy.depth) / 2;
+                            y -= (j > 0) ? top : 0;
+                        }
 
                         group.append(this.drawText(p, x, y));
                     }
@@ -19488,6 +19525,14 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
             return g;
 		}
 	}
+
+    FullStackColumn3DBrush.setup = function() {
+        return {
+            symbol : "rectangle",
+            outerPadding: 10,
+            showText: false
+        };
+    }
 
 	return FullStackColumn3DBrush;
 }, "chart.brush.fullstackbar3d");

@@ -23,12 +23,18 @@ jui.define("chart.brush.column3d", [], function() {
                     startX = zeroXY.x - (width - brush.outerPadding * 2) / 2;
 
                 for(var j = 0; j < count; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value);
 
                     var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
-                        height = Math.abs(zeroXY.y - xy.y),
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        r = chart.svg.cylinder3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
+                    }
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -49,6 +55,7 @@ jui.define("chart.brush.column3d", [], function() {
 
     Column3DBrush.setup = function() {
         return {
+            symbol: "rectangle", // or cylinder
             outerPadding: 10,
             innerPadding: 5
         };

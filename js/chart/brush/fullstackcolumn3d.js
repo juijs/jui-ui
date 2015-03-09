@@ -32,12 +32,18 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                 }
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value),
-                        top = Math.sin(axis.c.radian) * xy.depth;
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        height = zeroXY.y - axis.y.rate(list[j], sum);
 
-                    var height = zeroXY.y - axis.y.rate(list[j], sum),
+                    if(brush.symbol == "cylinder") {
+                        var h = (j > 0) ? height - top : height;
+                        r = chart.svg.cylinder3d(this.color(j), bar_width, h, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+                    }
 
                     r.translate(startX, startY - height + top);
                     group.append(r);
@@ -47,6 +53,11 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                         var p = Math.round((list[j] / sum) * axis.y.max()),
                             x = startX + bar_width / 2,
                             y = startY - height / 2 + 6;
+
+                        if(brush.symbol == "cylinder") {
+                            x += (Math.cos(axis.c.radian) * xy.depth) / 2;
+                            y -= (j > 0) ? top : 0;
+                        }
 
                         group.append(this.drawText(p, x, y));
                     }
@@ -61,6 +72,14 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
             return g;
 		}
 	}
+
+    FullStackColumn3DBrush.setup = function() {
+        return {
+            symbol : "rectangle",
+            outerPadding: 10,
+            showText: false
+        };
+    }
 
 	return FullStackColumn3DBrush;
 }, "chart.brush.fullstackbar3d");

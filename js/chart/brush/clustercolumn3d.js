@@ -18,15 +18,21 @@ jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
             this.eachData(function(i, data) {
                 for(var j = 0; j < count; j++) {
-                    var value = data[brush.target[j]],
+                    var r = null,
+                        value = data[brush.target[j]],
                         xy = axis.c(i, value, j, count),
                         zeroXY = axis.c(i, 0, j, count),
                         padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
 
                     var startX = xy.x - (width / 2),
                         startY = xy.y - (Math.sin(axis.c.radian) * padding),
-                        height = Math.abs(zeroXY.y - xy.y),
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        r = chart.svg.cylinder3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+                    }
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -45,6 +51,7 @@ jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
     ClusterColumn3DBrush.setup = function() {
         return {
+            symbol: "rectangle",
             outerPadding: 5,
             innerPadding: 5
         };

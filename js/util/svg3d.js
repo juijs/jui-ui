@@ -13,8 +13,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                 w1 = width,
                 h1 = height;
 
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1,
+            var x2 = Math.cos(radian) * depth,
+                y2 = Math.sin(radian) * depth,
                 w2 = width + x2,
                 h2 = height + y2;
 
@@ -48,9 +48,11 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
         }
 
         // 3D 타원 그리기
-        this.cylinder3d = function(fill, width, height, depth) {
-            var r = width / 2,
-                d = depth / 2,
+        this.cylinder3d = function(fill, width, height, degree, depth) {
+            var radian = math.radian(degree),
+                r = width / 2,
+                l = (Math.cos(radian) * depth) / 2,
+                d = (Math.sin(radian) * depth) / 2,
                 key = _.createId("cylinder3d");
 
             var g = svg.group({}, function() {
@@ -62,7 +64,7 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     ry: d,
                     cx: r,
                     cy: height
-                });
+                }).translate(l, d);
 
                 svg.path({
                     fill: "url(#" + key + ")",
@@ -72,7 +74,8 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     .LineTo(0, height)
                     .Arc(r, d, 0, 0, 0, width, height)
                     .LineTo(width, d)
-                    .Arc(r, d, 0, 0, 1, 0, d);
+                    .Arc(r, d, 0, 0, 1, 0, d)
+                    .translate(l, d);
 
                 svg.ellipse({
                     fill: color.lighten(fill, 0.2),
@@ -82,7 +85,7 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
                     ry: d,
                     cx: r,
                     cy: d
-                });
+                }).translate(l, d);
 
                 svg.linearGradient({
                     id: key,

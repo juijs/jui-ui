@@ -23,12 +23,20 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
                     col_height = 0;
 
                 for(var j = 0; j < brush.target.length; j++) {
-                    var value = data[brush.target[j]],
-                        xy = axis.c(i, value);
+                    var r = null,
+                        value = data[brush.target[j]],
+                        xy = axis.c(i, value),
+                        top = Math.sin(axis.c.radian) * xy.depth;
 
-                    var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
-                        height = Math.abs(zeroXY.y - xy.y),
+                    var startY = xy.y + top,
+                        height = Math.abs(zeroXY.y - xy.y);
+
+                    if(brush.symbol == "cylinder") {
+                        var h = (j > 0) ? height - top : height;
+                        r = chart.svg.cylinder3d(this.color(j), bar_width, h, axis.c.degree, xy.depth);
+                    } else {
                         r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
+                    }
 
                     r.translate(startX, startY - col_height);
                     group.append(r);
@@ -49,6 +57,7 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
 
     StackColumn3DBrush.setup = function() {
         return {
+            symbol: "rectangle",
             outerPadding: 10
         };
     }
