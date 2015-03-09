@@ -4,39 +4,36 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
      * @class chart.brush.stackcolumn3d
      * @extends chart.brush.core
      */
-	var StackColumn3DBrush = function(chart, axis, brush) {
+	var StackColumn3DBrush = function() {
 		var g;
         var width, bar_width;
         var zeroXY;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-            width = axis.x.rangeBand();
-            bar_width = width - brush.outerPadding * 2;
-            zeroXY = axis.c(0, 0);
+			g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
+            bar_width = width - this.brush.outerPadding * 2;
+            zeroXY = this.axis.c(0, 0);
 		}
+
+        this.drawMain = function(index, width, height, degree, depth) {
+            return this.chart.svg.rect3d(this.color(index), width, height, degree, depth);
+        }
 
 		this.draw = function() {
             this.eachData(function(i, data) {
-                var group = chart.svg.group(),
-                    startX = axis.c(i, 0).x - bar_width / 2,
+                var group = this.chart.svg.group(),
+                    startX = this.axis.c(i, 0).x - bar_width / 2,
                     col_height = 0;
 
-                for(var j = 0; j < brush.target.length; j++) {
-                    var r = null,
-                        value = data[brush.target[j]],
-                        xy = axis.c(i, value),
-                        top = Math.sin(axis.c.radian) * xy.depth;
+                for(var j = 0; j < this.brush.target.length; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value),
+                        top = Math.sin(this.axis.c.radian) * xy.depth;
 
                     var startY = xy.y + top,
-                        height = Math.abs(zeroXY.y - xy.y);
-
-                    if(brush.symbol == "cylinder") {
-                        var h = (j > 0) ? height - top : height;
-                        r = chart.svg.cylinder3d(this.color(j), bar_width, h, axis.c.degree, xy.depth);
-                    } else {
-                        r = chart.svg.rect3d(this.color(j), bar_width, height, axis.c.degree, xy.depth);
-                    }
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
 
                     r.translate(startX, startY - col_height);
                     group.append(r);
@@ -57,7 +54,6 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
 
     StackColumn3DBrush.setup = function() {
         return {
-            symbol: "rectangle",
             outerPadding: 10
         };
     }

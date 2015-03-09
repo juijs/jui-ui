@@ -4,37 +4,35 @@ jui.define("chart.brush.column3d", [], function() {
      * @class chart.brush.column3d
      * @extends chart.brush.core
      */
-	var Column3DBrush = function(chart, axis, brush) {
+	var Column3DBrush = function() {
 		var g;
         var width, col_width;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-            width = axis.x.rangeBand();
-            col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+			g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
+            col_width = (width - this.brush.outerPadding * 2 - (this.brush.target.length - 1) * this.brush.innerPadding) / this.brush.target.length;
             col_width = (col_width < 0) ? 0 : col_width;
 		}
 
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.rect3d(color, width, height, degree, depth);
+        }
+
 		this.draw = function() {
-            var count = brush.target.length;
+            var count = this.brush.target.length;
 
             this.eachData(function(i, data) {
-                var zeroXY = axis.c(i, 0),
-                    startX = zeroXY.x - (width - brush.outerPadding * 2) / 2;
+                var zeroXY = this.axis.c(i, 0),
+                    startX = zeroXY.x - (width - this.brush.outerPadding * 2) / 2;
 
                 for(var j = 0; j < count; j++) {
-                    var r = null,
-                        value = data[brush.target[j]],
-                        xy = axis.c(i, value);
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value);
 
-                    var startY = xy.y + (Math.sin(axis.c.radian) * xy.depth),
-                        height = Math.abs(zeroXY.y - xy.y);
-
-                    if(brush.symbol == "cylinder") {
-                        r = chart.svg.cylinder3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
-                    } else {
-                        r = chart.svg.rect3d(this.color(j), col_width, height, axis.c.degree, xy.depth);
-                    }
+                    var startY = xy.y + (Math.sin(this.axis.c.radian) * xy.depth),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(this.color(j), col_width, height, this.axis.c.degree, xy.depth);
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -45,7 +43,7 @@ jui.define("chart.brush.column3d", [], function() {
                     // 그룹에 컬럼 엘리먼트 추가
                     g.append(r);
 
-                    startX += col_width + brush.innerPadding;
+                    startX += col_width + this.brush.innerPadding;
                 }
             });
 
@@ -55,7 +53,6 @@ jui.define("chart.brush.column3d", [], function() {
 
     Column3DBrush.setup = function() {
         return {
-            symbol: "rectangle", // or cylinder
             outerPadding: 10,
             innerPadding: 5
         };

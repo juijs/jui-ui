@@ -1,38 +1,36 @@
-jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
+jui.define("chart.brush.clustercolumn3d", [], function() {
 
     /**
      * @class chart.brush.clustercolumn3d
      * @extends chart.brush.bar
      */
-    var ClusterColumn3DBrush = function(chart, axis, brush) {
+    var ClusterColumn3DBrush = function() {
         var g;
         var width;
 
         this.drawBefore = function() {
-            g = chart.svg.group();
-            width = axis.x.rangeBand() - brush.outerPadding * 2;
+            g = this.chart.svg.group();
+            width = this.axis.x.rangeBand() - this.brush.outerPadding * 2;
+        }
+
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.rect3d(color, width, height, degree, depth);
         }
 
         this.draw = function() {
-            var count = brush.target.length;
+            var count = this.brush.target.length;
 
             this.eachData(function(i, data) {
                 for(var j = 0; j < count; j++) {
-                    var r = null,
-                        value = data[brush.target[j]],
-                        xy = axis.c(i, value, j, count),
-                        zeroXY = axis.c(i, 0, j, count),
-                        padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value, j, count),
+                        zeroXY = this.axis.c(i, 0, j, count),
+                        padding = (this.brush.innerPadding > xy.depth) ? xy.depth : this.brush.innerPadding;
 
                     var startX = xy.x - (width / 2),
-                        startY = xy.y - (Math.sin(axis.c.radian) * padding),
-                        height = Math.abs(zeroXY.y - xy.y);
-
-                    if(brush.symbol == "cylinder") {
-                        r = chart.svg.cylinder3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
-                    } else {
-                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
-                    }
+                        startY = xy.y - (Math.sin(this.axis.c.radian) * padding),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(this.color(j), width, height, this.axis.c.degree, xy.depth - padding);
 
                     if(value != 0) {
                         this.addEvent(r, i, j);
@@ -51,7 +49,6 @@ jui.define("chart.brush.clustercolumn3d", [ "util.math" ], function(math) {
 
     ClusterColumn3DBrush.setup = function() {
         return {
-            symbol: "rectangle",
             outerPadding: 5,
             innerPadding: 5
         };
