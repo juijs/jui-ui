@@ -12136,7 +12136,7 @@ jui.define("chart.brush.fullstackcylinder3d", [], function() {
      * @class chart.brush.fullstackcylinder3d
      * @extends chart.brush.core
      */
-	var FullStackCylinder3DBrush = function(chart, axis, brush) {
+	var FullStackCylinder3DBrush = function() {
         this.drawMain = function(index, width, height, degree, depth) {
             var top = Math.sin(this.axis.c.radian) * depth,
                 h = (index > 0) ? height - top : height;
