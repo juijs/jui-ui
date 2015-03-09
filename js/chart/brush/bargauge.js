@@ -80,7 +80,11 @@ jui.define("chart.brush.bargauge", [], function() {
             /** @cfg {Number} [size=20] Determines the size of a bar gauge. */
             size: 20,
             /** @cfg {Function} [format=null] bar gauge format callback */
-            format: null
+            format: null,
+
+            max : 100,
+
+            min : 0
         };
     }
 
