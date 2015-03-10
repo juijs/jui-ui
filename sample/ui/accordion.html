@@ -22,7 +22,7 @@
         var uiObj = accordion(".accordion:first", {
             event: {
                 open: function(index, e) {
-                    $(this.root).find("i").attr("class", "icon-arrow1");
+                    $(this.root).find(".title > i").attr("class", "icon-arrow1");
                     $(e.target).find("i").attr("class", "icon-arrow3");
                 }
             },
@@ -46,7 +46,7 @@
                 Group Item #1 <i class="icon-arrow1"></i>
             </div>
             <div class="content">
-                The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
+                <i class="icon-add-dir"></i> The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
             </div>
             <div class="title">
                 Group Item #2 <i class="icon-arrow3"></i>

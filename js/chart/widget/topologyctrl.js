@@ -140,9 +140,9 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     TopologyControlWidget.setup = function() {
         return {
-            /** @cfg {Boolean} [move=false] */
+            /** @cfg {Boolean} [move=false] Set to be moved to see the point of view of the topology map. */
             move: false,
-            /** @cfg {Boolean} [zoom=false] */
+            /** @cfg {Boolean} [zoom=false] Set the zoom-in / zoom-out features of the topology map. */
             zoom: false
         }
     }

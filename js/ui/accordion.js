@@ -5,7 +5,6 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
      * @extends core
      * @alias Accordion
      * @requires jquery
-     *
      */
     var UI = function() {
         var activeIndex = 0;
@@ -54,6 +53,12 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             setTitleEvent(this);
         }
 
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled node
+         *
+         * @return {Integer} Index
+         */
         this.activeIndex = function() {
             return activeIndex;
         }
@@ -61,10 +66,35 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [index=null]
+             * Sets an enabled node
+             */
             index: null,
+
+            /**
+             * @cfg {Boolean} [autoFold=false]
+             * When you click on a node, the node folding
+             */
             autoFold: false
         }
     }
+
+    /**
+     * @event open
+     * When a node is opened, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
+
+    /**
+     * @event fold
+     * When a node is closed, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
 
     return UI;
 });

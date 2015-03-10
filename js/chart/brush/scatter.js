@@ -1,4 +1,4 @@
-jui.define("chart.brush.scatter", [], function() {
+jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.scatter
@@ -29,56 +29,66 @@ jui.define("chart.brush.scatter", [], function() {
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
-            if(symbol == "triangle" || symbol == "cross") {
-                elem = this.chart.svg.group({ width: w, height: h }, function() {
-                    if(symbol == "triangle") {
-                        var poly = self.chart.svg.polygon();
-
-                        poly.point(0, h)
-                            .point(w, h)
-                            .point(w / 2, 0);
-                    } else {
-                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
-                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
-                    }
-                }).translate(pos.x - (w / 2), pos.y - (h / 2));
+            if(_.typeCheck("function", symbol)) {
+                elem = this.chart.svg.image({
+                    "xlink:href": symbol(pos.value),
+                    width: w + borderWidth,
+                    height: h + borderWidth,
+                    x: pos.x - (w / 2) - borderWidth,
+                    y: pos.y - (h / 2)
+                });
             } else {
-                if(symbol == "rectangle") {
-                    elem = this.chart.svg.rect({
-                        width: w,
-                        height: h,
-                        x: pos.x - (w / 2),
-                        y: pos.y - (h / 2)
-                    });
-                } else {
-                    elem = this.chart.svg.ellipse({
-                        rx: w / 2,
-                        ry: h / 2,
-                        cx: pos.x,
-                        cy: pos.y
-                    });
-                }
-            }
+                if(symbol == "triangle" || symbol == "cross") {
+                    elem = this.chart.svg.group({ width: w, height: h }, function() {
+                        if(symbol == "triangle") {
+                            var poly = self.chart.svg.polygon();
 
-            if(symbol != "cross") {
-                elem.attr({
-                    fill: color,
-                    stroke: borderColor,
-                    "stroke-width": borderWidth
-                })
-                .hover(function () {
-                    elem.attr({
-                        fill: self.chart.theme("scatterHoverColor"),
-                        stroke: color,
-                        "stroke-width": borderWidth * 2
-                    });
-                }, function () {
+                            poly.point(0, h)
+                                .point(w, h)
+                                .point(w / 2, 0);
+                        } else {
+                            self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
+                            self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
+                        }
+                    }).translate(pos.x - (w / 2), pos.y - (h / 2));
+                } else {
+                    if(symbol == "rectangle") {
+                        elem = this.chart.svg.rect({
+                            width: w,
+                            height: h,
+                            x: pos.x - (w / 2),
+                            y: pos.y - (h / 2)
+                        });
+                    } else {
+                        elem = this.chart.svg.ellipse({
+                            rx: w / 2,
+                            ry: h / 2,
+                            cx: pos.x,
+                            cy: pos.y
+                        });
+                    }
+                }
+
+                if(symbol != "cross") {
                     elem.attr({
                         fill: color,
                         stroke: borderColor,
                         "stroke-width": borderWidth
+                    })
+                    .hover(function () {
+                        elem.attr({
+                            fill: self.chart.theme("scatterHoverColor"),
+                            stroke: color,
+                            "stroke-width": borderWidth * 2
+                        });
+                    }, function () {
+                        elem.attr({
+                            fill: color,
+                            stroke: borderColor,
+                            "stroke-width": borderWidth
+                        });
                     });
-                });
+                }
             }
 
             return elem;
@@ -140,11 +150,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"/"callback"} [symbol="circle"] Determines the shape of a (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Boolean} [clip=false] */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };
     }

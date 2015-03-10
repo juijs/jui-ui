@@ -69,15 +69,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
 
-		// Private
-		/**
-		 * @private
-		 * @method _setting
-		 * @param type
-		 * @param e
-		 * @param order
-		 * @private
-		 */
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
@@ -126,35 +117,14 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 	/**
 	 * @class ui.button
-	 * implements checkbox, radio button
 	 * @extends core
 	 * @alias Button
 	 * @requires jquery
 	 * @requires util.base
-	 *
 	 */
 	var UI = function() {
 		var ui_list = {};
 
-		/**
-		 * @event click
-		 * Fire when element is clicked on.
-		 * @param {Data} data clicked data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-
-		/**
-		 * @event change
-		 * Fire when element is changed.
-		 * @param {Data} data changed data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-
-		/**
-		 * @constructor
-		 */
 		this.init = function() {
             var self = this, opts = this.options;
 			
@@ -171,8 +141,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setIndex
-		 * check button by index
-		 * @param {Array} indexList  index list for button check
+         * Selects a button of a specified index
+         *
+		 * @param {Array} indexList Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -185,8 +156,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setValue
-		 * check button by value
-		 * @param valueList value list for button check
+         * Selects a button with a specified value
+         *
+		 * @param {Array} valueList Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -199,7 +171,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getData
-		 * get data
+         * Gets the data of the button currently selected
+         *
 		 * @return {Array}
 		 */
 		this.getData = function() {
@@ -208,9 +181,10 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getValue
-		 * get selected value list
-		 * @return {Array}  return value list if it is check button
-		 * @return {Object}  return one value if it is radio button
+         * Gets the value of the button currently selected
+         *
+		 * @return {Array} Values
+		 * @return {Object} Value
 		 */
 		this.getValue = function() {
             var data = this.getData();
@@ -230,7 +204,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method reload
-		 * reload button data
+		 * Re-defines the button UI
 		 */
 		this.reload = function() {
 			ui_list[this.options.type]._setting("init");
@@ -241,23 +215,31 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
         return {
 			/**
 			 * @cfg {String} [type="radio"]
-			 * button type
+             * Determines whether to use a radio/check button
 			 */
 			type: "radio",
 
 			/**
-			 * @cfg
-			 * selected index
+			 * @cfg {Integer} [index=0]
+			 * Determines an initial selection button with a specified index
 			 */
 			index: 0,
 
 			/**
-			 * @cfg
-			 * selected value
+			 * @cfg {String} [index=""]
+			 * Determines an initial selection button with a specified value
 			 */
 			value: ""
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when clicking on a button
+     *
+     * @param {Object} data Data of the selected button
+     * @param {jQueryEvent} e The event object
+     */
 	
 	return UI;
 });

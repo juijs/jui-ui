@@ -1,102 +1,100 @@
-
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-<META charset="UTF-8">
-<title>[JUI Library] - JavaScript/Table/API</title>
-
-<script src="../../lib/jquery-1.8.0.min.js"></script>
-<script src="../../lib/jquery.binder.js"></script>
-<script src="../../js/base.js"></script>
-<script src="../../js/util/svg.js"></script>
-<script src="../../js/chart/theme/white.js"></script>
-
-<script>
-
-var width = 40, degree = 60, depth = 30, dis = 5;
-
-function getX(i) {
-    return (width + dis) * i;
-}
-
-jui.ready([ "util", "util.svg", "chart.theme.white" ], function(_, SVGUtil, theme) {
-    var svg = new SVGUtil($("#svg").get(0), { width: 1000, height: 1000 });
-
-    svg.rect3d({
-        width: width,
-        height: 100,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[0],
-        "stroke-width": 1
-    }).translate(getX(0), 20);
-
-    svg.rect3d({
-        width: width,
-        height: 60,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[1],
-        "stroke-width": 1
-    }).translate(getX(1), 60);
-
-    svg.rect3d({
-        width: width,
-        height: 120,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[2],
-        "stroke-width": 1
-    }).translate(getX(2), 0);
-
-    svg.rect3d({
-        width: width,
-        height: 90,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[3],
-        "stroke-width": 1
-    }).translate(getX(3), 30);
-
-    svg.rect3d({
-        width: width,
-        height: 70,
-        degree: 60,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[4],
-        "stroke-width": 1
-    }).translate(getX(4), 50);
-
-    svg.rect3d({
-        width: width,
-        height: 20,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[5],
-        "stroke-width": 1
-    }).translate(getX(5), 100);
-
-    svg.rect3d({
-        width: width,
-        height: 50,
-        degree: degree,
-        depth: depth,
-        stroke: "#dcdcdc",
-        fill: theme.colors[6],
-        "stroke-width": 1
-    }).translate(getX(6), 70);
-
-    svg.render();
-});
-</script>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
 </head>
 <body class="jui">
-    <div id="svg"></div>
+
+<div class="row">
+    <div class="col col-4"><div id="chart"></div></div>
+    <div class="col col-4"><div id="chart2"></div></div>
+</div>
+
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="message"><!= obj.dataKey !>: <!= obj.data[obj.dataKey] !></div>
+    </div>
+</script>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        c = chart("#chart", {
+            width: 600,
+            height : 400,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "range",
+                    domain : "profit",
+                    step : 5
+                },
+                y : {
+                    type : "block",
+                    domain : [ "Q1", "Q2", "Q3", "Q4" ]
+                },
+                c : {
+                    type : "grid3d",
+                    domain : [ "sales", "profit", "total" ]
+                },
+                data : [
+                    { sales: 20, profit: 20, total: 20 },
+                    { sales: 15, profit: 6, total: 20 },
+                    { sales: 8, profit: 10, total: 20 },
+                    { sales: 18, profit: 5, total: 20 }
+                ],
+                depth : 20,
+                degree : 30
+            },
+            brush : {
+                type : "bar3d",
+                outerPadding : 10,
+                innerPadding : 5
+            },
+            widget : {
+                type : "tooltip"
+            },
+            style : {
+                gridAxisBorderColor : "black",
+                gridBorderColor : "#dcdcdc"
+            }
+        });
+
+        /*/
+        chart("#chart2", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "block",
+                    domain : [ "Q1", "Q2", "Q3", "Q4" ]
+                },
+                y : {
+                    type : "range",
+                    domain : "total",
+                    step : 10
+                },
+                data : [
+                    { sales: 2, profit: 15, total: 20 },
+                    { sales: 15, profit: 6, total: 20 },
+                    { sales: 8, profit: 10, total: 20 },
+                    { sales: 18, profit: 5, total: 20 }
+                ]
+            },
+            style : {
+                gridAxisBorderColor : "black",
+                gridBorderColor : "#a9a9a9"
+            }
+        });
+        /**/
+	})
+</script>
+
+
 </body>
 </html>

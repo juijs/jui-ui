@@ -13,6 +13,42 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
+        /**
+         * @method lighten 
+         * 
+         * rgb 컬러 밝은 농도로 변환  
+         *  
+         * @param {String} color   RGB color code 
+         * @param {Number} rate 밝은 농도 
+         * @return {String}
+         */
+		lighten : function(color, rate) {
+			color = color.replace(/[^0-9a-f]/gi, '');
+			rate = rate || 0;
+
+			var rgb = [], c, i;
+			for (i = 0; i < 6; i += 2) {
+				c = parseInt(color.substr(i,2), 16);
+				c = Math.round(Math.min(Math.max(0, c + (c * rate)), 255)).toString(16);
+				rgb.push(("00"+c).substr(c.length));
+			}
+
+			return "#" + rgb.join("");
+		},
+
+        /**
+         * @method darken
+         *
+         * rgb 컬러 어두운 농도로 변환
+         *
+         * @param {String} color   RGB color code
+         * @param {Number} rate 어두운 농도
+         * @return {String}
+         */
+		darken : function(color, rate) {
+			return this.lighten(color, -rate)
+		},
+
 		/**
 		 * @method parse
 		 *

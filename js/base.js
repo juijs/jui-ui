@@ -1205,7 +1205,6 @@
         return modules;
     }
 
-
 	/**
 	 * @class jui
 	 *
@@ -1288,6 +1287,7 @@
                 type: name,
                 "class": uiFunc
             });
+
 		},
 
         /**

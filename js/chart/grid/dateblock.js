@@ -7,172 +7,14 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
      *
      * @extends chart.grid.date  
      */
-	var DateBlockGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
-		var domain = [];
-		var step = [];
-		var unit = 0;
-		var half_unit;
+	var DateBlockGrid = function() {
 
-
-		this.top = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line(chart, {
-					y2 : (grid.line) ? this.axis.area('height') : -bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.bottom = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var group = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				group.append(this.line(chart, {
-					y2 : (grid.line) ? -this.axis.area('height') : bar
-				}));
-
-				group.append(this.getTextRotate(chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(group);
-			}
-		}
-
-		this.left = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line(chart, {
-					x2 : (grid.line) ? this.axis.area('width') : -bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : -bar-2,
-					y : bar-2,
-					"text-anchor" : "end",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.right = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -this.axis.area('width') : bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : bar + 4,
-					y : -bar,
-					"text-anchor" : "start",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.wrapper = function(chart, scale, key) {
+		this.wrapper = function(scale, key) {
 			var old_scale = scale;
 			var self = this;
 
 			old_scale.rangeBand = function() {
-				return unit;
+				return self.grid.unit;
 			}
 
 			return old_scale;
@@ -220,50 +62,45 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 			this.grid.max = max;
 			this.grid.min = min;
-			domain = [this.grid.min, this.grid.max];
+			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
-				step = step.call(this.chart, domain);
-			} else {
-				step = this.grid.step;
+				this.grid.step = step.call(this.chart, domain);
 			}
 
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
+
+			return domain;
 		}
 
 		this.drawBefore = function() {
 
-			console.log('aaa');
-
 			var self = this;
-			this.initDomain();
+			var domain = this.initDomain();
 
-			var obj = this.getGridSize(chart, orient, grid),
-				range = [obj.start, obj.end];
-
-			console.log(domain, range, step);
+			var obj = this.getGridSize(), range = [obj.start, obj.end];
 
 			var time = UtilScale.time().domain(domain).rangeRound(range);
+			var len = this.axis.data.length;
 
-
-			unit = Math.abs(range[0] - range[1])/(this.axis.data.length- 1);
-			half_unit = unit/2;
+			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
+			var half_unit = unit/2;
 
 
 			if (this.grid.realtime) {
-				this.ticks = time.realTicks(step[0], step[1]);
+				this.ticks = time.realTicks(this.grid.step[0], this.grid.step[1]);
 			} else {
-				this.ticks = time.ticks(step[0], step[1]);
+				this.ticks = time.ticks(this.grid.step[0], this.grid.step[1]);
 			}
 
-			if ( typeof grid.format == "string") {
+			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
 					}	
-				})(grid, grid.format)
+				})(this.grid, this.grid.format)
 			}
 
 			// step = [this.time.days, 1];
@@ -277,34 +114,23 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.values[i] = time(this.ticks[i]);
 			}
 
-			console.log(this.ticks, this.values);
-
 			this.scale = $.extend((function(i) {
-				return  i * unit;
+				return  i * unit + (self.grid.full ? 0 : half_unit);
 			}), time);
 
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "dateblock", grid);
+			return this.drawGrid("dateblock");
 		}
 	}
 
-
 	DateBlockGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null] */
-			domain: null,
-			/** @cfg {Array} [step=[]] */
-			step: [],
-			/** @cfg {Number} [min=0] min timestamp  */
-			min: 0,
-			/** @cfg {Number} [max=0] max timestamp  */
-			max: 0,
-			/** @cfg {Boolean} [reverse=false]  */
-			reverse: false
+			/** @cfg {Boolean} [full=true] */
+			full: true
 		};
 	}
 
 	return DateBlockGrid;
-}, "chart.grid.core");
+}, "chart.grid.date");

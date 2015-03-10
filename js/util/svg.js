@@ -422,14 +422,19 @@ jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
         }
 
         this.length = function() {
-            var key = _.createId(),
-                d = orders.join(" "),
-                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+            var id = _.createId(),
+                d = orders.join(" ");
 
-            $("body").append($dummy.find("path").attr("d", d).end());
+            var svg = document.createElement("svg"),
+                path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-            var length = $("#" + key)[0].getTotalLength();
-            $dummy.remove();
+            path.setAttributeNS(null, "id", id);
+            path.setAttributeNS(null, "d", d);
+            svg.appendChild(path);
+
+            document.body.appendChild(svg);
+            var length = document.getElementById(id).getTotalLength();
+            document.body.removeChild(svg);
 
             return length;
         }
@@ -523,42 +528,6 @@ jui.define("util.svg.element.path.rect", [ "util.math" ], function(math) {
                 .ClosePath()
                 .join();
         }
-
-        this.rect3d = function(width, height, degree, depth) {
-            var radian = math.radian(degree),
-                x1 = 0, y1 = 0,
-                w1 = width, h1 = height;
-
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1;
-
-            var w2 = width + x2,
-                h2 = height + y2;
-
-            var g = svg.group({
-                width: w2,
-                height: h2
-            }, function() {
-                this.MoveTo(x2, x1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .LineTo(x1, y2);
-
-                this.MoveTo(x1, y2)
-                    .LineTo(x1, h2)
-                    .LineTo(w1, h2)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-
-                this.MoveTo(w1, h2)
-                    .LineTo(w2, h1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-            });
-
-            return g;
-        }
     }
 
     return PathRectElement;
@@ -590,9 +559,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
+    function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
 
     /**
      * @class util.svg
@@ -765,7 +734,7 @@ jui.define("util.svg",
                 name = name.split(".")[0];
             }
 
-            var a = document.createElement('a');
+            var a = document.createElement("a");
             a.download = (name) ? name + ".svg" : "svg.svg";
             a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
 

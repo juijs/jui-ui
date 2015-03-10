@@ -95,6 +95,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         gaugeTitleFontWeight : "normal",
         /** @cfg */
+        gaugeTitleFontColor : "#333",
+        /** @cfg */
         bargaugeBackgroundColor : "#ececec",
         /** @cfg */
         bargaugeFontSize : "11px",

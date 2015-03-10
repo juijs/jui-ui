@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div class="row">
+    <div class="col col-4"><div id="chart"></div></div>
+    <div class="col col-4"><div id="chart2"></div></div>
+</div>
+
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="message"><!= obj.dataKey !>: <!= obj.data[obj.dataKey] !></div>
+    </div>
+</script>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        c = chart("#chart", {
+            width: 600,
+            height : 400,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "block",
+                    domain : [ "Q1", "Q2", "Q3", "Q4" ]
+                },
+                y : {
+                    type : "range",
+                    domain : "profit",
+                    step : 5
+                },
+                c : {
+                    type : "grid3d",
+                    domain : [ "sales", "profit", "total" ]
+                },
+                data : [
+                    { sales: 20, profit: 20, total: 20 },
+                    { sales: 15, profit: 6, total: 20 },
+                    { sales: 8, profit: 10, total: 20 },
+                    { sales: 18, profit: 5, total: 20 }
+                ],
+                depth : 20,
+                degree : 30
+            },
+            brush : {
+                type : "column3d",
+                outerPadding : 10,
+                innerPadding : 5
+            },
+            widget : {
+                type : "tooltip"
+            },
+            style : {
+                gridAxisBorderColor : "black",
+                gridBorderColor : "#dcdcdc"
+            }
+        });
+
+        /*/
+        chart("#chart2", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "block",
+                    domain : [ "Q1", "Q2", "Q3", "Q4" ]
+                },
+                y : {
+                    type : "range",
+                    domain : "total",
+                    step : 10
+                },
+                data : [
+                    { sales: 2, profit: 15, total: 20 },
+                    { sales: 15, profit: 6, total: 20 },
+                    { sales: 8, profit: 10, total: 20 },
+                    { sales: 18, profit: 5, total: 20 }
+                ]
+            },
+            style : {
+                gridAxisBorderColor : "black",
+                gridBorderColor : "#a9a9a9"
+            }
+        });
+        /**/
+	})
+</script>
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
-jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 	/**
 	 * @class chart.grid.core
-     * Grid Core 객체 
+     * Grid Core 객체
 	 * @extends chart.draw
      * @abstract
 	 */
@@ -9,24 +9,24 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method drawAfter
-         * 
          *
-         *  
+         *
+         *
          * @param {Object} obj
-         * @protected 
+         * @protected
          */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
 		}
 
 		/**
-		 * @method wrapper  
-         * scale wrapper 
-		 * 
-		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
-		 * 
-		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
-		 * 
+		 * @method wrapper
+         * scale wrapper
+		 *
+		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수
+		 *
+		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리
+		 *
 		 *      @example
 		 *      // 그리드 속성에 키가 없을 때
 		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
@@ -34,17 +34,17 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 *      grid { key : "field" }
 		 *      scale(0)			// field 값으로 scale 설정 (range, date)
          *
-		 * @protected 
+		 * @protected
 		 */
 		this.wrapper = function(scale, key) {
 			return scale;
 		}
-		
+
 		/**
-         * @method axisLine  
+         * @method axisLine
 		 * theme 이 적용된  axis line 리턴
-		 * @param {ChartBuilder} chart 
-         * @param {Object} attr  
+		 * @param {ChartBuilder} chart
+         * @param {Object} attr
 		 */
 		this.axisLine = function(attr) {
 			return this.chart.svg.line($.extend({
@@ -59,9 +59,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * @method line 
+		 * @method line
          * theme 이 적용된  line 리턴
-         * @protected 
+         * @protected
          * @param {ChartBuilder} chart
          * @param {Object} attr
 		 */
@@ -70,7 +70,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
-				y2 : 0,				
+				y2 : 0,
 				stroke : this.color("gridBorderColor"),
 				"stroke-width" : this.chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : this.chart.theme("gridBorderDashArray"),
@@ -79,7 +79,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * @method color 
+         * @method color
          * grid 에서 color 를 위한 유틸리티 함수
          * @param theme
          * @return {Mixed}
@@ -113,9 +113,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @protected
          * @param {chart.builder} chart
          * @param {String} orient
-         * @param {String} cls 
-         * @param {Grid} grid 
-         */		
+         * @param {String} cls
+         * @param {Grid} grid
+         */
 		this.drawGrid = function() {
 			// create group
 			var root = this.chart.svg.group(),
@@ -129,7 +129,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
-			// hide grid 
+			// hide grid
 			if(this.grid.hide) {
 				root.attr({ display : "none" })
 			}
@@ -167,30 +167,52 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getGridSize
-         *  
-         * get real size of grid 
+         *
+         * get real size of grid
 		 *
 		 * @param {chart.builder} chart
 		 * @param {Strng} orient
-		 * @param {Object} grid             그리드 옵션 
+		 * @param {Object} grid             그리드 옵션
 		 * @return {Object}
          * @return {Number} return.start    시작 지점
          * @return {Number} return.size     그리드 넓이 또는 높이
          * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function() {
-			var width = this.axis.area('width'),
-				height = this.axis.area('height'),
-				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area('y') : this.axis.area('x'),
-				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
-				start = axis,
-				size = max;
+            var orient = this.grid.orient,
+                area = this.axis.area();
 
-			return {
-				start: start,
-				size: size,
-				end: start + size
-			}
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
+                depth = this.axis.get("depth"),
+                degree = this.axis.get("degree"),
+				start = axis,
+				size = max,
+                end = start + size;
+
+            var result = {
+                start: start,
+                size: size,
+                end: end
+            };
+
+            if(depth > 0 || degree > 0) {
+                var radian = math.radian(360 - degree),
+                    x2 = Math.cos(radian) * depth,
+                    y2 = Math.sin(radian) * depth;
+
+                if(orient == "left") {
+                    result.start = result.start - y2;
+                    result.size = result.size - y2;
+                } else if(orient == "bottom") {
+                    result.end = result.end - x2;
+                    result.size = result.size - x2;
+                }
+            }
+
+            return result;
 		}
 	}
 
@@ -199,31 +221,32 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} grid */
-        
+
 		return {
             /**
-             * @cfg {Number} [extend=null] extend grid's option
+             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
              */
 			extend:	null,
-            /**  @cfg {Number} [dist=0] 그리는 좌표로부터 떨어지는 거리  */
+            /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
 
-			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
-            
-            /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
+
+            /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
 
-            /** @cfg {String/Object/Number} [color=null] 그리드의 라인 색깔 */
+            /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
-            /** @cfg {String} [title=null] */
+            /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
 			title: null,
-            /** @cfg {Boolean} [hide=false] */
+            /** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
+			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
             baseline : true,
-            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
+            /** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
-            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
+            /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
 			textRotate : null
 		};
 	}

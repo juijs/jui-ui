@@ -56,6 +56,7 @@ jui.define("chart.theme.dark", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#c5c5c5",
         bargaugeBackgroundColor : "#3e3e3e",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#c5c5c5",

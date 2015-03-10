@@ -118,12 +118,8 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
-			/** @cfg {Number} [outerPadding=15] */
-			outerPadding: 15,
-			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
-			active: null,
-			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
-			activeEvent: null // or click, mouseover, ...
+			/** @cfg {Number} [outerPadding=15] Determines the outer margin of a stack bar. */
+			outerPadding: 15
 		};
 	}
 

@@ -1265,7 +1265,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};
-			
+
 			// UITable 객체 생성
 			this.uit = new Base({
 				$obj: $obj, $tpl: this.tpl 

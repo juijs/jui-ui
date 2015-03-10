@@ -1,4 +1,4 @@
-jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], function(_, math, ColorUtil) {
 
 	/**
 	 * @class chart.brush.pie
@@ -12,8 +12,25 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
         var g;
 
 		this.drawPie = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
-			var pie = this.chart.svg.group(),
-				path = this.chart.svg.path({
+            
+			var pie = this.chart.svg.group();
+
+            if (endAngle == 360) { // if pie is full size, draw a circle as pie brush
+                
+                var circle = this.chart.svg.circle({
+                    cx : centerX,
+                    cy : centerY,
+                    r : outerRadius,
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+                pie.append(circle);
+                return pie; 
+
+            }            
+            
+            var path = this.chart.svg.path({
                     fill : color,
                     stroke : this.chart.theme("pieBorderColor") || color,
                     "stroke-width" : this.chart.theme("pieBorderWidth")
@@ -36,6 +53,47 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
                 .LineTo(0, 0)
                 .ClosePath();
+
+            pie.append(path);
+
+			return pie;
+		}
+
+		this.drawPie3d = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
+			var pie = this.chart.svg.group(),
+				path = this.chart.svg.path({
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+                startY = obj.y;
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			pie.translate(centerX, centerY);
+
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
 
             pie.append(path);
 
@@ -70,11 +128,24 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = data[target[i]],
-					endAngle = all * (value / max),
+                var value = data[target[i]],
+                    endAngle = all * (value / max);
+
+                if (this.brush['3d']) {
+                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, ColorUtil.darken(this.color(i), 0.5));
+                    g.append(pie3d);
+                }
+
+				startAngle += endAngle;
+			}
+
+            startAngle = 0;
+			for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
                     pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
 
-                if(this.brush.showText) {
+                if (this.brush.showText) {
                     var text = this.getFormatText(target[i], value, max),
                         elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
@@ -83,7 +154,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                 }
 
                 self.addEvent(pie, index, i);
-				g.append(pie);
+
+                g.append(pie);
 
 				startAngle += endAngle;
 			}
@@ -150,12 +222,14 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
-            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
+            /** @cfg {Boolean} [showText=false] Set the text appear.  */
             showText: false,
-            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
-            format: null
+            /** @cfg {Function} [format=null] Returns a value from the format callback function of a defined option. */
+            format: null,
+            /** @cfg {Boolean} [3d=false] check 3d support */
+            "3d" : false
         }
     }
 

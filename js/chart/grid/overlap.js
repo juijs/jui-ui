@@ -73,7 +73,7 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     OverlapGrid.setup = function() {
         return {
-            /** @cfg {Number} [size=null] 분할할 개수  */
+            /** @cfg {Number} [count=null] Splited count  */
             count : null
         }
     }

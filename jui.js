@@ -1205,7 +1205,6 @@
         return modules;
     }
 
-
 	/**
 	 * @class jui
 	 *
@@ -1288,6 +1287,7 @@
                 type: name,
                 "class": uiFunc
             });
+
 		},
 
         /**
@@ -1451,11 +1451,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class core.UIManager
-     * UI에 관련된 기본 로직 클래스 
-     *
      * @private
      * @singleton
-     *  
      */
 	var UIManager = new function() {
 		var instances = [], classes = [];
@@ -1463,10 +1460,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method add
+         * Adds a component object created
          *
-         * 생성된 instance 를 추가
-         *
-         * @param {Object} uiIns
+         * @param {Object} ui UI instance
          */
 		this.add = function(uiIns) {
 			instances.push(uiIns);
@@ -1474,12 +1470,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method emit
+         * Generates a custom event to an applicable component
          *
-         * 커스텀 이벤트 실행
-         *
-         * @param {String} key  selector
-         * @param {String} type  이벤트 이름
-         * @param {Array} args  이벤트에 전달될 파라미터
+         * @param {String} key Selector or UI type
+         * @param {String} type Event type
+         * @param {Array} args Event arguments
          */
         this.emit = function(key, type, args) {
             var targets = [];
@@ -1503,11 +1498,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method get
+         * Gets a component currently created
          *
-         * 객체 가지고 오기
-         *
-         * @param {String/Integer} key 패키지 명 또는 인스턴스 index
-         * @returns {Object/Array} 생성된 객체 또는 리스트
+         * @param {Integer/String} key
+         * @returns {Object/Array} UI instance
          */
 		this.get = function(key) {
 			if(_.typeCheck("integer", key)) {
@@ -1538,10 +1532,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method getAll
+         * Gets all components currently created
          *
-         * 모든 인스턴스 리스트
-         *
-         * @return {Array}
+         * @return {Array} UI instances
          */
 		this.getAll = function() {
 			return instances;
@@ -1549,11 +1542,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method remove
-         *
-         * 인스턴스 삭제
+         * Removes a component object in an applicable index from the list
          *
          * @param {Integer} index
-         * @return {Object}  removed instance;
+         * @return {Object} Removed instance
          */
         this.remove = function(index) {
             if(_.typeCheck("integer", index)) { // UI 객체 인덱스
@@ -1561,20 +1553,31 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method shift
+         * Removes the last component object from the list
+         *
+         * @return {Object} Removed instance
+         */
         this.shift = function() {
             return instances.shift();
         }
 
+        /**
+         * @method pop
+         * Removes the first component object from the list
+         *
+         * @return {Object} Removed instance
+         */
         this.pop = function() {
             return instances.pop();
         }
 
         /**
          * @method size
+         * Gets the number of objects currently created
          *
-         * 인스턴스 길이 얻어오기
-         *
-         * @return {Number} 인스턴스 길이
+         * @return {Number}
          */
 		this.size = function() {
 			return instances.length;
@@ -1583,13 +1586,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
         /**
          * @method debug
          *
-         * 디버그 코드 삽입
-         *
-         * @param {Object} uiObj
+         * @param {Object} uiObj UI instance
          * @param {Number} i
          * @param {Number} j
-         * @param {Function} callback  디버그시 실행될 함수
-         *
+         * @param {Function} callback
          */
 		this.debug = function(uiObj, i, j, callback) {
 			if(!uiObj.__proto__) return;
@@ -1642,7 +1642,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 				}
 			}
 		}
-		
+
+        /**
+         * @method debugAll
+         * debugs all component objects currently existing
+         *
+         * @param {Function} callback
+         */
 		this.debugAll = function(callback) {
 			for(var i = 0; i < instances.length; i++) {
 				var uiList = instances[i];
@@ -1655,8 +1661,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		
         /**
          * @method addClass
+         * Adds a component class
          *
-         * @param {String} uiCls
+         * @param {Object} uiCls UI Class
          */
 		this.addClass = function(uiCls) {
 			classes.push(uiCls);
@@ -1664,6 +1671,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method getClass
+         * Gets a component class
          *
          * @param {String/Integer} key
          * @return {Object}
@@ -1681,20 +1689,25 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			
 			return null;
 		}
-		
+
+        /**
+         * @method getClassAll
+         * Gets all component classes
+         *
+         * @return {Array}
+         */
 		this.getClassAll = function() {
 			return classes;
 		}
 
         /**
          * @method create
+         * It is possible to create a component dynamically after the ready point
          *
-         * UI 객체 동적 생성 메소드
-         *
-         * @param {String} type  모듈 이름
-         * @param {String/Object} selector   jquery selector or dom element
-         * @param {Object} options  객체 생성시 필요한 옵션
-         * @return {Object} 생성된 JUI 객체
+         * @param {String} type UI type
+         * @param {String/DOMElement} selector
+         * @param {Object} options
+         * @return {Object}
          */
         this.create = function(type, selector, options) {
             var cls = UIManager.getClass(type);
@@ -1709,11 +1722,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	var UIListener = function() {
 		var list = [];
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function settingEventAnimation(e) {
 			var pfx = [ "webkit", "moz", "MS", "o", "" ];
 			
@@ -1757,10 +1766,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 			}[type];
 		}
 		
-		/**
-		 * Public Methods
-		 * 
-		 */
 		this.add = function(args) {
 			var e = { target: args[0], type: args[1] };
 			
@@ -1810,11 +1815,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 		}
 	}
 
-
-    /**
-     * UIManager에서 관리되는 객체
-     * 객체 생성 정보와 목록을 가지고 있음
-     */
     var UICoreSet = function(type, selector, options, list) {
         this.type = type;
         this.selector = selector;
@@ -1837,20 +1837,18 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	/** 
 	 * @class core
-     * 각각의 UI별 공통 메소드 (메모리 공유)
-	 * 예를 들어 테이블 UI 객체일 경우에 해당되는 모든 요소는 UI 객체에 공유된다.
-     * @alias UICore
+     * Core classes for all of the components
      *
+     * @alias UICore
 	 */
 	var UICore = function() {
         var vo = null;
 
         /**
          * @method find
+         * Get the child element of the root element
          *
-         * 루트에 포함되는 하위 엘리먼트를 가져온다.
-         *
-         * @param selector
+         * @param {String/HTMLElement} Selector
          * @returns {*|jQuery}
          */
         this.find = function(selector) {
@@ -1859,12 +1857,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method emit
-         * 
-         * 커스텀 이벤트 발생시키는 메소드
+         * Generates a custom event. The first parameter is the type of a custom event. A function defined as an option or on method is called
          *
-         * @param {String} type 발생시킬 이벤트
-         * @param {Function} args 이벤트 핸들러에 넘기는 값
-         * @return {Mixed} 커스텀 이벤트의 핸들러의 리턴 값 또는 undefined
+         * @param {String} type Event type
+         * @param {Function} args Event Arguments
+         * @return {Mixed}
          */
         this.emit = function(type, args) {
             if(typeof(type) != "string") return;
@@ -1884,9 +1881,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method on
-         * 이벤트를 리스너에 등록한다.
-         * @param {String} type 이벤트 이름
-         * @param {Function} callback 실행할 콜백 함수
+         * A callback function defined as an on method is run when an emit method is called
+         *
+         * @param {String} type Event type
+         * @param {Function} callback
          */
         this.on = function(type, callback) {
             if(typeof(type) != "string" || typeof(callback) != "function") return;
@@ -1895,8 +1893,9 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method off
-         * 등록된 이벤트를 삭제한다.
-         * @param {String} type 이벤트 이름
+         * Removes a custom event of an applicable type or callback handler
+         *
+         * @param {String} type Event type
          */
         this.off = function(type) {
             var event = [];
@@ -1915,7 +1914,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addEvent
-         * 커스텀 이벤트 등록
+         * Defines a browser event of a DOM element
+         *
+         * @param {String/HTMLElement} selector
+         * @param {String} type Dom event type
+         * @param {Function} callback
          */
         this.addEvent = function() {
             this.listen.add(arguments);
@@ -1923,9 +1926,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addTrigger
-         * 트리거 등록
-         * @param selector
-         * @param type
+         * Generates an applicable event to a DOM element
+         *
+         * @param {String/HTMLElement} Selector
+         * @param {String} Dom event type
          */
         this.addTrigger = function(selector, type) {
             this.listen.trigger(selector, type);
@@ -1933,9 +1937,10 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method addValid
-         * Validation 추가
-         * @param name
-         * @param params
+         * Check the parameter type of a UI method and generates an alarm when a wrong value is entered
+         *
+         * @param {String} name Method name
+         * @param {Array} params Parameters
          */
         this.addValid = function(name, params) {
             if(!this.__proto__) return;
@@ -1956,8 +1961,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method callBefore
-         * @param {String} name
+         * Sets a callback function that is called before a UI method is run
+         *
+         * @param {String} name Method name
          * @param {Function} callback
+         * @return {Mixed}
          */
         this.callBefore = function(name, callback) {
             if(!this.__proto__) return;
@@ -1977,6 +1985,14 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callAfter
+         * Sets a callback function that is called after a UI method is run
+         *
+         * @param {String} name Method name
+         * @param {Function} callback
+         * @return {Mixed}
+         */
         this.callAfter = function(name, callback) {
             if(!this.__proto__) return;
             var ui = this.__proto__[name];
@@ -1994,6 +2010,13 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method callDelay
+         * Sets a callback function and the delay time before/after a UI method is run
+         *
+         * @param {String} name Method name
+         * @param {Function} callback
+         */
         this.callDelay = function(name, callObj) { // void 형의 메소드에서만 사용할 수 있음
             if(!this.__proto__) return;
 
@@ -2028,15 +2051,19 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method setTpl
-         * tpl 을 설정한다.
-         * @param {String} name tpl 이름
-         * @param {String} html tpl string
+         * Dynamically defines the template method of a UI
+         *
+         * @param {String} name Template name
+         * @param {String} html Template markup
          */
         this.setTpl = function(name, html) {
             this.tpl[name] = _.template(html);
         }
 
         /**
+         * @method setVo
+         * Dynamically defines the template method of a UI
+         *
          * @deprecated
          */
         this.setVo = function() { // @Deprecated
@@ -2050,7 +2077,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method setOption
-         * 옵션을 설정한다.
+         * Dynamically defines the options of a UI
+         *
          * @param {String} key
          * @param {Mixed} value
          */
@@ -2063,14 +2091,11 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 this.options[key] = value;
             }
         }
-        
-        this.find = function(selector) {
-            return this.$root.find(selector);
-        }
 
         /**
          * @method destroy
-         * 생성된 객체를 메모리에서 삭제한다.
+         * Removes all events set in a UI obejct and the DOM element
+         *
          */
         this.destroy = function() {
             if(!this.__proto__) return;
@@ -2104,17 +2129,24 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 mainObj.init.prototype.selector = $root.selector;
                 /** @property {HTMLElement} root */
                 mainObj.init.prototype.root = this;
+                /** @property {Object} options */
                 mainObj.init.prototype.options = opts;
+                /** @property {Object} tpl Templates */
                 mainObj.init.prototype.tpl = {};
+                /** @property {Array} event Custom events */
                 mainObj.init.prototype.event = new Array(); // Custom Event
+                /** @property {Object} listen Dom events */
                 mainObj.init.prototype.listen = new UIListener(); // DOM Event
+                /** @property {Integer} timestamp UI Instance creation time*/
                 mainObj.init.prototype.timestamp = new Date().getTime();
+                /** @property {Integer} index Index of UI instance*/
                 mainObj.init.prototype.index = index;
+                /** @property {Class} module Module class */
                 mainObj.init.prototype.module = UI;
 
                 // Template Setting (Markup)
                 $("script").each(function(i) {
-                    if(selector == $(this).data("jui") || selector == $(this).data("vo")) {
+                    if(selector == $(this).data("jui") || selector == $(this).data("vo") || selector instanceof HTMLElement) {
                         var tplName = $(this).data("tpl");
 
                         if(tplName == "") {
@@ -2174,13 +2206,21 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 
     UICore.setup = function() {
         return {
-            /** @cfg {Object} [tpl={}]  템플릿 리스트  */
-            tpl: {},
-            /** @cfg {Object} [event={}]  이벤트 리스트  */
-            event: {},
             /**
              * @cfg {Object} [tpl={}]
-             * 템플릿 리스트
+             * Defines a template markup to be used in a UI
+             */
+            tpl: {},
+
+            /**
+             * @cfg {Object} [event={}]
+             * Defines a DOM event to be used in a UI
+             */
+            event: {},
+
+            /**
+             * @cfg {Object} [vo=null]
+             * Configures a binding object of a markup
              *
              * @deprecated
              */
@@ -2975,6 +3015,42 @@ jui.define("util.color", [], function() {
 			return (str || "").replace(/^\s+|\s+$/g, '');	
 		},
 
+        /**
+         * @method lighten 
+         * 
+         * rgb 컬러 밝은 농도로 변환  
+         *  
+         * @param {String} color   RGB color code 
+         * @param {Number} rate 밝은 농도 
+         * @return {String}
+         */
+		lighten : function(color, rate) {
+			color = color.replace(/[^0-9a-f]/gi, '');
+			rate = rate || 0;
+
+			var rgb = [], c, i;
+			for (i = 0; i < 6; i += 2) {
+				c = parseInt(color.substr(i,2), 16);
+				c = Math.round(Math.min(Math.max(0, c + (c * rate)), 255)).toString(16);
+				rgb.push(("00"+c).substr(c.length));
+			}
+
+			return "#" + rgb.join("");
+		},
+
+        /**
+         * @method darken
+         *
+         * rgb 컬러 어두운 농도로 변환
+         *
+         * @param {String} color   RGB color code
+         * @param {Number} rate 어두운 농도
+         * @return {String}
+         */
+		darken : function(color, rate) {
+			return this.lighten(color, -rate)
+		},
+
 		/**
 		 * @method parse
 		 *
@@ -3539,14 +3615,19 @@ jui.define("util.svg.element.path", [ "util.base" ], function(_) { // path
         }
 
         this.length = function() {
-            var key = _.createId(),
-                d = orders.join(" "),
-                $dummy = $("<svg><path id='" + key + "'></path></svg>");
+            var id = _.createId(),
+                d = orders.join(" ");
 
-            $("body").append($dummy.find("path").attr("d", d).end());
+            var svg = document.createElement("svg"),
+                path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-            var length = $("#" + key)[0].getTotalLength();
-            $dummy.remove();
+            path.setAttributeNS(null, "id", id);
+            path.setAttributeNS(null, "d", d);
+            svg.appendChild(path);
+
+            document.body.appendChild(svg);
+            var length = document.getElementById(id).getTotalLength();
+            document.body.removeChild(svg);
 
             return length;
         }
@@ -3640,42 +3721,6 @@ jui.define("util.svg.element.path.rect", [ "util.math" ], function(math) {
                 .ClosePath()
                 .join();
         }
-
-        this.rect3d = function(width, height, degree, depth) {
-            var radian = math.radian(degree),
-                x1 = 0, y1 = 0,
-                w1 = width, h1 = height;
-
-            var x2 = (Math.cos(radian) * depth) + x1,
-                y2 = (Math.sin(radian) * depth) + y1;
-
-            var w2 = width + x2,
-                h2 = height + y2;
-
-            var g = svg.group({
-                width: w2,
-                height: h2
-            }, function() {
-                this.MoveTo(x2, x1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .LineTo(x1, y2);
-
-                this.MoveTo(x1, y2)
-                    .LineTo(x1, h2)
-                    .LineTo(w1, h2)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-
-                this.MoveTo(w1, h2)
-                    .LineTo(w2, h1)
-                    .LineTo(w2, y1)
-                    .LineTo(w1, y2)
-                    .ClosePath();
-            });
-
-            return g;
-        }
     }
 
     return PathRectElement;
@@ -3707,9 +3752,9 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
 }, "util.svg.element.transform");
 
 jui.define("util.svg",
-    [ "util.base", "util.math", "util.svg.element", "util.svg.element.transform",
+    [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
-    function(_, math, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
+    function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
 
     /**
      * @class util.svg
@@ -3882,7 +3927,7 @@ jui.define("util.svg",
                 name = name.split(".")[0];
             }
 
-            var a = document.createElement('a');
+            var a = document.createElement("a");
             a.download = (name) ? name + ".svg" : "svg.svg";
             a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
 
@@ -4431,6 +4476,132 @@ jui.define("util.svg",
     return SVG;
 });
 
+jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ], function(_, math, color, SVGUtil) {
+    var SVG3D = function(rootElem, rootAttr) {
+        var svg = new SVGUtil(rootElem, rootAttr);
+
+        // SVG 유틸 상속
+        this.__proto__ = svg;
+
+        // 3D 사각형 그리기
+        this.rect3d = function(fill, width, height, degree, depth) {
+            var radian = math.radian(degree),
+                x1 = 0,
+                y1 = 0,
+                w1 = width,
+                h1 = height;
+
+            var x2 = Math.cos(radian) * depth,
+                y2 = Math.sin(radian) * depth,
+                w2 = width + x2,
+                h2 = height + y2;
+
+            var g = svg.group({}, function() {
+                svg.path({
+                    fill: color.lighten(fill, 0.15),
+                    stroke: color.lighten(fill, 0.15)
+                }).MoveTo(x2, x1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2)
+                    .LineTo(x1, y2);
+
+                svg.path({
+                    fill: fill,
+                    stroke: fill
+                }).MoveTo(x1, y2)
+                    .LineTo(x1, h2)
+                    .LineTo(w1, h2)
+                    .LineTo(w1, y2);
+
+                svg.path({
+                    fill: color.darken(fill, 0.2),
+                    stroke: color.darken(fill, 0.2)
+                }).MoveTo(w1, h2)
+                    .LineTo(w2, h1)
+                    .LineTo(w2, y1)
+                    .LineTo(w1, y2);
+            });
+
+            return g;
+        }
+
+        // 3D 타원 그리기
+        this.cylinder3d = function(fill, width, height, degree, depth, rate) {
+            var radian = math.radian(degree),
+                rate = (rate == undefined) ? 1 : (rate == 0) ? 0.01 : rate,
+                r = width / 2,
+                tr = r * rate,
+                l = (Math.cos(radian) * depth) / 2,
+                d = (Math.sin(radian) * depth) / 2,
+                key = _.createId("cylinder3d");
+
+            var g = svg.group({}, function() {
+                svg.ellipse({
+                    fill: color.darken(fill, 0.05),
+                    "fill-opacity": 0.85,
+                    stroke: color.darken(fill, 0.05),
+                    rx: r,
+                    ry: d,
+                    cx: r,
+                    cy: height
+                }).translate(l, d);
+
+                svg.path({
+                    fill: "url(#" + key + ")",
+                    "fill-opacity": 0.85,
+                    stroke: fill
+                }).MoveTo(r - tr, d)
+                    .LineTo(0, height)
+                    .Arc(r, d, 0, 0, 0, width, height)
+                    .LineTo(r + tr, d)
+                    .Arc(r + tr, d, 0, 0, 1, r - tr, d)
+                    .translate(l, d);
+
+                svg.ellipse({
+                    fill: color.lighten(fill, 0.2),
+                    "fill-opacity": 0.95,
+                    stroke: color.lighten(fill, 0.2),
+                    rx: r * rate,
+                    ry: d * rate,
+                    cx: r,
+                    cy: d
+                }).translate(l, d);
+
+                svg.linearGradient({
+                    id: key,
+                    x1: "100%",
+                    x2: "0%",
+                    y1: "0%",
+                    y2: "0%"
+                }, function() {
+                    svg.stop({
+                        offset: "0%",
+                        "stop-color": color.lighten(fill, 0.15)
+                    });
+                    svg.stop({
+                        offset: "33.333333333333336%",
+                        "stop-color": color.darken(fill, 0.2)
+                    });
+                    svg.stop({
+                        offset: "66.66666666666667%",
+                        "stop-color": color.darken(fill, 0.2)
+                    });
+                    svg.stop({
+                        offset: "100%",
+                        "stop-color": color.lighten(fill, 0.15)
+                    });
+                });
+            });
+
+            return g;
+        }
+    }
+  
+    SVG3D.createElement = SVGUtil.createElement;
+
+    return SVG3D;
+});
+
 jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
     var UIRadio = function(ui, element, options) {
@@ -4502,15 +4673,6 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		this.data = [];
 		this.options = $.extend({ index: [], value: [] }, this.options);
 
-		// Private
-		/**
-		 * @private
-		 * @method _setting
-		 * @param type
-		 * @param e
-		 * @param order
-		 * @private
-		 */
 		this._setting = function(type, e, order) {
 			var self = this,
 				className = "active",
@@ -4559,35 +4721,14 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 	/**
 	 * @class ui.button
-	 * implements checkbox, radio button
 	 * @extends core
 	 * @alias Button
 	 * @requires jquery
 	 * @requires util.base
-	 *
 	 */
 	var UI = function() {
 		var ui_list = {};
 
-		/**
-		 * @event click
-		 * Fire when element is clicked on.
-		 * @param {Data} data clicked data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-
-		/**
-		 * @event change
-		 * Fire when element is changed.
-		 * @param {Data} data changed data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-
-		/**
-		 * @constructor
-		 */
 		this.init = function() {
             var self = this, opts = this.options;
 			
@@ -4604,8 +4745,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setIndex
-		 * check button by index
-		 * @param {Array} indexList  index list for button check
+         * Selects a button of a specified index
+         *
+		 * @param {Array} indexList Index for button check
 		 */
 		this.setIndex = function(indexList) {
             var btn = ui_list[this.options.type];
@@ -4618,8 +4760,9 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setValue
-		 * check button by value
-		 * @param valueList value list for button check
+         * Selects a button with a specified value
+         *
+		 * @param {Array} valueList Values for button check
 		 */
 		this.setValue = function(valueList) {
             var btn = ui_list[this.options.type];
@@ -4632,7 +4775,8 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getData
-		 * get data
+         * Gets the data of the button currently selected
+         *
 		 * @return {Array}
 		 */
 		this.getData = function() {
@@ -4641,9 +4785,10 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getValue
-		 * get selected value list
-		 * @return {Array}  return value list if it is check button
-		 * @return {Object}  return one value if it is radio button
+         * Gets the value of the button currently selected
+         *
+		 * @return {Array} Values
+		 * @return {Object} Value
 		 */
 		this.getValue = function() {
             var data = this.getData();
@@ -4663,7 +4808,7 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method reload
-		 * reload button data
+		 * Re-defines the button UI
 		 */
 		this.reload = function() {
 			ui_list[this.options.type]._setting("init");
@@ -4674,32 +4819,36 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
         return {
 			/**
 			 * @cfg {String} [type="radio"]
-			 * button type
+             * Determines whether to use a radio/check button
 			 */
 			type: "radio",
 
 			/**
-			 * @cfg
-			 * selected index
+			 * @cfg {Integer} [index=0]
+			 * Determines an initial selection button with a specified index
 			 */
 			index: 0,
 
 			/**
-			 * @cfg
-			 * selected value
+			 * @cfg {String} [index=""]
+			 * Determines an initial selection button with a specified value
 			 */
 			value: ""
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when clicking on a button
+     *
+     * @param {Object} data Data of the selected button
+     * @param {jQueryEvent} e The event object
+     */
 	
 	return UI;
 });
 jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var call_list = jui.get("ui.combo");
 		
@@ -4720,14 +4869,9 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	
 	
 	/**
-	 *
-	 * Combo Class
-	 *
-	 * 		@example
-	 * 		var combo = ui.combo("#root");
-	 *
 	 * @class ui.combo
 	 * @extends core
+     * @alias Combo Box
 	 * @requires jquery
 	 * @requires util.base
 	 */
@@ -4735,26 +4879,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		var ui_list = null, ui_data = null;
 		var index = -1;
 
-		/**
-		 * @event click
-		 * Fire when element is clicked on.
-		 * @param {Data} data clicked data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
 
-		/**
-		 * @event change
-		 * Fire when element is changed.
-		 * @param {Data} data changed data
-		 * @param {EventObject} e The event object
-		 * @preventable
-		 */
-					
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function load(type, data) {
 			var $combo_root = ui_list["root"],
 				$combo_text = ui_list["text"],
@@ -4883,13 +5008,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -4960,7 +5079,8 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method setIndex
-		 * set selected index
+		 * Selects a button of a specified index
+         *
 		 * @param {Number} index
 		 */
 		this.setIndex = function(index) {
@@ -4968,23 +5088,51 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("change", [ ui_data ]);
 		}
 
+        /**
+         * @method setValue
+         * Selects a button having a specified value
+         *
+         * @param {Mixed} value
+         */
 		this.setValue = function(value) {
 			load("value", value);
 			this.emit("change", [ ui_data ]);
 		}
-		
+
+        /**
+         * @method getData
+         * Gets the data of the button currently selected
+         *
+         * @return {Object}
+         */
 		this.getData = function() {
 			return ui_data;
 		}
-		
+
+        /**
+         * @method getValue
+         * Gets the value of the button currently selected
+         *
+         * @return {Mixed}
+         */
 		this.getValue = function() {
 			return (ui_data != null) ? ui_data["value"] : null;
 		}
 
+        /**
+         * @method getText
+         * Gets the markup text of the button currently selected
+         *
+         * @return {String}
+         */
 		this.getText = function() {
 			return (ui_data != null) ? ui_data["text"] : null;
 		}
-		
+
+        /**
+         * @method open
+         * Shows the element list of a combo box
+         */
 		this.open = function(e) {
 			ui_list["toggle"].addClass("active");
 			ui_list["drop"].outerWidth(ui_list["root"].outerWidth() - 1);
@@ -5003,7 +5151,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("open", e);
 			this.type = "open";
 		}
-		
+
+        /**
+         * @method fold
+         * Hides the element list of a combo box
+         */
 		this.fold = function() {
 			ui_list["drop"].hide();
 			ui_list["toggle"].removeClass("active");
@@ -5015,7 +5167,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			this.emit("fold");
 			this.type = "fold";
 		}
-		
+
+        /**
+         * @method reload
+         * Re-defines a combo box
+         */
 		this.reload = function() {
 			if(this.options.value != "") {
 				load("value", this.options.value);
@@ -5031,14 +5187,51 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [index=0]
+             * Determines an initial selection button with a specified index
+             */
 			index: 0,
+
+            /**
+             * @cfg {String} [value=0]
+             * Determines an initial selection button with a specified value
+             */
 			value: "",
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Determines the horizontal size of a combo box
+             */
 			width: 0,
+
+            /**
+             * @cfg {Integer} [height=100]
+             * Determines an initial selection button with a specified value
+             */
 			height: 100,
+
+            /**
+             * @cfg {Boolean} [keydown=false]
+             * It is possible to select a node using the keyboard
+             */
 			keydown: false,
+
+            /**
+             * @cfg {"top"/"bottom"} [position="bottom"]
+             * It is possible to determine an initial selection button with a specified value
+             */
 			position: "bottom"
         }
     }
+
+    /**
+     * @event change
+     * Event which occurs when selecting a combo box
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -5055,12 +5248,10 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.datepicker
-     * implements date picker
      * @extends core
-     * @alias DatePicker
+     * @alias Date Picker
      * @requires jquery
      * @requires util.base
-     *
      */
     var UI = function() {
     	var year = null, month = null, date = null,
@@ -5068,10 +5259,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var $head = null, $body = null;
 
 
-        /**
-         * Private Methods
-         *
-         */
         function setCalendarEvent(self) {
             self.addEvent($head.children(".prev"), "click", function(e) {
                 self.prev(e);
@@ -5269,12 +5456,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             return { objs: objs, nums: nums };
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
-
         this.init = function() {
             $head = $(this.root).children(".head");
             $body = $(this.root).children(".body");
@@ -5285,7 +5466,14 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             // 기본 날짜 설정
             this.select(this.options.date);
         }
-        
+
+        /**
+         * @method page
+         * Outputs a calendar that fits the year/month entered
+         *
+         * @param {Integer} year
+         * @param {Integer} month
+         */
         this.page = function(y, m) {
             if(arguments.length == 0) return;
             var opts = this.options;
@@ -5311,6 +5499,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             $head.children(".title").html(_.dateFormat(getCalendarDate(this), opts.titleFormat));
         }
 
+        /**
+         * @method prev
+         * Outputs a calendar that fits the previous year/month
+         *
+         */
         this.prev = function(e) {
             var opts = this.options;
 
@@ -5327,7 +5520,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             
             this.emit("prev", [ e ]);
         }
-        
+
+        /**
+         * @method next
+         * Outputs a calendar that fits the next year/month
+         *
+         */
         this.next = function(e) {
             var opts = this.options;
 
@@ -5344,7 +5542,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             this.emit("next", [ e ]);
         }
-        
+
+        /**
+         * @method select
+         * Selects today if there is no value, or selects a date applicable to a timestamp or year/month/date
+         *
+         * @param {"year"/"month"/"date"/"timestamp"/"Date"}
+         */
         this.select = function() {
         	var opts = this.options,
         		args = arguments;
@@ -5376,20 +5580,44 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 this.addTrigger(items[y], "click");
             }
         }
-        
+
+        /**
+         * @method addTime
+         * Selects a date corresponding to the time added to the currently selected date
+         *
+         * @param {"Integer"/"Date"} time Timestamp or Date
+         */
         this.addTime = function(time) {
         	selDate = new Date(this.getTime() + time);
         	this.select(this.getTime());
         }
 
+        /**
+         * @method getDate
+         * Gets the value of the date currently selected
+         *
+         * @return {Date} Date object
+         */
         this.getDate = function() {
             return selDate;
         }
 
+        /**
+         * @method getTime
+         * Gets the timestamp value of the date currently selected
+         *
+         * @return {Integer} Timestamp
+         */
         this.getTime = function() {
             return selDate.getTime();
         }
 
+        /**
+         * @method getFormat
+         * Gets a date string that fits the format entered
+         *
+         * @return {String} format Formatted date string
+         */
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
@@ -5399,22 +5627,64 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var now = getStartDate(new Date());
 
         return {
+            /**
+             * @cfg {"daily"/"monthly"/"yearly"} [type="daily"]
+             * Determines the type of a calendar
+             */
             type: "daily",
+
+            /**
+             * @cfg {String} [titleFormat="yyyy.MM"]
+             * Title format of a calendar
+             */
             titleFormat: "yyyy.MM",
+
+            /**
+             * @cfg {String} [format="yyyy-MM-dd"]
+             * Format of the date handed over when selecting a specific date
+             */
             format: "yyyy-MM-dd",
+
+            /**
+             * @cfg {Date} [date="now"]
+             * Selects a specific date as a basic
+             */
             date: now,
-            animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * @deprecated
+             */
+            animate: false
         };
     }
+
+    /**
+     * @event select
+     * Event that occurs when selecting a specific date
+     *
+     * @param {String} value Formatted date string
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event prev
+     * Event that occurs when clicking on the previous button
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event next
+     * Event that occurs when clicking on the next button
+     *
+     * @param {EventObject} e The event object
+     */
 
     return UI;
 });
 jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var hideAll = function() {
 		var dd = getDropdown();
 		
@@ -5460,20 +5730,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     /**
      * @class ui.dropdown
-     * implements dropdown menu
+     * Dropdown is a UI component that is frequently used in multiple UI components such as combo box, navigation, table, ect
+     *
      * @extends core
-     * @alias DropDown
+     * @alias Dropdown
      * @requires jquery
      *
      */
 	var UI = function() {
 		var ui_list = null, index = -1;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setEventNodes(self) {
 			var $list = $(ui_list.menu).find("li");
 			
@@ -5536,12 +5802,6 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			}
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var opts = this.options;
 			
@@ -5591,7 +5851,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
 			this.type = "hide"; // 기본 타입 설정
 		}
-		
+
+        /**
+         * @method update
+         * Changes the dropdown list
+         *
+         * @param {Array} nodes Dropdown list
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -5603,14 +5869,25 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method hide
+         * Hides the dropdown
+         */
 		this.hide = function() {
 			ui_list.root.hide();
 			
 			this.emit("hide");
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a dropdown at the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.show = function(x, y) {
 			hideAll();
 			
@@ -5628,12 +5905,26 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			this.emit("show");
 			this.type = "show";
 		}
-		
+
+        /**
+         * @method move
+         * Moves a dropdown to the specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.move = function(x, y) {
 			ui_list.root.css("left", x);
 			ui_list.root.css("top", y);
 		}
-		
+
+        /**
+         * @method wheel
+         * Changes a selected node upwards when the key is set to -1, or downwards when the key is set to 1. If the key is set to 0, the speciified node is selected
+         *
+         * @param {Integer} key
+         * @param {Function} callback
+         */
 		this.wheel = function(key, callback) {
 			if(!this.options.keydown) return;
 			
@@ -5671,7 +5962,11 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				if(callback) callback();
 			}
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the dropdown list
+         */
 		this.reload = function() {
 			this.init();
 			this.emit("reload");
@@ -5680,24 +5975,77 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Boolean} [close=true]
+             * Closes the Auto when clicking on the dropdown list
+             */
 			close: true,
+
+            /**
+             * @cfg {Boolean} [keydown=false]
+             * It is possible to choose anything on the dropdown list with the arrow keys on the keyboard
+             */
 			keydown: false,
+
+            /**
+             * @cfg {Integer} [left=0]
+             * Sets the X coordinate of the dropdown list
+             */
 			left: 0,
+
+            /**
+             * @cfg {Integer} [top=0]
+             * Sets the Y coordinate of the dropdown list
+             */
 			top: 0,
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Determines the horizontal size of a dropdown list
+             */
 			width: 0,
+
+            /**
+             * @cfg {Integer} [height=0]
+             * Determines the vertical size of a dropdown list
+             */
 			height: 0,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a dropdown list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when anything on the dropdown list is selected
+     *
+     * @param {Object} data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event show
+     * Event that occurs when a dropdown is shown
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a dropdown is hidden
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when a dropdown is reloaded
+     */
 	
 	return UI;
 });
 jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
+
 	var win_width = 0;
 	
 	_.resize(function() {
@@ -5719,7 +6067,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.modal
-     * implements modal window
+     * Developed as a separate component so that the modal, which is used in UI components such as window or loading, can be used more universally
+     *
      * @extends core
      * @alias Modal
      * @requires jquery
@@ -5731,11 +6080,6 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		var uiObj = null, uiTarget = null;
 		var x = 0, y = 0, z_index = 5000;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
 		function setPrevStatus(self) {
 			uiObj = { 
 				"position": $(self.root).css("position"),
@@ -5813,13 +6157,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			setPrevStatus(this); // 이전 상태 저장
 
@@ -5831,7 +6169,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			// 타입 프로퍼티 설정
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method hide
+         * Hides a modal
+         */
 		this.hide = function() {
 			var opts = this.options;
 
@@ -5851,7 +6193,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a modal
+         */
 		this.show = function() {
 			var opts = this.options,
 				info = getModalInfo(this);
@@ -5872,6 +6218,10 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			this.type = "show";
 		}
 
+        /**
+         * @method resize
+         * Re-adjust the location of a modal
+         */
         this.resize = function() {
             var info = getModalInfo(this);
 
@@ -5890,12 +6240,41 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a modal
+             */
 			color: "black",
+
+            /**
+             * @cfg {Float} [opacity=0.4]
+             * Sets the transparency of a modal
+             */
 			opacity: 0.4,
+
+            /**
+             * @cfg {String/DOMElement} [target="body"]
+             * Sets a selector on which a modal is shown
+             */
 			target: "body",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Determines the sequence (index) of a modal
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [clone=false]
+             * Copies an existing modal and shows it
+             */
 			clone: false,
-			autoHide: true // 자신을 클릭했을 경우, hide
+
+            /**
+             * @cfg {Boolean} [autoHide=true]
+             * Automatically hides a modal when clicking on it
+             */
+			autoHide: true
         }
     }
 	
@@ -5906,7 +6285,8 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     /**
      * @class ui.notify
-     * implements notify layer
+     * Notify component that provides an alarm function for when a serious problem or event occurs
+     *
      * @extends core
      * @alias Notify
      * @requires jquery
@@ -5915,11 +6295,6 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var UI = function() {
     	var $container = null,
             paddingPos = null;
-    	
-        /**
-         * Public Methods
-         *
-         */
 
         this.init = function() {
             var opts = this.options;
@@ -5957,6 +6332,13 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             return this;
         }
 
+        /**
+         * @method add
+         * Adds a notice message. The value passed is the data object shown by the notice template
+         *
+         * @param {Object} data
+         * @param {Integer} timeout
+         */
         this.add = function(data, timeout) {
             var self = this, 
             	opts = this.options,
@@ -6017,7 +6399,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
                 return (opts.position.indexOf("top-") != -1) ? true : false;
             }
         }
-        
+
+        /**
+         * @method reset
+         * Removes all notice messages that are enabled
+         */
         this.reset = function() {
         	$container.empty();
         }
@@ -6025,15 +6411,76 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-            padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-            distance: 5, // 알림끼리의 간격
-            timeout: 3000, // 0이면 사라지지 않음
+            /**
+             * @cfg {"top"/"top-lefet"/"top-right"/"bottom"/"bottom-left"/"bottom-right"} [position="top-right"]
+             * Designates the location where a notice message is added
+             */
+            position: "top-right",
+
+            /**
+             * @cfg {Integer} [padding=12]
+             * Determines the margin value of a notice message (the margin value may be in object form rather than a numeric value)
+             */
+            padding: DEF_PADDING,
+
+            /**
+             * @cfg {Integer} [distance=5]
+             * Determines each margin value when there are multiple notice messages
+             */
+            distance: 5,
+
+            /**
+             * @cfg {Integer} [timeout=3000]
+             * Determines the duration for which a notice message is displayed (the message does not disappear when the value is 0)
+             */
+            timeout: 3000,
+
+            /**
+             * @cfg {Integer} [showDuration=500]
+             * Determines the duration of an effect when a notice message is shown
+             */
             showDuration: 500,
+
+            /**
+             * @cfg {Integer} [hideDuration=500]
+             * Determines the duration of an effect when a notice message disappears
+             */
             hideDuration: 500,
+
+            /**
+             * @cfg {String} [showEasing="swing"]
+             * Determines an effect when a notice message is shown (see CSS3 specifications)
+             */
             showEasing: "swing",
+
+            /**
+             * @cfg {String} [hideEasing="linear"]
+             * Determines an effect when a notice message disappears (see CSS3 specifications)
+             */
             hideEasing: "linear"
         };
+
+        /**
+         * @event select
+         * Event that occurs when a notice message is clicked
+         *
+         * @param {Object} data
+         * @param {EventObject} e The event object
+         */
+
+        /**
+         * @event show
+         * Event that occurs when a notice message is shown
+         *
+         * @param {Object} data
+         */
+
+        /**
+         * @event hide
+         * Event that occurs when a notice message is hidden
+         *
+         * @param {Object} data
+         */
     }
 
     return UI;
@@ -6042,21 +6489,16 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     /**
      * @class ui.paging
-     * implements pagination
+     * Paging component that can be applied to a screen with tables or various other data
+     *
      * @extends core
      * @alias Paging
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var activePage = 1, lastPage = 1;
 		var $main = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function setEventAction(self) {
 			self.addEvent($(self.root).find(".prev"), "click", function(e) {
 				self.prev();
@@ -6119,12 +6561,6 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			setPageStyle(self, activePage);
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -6137,7 +6573,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			
 			return this;
 		}
-		
+
+        /**
+         * @method reload
+         * Reloads the number of specified data records, or reloads the initially configured number of data records if there is no parameter
+         *
+         * @param {Integer} count Data total count
+         */
 		this.reload = function(count) {
 			var count = (!count) ? this.options.count : count;
 			
@@ -6147,7 +6589,13 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			changePage(this, activePage);
 			this.emit("reload");
 		}
-		
+
+        /**
+         * @method page
+         * Changes to a specified page number, and gets the currently enabled page number if there is no parameter
+         *
+         * @param {Integer} pNo Page number
+         */
 		this.page = function(pNo) {
 			if(!pNo) return activePage;
 			
@@ -6155,18 +6603,34 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			this.emit("page", [ activePage ]);
 		}
 
+        /**
+         * @method next
+         * Changes to the next page
+         */
 		this.next = function() {
 			this.page(activePage + 1);
 		}
-		
+
+        /**
+         * @method prev
+         * Changes to the previous page
+         */
 		this.prev = function() {
 			this.page(activePage - 1);
 		}
-		
+
+        /**
+         * @method first
+         * Changes to the first page
+         */
 		this.first = function() {
 			this.page(1);
 		}
 
+        /**
+         * @method last
+         * Changes to the last page
+         */
 		this.last = function() {
 			this.page(lastPage);
 		}
@@ -6174,11 +6638,37 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-			count: 0,		// 데이터 전체 개수
-			pageCount: 10,	// 한페이지당 데이터 개수
-			screenCount: 5	// 페이지 개수
+            /**
+             * @cfg {Integer} [count=0]
+             * Total number of data records subject to paging)
+             */
+			count: 0,
+
+            /**
+             * @cfg {Integer} [pageCount=10]
+             * Number of data records per page
+             */
+			pageCount: 10,
+
+            /**
+             * @cfg {Integer} [screenCount=5]
+             * Number of pages shown on the paging screen
+             */
+			screenCount: 5
         }
     }
+
+    /**
+     * @event page
+     * Event that occurs when the page is changed
+     *
+     * @param {Integer} page Active page number
+     */
+
+    /**
+     * @event reload
+     * Event that occurs when the page is reloaded
+     */
 	
 	return UI;
 });
@@ -6186,21 +6676,16 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     /**
      * @class ui.tooltip
-     * implements tooltip
+     * Tooltip component can be applied to 4 locations, namely top/bottom/left/right, and a relate message can be entered in the title properties
+     *
      * @extends core
      * @alias Tooltip
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var $tooltip = null;
 		var pos = {}, title = "", delay = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createTooltip(self, msg) {
             // 메시지 템플릿 적용
 			$tooltip = $(self.tpl.item({
@@ -6279,12 +6764,6 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 				
@@ -6324,6 +6803,12 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
 		}
 
+        /**
+         * @method update
+         * Changes the content of a tooltip
+         *
+         * @param {String} text
+         */
         this.update = function(newTitle) {
             title = newTitle;
         }
@@ -6331,14 +6816,54 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a tooltip
+             */
             color: "black",
+
+            /**
+             * @cfg {"top"/"bottom"/"left"/"right"} [position="top"]
+             * Determines the location where a tooltip is shown
+             */
             position: "top",
+
+            /**
+             * @cfg {Integer} [width=150]
+             * Determines the horizontal size of a tooltip
+             */
             width: 150,
+
+            /**
+             * @cfg {"left"/"right"/"center"} [align="left"]
+             * Determines the alignment state inside a tooltip
+             */
             align: "left",
+
+            /**
+             * @cfg {Integer} [delay=0]
+             * Determines the event time when a tooltip is shown
+             */
             delay: 0,
+
+            /**
+             * @cfg {String} [showType="mouseover"]
+             * Determines the type of event that triggers a tooltip
+             */
             showType: "mouseover",
+
+            /**
+             * @cfg {String} [hideType="mouseout"]
+             * Determines the type of event that hides a tooltip
+             */
             hideType: "mouseout",
+
+            /**
+             * @cfg {String} [title=""]
+             * Sets the content of a tooltip (referring to the title properties in markup)
+             */
             title: "",
+
             tpl: {
                 item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
                 "<div class='anchor'></div><div class='message'><!= message !></div>" +
@@ -6346,6 +6871,21 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
     }
+
+    /**
+     * @event show
+     * Event that occurs when a tooltip is shown
+     *
+     * @param {DOMElement} tooltip
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a tooltip is hidden
+     *
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -6353,7 +6893,8 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.layout
-     * implements layout
+     * Layout can split the screen into areas and each area will be resizable
+     *
      * @extends core
      * @alias Layout
      * @requires jquery
@@ -6584,12 +7125,6 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
             self.resize();
         }
 	
-	
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			var $root, $top, $left, $right, $bottom, $center;
@@ -6638,7 +7173,11 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
  
 			return this; 			
 		}
-		
+
+        /**
+         * @method resize
+         * Resets the layout
+         */
 		this.resize = function() {
 			var $obj = null, $option = null;
             var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
@@ -6827,14 +7366,58 @@ jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String} [barColor="#d6d6d6"]
+             * Determines the color of the resizing bar
+             */
 			barColor : '#d6d6d6',
+
+            /**
+             * @cfg {Integer} [barSize=3]
+             * Determines the size of the resizing bar
+             */
 			barSize : 3,
+
+            /**
+             * @cfg {Integer} [width=null]
+             * Determines the container area value
+             */
 			width	: null,
+
+            /**
+             * @cfg {Integer} [height=null]
+             * Determines the container height value
+             */
 			height	: null,
+
+            /**
+             * @cfg {Object} top
+             * Configures options for the top area
+             */
 			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} left
+             * Configures options for the left area
+             */
 			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} right
+             * Configures options for the right area
+             */
 			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} bottom
+             * Configures options for the bottom area
+             */
 			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} center
+             * Configures options for the center area
+             */
 			center	: { el : null }
         }
     }
@@ -6850,7 +7433,6 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
      * @extends core
      * @alias Accordion
      * @requires jquery
-     *
      */
     var UI = function() {
         var activeIndex = 0;
@@ -6899,6 +7481,12 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             setTitleEvent(this);
         }
 
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled node
+         *
+         * @return {Integer} Index
+         */
         this.activeIndex = function() {
             return activeIndex;
         }
@@ -6906,10 +7494,35 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [index=null]
+             * Sets an enabled node
+             */
             index: null,
+
+            /**
+             * @cfg {Boolean} [autoFold=false]
+             * When you click on a node, the node folding
+             */
             autoFold: false
         }
     }
+
+    /**
+     * @event open
+     * When a node is opened, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
+
+    /**
+     * @event fold
+     * When a node is closed, the events that occur
+     *
+     * @param {Integer} index Index
+     * @param {jQueryEvent} e The event object
+     */
 
     return UI;
 });
@@ -6917,24 +7530,17 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 	
 	/**
 	 * @class uix.autocomplete
-     * 
-     * 자동 완성 컴포넌트
-     * 
+     * Auto complete component that shows a list of keywords containing the input value when inputting a string in a text box
+     *
      * @extends core
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-	 * 
 	 */
 	var UI = function() {
 		var ddUi = null, target = null,
             words = [], list = [];
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createDropdown(self, words) {
 			if(words.length == 0) {
 				if(ddUi) ddUi.hide();
@@ -6992,13 +7598,7 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 				return false;
 			});
 		}
-		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
+
 		this.init = function() {
 			var opts = this.options;
 			
@@ -7010,12 +7610,24 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
             // 단어 업데이트
             this.update(opts.words);
-		}		
-		
+		}
+
+        /**
+         * @method update
+         * Updates words subject to autofill
+         *
+         * @param {Array} words
+         */
 		this.update = function(newWords) {
 			words = newWords;
 		}
 
+        /**
+         * @method list
+         * Gets filtered words subject to autofill
+         *
+         * @return {Array} words
+         */
         this.list = function() {
             return list;
         }
@@ -7023,10 +7635,26 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=null]
+             * Designates a target selector when an autofill route is not a target
+             */
 			target: null,
+
+            /**
+             * @cfg {Array} words
+             * Designates words subject to autofill
+             */
 			words: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when you click on a dropdown that shows a word list
+     *
+     * @param {String} word Changed word
+     */
 	
 	return UI;
 });
@@ -7034,13 +7662,11 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     /**
      * @class uix.tab
-     * implements tab controller
      * @extends core
      * @alias Tab
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-     *
      */
 	var UI = function() {
 		var ui_menu = null,
@@ -7048,12 +7674,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 		var menuIndex = -1, // menu index
 			activeIndex = 0;
-		
-			
-		/**
-		 * Private Methods
-		 * 
-		 */
 		
 		function hideAll(self) {
 			var $list = $(self.root).children("li");
@@ -7215,12 +7835,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			changeTab(self, $list.index($node));
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -7246,7 +7860,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 					event: {
 						change: function(data, e) {
 							hideMenu(self);
-							self.emit("changeMenu", [ data, e ]);
+							self.emit("changemenu", [ data, e ]);
 						},
 						hide: function() {
 							hideMenu(self);
@@ -7257,7 +7871,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			return this;
 		}
-		
+
+        /**
+         * @method update
+         * Changes the tab list
+         *
+         * @param {Array} nodes
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -7269,7 +7889,14 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method insert
+         * Adds a tab at a specified index
+         *
+         * @param {Integer} index
+         * @param {Object} node
+         */
 		this.insert = function(index, node) {
 			if(!this.tpl.node) return;
 			
@@ -7284,7 +7911,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method append
+         * Adds a tab to the last node
+         *
+         * @param {Object} node
+         */
 		this.append = function(node) {
 			if(!this.tpl.node) return;
 
@@ -7299,19 +7932,38 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method prepend
+         * Adds a tab to the first node
+         *
+         * @param {Object} node
+         */
 		this.prepend = function(node) {
 			if(!this.tpl.node) return;
 
 			$(this.root).prepend(this.tpl.node(node));
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method remove
+         * Removes a tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.remove = function(index) {
 			$(this.root).children("li").eq(index).remove();
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method move
+         * Changes a specified tab to a tab at a target index
+         *
+         * @param {Integer} index
+         * @param {Integer} targetIndex
+         */
 		this.move = function(index, targetIndex) {
 			if(index == targetIndex) return;
 			
@@ -7335,7 +7987,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			activeIndex = targetIndex;
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method show
+         * Enables the tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.show = function(index) {
             if(index == menuIndex || index == activeIndex) return;
 
@@ -7350,7 +8008,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			changeTab(this, index);
 		}
-		
+
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled tab
+         *
+         * @return {Integer}
+         */
 		this.activeIndex = function() {
 			return activeIndex;
 		}
@@ -7358,12 +8022,87 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=""]
+             * Determines a selector in the area to become the content of a tab
+             */
 			target: "",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Sets an enabled tab
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [drag=false]
+             * Changes the tab location through dragging
+             */
 			drag: false,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a tab list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when a tab is enabled
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event click
+     * Event that occurs when a tab is mouse clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event rclick
+     * Event that occurs when a tab is mouse right clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event menu
+     * Event which occurs when tab menu shown
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event changemenu
+     * Event that occurs when a dropdown is selected
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragstart
+     * Event that occurs when a tab starts to move
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragend
+     * Event that occurs when the movement of a tab is completed
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -8634,7 +9373,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 				thead: $(this.root).find("thead"),
 				tbody: $(this.root).find("tbody")
 			};
-			
+
 			// UITable 객체 생성
 			this.uit = new Base({
 				$obj: $obj, $tpl: this.tpl 
@@ -10233,7 +10972,8 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
     /**
      * @class uix.window
-     * implements Window Component
+     * The window is a layer component that can replace pop-ups
+     *
      * @extends core
      * @alias Window
      * @requires jquery
@@ -10249,22 +10989,11 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			info = {},
 			ui_modal = null;
 
-		
-		/**
-		 * Private Methods
-		 *
-		 */
 		function setBodyResize() {
 			var bottom = (info.$foot.length < 1) ? 5 : info.$foot.outerHeight();
 			info.$body.outerHeight(info.$root.outerHeight() - info.$head.outerHeight() - bottom);
 		}
-		
-		
-		/**
-		 * Public Methods
-		 *
-		 */
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -10366,7 +11095,11 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 				ui_modal = modal(self.root, $.extend({ autoHide: false }, modalOpts));
 			}
 		}
-		
+
+        /**
+         * @method hide
+         * Hides a window
+         */
 		this.hide = function() {
 			if(ui_modal) ui_modal.hide();
 			else info.$root.hide();
@@ -10374,7 +11107,14 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 			this.emit("hide");
 			this.type = "hide";
 		}
-		
+
+        /**
+         * @method show
+         * Shows a window at specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.show = function(x, y) {
 			if(ui_modal) ui_modal.show();
 			else info.$root.show();
@@ -10386,31 +11126,65 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
 			setBodyResize();
 		}
-		
+
+        /**
+         * @method move
+         * Moves a window at specified coordinates
+         *
+         * @param {Integer} x
+         * @param {Integer} y
+         */
 		this.move = function(x, y) {
 			info.$root.css("left", x);
 			info.$root.css("top", y);
 		}
-		
+
+        /**
+         * @method update
+         * Changes the markup in the body area of a window
+         *
+         * @param {String} html
+         */
 		this.update = function(html) {
 			info.$body.empty().html(html);
 		}
-		
+
+        /**
+         * @method setTitle
+         * Changes the markup of the title tag in the head area of a window
+         *
+         * @param {String} title
+         */
 		this.setTitle = function(html) {
 			info.$head.find(".title").empty().html(html);
 		}
-		
+
+        /**
+         * @method setSize
+         * Changes the horizontal/vertical size of a window
+         *
+         * @param {Integer} width
+         * @param {Integer} height
+         */
 		this.setSize = function(w, h) {
 			info.$root.width(w);
 			info.$root.height(h);
 			
 			setBodyResize();
 		}
-		
+
+        /**
+         * @method resize
+         * Designates a scroll area if there is a lot of content in the window body area
+         */
 		this.resize = function() {
 			setBodyResize();
 		}
 
+        /**
+         * @method resizeModal
+         * Re-adjust the location of a modal window
+         */
         this.resizeModal = function() {
             if(!ui_modal) return;
 
@@ -10420,19 +11194,99 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Integer} [width=400]
+             * Determines the horizontal size of a window
+             */
 			width: 400,
+
+            /**
+             * @cfg {Integer} [height=300]
+             * Determines the height of a window
+             */
 			height: 300,
+
+            /**
+             * @cfg {String/Integer} [left="auto"]
+             * Determines the X coordinate of a window
+             */
 			left: "auto",
+
+            /**
+             * @cfg {String/Integer} [top="auto"]
+             * Determines the Y coordinate of a window
+             */
 			top: "auto",
+
+            /**
+             * @cfg {String/Integer} [right="auto"]
+             * Determines the X coordinate based on the right side of a window
+             */
 			right: "auto",
+
+            /**
+             * @cfg {String/Integer} [bottom="auto"]
+             * Determines the Y coordinate based on the bottom side of a window
+             */
 			bottom: "auto",
+
+            /**
+             * @cfg {Boolean} [modal=false]
+             * Applies a modal UI to a window
+             */
 			modal: false,
+
+            /**
+             * @cfg {Boolean} [move=true]
+             * It is possible to move a window
+             */
 			move: true,
+
+            /**
+             * @cfg {Boolean} [resize=true]
+             * It is possible to resize a window
+             */
 			resize: true,
+
+            /**
+             * @cfg {Integer} [modalIndex=0]
+             * Determines the z-index property of a modal UI
+             */
 			modalIndex: 0,
-			animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * Determines whether to use the animation effect of a UI
+             *
+             * @deprecated
+             */
+			animate: false
         }
     }
+
+    /**
+     * @event show
+     * Event that occurs when a window is shown
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a window is hidden
+     */
+
+    /**
+     * @event move
+     * Event that occurs when a window is moved
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event resize
+     * Event that occurs when a window is resized
+     *
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -11289,8 +12143,10 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * Draw 객체 기본 포맷 메소드
+         * @method format
+         * Get a default format callback of draw object.
          *
+         * @return {Function}
          */
         this.format = function() {
             var draw = this.grid || this.brush || this.widget,
@@ -11300,13 +12156,15 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
         }
 
         /**
+         * @method balloonPoints
+         *
          * 말풍선 그리그 메소드
          *
-         * @param type
-         * @param w
-         * @param h
-         * @param anchor
-         * @returns {string}
+         * @param {String} type
+         * @param {Number} w
+         * @param {Number} h
+         * @param {Number} anchor
+         * @return {String}
          */
         this.balloonPoints = function(type, w, h, anchor) {
             var points = [];
@@ -11355,9 +12213,9 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
     Draw.setup = function() {
         return {
-            /** @cfg {String} [type=null] */
+            /** @cfg {String} [type=null] Specifies the type of a widget/brush/grid to be added.*/
             type: null,
-            /** @cfg {Boolean} [animate=false] */
+            /** @cfg {Boolean} [animate=false] Run the animation effect.*/
             animate: false
         }
     }
@@ -11365,7 +12223,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 
     /**
      * @class chart.axis
@@ -11380,9 +12238,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {};
+        var _area = {}, _clipId = "", _clipPath = null;
 
-        function caculatePanel(a) {
+        function caculatePanel(a, padding) {
+
             a.x = getRate(a.x, chart.area('width'));
             a.y = getRate(a.y, chart.area('height'));
             a.width = getRate(a.width, chart.area('width'));
@@ -11390,6 +12249,16 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             a.x2 = a.x + a.width;
             a.y2 = a.y + a.height;
+            
+            // 패딩 개념 추가 
+            a.x += padding.left || 0;
+            a.y += padding.top || 0;
+            
+            a.x2 -= padding.right || 0;
+            a.y2 -= padding.bottom || 0;
+            
+            a.width = a.x2 - a.x;
+            a.height = a.y2 - a.y;
 
             return a;
         }
@@ -11409,12 +12278,12 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             axis[k] = axis[k]  || {};
 
             if (k == "x") {
-                axis[k].orient = axis[k].orient == 'top' ? 'top' : 'bottom';
-            } else if (k == 'y') {
-                axis[k].orient = axis[k].orient == 'right' ? 'right' : 'left';
-            } else if (k == 'c') {
-                axis[k].type = axis[k].type || 'panel';
-                axis[k].orient = 'custom';
+                axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
+            } else if (k == "y") {
+                axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "c") {
+                axis[k].type = axis[k].type || "panel";
+                axis[k].orient = "custom";
             }
 
             // 다른 그리드 옵션을 사용함
@@ -11438,19 +12307,20 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // 그리드 별 위치 선정하기
             if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area('x') + self.area("x") - axis[k].dist, chart.area('y'));
+                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area('x') + self.area("x2") + axis[k].dist, chart.area('y'));
+                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y2") + axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
             } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y") - axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
             } else {
                 // custom
-                if(elem.root) elem.root.translate(chart.area('x') + self.area("x"), chart.area('y') + self.area('y'));
+                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             }
 
             elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
 
             return elem.scale;
         }
@@ -11491,7 +12361,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 shift : cloneAxis.shift,
                 page : cloneAxis.page
             });
-            
+
             // 원본 데이터 설정
             self.origin = self.data;
 
@@ -11500,6 +12370,28 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // Grid 및 Area 설정
             self.reload(cloneAxis);
+        }
+        
+        function createClipPath() {
+            if (_clipPath) {
+                _clipPath.remove();
+                _clipPath = null;
+            }
+            
+            _clipId = _.createId("clip-id-");
+
+            _clipPath = chart.svg.clipPath({
+                id: _clipId
+            }, function() {
+                chart.svg.rect({
+                    x: _area.x,
+                    y: _area.y,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+            
+            chart.appendDefs(_clipPath);
         }
 
         /**
@@ -11544,11 +12436,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: area.width, height: area.height
-            }, true));
+            }, true), options.padding || {});
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
+            
+            createClipPath();
         }
 
         /**
@@ -11561,6 +12455,22 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
+        }
+
+        /**
+         * @method get
+         *
+         * Axis 의 옵션 정보를 리턴한다.
+         *
+         * @param key
+         */
+        this.get = function(type) {
+            var obj = {
+                area: _area,
+                clipId: _clipId
+            };
+
+            return obj[type] || cloneAxis[type];
         }
 
         /**
@@ -11651,7 +12561,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @method zoom 
          * 
          * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
-         *  *  
+         *
          * @param {Number} start
          * @param {Number} end
          */
@@ -11665,39 +12575,53 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-        
+
         init();
     }
 
     Axis.setup = function() {
+
         return {
-            /** @cfg {chart.grid.core} [x=null]  x축 그리드 */
+            /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
-            /** @cfg {chart.grid.core} [y=null]  y축 그리드 */
+            /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
-            /** @cfg {chart.grid.core} [c=null]  커스텀 그리드 */
+            /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
-            /** @cfg {Array} [data=[]]  Axis 에서 사용할 data  */
+            /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
-            /** @cfg {Array} [origin=[]]  원본 data  */
+            /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */
             origin: [],
-            /** @cfg {Object} [keymap={}] 데이터 키-맵 */
+            /** @cfg {Object} [keymap={}] grid's data key map  */
             keymap: {},
-            /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
+            /** @cfg {Object} [area={}]  set area(x, y, width, height) of axis */
             area: {},
-            /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
+            /**
+             * @cfg  {Object} padding axis padding
+             * @cfg  {Number} [padding.top=0] axis's top padding
+             * @cfg  {Number} [padding.bottom=0] axis's bottom padding
+             * @cfg  {Number} [padding.left=0] axis's left padding
+             * @cfg  {Number} [padding.right=0] axis's right padding
+             */
+            padding : {},
+            /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
-            /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
+            /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
-            /** @cfg {Number} [page=1]  현재 표시될 페이지 */
-            page: 1
+            /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
+            page: 1,
+
+            /** @cfg {Number} [degree=0]  Set degree of 3d chart */
+            degree: 0,
+            /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
+            depth: 0
         }
     }
 
     return Axis;
 });
 
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
     /**
@@ -11731,13 +12655,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     /**
      * @class chart.builder
      *
-     * implements chart builder
+     * Implements chart builder
      *
      * @extends core
      * @alias ChartBuilder
      * @requires util.base
      * @requires util.svg
      * @requires util.color
+     * @requires chart.axis
      * @requires jquery
      *
      */
@@ -11750,7 +12675,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method caculate
          * 
-         * chart 기본 영역 계산
+         * caculate chart's default area
          *
          * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
          *
@@ -11793,29 +12718,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
+            // defs 엘리먼트 생성
+            _defs = self.svg.defs();
+
             // 해쉬 코드 초기화
             _hash = {};
-        }
-
-        /**
-         * @method drawDefs
-         * define svg default pattern, clipPath, Symbol  
-         * @param {chart.builder} self
-         * @private
-         */
-        function drawDefs(self) {
-            _defs = self.svg.defs(function() {
-                self.svg.clipPath({
-                    id: "clip-id-" + self.timestamp
-                }, function() {
-                    self.svg.rect({
-                        x: 0,
-                        y: 0,
-                        width: self.area("width"),
-                        height: self.area("height")
-                    });
-                });
-            });
         }
 
         /**
@@ -11894,7 +12801,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * implements widget draw 
          *  
          * @param {chart.builder} self
-         * @param {Boolean} isAll  whether redraw widget 
+         * @param {Boolean} isAll  Whether redraw widget
          * @private  
          */
         function drawWidget(self, isAll) {
@@ -12053,7 +12960,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function createGradient(self, obj, hashKey) {
+        function createGradient(obj, hashKey) {
             if(!_.typeCheck("undefined", hashKey) && _hash[hashKey]) {
                 return "url(#" + _hash[hashKey] + ")";
             }
@@ -12074,7 +12981,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             return "url(#" + id + ")";
         }
         
-        function createPattern(self, obj) {
+        function createPattern(obj) {
             if (_.typeCheck("string", obj)) {
                 obj = obj.replace("url(#", "").replace(")", "");
 
@@ -12102,9 +13009,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     patternElement = patternElement.call(patternElement);
                 }
 
-                if (!patternElement.attr('id')) {
-                    patternElement.attr({id : obj})
+                // json 객체를 svg element 로 변환
+                if (patternElement.attr && !patternElement.attr.id) {
+                    patternElement.attr.id = obj;
                 }
+
+                patternElement = SVGUtil.createElement(patternElement);
 
                 _defs.append(patternElement);
                 
@@ -12129,22 +13039,22 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function createColor(self, color) {
+        function createColor(color) {
             if(_.typeCheck("undefined", color)) {
                 return "none";
             }
 
             if(_.typeCheck("object", color)) {
                 
-                if (color.type == 'pattern') {
-                    return createPattern(self, color);
+                if (color.type == "pattern") {
+                    return createPattern(color);
                 } else {
-                    return createGradient(self, color);
+                    return createGradient(color);
                 }
             }
             
-            if (typeof color == 'string') {
-                var url = createPattern(self, color);
+            if (typeof color == "string") {
+                var url = createPattern(color);
                 if (url) {
                     return url; 
                 }
@@ -12154,15 +13064,24 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             if(parsedColor == color)
                 return color;
 
-            return createGradient(self, parsedColor, color);
+            return createGradient(parsedColor, color);
         }
 
-        function setThemeStyle(theme, options) {
+        function setThemeStyle(theme) {
+            var style = {};
+
+            // 테마를 하나의 객체로 Merge
             if(_.typeCheck("string", theme)) {
-                _theme = _.extend(jui.include("chart.theme." + theme), options);
+                _.extend(style, jui.include("chart.theme." + theme));
+                _.extend(style, _options.style);
             } else if(_.typeCheck("object", theme)) {
-                _theme = _.extend(_theme, theme);
+                _.extend(_theme, _options.style);
+                _.extend(_theme, theme);
+                _.extend(style, _theme);
             }
+
+            // 최종 렌더링에 적용되는 객체
+            _theme = style;
         }
 
         function setDefaultOptions(self) {
@@ -12197,7 +13116,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        function setChartIcons(self) {
+        function setChartIcons() {
             var icon = _options.icon;
             if(!_.typeCheck("string", icon.path)) return;
 
@@ -12228,9 +13147,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setDefaultOptions(this);
 
             // 차트 테마 설정 (+옵션 스타일)
-            setThemeStyle(_options.theme, _options.style);
+            setThemeStyle(_options.theme);
 
             // svg 기본 객체 생성
+            /** @property {chart.svg} svg Refers to an SVG utility object. */
             this.svg = new SVGUtil(this.root, {
                 width: _options.width,
                 height: _options.height,
@@ -12244,15 +13164,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             setChartEvent(this);
 
             // 아이콘 폰트 설정
-            setChartIcons(this);
+            setChartIcons();
         }
-
+        
         /**
          * @method get  
-         * get option's property of chart builder 
          *
-         * @param {String} type "axis", "brush", "widget", "series", "padding", "area"
-         * @param {String} key  property name
+         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         *
+         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {String} key  Property name
+         * @return {Mixed/Object}
          */
         this.get = function(type, key) {
             var obj = {
@@ -12272,40 +13194,41 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 엑시스 객체를 반환
+         * Gets the axis object of that index.
          *
-         * @param key
-         * @returns {Array}
+         * @param {Number} key
+         * @returns {Array/Object}
          */
         this.axis = function(key) {
             return _.typeCheck("undefined", _axis[key]) ? _axis : _axis[key];
         }
 
         /**
-         * 차트의 영역 요소 반환
+         * Gets a calculated value for a chart area (type: width, height, x, y, x2, y2)).
          *
-         * @param key (width | height | x | y | x2 | y2)
-         * @returns {*}
+         * @param {String} key
+         * @return {Number/Object}
          */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
         }
 
         /**
-         * 차트의 여백 요소 반환
-         * @param key (top | left | bottom | right)
-         * @returns {*}
+         * Gets the top, bottom, left and right margin values.
+         *
+         * @param {"top"/"left"/"bottom"/"right"} key
+         * @return {Number/Object}
          */
         this.padding = function(key) {
             return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
         }
 
         /**
-         * 브러쉬 컬러 관련 함수
+         * Gets a color defined in the theme or the color set.
          *
-         * @param dataIndex
-         * @param brush
-         * @returns {*}
+         * @param {Number} i
+         * @param {chart.brush.core} brush
+         * @return {String} Selected color string
          */
         this.color = function(i, brush) {
             var color;
@@ -12345,23 +13268,25 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
 
-            return createColor(this, color);
+            return createColor(color);
         }
 
         /**
-         * 아이콘 유니코드를 가져오는 함수
+         * Gets the unicode string of the icon.
          *
-         * @param key
+         * @param {String} key  icon's alias
          */
         this.icon = function(key) {
             return jui.include("chart.icon." + _options.icon.type)[key];
         }
 
         /**
-         * 텍스트 엘리먼트 생성하는 함수, 아이콘 키를 유니코드로 자동으로 파싱해준다.
+         * Creates a text element to which a theme is applied.
          *
-         * @param {object} attr
-         * @param {string|function} textOrCallback
+         * Also it support icon string
+         *
+         * @param {Object} attr
+         * @param {String|Function} textOrCallback
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
@@ -12383,15 +13308,16 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method theme
-         * theme 의 요소에 대한 값 구하기
+         *
+         * Gets a value for the theme element applied to the current chart.
          *
          * ```
-         *      // theme 전체 객체 얻어오기
+         *      // get all theme property
          *      var theme = chart.theme();
-         *      // 부분 속성 얻어오기
+         *      // get a part of theme
          *      var fontColor = chart.theme("fontColor");
-         *      // 값 비교해서 얻어오기
-         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // isSelected 가 true 이면 selectedFontColor, 아니면 fontColor 리턴
+         *      // get selected value of theme
+         *      chart.theme(isSelected, "selectedFontColor", "fontColor");  // if isSelected is true, return 'selectedFontColor' else return 'fontColor'
          * ```
          */
         this.theme = function(key, value, value2) {
@@ -12399,7 +13325,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 return _theme;
             } else if(arguments.length == 1) {
                 if(key.indexOf("Color") > -1 && _theme[key] != null) {
-                    return createColor(this, _theme[key]);
+                    return createColor(_theme[key]);
                 }
 
                 return _theme[key];
@@ -12407,7 +13333,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 var val = (key) ? value : value2;
 
                 if(val.indexOf("Color") > -1 && _theme[val] != null) {
-                    return createColor(this, _theme[val]);
+                    return createColor(_theme[val]);
                 }
 
                 return _theme[val];
@@ -12415,8 +13341,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 브러쉬/위젯/그리드에서 공통적으로 사용하는 숫자 포맷 함수
+         * Returns a value from the format callback function of a defined option.
          *
+         * @param {Function} format
+         * @return {Mixed}
          */
         this.format = function() {
             if(arguments.length == 0) return;
@@ -12432,10 +13360,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method bindUI 
          * 
-         * uix.table, uix.xtable 객체를 바인딩 해서 사용할 수 있음.
-         * 테이블 요소를 수정하면 chart의 data 속성으로 자동으로 설정
+         * Binds data used in a uix.table or the uix.xtable.
          *
-         * @param {object} bind   uix.table, uix.xtable 객체 사용
+         * @param {Number} axisIndex
+         * @param {Object} uiObj
          */
         this.bindUI = function(axisIndex, uiObj) {
             var self = this;
@@ -12459,10 +13387,11 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method on
          * 
-         * 차트에서 사용할 커스텀 이벤트 핸들러
+         * A callback function defined as an on method is run when an emit method is called.
          *
-         * @param type
-         * @param callback
+         * @param {String} type Event's name
+         * @param {Function} callback
+         * @param {"render"/"renderAll"/undefined} resetType
          */
         this.on = function(type, callback, resetType) {
             if(!_.typeCheck("string", type)  || !_.typeCheck("function", callback)) return;
@@ -12476,10 +13405,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 줌인/줌아웃 상태를 설정
+         * Change the scale of the chart.
          *
-         * @param scale
-         * @returns {number}
+         * @param {Number} scale
+         * @return {Number}
          */
         this.scale = function(scale) {
             if(!scale || scale < 0) return _scale;
@@ -12493,11 +13422,13 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 보이는 영역을 변경
+         * Change the view of the chart.
          *
-         * @param x
-         * @param y
-         * @returns {{x: number, y: number}}
+         * @param {Number} x
+         * @param {Number} y
+         * @return {Object}
+         * @return {Number} return.x
+         * @return {Number} return.y
          */
         this.view = function(x, y) {
             var area = this.area(),
@@ -12525,8 +13456,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method render 
          *
-         * chart render 함수 재정의
+         * Renders all draw objects.
          *
+         * @param {Boolean} isAll
          */
         this.render = function(isAll) {
             // SVG 메인 리셋
@@ -12540,7 +13472,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // chart 관련된 요소 draw
             drawBefore(this);
-            drawDefs(this);
             drawAxis(this);
             drawBrush(this);
             drawWidget(this, isAll);
@@ -12563,6 +13494,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _initialize = true;
         }
 
+        /**
+         * @method appendDefs
+         *
+         * Add the child element in defs tag.
+         *
+         * @param {chart.svg.element} elem
+         */
+        this.appendDefs = function(elem) {
+            _defs.append(elem);
+        }
+
         /*
          * Brush & Widget 관련 메소드
          *
@@ -12571,7 +13513,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method addBrush 
          * 
-         * 동적으로 브러쉬를 추가한다. 
+         * Adds a brush and performs rendering again.
          *  
          * @param {Object} brush
          */
@@ -12583,7 +13525,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method removeBrush 
          * 
-         * 특정 브러쉬를 삭제한다. 
+         * Deletes the brush of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeBrush = function(index) {
@@ -12592,7 +13534,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
         /**
          * @method updateBrush 
-         * 특정 브러쉬를 업데이트 한다.  
+         * Updates the brush of a specified index and performs rendering again.
          * @param {Number} index
          * @param {Object} brush
          */
@@ -12603,7 +13545,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method addWidget 
-         * 동적으로 위젯을 추가한다. 
+         * Adds a widget and performs rendering again.
          * 
          * @param {Object} widget
          */
@@ -12614,7 +13556,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method removeWidget 
-         * 특정 위젯을 삭제한다.  
+         * Deletes the widget of a specified index and performs rendering again.
          * @param {Number} index
          */
         this.removeWidget = function(index) {
@@ -12624,7 +13566,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
         /**
          * @method updateWidget
-         * 특정 위젯을 업데이트한다.
+         * Updates the widget of a specified index and performs rendering again
          * @param {Number} index
          * @param {Object} widget
          */
@@ -12635,20 +13577,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
 
         /**
-         * 테마 변경 후 차트 렌더링
+         * Changes a chart to a specified theme and renders the chart again.
          *
-         * @param themeName
+         * @param {String/Object} theme
          */
         this.setTheme = function(theme) {
-            setThemeStyle(theme, _options.style);
+            setThemeStyle(theme);
             if(this.isRender()) this.render(true);
         }
 
         /**
-         * 사이즈 조정 후 차트 렌더링
+         * Changes the size of a chart to the specified area and height then performs rendering.
          *
-         * @param {integer} width
-         * @param {integer} height
+         * @param {Number} width
+         * @param {Number} height
          */
         this.setSize = function(width, height) {
             if(arguments.length == 2) {
@@ -12661,9 +13603,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트가 풀-사이즈인지 확인
+         * Returns true if the horizontal or vertical size of the chart is 100%.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isFullSize = function() {
             if(_options.width == "100%" || _options.height == "100%")
@@ -12673,10 +13615,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         }
 
         /**
-         * 차트의 자동 렌더링 여부 확인
-         * false일 경우, 수동으로 render 메소드를 호출해줘야 함
+         * Returns the values of rendering options and, if the rendering option is false, does not render the chart again when a method is called.
          *
-         * @returns {boolean}
+         * @return {Boolean}
          */
         this.isRender = function() {
             return (!_initialize) ? true : _options.render;
@@ -12708,22 +13649,27 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series 각각의 필드에 대한 메타 정보 */
+            /** @cfg {Object} series Sets additional information for a specific data property. */
             series: {},
-            /** @cfg {Array} brush 그려질 브러쉬 목록 */
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
-            /** @cfg {Array} widget 그려질 위젯 목록 */
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
             widget: [],
-            /** @cfg {Array} axis 그려질 Axis 목록 */
+            /** @cfg {Array} [axis=[]] Determines a axis to be added to a chart. */
             axis: [],
 
+            /** @cfg {Object} [bind=null] Sets a component objects to be bind.*/
             bind: null,
-            /** @cfg {Function} [format=null] 빌더에서 공통으로 사용할 format 함수 정의 */
+            /** @cfg {Function} [format=null] Sets a format callback function to be used in a grid/brush/widget. */
             format: null,
-            /** @cfg {Boolean} [render=true] */
+            /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
 
-            /** @cfg {Object} */
+            /**
+             * @cfg {Object} icon Icon-related settings available in the chart.
+             * @cfg {String} [icon.type="jennifer"]
+             * @cfg {String} [icon.path=null]
+             */
             icon: {
                 type: "jennifer",
                 path: null
@@ -12733,97 +13679,113 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     /**
      * @event bg_click
-     * 실제 이벤트 이름은 bg.click 사용된다.
+     * Real name ``` bg.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_click
-     * 실제 이벤트 이름은 chart.click 사용된다.
+     * Real name ``` chart.click ```
+     * Event that occurs when clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_rclick
-     * 실제 이벤트 이름은 bg.rclick 사용된다.
+     * Real name ``` bg.rclick ```
+     * Event that occurs when right clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_rclick
-     * 실제 이벤트 이름은 chart.rclick 사용된다.
+     * Real name ``` chart.rclick ```
+     * Event that occurs when right clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_dblclick
-     * 실제 이벤트 이름은 bg.dblclick 사용된다.
+     * Real name ``` bg.dblclick ```
+     * Event that occurs when clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_dblclick
-     * 실제 이벤트 이름은 chart.dblclick 사용된다.
+     * Real name ``` chart.dblclick ```
+     * Event that occurs when double clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousemove
-     * 실제 이벤트 이름은 bg.mousemove 사용된다.
+     * Real name ``` bg.mousemove```
+     * Event that occurs when moving the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousemove
-     * 실제 이벤트 이름은 chart.mousemove 사용된다.
+     * Real name ``` chart.mousemove ```
+     * Event that occurs when moving the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mousedown
-     * 실제 이벤트 이름은 bg.mousedown 사용된다.
+     * Real name ``` bg.mousedown ```
+     * Event that occurs when left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mousedown
-     * 실제 이벤트 이름은 chart.mousedown 사용된다.
+     * Real name ``` chart.mousedown ```
+     * Event that occurs when left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseup
-     * 실제 이벤트 이름은 bg.mouseup 사용된다.
+     * Real name ``` bg.mouseup ```
+     * Event that occurs after left clicking on a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseup
-     * 실제 이벤트 이름은 chart.mouseup 사용된다.
+     * Real name ``` chart.mouseup ```
+     * Event that occurs after left clicking on the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseover
-     * 실제 이벤트 이름은 bg.mouseover 사용된다.
+     * Real name ``` bg.mouseover ```
+     * Event that occurs when placing the mouse over a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseover
-     * 실제 이벤트 이름은 chart.mouseover 사용된다.
+     * Real name ``` chart.mouseover ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event bg_mouseout
-     * 실제 이벤트 이름은 bg.mouseout 사용된다.
+     * Real name ``` bg.mouseout ```
+     * Event that occurs when moving the mouse out of a chart margin.
      * @param {jQueryEvent} e The event object.
      */
 
     /**
      * @event chart_mouseout
-     * 실제 이벤트 이름은 chart.mouseout 사용된다.
+     * Real name ``` chart.mouseout ```
+     * Event that occurs when placing the mouse over the chart area.
      * @param {jQueryEvent} e The event object.
      */
 
@@ -12926,6 +13888,8 @@ jui.define("chart.theme.jennifer", [], function() {
         gaugeTitleFontSize : "12px",
         /** @cfg */
         gaugeTitleFontWeight : "normal",
+        /** @cfg */
+        gaugeTitleFontColor : "#333",
         /** @cfg */
         bargaugeBackgroundColor : "#ececec",
         /** @cfg */
@@ -13152,6 +14116,7 @@ jui.define("chart.theme.gradient", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#333",
         bargaugeBackgroundColor : "#ececec",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#333333",
@@ -13295,6 +14260,7 @@ jui.define("chart.theme.dark", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#c5c5c5",
         bargaugeBackgroundColor : "#3e3e3e",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#c5c5c5",
@@ -13434,6 +14400,7 @@ jui.define("chart.theme.pastel", [], function() {
         gaugeFontWeight : "bold",
         gaugeTitleFontSize : "12px",
         gaugeTitleFontWeight : "normal",
+        gaugeTitleFontColor : "#333",
         bargaugeBackgroundColor : "#f5f5f5",
         bargaugeFontSize : "11px",
         bargaugeFontColor : "#333333",
@@ -13521,23 +14488,24 @@ jui.define("chart.theme.pastel", [], function() {
 }); 
 jui.define("chart.theme.pattern", [], function() {
 
+    /**
+     * @class chart.theme.pattern
+     * Pattern Theme
+     * @singleton
+     */
     var themeColors = [
-        "pattern-white-rect1",
-        "pattern-white-rect2",
-        "pattern-white-rect3",
-        "pattern-white-rect4",
-        "#f94590",
-        "#8bccf9",
-        "#9228e4",
-        "#06d9b6",
-        "#fc6d65",
-        "#f199ff",
-        "#c8f21d",
-        "#16a6e5",
-        "#00ba60",
-        "#91f2a1",
-        "#fc9765",
-        "#f21d4f"
+        "pattern-jennifer-01",
+        "pattern-jennifer-02",
+        "pattern-jennifer-03",
+        "pattern-jennifer-04",
+        "pattern-jennifer-05",
+        "pattern-jennifer-06",
+        "pattern-jennifer-07",
+        "pattern-jennifer-08",
+        "pattern-jennifer-09",
+        "pattern-jennifer-10",
+        "pattern-jennifer-11",
+        "pattern-jennifer-12"
     ];
 
     return {
@@ -13607,6 +14575,8 @@ jui.define("chart.theme.pattern", [], function() {
         gaugeTitleFontSize : "12px",
         /** */
         gaugeTitleFontWeight : "normal",
+        /** */
+        gaugeTitleFontColor : "#333",
         /** */
         pieBorderColor : "white",
         /** */
@@ -13750,14 +14720,14 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
 
     function CreateCirclePattern (id, size) {
         size = parseInt(size || 1);
-        var el = SVG.createElement({
+        var el = {
             type : "pattern",
             attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
             children : [
                 { type : 'rect', attr : { width : 10, height : 10, fill : '#ffffff' }},
                 { type : 'circle', attr : { cx : size, cy : size, r : size,  fill : '#000000' }}
             ]
-        });
+        };
 
         return el; 
     }
@@ -13772,7 +14742,7 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
          *
          * @return {util.svg.element}
          */
-        circle : SVG.createElement({
+        circle : {
             type: "pattern",
             attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
             children: [
@@ -13782,7 +14752,7 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
                 { type: 'circle', attr: { cx: 10.5, cy: 12.5, r: 1.8, fill: '#393939' }},
                 { type: 'circle', attr: { cx: 10.5, cy: 11.3, r: 1.8, fill: 'black' }}
             ]
-        }),
+        },
         
         /**
          * @method rect
@@ -13791,14 +14761,14 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
          * 
          * @return {util.svg.element}
          */        
-        rect : SVG.createElement({
+        rect : {
             type: "pattern",
             attr: { id: 'pattern-white-rect', width: 20, height: 20, patternUnits: "userSpaceOnUse" },
             children: [
                 { type: 'rect', attr: { width: 20, height: 20, fill: '#00a9f1' }},
                 { type: 'rect', attr: { width: 20, height: 10, fill: '#26baf4' }}
             ]
-        }),
+        },
 
         circle1 : function() { return CreateCirclePattern.call(this, 1, 1); },
         circle2 : function() { return CreateCirclePattern.call(this, 2, 1.5); },
@@ -13809,39 +14779,271 @@ jui.define("chart.pattern.white", ["util.svg"], function(SVG){
         circle7 : function() { return CreateCirclePattern.call(this, 7, 4); },
         circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); },
 
-        rect1 : SVG.createElement({
+        rect1 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect1', width: 70, height: 70, patternUnits: "userSpaceOnUse" },
             children : [
                 { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iI2JiZDgxNyI+PC9yZWN0Pgo8ZyB0cmFuc2Zvcm09InJvdGF0ZSg0NSkiPgo8cmVjdCB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPHJlY3QgeT0iLTUwIiB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPC9nPgo8L3N2Zz4=", width: 70, height : 70}}
             ]
-        }),
-        rect2 : SVG.createElement({
+        },
+        rect2 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect2', width: 56, height: 100, patternUnits: "userSpaceOnUse", patternTransform : "rotate(45)" },
             children : [
                 { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjhkMjAzIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZjYyOSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZTUwMyIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+Cjwvc3ZnPg==", width: 56, height : 100}}
             ]
-        }),
-        rect3 : SVG.createElement({
+        },
+        rect3 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect3', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "scale(2)" },
             children : [
                 { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
             ]
-        }),
-        rect4 : SVG.createElement({
+        },
+        rect4 : {
             type : 'pattern',
             attr: { id: 'pattern-white-rect4', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "skewX(45)" },
             children : [
                 { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
             ]
-        })
+        }
 
     }
     
 })
 
+jui.define("chart.pattern.jennifer", [], function() {
+	return {
+    "10": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-10",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjEBRg6GhgcHFgUFLAxQYAaTkFzlvDQuIAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "11": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-11",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABJJREFUCNdjMDZgOHOAAQxwsQF00wXOMquS/QAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "12": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-12",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABBJREFUCNdj+P8BioAABxsAU88RaA20zg0AAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "01": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-01",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABVJREFUCNdjKC9g+P+B4e4FIImLDQBPxxNXosybYgAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "02": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-02",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABNJREFUCNdj6GhgAAIlBSCBiw0AUpID3xszyekAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "03": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-03",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQzwMACirge9PFNsFQAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "04": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-04",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAaGRkWFhUIIaslAAAAAXRSTlMAQObYZgAAACFJREFUCNdj6HBpYQABjw4wDeS7QPgtENrFxQNCe3SAKAC36AapdMh8ewAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "05": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-05",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA1JREFUCNdjWLWAIAIAFt8Ped1+QPcAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "06": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-06",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQjwkgDijAubMqjSSAAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "07": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-07",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAAAAAMDAwvehODAAAAAXRSTlMAQObYZgAAAA5JREFUCNdjmDJlCikYAPO/FNGPw+TMAAAAAElFTkSuQmCC",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "08": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-08",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjKC9gePeA4e4Fht0bcLEBM1MRaPwhp7AAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "09": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-09",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjePeAobyAYfcGhrsXcLEBOSARaPIjMTsAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    }
+}
+});
 jui.define("chart.icon.jennifer", [], function() {
 	return {
 		"menu" : "\ue600",
@@ -13920,10 +15122,10 @@ jui.define("chart.icon.jennifer", [], function() {
 		"upload" : "\ue649"
 	}
 });
-jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 	/**
 	 * @class chart.grid.core
-     * Grid Core 객체 
+     * Grid Core 객체
 	 * @extends chart.draw
      * @abstract
 	 */
@@ -13931,24 +15133,24 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * @method drawAfter
-         * 
          *
-         *  
+         *
+         *
          * @param {Object} obj
-         * @protected 
+         * @protected
          */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
 		}
 
 		/**
-		 * @method wrapper  
-         * scale wrapper 
-		 * 
-		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수 
-		 * 
-		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리 
-		 * 
+		 * @method wrapper
+         * scale wrapper
+		 *
+		 * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수
+		 *
+		 * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리
+		 *
 		 *      @example
 		 *      // 그리드 속성에 키가 없을 때
 		 *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
@@ -13956,17 +15158,17 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		 *      grid { key : "field" }
 		 *      scale(0)			// field 값으로 scale 설정 (range, date)
          *
-		 * @protected 
+		 * @protected
 		 */
 		this.wrapper = function(scale, key) {
 			return scale;
 		}
-		
+
 		/**
-         * @method axisLine  
+         * @method axisLine
 		 * theme 이 적용된  axis line 리턴
-		 * @param {ChartBuilder} chart 
-         * @param {Object} attr  
+		 * @param {ChartBuilder} chart
+         * @param {Object} attr
 		 */
 		this.axisLine = function(attr) {
 			return this.chart.svg.line($.extend({
@@ -13981,9 +15183,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
 		/**
-		 * @method line 
+		 * @method line
          * theme 이 적용된  line 리턴
-         * @protected 
+         * @protected
          * @param {ChartBuilder} chart
          * @param {Object} attr
 		 */
@@ -13992,7 +15194,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
-				y2 : 0,				
+				y2 : 0,
 				stroke : this.color("gridBorderColor"),
 				"stroke-width" : this.chart.theme("gridBorderWidth"),
 				"stroke-dasharray" : this.chart.theme("gridBorderDashArray"),
@@ -14001,7 +15203,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 		}
 
         /**
-         * @method color 
+         * @method color
          * grid 에서 color 를 위한 유틸리티 함수
          * @param theme
          * @return {Mixed}
@@ -14035,9 +15237,9 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
          * @protected
          * @param {chart.builder} chart
          * @param {String} orient
-         * @param {String} cls 
-         * @param {Grid} grid 
-         */		
+         * @param {String} cls
+         * @param {Grid} grid
+         */
 		this.drawGrid = function() {
 			// create group
 			var root = this.chart.svg.group(),
@@ -14051,7 +15253,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
-			// hide grid 
+			// hide grid
 			if(this.grid.hide) {
 				root.attr({ display : "none" })
 			}
@@ -14089,30 +15291,52 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
 
 		/**
 		 * @method getGridSize
-         *  
-         * get real size of grid 
+         *
+         * get real size of grid
 		 *
 		 * @param {chart.builder} chart
 		 * @param {Strng} orient
-		 * @param {Object} grid             그리드 옵션 
+		 * @param {Object} grid             그리드 옵션
 		 * @return {Object}
          * @return {Number} return.start    시작 지점
          * @return {Number} return.size     그리드 넓이 또는 높이
          * @return {Number} return.end      마지막 지점
 		 */
 		this.getGridSize = function() {
-			var width = this.axis.area('width'),
-				height = this.axis.area('height'),
-				axis = (this.grid.orient == "left" || this.grid.orient == "right") ? this.axis.area('y') : this.axis.area('x'),
-				max = (this.grid.orient == "left" || this.grid.orient == "right") ? height : width,
-				start = axis,
-				size = max;
+            var orient = this.grid.orient,
+                area = this.axis.area();
 
-			return {
-				start: start,
-				size: size,
-				end: start + size
-			}
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
+                depth = this.axis.get("depth"),
+                degree = this.axis.get("degree"),
+				start = axis,
+				size = max,
+                end = start + size;
+
+            var result = {
+                start: start,
+                size: size,
+                end: end
+            };
+
+            if(depth > 0 || degree > 0) {
+                var radian = math.radian(360 - degree),
+                    x2 = Math.cos(radian) * depth,
+                    y2 = Math.sin(radian) * depth;
+
+                if(orient == "left") {
+                    result.start = result.start - y2;
+                    result.size = result.size - y2;
+                } else if(orient == "bottom") {
+                    result.end = result.end - x2;
+                    result.size = result.size - x2;
+                }
+            }
+
+            return result;
 		}
 	}
 
@@ -14121,31 +15345,32 @@ jui.define("chart.grid.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} grid */
-        
+
 		return {
             /**
-             * @cfg {Number} [extend=null] extend grid's option
+             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
              */
 			extend:	null,
-            /**  @cfg {Number} [dist=0] 그리는 좌표로부터 떨어지는 거리  */
+            /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
 
-			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] 기본적으로 배치될 그리드 방향 */
+			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
-            
-            /** @cfg {Boolean} [hide=false] 숨기기 여부 설정, hide=true 이면 보이지 않음  */
+
+            /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
 
-            /** @cfg {String/Object/Number} [color=null] 그리드의 라인 색깔 */
+            /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
-            /** @cfg {String} [title=null] */
+            /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
 			title: null,
-            /** @cfg {Boolean} [hide=false] */
+            /** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
+			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
             baseline : true,
-            /** @cfg {Function} [format=null]  화면상에 나타나는 텍스트를 변환하는 함수 */
+            /** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
-            /** @cfg {Number} [textRotate=null] 표시되는 텍스트의 회전 여부 */
+            /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
 			textRotate : null
 		};
 	}
@@ -14156,13 +15381,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
     /**
      * @class chart.grid.block
-     * Block Grid 는 특정한 간격을 가지고 있는  Grid 이다.
+     * Implements Block Grid
      * 
      *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
      * 
-     * domain 을 배열로 지정하면 해단 개수만큼 그리드의 영역이 설정된다.
-     *
-     * @extends chart.grid.core  
+     * @extends chart.grid.core
      */
 	var BlockGrid = function() {
         /**
@@ -14191,7 +15414,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 					"transform" : "translate(" + this.points[i] + ", 0)"
 				});
 
-				axis.append(this.line(this.chart, {
+				axis.append(this.line({
 					x1 : -this.half_band,
 					y1 : 0,
 					x2 : -this.half_band,
@@ -14463,13 +15686,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
-            /** @cfg {String/Array/Function} [domain=null] */
+            /** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-            /** @cfg {Boolean} [reverse=false] */
+            /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {Number} [max=10] */
+            /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
 			max: 10,
-            /** @cfg {Boolean} [full=false] */
+            /** @cfg {Boolean} [full=false] Determines whether to expand the reference coordinates to the entire range.*/
 			full: false
 		};
 	}
@@ -14761,19 +15984,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
-            /** @cfg {Array} [domain=null] */
+            /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Array} [step=[]] */
+            /** @cfg {Array} [step=[]] Sets the interval of the scale displayed on a grid.*/
 			step: [],
-            /** @cfg {Number} [min=null] min timestamp  */
+            /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
-            /** @cfg {Number} [max=null] max timestamp  */
+            /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
 			max: null,
-            /** @cfg {Boolean} [reverse=false]  */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {String} [key=null] a field for value  */
+            /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {Boolean} [realtime=false]  */
+            /** @cfg {Boolean} [realtime=false] Determines whether to use as a real-time grid. */
 			realtime: false
 		};
 	}
@@ -14790,172 +16013,14 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
      *
      * @extends chart.grid.date  
      */
-	var DateBlockGrid = function(chart, axis, grid) {
-		var orient = grid.orient;
-		var domain = [];
-		var step = [];
-		var unit = 0;
-		var half_unit;
+	var DateBlockGrid = function() {
 
-
-		this.top = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line(chart, {
-					y2 : (grid.line) ? this.axis.area('height') : -bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.bottom = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var group = chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				group.append(this.line(chart, {
-					y2 : (grid.line) ? -this.axis.area('height') : bar
-				}));
-
-				group.append(this.getTextRotate(chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(group);
-			}
-		}
-
-		this.left = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line(chart, {
-					x2 : (grid.line) ? this.axis.area('width') : -bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : -bar-2,
-					y : bar-2,
-					"text-anchor" : "end",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.right = function(chart, g) {
-			if (!grid.line) {
-				g.append(this.axisLine(chart, {
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line(chart,{
-					x2 : (grid.line) ? -this.axis.area('width') : bar
-				}));
-
-				axis.append(this.getTextRotate(chart.text({
-					x : bar + 4,
-					y : -bar,
-					"text-anchor" : "start",
-					fill : chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
-		}
-
-		this.wrapper = function(chart, scale, key) {
+		this.wrapper = function(scale, key) {
 			var old_scale = scale;
 			var self = this;
 
 			old_scale.rangeBand = function() {
-				return unit;
+				return self.grid.unit;
 			}
 
 			return old_scale;
@@ -15003,50 +16068,45 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 			this.grid.max = max;
 			this.grid.min = min;
-			domain = [this.grid.min, this.grid.max];
+			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
-				step = step.call(this.chart, domain);
-			} else {
-				step = this.grid.step;
+				this.grid.step = step.call(this.chart, domain);
 			}
 
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
+
+			return domain;
 		}
 
 		this.drawBefore = function() {
 
-			console.log('aaa');
-
 			var self = this;
-			this.initDomain();
+			var domain = this.initDomain();
 
-			var obj = this.getGridSize(chart, orient, grid),
-				range = [obj.start, obj.end];
-
-			console.log(domain, range, step);
+			var obj = this.getGridSize(), range = [obj.start, obj.end];
 
 			var time = UtilScale.time().domain(domain).rangeRound(range);
+			var len = this.axis.data.length;
 
-
-			unit = Math.abs(range[0] - range[1])/(this.axis.data.length- 1);
-			half_unit = unit/2;
+			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
+			var half_unit = unit/2;
 
 
 			if (this.grid.realtime) {
-				this.ticks = time.realTicks(step[0], step[1]);
+				this.ticks = time.realTicks(this.grid.step[0], this.grid.step[1]);
 			} else {
-				this.ticks = time.ticks(step[0], step[1]);
+				this.ticks = time.ticks(this.grid.step[0], this.grid.step[1]);
 			}
 
-			if ( typeof grid.format == "string") {
+			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
 					}	
-				})(grid, grid.format)
+				})(this.grid, this.grid.format)
 			}
 
 			// step = [this.time.days, 1];
@@ -15060,37 +16120,26 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.values[i] = time(this.ticks[i]);
 			}
 
-			console.log(this.ticks, this.values);
-
 			this.scale = $.extend((function(i) {
-				return  i * unit;
+				return  i * unit + (self.grid.full ? 0 : half_unit);
 			}), time);
 
 		}
 
 		this.draw = function() {
-			return this.drawGrid(chart, orient, "dateblock", grid);
+			return this.drawGrid("dateblock");
 		}
 	}
 
-
 	DateBlockGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null] */
-			domain: null,
-			/** @cfg {Array} [step=[]] */
-			step: [],
-			/** @cfg {Number} [min=0] min timestamp  */
-			min: 0,
-			/** @cfg {Number} [max=0] max timestamp  */
-			max: 0,
-			/** @cfg {Boolean} [reverse=false]  */
-			reverse: false
+			/** @cfg {Boolean} [full=true] */
+			full: true
 		};
 	}
 
 	return DateBlockGrid;
-}, "chart.grid.core");
+}, "chart.grid.date");
 
 jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
@@ -15365,13 +16414,21 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	RadarGrid.setup = function() {
 		return {
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
+			/** @cfg {Number} [max=null] Sets the maximum value of a grid. */
 			max: 100,
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
             step : 10,
+			/** @cfg {Boolean} [line=true] Determines whether to display a line on the axis background. */
 			line: true,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
+			/** @cfg {Boolean} [extra=false] Leaves a certain spacing distance from the grid start point and displays a line where the spacing ends. */
 			extra: false,
+			/** @cfg {"radial"/"circle"} [shape="radial"] Determines the shape of a grid (radial, circle). */
 			shape: "radial" // or circle
 		};
 	}
@@ -15730,15 +16787,15 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 	RangeGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-			/** @cfg {Number} [step=10] 나누는 숫자 */
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
 			step: 10,
-			/** @cfg {Number} [min=0] 최소값 설정 */
+			/** @cfg {Number} [min=0] Sets the minimum value of a grid.  */
 			min: 0,
-			/** @cfg {Number} [max=0] 최대값 설정 */
+			/** @cfg {Number} [max=0] Sets the maximum value of a grid. */
 			max: 0,
-			/** @cfg {Number} [unit=null] 단계별 사이즈  */
+			/** @cfg {Number} [unit=null] Multiplies the axis value to be displayed.  */
 			unit: null,
 			/**
 			 * @cfg {Boolean} [clamp=true]
@@ -15747,19 +16804,13 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
 			 */
 			clamp : true,
-			/**
-			 * @cfg {Boolean} [reverse=false]
-			 *
-			 * 도메인을 거꾸로 정렬한다.
-			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
-			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
-			 */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-			/** @cfg {String} [key=null] a field for value */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
-			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
+			/** @cfg {Boolean} [nice=false] Automatically sets the value of a specific section.  */
 			nice: false
 		};
 	}
@@ -16099,15 +17150,15 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	RuleGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-			/** @cfg {Number} [step=10] 나누는 숫자 */
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
 			step: 10,
-			/** @cfg {Number} [min=0] 최소값 설정 */
+			/** @cfg {Number} [min=0] Sets the minimum value of a grid.  */
 			min: 0,
-			/** @cfg {Number} [max=0] 최대값 설정 */
+			/** @cfg {Number} [max=0] Sets the maximum value of a grid. */
 			max: 0,
-			/** @cfg {Number} [unit=null] 단계별 사이즈  */
+			/** @cfg {Number} [unit=null] Multiplies the axis value to be displayed.  */
 			unit: null,
 			/**
 			 * @cfg {Boolean} [clamp=true]
@@ -16116,23 +17167,17 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
 			 */
 			clamp : true,
-			/**
-			 * @cfg {Boolean} [reverse=false]
-			 *
-			 * 도메인을 거꾸로 정렬한다.
-			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
-			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
-			 */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-			/** @cfg {String} [key=null] a field for value */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
-			/** @cfg {Boolean} [hideZero=false] 0(zero) value 화면에서 보이지 않기 */
+			/** @cfg {Boolean} [hideZero=false] Determines whether to show '0' displayed on the grid. */
 			hideZero: false,
-			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
+			/** @cfg {Boolean} [nice=false] Automatically sets the value of a specific section.  */
 			nice: false,
-			/** @cfg {Boolean} [center=false] 가운데로 그리드 이동  */
+			/** @cfg {Boolean} [center=false] Place the reference axis in the middle.  */
 			center: false
 
 		};
@@ -16390,7 +17435,7 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     OverlapGrid.setup = function() {
         return {
-            /** @cfg {Number} [size=null] 분할할 개수  */
+            /** @cfg {Number} [count=null] Splited count  */
             count : null
         }
     }
@@ -16561,12 +17606,156 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     TopologyTableGrid.setup = function() {
         return {
+            /** @cfg {String} [sort=null]  */
             sort: null, // or random
+            /** @cfg {Number} [space=50]  */
             space: 50
         }
     }
     
     return TopologyTableGrid;
+}, "chart.grid.core");
+
+jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) {
+
+    /**
+     * @class chart.grid.grid3d
+     *
+     * 토폴로지 배치를 위한 grid
+     *
+     * @extends chart.grid.core
+     */
+    var Grid3D = function() {
+        var self = this,
+            depth = 0,
+            degree = 0,
+            radian = 0;
+
+        /**
+         * @method drawBefore
+         *
+         * initialize grid option before draw grid
+         *
+         */
+        this.drawBefore = function() {
+            depth = this.axis.get("depth");
+            degree = this.axis.get("degree");
+            radian = math.radian(360 - degree);
+
+            /**
+             * @method scale
+             *
+             * get scale function
+             *
+             */
+            this.scale = (function() {
+                return function(x, y, z, count) {
+                    var step = _.typeCheck("integer", count) ? count : 1,
+                        split = depth / step;
+
+                    if(z == undefined || step == 1) {
+                        return {
+                            x: self.axis.x(x),
+                            y: self.axis.y(y),
+                            depth: split
+                        }
+                    } else {
+                        var z = (z == undefined) ? 0 : z,
+                            c = split * z,
+                            top = Math.sin(radian) * split;
+
+                        return {
+                            x: self.axis.x(x) + Math.cos(radian) * c,
+                            y: (self.axis.y(y) + Math.sin(radian) * c) + top,
+                            depth: split
+                        }
+                    }
+                }
+            })(this.axis);
+
+            this.scale.depth = depth;
+            this.scale.degree = degree;
+            this.scale.radian = radian;
+        }
+
+        /**
+         * @method draw
+         *
+         *
+         * @returns {Object}
+         * @returns {util.scale} return.scale  return scale be used in grid
+         * @returns {SVGElement} return.root grid root element
+         * @protected
+         */
+        this.draw = function() {
+            var y2 = Math.sin(radian) * depth,
+                x2 = Math.cos(radian) * depth;
+
+            this.axis.y.root.each(function(i, elem) {
+                if(i == 0) {
+                    self.axis.y.root.append(self.line({
+                        x1 : x2,
+                        y1 : 0,
+                        x2 : x2,
+                        y2 : y2 + elem.attributes.y2
+                    }));
+                } else {
+                    // X축 라인 속성 가져오기
+                    var xAttr = self.axis.x.root.get(0).attributes;
+
+                    elem.append(self.line({
+                        x1 : 0,
+                        y1 : 0,
+                        x2 : x2,
+                        y2 : y2
+                    }));
+
+                    elem.append(self.line({
+                        x1 : x2,
+                        y1 : y2,
+                        x2 : x2 + xAttr.x2,
+                        y2 : y2
+                    }));
+                }
+            });
+
+            this.axis.x.root.each(function(i, elem) {
+                var attr = (i == 0) ? elem.attributes : elem.get(0).attributes,
+                    y2 = attr.y1 + Math.sin(radian) * depth,
+                    x2 = attr.x1 + Math.cos(radian) * depth;
+
+                if(i > 1) {
+                    // Y축 라인 속성 가져오기
+                    var yAttr = self.axis.y.root.get(0).attributes;
+
+                    elem.append(self.line({
+                        x1 : attr.x1,
+                        y1 : attr.y1,
+                        x2 : x2,
+                        y2 : y2
+                    }));
+
+                    elem.append(self.line({
+                        x1 : x2,
+                        y1 : -yAttr.y1,
+                        x2 : x2,
+                        y2 : -yAttr.y2
+                    }));
+                }
+            });
+
+            return this.drawGrid();
+        }
+    }
+
+    Grid3D.setup = function() {
+        return {
+            /** @cfg {Array} [domain=null] */
+            domain: null
+        }
+    }
+    
+    return Grid3D;
 }, "chart.grid.core");
 
 jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
@@ -16614,7 +17803,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
         this.drawAfter = function(obj) {
             if(this.brush.clip !== false) {
-                obj.attr({ "clip-path" : "url(#clip-id-" + this.chart.timestamp + ")" });
+                obj.attr({ "clip-path" : "url(#" + this.axis.get("clipId") + ")" });
             }
 
             obj.attr({ "class": "brush brush-" + this.brush.type });
@@ -16790,13 +17979,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *
          * @param {Function} callback
          */
-        this.eachData = function(callback) {
+        this.eachData = function(callback, reverse) {
             if(!_.typeCheck("function", callback)) return;
             var list = this.listData();
 
-
-            for(var index = 0, len = list.length; index < len; index++) {
-                callback.call(this, index, list[index]);
+            if(reverse === true) {
+                for(var len = list.length - 1; len >= 0; len--) {
+                    callback.call(this, len, list[len]);
+                }
+            } else {
+                for(var index = 0, len = list.length; index < len; index++) {
+                    callback.call(this, index, list[index]);
+                }
             }
         }
 
@@ -17038,20 +18232,16 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             /** @property {chart.builder} chart */
             /** @property {chart.axis} axis */
             /** @property {Object} brush */
-            
-            /** @cfg {Array} [target=null] 적용될 필드 리스트  */
+
+            /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
-            /** @cfg {Array} [colors=null]
-             * 필드 리스트마다 적용될 색상
-             *
-             * colors 는 theme 보다 우선순위를 가진다.
-             */
+            /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
-            /** @cfg {Integer} [axis=0] 그려질 영역의 Axis 인덱스 */
+            /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
             axis: 0,
-            /** @cfg {Integer} [index=null] 현재 브러쉬의 인덱스 */
+            /** @cfg {Integer} [index=null] [Read Only] Sequence index on which brush is drawn. */
             index: null,
-            /** @cfg {boolean} [clip=true] 그려지는 영역을 clip 할 것인지 체크 */
+            /** @cfg {boolean} [clip=true] If the brush is drawn outside of the chart, cut the area. */
             clip: true
         }
     }
@@ -17307,18 +18497,18 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [minValue=0] 표시 최소 값, minValue 보다 작으면 minValue 를 기준으로 그린다. */
+            /** @cfg {Number} [minValue=0] Sets the minimum value as it is not possible to draw a bar when the value is 0. */
 			minValue: 0,
-            /** @cfg {Number} [outerPadding=2] 바깥쪽 여백  */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] 안쪽 여백 */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1,
-            /** @cfg {Number} [active=null] */
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
 			active: null,
-            /** @cfg {String} [activeEvent=null]  event name (click or mouseover or etc) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {"max"/"min"} [display=null]  'max', 'min' */
-			display: null // or max, min
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+			activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+			display: null
 		};
 	}
 
@@ -17436,6 +18626,286 @@ jui.define("chart.brush.column", [], function() {
 
 	return ColumnBrush;
 }, "chart.brush.bar");
+
+jui.define("chart.brush.bar3d", [], function() {
+
+    /**
+     * @class chart.brush.bar3d
+     * @extends chart.brush.core
+     */
+	var Bar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, col_height;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            col_height = (height - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
+            col_height = (col_height < 0) ? 0 : col_height;
+		}
+
+		this.draw = function() {
+            var count = brush.target.length;
+
+            this.eachData(function(i, data) {
+                var zeroXY = axis.c(0, i),
+                    startY = zeroXY.y - (height - brush.outerPadding * 2) / 2;
+
+                for(var j = 0; j < count; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = Math.abs(zeroXY.x - xy.x),
+                        r = chart.svg.rect3d(this.color(j), width, col_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
+
+                    startY += col_height + brush.innerPadding;
+                }
+            });
+
+            return g;
+		}
+	}
+
+    Bar3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            innerPadding: 5
+        };
+    }
+
+	return Bar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.column3d", [], function() {
+
+    /**
+     * @class chart.brush.column3d
+     * @extends chart.brush.core
+     */
+	var Column3DBrush = function() {
+		var g;
+        var width, col_width;
+
+		this.drawBefore = function() {
+			g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
+            col_width = (width - this.brush.outerPadding * 2 - (this.brush.target.length - 1) * this.brush.innerPadding) / this.brush.target.length;
+            col_width = (col_width < 0) ? 0 : col_width;
+		}
+
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.rect3d(color, width, height, degree, depth);
+        }
+
+		this.draw = function() {
+            var count = this.brush.target.length;
+
+            this.eachData(function(i, data) {
+                var zeroXY = this.axis.c(i, 0),
+                    startX = zeroXY.x - (width - this.brush.outerPadding * 2) / 2;
+
+                for(var j = 0; j < count; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value);
+
+                    var startY = xy.y + (Math.sin(this.axis.c.radian) * xy.depth),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(this.color(j), col_width, height, this.axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(startX, startY);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.append(r);
+
+                    startX += col_width + this.brush.innerPadding;
+                }
+            });
+
+            return g;
+		}
+	}
+
+    Column3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            innerPadding: 5
+        };
+    }
+
+	return Column3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.cylinder3d", [], function() {
+
+    /**
+     * @class chart.brush.cylinder3d
+     * @extends chart.brush.core
+     */
+	var Cylinder3DBrush = function() {
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.cylinder3d(color, width, height, degree, depth, this.brush.topRate);
+        }
+	}
+
+    Cylinder3DBrush.setup = function() {
+        return {
+            topRate: 1,
+            outerPadding: 10,
+            innerPadding: 5
+        };
+    }
+
+	return Cylinder3DBrush;
+}, "chart.brush.column3d");
+
+jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
+
+    /**
+     * @class chart.brush.clusterbar3d
+     * @extends chart.brush.bar
+     */
+    var ClusterBar3DBrush = function(chart, axis, brush) {
+        var g;
+        var height;
+
+        this.drawBefore = function() {
+            g = chart.svg.group();
+            height = axis.y.rangeBand() - brush.outerPadding * 2;
+        }
+
+        this.draw = function() {
+            var count = brush.target.length;
+
+            this.eachData(function(i, data) {
+                for(var j = 0; j < count; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i, j, count),
+                        zeroXY = axis.c(0, i, j, count),
+                        padding = (brush.innerPadding > xy.depth) ? xy.depth : brush.innerPadding;
+
+                    var startY = xy.y - (height / 2) + (padding / 2),
+                        width = Math.abs(zeroXY.x - xy.x),
+                        r = chart.svg.rect3d(this.color(j), width, height, axis.c.degree, xy.depth - padding);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x, startY);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
+                }
+            });
+
+            return g;
+        }
+    }
+
+    ClusterBar3DBrush.setup = function() {
+        return {
+            outerPadding: 5,
+            innerPadding: 5
+        };
+    }
+
+    return ClusterBar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.clustercolumn3d", [], function() {
+
+    /**
+     * @class chart.brush.clustercolumn3d
+     * @extends chart.brush.bar
+     */
+    var ClusterColumn3DBrush = function() {
+        var g;
+        var width;
+
+        this.drawBefore = function() {
+            g = this.chart.svg.group();
+            width = this.axis.x.rangeBand() - this.brush.outerPadding * 2;
+        }
+
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.rect3d(color, width, height, degree, depth);
+        }
+
+        this.draw = function() {
+            var count = this.brush.target.length;
+
+            this.eachData(function(i, data) {
+                for(var j = 0; j < count; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value, j, count),
+                        zeroXY = this.axis.c(i, 0, j, count),
+                        padding = (this.brush.innerPadding > xy.depth) ? xy.depth : this.brush.innerPadding;
+
+                    var startX = xy.x - (width / 2),
+                        startY = xy.y - (Math.sin(this.axis.c.radian) * padding),
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(this.color(j), width, height, this.axis.c.degree, xy.depth - padding);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(startX, startY);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.prepend(r);
+                }
+            }, true);
+
+            return g;
+        }
+    }
+
+    ClusterColumn3DBrush.setup = function() {
+        return {
+            outerPadding: 5,
+            innerPadding: 5
+        };
+    }
+
+    return ClusterColumn3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.clustercylinder3d", [], function() {
+
+    /**
+     * @class chart.brush.clustercylinder3d
+     * @extends chart.brush.bar
+     */
+    var ClusterCylinder3DBrush = function() {
+        this.drawMain = function(color, width, height, degree, depth) {
+            return this.chart.svg.cylinder3d(color, width, height, degree, depth, this.brush.topRate);
+        }
+    }
+
+    ClusterCylinder3DBrush.setup = function() {
+        return {
+            topRate: 1,
+            outerPadding: 5,
+            innerPadding: 5
+        };
+    }
+
+    return ClusterCylinder3DBrush;
+}, "chart.brush.clustercolumn3d");
 
 jui.define("chart.brush.stackbar", [], function() {
 
@@ -17557,12 +19027,8 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	StackBarBrush.setup = function() {
 		return {
-			/** @cfg {Number} [outerPadding=15] */
-			outerPadding: 15,
-			/** @cfg {Number} [active=null] 선택 되어진 bar 의 인덱스 */
-			active: null,
-			/** @cfg {String} [activeEvent=null]  active 가 적용될 이벤트 (click, mouseover, etc..)*/
-			activeEvent: null // or click, mouseover, ...
+			/** @cfg {Number} [outerPadding=15] Determines the outer margin of a stack bar. */
+			outerPadding: 15
 		};
 	}
 
@@ -17628,6 +19094,150 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 	return ColumnStackBrush;
 }, "chart.brush.stackbar");
+
+jui.define("chart.brush.stackbar3d", [], function() {
+
+    /**
+     * @class chart.brush.stackbar3d
+     * @extends chart.brush.core
+     */
+	var StackBar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, bar_height;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            bar_height = height - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startY = axis.c(0, i).y - bar_height / 2,
+                    col_width = 0;
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = Math.abs(zeroXY.x - xy.x),
+                        r = chart.svg.rect3d(this.color(j), width, bar_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x + col_width, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    g.append(r);
+
+                    col_width += width;
+                }
+
+                if(value != 0) {
+                    this.addEvent(group, i, j);
+                }
+
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    StackBar3DBrush.setup = function() {
+        return {
+            outerPadding: 10
+        };
+    }
+
+	return StackBar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.stackcolumn3d", [], function() {
+
+    /**
+     * @class chart.brush.stackcolumn3d
+     * @extends chart.brush.core
+     */
+	var StackColumn3DBrush = function() {
+		var g;
+        var width, bar_width;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
+            bar_width = width - this.brush.outerPadding * 2;
+            zeroXY = this.axis.c(0, 0);
+		}
+
+        this.drawMain = function(index, width, height, degree, depth) {
+            return this.chart.svg.rect3d(this.color(index), width, height, degree, depth);
+        }
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = this.chart.svg.group(),
+                    startX = this.axis.c(i, 0).x - bar_width / 2,
+                    col_height = 0;
+
+                for(var j = 0; j < this.brush.target.length; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value),
+                        top = Math.sin(this.axis.c.radian) * xy.depth;
+
+                    var startY = xy.y + top,
+                        height = Math.abs(zeroXY.y - xy.y),
+                        r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
+
+                    r.translate(startX, startY - col_height);
+                    group.append(r);
+
+                    col_height += height;
+                }
+
+                if(value != 0) {
+                    this.addEvent(group, i, j);
+                }
+
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    StackColumn3DBrush.setup = function() {
+        return {
+            outerPadding: 10
+        };
+    }
+
+	return StackColumn3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.stackcylinder3d", [], function() {
+
+    /**
+     * @class chart.brush.stackcylinder3d
+     * @extends chart.brush.core
+     */
+	var StackCylinder3DBrush = function() {
+        this.drawMain = function(index, width, height, degree, depth) {
+            var top = Math.sin(this.axis.c.radian) * depth,
+                h = (index > 0) ? height - top : height;
+
+            return this.chart.svg.cylinder3d(this.color(index), width, h, degree, depth);
+        }
+	}
+
+	return StackCylinder3DBrush;
+}, "chart.brush.stackcolumn3d");
 
 jui.define("chart.brush.fullstackbar", [], function() {
 
@@ -17719,11 +19329,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		return {
             /** @cfg {Number} [outerPadding=15] */
 			outerPadding: 15,
-            /** @cfg {Number} [active=null] active data index  */
-			active: null,
-            /** @cfg {Number} [activeEvent=null] active event name (click or mouseover ...) */
-			activeEvent: null, // or click, mouseover, ...
-            /** @cfg {Boolean} [showText=false] */
+            /** @cfg {Boolean} [showText=false] Configures settings to let the percent text of a full stack bar revealed. */
 			showText: false
 		};
 	}
@@ -17751,7 +19357,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 		}
 
 		this.draw = function() {
-			var chart_height = chart.area("height");
+			var chart_height = axis.area("height");
 
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
@@ -17811,6 +19417,207 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
 	return FullStackColumnBrush;
 }, "chart.brush.fullstackbar");
+
+jui.define("chart.brush.fullstackbar3d", [], function() {
+
+    /**
+     * @class chart.brush.fullstackbar3d
+     * @extends chart.brush.core
+     */
+	var FullStackBar3DBrush = function(chart, axis, brush) {
+		var g;
+        var height, bar_height;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+            height = axis.y.rangeBand();
+            bar_height = height - brush.outerPadding * 2;
+            zeroXY = axis.c(0, 0);
+		}
+
+        this.drawText = function(percent, x, y) {
+            var text = this.chart.text({
+                x : x,
+                y : y,
+                "text-anchor" : "middle"
+            }, percent + "%");
+
+            return text;
+        }
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = chart.svg.group(),
+                    startY = axis.c(0, i).y - bar_height / 2,
+                    col_width = 0,
+                    sum = 0,
+                    list = [];
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var width = data[brush.target[j]];
+
+                    sum += width;
+                    list.push(width);
+                }
+
+                for(var j = 0; j < brush.target.length; j++) {
+                    var value = data[brush.target[j]],
+                        xy = axis.c(value, i),
+                        top = Math.sin(axis.c.radian) * xy.depth,
+                        width = axis.x.rate(list[j], sum),
+                        r = chart.svg.rect3d(this.color(j), width, bar_height, axis.c.degree, xy.depth);
+
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
+                    r.translate(zeroXY.x + col_width, startY + top);
+
+                    // 그룹에 컬럼 엘리먼트 추가
+                    group.append(r);
+
+                    // 퍼센트 노출 옵션 설정
+                    if(brush.showText) {
+                        var p = Math.round((list[j] / sum) * axis.x.max()),
+                            x = col_width + width / 2,
+                            y = startY + bar_height / 2 + 5;
+
+                        group.append(this.drawText(p, x, y));
+                    }
+
+                    col_width += width;
+                }
+
+                this.addEvent(group, i, j);
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    FullStackBar3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            showText: false
+        };
+    }
+
+	return FullStackBar3DBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.fullstackcolumn3d", [], function() {
+
+    /**
+     * @class chart.brush.fullstackcolumn3d
+     * @extends chart.brush.core
+     */
+	var FullStackColumn3DBrush = function() {
+		var g;
+        var width, bar_width;
+        var zeroXY;
+
+		this.drawBefore = function() {
+			g = this.chart.svg.group();
+            width = this.axis.x.rangeBand();
+            bar_width = width - this.brush.outerPadding * 2;
+            zeroXY = this.axis.c(0, 0);
+		}
+
+        this.drawMain = function(index, width, height, degree, depth) {
+            return this.chart.svg.rect3d(this.color(index), width, height, degree, depth);
+        }
+
+        this.getTextXY = function(index, x, y, depth) {
+            return {
+                x: x,
+                y: y
+            }
+        }
+
+		this.draw = function() {
+            this.eachData(function(i, data) {
+                var group = this.chart.svg.group(),
+                    startX = this.axis.c(i, 0).x - bar_width / 2,
+                    startY = zeroXY.y,
+                    sum = 0,
+                    list = [];
+
+                for(var j = 0; j < this.brush.target.length; j++) {
+                    var height = data[this.brush.target[j]];
+
+                    sum += height;
+                    list.push(height);
+                }
+
+                for(var j = 0; j < this.brush.target.length; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value),
+                        top = Math.sin(this.axis.c.radian) * xy.depth,
+                        height = zeroXY.y - this.axis.y.rate(list[j], sum),
+                        r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
+
+                    r.translate(startX, startY - height + top);
+                    group.append(r);
+
+                    // 퍼센트 노출 옵션 설정
+                    if(this.brush.showText) {
+                        var p = Math.round((list[j] / sum) * this.axis.y.max()),
+                            x = startX + bar_width / 2,
+                            y = startY - height / 2 + 6,
+                            xy = this.getTextXY(j, x, y, xy.depth)
+
+                        group.append(this.drawText(p, xy.x, xy.y));
+                    }
+
+                    startY -= height;
+                }
+
+                this.addEvent(group, i, j);
+                g.append(group);
+            });
+
+            return g;
+		}
+	}
+
+    FullStackColumn3DBrush.setup = function() {
+        return {
+            outerPadding: 10,
+            showText: false
+        };
+    }
+
+	return FullStackColumn3DBrush;
+}, "chart.brush.fullstackbar3d");
+
+jui.define("chart.brush.fullstackcylinder3d", [], function() {
+
+    /**
+     * @class chart.brush.fullstackcylinder3d
+     * @extends chart.brush.core
+     */
+	var FullStackCylinder3DBrush = function() {
+        this.drawMain = function(index, width, height, degree, depth) {
+            var top = Math.sin(this.axis.c.radian) * depth,
+                h = (index > 0) ? height - top : height;
+
+            return this.chart.svg.cylinder3d(this.color(index), width, h, degree, depth);
+        }
+
+        this.getTextXY = function(index, x, y, depth) {
+            var top = Math.sin(this.axis.c.radian) * depth;
+
+            return {
+                x: x + ((Math.cos(this.axis.c.radian) * depth) / 2),
+                y: y - ((index > 0) ? top : 0)
+            }
+        }
+	}
+
+	return FullStackCylinder3DBrush;
+}, "chart.brush.fullstackcolumn3d");
 
 jui.define("chart.brush.bubble", [], function() {
 
@@ -17922,9 +19729,9 @@ jui.define("chart.brush.bubble", [], function() {
 
     BubbleBrush.setup = function() {
         return {
-            /** @cfg {Number} [min=5] */
+            /** @cfg {Number} [min=5] Determines the minimum size of a bubble. */
             min: 5,
-            /** @cfg {Number} [max=5] */
+            /** @cfg {Number} [max=30] Determines the maximum size of a bubble.*/
             max: 30
         };
     }
@@ -18165,13 +19972,13 @@ jui.define("chart.brush.equalizer", [], function() {
 
     EqualizerBrush.setup = function() {
         return {
-            /** @cfg {Number} [innerPadding=10] */
+            /** @cfg {Number} [innerPadding=10] Determines the inner margin of an equalizer.*/
             innerPadding: 10,
-            /** @cfg {Number} [outerPadding=15] */
+            /** @cfg {Number} [outerPadding=15] Determines the outer margin of an equalizer. */
             outerPadding: 15,
-            /** @cfg {Number} [unit=5] */
+            /** @cfg {Number} [unit=5] Determines the reference value that represents the color.*/
             unit: 5,
-            /** @cfg {Number} [gap=5] */
+            /** @cfg {Number} [gap=5] Determines the number of columns in an equalizer - expressed as a color.*/
             gap: 5
         };
     }
@@ -18346,10 +20153,14 @@ jui.define("chart.brush.line", [], function() {
 
     LineBrush.setup = function() {
         return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step). */
             symbol: "normal", // normal, curve, step
-            display: null,
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
             active: null,
-            activeEvent: null // or click, mouseover, ...
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            display: null
         };
     }
 
@@ -18403,7 +20214,7 @@ jui.define("chart.brush.path", [], function() {
 	return PathBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], function(_, math, ColorUtil) {
 
 	/**
 	 * @class chart.brush.pie
@@ -18417,8 +20228,25 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
         var g;
 
 		this.drawPie = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
-			var pie = this.chart.svg.group(),
-				path = this.chart.svg.path({
+            
+			var pie = this.chart.svg.group();
+
+            if (endAngle == 360) { // if pie is full size, draw a circle as pie brush
+                
+                var circle = this.chart.svg.circle({
+                    cx : centerX,
+                    cy : centerY,
+                    r : outerRadius,
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+                pie.append(circle);
+                return pie; 
+
+            }            
+            
+            var path = this.chart.svg.path({
                     fill : color,
                     stroke : this.chart.theme("pieBorderColor") || color,
                     "stroke-width" : this.chart.theme("pieBorderWidth")
@@ -18441,6 +20269,47 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
                 .LineTo(0, 0)
                 .ClosePath();
+
+            pie.append(path);
+
+			return pie;
+		}
+
+		this.drawPie3d = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
+			var pie = this.chart.svg.group(),
+				path = this.chart.svg.path({
+                    fill : color,
+                    stroke : this.chart.theme("pieBorderColor") || color,
+                    "stroke-width" : this.chart.theme("pieBorderWidth")
+                });
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+                startY = obj.y;
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+
+			pie.translate(centerX, centerY);
+
+			// arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
 
             pie.append(path);
 
@@ -18475,11 +20344,24 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 			}
 
 			for (var i = 0; i < target.length; i++) {
-				var value = data[target[i]],
-					endAngle = all * (value / max),
+                var value = data[target[i]],
+                    endAngle = all * (value / max);
+
+                if (this.brush['3d']) {
+                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, ColorUtil.darken(this.color(i), 0.5));
+                    g.append(pie3d);
+                }
+
+				startAngle += endAngle;
+			}
+
+            startAngle = 0;
+			for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
                     pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
 
-                if(this.brush.showText) {
+                if (this.brush.showText) {
                     var text = this.getFormatText(target[i], value, max),
                         elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
 
@@ -18488,7 +20370,8 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
                 }
 
                 self.addEvent(pie, index, i);
-				g.append(pie);
+
+                g.append(pie);
 
 				startAngle += endAngle;
 			}
@@ -18555,19 +20438,21 @@ jui.define("chart.brush.pie", [ "util.base", "util.math" ], function(_, math) {
 
     PieBrush.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 그려지는 영역 클립핑 여부 */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
-            /** @cfg {Boolean} [showText=false] 텍스트 표시 여부 */
+            /** @cfg {Boolean} [showText=false] Set the text appear.  */
             showText: false,
-            /** @cfg {Function} [format=null] 텍스트 포맷 함수  */
-            format: null
+            /** @cfg {Function} [format=null] Returns a value from the format callback function of a defined option. */
+            format: null,
+            /** @cfg {Boolean} [3d=false] check 3d support */
+            "3d" : false
         }
     }
 
 	return PieBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], function(_, math, ColorUtil) {
 
     /**
      * @class chart.brush.donut 
@@ -18651,6 +20536,139 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
 			return g;
 		}
 
+        /**
+         * @method drawDonut3d
+         *
+         * donut 을 그린다.
+         *
+         * @param {Number} centerX 중앙 위치 x
+         * @param {Number} centerY 중앙 위치 y
+         * @param {Number} innerRadius 안쪽 반지름
+         * @param {Number} outerRadius 바깥쪽 반지름
+         * @param {Number} startAngle 시작 지점 각도
+         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
+         * @param {Object} attr donut 설정될 svg 속성 리스트
+         * @param {Boolean} hasCircle
+         * @return {util.svg.element}
+         */
+		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
+		    hasCircle = hasCircle || false;
+
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+                dist = Math.abs(outerRadius - innerRadius);
+
+            outerRadius += dist/2;
+            innerRadius = outerRadius - dist;
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+
+			var innerObj = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				innerStartX = innerObj.x,
+				innerStartY = innerObj.y;
+
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+			innerObj = math.rotate(innerStartX, innerStartY, math.radian(endAngle));
+
+			// 중심점 이동
+			g.translate(centerX, centerY);
+
+			// outer arc 그림
+			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
+
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var innerY = innerObj.y + 10;
+            var innerX = innerObj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            var innerTargetX = innerStartX + 5;
+            var innerTargetY = innerStartY + 10;
+
+            path.LineTo(x, y);
+
+            path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
+
+            path.ClosePath();
+            g.append(path);
+
+            // 안쪽 면 그리기
+            var innerPath = this.chart.svg.path(attr);
+            // 시작 하는 위치로 옮김
+            innerPath.MoveTo(innerStartX, innerStartY);
+            innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 1, innerObj.x, innerObj.y);
+            innerPath.LineTo(innerX, innerY);
+            innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 0, innerTargetX, innerTargetY);
+            innerPath.ClosePath();
+            g.append(innerPath);
+
+
+			return g;
+		}
+
+		this.drawDonut3dBlock = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
+		    hasCircle = hasCircle || false;
+
+			var g = this.chart.svg.group(),
+				path = this.chart.svg.path(attr),
+                dist = Math.abs(outerRadius - innerRadius);
+
+            outerRadius += dist/2;
+            innerRadius = outerRadius - dist;
+
+			// 바깥 지름 부터 그림
+			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
+				startX = obj.x,
+				startY = obj.y;
+
+			var innerObj = math.rotate(0, -innerRadius, math.radian(startAngle)),
+				innerStartX = innerObj.x,
+				innerStartY = innerObj.y;
+
+
+			// 시작 하는 위치로 옮김
+			path.MoveTo(startX, startY);
+
+			// outer arc 에 대한 지점 설정
+			obj = math.rotate(startX, startY, math.radian(endAngle));
+			innerObj = math.rotate(innerStartX, innerStartY, math.radian(endAngle));
+
+			// 중심점 이동
+			g.translate(centerX, centerY);
+
+            var y = obj.y + 10;
+            var x = obj.x + 5;
+
+            var innerY = innerObj.y + 10;
+            var innerX = innerObj.x + 5;
+
+            var targetX = startX + 5;
+            var targetY = startY + 10;
+
+            var innerTargetX = innerStartX + 5;
+            var innerTargetY = innerStartY + 10;
+
+
+            // 왼쪽면 그리기
+            var rect = this.chart.svg.path(attr);
+            rect.MoveTo(obj.x, obj.y).LineTo(x, y).LineTo(innerX, innerY).LineTo(innerObj.x, innerObj.y).ClosePath();
+            g.append(rect);
+
+			return g;
+		}
+
 
         this.drawUnit = function (index, data, g) {
             var obj = this.axis.c(index);
@@ -18680,6 +20698,34 @@ jui.define("chart.brush.donut", [ "util.base", "util.math" ], function(_, math) 
                 max += data[target[i]];
             }
 
+            if (this.brush['3d']) {
+
+                // 화면 블럭 그리기
+                for (var i = 0; i < target.length; i++) {
+                    var value = data[target[i]],
+                        endAngle = all * (value / max),
+                        donut3d = this.drawDonut3dBlock(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+                            fill : ColorUtil.darken(this.color(i), 0.5)
+                        }, i == target.length - 1);
+                    g.append(donut3d);
+
+                    startAngle += endAngle;
+                }
+
+                startAngle = 0;
+                for (var i = 0; i < target.length; i++) {
+                    var value = data[target[i]],
+                        endAngle = all * (value / max),
+                        donut3d = this.drawDonut3d(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
+                            fill : ColorUtil.darken(this.color(i), 0.5)
+                        }, i == target.length - 1);
+                    g.append(donut3d);
+
+                    startAngle += endAngle;
+                }
+            }
+
+            startAngle = 0;
             for (var i = 0; i < target.length; i++) {
                 var value = data[target[i]],
                     endAngle = all * (value / max),
@@ -18903,10 +20949,8 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
         }
         
 		this.drawUnit = function(index, data, group) {
-            
-            var obj = this.axis.c(index);
-            
-            var width = obj.width,
+            var obj = this.axis.c(index),
+                width = obj.width,
                 height = obj.height,
                 x = obj.x,
                 y = obj.y;
@@ -18916,12 +20960,11 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             centerX = width / 2 + x;
             centerY = height / 2 + y;
             
-            var date = new Date();
-            
-            var hour = typeof data[this.brush.hour] == 'undefined' ? date.getHours() : data[this.brush.hour];
-            var minute = typeof data[this.brush.minute] == 'undefined' ?  date.getMinutes() : data[this.brush.minute];
-            var second = typeof data[this.brush.second] == 'undefined' ?  date.getSeconds() : data[this.brush.second];
-            var millis = typeof data[this.brush.second]  == 'undefined' ?  date.getMilliseconds() : 0;
+            var date = new Date(),
+                hour = this.getValue(data, "hour", date.getHours()),
+                minute = this.getValue(data, "minute", date.getMinutes()),
+                second = this.getValue(data, "second", date.getSeconds()),
+                millis = date.getMilliseconds();
 
             group.append(this.drawOuterCircle(w, centerX, centerY));
             group.append(this.drawInnerCircle(w, centerX, centerY));
@@ -18934,12 +20977,7 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             return group; 
 		}
 
-        this.drawBefore = function() {
-
-        }
-
         this.draw = function() {
-
             var group = this.chart.svg.group();
 
             this.eachData(function(i, data) {
@@ -18947,22 +20985,13 @@ jui.define("chart.brush.clock", [ "util.math" ], function(math) {
             });
 
             return group;
-
         }
-	}
-
-	ClockBrush.setup = function() {
-		return {
-            hour : "hour",
-            minute : "minute",
-            second : "second"
-		};
 	}
 
 	return ClockBrush;
 }, "chart.brush.core");
 
-jui.define("chart.brush.scatter", [], function() {
+jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.scatter
@@ -18993,56 +21022,66 @@ jui.define("chart.brush.scatter", [], function() {
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
-            if(symbol == "triangle" || symbol == "cross") {
-                elem = this.chart.svg.group({ width: w, height: h }, function() {
-                    if(symbol == "triangle") {
-                        var poly = self.chart.svg.polygon();
-
-                        poly.point(0, h)
-                            .point(w, h)
-                            .point(w / 2, 0);
-                    } else {
-                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
-                        self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
-                    }
-                }).translate(pos.x - (w / 2), pos.y - (h / 2));
+            if(_.typeCheck("function", symbol)) {
+                elem = this.chart.svg.image({
+                    "xlink:href": symbol(pos.value),
+                    width: w + borderWidth,
+                    height: h + borderWidth,
+                    x: pos.x - (w / 2) - borderWidth,
+                    y: pos.y - (h / 2)
+                });
             } else {
-                if(symbol == "rectangle") {
-                    elem = this.chart.svg.rect({
-                        width: w,
-                        height: h,
-                        x: pos.x - (w / 2),
-                        y: pos.y - (h / 2)
-                    });
-                } else {
-                    elem = this.chart.svg.ellipse({
-                        rx: w / 2,
-                        ry: h / 2,
-                        cx: pos.x,
-                        cy: pos.y
-                    });
-                }
-            }
+                if(symbol == "triangle" || symbol == "cross") {
+                    elem = this.chart.svg.group({ width: w, height: h }, function() {
+                        if(symbol == "triangle") {
+                            var poly = self.chart.svg.polygon();
 
-            if(symbol != "cross") {
-                elem.attr({
-                    fill: color,
-                    stroke: borderColor,
-                    "stroke-width": borderWidth
-                })
-                .hover(function () {
-                    elem.attr({
-                        fill: self.chart.theme("scatterHoverColor"),
-                        stroke: color,
-                        "stroke-width": borderWidth * 2
-                    });
-                }, function () {
+                            poly.point(0, h)
+                                .point(w, h)
+                                .point(w / 2, 0);
+                        } else {
+                            self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: 0, x2: w, y2: h });
+                            self.chart.svg.line({ stroke: color, "stroke-width": borderWidth * 2, x1: 0, y1: w, x2: h, y2: 0 });
+                        }
+                    }).translate(pos.x - (w / 2), pos.y - (h / 2));
+                } else {
+                    if(symbol == "rectangle") {
+                        elem = this.chart.svg.rect({
+                            width: w,
+                            height: h,
+                            x: pos.x - (w / 2),
+                            y: pos.y - (h / 2)
+                        });
+                    } else {
+                        elem = this.chart.svg.ellipse({
+                            rx: w / 2,
+                            ry: h / 2,
+                            cx: pos.x,
+                            cy: pos.y
+                        });
+                    }
+                }
+
+                if(symbol != "cross") {
                     elem.attr({
                         fill: color,
                         stroke: borderColor,
                         "stroke-width": borderWidth
+                    })
+                    .hover(function () {
+                        elem.attr({
+                            fill: self.chart.theme("scatterHoverColor"),
+                            stroke: color,
+                            "stroke-width": borderWidth * 2
+                        });
+                    }, function () {
+                        elem.attr({
+                            fill: color,
+                            stroke: borderColor,
+                            "stroke-width": borderWidth
+                        });
                     });
-                });
+                }
             }
 
             return elem;
@@ -19104,11 +21143,11 @@ jui.define("chart.brush.scatter", [], function() {
 
     ScatterBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"/"callback"} [symbol="circle"] Determines the shape of a (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Boolean} [clip=false] */
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };
     }
@@ -19184,11 +21223,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     ScatterPathBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] Determines the shape of a starter (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
+            /** @cfg {Number} [strokeWidth=1] Set the line thickness of a starter. */
             strokeWidth : 1
         };
     }
@@ -19272,12 +21311,16 @@ jui.define("chart.brush.bargauge", [], function() {
 
     BarGaugeBrush.setup = function() {
         return {
-            /** @cfg {Number} [cut=5] bar gauge item padding */
+            /** @cfg {Number} [cut=5] Determines the spacing of a bar gauge. */
             cut: 5,
-            /** @cfg {Number} [size=20] bar gauge item height */
+            /** @cfg {Number} [size=20] Determines the size of a bar gauge. */
             size: 20,
             /** @cfg {Function} [format=null] bar gauge format callback */
-            format: null
+            format: null,
+
+            max : 100,
+
+            min : 0
         };
     }
 
@@ -19347,6 +21390,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     CircleGaugeBrush.setup = function() {
         return {
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         }
     }
@@ -19500,12 +21544,19 @@ jui.define("chart.brush.fillgauge", [ "jquery", "util.base" ], function($, _) {
 
     FillGaugeBrush.setup = function() {
         return {
+            /** @cfg {Number} [min=0] Determines the minimum size of a fill gauge.*/
             min: 0,
+            /** @cfg {Number} [max=100] Determines the maximum size of a fill gauge.*/
             max: 100,
+            /** @cfg {Number} [value=0] Determines the value of a fill gauge. */
             value: 0,
+            /** @cfg {String} [shape="circle"] Determines the shape of a fill gauge (circle, rectangle).*/
             shape: "circle", // or rectangle
+            /** @cfg {String} [direction="vertical"] Determines the direction in which a fill gauge is to be filled (vertical, horizontal). */
             direction: "vertical",
+            /** @cfg {String} [svg=""] Sets the shape of a fill gauge with a specified URL as an SVG tag. */
             svg: "",
+            /** @cfg {String} [path=""] Sets the shape of a fill gauge with a specified pass tag.*/
             path: ""
         };
     }
@@ -19655,18 +21706,18 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
      *  
      * @extends chart.brush.donut
      */
-	var GaugeBrush = function(chart, axis, brush) {
+	var GaugeBrush = function() {
 		var self = this;
         var w, centerX, centerY, outerRadius, innerRadius;
 
         function createText(startAngle, endAngle, min, max, value, unit) {
-			var g = chart.svg.group({
+			var g = self.chart.svg.group({
 				"class" : "gauge text"
 			}).translate(centerX, centerY);
 
-			g.append(chart.svg.text({
+			g.append(self.chart.svg.text({
 				x : 0,
-				y : (brush.arrow) ? 70 : 10,
+				y : (self.brush.arrow) ? 70 : 10,
 				"text-anchor" : "middle",
 				"font-size" : "3em",
 				"font-weight" : 1000,
@@ -19674,13 +21725,13 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			}, value + ""));
 
 			if (unit != "") {
-				g.append(chart.text({
+				g.append(self.chart.text({
 					x : 0,
 					y : 100,
 					"text-anchor" : "middle",
 					"font-size" : "1.5em",
 					"font-weight" : 500,
-					"fill" : chart.theme("gaugeFontColor")
+					"fill" : self.chart.theme("gaugeFontColor")
 				}, unit))
 			}
 
@@ -19694,22 +21745,22 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
             startX = obj.x;
             startY = obj.y;
 
-            g.append(chart.text({
+            g.append(self.chart.text({
                 x : obj.x + 30,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-				"fill" : chart.theme("gaugeFontColor")
+				"fill" : self.chart.theme("gaugeFontColor")
             }, min + ""));
 
 			// max
 			// outer arc 에 대한 지점 설정
             var obj = math.rotate(startX, startY, math.radian(endAngle));
     
-            g.append(chart.text({
+            g.append(self.chart.text({
                 x : obj.x - 20,
                 y : obj.y + 20,
                 "text-anchor" : "middle",
-				"fill" : chart.theme("gaugeFontColor")
+				"fill" : self.chart.theme("gaugeFontColor")
             }, max + ""));
 
 			return g;
@@ -19736,16 +21787,18 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 				min = this.getValue(data, "min", 0),
 				unit = this.getValue(data, "unit");
 
+			var startAngle = this.brush.startAngle;
+			var endAngle = this.brush.endAngle;
 
-			var rate = (value - min) / (max - min),
-				currentAngle = brush.endAngle * rate;
-
-			if (brush.endAngle >= 360) {
-				brush.endAngle = 359.99999;
+			if (endAngle >= 360) {
+				endAngle = 359.99999;
 			}
 
-			if (currentAngle > brush.endAngle) {
-				currentAngle = brush.endAngle;
+			var rate = (value - min) / (max - min),
+				currentAngle = endAngle * rate;
+
+			if (currentAngle > endAngle) {
+				currentAngle = endAngle;
 			}
 
 			var width = obj.width,
@@ -19757,23 +21810,23 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			w = Math.min(width, height) / 2;
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
-			outerRadius = w - brush.size/2;
-			innerRadius = outerRadius - brush.size;
+			outerRadius = w - this.brush.size/2;
+			innerRadius = outerRadius - this.brush.size;
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle - currentAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				fill : "transparent",
-				stroke : chart.theme("gaugeBackgroundColor")
+				stroke : this.chart.theme("gaugeBackgroundColor")
 			}));
 
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
 				fill : "transparent",
-				stroke : this.color(0)
+				stroke : this.color(index)
 			}));
 
 
 			// startAngle, endAngle 에 따른 Text 위치를 선정해야함
-			group.append(createText(brush.startAngle, brush.endAngle, min, max, value, unit));
+			group.append(createText(startAngle, endAngle, min, max, value, unit));
 
 			return group;
 		}
@@ -19793,11 +21846,11 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
 	GaugeBrush.setup = function() {
 		return {
-            /** @cfg {Number} [size=30] stroke width  */
+            /** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
 			size: 30,
-            /** @cfg {Number} [startAngle=0] start point */
+            /** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
 			startAngle: 0,
-            /** @cfg {Number} [endAngle=360]  */
+            /** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
 			endAngle: 360
 		};
 	}
@@ -19812,17 +21865,17 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 	 * implements full gauge brush
 	 * @extends chart.brush.donut
 	 */
-	var FullGaugeBrush = function(chart, axis, brush) {
+	var FullGaugeBrush = function() {
 		var self = this, textY = 5;
         var group, w, centerX, centerY, outerRadius, innerRadius, textScale;
 
 		function createText(value, index) {
-			var g = chart.svg.group().translate(centerX, centerY);
+			var g = self.chart.svg.group().translate(centerX, centerY);
 
-            g.append(chart.text({
+            g.append(self.chart.text({
                 "text-anchor" : "middle",
-                "font-size" : chart.theme("gaugeFontSize"),
-                "font-weight" : chart.theme("gaugeFontWeight"),
+                "font-size" : self.chart.theme("gaugeFontSize"),
+                "font-weight" : self.chart.theme("gaugeFontWeight"),
                 "fill" : self.color(0),
                 y: textY
             }, self.format(value, index)).scale(textScale));
@@ -19831,13 +21884,14 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 		}
 
         function createTitle(title, dx, dy) {
-            var g = chart.svg.group().translate(centerX + dx, centerY + dy),
+            var g = self.chart.svg.group().translate(centerX + dx, centerY + dy),
                 anchor = (dx == 0) ? "middle" : ((dx < 0) ? "end" : "start");
 
-            g.append(chart.text({
+            g.append(self.chart.text({
                 "text-anchor" : anchor,
-                "font-size" : chart.theme("gaugeTitleFontSize"),
-                "font-weight" : chart.theme("gaugeTitleFontWeight"),
+                "font-size" : self.chart.theme("gaugeTitleFontSize"),
+                "font-weight" : self.chart.theme("gaugeTitleFontWeight"),
+                fill : self.chart.theme("gaugeTitleFontColor"),
                 y: textY
             }, title).scale(textScale));
 
@@ -19845,17 +21899,24 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
         }
 
 		this.drawUnit = function(index, data) {
-			var obj = axis.c(index),
+			var obj = this.axis.c(index),
 				value = this.getValue(data, "value", 0),
                 title = this.getValue(data, "title"),
 				max = this.getValue(data, "max", 100),
 				min = this.getValue(data, "min", 0);
 
-			var rate = (value - min) / (max - min),
-				currentAngle = brush.endAngle * rate;
+			var startAngle = this.brush.startAngle;
+			var endAngle = this.brush.endAngle;
 
-			if (brush.endAngle >= 360) {
-				brush.endAngle = 359.99999;
+			if (endAngle >= 360) {
+				endAngle = 359.99999;
+			}
+
+			var rate = (value - min) / (max - min),
+				currentAngle = endAngle * rate;
+
+			if (currentAngle > endAngle) {
+				currentAngle = endAngle;
 			}
 
 			var width = obj.width,
@@ -19867,33 +21928,33 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			w = Math.min(width, height) / 2;
 			centerX = width / 2 + x;
 			centerY = height / 2 + y;
-			outerRadius = w - brush.size;
-			innerRadius = outerRadius - brush.size;
+			outerRadius = w - this.brush.size;
+			innerRadius = outerRadius - this.brush.size;
             textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle + currentAngle, brush.endAngle, {
-				stroke : chart.theme("gaugeBackgroundColor"),
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
+				stroke : this.chart.theme("gaugeBackgroundColor"),
 				fill : "transparent"
 			}));
 
-			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, brush.startAngle, currentAngle, {
-				stroke : this.color(0),
+			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, currentAngle, {
+				stroke : this.color(index),
 				fill : "transparent"
 			}));
 
-            if(brush.showText) {
+            if(this.brush.showText) {
                 group.append(createText(value, index));
             }
 
             if(title != "") {
-                group.append(createTitle(title, brush.titleX, brush.titleY));
+                group.append(createTitle(title, this.brush.titleX, this.brush.titleY));
             }
 
 			return group;
 		}
 
 		this.draw = function() {
-			group = chart.svg.group();
+			group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
 				this.drawUnit(i, data);
@@ -19905,12 +21966,19 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	FullGaugeBrush.setup = function() {
 		return {
-            size: 60,
-            startAngle: 0,
-            endAngle: 300,
+			/** @cfg {Number} [size=30] Determines the stroke width of a gauge.  */
+			size: 60,
+			/** @cfg {Number} [startAngle=0] Determines the start angle(as start point) of a gauge. */
+			startAngle: 0,
+			/** @cfg {Number} [endAngle=360] Determines the end angle(as draw point) of a gauge. */
+			endAngle: 360,
+			/** @cfg {Boolean} [showText=true] */
             showText: true,
+			/** @cfg {Number} [titleX=0] */
             titleX: 0,
+			/** @cfg {Number} [titleY=0]  */
             titleY: 0,
+			/** @cfg {Function} [format=null] */
             format: null
 		};
 	}
@@ -20003,19 +22071,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
-			/** @cfg {Number} [min=0] */
+			/** @cfg {Number} [min=0] Determines the minimum value of a stack gauge.*/
 			min: 0,
-			/** @cfg {Number} [max=100] */
+			/** @cfg {Number} [max=100] Determines the maximum value of a stack gauge.*/
 			max: 100,
-			/** @cfg {Number} [cut=5] */
+			/** @cfg {Number} [cut=5] Determines the bar spacing of a stack gauge.*/
 			cut: 5,
-			/** @cfg {Number} [size=24] */
+			/** @cfg {Number} [size=24] Determines the bar size of a stack gauge.*/
 			size: 24,
-			/** @cfg {Number} [startAngle=-180] */
+			/** @cfg {Number} [startAngle=-180] Determines the start angle of a stack gauge.*/
 			startAngle: -180,
-			/** @cfg {Number} [endAngle=360] */
+			/** @cfg {Number} [endAngle=360] Determines the end angle of a stack gauge.*/
 			endAngle: 360,
-			/** @cfg {String} [title="title"] */
+			/** @cfg {String} [title="title"] Sets a data key to be configured as the title of a stack gauge.*/
 			title: "title"
 		};
 	}
@@ -20129,11 +22197,11 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	WaterFallBrush.setup = function() {
 		return {
-			/** @cfg {Boolean} [line=true] */
+			/** @cfg {Boolean} [line=true] Connects with a line between columns of a waterfall.*/
 			line: true,
-			/** @cfg {Boolean} [end=false] */
+			/** @cfg {Boolean} [end=false] Sets effects for the last column of a waterfall.*/
 			end: false,
-			/** @cfg {Boolean} [outerPadding=5] */
+			/** @cfg {Boolean} [outerPadding=5] Determines the outer margin of a waterfall.*/
 			outerPadding: 5
 		};
 	}
@@ -20228,9 +22296,9 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     SplitLineBrush.setup = function() {
         return {
-            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] 그려질 모양 선택  */
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
             symbol: "normal", // normal, curve, step
-            /** @cfg {Number} [split=null] 분리될 위치  */
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
             split: null
         };
     }
@@ -20369,9 +22437,9 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 	RangeColumnBrush.setup = function() {
 		return {
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a column. */
             outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a column. */
             innerPadding: 1
 		};
 	}
@@ -20444,9 +22512,9 @@ jui.define("chart.brush.rangebar", [], function() {
 
 	RangeBarBrush.setup = function() {
 		return {
-            /** @cfg {Number} [outerPadding=2] */
+            /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar. */
 			outerPadding: 2,
-            /** @cfg {Number} [innerPadding=1] */
+            /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
 			innerPadding: 1
 		};
 	}
@@ -20543,7 +22611,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * 토폴로지를 표시할 Node 객체  
+     * TopologyNode Class
      * @extends chart.brush.core 
      */
     var TopologyNode = function(chart, axis, brush) {
@@ -20917,7 +22985,7 @@ jui.define("chart.brush.topologynode",
 
     TopologyNode.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 클립 여부*/
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
 
             // topology options
@@ -21021,10 +23089,10 @@ jui.define("chart.brush.focus", [], function() {
 
 	FocusBrush.setup = function() {
 		return {
-			/** @cfg {Integer} [start=-1] */
+			/** @cfg {Integer} [start=-1] Sets a focus start index.*/
 			start: -1,
 
-			/** @cfg {Integer} [end=-1] */
+			/** @cfg {Integer} [end=-1] Sets a focus end index. */
 			end: -1
 		};
 	}
@@ -21084,7 +23152,7 @@ jui.define("chart.brush.pin", [], function() {
         return {
             /** @cfg {Number} [size=6] */
             size: 6,
-            /** @cfg {Number} [split=0] */
+            /** @cfg {Number} [split=0] Determines a location where a pin is displayed (data index). */
             split: 0,
             /** @cfg {Boolean} [showValue=false] */
             showValue: false,
@@ -21198,14 +23266,15 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} widget */
-        
+        /** @property {Number} index [Read Only] Index which shows the sequence how a widget is drawn. */
+
         return {
             /**
-             * @cfg {Number} [brush=0] selected brush index  
+             * @cfg {Number} [brush=0] Specifies a brush index for which a widget is used.
              */
             brush: 0,
             /**
-             * @cfg {Boolean} [render=false] check whether widget redraw
+             * @cfg {Boolean} [render=false] Determines whether a widget is to be rendered.
              */            
             render: false,
             /**
@@ -21372,11 +23441,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
-            orient: "top", // or bottom, left, right
-            /** @cfg {Boolean} [all=false] */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Determines the side on which the tool tip is displayed (top, bottom, left, right). */
+            orient: "top",
+            /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
-            /** @cfg {Function} [format=false] */
+            /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null
         };
     }
@@ -21445,17 +23514,17 @@ jui.define("chart.widget.title", [], function() {
 
     TitleWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } [orient="top"]  Determines the side on which the tool tip is displayed (top, bottom, left, right). */
             orient: "top", // or bottom
-            /** @cfg {"start"/"center"/"end" } */
-            align: "center", // or start, end
-            /** @cfg {String} text 표시될 타이틀 */
+            /** @cfg {"start"/"center"/"end" } [align="center"] Aligns the title message (center, start, end).*/
+            align: "center",
+            /** @cfg {String} [text=""] Sets the title message. */
             text: "",
-            /** @cfg {Number} [dx=0] x 축과의 거리  */
+            /** @cfg {Number} [dx=0] Moves the x coordinate by a set value from the location where the chart is drawn.  */
             dx: 0,
-            /** @cfg {Number} [dy=0] y 축과의 거리  */
+            /** @cfg {Number} [dy=0] Moves the y coordinate by a set value from the location where the chart is drawn. */
             dy: 0,
-            /** @cfg {Number} [size=null] */
+            /** @cfg {Number} [size=null] Sets the title message size. */
             size: null
         }
     }
@@ -21648,13 +23717,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
     LegendWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } */
+            /** @cfg {"bottom"/"top"/"left"/"right" } Sets the location where the label is displayed (top, bottom). */
             orient: "bottom",
-            /** @cfg {"start"/"center"/"end" } */
+            /** @cfg {"start"/"center"/"end" } Aligns the label (center, start, end). */
             align: "center", // or start, end
-            /** @cfg {Boolean} [filter=false] */
+            /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
-            /** @cfg {Boolean} [brushSync=false] */
+            /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
     }
@@ -22057,11 +24126,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     CrossWidget.setup = function() {
         return {
             /**
-             * @cfg {Function} [xFormat=null] callback function for x format
+             * @cfg {Function} [xFormat=null] Sets the format for the value on the X axis shown on the tooltip.
              */            
             xFormat: null,
             /**
-             * @cfg {Function} [yFormat=null] callback function for y format
+             * @cfg {Function} [yFormat=null] Sets the format for the value on the Y axis shown on the tooltip.
              */
             yFormat: null
         };
@@ -22211,9 +24280,9 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     TopologyControlWidget.setup = function() {
         return {
-            /** @cfg {Boolean} [move=false] */
+            /** @cfg {Boolean} [move=false] Set to be moved to see the point of view of the topology map. */
             move: false,
-            /** @cfg {Boolean} [zoom=false] */
+            /** @cfg {Boolean} [zoom=false] Set the zoom-in / zoom-out features of the topology map. */
             zoom: false
         }
     }
@@ -22301,13 +24370,15 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                         realtime : true,
                         format : opts.axis.format,
                         key : opts.axis.key,
-                        line : opts.axis.xline
+                        line : opts.axis.xline,
+                        hide : opts.axis.xhide
                     },
                     y : {
                         type : "range",
                         domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
-                        line : opts.axis.yline
+                        line : opts.axis.yline,
+                        hide : opts.axis.yhide
                     },
                     buffer: opts.period * 60
                 }
@@ -22369,35 +24440,49 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            /** @cfg {String/Number} [width="100%"] 차트 기본 넓이 */
-            width : "100%",
-            /** @cfg {String/Number} [height="100%"] 차트 기본 높이 */
-            height : "100%",
 
-            /** @cfg {Object} padding 차트 여백 */
-            padding : {
-                /** @cfg {Number} [padding.left=50] */
-                left : 50 ,
-                /** @cfg {Number} [padding.right=50] */
-                right : 50,
-                /** @cfg {Number} [padding.bottom=50] */
-                bottom : 50,
-                /** @cfg {Number} [padding.top=50] */
-                top : 50
+            /** @cfg  {String/Number} [width="100%"] chart width */
+            width: "100%", // chart 기본 넓이
+            /** @cfg  {String/Number} [height="100%"] chart height */
+            height: "100%", // chart 기본 높이
+            /**
+             * @cfg  {Object} padding chart padding
+             * @cfg  {Number} [padding.top=50] chart padding
+             * @cfg  {Number} [padding.bottom=50] chart padding
+             * @cfg  {Number} [padding.left=50] chart padding
+             * @cfg  {Number} [padding.right=50] chart padding
+             */
+            padding: {
+                top: 50,
+                bottom: 50,
+                left: 50,
+                right: 50
             },
 
-            /** @cfg {String} [theme=jennifer] 기본 테마 jennifer */
-            theme : "jennifer",
-            /** @cfg {Object} [style={}]  */
-            style : {},
-            /** @cfg {Object} [series={}] */
-            series : {},
-            /** @cfg {Array} [brush=[]]  */
-            brush : [],
-            /** @cfg {Array} [widget=[]] */
-            widget : [],
+            /** @cfg  {String} [theme=jennifer] chart theme  */
+            theme: "jennifer",
+            /** @cfg  {Object} style chart custom theme  */
+            style: {},
+            /** @cfg {Object} series Sets additional information for a specific data property. */
+            series: {},
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
+            brush: [],
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
+            widget: [],
 
-            /** @cfg {Object} axis  그리드 에 관한 설정 */
+            /**
+             * @cfg {Object} axis  Determines a axis to be added to a chart
+             * @cfg {Array/Function/String} [domain=null]
+             * @cfg {String} [format="hh:mm"]
+             * @cfg {String} [key="time"]
+             * @cfg {Number} [xstep=1] Set a step of x grid(date).
+             * @cfg {Number} [ystep=10] Set a step of y grid(range).
+             * @cfg {Boolean} [xline=true] Set a line option of x grid.
+             * @cfg {Boolean} [yline=true] Set a line option of y grid.
+             * @cfg {Boolean} [xhide=true] Set a hide option of x grid.
+             * @cfg {Boolean} [yhide=true] Set a hide option of y grid.
+             * @cfg {Array} [data=[]] Sets the row set data which constitute a chart.
+             */
             axis : {
                 domain : null,
                 format : "hh:mm",
@@ -22406,14 +24491,16 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 ystep : 10,
                 xline : true,
                 yline : true,
+                xhide : false,
+                yhide : false,
                 data : []
             },
 
-            /** @cfg {Number} [interval=1] 리얼타임 움직이는 시간 간격(초단위) */
-            interval : 1, // 초
+            /** @cfg {Number} [interval=1] Set moving time interval(in seconds) */
+            interval : 1, // second
 
-            /** @cfg {Number} [interval=1] 리얼타임 전체 시작과 끝 기간 (분단위) */
-            period : 5 // 분
+            /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
+            period : 5 // minute
         }
     }
 

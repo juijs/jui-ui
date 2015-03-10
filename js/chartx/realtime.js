@@ -79,13 +79,15 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                         realtime : true,
                         format : opts.axis.format,
                         key : opts.axis.key,
-                        line : opts.axis.xline
+                        line : opts.axis.xline,
+                        hide : opts.axis.xhide
                     },
                     y : {
                         type : "range",
                         domain : (opts.axis.domain != null) ? opts.axis.domain : axis_domain,
                         step : opts.axis.ystep,
-                        line : opts.axis.yline
+                        line : opts.axis.yline,
+                        hide : opts.axis.yhide
                     },
                     buffer: opts.period * 60
                 }
@@ -147,35 +149,49 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
 
     UI.setup = function() {
         return {
-            /** @cfg {String/Number} [width="100%"] 차트 기본 넓이 */
-            width : "100%",
-            /** @cfg {String/Number} [height="100%"] 차트 기본 높이 */
-            height : "100%",
 
-            /** @cfg {Object} padding 차트 여백 */
-            padding : {
-                /** @cfg {Number} [padding.left=50] */
-                left : 50 ,
-                /** @cfg {Number} [padding.right=50] */
-                right : 50,
-                /** @cfg {Number} [padding.bottom=50] */
-                bottom : 50,
-                /** @cfg {Number} [padding.top=50] */
-                top : 50
+            /** @cfg  {String/Number} [width="100%"] chart width */
+            width: "100%", // chart 기본 넓이
+            /** @cfg  {String/Number} [height="100%"] chart height */
+            height: "100%", // chart 기본 높이
+            /**
+             * @cfg  {Object} padding chart padding
+             * @cfg  {Number} [padding.top=50] chart padding
+             * @cfg  {Number} [padding.bottom=50] chart padding
+             * @cfg  {Number} [padding.left=50] chart padding
+             * @cfg  {Number} [padding.right=50] chart padding
+             */
+            padding: {
+                top: 50,
+                bottom: 50,
+                left: 50,
+                right: 50
             },
 
-            /** @cfg {String} [theme=jennifer] 기본 테마 jennifer */
-            theme : "jennifer",
-            /** @cfg {Object} [style={}]  */
-            style : {},
-            /** @cfg {Object} [series={}] */
-            series : {},
-            /** @cfg {Array} [brush=[]]  */
-            brush : [],
-            /** @cfg {Array} [widget=[]] */
-            widget : [],
+            /** @cfg  {String} [theme=jennifer] chart theme  */
+            theme: "jennifer",
+            /** @cfg  {Object} style chart custom theme  */
+            style: {},
+            /** @cfg {Object} series Sets additional information for a specific data property. */
+            series: {},
+            /** @cfg {Array} brush Determines a brush to be added to a chart. */
+            brush: [],
+            /** @cfg {Array} widget Determines a widget to be added to a chart. */
+            widget: [],
 
-            /** @cfg {Object} axis  그리드 에 관한 설정 */
+            /**
+             * @cfg {Object} axis  Determines a axis to be added to a chart
+             * @cfg {Array/Function/String} [domain=null]
+             * @cfg {String} [format="hh:mm"]
+             * @cfg {String} [key="time"]
+             * @cfg {Number} [xstep=1] Set a step of x grid(date).
+             * @cfg {Number} [ystep=10] Set a step of y grid(range).
+             * @cfg {Boolean} [xline=true] Set a line option of x grid.
+             * @cfg {Boolean} [yline=true] Set a line option of y grid.
+             * @cfg {Boolean} [xhide=true] Set a hide option of x grid.
+             * @cfg {Boolean} [yhide=true] Set a hide option of y grid.
+             * @cfg {Array} [data=[]] Sets the row set data which constitute a chart.
+             */
             axis : {
                 domain : null,
                 format : "hh:mm",
@@ -184,14 +200,16 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                 ystep : 10,
                 xline : true,
                 yline : true,
+                xhide : false,
+                yhide : false,
                 data : []
             },
 
-            /** @cfg {Number} [interval=1] 리얼타임 움직이는 시간 간격(초단위) */
-            interval : 1, // 초
+            /** @cfg {Number} [interval=1] Set moving time interval(in seconds) */
+            interval : 1, // second
 
-            /** @cfg {Number} [interval=1] 리얼타임 전체 시작과 끝 기간 (분단위) */
-            period : 5 // 분
+            /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
+            period : 5 // minute
         }
     }
 

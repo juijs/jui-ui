@@ -1,4 +1,4 @@
-jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 
     /**
      * @class chart.axis
@@ -13,9 +13,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {};
+        var _area = {}, _clipId = "", _clipPath = null;
 
-        function caculatePanel(a) {
+        function caculatePanel(a, padding) {
+
             a.x = getRate(a.x, chart.area('width'));
             a.y = getRate(a.y, chart.area('height'));
             a.width = getRate(a.width, chart.area('width'));
@@ -23,6 +24,16 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             a.x2 = a.x + a.width;
             a.y2 = a.y + a.height;
+            
+            // 패딩 개념 추가 
+            a.x += padding.left || 0;
+            a.y += padding.top || 0;
+            
+            a.x2 -= padding.right || 0;
+            a.y2 -= padding.bottom || 0;
+            
+            a.width = a.x2 - a.x;
+            a.height = a.y2 - a.y;
 
             return a;
         }
@@ -42,12 +53,12 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             axis[k] = axis[k]  || {};
 
             if (k == "x") {
-                axis[k].orient = axis[k].orient == 'top' ? 'top' : 'bottom';
-            } else if (k == 'y') {
-                axis[k].orient = axis[k].orient == 'right' ? 'right' : 'left';
-            } else if (k == 'c') {
-                axis[k].type = axis[k].type || 'panel';
-                axis[k].orient = 'custom';
+                axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
+            } else if (k == "y") {
+                axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "c") {
+                axis[k].type = axis[k].type || "panel";
+                axis[k].orient = "custom";
             }
 
             // 다른 그리드 옵션을 사용함
@@ -71,19 +82,20 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // 그리드 별 위치 선정하기
             if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area('x') + self.area("x") - axis[k].dist, chart.area('y'));
+                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area('x') + self.area("x2") + axis[k].dist, chart.area('y'));
+                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
             } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y2") + axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
             } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area('x') , chart.area('y') + self.area("y") - axis[k].dist);
+                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
             } else {
                 // custom
-                if(elem.root) elem.root.translate(chart.area('x') + self.area("x"), chart.area('y') + self.area('y'));
+                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             }
 
             elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
 
             return elem.scale;
         }
@@ -124,7 +136,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 shift : cloneAxis.shift,
                 page : cloneAxis.page
             });
-            
+
             // 원본 데이터 설정
             self.origin = self.data;
 
@@ -133,6 +145,28 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             // Grid 및 Area 설정
             self.reload(cloneAxis);
+        }
+        
+        function createClipPath() {
+            if (_clipPath) {
+                _clipPath.remove();
+                _clipPath = null;
+            }
+            
+            _clipId = _.createId("clip-id-");
+
+            _clipPath = chart.svg.clipPath({
+                id: _clipId
+            }, function() {
+                chart.svg.rect({
+                    x: _area.x,
+                    y: _area.y,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+            
+            chart.appendDefs(_clipPath);
         }
 
         /**
@@ -177,11 +211,13 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: area.width, height: area.height
-            }, true));
+            }, true), options.padding || {});
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
+            
+            createClipPath();
         }
 
         /**
@@ -194,6 +230,22 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.area = function(key) {
             return _.typeCheck("undefined", _area[key]) ? _area : _area[key];
+        }
+
+        /**
+         * @method get
+         *
+         * Axis 의 옵션 정보를 리턴한다.
+         *
+         * @param key
+         */
+        this.get = function(type) {
+            var obj = {
+                area: _area,
+                clipId: _clipId
+            };
+
+            return obj[type] || cloneAxis[type];
         }
 
         /**
@@ -284,7 +336,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @method zoom 
          * 
          * 특정 인덱스의 영역으로 데이타를 다시 맞춘다.
-         *  *  
+         *
          * @param {Number} start
          * @param {Number} end
          */
@@ -298,32 +350,46 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             if(chart.isRender()) chart.render();
         }
-        
+
         init();
     }
 
     Axis.setup = function() {
+
         return {
-            /** @cfg {chart.grid.core} [x=null]  x축 그리드 */
+            /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
-            /** @cfg {chart.grid.core} [y=null]  y축 그리드 */
+            /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
-            /** @cfg {chart.grid.core} [c=null]  커스텀 그리드 */
+            /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
-            /** @cfg {Array} [data=[]]  Axis 에서 사용할 data  */
+            /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
-            /** @cfg {Array} [origin=[]]  원본 data  */
+            /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */
             origin: [],
-            /** @cfg {Object} [keymap={}] 데이터 키-맵 */
+            /** @cfg {Object} [keymap={}] grid's data key map  */
             keymap: {},
-            /** @cfg {Object} [area={}]  Axis 의 위치,크기 정의 */
+            /** @cfg {Object} [area={}]  set area(x, y, width, height) of axis */
             area: {},
-            /** @cfg {Number} [buffer=10000]  page 당 표시할 데이타 개수  */
+            /**
+             * @cfg  {Object} padding axis padding
+             * @cfg  {Number} [padding.top=0] axis's top padding
+             * @cfg  {Number} [padding.bottom=0] axis's bottom padding
+             * @cfg  {Number} [padding.left=0] axis's left padding
+             * @cfg  {Number} [padding.right=0] axis's right padding
+             */
+            padding : {},
+            /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
-            /** @cfg {Number} [shift=1]  prev, next 로 이동할 때 이동하는 데이타 개수  */
+            /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
-            /** @cfg {Number} [page=1]  현재 표시될 페이지 */
-            page: 1
+            /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
+            page: 1,
+
+            /** @cfg {Number} [degree=0]  Set degree of 3d chart */
+            degree: 0,
+            /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
+            depth: 0
         }
     }
 

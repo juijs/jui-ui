@@ -349,15 +349,15 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 	RangeGrid.setup = function() {
 		return {
-			/** @cfg {Array} [domain=null]  보이는 값(min, max) 설정 */
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-			/** @cfg {Number} [step=10] 나누는 숫자 */
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
 			step: 10,
-			/** @cfg {Number} [min=0] 최소값 설정 */
+			/** @cfg {Number} [min=0] Sets the minimum value of a grid.  */
 			min: 0,
-			/** @cfg {Number} [max=0] 최대값 설정 */
+			/** @cfg {Number} [max=0] Sets the maximum value of a grid. */
 			max: 0,
-			/** @cfg {Number} [unit=null] 단계별 사이즈  */
+			/** @cfg {Number} [unit=null] Multiplies the axis value to be displayed.  */
 			unit: null,
 			/**
 			 * @cfg {Boolean} [clamp=true]
@@ -366,19 +366,13 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			 * true 이면 넘어가는 값도 min, max 에서 조정, false 이면  비율로 계산해서 넘어가는 값 적용
 			 */
 			clamp : true,
-			/**
-			 * @cfg {Boolean} [reverse=false]
-			 *
-			 * 도메인을 거꾸로 정렬한다.
-			 * true 이면 도메인이  [0,300] 이라고 할 때 [300, 0] 으로 변경된다.
-			 * 화면상에 300 에서 0 값으로 차례로 나타나게 된다.
-			 */
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-			/** @cfg {String} [key=null] a field for value */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-			/** @cfg {Boolean} [hideText=false] 텍스트 보이기 여부 */
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
-			/** @cfg {Boolean} [nice=false] 그리드 간격 적당히 분할하기  */
+			/** @cfg {Boolean} [nice=false] Automatically sets the value of a specific section.  */
 			nice: false
 		};
 	}

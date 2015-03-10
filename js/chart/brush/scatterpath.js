@@ -67,11 +67,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     ScatterPathBrush.setup = function() {
         return {
-            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] 그려질 모양 선택  */
+            /** @cfg {"circle"/"triangle"/"rectangle"/"cross"} [symbol="circle"] Determines the shape of a starter (circle, rectangle, cross, triangle).  */
             symbol: "circle", // or triangle, rectangle, cross
-            /** @cfg {Number} [size=7]  그려질 모양 크기 */
+            /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
-            /** @cfg {Number} [strokeWidth=1] 선의 굵기 */
+            /** @cfg {Number} [strokeWidth=1] Set the line thickness of a starter. */
             strokeWidth : 1
         };
     }

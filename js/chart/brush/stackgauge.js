@@ -83,19 +83,19 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	StackGaugeBrush.setup = function() {
 		return {
-			/** @cfg {Number} [min=0] */
+			/** @cfg {Number} [min=0] Determines the minimum value of a stack gauge.*/
 			min: 0,
-			/** @cfg {Number} [max=100] */
+			/** @cfg {Number} [max=100] Determines the maximum value of a stack gauge.*/
 			max: 100,
-			/** @cfg {Number} [cut=5] */
+			/** @cfg {Number} [cut=5] Determines the bar spacing of a stack gauge.*/
 			cut: 5,
-			/** @cfg {Number} [size=24] */
+			/** @cfg {Number} [size=24] Determines the bar size of a stack gauge.*/
 			size: 24,
-			/** @cfg {Number} [startAngle=-180] */
+			/** @cfg {Number} [startAngle=-180] Determines the start angle of a stack gauge.*/
 			startAngle: -180,
-			/** @cfg {Number} [endAngle=360] */
+			/** @cfg {Number} [endAngle=360] Determines the end angle of a stack gauge.*/
 			endAngle: 360,
-			/** @cfg {String} [title="title"] */
+			/** @cfg {String} [title="title"] Sets a data key to be configured as the title of a stack gauge.*/
 			title: "title"
 		};
 	}

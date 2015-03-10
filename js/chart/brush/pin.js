@@ -51,7 +51,7 @@ jui.define("chart.brush.pin", [], function() {
         return {
             /** @cfg {Number} [size=6] */
             size: 6,
-            /** @cfg {Number} [split=0] */
+            /** @cfg {Number} [split=0] Determines a location where a pin is displayed (data index). */
             split: 0,
             /** @cfg {Boolean} [showValue=false] */
             showValue: false,

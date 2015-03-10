@@ -87,7 +87,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * 토폴로지를 표시할 Node 객체  
+     * TopologyNode Class
      * @extends chart.brush.core 
      */
     var TopologyNode = function(chart, axis, brush) {
@@ -461,7 +461,7 @@ jui.define("chart.brush.topologynode",
 
     TopologyNode.setup = function() {
         return {
-            /** @cfg {Boolean} [clip=false] 클립 여부*/
+            /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false,
 
             // topology options

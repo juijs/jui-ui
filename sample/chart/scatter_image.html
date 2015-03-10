@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="message"><!= obj.dataKey !>: <!= obj.data[obj.dataKey] !></div>
+    </div>
+</script>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+
+         chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+             axis : {
+                 x : {
+                     type : "block",
+                     domain : [ "Q1", "Q2", "Q3", "Q4" ],
+                     line : true
+                 },
+                 y : {
+                     type : "range",
+                     domain : "total",
+                     step : 10
+                 },
+                 data : [
+                     { sales: 2, profit: 15, total: 20 },
+                     { sales: 15, profit: 6, total: 20 },
+                     { sales: 8, profit: 10, total: 20 },
+                     { sales: 18, profit: 5, total: 20 }
+                 ]
+             },
+             series : {
+                 sales : {
+                     symbol : "rectangle"
+                 },
+                 profit : {
+                     symbol : "cross"
+                 },
+                 total : {
+                     symbol: function(value) {
+                         return "../chart/resource/db.png";
+                     }
+                 }
+             },
+             brush : {
+                 type: "scatter",
+                 size: 15
+             },
+             widget : [
+                 { type : "title", text : "Scatter Sample"}
+             ],
+            event: {
+                click: function(obj, e) {
+                    console.log(obj);
+                },
+                mouseover: function(obj, e) {
+                    var $tooltip = $(this.tpl.tooltip(obj));
+
+                    $(this.root).append($tooltip);
+
+                    $tooltip.css({
+                        left: e.pageX - $tooltip.width() / 2,
+                        top: e.pageY - $tooltip.height() - 15
+                    });
+                },
+                mouseout: function(obj, e) {
+                    $(this.root).find(".tooltip").remove();
+                }
+            },
+            tpl: {
+                tooltip: $("#tpl_tooltip").html()
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

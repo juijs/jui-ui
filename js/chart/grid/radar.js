@@ -271,13 +271,21 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	RadarGrid.setup = function() {
 		return {
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
+			/** @cfg {Number} [max=null] Sets the maximum value of a grid. */
 			max: 100,
+			/** @cfg {Array} [step=10] Sets the interval of the scale displayed on a grid. */
             step : 10,
+			/** @cfg {Boolean} [line=true] Determines whether to display a line on the axis background. */
 			line: true,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
 			hideText: false,
+			/** @cfg {Boolean} [extra=false] Leaves a certain spacing distance from the grid start point and displays a line where the spacing ends. */
 			extra: false,
+			/** @cfg {"radial"/"circle"} [shape="radial"] Determines the shape of a grid (radial, circle). */
 			shape: "radial" // or circle
 		};
 	}

@@ -3,7 +3,8 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     /**
      * @class ui.notify
-     * implements notify layer
+     * Notify component that provides an alarm function for when a serious problem or event occurs
+     *
      * @extends core
      * @alias Notify
      * @requires jquery
@@ -12,11 +13,6 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var UI = function() {
     	var $container = null,
             paddingPos = null;
-    	
-        /**
-         * Public Methods
-         *
-         */
 
         this.init = function() {
             var opts = this.options;
@@ -54,6 +50,13 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             return this;
         }
 
+        /**
+         * @method add
+         * Adds a notice message. The value passed is the data object shown by the notice template
+         *
+         * @param {Object} data
+         * @param {Integer} timeout
+         */
         this.add = function(data, timeout) {
             var self = this, 
             	opts = this.options,
@@ -114,7 +117,11 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
                 return (opts.position.indexOf("top-") != -1) ? true : false;
             }
         }
-        
+
+        /**
+         * @method reset
+         * Removes all notice messages that are enabled
+         */
         this.reset = function() {
         	$container.empty();
         }
@@ -122,15 +129,76 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            position: "top-right", // top | top-left | top-right | bottom | bottom-left | bottom-right
-            padding: DEF_PADDING, // 알림 컨테이너 여백 또는 리터럴 형태로 패딩 값을 직접 넣을 수 있음
-            distance: 5, // 알림끼리의 간격
-            timeout: 3000, // 0이면 사라지지 않음
+            /**
+             * @cfg {"top"/"top-lefet"/"top-right"/"bottom"/"bottom-left"/"bottom-right"} [position="top-right"]
+             * Designates the location where a notice message is added
+             */
+            position: "top-right",
+
+            /**
+             * @cfg {Integer} [padding=12]
+             * Determines the margin value of a notice message (the margin value may be in object form rather than a numeric value)
+             */
+            padding: DEF_PADDING,
+
+            /**
+             * @cfg {Integer} [distance=5]
+             * Determines each margin value when there are multiple notice messages
+             */
+            distance: 5,
+
+            /**
+             * @cfg {Integer} [timeout=3000]
+             * Determines the duration for which a notice message is displayed (the message does not disappear when the value is 0)
+             */
+            timeout: 3000,
+
+            /**
+             * @cfg {Integer} [showDuration=500]
+             * Determines the duration of an effect when a notice message is shown
+             */
             showDuration: 500,
+
+            /**
+             * @cfg {Integer} [hideDuration=500]
+             * Determines the duration of an effect when a notice message disappears
+             */
             hideDuration: 500,
+
+            /**
+             * @cfg {String} [showEasing="swing"]
+             * Determines an effect when a notice message is shown (see CSS3 specifications)
+             */
             showEasing: "swing",
+
+            /**
+             * @cfg {String} [hideEasing="linear"]
+             * Determines an effect when a notice message disappears (see CSS3 specifications)
+             */
             hideEasing: "linear"
         };
+
+        /**
+         * @event select
+         * Event that occurs when a notice message is clicked
+         *
+         * @param {Object} data
+         * @param {EventObject} e The event object
+         */
+
+        /**
+         * @event show
+         * Event that occurs when a notice message is shown
+         *
+         * @param {Object} data
+         */
+
+        /**
+         * @event hide
+         * Event that occurs when a notice message is hidden
+         *
+         * @param {Object} data
+         */
     }
 
     return UI;

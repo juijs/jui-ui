@@ -43,11 +43,12 @@
             theme : "jennifer",
             axis : {
                 data : [
-                    { yellow : 46, red : 15, black : 18, blue : 10 }
+                    { yellow : 36, red : 45, black : 18, blue : 10 }
                 ]
             },
             brush : [{
                 type : "pie",
+                "3d" : true,
                 showText : true,
                 format : function(k, v) {
                     return this.icon("check") + k + ": " + v;

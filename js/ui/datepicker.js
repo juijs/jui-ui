@@ -11,12 +11,10 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class ui.datepicker
-     * implements date picker
      * @extends core
-     * @alias DatePicker
+     * @alias Date Picker
      * @requires jquery
      * @requires util.base
-     *
      */
     var UI = function() {
     	var year = null, month = null, date = null,
@@ -24,10 +22,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var $head = null, $body = null;
 
 
-        /**
-         * Private Methods
-         *
-         */
         function setCalendarEvent(self) {
             self.addEvent($head.children(".prev"), "click", function(e) {
                 self.prev(e);
@@ -225,12 +219,6 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             return { objs: objs, nums: nums };
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
-
         this.init = function() {
             $head = $(this.root).children(".head");
             $body = $(this.root).children(".body");
@@ -241,7 +229,14 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             // 기본 날짜 설정
             this.select(this.options.date);
         }
-        
+
+        /**
+         * @method page
+         * Outputs a calendar that fits the year/month entered
+         *
+         * @param {Integer} year
+         * @param {Integer} month
+         */
         this.page = function(y, m) {
             if(arguments.length == 0) return;
             var opts = this.options;
@@ -267,6 +262,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             $head.children(".title").html(_.dateFormat(getCalendarDate(this), opts.titleFormat));
         }
 
+        /**
+         * @method prev
+         * Outputs a calendar that fits the previous year/month
+         *
+         */
         this.prev = function(e) {
             var opts = this.options;
 
@@ -283,7 +283,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             
             this.emit("prev", [ e ]);
         }
-        
+
+        /**
+         * @method next
+         * Outputs a calendar that fits the next year/month
+         *
+         */
         this.next = function(e) {
             var opts = this.options;
 
@@ -300,7 +305,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             this.emit("next", [ e ]);
         }
-        
+
+        /**
+         * @method select
+         * Selects today if there is no value, or selects a date applicable to a timestamp or year/month/date
+         *
+         * @param {"year"/"month"/"date"/"timestamp"/"Date"}
+         */
         this.select = function() {
         	var opts = this.options,
         		args = arguments;
@@ -332,20 +343,44 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 this.addTrigger(items[y], "click");
             }
         }
-        
+
+        /**
+         * @method addTime
+         * Selects a date corresponding to the time added to the currently selected date
+         *
+         * @param {"Integer"/"Date"} time Timestamp or Date
+         */
         this.addTime = function(time) {
         	selDate = new Date(this.getTime() + time);
         	this.select(this.getTime());
         }
 
+        /**
+         * @method getDate
+         * Gets the value of the date currently selected
+         *
+         * @return {Date} Date object
+         */
         this.getDate = function() {
             return selDate;
         }
 
+        /**
+         * @method getTime
+         * Gets the timestamp value of the date currently selected
+         *
+         * @return {Integer} Timestamp
+         */
         this.getTime = function() {
             return selDate.getTime();
         }
 
+        /**
+         * @method getFormat
+         * Gets a date string that fits the format entered
+         *
+         * @return {String} format Formatted date string
+         */
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
@@ -355,13 +390,59 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         var now = getStartDate(new Date());
 
         return {
+            /**
+             * @cfg {"daily"/"monthly"/"yearly"} [type="daily"]
+             * Determines the type of a calendar
+             */
             type: "daily",
+
+            /**
+             * @cfg {String} [titleFormat="yyyy.MM"]
+             * Title format of a calendar
+             */
             titleFormat: "yyyy.MM",
+
+            /**
+             * @cfg {String} [format="yyyy-MM-dd"]
+             * Format of the date handed over when selecting a specific date
+             */
             format: "yyyy-MM-dd",
+
+            /**
+             * @cfg {Date} [date="now"]
+             * Selects a specific date as a basic
+             */
             date: now,
-            animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * @deprecated
+             */
+            animate: false
         };
     }
+
+    /**
+     * @event select
+     * Event that occurs when selecting a specific date
+     *
+     * @param {String} value Formatted date string
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event prev
+     * Event that occurs when clicking on the previous button
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event next
+     * Event that occurs when clicking on the next button
+     *
+     * @param {EventObject} e The event object
+     */
 
     return UI;
 });

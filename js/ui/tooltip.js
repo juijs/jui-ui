@@ -2,21 +2,16 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     /**
      * @class ui.tooltip
-     * implements tooltip
+     * Tooltip component can be applied to 4 locations, namely top/bottom/left/right, and a relate message can be entered in the title properties
+     *
      * @extends core
      * @alias Tooltip
      * @requires jquery
-     *
      */
 	var UI = function() {
 		var $tooltip = null;
 		var pos = {}, title = "", delay = null;
-		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createTooltip(self, msg) {
             // 메시지 템플릿 적용
 			$tooltip = $(self.tpl.item({
@@ -95,12 +90,6 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 				
@@ -140,6 +129,12 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
 		}
 
+        /**
+         * @method update
+         * Changes the content of a tooltip
+         *
+         * @param {String} text
+         */
         this.update = function(newTitle) {
             title = newTitle;
         }
@@ -147,14 +142,54 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {"black"/"gray"} [color="black"]
+             * Determines the color of a tooltip
+             */
             color: "black",
+
+            /**
+             * @cfg {"top"/"bottom"/"left"/"right"} [position="top"]
+             * Determines the location where a tooltip is shown
+             */
             position: "top",
+
+            /**
+             * @cfg {Integer} [width=150]
+             * Determines the horizontal size of a tooltip
+             */
             width: 150,
+
+            /**
+             * @cfg {"left"/"right"/"center"} [align="left"]
+             * Determines the alignment state inside a tooltip
+             */
             align: "left",
+
+            /**
+             * @cfg {Integer} [delay=0]
+             * Determines the event time when a tooltip is shown
+             */
             delay: 0,
+
+            /**
+             * @cfg {String} [showType="mouseover"]
+             * Determines the type of event that triggers a tooltip
+             */
             showType: "mouseover",
+
+            /**
+             * @cfg {String} [hideType="mouseout"]
+             * Determines the type of event that hides a tooltip
+             */
             hideType: "mouseout",
+
+            /**
+             * @cfg {String} [title=""]
+             * Sets the content of a tooltip (referring to the title properties in markup)
+             */
             title: "",
+
             tpl: {
                 item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
                 "<div class='anchor'></div><div class='message'><!= message !></div>" +
@@ -162,6 +197,21 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             }
         }
     }
+
+    /**
+     * @event show
+     * Event that occurs when a tooltip is shown
+     *
+     * @param {DOMElement} tooltip
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event hide
+     * Event that occurs when a tooltip is hidden
+     *
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });

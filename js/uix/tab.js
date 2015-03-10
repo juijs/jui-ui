@@ -2,13 +2,11 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     /**
      * @class uix.tab
-     * implements tab controller
      * @extends core
      * @alias Tab
      * @requires jquery
      * @requires util.base
      * @requires ui.dropdown
-     *
      */
 	var UI = function() {
 		var ui_menu = null,
@@ -16,12 +14,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 		var menuIndex = -1, // menu index
 			activeIndex = 0;
-		
-			
-		/**
-		 * Private Methods
-		 * 
-		 */
 		
 		function hideAll(self) {
 			var $list = $(self.root).children("li");
@@ -183,12 +175,6 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			changeTab(self, $list.index($node));
 		}
 		
-		
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -214,7 +200,7 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 					event: {
 						change: function(data, e) {
 							hideMenu(self);
-							self.emit("changeMenu", [ data, e ]);
+							self.emit("changemenu", [ data, e ]);
 						},
 						hide: function() {
 							hideMenu(self);
@@ -225,7 +211,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			return this;
 		}
-		
+
+        /**
+         * @method update
+         * Changes the tab list
+         *
+         * @param {Array} nodes
+         */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
 			
@@ -237,7 +229,14 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method insert
+         * Adds a tab at a specified index
+         *
+         * @param {Integer} index
+         * @param {Object} node
+         */
 		this.insert = function(index, node) {
 			if(!this.tpl.node) return;
 			
@@ -252,7 +251,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method append
+         * Adds a tab to the last node
+         *
+         * @param {Object} node
+         */
 		this.append = function(node) {
 			if(!this.tpl.node) return;
 
@@ -267,19 +272,38 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method prepend
+         * Adds a tab to the first node
+         *
+         * @param {Object} node
+         */
 		this.prepend = function(node) {
 			if(!this.tpl.node) return;
 
 			$(this.root).prepend(this.tpl.node(node));
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method remove
+         * Removes a tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.remove = function(index) {
 			$(this.root).children("li").eq(index).remove();
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method move
+         * Changes a specified tab to a tab at a target index
+         *
+         * @param {Integer} index
+         * @param {Integer} targetIndex
+         */
 		this.move = function(index, targetIndex) {
 			if(index == targetIndex) return;
 			
@@ -303,7 +327,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 			activeIndex = targetIndex;
 			setEventNodes(this);
 		}
-		
+
+        /**
+         * @method show
+         * Enables the tab at a specified index
+         *
+         * @param {Integer} index
+         */
 		this.show = function(index) {
             if(index == menuIndex || index == activeIndex) return;
 
@@ -318,7 +348,13 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
 			changeTab(this, index);
 		}
-		
+
+        /**
+         * @method activeIndex
+         * Gets the index of the currently enabled tab
+         *
+         * @return {Integer}
+         */
 		this.activeIndex = function() {
 			return activeIndex;
 		}
@@ -326,12 +362,87 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {String/DOMElement} [target=""]
+             * Determines a selector in the area to become the content of a tab
+             */
 			target: "",
+
+            /**
+             * @cfg {Integer} [index=0]
+             * Sets an enabled tab
+             */
 			index: 0,
+
+            /**
+             * @cfg {Boolean} [drag=false]
+             * Changes the tab location through dragging
+             */
 			drag: false,
+
+            /**
+             * @cfg {Array} nodes
+             * Sets a tab list to data rather than markup
+             */
 			nodes: []
         }
     }
+
+    /**
+     * @event change
+     * Event that occurs when a tab is enabled
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event click
+     * Event that occurs when a tab is mouse clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event rclick
+     * Event that occurs when a tab is mouse right clicked
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event menu
+     * Event which occurs when tab menu shown
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event changemenu
+     * Event that occurs when a dropdown is selected
+     *
+     * @param {Object} data changed data
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragstart
+     * Event that occurs when a tab starts to move
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragend
+     * Event that occurs when the movement of a tab is completed
+     *
+     * @param {Integer} index
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });

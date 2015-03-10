@@ -1,7 +1,9 @@
 var css = require("css"),
-    fs = require("fs");
+    fs = require("fs")
+    datauri = require("datauri");
 
 module.exports = function(grunt) {
+
     var base_src = [
         // core
         "js/base.js",
@@ -12,7 +14,8 @@ module.exports = function(grunt) {
         "js/util/time.js",
         "js/util/scale.js",
         "js/util/color.js",
-        "js/util/svg.js"
+        "js/util/svg.js",
+        "js/util/svg3d.js"
     ];
 
     var ui_src = [
@@ -35,6 +38,13 @@ module.exports = function(grunt) {
         "js/uix/xtable.js"
     ];
 
+    var table_src = [
+        "js/ui/dropdown.js",
+        "js/uix/table.js",
+        "js/uix/tree.js",
+        "js/uix/xtable.js"
+    ];
+
     var chart_src = [
         // chart (core)
         "js/chart/draw.js",
@@ -50,6 +60,7 @@ module.exports = function(grunt) {
 
         // chart.pattern 
         "js/chart/pattern/white.js",
+        "js/chart/pattern/jennifer.js",
 
         // chart.icon
         "js/chart/icon/jennifer.js",
@@ -66,15 +77,28 @@ module.exports = function(grunt) {
         "js/chart/grid/table.js",
         "js/chart/grid/overlap.js",
         "js/chart/grid/topologytable.js",
+        "js/chart/grid/grid3d.js",
 
         // chart.brush
         "js/chart/brush/core.js",
         "js/chart/brush/bar.js",
         "js/chart/brush/column.js", // extends bar
+        "js/chart/brush/bar3d.js",
+        "js/chart/brush/column3d.js",
+        "js/chart/brush/cylinder3d.js",
+        "js/chart/brush/clusterbar3d.js",
+        "js/chart/brush/clustercolumn3d.js",
+        "js/chart/brush/clustercylinder3d.js",
         "js/chart/brush/stackbar.js", // extends bar
         "js/chart/brush/stackcolumn.js", // extends stackbar
+        "js/chart/brush/stackbar3d.js",
+        "js/chart/brush/stackcolumn3d.js",
+        "js/chart/brush/stackcylinder3d.js",
         "js/chart/brush/fullstackbar.js", // extends stackbar
         "js/chart/brush/fullstackcolumn.js", // extends fullstackbar
+        "js/chart/brush/fullstackbar3d.js",
+        "js/chart/brush/fullstackcolumn3d.js",
+        "js/chart/brush/fullstackcylinder3d.js",
         "js/chart/brush/bubble.js",
         "js/chart/brush/candlestick.js",
         "js/chart/brush/ohlc.js",
@@ -148,10 +172,17 @@ module.exports = function(grunt) {
                 src : base_src.concat(ui_src, chart_src),
                 dest : "jui.js"
             },
-
-
-
-            // jui all 
+            // jui component
+            comp : {
+                src : base_src.concat(ui_src),
+                dest : "jui.comp.js"
+            },
+            // jui table, tree, xtable
+            table : {
+                src : base_src.concat(table_src),
+                dest : "jui.table.js"
+            },
+            // jui chart
             chart : {
                 src : base_src.concat(chart_src),
                 dest : "jui.chart.js"
@@ -162,6 +193,16 @@ module.exports = function(grunt) {
             dist : {
                 files : {
                     "jui.min.js" : [ "jui.js" ]
+                }
+            },
+            comp : {
+                files : {
+                    "jui.comp.min.js" : [ "jui.comp.js" ]
+                }
+            },
+            table : {
+                files : {
+                    "jui.table.min.js" : [ "jui.table.js" ]
                 }
             },
             chart : {
@@ -191,10 +232,40 @@ module.exports = function(grunt) {
             css : "jui.css",
             dist : "js/chart/icon/jennifer.js"
         },
+        pattern : {
+            src : "img/pattern/*.png",
+            dist : "js/chart/pattern/jennifer.js"
+        },
         pkg: grunt.file.readJSON("package.json")
     });
 
     require("load-grunt-tasks")(grunt);
+
+    grunt.registerTask("pattern", "Image Patter Build", function() {
+        var arr = grunt.file.expand(grunt.config('pattern.src')),
+            list = {};
+
+        arr.forEach(function(it) {
+            var filename = it.split("/").pop().replace(".png", "").replace("pattern_", "");
+
+            var obj = {
+                type : "pattern",
+                    attr: { id: "pattern-jennifer-" + filename, width: 12, height: 12, patternUnits: "userSpaceOnUse" },
+                children : [
+                    { type : "image" , attr : { "xlink:href" : datauri(it), width: 12, height : 12 } }
+                ]
+            }
+
+            list[filename] = obj;
+        })
+
+        var str = 'jui.define("chart.pattern.jennifer", [], function() {\n' + '\treturn ' + JSON.stringify(list, null, 4)+ "\n" + "});";
+
+        fs.writeFileSync(grunt.config("pattern.dist"), new Buffer(str));
+
+        grunt.log.writeln("File " + grunt.config("pattern.dist") + " created.");
+
+    });
 
     // 커스텀 빌드 모듈
     grunt.registerTask("icon", "SVG Icon Build", function() {
@@ -224,8 +295,8 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.registerTask("js", [ "concat", "uglify" ]);
-    grunt.registerTask("css", [ "less", "cssmin", "icon" ]);
+    grunt.registerTask("js", [ "icon", "pattern", "concat", "uglify" ]);
+    grunt.registerTask("css", [ "less", "cssmin" ]);
     grunt.registerTask("test", [ "qunit" ]);
     grunt.registerTask("default", [ "css", "test", "js" ]);
 };
