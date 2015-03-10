@@ -35,7 +35,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 					"transform" : "translate(" + this.points[i] + ", 0)"
 				});
 
-				axis.append(this.line(this.chart, {
+				axis.append(this.line({
 					x1 : -this.half_band,
 					y1 : 0,
 					x2 : -this.half_band,
