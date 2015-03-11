@@ -57,8 +57,8 @@ node install jui
 
 #### Example
 ```js
-var jui = require('jui');   // use jui package 
-var fs = require('fs');
+var jui = require("jui");   // use jui package 
+var fs = require("fs");
 
 // create jui chart 
 var chart = jui.create("chart.builder", $("<div></div>"), {
@@ -72,7 +72,7 @@ var chart = jui.create("chart.builder", $("<div></div>"), {
         },
         y : {
             type : "range",
-            domain : function(d) {return [d.sales, d.profit]; },
+            domain : [ -100, 50 ],
             step : 10,
             line : true,
             orient : "right"
@@ -87,7 +87,7 @@ var chart = jui.create("chart.builder", $("<div></div>"), {
     }, 
     brush : {
         type : "column",
-        target : ["sales", "profit"]
+        target : [ "sales", "profit" ]
     }
 });
 
