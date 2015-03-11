@@ -1,10 +1,103 @@
-## Introduction 
+## Getting Started
 
-![IMAGE](http://seogi1004.github.io/jui/res/img/jui_info_4.jpg)
+#### Install
+JUI library only requires the user to load a single package file.
+Access to the jui class must then be configured in the markup.
+```html
+<link rel="stylesheet" href="jui.min.css" />
+<body class="jui">...</body>
+```
+
+As the script works only with jQuery 1.8 or higher, it is necessary to load the jQuery library first.
+```html
+<script src="jquery.min.js"></script>
+<script src="jui.min.js"></script>
+```
+
+#### Install with Bower
+```
+bower install jui
+```
+
+#### Install with JamJS
+```
+jamjs install jui
+```
+
+#### Build
+Build using a grunt in JUI Library
+```
+grunt       // Build all processes
+grunt js    // Merge and Minifiy JavaScript files
+grunt css   // Compile LESS files
+grunt test  // Unit Tests
+```
+After the build output is shown below.
+```
+jui.js
+jui.min.js
+jui.comp.js
+jui.comp.min.js
+jui.table.js
+jui.table.min.js
+jui.chart.js
+jui.chart.min.js
+jui.css
+jui.min.css 
+```
+
+## Using in NodeJS
+You can use the JUI chart in server as well as client.
+Get started right now in NodeJS.
+
+#### Install
+```
+node install jui
+```
+
+#### Example
+```js
+var jui = require("jui");   // use jui package 
+var fs = require("fs");
+
+// create jui chart 
+var chart = jui.create("chart.builder", $("<div></div>"), {
+    width : 800,
+    height : 800,
+    axis : {
+        x : {
+           type : "block",
+           domain : "quarter",
+           line : true
+        },
+        y : {
+            type : "range",
+            domain : [ -100, 50 ],
+            step : 10,
+            line : true,
+            orient : "right"
+        },
+        data : [
+          { quarter : "1Q", sales : 50, profit : 35 },
+          { quarter : "2Q", sales : -20, profit : -100 },
+          { quarter : "3Q", sales : 10, profit : -5 },
+          { quarter : "4Q", sales : 30, profit : 25 }
+        ]
+
+    }, 
+    brush : {
+        type : "column",
+        target : [ "sales", "profit" ]
+    }
+});
+
+// save file as xml  
+fs.writeFileSync("test.svg", chart.svg.toXml());
+```
 
 ## Documentation
 
-http://seogi1004.github.io/jui
+http://jui.io
 
 ## Maintainers
 
