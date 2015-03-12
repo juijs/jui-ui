@@ -1287,7 +1287,6 @@
                 type: name,
                 "class": uiFunc
             });
-
 		},
 
         /**

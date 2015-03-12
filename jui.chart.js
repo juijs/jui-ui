@@ -1287,7 +1287,6 @@
                 type: name,
                 "class": uiFunc
             });
-
 		},
 
         /**
@@ -1716,7 +1715,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
             }
 
-            return cls["class"](selector, options);
+            return cls["class"](selector || $("<div />"), options);
         }
 	}
 	
@@ -14125,15 +14124,15 @@ jui.define("chart.brush.area", [], function() {
          */
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
-                maxY = this.axis.y(this.axis.y.min());
+                y = this.axis.y(this.brush.startZero ? 0 : this.axis.y.min());
 
             for(var k = 0; k < path.length; k++) {
                 var p = this.createLine(path[k], k),
                     xList = path[k].x;
 
                 if(path[k].length > 0) {
-                    p.LineTo(xList[xList.length - 1], maxY);
-                    p.LineTo(xList[0], maxY);
+                    p.LineTo(xList[xList.length - 1], y);
+                    p.LineTo(xList[0], y);
                     p.ClosePath();
                 }
 
@@ -14145,6 +14144,11 @@ jui.define("chart.brush.area", [], function() {
 
                 this.addEvent(p, null, k);
                 g.prepend(p);
+
+                // Add line
+                if(this.brush.line) {
+                    g.prepend(this.createLine(path[k], k));
+                }
             }
 
             return g;
@@ -14178,6 +14182,23 @@ jui.define("chart.brush.area", [], function() {
                  })
             );
         }
+    }
+
+    AreaBrush.setup = function() {
+        return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step). */
+            symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [active=null] Activates the bar of an applicable index. */
+            active: null,
+            /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            display: null,
+            /** @cfg {Boolean} [startZero=false]  The end of the area is zero point. */
+            startZero: false,
+            /** @cfg {Boolean} [line=true]  Visible line */
+            line: true
+        };
     }
 
     return AreaBrush;
