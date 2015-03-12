@@ -267,7 +267,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
             }
 
-            return cls["class"](selector, options);
+            return cls["class"](selector || $("<div />"), options);
         }
 	}
 	
