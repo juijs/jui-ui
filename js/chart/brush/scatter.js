@@ -79,13 +79,15 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         elem.attr({
                             fill: self.chart.theme("scatterHoverColor"),
                             stroke: color,
-                            "stroke-width": borderWidth * 2
+                            "stroke-width": borderWidth * 2,
+                            opacity: 1
                         });
                     }, function () {
                         elem.attr({
                             fill: color,
                             stroke: borderColor,
-                            "stroke-width": borderWidth
+                            "stroke-width": borderWidth,
+                            opacity: (self.brush.hide) ? 0 : 1
                         });
                     });
                 }
@@ -114,6 +116,10 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         min: points[i].min[j],
                         value: points[i].value[j]
                     }, i);
+
+                    if(this.brush.hide) {
+                        p.attr({ opacity: 0 });
+                    }
 
                     this.addEvent(p, j, i);
                     g.append(p);
@@ -151,9 +157,11 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
     ScatterBrush.setup = function() {
         return {
             /** @cfg {"circle"/"triangle"/"rectangle"/"cross"/"callback"} [symbol="circle"] Determines the shape of a (circle, rectangle, cross, triangle).  */
-            symbol: "circle", // or triangle, rectangle, cross
+            symbol: "circle",
             /** @cfg {Number} [size=7]  Determines the size of a starter. */
             size: 7,
+            /** @cfg {Boolean} [hide=false]  Hide the scatter, will be displayed only when the mouse is over. */
+            hide: false,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };

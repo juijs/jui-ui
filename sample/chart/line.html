@@ -71,10 +71,14 @@
             brush : [
                 {
                     type : 'line',
-                    display : 'max',
+                    //display : 'max',
                     activeEvent : "click",
                     active: "ms",
                     animate : true
+                },
+                {
+                    type : 'scatter',
+                    hide : true
                 }
             ],
             widget : [
@@ -84,7 +88,8 @@
                     render : true
                 },
                 {
-                    type : "tooltip"
+                    type : "tooltip",
+                    brush : 1
                 }
             ]
         });
