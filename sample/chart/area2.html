@@ -41,10 +41,10 @@
             theme : "jennifer",
             axis : [{
                 data : [
-                    { name : 2, value : 15, test : -7 },
-                    { name : 15, value : 6, test : -2 },
-                    { name : 8, value : 10, test : -5 },
-                    { name : 18, value : 5, test : -12 }
+                    { name : 2, value : 15, test : -7, test2 : -7 },
+                    { name : 15, value : 6, test : -2, test2 : -7 },
+                    { name : 8, value : 10, test : -5, test2 : -7 },
+                    { name : 18, value : 5, test : -12, test2 : -7 }
                 ],
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -65,8 +65,7 @@
             }, {
                 type : 'stackarea',
                 symbol : 'curve',
-                target : [ "test" ],
-                colors : [ 2 ],
+                target : [ "test", "test2" ],
                 startZero : true
             }],
             
