@@ -81,6 +81,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineBorderDashArray : "none",
         lineDisableBorderOpacity : 0.3,
         linePointBorderColor : "white",
         lineSplitBorderColor : null,

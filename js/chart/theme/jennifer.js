@@ -142,6 +142,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineBorderWidth : 2,
         /** @cfg */
+        lineBorderDashArray : "none",
+        /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
         linePointBorderColor : "white",

@@ -7,7 +7,7 @@ jui.define("chart.brush.line", [], function() {
      */
 	var LineBrush = function() {
         var g;
-        var circleColor, disableOpacity, lineBorderWidth;
+        var circleColor, disableOpacity, lineBorderWidth, lineBorderDashArray;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
@@ -39,6 +39,7 @@ jui.define("chart.brush.line", [], function() {
             var p = this.chart.svg.path({
                 stroke : this.color(index),
                 "stroke-width" : lineBorderWidth,
+                "stroke-dasharray" : lineBorderDashArray,
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             });
@@ -133,6 +134,7 @@ jui.define("chart.brush.line", [], function() {
             circleColor = this.chart.theme("linePointBorderColor");
             disableOpacity = this.chart.theme("lineDisableBorderOpacity");
             lineBorderWidth = this.chart.theme("lineBorderWidth");
+            lineBorderDashArray = this.chart.theme("lineBorderDashArray");
         }
 
         this.draw = function() {
@@ -144,20 +146,33 @@ jui.define("chart.brush.line", [], function() {
 
             root.each(function(i, elem) {
                 if(elem.is("util.svg.element.path")) {
-                    var len = elem.length();
+                    var dash = elem.attributes["stroke-dasharray"],
+                        len = elem.length();
 
-                    elem.attr({
-                        "stroke-dasharray": len
-                    });
+                    if(dash == "none") {
+                        elem.attr({
+                            "stroke-dasharray": len
+                        });
 
-                    elem.append(svg.animate({
-                        attributeName: "stroke-dashoffset",
-                        from: len,
-                        to: "0",
-                        begin: "0s",
-                        dur: "1s",
-                        repeatCount: "1"
-                    }));
+                        elem.append(svg.animate({
+                            attributeName: "stroke-dashoffset",
+                            from: len,
+                            to: "0",
+                            begin: "0s",
+                            dur: "1s",
+                            repeatCount: "1"
+                        }));
+                    } else {
+                        elem.append(svg.animate({
+                            attributeName: "opacity",
+                            from: "0",
+                            to: "1",
+                            begin: "0s" ,
+                            dur: "1.5s",
+                            repeatCount: "1",
+                            fill: "freeze"
+                        }));
+                    }
                 }
             });
         }

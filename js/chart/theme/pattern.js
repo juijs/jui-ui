@@ -134,6 +134,8 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineBorderWidth : 2,
         /** */
+        lineBorderDashArray : "none",
+        /** */
         lineDisableBorderOpacity : 0.3,
         /** */
         linePointBorderColor : "white",
