@@ -9,8 +9,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
      *
      */
     var ZoomWidget = function(chart, axis, widget) {
+        var self = this;
 
-        function setDragEvent(self, thumb, bg) {
+        function setDragEvent(thumb, bg) {
             var isMove = false,
                 mouseStart = 0,
                 thumbWidth = 0;
@@ -129,7 +130,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 }).translate(chart.area("x"), chart.area("y"));
 
-                setDragEvent(self, thumb, bg);
+                setDragEvent(thumb, bg);
             });
         }
     }

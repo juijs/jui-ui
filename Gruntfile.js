@@ -134,9 +134,9 @@ module.exports = function(grunt) {
         "js/chart/widget/tooltip.js",
         "js/chart/widget/title.js",
         "js/chart/widget/legend.js",
+        "js/chart/widget/zoom.js",
         "js/chart/widget/scroll.js", // horizontal scroll
         "js/chart/widget/vscroll.js", // vertical scroll
-        "js/chart/widget/zoom.js",
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
 
