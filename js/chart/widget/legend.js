@@ -61,7 +61,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			for(var i = 0; i < count; i++) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
-                    text = chart.get("series", target).text || target;
+                    text = chart.get("series", target).text || target,
+                    color = chart.color(i, brush);
 
 				var rect = chart.svg.getTextRect(text),
                     width = Math.min(rect.width, rect.height),
@@ -70,16 +71,27 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 // 아이콘 사이즈
                 if(i == 0) iconSize = width;
 
-				group.append(chart.svg.rect({
-					x: 0, 
-					y : 0, 
-					width: iconSize,
-					height : iconSize,
-					fill : chart.color(i, brush)
-				}));
-				
+                if(widget.icon != null) {
+                    var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
+
+                    group.append(chart.text({
+                        x: 0,
+                        y: 12,
+                        "font-size": chart.theme("legendFontSize"),
+                        "fill": color
+                    }, icon));
+                } else {
+                    group.append(chart.svg.rect({
+                        x : 0,
+                        y : 0,
+                        width : iconSize,
+                        height : iconSize,
+                        fill : color
+                    }));
+                }
+
  				group.append(chart.text({
-					x : width + 4,
+					x : width,
 					y : 11,
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
@@ -155,24 +167,24 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
-                var y = (widget.orient == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
+                var y = (widget.orient == "bottom") ? chart.area("y2") + chart.padding("bottom") - max_height : chart.area("y") - chart.padding("top");
                 
                 if (widget.align == "start") {
-                    x = chart.area('x');
+                    x = chart.area("x");
                 } else if (widget.align == "center") {
-                    x = chart.area('x') + (chart.area('width') / 2- total_width / 2);
+                    x = chart.area("x") + (chart.area("width") / 2- total_width / 2);
                 } else if (widget.align == "end") {
-                    x = chart.area('x2') - total_width;
+                    x = chart.area("x2") - total_width;
                 }
             } else {
-                var x = (widget.orient == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.orient == "left") ? chart.area("x") - chart.padding("left") : chart.area("x2") + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
-                    y = chart.area('y');
+                    y = chart.area("y");
                 } else if (widget.align == "center") {
-                    y = chart.area('y') + (chart.area('height') / 2 - total_height / 2);
+                    y = chart.area("y") + (chart.area("height") / 2 - total_height / 2);
                 } else if (widget.align == "end") {
-                    y = chart.area('y2') - total_height;
+                    y = chart.area("y2") - total_height;
                 }
             } 
             
@@ -190,6 +202,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             align: "center", // or start, end
             /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
+            /** @cfg {Function} [icon=null] */
+            icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
