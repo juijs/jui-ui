@@ -1,18 +1,18 @@
-jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
+jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
 
     /**
-     * @class chart.widget.scroll
+     * @class chart.widget.vscroll
      * @extends chart.widget.core
      * @alias ScrollWidget
      * @requires util.base
      */
-    var ScrollWidget = function(chart, axis, widget) {
+    var VScrollWidget = function(chart, axis, widget) {
         var self = this;
-        var thumbWidth = 0,
-            thumbLeft = 0,
+        var thumbHeight = 0,
+            thumbTop = 0,
             bufferCount = 0,
             dataLength = 0,
-            totalWidth = 0,
+            totalHeight = 0,
             piece = 0,
             rate = 0 ;
 
@@ -21,12 +21,12 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 mouseStart = 0,
                 thumbStart = 0;
 
-            self.on("bg.mousedown", function(e) {
+            self.on("chart.mousedown", function(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
-                mouseStart = e.bgX;
-                thumbStart = thumbLeft;
+                mouseStart = e.bgY;
+                thumbStart = thumbTop;
             });
 
             self.on("bg.mousemove", mousemove);
@@ -37,23 +37,23 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
             function mousemove(e) {
                 if(!isMove) return;
 
-                var gap = thumbStart + e.bgX - mouseStart;
+                var gap = thumbStart + e.bgY - mouseStart;
 
                 if(gap < 0) {
                     gap = 0;
                 } else {
-                    if(gap + thumbWidth > chart.area("width")) {
-                        gap = chart.area("width") - thumbWidth;
+                    if(gap + thumbHeight > chart.area("height")) {
+                        gap = chart.area("height") - thumbHeight;
                     }
                 }
 
-                thumb.translate(gap, 1);
-                thumbLeft = gap;
+                thumb.translate(1, gap);
+                thumbTop = gap;
 
                 var startgap = gap * rate,
                     start = startgap == 0 ? 0 : Math.floor(startgap / piece);
 
-                if(gap + thumbWidth == chart.area("width")) {
+                if(gap + thumbHeight == chart.area("height")) {
                     start += 1;
                 }
 
@@ -77,35 +77,35 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         this.drawBefore = function() {
 			dataLength =  axis.origin.length;
 			bufferCount = axis.buffer;
-			piece = chart.area("width") / bufferCount;
-			totalWidth = piece * dataLength;
-			rate = totalWidth / chart.area("width");
-            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
+			piece = chart.area("height") / bufferCount;
+			totalHeight = piece * dataLength;
+			rate = totalHeight / chart.area("height");
+            thumbHeight = chart.area("height") * (bufferCount / dataLength) + 2;
         }
 
         this.draw = function() {
             return chart.svg.group({}, function() {
                 chart.svg.rect({
-                    width: chart.area("width"),
-                    height: 7,
+                    width: 7,
+                    height: chart.area("height"),
                     fill: chart.theme("scrollBackgroundColor")
                 });
 
                 var thumb = chart.svg.rect({
-                    width: thumbWidth,
-                    height: 5,
+                    width: 5,
+                    height: thumbHeight,
                     fill: chart.theme("scrollThumbBackgroundColor"),
                     stroke: chart.theme("scrollThumbBorderColor"),
                     cursor: "pointer",
                     "stroke-width": 1
-                }).translate(thumbLeft, 1);
+                }).translate(1, thumbTop);
 
                 // 차트 스크롤 이벤트
                 setScrollEvent(thumb);
 
-            }).translate(chart.area("x"), chart.area("y2"));
+            }).translate(chart.area("x"), chart.area("y"));
         }
     }
 
-    return ScrollWidget;
+    return VScrollWidget;
 }, "chart.widget.core");
