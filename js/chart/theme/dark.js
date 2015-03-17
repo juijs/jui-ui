@@ -124,6 +124,7 @@ jui.define("chart.theme.dark", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#ffffff",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",

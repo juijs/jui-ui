@@ -39,6 +39,17 @@
             icon: {
                 path: "../../img/icon-list"
             },
+            series : {
+                name : {
+                    text : "이름"
+                },
+                value : {
+                    text : "값"
+                },
+                test : {
+                    text : "Test"
+                }
+            },
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -80,10 +91,10 @@
                     text : 'Text'
                 }, {
                     type : 'legend',
-                    //icon : '{chart}',
-                    icon : function(i) {
-                        return (i === 0) ? "{chart}" : "{gear}";
-                    },
+                    icon : '{chart}',
+                    //icon : function(i) {
+                        //return (i === 0) ? "{chart}" : "{gear}";
+                    //},
                     brush : [ 0, 1 ]
                 }
             ]

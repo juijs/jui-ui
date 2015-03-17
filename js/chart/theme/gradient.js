@@ -126,6 +126,7 @@ jui.define("chart.theme.gradient", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#666",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",

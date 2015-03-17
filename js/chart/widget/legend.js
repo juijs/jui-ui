@@ -56,43 +56,36 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 arr = [],
                 data = brush.target,
                 count = data.length,
-                iconSize = 0;
+                r = chart.theme("legendIconRadius");
 			
 			for(var i = 0; i < count; i++) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = chart.get("series", target).text || target,
-                    color = chart.color(i, brush);
-
-				var rect = chart.svg.getTextRect(text),
-                    width = Math.min(rect.width, rect.height),
-                    height = width;
-
-                // 아이콘 사이즈
-                if(i == 0) iconSize = width;
+                    color = chart.color(i, brush),
+                    rect = chart.svg.getTextRect(text);
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
 
                     group.append(chart.text({
                         x: 0,
-                        y: 12,
+                        y: 11,
                         "font-size": chart.theme("legendFontSize"),
                         "fill": color
                     }, icon));
                 } else {
-                    group.append(chart.svg.rect({
-                        x : 0,
-                        y : 0,
-                        width : iconSize,
-                        height : iconSize,
+                    group.append(chart.svg.circle({
+                        cx : r,
+                        cy : r,
+                        r : r,
                         fill : color
                     }));
                 }
 
  				group.append(chart.text({
-					x : width,
-					y : 11,
+					x : (r * 2) + 2,
+					y : 10,
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
@@ -100,8 +93,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
 				arr.push({
 					icon : group,
-					width : width + 4 + rect.width + 10,
-					height : height + 4
+					width : (r * 2) + rect.width + 14,
+					height : (r * 2) + 4
 				});
 
                 if(widget.filter) {
@@ -202,7 +195,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             align: "center", // or start, end
             /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
-            /** @cfg {Function} [icon=null] */
+            /** @cfg {Function/String} [icon=null]   */
             icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false

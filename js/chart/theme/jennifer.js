@@ -228,6 +228,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         legendFontSize : "12px",
         /** @cfg */
+        legendIconRadius : 6,
+        /** @cfg */
         tooltipFontColor : "#333",
         /** @cfg */
         tooltipFontSize : "12px",

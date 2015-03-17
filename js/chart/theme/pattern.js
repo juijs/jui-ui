@@ -203,6 +203,7 @@ jui.define("chart.theme.pattern", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",

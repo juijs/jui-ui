@@ -120,6 +120,7 @@ jui.define("chart.theme.pastel", [], function() {
 		titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
