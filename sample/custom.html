@@ -8,11 +8,56 @@
 <link rel="stylesheet" href="../jui.css" />
 <script src="../lib/jquery-1.8.0.min.js"></script>
 <script src="../jui.js"></script>
-    <script>
-        console.log(jui.include("ui.button"))
-    </script>
+<script>
+    var c = jui.create("chart.builder", {
+        width: 400,
+        height : 400,
+        theme : "jennifer",
+        axis : [{
+            data : [
+                { name : 2, value : 15 },
+                { name : 10, value : 6 },
+                { name : 8, value : 10 },
+                { name : 18, value : 5 }
+            ],
+            x : {
+                //type : "block",  // default type is block
+                domain : [ "week1", "week2", "week3", "week4" ],
+                line : true
+            },
+            y : {
+                type : 'range',
+                domain : function(d) {
+                    return Math.max(d.name, d.value);
+                },
+                step : 10
+            }
+        }],
+        series : {
+            name : { text : "test" },
+            value : { text : "test" }
+        },
+        brush : {
+            type : 'bubble',
+            //colors : [ "red", "blue" ],
+            target : [ 'name', 'value'],
+            min : 1,
+            max : 50
+        },
+        event: {
+            click: function(obj, e) {
+                console.log(obj);
+            }
+        }
+    });
+
+    $(function() {
+        $("body").append(c.root);
+    });
+
+    console.log(c.svg.toXml());
+</script>
 </head>
 <body class="jui">
-
 </body>
 </html>
