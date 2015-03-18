@@ -15918,15 +15918,15 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = Math.max.apply(Math, value);
-                        value_list.push(Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = Math.max.apply(Math, value);
+                value_list.push(Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = value;
+            }
+        }
 
 			} else {
 				value_list = this.grid.domain;
@@ -15946,7 +15946,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			if (_.typeCheck("function", step)) {
 				this.grid.step = step.call(this.chart, domain);
-			}
+			} 
+      
+      // default second
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			return domain;
 		}
@@ -16060,15 +16065,15 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = +Math.max.apply(Math, value);
-                        value_list.push(+Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = +value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = +Math.max.apply(Math, value);
+                value_list.push(+Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = +value;
+            }
+        }
 
 
 			} else {
@@ -16083,8 +16088,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = step.call(this.chart, domain);
+				this.grid.step = this.grid.call(this.chart, domain);
 			}
+
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -24732,7 +24741,7 @@ jui.define("chartx.mini", [ "jquery", "chart.builder" ], function($, builder) {
      *
      * @extends core
      */
-    var UI = function(selector, options) {
+    var UI = function(selector, data, options) {
 
       options.padding = 0; 
       if (options.axis) {
