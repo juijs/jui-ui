@@ -1715,7 +1715,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
             }
 
-            return cls["class"](selector || $("<div />"), options);
+            if(arguments.length == 2) {
+                options = selector;
+                selector = null;
+            }
+
+            return cls["class"](selector, options);
         }
 	}
 	
@@ -2113,7 +2118,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
     UICore.build = function(UI) {
 
         return function(selector, options) {
-            var $root = $(selector);
+            if(arguments.length == 1) {
+                options = selector;
+                selector = null;
+            }
+
+            var $root = $(selector || "<div />");
             var list = [];
 
             $root.each(function(index) {
@@ -2442,7 +2452,7 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 				for (var i = 1; i < arguments.length; i += 2) {
 
-					var split = typeof arguments[i] == 'string' ? this[arguments[i]] : arguments[i];
+					var split = arguments[i];
 					var time = arguments[i + 1];
 
 					if (this.years == split) {
@@ -6888,514 +6898,541 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 	
 	return UI;
 });
-jui.defineUI("ui.layout", [ "jquery", "util.base" ], function ($, _) {
-
-  /**
-   * @class ui.layout
-   * Layout can split the screen into areas and each area will be resizable
-   *
-   * @extends core
-   * @alias Layout
-   * @requires jquery
-   * @requires util.base
-   *
-   */
-  var UI = function () {
-    var ui_layout = null,
-      ui_options = {},
-      directions = [ 'top', 'left', 'right', 'bottom', 'center' ];
-
-    var resizerIcons = {
-      top: 'n-resize',
-      bottom: 'n-resize',
-      right: 'e-resize',
-      left: 'e-resize'
-    };
-
-    function setEvent($resizer, move, down, up) {
-      $resizer.mousedown(function (e) {
-        $resizer.data('mousedown', true);
-
-        var $shadow = $resizer.clone();
-
-        $resizer.data('shadow', $shadow);
-        $resizer.after($shadow);
-
-        down.call(this, e);
-        $shadow.css('opacity', 0.3);
-
-        $(document).on('mousemove', move);
-        $(document).on('mouseup', function mouseUp(e) {
-          $(document).off('mousemove', move);
-          $(document).off('mouseup', mouseUp);
-
-          up.call(this, e);
-          $resizer.data('mousedown', false);
-
-          $shadow.remove();
-          $("body :not(.resize)").css({ 'user-select': '' })
-        });
-
-        $("body :not(.resize)").css({ 'user-select': 'none' })
-      });
-    }
-
-    function setResizer(direction) {
-      var $layout, $resizer;
-
-      $layout = ui_layout[direction];
-      $resizer = $layout.resizer;
-
-      $resizer.css({
-        cursor: resizerIcons[direction],
-        'z-index': 1
-      })
-
-      if ($resizer.data('event')) return;
-
-      if (direction == 'top') {
-        setEvent($resizer, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var top = e.clientY - $resizer.data('current');
-          var min = ui_options.top.min;
-          var max = ui_options.top.max;
-          
-          if (ui_layout.bottom) {
-            var bottomTop = ui_layout.bottom.position().top;
-            if (max > bottomTop - 20 ) {
-              max = bottomTop - 20 ;
-            }
-            
-          }
-          
-          if (min <= top && top < max) {
-            $resizer.css({top: top + 'px'});
-          }
-
-        }, function (e) {
-          var top = $resizer.position().top;
-          $resizer.data('current', e.clientY - top);
-        }, function (e) {
-
-          var top = $resizer.position().top;
-          var height = $resizer.height();
-
-          var first = top;
-          var second = (top + $resizer.height()) + 'px';
-
-          var pre_height = ui_layout.top.height();
-          ui_layout.top.height(first);
-
-          var dh = pre_height - first;
-          var new_height = ui_layout.center.height() + dh;
-
-          if (ui_layout.center) ui_layout.center.css({top: second}).height(new_height);
-          if (ui_layout.left) ui_layout.left.css({top: second}).height(new_height);
-          if (ui_layout.left && ui_layout.left.resizer) ui_layout.left.resizer.css({top: second}).height(new_height);
-          if (ui_layout.right) ui_layout.right.css({top: second}).height(new_height);
-          if (ui_layout.right && ui_layout.right.resizer)  ui_layout.right.resizer.css({top: second}).height(new_height);
-        });
-
-      } else if (direction == 'bottom') {
-        setEvent($resizer, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var min = ui_options.bottom.min;
-          var max = ui_options.bottom.max;
-
-          var top = e.clientY - $resizer.data('current');
-
-          if (ui_layout.top) {
-            var topBottom = ui_layout.top.height() + (ui_layout.top.resizer ? ui_layout.top.resizer.height() : 0);
-            if ((ui_layout.root.height() - max) < topBottom + 20 ) {
-              max = ui_layout.root.height() - (topBottom + 20) ;
-            }
-
-          }
-          
-          if ((ui_layout.root.height() - min) >= top && top >= (ui_layout.root.height() - max)) {
-            $resizer.css({top: top + 'px'});
-          }
-        }, function (e) {
-          var top = $resizer.position().top;
-          $resizer.data('current', e.clientY - top);
-        }, function (e) {
-          var top = $resizer.position().top + $resizer.height();
-
-          var max = ui_layout.root.height();
-          var dh = parseFloat(ui_layout.bottom.position().top) - top;
-
-          ui_layout.bottom.css({ top: top + "px"});
-          ui_layout.bottom.height(ui_layout.bottom.height() + dh);
-
-          var new_height = ui_layout.center.height() - dh;
-
-          if (ui_layout.center) ui_layout.center.height(new_height);
-          if (ui_layout.left) ui_layout.left.height(new_height);
-          if (ui_layout.left && ui_layout.left.resizer)  ui_layout.left.resizer.height(new_height);
-          if (ui_layout.right)  ui_layout.right.height(new_height);
-          if (ui_layout.right && ui_layout.right.resizer)  ui_layout.right.resizer.height(new_height);
-        });
-      } else if (direction == 'left') {
-        setEvent($resizer, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var left = e.clientX - $resizer.data('current');
-          var min = ui_options.left.min;
-          var max = ui_options.left.max;
-          if (min <= left && left < max) {
-            $resizer.css({left: left + 'px'});
-          }
-        }, function (e) {
-          var left = $resizer.position().left;
-          $resizer.data('left', left).data('current', e.clientX - left);
-        }, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var left = $resizer.position().left;
-          var pre_left = $resizer.data('left');
-          var dw = pre_left - left;
-
-          ui_layout.left.css({ width: left + "px"});
-          ui_layout.center.css({ left: (left + ui_options.barSize ) + "px" });
-        });
-      } else if (direction == 'right') {
-        setEvent($resizer, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var left = e.clientX - $resizer.data('current');
-          var min = ui_options.right.min;
-          var max = ui_options.right.max;
-
-          var sizeLeft = ui_layout.left.width() + ui_layout.left.resizer.width();
-          var sizeCenter = ui_layout.center.width();
-          var current = $layout.width() - (left - (sizeLeft + sizeCenter));
-
-          if (min <= current && current < max) {
-            $resizer.css({left: left + 'px'});
-          }
-        }, function (e) {
-          var left = $resizer.position().left;
-          $resizer.data('left', left).data('current', e.clientX - left);
-        }, function (e) {
-          if (!$resizer.data('mousedown')) return;
-
-          var left = $resizer.position().left;
-          var pre_left = $resizer.data('left');
-          var dw = pre_left - left;
-
-          ui_layout.right.css({
-            left: (left + $resizer.width()) + 'px'
-          });
-          ui_layout.center.css({
-            right: (ui_layout.root.width() - (left + $resizer.width())) + 'px'
-          });
-
-
-        });
-      }
-
-      $resizer.data('event', true);
-    }
-
-    function initLayout(self) {
-      for (var i = 0, len = directions.length; i < len; i++) {
-        var direct = ui_layout[directions[i]];
-
-        if (direct) {
-          ui_layout.root.append(direct);
-
-          if (directions[i] != 'center') {
-            if (ui_options[directions[i]].resize) {
-              if (!direct.resizer) {
-                direct.resizer = $("<div class='resize " + directions[i] + "' />");
-              }
-
-              ui_layout.root.append(direct.resizer);
-              setResizer(directions[i]);
-            }
-          }
-        }
-      }
-
-      self.resize();
-    }
-
-    this.init = function () {
-      var self = this, opts = this.options;
-      var $root, $top, $left, $right, $bottom, $center;
-
-      $root = $(this.root).css("position", "relative");
-
-      if (opts.width != null) {
-        $root.outerWidth(opts.width);
-      }
-
-      if (opts.height != null) {
-        $root.outerHeight(opts.height);
-      }
-
-      $top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");
-      if ($top.length == 0) $top = null;
-
-      $left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
-      if ($left.length == 0) $left = null;
-
-
-      $right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right");
-      if ($right.length == 0) $right = null;
-
-      $bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom");
-      if ($bottom.length == 0) $bottom = null;
-
-      $center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center");
-      if ($center.length == 0) $center = null;
-
-      ui_layout = {
-        root: $root,
-        top: $top,
-        left: $left,
-        right: $right,
-        bottom: $bottom,
-        center: $center
-      };
-
-      ui_options = opts;
-      initLayout(this);
-
-      $(window).on('resize', function (e) {
-        self.resize();
-      })
-
-      return this;
-    }
+jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     /**
-     * @method resize
-     * Resets the layout
+     * @class ui.layout
+     * Layout can split the screen into areas and each area will be resizable
+     *
+     * @extends core
+     * @alias Layout
+     * @requires jquery
+     * @requires util.base
+     *
      */
-    this.resize = function () {
-      var $obj = null, $option = null;
-      var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0;
+	var UI = function() {
+		var ui_layout = null, 
+			ui_options = {}, 
+			directions = [ 'top','left','right','bottom','center' ];
+		
+		var resizerIcons = { 
+			top: 'n-resize', 
+			bottom: 'n-resize', 
+			right: 'e-resize', 
+			left: 'e-resize' 
+		};
+		
+		function setEvent($resizer, move, down, up) {
+			$resizer.mousedown(function(e) {
+				$resizer.data('mousedown', true);
+				
+				var $shadow = $resizer.clone();
+				
+				$resizer.data('shadow', $shadow);
+				$resizer.after($shadow);
+				
+				down.call(this, e);
+				$shadow.css('opacity', 0.3);
+				
+				$(document).on('mousemove', move);
+				$(document).on('mouseup', function mouseUp(e) {
+					$(document).off('mousemove', move);
+					$(document).off('mouseup', mouseUp);
+						
+					up.call(this, e);
+          			$resizer.data('mousedown', false);					
+          			
+					$shadow.remove();
+					$("body :not(.resize)").css({ 'user-select' : '' })						
+				});
+				
+				$("body :not(.resize)").css({ 'user-select' : 'none' })
+			});
+		}
+		
+		function setPosition(height, first, arr, second) {
+			arr = arr || [];
+			
+			if(ui_layout[height]) {
+				ui_layout[height].height(first);
+			}
+			
+			if(typeof arr == 'string') arr = [arr];
+			if(arr.length == 0) return;
+			
+			for(var i = 0, len = arr.length; i < len; i++) {
+				var $obj = ui_layout[arr[i]];
+				
+				if($obj) {
+					$obj.css({ top : second })
+					if($obj.resizer) $obj.resizer.css({ top : second })					
+				}
+			}
+		}
+		
+		function setResizer(direction) {
+			var $first, $second, $layout, $resizer, options;
 
-      var totalHeight = $(this.root).height();
-      var totalWidth = $(this.root).width();
+			$layout = ui_layout[direction];
+			$resizer = $layout.resizer;
 
-      $obj = ui_layout.top;
-      $option = this.options.top;
+			$resizer.css({
+				cursor : resizerIcons[direction]
+			})			
+			
+			if($resizer.data('event')) return; 
+			
+			if(direction == 'top') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var top = e.clientY - $resizer.data('current');
+					var min = ui_options.top.min;
+					var max = ui_options.top.max;
+					if(min <= top && top < max) {
+						$resizer.css({top : top + 'px'});
+					}
+					
+				}, function(e) {
+					var top = $resizer.position().top;										 
+					$resizer.data('current', e.clientY - top);
+				}, function(e) {
 
-      if ($obj) {
-        $obj.css({
-          'position': 'absolute',
-          'top': '0px',
-          'left': '0px',
-          'width': '100%',
-          'height': $option.size || $option.min
-        });
+					var top = $resizer.position().top;					
+					var height = $resizer.height();					
+	
+					var first = top;
+					var second = (top + $resizer.height()) + 'px';
+						
+					var pre_height = ui_layout.top.height();
+					ui_layout.top.height(first);
+					
+					var dh = pre_height - first;
+					var new_height = ui_layout.center.height() + dh;
+					
+					ui_layout.center.css({top : second}).height(new_height);			
+					ui_layout.left.css({top : second}).height(new_height);			
+					ui_layout.left.resizer.css({top : second}).height(new_height);			
+					ui_layout.right.css({top : second}).height(new_height);			
+					ui_layout.right.resizer.css({top : second}).height(new_height);			
+				});
+		
+			} else if(direction == 'bottom') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var top = e.clientY - $resizer.data('current');
+					var min = ui_options.bottom.min;
+					var max = ui_options.bottom.max;
+					
+					var dh =  $layout.position().top - (top + ui_options.barSize);
+					var real_height = dh + $layout.height();
+					
+					if(min <= real_height && real_height <= max ) {
+						$resizer.css({top : top + 'px'});	
+					}
+				}, function(e) {
+					var top = $resizer.position().top;										 
+					$resizer.data('current', e.clientY - top);
+				}, function(e) {
+					var top = $resizer.position().top + $resizer.height();
+					
+					var max = ui_layout.root.height();
+					var dh = parseFloat(ui_layout.bottom.position().top) - top;
+					
+					ui_layout.bottom.css({ top : top + "px"});
+					ui_layout.bottom.height(ui_layout.bottom.height() + dh);
+					
+					var new_height = ui_layout.center.height() - dh;
+					
+					ui_layout.center.height(new_height);			
+					ui_layout.left.height(new_height);			
+					ui_layout.left.resizer.height(new_height);			
+					ui_layout.right.height(new_height);			
+					ui_layout.right.resizer.height(new_height);		
+				});				
+			} else if(direction == 'left') {
+				setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var left = e.clientX - $resizer.data('current');
+					var min = ui_options.left.min;
+					var max = ui_options.left.max;
+					if(min <= left && left < max) {
+						$resizer.css({left : left + 'px'});
+					}
+				}, function(e) {
+					var left = $resizer.position().left;										 
+					$resizer.data('left', left).data('current', e.clientX - left);
+				}, function(e) {
+          			if(!$resizer.data('mousedown')) return; 
+          					
+					var left = $resizer.position().left;
+					var pre_left = $resizer.data('left');
+					var dw = pre_left - left;
+					
+					ui_layout.left.css({ width : left + "px"});
+					ui_layout.center.css({ left : (left + ui_options.barSize ) + "px" });
+          			ui_layout.center.width(ui_layout.center.width() + dw);
+				});	
+			} else if(direction == 'right') {
+        		setEvent($resizer, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					  
+					var left = e.clientX - $resizer.data('current');
+					var min = ui_options.right.min;
+					var max = ui_options.right.max;
+					  
+					var sizeLeft = ui_layout.left.width() + ui_layout.left.resizer.width();
+					var sizeCenter = ui_layout.center.width();
+					var current = $layout.width() - (left - (sizeLeft + sizeCenter));
+					  
+					if(min <= current && current < max) {
+						$resizer.css({left : left + 'px'});  
+					}
+		        }, function(e) {
+		        	var left = $resizer.position().left;                     
+		        	$resizer.data('left', left).data('current', e.clientX - left);
+		        }, function(e) {
+					if(!$resizer.data('mousedown')) return; 
+					
+					var left = $resizer.position().left;
+					var pre_left = $resizer.data('left');
+					var dw = pre_left - left;
+					
+					ui_layout.right.css({ 
+						left : (left + $resizer.width()) + 'px',
+						width : (ui_layout.right.width() + dw) + "px"
+					});
+					ui_layout.center.width(ui_layout.center.width() - dw);		          
+		        });			  
+			}
+			
+			$resizer.data('event', true);
+		}
 
-        sizeTop = $obj.height();
+        function initLayout(self) {
+            for(var i = 0, len = directions.length; i < len; i++) {
+                var direct = ui_layout[directions[i]];
 
-        if ($option.resize) {
-          $obj.resizer.css({
-            'position': 'absolute',
-            'top': sizeTop,
-            'left': '0px',
-            'width': '100%',
-            "background": this.options.barColor,
-            "height": this.options.barSize
-          })
+                if(direct) {
+                    ui_layout.root.append(direct);
 
-          sizeTop += this.options.barSize;
-        } else {
-          if ($obj.resizer) {
-            $obj.resizer.remove();
-          }
+                    if(directions[i] != 'center') {
+                        if(ui_options[directions[i]].resize) {
+                            if(!direct.resizer) {
+                                direct.resizer = $("<div class='resize " + directions[i] + "' />");
+                            }
+
+                            ui_layout.root.append(direct.resizer);
+                            setResizer(directions[i]);
+                        }
+                    }
+                }
+            }
+
+            self.resize();
         }
-      }
+	
+		this.init = function() {
+			var self = this, opts = this.options;
+			var $root, $top, $left, $right, $bottom, $center;
+			
+			$root = $(this.root).css("position", "relative");
+			
+			if(opts.width != null) {
+				$root.outerWidth(opts.width);
+			}
 
-      $obj = ui_layout.bottom;
-      $option = this.options.bottom;
-      var rightHeight = $option.size || $option.min;
-      if ($obj) {
-        $obj.css({
-          'position': 'absolute',
-          'right': '0px',
-          'left': '0px',
-          'top': ui_layout.root.height() - rightHeight,
-          'bottom': '0px'
+			if(opts.height != null) {
+				$root.outerHeight(opts.height);
+			}
+			
+			$top = (opts.top.el) ? $(opts.top.el) : $root.find("> .top");				
+			if($top.length == 0) $top = null; 
+			
+			$left = (opts.left.el) ? $(opts.left.el) : $root.find("> .left");
+			if($left.length == 0) $left = null;
 
-        });
+			
+			$right = (opts.right.el) ? $(opts.right.el) : $root.find("> .right"); 
+			if($right.length == 0) $right = null;
+			
+			$bottom = (opts.bottom.el) ? $(opts.bottom.el) : $root.find("> .bottom"); 
+			if($bottom.length == 0) $bottom = null;
+			
+			$center = (opts.center.el) ? $(opts.center.el) : $root.find("> .center"); 
+			if($center.length == 0) $center = null;
+			
+			ui_layout = { 
+				root 	: $root, 
+				top 	: $top, 
+				left 	: $left,
+				right 	: $right, 
+				bottom 	: $bottom,
+				center	: $center
+			};
+			
+			ui_options = opts;
+			initLayout(this);
+			
+			$(window).on('resize', function(e) {
+				self.resize();
+			})
+ 
+			return this; 			
+		}
 
-        sizeBottom = $obj.position().top;
+        /**
+         * @method resize
+         * Resets the layout
+         */
+		this.resize = function() {
+			var $obj = null, $option = null;
+            var sizeTop = 0, sizeLeft = 0, sizeRight = 0, sizeBottom = 0, sizeCenter = 0 ;
+			
+			$obj = ui_layout.top;
+			$option = this.options.top;
 
-        if ($option.resize) {
-          sizeBottom -= this.options.barSize;
-          $obj.resizer.css({
-            'position': 'absolute',
-            'top': sizeBottom,
-            'right': '0px',
-            'left': '0px',
-            "background": this.options.barColor,
-            "height": this.options.barSize
-          });
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : '0px',
+					'left' : '0px',
+					'width' : '100%',
+					'height' : $option.size || $option.min  
+				});
+				
+				sizeTop = $obj.height();
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' : 'absolute',
+						'top': sizeTop,
+						'left' : '0px',
+						'width' : '100%',
+						"background": this.options.barColor,						
+						"height" : this.options.barSize
+					})					
+					
+					sizeTop += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}
+				}
+			}
 
-          sizeBottom = $obj.resizer.position().top;
+			$obj = ui_layout.bottom;
+			$option = this.options.bottom;
+			
+			var max = ui_layout.root.height();			
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'left' : '0px',
+					'width' : '100%',
+					'height' : $option.size || $option.min  
+				});
+				
+				var bottom_top = (sizeTop -  $obj.height()) + sizeTop;
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: bottom_top,
+						'left' 		: '0px',
+						'width' 	: '100%',
+						"background": this.options.barColor,
+						"height" 	: this.options.barSize
+					});					
+					
+					bottom_top += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}
+				}		
+					
+				$obj.css('top', bottom_top + "px");					
+			}			
+			
+			$obj = ui_layout.left;
+			$option = this.options.left;
+			
+			var content_height = max ;
+			
+			if(ui_layout.top) {
+				content_height -= ui_layout.top.height();
+				if(ui_layout.top.resizer) {
+					content_height -= ui_layout.top.resizer.height();	
+				}
+			}
+			
+			if(ui_layout.bottom) {
+				content_height -= ui_layout.bottom.height();
+				if(ui_layout.bottom.resizer) {
+					content_height -= ui_layout.bottom.resizer.height();	
+				}
+			}							
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : sizeTop,
+					'left' : '0px',
+					'height' : content_height,
+					'width' : $option.size || $option.min,
+					'max-width' : '100%',
+					'overflow' : 'auto'
+				});
+				
+				sizeLeft = $obj.width();
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: sizeTop,
+						'height'	: $obj.height(),
+						'left' 		: sizeLeft,
+						"background": this.options.barColor,
+						"width" 	: this.options.barSize
+					});			
+					
+					sizeLeft += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}					
+				}					
+			}
+			
+			$obj = ui_layout.right;
+			$option = this.options.right;
+			
+			var max_width = ui_layout.root.width();
+		    var content_width = max_width;
+		    
+		    if(ui_layout.left) {
+		    	content_width -= ui_layout.left.width();
+		    	if(ui_layout.left.resizer) {
+		    		content_width -= ui_layout.left.resizer.width();
+		    	}
+		    }			
+			
+			if($obj) {
+				$obj.css({
+					'position' : 'absolute',
+					'top' : sizeTop,
+					//'right' : '0px',
+					'height' : content_height,
+					'width' : $option.size || $option.min  ,
+					'max-width' : '100%'
+				});
+				
+				if($option.resize) {
+					$obj.resizer.css({
+						'position' 	: 'absolute',
+						'top' 		: sizeTop,
+						'height'	: $obj.height(),
+						"background": this.options.barColor,
+						"width" 	: this.options.barSize
+					})	
+					
+					sizeRight += this.options.barSize;
+				} else {
+					if($obj.resizer) {
+						$obj.resizer.remove();
+					}					
+				}		
+				
+		    	content_width -= ui_layout.right.width();
+		    	if(ui_layout.right.resizer) {
+		    		content_width -= ui_layout.right.resizer.width();
+		    	}
+		        
+		        $obj.resizer.css({ left : (sizeLeft + content_width) + "px" });
+		        $obj.css({left : (sizeLeft + content_width + $obj.resizer.width()) + "px"})
+											
+			}									
+			
+			$obj = ui_layout.center;
+			$option = this.options.center;
+			
+			if($obj) {
+				$obj.css({
+					'position' 	: 'absolute',
+					'top' 		: sizeTop,
+          			'height'  : content_height,
+					'left' 		: sizeLeft,
+					'width'   : content_width,
+					'overflow' : 'auto'
+				});
+			}			
+		}
+	}
 
-        } else {
-          if ($obj.resizer) {
-            $obj.resizer.remove();
-          }
+    UI.setup = function() {
+        return {
+            /**
+             * @cfg {String} [barColor="#d6d6d6"]
+             * Determines the color of the resizing bar
+             */
+			barColor : '#d6d6d6',
+
+            /**
+             * @cfg {Integer} [barSize=3]
+             * Determines the size of the resizing bar
+             */
+			barSize : 3,
+
+            /**
+             * @cfg {Integer} [width=null]
+             * Determines the container area value
+             */
+			width	: null,
+
+            /**
+             * @cfg {Integer} [height=null]
+             * Determines the container height value
+             */
+			height	: null,
+
+            /**
+             * @cfg {Object} top
+             * Configures options for the top area
+             */
+			top		: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} left
+             * Configures options for the left area
+             */
+			left	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} right
+             * Configures options for the right area
+             */
+			right	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} bottom
+             * Configures options for the bottom area
+             */
+			bottom	: { el : null, size : null, min : 50, max : 200, resize : true },
+
+            /**
+             * @cfg {Object} center
+             * Configures options for the center area
+             */
+			center	: { el : null }
         }
-
-      }
-
-      $obj = ui_layout.left;
-      $option = this.options.left;
-
-      if ($obj) {
-        $obj.css({
-          'position': 'absolute',
-          'top': sizeTop,
-          'left': '0px',
-          'bottom': totalHeight - sizeBottom,
-          'width': $option.size || $option.min
-        });
-
-        sizeLeft = $obj.width();
-
-        if ($option.resize) {
-          $obj.resizer.css({
-            'position': 'absolute',
-            'top': sizeTop,
-            'bottom': totalHeight - sizeBottom,
-            'left': sizeLeft,
-            "background": this.options.barColor,
-            "width": this.options.barSize
-          });
-
-          sizeLeft += this.options.barSize;
-        } else {
-          if ($obj.resizer) {
-            $obj.resizer.remove();
-          }
-        }
-      } else {
-        sizeLeft = 0; 
-        
-      }
-
-      $obj = ui_layout.right;
-      $option = this.options.right;
-      var rightWidth = $option.size || $option.min;
-
-      if ($obj) {
-        $obj.css({
-          'position': 'absolute',
-          'top': sizeTop,
-          'right': '0px',
-          'left': ui_layout.root.width() - rightWidth,
-          'bottom': totalHeight - sizeBottom
-        });
-
-        sizeRight = $obj.position().left;
-
-        if ($option.resize) {
-          sizeRight -= this.options.barSize;
-          $obj.resizer.css({
-            'position': 'absolute',
-            'top': sizeTop,
-            'bottom': totalHeight - sizeBottom,
-            "left": sizeRight,
-            "background": this.options.barColor,
-            "width": this.options.barSize
-          })
-
-
-        } else {
-          if ($obj.resizer) {
-            $obj.resizer.remove();
-          }
-        }
-
-      } else {
-        sizeRight = totalWidth;
-      }
-
-      $obj = ui_layout.center;
-
-      if ($obj) {
-        $obj.css({
-          'position': 'absolute',
-          'top': sizeTop,
-          'bottom': totalHeight - sizeBottom,
-          'left': sizeLeft,
-          'right': totalWidth - sizeRight
-        });
-      }
     }
-  }
-
-  UI.setup = function () {
-    return {
-      /**
-       * @cfg {String} [barColor="#d6d6d6"]
-       * Determines the color of the resizing bar
-       */
-      barColor: '#d6d6d6',
-
-      /**
-       * @cfg {Integer} [barSize=3]
-       * Determines the size of the resizing bar
-       */
-      barSize: 3,
-
-      /**
-       * @cfg {Integer} [width=null]
-       * Determines the container area value
-       */
-      width: '100%',
-
-      /**
-       * @cfg {Integer} [height=null]
-       * Determines the container height value
-       */
-      height: '100%',
-
-      /**
-       * @cfg {Object} top
-       * Configures options for the top area
-       */
-      top: { el: null, size: null, min: 50, max: 200, resize: true },
-
-      /**
-       * @cfg {Object} left
-       * Configures options for the left area
-       */
-      left: { el: null, size: null, min: 50, max: 200, resize: true },
-
-      /**
-       * @cfg {Object} right
-       * Configures options for the right area
-       */
-      right: { el: null, size: null, min: 50, max: 200, resize: true },
-
-      /**
-       * @cfg {Object} bottom
-       * Configures options for the bottom area
-       */
-      bottom: { el: null, size: null, min: 50, max: 200, resize: true },
-
-      /**
-       * @cfg {Object} center
-       * Configures options for the center area
-       */
-      center: { el: null }
-    }
-  }
-
-  return UI;
-
+	
+	return UI;
+	
 });
 
 jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
@@ -12259,9 +12296,11 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             }
 
             // 다른 그리드 옵션을 사용함
+            /*/
             if(_.typeCheck("integer", axis[k].extend)) {
                 _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
             }
+            /**/
 
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
@@ -12554,6 +12593,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     Axis.setup = function() {
 
         return {
+            /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
+            extend: null,
+
             /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
@@ -13086,19 +13128,32 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
             }
+
+            // Axis 확장 설정
+            for(var i = 0; i < _options.axis.length; i++) {
+                var axis = _options.axis[i];
+                _.extend(axis, _options.axis[axis.extend], true);
+            }
         }
 
         function setChartIcons() {
             var icon = _options.icon;
             if(!_.typeCheck("string", icon.path)) return;
 
-            var iconList = [
-                "url(" + icon.path + ".eot) format('embedded-opentype')",
-                "url(" + icon.path + ".woff) format('woff')",
-                "url(" + icon.path + ".ttf) format('truetype')",
-                "url(" + icon.path + ".svg) format('svg')"
-            ],
-            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            var path = (icon.path != null) ? icon.path : "",
+                url = "url(" + icon.path + ") ";
+
+            if(path.indexOf(".eot") != -1) {
+                url += "format('embedded-opentype')";
+            } else if(path.indexOf(".woff") != -1) {
+                url += "format('woff')";
+            } else if(path.indexOf(".ttf") != -1) {
+                url += "format('truetype')";
+            } else if(path.indexOf(".svg") != -1) {
+                url += "format('svg')";
+            }
+
+            var fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + url;
 
             (function(rule) {
                 var sheet = (function() {
@@ -13908,6 +13963,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineBorderWidth : 2,
         /** @cfg */
+        lineBorderDashArray : "none",
+        /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
         linePointBorderColor : "white",
@@ -13992,6 +14049,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         legendFontSize : "12px",
         /** @cfg */
+        legendIconRadius : 6,
+        /** @cfg */
         tooltipFontColor : "#333",
         /** @cfg */
         tooltipFontSize : "12px",
@@ -14001,6 +14060,8 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipBorderColor : "#aaaaaa",
         /** @cfg */
         tooltipBackgroundOpacity : 0.7,
+        /** @cfg */
+        scrollBackgroundSize : 7,
         /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
         /** @cfg */
@@ -14111,6 +14172,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineBorderDashArray : "none",
         lineDisableBorderOpacity : 0.3,
         linePointBorderColor : "white",
         lineSplitBorderColor : null,
@@ -14155,11 +14217,13 @@ jui.define("chart.theme.gradient", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#666",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -14255,6 +14319,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineBorderDashArray : "none",
         lineDisableBorderOpacity : 0.3,
         linePointBorderColor : "white",
         lineSplitBorderColor : null,
@@ -14299,11 +14364,13 @@ jui.define("chart.theme.dark", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#ffffff",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",
@@ -14395,6 +14462,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
+        lineBorderDashArray : "none",
 		lineDisableBorderOpacity : 0.3,
 		linePointBorderColor : "white",
 		lineSplitBorderColor : null,
@@ -14439,11 +14507,13 @@ jui.define("chart.theme.pastel", [], function() {
 		titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
 		tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",
@@ -14594,6 +14664,8 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineBorderWidth : 2,
         /** */
+        lineBorderDashArray : "none",
+        /** */
         lineDisableBorderOpacity : 0.3,
         /** */
         linePointBorderColor : "white",
@@ -14661,11 +14733,13 @@ jui.define("chart.theme.pattern", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
         tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -15319,19 +15393,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
         /** @property {Object} grid */
 
 		return {
-            /**
-             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
-             */
-			extend:	null,
             /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
-
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
-
             /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
-
             /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
             /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
@@ -19967,7 +20034,7 @@ jui.define("chart.brush.line", [], function() {
      */
 	var LineBrush = function() {
         var g;
-        var circleColor, disableOpacity, lineBorderWidth;
+        var circleColor, disableOpacity, lineBorderWidth, lineBorderDashArray;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
@@ -19999,6 +20066,7 @@ jui.define("chart.brush.line", [], function() {
             var p = this.chart.svg.path({
                 stroke : this.color(index),
                 "stroke-width" : lineBorderWidth,
+                "stroke-dasharray" : lineBorderDashArray,
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             });
@@ -20093,6 +20161,7 @@ jui.define("chart.brush.line", [], function() {
             circleColor = this.chart.theme("linePointBorderColor");
             disableOpacity = this.chart.theme("lineDisableBorderOpacity");
             lineBorderWidth = this.chart.theme("lineBorderWidth");
+            lineBorderDashArray = this.chart.theme("lineBorderDashArray");
         }
 
         this.draw = function() {
@@ -20104,20 +20173,33 @@ jui.define("chart.brush.line", [], function() {
 
             root.each(function(i, elem) {
                 if(elem.is("util.svg.element.path")) {
-                    var len = elem.length();
+                    var dash = elem.attributes["stroke-dasharray"],
+                        len = elem.length();
 
-                    elem.attr({
-                        "stroke-dasharray": len
-                    });
+                    if(dash == "none") {
+                        elem.attr({
+                            "stroke-dasharray": len
+                        });
 
-                    elem.append(svg.animate({
-                        attributeName: "stroke-dashoffset",
-                        from: len,
-                        to: "0",
-                        begin: "0s",
-                        dur: "1s",
-                        repeatCount: "1"
-                    }));
+                        elem.append(svg.animate({
+                            attributeName: "stroke-dashoffset",
+                            from: len,
+                            to: "0",
+                            begin: "0s",
+                            dur: "1s",
+                            repeatCount: "1"
+                        }));
+                    } else {
+                        elem.append(svg.animate({
+                            attributeName: "opacity",
+                            from: "0",
+                            to: "1",
+                            begin: "0s" ,
+                            dur: "1.5s",
+                            repeatCount: "1",
+                            fill: "freeze"
+                        }));
+                    }
                 }
             });
         }
@@ -22364,6 +22446,11 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
                 this.addEvent(line, null, k);
                 g.prepend(line);
+
+                // Add line
+                if(this.brush.line) {
+                    g.prepend(this.createLine(path[k], k));
+                }
             }
 
             return g;
@@ -22372,6 +22459,17 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
+    }
+
+    SplitAreaBrush.setup = function() {
+        return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
+            symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
+            split: null,
+            /** @cfg {Boolean} [line=true]  Visible line */
+            line: true
+        };
     }
 
     return SplitAreaBrush;
@@ -23591,31 +23689,36 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 arr = [],
                 data = brush.target,
                 count = data.length,
-                iconSize = 0;
+                r = chart.theme("legendIconRadius");
 			
 			for(var i = 0; i < count; i++) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
-                    text = chart.get("series", target).text || target;
+                    text = chart.get("series", target).text || target,
+                    color = chart.color(i, brush),
+                    rect = chart.svg.getTextRect(text);
 
-				var rect = chart.svg.getTextRect(text),
-                    width = Math.min(rect.width, rect.height),
-                    height = width;
+                if(widget.icon != null) {
+                    var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
 
-                // 아이콘 사이즈
-                if(i == 0) iconSize = width;
+                    group.append(chart.text({
+                        x: 0,
+                        y: 11,
+                        "font-size": chart.theme("legendFontSize"),
+                        "fill": color
+                    }, icon));
+                } else {
+                    group.append(chart.svg.circle({
+                        cx : r,
+                        cy : r,
+                        r : r,
+                        fill : color
+                    }));
+                }
 
-				group.append(chart.svg.rect({
-					x: 0, 
-					y : 0, 
-					width: iconSize,
-					height : iconSize,
-					fill : chart.color(i, brush)
-				}));
-				
  				group.append(chart.text({
-					x : width + 4,
-					y : 11,
+					x : (r * 2) + 2,
+					y : 10,
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
@@ -23623,8 +23726,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
 				arr.push({
 					icon : group,
-					width : width + 4 + rect.width + 10,
-					height : height + 4
+					width : (r * 2) + rect.width + 14,
+					height : (r * 2) + 4
 				});
 
                 if(widget.filter) {
@@ -23690,24 +23793,24 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
-                var y = (widget.orient == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
+                var y = (widget.orient == "bottom") ? chart.area("y2") + chart.padding("bottom") - max_height : chart.area("y") - chart.padding("top");
                 
                 if (widget.align == "start") {
-                    x = chart.area('x');
+                    x = chart.area("x");
                 } else if (widget.align == "center") {
-                    x = chart.area('x') + (chart.area('width') / 2- total_width / 2);
+                    x = chart.area("x") + (chart.area("width") / 2- total_width / 2);
                 } else if (widget.align == "end") {
-                    x = chart.area('x2') - total_width;
+                    x = chart.area("x2") - total_width;
                 }
             } else {
-                var x = (widget.orient == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.orient == "left") ? chart.area("x") - chart.padding("left") : chart.area("x2") + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
-                    y = chart.area('y');
+                    y = chart.area("y");
                 } else if (widget.align == "center") {
-                    y = chart.area('y') + (chart.area('height') / 2 - total_height / 2);
+                    y = chart.area("y") + (chart.area("height") / 2 - total_height / 2);
                 } else if (widget.align == "end") {
-                    y = chart.area('y2') - total_height;
+                    y = chart.area("y2") - total_height;
                 }
             } 
             
@@ -23725,126 +23828,14 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             align: "center", // or start, end
             /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
+            /** @cfg {Function/String} [icon=null]   */
+            icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
     }
 
     return LegendWidget;
-}, "chart.widget.core");
-jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
-
-    /**
-     * @class chart.widget.scroll
-     * implements scroll widget
-     * @extends chart.widget.core
-     * @alias ScrollWidget
-     * @requires util.base
-     *
-     */
-    var ScrollWidget = function(chart, axis, widget) {
-        var thumbWidth = 0,
-            thumbLeft = 0,
-            bufferCount = 0,
-            dataLength = 0,
-            totalWidth = 0,
-            piece = 0,
-            rate = 0 ;
-
-        function setScrollEvent(self, thumb) {
-            var isMove = false,
-                mouseStart = 0,
-                thumbStart = 0;
-
-            self.on("bg.mousedown", function(e) {
-                if(isMove && thumb.element != e.target) return;
-
-                isMove = true;
-                mouseStart = e.bgX;
-                thumbStart = thumbLeft;
-            });
-
-            self.on("bg.mousemove", mousemove);
-            self.on("bg.mouseup", mouseup);
-            self.on("chart.mousemove", mousemove);
-            self.on("chart.mouseup", mouseup);
-
-            function mousemove(e) {
-                if(!isMove) return;
-
-                var gap = thumbStart + e.bgX - mouseStart;
-
-                if(gap < 0) {
-                    gap = 0;
-                } else {
-                    if(gap + thumbWidth > chart.area("width")) {
-                        gap = chart.area("width") - thumbWidth;
-                    }
-                }
-
-                thumb.translate(gap, 1);
-                thumbLeft = gap;
-
-                var startgap = gap * rate,
-                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
-
-                if(gap + thumbWidth == chart.area("width")) {
-                    start += 1;
-                }
-
-                axis.zoom(start, start + bufferCount);
-
-                // 차트 렌더링이 활성화되지 않았을 경우
-                if(!chart.isRender()) {
-                    chart.render();
-                }
-            }
-
-            function mouseup(e) {
-                if(!isMove) return;
-
-                isMove = false;
-                mouseStart = 0;
-                thumbStart = 0;
-            }
-        }
-
-        this.drawBefore = function() {
-			dataLength =  axis.origin.length;
-			bufferCount = axis.buffer;
-			piece = chart.area("width") / bufferCount;
-			totalWidth = piece * dataLength;
-			rate = totalWidth / chart.area("width");
-            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
-        }
-
-        this.draw = function() {
-            var self = this;
-
-            return chart.svg.group({}, function() {
-                chart.svg.rect({
-                    width: chart.area("width"),
-                    height: 7,
-                    fill: chart.theme("scrollBackgroundColor")
-                });
-
-                var thumb = chart.svg.rect({
-                    width: thumbWidth,
-                    height: 5,
-                    fill: chart.theme("scrollThumbBackgroundColor"),
-                    stroke: chart.theme("scrollThumbBorderColor"),
-                    cursor: "pointer",
-                    "stroke-width": 1
-                }).translate(thumbLeft, 1);
-
-                // 차트 스크롤 이벤트
-                setScrollEvent(self, thumb);
-
-            }).translate(chart.area("x"), chart.area("y2"));
-        }
-    }
-
-    return ScrollWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
@@ -23857,8 +23848,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
      *
      */
     var ZoomWidget = function(chart, axis, widget) {
+        var self = this;
 
-        function setDragEvent(self, thumb, bg) {
+        function setDragEvent(thumb, bg) {
             var isMove = false,
                 mouseStart = 0,
                 thumbWidth = 0;
@@ -23977,12 +23969,262 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 }).translate(chart.area("x"), chart.area("y"));
 
-                setDragEvent(self, thumb, bg);
+                setDragEvent(thumb, bg);
             });
         }
     }
 
     return ZoomWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
+
+    /**
+     * @class chart.widget.scroll
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var ScrollWidget = function(chart, axis, widget) {
+        var self = this;
+        var thumbWidth = 0,
+            thumbLeft = 0,
+            bufferCount = 0,
+            dataLength = 0,
+            totalWidth = 0,
+            piece = 0,
+            rate = 0 ;
+
+        function setScrollEvent(thumb) {
+            var isMove = false,
+                mouseStart = 0,
+                thumbStart = 0,
+                axies = chart.axis();
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove && thumb.element != e.target) return;
+
+                isMove = true;
+                mouseStart = e.bgX;
+                thumbStart = thumbLeft;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gap = thumbStart + e.bgX - mouseStart;
+
+                if(gap < 0) {
+                    gap = 0;
+                } else {
+                    if(gap + thumbWidth > chart.area("width")) {
+                        gap = chart.area("width") - thumbWidth;
+                    }
+                }
+
+                thumb.translate(gap, 1);
+                thumbLeft = gap;
+
+                var startgap = gap * rate,
+                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
+
+                if(gap + thumbWidth == chart.area("width")) {
+                    start += 1;
+                }
+
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!chart.isRender()) {
+                    chart.render();
+                }
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStart = 0;
+                thumbStart = 0;
+            }
+        }
+
+        this.drawBefore = function() {
+			dataLength =  axis.origin.length;
+			bufferCount = axis.buffer;
+			piece = chart.area("width") / bufferCount;
+			totalWidth = piece * dataLength;
+			rate = totalWidth / chart.area("width");
+            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
+        }
+
+        this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgY = (widget.orient == "top") ? chart.area("y") - bgSize : chart.area("y2");
+
+            return chart.svg.group({}, function() {
+                chart.svg.rect({
+                    width: chart.area("width"),
+                    height: bgSize,
+                    fill: chart.theme("scrollBackgroundColor")
+                });
+
+                var thumb = chart.svg.rect({
+                    width: thumbWidth,
+                    height: bgSize - 2,
+                    fill: chart.theme("scrollThumbBackgroundColor"),
+                    stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
+                    "stroke-width": 1
+                }).translate(thumbLeft, 1);
+
+                // 차트 스크롤 이벤트
+                setScrollEvent(thumb);
+
+            }).translate(chart.area("x"), bgY);
+        }
+    }
+
+    ScrollWidget.setup = function() {
+        return {
+            orient : "bottom"
+        }
+    }
+
+    return ScrollWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
+
+    /**
+     * @class chart.widget.vscroll
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var VScrollWidget = function(chart, axis, widget) {
+        var self = this;
+        var thumbHeight = 0,
+            thumbTop = 0,
+            bufferCount = 0,
+            dataLength = 0,
+            totalHeight = 0,
+            piece = 0,
+            rate = 0 ;
+
+        function setScrollEvent(thumb) {
+            var isMove = false,
+                mouseStart = 0,
+                thumbStart = 0,
+                axies = chart.axis();
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove && thumb.element != e.target) return;
+
+                isMove = true;
+                mouseStart = e.bgY;
+                thumbStart = thumbTop;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gap = thumbStart + e.bgY - mouseStart;
+
+                if(gap < 0) {
+                    gap = 0;
+                } else {
+                    if(gap + thumbHeight > chart.area("height")) {
+                        gap = chart.area("height") - thumbHeight;
+                    }
+                }
+
+                thumb.translate(1, gap);
+                thumbTop = gap;
+
+                var startgap = gap * rate,
+                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
+
+                if(gap + thumbHeight == chart.area("height")) {
+                    start += 1;
+                }
+
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!chart.isRender()) {
+                    chart.render();
+                }
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStart = 0;
+                thumbStart = 0;
+            }
+        }
+
+        this.drawBefore = function() {
+			dataLength =  axis.origin.length;
+			bufferCount = axis.buffer;
+			piece = chart.area("height") / bufferCount;
+			totalHeight = piece * dataLength;
+			rate = totalHeight / chart.area("height");
+            thumbHeight = chart.area("height") * (bufferCount / dataLength) + 2;
+        }
+
+        this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgX = (widget.orient == "right") ? chart.area("x2") : chart.area("x") - bgSize;
+
+            return chart.svg.group({}, function() {
+                chart.svg.rect({
+                    width: bgSize,
+                    height: chart.area("height"),
+                    fill: chart.theme("scrollBackgroundColor")
+                });
+
+                var thumb = chart.svg.rect({
+                    width: bgSize - 2,
+                    height: thumbHeight,
+                    fill: chart.theme("scrollThumbBackgroundColor"),
+                    stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
+                    "stroke-width": 1
+                }).translate(1, thumbTop);
+
+                // 차트 스크롤 이벤트
+                setScrollEvent(thumb);
+
+            }).translate(bgX, chart.area("y"));
+        }
+    }
+
+    VScrollWidget.setup = function() {
+        return {
+            orient : "left"
+        }
+    }
+
+    return VScrollWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
@@ -24504,31 +24746,6 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
             period : 5 // minute
         }
-    }
-
-    return UI;
-});
-jui.define("chartx.mini", [ "jquery", "chart.builder" ], function($, builder) {
-
-    /**
-     * @class chartx.realtime
-     *
-     * 심플 차트 구현
-     *
-     * @extends core
-     */
-    var UI = function(selector, options) {
-
-      options.padding = 0; 
-      if (options.axis) {
-        for(var i = 0; i < options.axis.length; i++) {
-          if (options.axis[i].x) { options.axis[i].x.hide = true; }
-          if (options.axis[i].y) { options.axis[i].y.hide = true; }
-          if (options.axis[i].c) { options.axis[i].c.hide = true; }
-        }
-      }
-      return builder(selector, options);
-
     }
 
     return UI;

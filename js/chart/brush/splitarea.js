@@ -55,6 +55,11 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
                 this.addEvent(line, null, k);
                 g.prepend(line);
+
+                // Add line
+                if(this.brush.line) {
+                    g.prepend(this.createLine(path[k], k));
+                }
             }
 
             return g;
@@ -63,6 +68,17 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
+    }
+
+    SplitAreaBrush.setup = function() {
+        return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
+            symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
+            split: null,
+            /** @cfg {Boolean} [line=true]  Visible line */
+            line: true
+        };
     }
 
     return SplitAreaBrush;

@@ -491,19 +491,32 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
             }
+
+            // Axis 확장 설정
+            for(var i = 0; i < _options.axis.length; i++) {
+                var axis = _options.axis[i];
+                _.extend(axis, _options.axis[axis.extend], true);
+            }
         }
 
         function setChartIcons() {
             var icon = _options.icon;
             if(!_.typeCheck("string", icon.path)) return;
 
-            var iconList = [
-                "url(" + icon.path + ".eot) format('embedded-opentype')",
-                "url(" + icon.path + ".woff) format('woff')",
-                "url(" + icon.path + ".ttf) format('truetype')",
-                "url(" + icon.path + ".svg) format('svg')"
-            ],
-            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            var path = (icon.path != null) ? icon.path : "",
+                url = "url(" + icon.path + ") ";
+
+            if(path.indexOf(".eot") != -1) {
+                url += "format('embedded-opentype')";
+            } else if(path.indexOf(".woff") != -1) {
+                url += "format('woff')";
+            } else if(path.indexOf(".ttf") != -1) {
+                url += "format('truetype')";
+            } else if(path.indexOf(".svg") != -1) {
+                url += "format('svg')";
+            }
+
+            var fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + url;
 
             (function(rule) {
                 var sheet = (function() {

@@ -4,6 +4,14 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
 </head>
 <body >
 
@@ -39,13 +47,19 @@
         ];
 
         c = chart("#chart", {
-            width: 600,
-            height : 400,
+            width: 400,
+            height : 600,
             theme : "gradient",
             axis : [{
                 data : dataSource,
-                buffer : 10,
+                buffer : 5,
                 x : {
+                    type : 'range',
+                    domain: [ 20, 30 ],
+                    step: 5,
+                    line : true
+                },
+                y : {
                     type : "block",  // default type is block
                     domain : 'date',
                     textRotate : function(chart, grid) {  return -20; },
@@ -53,45 +67,16 @@
                         return time.format(d, "MM-dd");
                     },
                     line : true
-                },
-                y : {
-                    type : 'range',
-                    domain: [ 20, 30 ],
-                    step: 5,
-                    line : true
-                },
-                keymap : {
-                    low: "l",
-                    high: "h",
-                    open: "o",
-                    close: "c"
                 }
-            }
-
-            ],
-            series : {
-                l: {
-                    text: "최저"
-                },
-                h: {
-                    text: "최고"
-                },
-                o: {
-                    text: "시작"
-                },
-                c: {
-                    text: "종료"
-                }
-            },
+            }],
             brush : [{
-                type : "candlestick"
+                type : "bar",
+                target : [ "l", "h", "o", "c" ],
+                outerPadding : 10
             }],
             widget : [{
-                type : "scroll",
-                orient : "bottom"
-            }, {
-                type : "tooltip",
-                orient : "bottom"
+                type : "vscroll",
+                orient : "right"
             }]
         });
 

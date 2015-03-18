@@ -61,9 +61,7 @@
                     step : 10
                 }
             },{
-                data : dataSource,
                 x : {
-                    extend : 0,
                     hide :true
                 },
                 y : {
@@ -73,7 +71,8 @@
                         return [data.name + data.value + 10, 0];
                     },
                     step : 10
-                }
+                },
+                extend : 0
             }],
             series : {
                 name : { text : "이름" },

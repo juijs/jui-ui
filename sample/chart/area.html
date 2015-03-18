@@ -36,6 +36,20 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
+            icon: {
+                path: "../../img/icon-list"
+            },
+            series : {
+                name : {
+                    text : "이름"
+                },
+                value : {
+                    text : "값"
+                },
+                test : {
+                    text : "Test"
+                }
+            },
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -67,12 +81,22 @@
             },{
                 type : 'area',
                 target : ["test"],
+                colors : [ 2 ],
                 animate : true
             }],
             
             widget : [
-            	{ type : 'title', text : 'Text'},
-            	{ type : 'legend' }
+            	{
+                    type : 'title',
+                    text : 'Text'
+                }, {
+                    type : 'legend',
+                    icon : '{chart}',
+                    //icon : function(i) {
+                        //return (i === 0) ? "{chart}" : "{gear}";
+                    //},
+                    brush : [ 0, 1 ]
+                }
             ]
         });
 	})

@@ -1715,7 +1715,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
             }
 
-            return cls["class"](selector || $("<div />"), options);
+            if(arguments.length == 2) {
+                options = selector;
+                selector = null;
+            }
+
+            return cls["class"](selector, options);
         }
 	}
 	
@@ -2113,7 +2118,12 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
     UICore.build = function(UI) {
 
         return function(selector, options) {
-            var $root = $(selector);
+            if(arguments.length == 1) {
+                options = selector;
+                selector = null;
+            }
+
+            var $root = $(selector || "<div />");
             var list = [];
 
             $root.each(function(index) {
@@ -2442,7 +2452,7 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 				for (var i = 1; i < arguments.length; i += 2) {
 
-					var split = typeof arguments[i] == 'string' ? this[arguments[i]] : arguments[i];
+					var split = arguments[i];
 					var time = arguments[i + 1];
 
 					if (this.years == split) {
@@ -4824,9 +4834,11 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             }
 
             // 다른 그리드 옵션을 사용함
+            /*/
             if(_.typeCheck("integer", axis[k].extend)) {
                 _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
             }
+            /**/
 
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
@@ -5119,6 +5131,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     Axis.setup = function() {
 
         return {
+            /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
+            extend: null,
+
             /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
@@ -5651,19 +5666,32 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
             }
+
+            // Axis 확장 설정
+            for(var i = 0; i < _options.axis.length; i++) {
+                var axis = _options.axis[i];
+                _.extend(axis, _options.axis[axis.extend], true);
+            }
         }
 
         function setChartIcons() {
             var icon = _options.icon;
             if(!_.typeCheck("string", icon.path)) return;
 
-            var iconList = [
-                "url(" + icon.path + ".eot) format('embedded-opentype')",
-                "url(" + icon.path + ".woff) format('woff')",
-                "url(" + icon.path + ".ttf) format('truetype')",
-                "url(" + icon.path + ".svg) format('svg')"
-            ],
-            fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + iconList.join(",");
+            var path = (icon.path != null) ? icon.path : "",
+                url = "url(" + icon.path + ") ";
+
+            if(path.indexOf(".eot") != -1) {
+                url += "format('embedded-opentype')";
+            } else if(path.indexOf(".woff") != -1) {
+                url += "format('woff')";
+            } else if(path.indexOf(".ttf") != -1) {
+                url += "format('truetype')";
+            } else if(path.indexOf(".svg") != -1) {
+                url += "format('svg')";
+            }
+
+            var fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + url;
 
             (function(rule) {
                 var sheet = (function() {
@@ -6473,6 +6501,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineBorderWidth : 2,
         /** @cfg */
+        lineBorderDashArray : "none",
+        /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
         linePointBorderColor : "white",
@@ -6557,6 +6587,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         legendFontSize : "12px",
         /** @cfg */
+        legendIconRadius : 6,
+        /** @cfg */
         tooltipFontColor : "#333",
         /** @cfg */
         tooltipFontSize : "12px",
@@ -6566,6 +6598,8 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipBorderColor : "#aaaaaa",
         /** @cfg */
         tooltipBackgroundOpacity : 0.7,
+        /** @cfg */
+        scrollBackgroundSize : 7,
         /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
         /** @cfg */
@@ -6676,6 +6710,7 @@ jui.define("chart.theme.gradient", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineBorderDashArray : "none",
         lineDisableBorderOpacity : 0.3,
         linePointBorderColor : "white",
         lineSplitBorderColor : null,
@@ -6720,11 +6755,13 @@ jui.define("chart.theme.gradient", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#666",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -6820,6 +6857,7 @@ jui.define("chart.theme.dark", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
         lineBorderWidth : 2,
+        lineBorderDashArray : "none",
         lineDisableBorderOpacity : 0.3,
         linePointBorderColor : "white",
         lineSplitBorderColor : null,
@@ -6864,11 +6902,13 @@ jui.define("chart.theme.dark", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#ffffff",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#333333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",
@@ -6960,6 +7000,7 @@ jui.define("chart.theme.pastel", [], function() {
         ohlcInvertBorderColor : "#ff4848",
         ohlcBorderRadius : 5,
 		lineBorderWidth : 2,
+        lineBorderDashArray : "none",
 		lineDisableBorderOpacity : 0.3,
 		linePointBorderColor : "white",
 		lineSplitBorderColor : null,
@@ -7004,11 +7045,13 @@ jui.define("chart.theme.pastel", [], function() {
 		titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "11px",
+        legendIconRadius : 5.5,
         tooltipFontColor : "#fff",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
 		tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",
@@ -7159,6 +7202,8 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineBorderWidth : 2,
         /** */
+        lineBorderDashArray : "none",
+        /** */
         lineDisableBorderOpacity : 0.3,
         /** */
         linePointBorderColor : "white",
@@ -7226,11 +7271,13 @@ jui.define("chart.theme.pattern", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
         tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -7884,19 +7931,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
         /** @property {Object} grid */
 
 		return {
-            /**
-             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
-             */
-			extend:	null,
             /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
-
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
-
             /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
-
             /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
             /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
@@ -12532,7 +12572,7 @@ jui.define("chart.brush.line", [], function() {
      */
 	var LineBrush = function() {
         var g;
-        var circleColor, disableOpacity, lineBorderWidth;
+        var circleColor, disableOpacity, lineBorderWidth, lineBorderDashArray;
 
         this.setActiveEffect = function(elem) {
             var lines = this.lineList;
@@ -12564,6 +12604,7 @@ jui.define("chart.brush.line", [], function() {
             var p = this.chart.svg.path({
                 stroke : this.color(index),
                 "stroke-width" : lineBorderWidth,
+                "stroke-dasharray" : lineBorderDashArray,
                 fill : "transparent",
                 "cursor" : (this.brush.activeEvent != null) ? "pointer" : "normal"
             });
@@ -12658,6 +12699,7 @@ jui.define("chart.brush.line", [], function() {
             circleColor = this.chart.theme("linePointBorderColor");
             disableOpacity = this.chart.theme("lineDisableBorderOpacity");
             lineBorderWidth = this.chart.theme("lineBorderWidth");
+            lineBorderDashArray = this.chart.theme("lineBorderDashArray");
         }
 
         this.draw = function() {
@@ -12669,20 +12711,33 @@ jui.define("chart.brush.line", [], function() {
 
             root.each(function(i, elem) {
                 if(elem.is("util.svg.element.path")) {
-                    var len = elem.length();
+                    var dash = elem.attributes["stroke-dasharray"],
+                        len = elem.length();
 
-                    elem.attr({
-                        "stroke-dasharray": len
-                    });
+                    if(dash == "none") {
+                        elem.attr({
+                            "stroke-dasharray": len
+                        });
 
-                    elem.append(svg.animate({
-                        attributeName: "stroke-dashoffset",
-                        from: len,
-                        to: "0",
-                        begin: "0s",
-                        dur: "1s",
-                        repeatCount: "1"
-                    }));
+                        elem.append(svg.animate({
+                            attributeName: "stroke-dashoffset",
+                            from: len,
+                            to: "0",
+                            begin: "0s",
+                            dur: "1s",
+                            repeatCount: "1"
+                        }));
+                    } else {
+                        elem.append(svg.animate({
+                            attributeName: "opacity",
+                            from: "0",
+                            to: "1",
+                            begin: "0s" ,
+                            dur: "1.5s",
+                            repeatCount: "1",
+                            fill: "freeze"
+                        }));
+                    }
                 }
             });
         }
@@ -14929,6 +14984,11 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
                 this.addEvent(line, null, k);
                 g.prepend(line);
+
+                // Add line
+                if(this.brush.line) {
+                    g.prepend(this.createLine(path[k], k));
+                }
             }
 
             return g;
@@ -14937,6 +14997,17 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
+    }
+
+    SplitAreaBrush.setup = function() {
+        return {
+            /** @cfg {"normal"/"curve"/"step"} [symbol="normal"] Sets the shape of a line (normal, curve, step).  */
+            symbol: "normal", // normal, curve, step
+            /** @cfg {Number} [split=null] Sets the style of a line of a specified index value.  */
+            split: null,
+            /** @cfg {Boolean} [line=true]  Visible line */
+            line: true
+        };
     }
 
     return SplitAreaBrush;
@@ -16156,31 +16227,36 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 arr = [],
                 data = brush.target,
                 count = data.length,
-                iconSize = 0;
+                r = chart.theme("legendIconRadius");
 			
 			for(var i = 0; i < count; i++) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
-                    text = chart.get("series", target).text || target;
+                    text = chart.get("series", target).text || target,
+                    color = chart.color(i, brush),
+                    rect = chart.svg.getTextRect(text);
 
-				var rect = chart.svg.getTextRect(text),
-                    width = Math.min(rect.width, rect.height),
-                    height = width;
+                if(widget.icon != null) {
+                    var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
 
-                // 아이콘 사이즈
-                if(i == 0) iconSize = width;
+                    group.append(chart.text({
+                        x: 0,
+                        y: 11,
+                        "font-size": chart.theme("legendFontSize"),
+                        "fill": color
+                    }, icon));
+                } else {
+                    group.append(chart.svg.circle({
+                        cx : r,
+                        cy : r,
+                        r : r,
+                        fill : color
+                    }));
+                }
 
-				group.append(chart.svg.rect({
-					x: 0, 
-					y : 0, 
-					width: iconSize,
-					height : iconSize,
-					fill : chart.color(i, brush)
-				}));
-				
  				group.append(chart.text({
-					x : width + 4,
-					y : 11,
+					x : (r * 2) + 2,
+					y : 10,
                     "font-size" : chart.theme("legendFontSize"),
                     "fill" : chart.theme("legendFontColor"),
 					"text-anchor" : "start"
@@ -16188,8 +16264,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
 				arr.push({
 					icon : group,
-					width : width + 4 + rect.width + 10,
-					height : height + 4
+					width : (r * 2) + rect.width + 14,
+					height : (r * 2) + 4
 				});
 
                 if(widget.filter) {
@@ -16255,24 +16331,24 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
-                var y = (widget.orient == "bottom") ? chart.area('y2') + chart.padding("bottom") - max_height : chart.area('y') - chart.padding("top");
+                var y = (widget.orient == "bottom") ? chart.area("y2") + chart.padding("bottom") - max_height : chart.area("y") - chart.padding("top");
                 
                 if (widget.align == "start") {
-                    x = chart.area('x');
+                    x = chart.area("x");
                 } else if (widget.align == "center") {
-                    x = chart.area('x') + (chart.area('width') / 2- total_width / 2);
+                    x = chart.area("x") + (chart.area("width") / 2- total_width / 2);
                 } else if (widget.align == "end") {
-                    x = chart.area('x2') - total_width;
+                    x = chart.area("x2") - total_width;
                 }
             } else {
-                var x = (widget.orient == "left") ? chart.area('x') - chart.padding("left") : chart.area('x2') + chart.padding("right") - max_width;
+                var x = (widget.orient == "left") ? chart.area("x") - chart.padding("left") : chart.area("x2") + chart.padding("right") - max_width;
                 
                 if (widget.align == "start") {
-                    y = chart.area('y');
+                    y = chart.area("y");
                 } else if (widget.align == "center") {
-                    y = chart.area('y') + (chart.area('height') / 2 - total_height / 2);
+                    y = chart.area("y") + (chart.area("height") / 2 - total_height / 2);
                 } else if (widget.align == "end") {
-                    y = chart.area('y2') - total_height;
+                    y = chart.area("y2") - total_height;
                 }
             } 
             
@@ -16290,126 +16366,14 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             align: "center", // or start, end
             /** @cfg {Boolean} [filter=false] Performs filtering so that only label(s) selected by the brush can be shown. */
             filter: false,
+            /** @cfg {Function/String} [icon=null]   */
+            icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false
         };
     }
 
     return LegendWidget;
-}, "chart.widget.core");
-jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
-
-    /**
-     * @class chart.widget.scroll
-     * implements scroll widget
-     * @extends chart.widget.core
-     * @alias ScrollWidget
-     * @requires util.base
-     *
-     */
-    var ScrollWidget = function(chart, axis, widget) {
-        var thumbWidth = 0,
-            thumbLeft = 0,
-            bufferCount = 0,
-            dataLength = 0,
-            totalWidth = 0,
-            piece = 0,
-            rate = 0 ;
-
-        function setScrollEvent(self, thumb) {
-            var isMove = false,
-                mouseStart = 0,
-                thumbStart = 0;
-
-            self.on("bg.mousedown", function(e) {
-                if(isMove && thumb.element != e.target) return;
-
-                isMove = true;
-                mouseStart = e.bgX;
-                thumbStart = thumbLeft;
-            });
-
-            self.on("bg.mousemove", mousemove);
-            self.on("bg.mouseup", mouseup);
-            self.on("chart.mousemove", mousemove);
-            self.on("chart.mouseup", mouseup);
-
-            function mousemove(e) {
-                if(!isMove) return;
-
-                var gap = thumbStart + e.bgX - mouseStart;
-
-                if(gap < 0) {
-                    gap = 0;
-                } else {
-                    if(gap + thumbWidth > chart.area("width")) {
-                        gap = chart.area("width") - thumbWidth;
-                    }
-                }
-
-                thumb.translate(gap, 1);
-                thumbLeft = gap;
-
-                var startgap = gap * rate,
-                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
-
-                if(gap + thumbWidth == chart.area("width")) {
-                    start += 1;
-                }
-
-                axis.zoom(start, start + bufferCount);
-
-                // 차트 렌더링이 활성화되지 않았을 경우
-                if(!chart.isRender()) {
-                    chart.render();
-                }
-            }
-
-            function mouseup(e) {
-                if(!isMove) return;
-
-                isMove = false;
-                mouseStart = 0;
-                thumbStart = 0;
-            }
-        }
-
-        this.drawBefore = function() {
-			dataLength =  axis.origin.length;
-			bufferCount = axis.buffer;
-			piece = chart.area("width") / bufferCount;
-			totalWidth = piece * dataLength;
-			rate = totalWidth / chart.area("width");
-            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
-        }
-
-        this.draw = function() {
-            var self = this;
-
-            return chart.svg.group({}, function() {
-                chart.svg.rect({
-                    width: chart.area("width"),
-                    height: 7,
-                    fill: chart.theme("scrollBackgroundColor")
-                });
-
-                var thumb = chart.svg.rect({
-                    width: thumbWidth,
-                    height: 5,
-                    fill: chart.theme("scrollThumbBackgroundColor"),
-                    stroke: chart.theme("scrollThumbBorderColor"),
-                    cursor: "pointer",
-                    "stroke-width": 1
-                }).translate(thumbLeft, 1);
-
-                // 차트 스크롤 이벤트
-                setScrollEvent(self, thumb);
-
-            }).translate(chart.area("x"), chart.area("y2"));
-        }
-    }
-
-    return ScrollWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
@@ -16422,8 +16386,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
      *
      */
     var ZoomWidget = function(chart, axis, widget) {
+        var self = this;
 
-        function setDragEvent(self, thumb, bg) {
+        function setDragEvent(thumb, bg) {
             var isMove = false,
                 mouseStart = 0,
                 thumbWidth = 0;
@@ -16542,12 +16507,262 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 }).translate(chart.area("x"), chart.area("y"));
 
-                setDragEvent(self, thumb, bg);
+                setDragEvent(thumb, bg);
             });
         }
     }
 
     return ZoomWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
+
+    /**
+     * @class chart.widget.scroll
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var ScrollWidget = function(chart, axis, widget) {
+        var self = this;
+        var thumbWidth = 0,
+            thumbLeft = 0,
+            bufferCount = 0,
+            dataLength = 0,
+            totalWidth = 0,
+            piece = 0,
+            rate = 0 ;
+
+        function setScrollEvent(thumb) {
+            var isMove = false,
+                mouseStart = 0,
+                thumbStart = 0,
+                axies = chart.axis();
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove && thumb.element != e.target) return;
+
+                isMove = true;
+                mouseStart = e.bgX;
+                thumbStart = thumbLeft;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gap = thumbStart + e.bgX - mouseStart;
+
+                if(gap < 0) {
+                    gap = 0;
+                } else {
+                    if(gap + thumbWidth > chart.area("width")) {
+                        gap = chart.area("width") - thumbWidth;
+                    }
+                }
+
+                thumb.translate(gap, 1);
+                thumbLeft = gap;
+
+                var startgap = gap * rate,
+                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
+
+                if(gap + thumbWidth == chart.area("width")) {
+                    start += 1;
+                }
+
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!chart.isRender()) {
+                    chart.render();
+                }
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStart = 0;
+                thumbStart = 0;
+            }
+        }
+
+        this.drawBefore = function() {
+			dataLength =  axis.origin.length;
+			bufferCount = axis.buffer;
+			piece = chart.area("width") / bufferCount;
+			totalWidth = piece * dataLength;
+			rate = totalWidth / chart.area("width");
+            thumbWidth = chart.area("width") * (bufferCount / dataLength) + 2;
+        }
+
+        this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgY = (widget.orient == "top") ? chart.area("y") - bgSize : chart.area("y2");
+
+            return chart.svg.group({}, function() {
+                chart.svg.rect({
+                    width: chart.area("width"),
+                    height: bgSize,
+                    fill: chart.theme("scrollBackgroundColor")
+                });
+
+                var thumb = chart.svg.rect({
+                    width: thumbWidth,
+                    height: bgSize - 2,
+                    fill: chart.theme("scrollThumbBackgroundColor"),
+                    stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
+                    "stroke-width": 1
+                }).translate(thumbLeft, 1);
+
+                // 차트 스크롤 이벤트
+                setScrollEvent(thumb);
+
+            }).translate(chart.area("x"), bgY);
+        }
+    }
+
+    ScrollWidget.setup = function() {
+        return {
+            orient : "bottom"
+        }
+    }
+
+    return ScrollWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
+
+    /**
+     * @class chart.widget.vscroll
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var VScrollWidget = function(chart, axis, widget) {
+        var self = this;
+        var thumbHeight = 0,
+            thumbTop = 0,
+            bufferCount = 0,
+            dataLength = 0,
+            totalHeight = 0,
+            piece = 0,
+            rate = 0 ;
+
+        function setScrollEvent(thumb) {
+            var isMove = false,
+                mouseStart = 0,
+                thumbStart = 0,
+                axies = chart.axis();
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove && thumb.element != e.target) return;
+
+                isMove = true;
+                mouseStart = e.bgY;
+                thumbStart = thumbTop;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gap = thumbStart + e.bgY - mouseStart;
+
+                if(gap < 0) {
+                    gap = 0;
+                } else {
+                    if(gap + thumbHeight > chart.area("height")) {
+                        gap = chart.area("height") - thumbHeight;
+                    }
+                }
+
+                thumb.translate(1, gap);
+                thumbTop = gap;
+
+                var startgap = gap * rate,
+                    start = startgap == 0 ? 0 : Math.floor(startgap / piece);
+
+                if(gap + thumbHeight == chart.area("height")) {
+                    start += 1;
+                }
+
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!chart.isRender()) {
+                    chart.render();
+                }
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStart = 0;
+                thumbStart = 0;
+            }
+        }
+
+        this.drawBefore = function() {
+			dataLength =  axis.origin.length;
+			bufferCount = axis.buffer;
+			piece = chart.area("height") / bufferCount;
+			totalHeight = piece * dataLength;
+			rate = totalHeight / chart.area("height");
+            thumbHeight = chart.area("height") * (bufferCount / dataLength) + 2;
+        }
+
+        this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgX = (widget.orient == "right") ? chart.area("x2") : chart.area("x") - bgSize;
+
+            return chart.svg.group({}, function() {
+                chart.svg.rect({
+                    width: bgSize,
+                    height: chart.area("height"),
+                    fill: chart.theme("scrollBackgroundColor")
+                });
+
+                var thumb = chart.svg.rect({
+                    width: bgSize - 2,
+                    height: thumbHeight,
+                    fill: chart.theme("scrollThumbBackgroundColor"),
+                    stroke: chart.theme("scrollThumbBorderColor"),
+                    cursor: "pointer",
+                    "stroke-width": 1
+                }).translate(1, thumbTop);
+
+                // 차트 스크롤 이벤트
+                setScrollEvent(thumb);
+
+            }).translate(bgX, chart.area("y"));
+        }
+    }
+
+    VScrollWidget.setup = function() {
+        return {
+            orient : "left"
+        }
+    }
+
+    return VScrollWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
@@ -17069,31 +17284,6 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
             period : 5 // minute
         }
-    }
-
-    return UI;
-});
-jui.define("chartx.mini", [ "jquery", "chart.builder" ], function($, builder) {
-
-    /**
-     * @class chartx.realtime
-     *
-     * 심플 차트 구현
-     *
-     * @extends core
-     */
-    var UI = function(selector, options) {
-
-      options.padding = 0; 
-      if (options.axis) {
-        for(var i = 0; i < options.axis.length; i++) {
-          if (options.axis[i].x) { options.axis[i].x.hide = true; }
-          if (options.axis[i].y) { options.axis[i].y.hide = true; }
-          if (options.axis[i].c) { options.axis[i].c.hide = true; }
-        }
-      }
-      return builder(selector, options);
-
     }
 
     return UI;

@@ -142,6 +142,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         lineBorderWidth : 2,
         /** @cfg */
+        lineBorderDashArray : "none",
+        /** @cfg */
         lineDisableBorderOpacity : 0.3,
         /** @cfg */
         linePointBorderColor : "white",
@@ -226,6 +228,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         legendFontSize : "12px",
         /** @cfg */
+        legendIconRadius : 6,
+        /** @cfg */
         tooltipFontColor : "#333",
         /** @cfg */
         tooltipFontSize : "12px",
@@ -235,6 +239,8 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipBorderColor : "#aaaaaa",
         /** @cfg */
         tooltipBackgroundOpacity : 0.7,
+        /** @cfg */
+        scrollBackgroundSize : 7,
         /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
         /** @cfg */

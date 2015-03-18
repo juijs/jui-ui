@@ -87,7 +87,9 @@
                 x : {
                     type : "block",
                     domain : "date",
-                    hide : true
+                    format : function(d) {
+                        return time.format(d, "MM-dd");
+                    }
                 },
                 y : {
                     type : "range",
@@ -96,58 +98,31 @@
                     line : true,
                     orient : "right"
                 },
-                area : { x : 0, y : 0, width : "100%", height : "70%" },
-                data : dataSource
+                area : { x : 0, y : 0, width : "100%", height : "50%" },
+                data : dataSource,
+                buffer : 10,
+                keymap : {
+                    low: "l",
+                    high: "h",
+                    open: "o",
+                    close: "c"
+                }
             }, {
-                x : {
-                    type : "block",
-                    domain : "date",
-                    format : function(d, day_cnt) {
-                        if(day_cnt % 7 == 0) {
-                            return time.format(d, "MM-dd");
-                        }
-                    }
-                },
                 y : {
-                    type : "range",
                     domain : "v",
-                    step : 5,
                     format : function(d) {
                         if(d > 10000) {
                             return Math.floor(d / 10000) + "M"
                         }
 
                         return d;
-                    },
-                    orient : "right"
+                    }
                 },
-                area : { x : 0, y : "75%", width : "100%", height : "25%" },
-                data : dataSource
+                area : { y : "60%", width : "100%", height : "30%" },
+                extend : 0
             }],
-            series : {
-                l: {
-                    type: "low",
-                    text: "Low"
-                },
-                h: {
-                    type: "high",
-                    text: "High"
-                },
-                o: {
-                    type: "open",
-                    text: "Open"
-                },
-                c: {
-                    type: "close",
-                    text: "Close"
-                },
-                v: {
-                    text: "Volume"
-                }
-            },
             brush : [{
                 type : "candlestick",
-                target : [ "l", "h", "o", "c" ],
                 axis : 0
             }, {
                 type : "column",
@@ -155,11 +130,7 @@
                 axis : 1
             }],
             widget : [{
-                type : "tooltip",
-                brush : 0
-            }, {
-                type : "tooltip",
-                brush : 1
+                type : "scroll"
             }]
         });
 	})

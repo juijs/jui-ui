@@ -76,13 +76,10 @@
                   height : '50%'
                 }
             },{
-                data : dataSource,
                 x : {
-                    extend : 0,
                     hide : false
                 },
                 y : {
-                    extend : 0,
                     reverse : true,
                     format : function(value) {
                       if (value == 0) return "";
@@ -94,7 +91,8 @@
                 area : {
                     y : '50%',
                     height : '50%'
-                }
+                },
+                extend : 0
             }],
             brush : [
                 { type : 'area', target : ["value"] },

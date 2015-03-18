@@ -134,6 +134,8 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         lineBorderWidth : 2,
         /** */
+        lineBorderDashArray : "none",
+        /** */
         lineDisableBorderOpacity : 0.3,
         /** */
         linePointBorderColor : "white",
@@ -201,11 +203,13 @@ jui.define("chart.theme.pattern", [], function() {
         titleFontWeight : "normal",
         legendFontColor : "#333",
         legendFontSize : "12px",
+        legendIconRadius : 6,
         tooltipFontColor : "#333",
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
         tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",

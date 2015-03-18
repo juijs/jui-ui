@@ -223,19 +223,12 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
         /** @property {Object} grid */
 
 		return {
-            /**
-             * @cfg {Number} [extend=null] Configures the index of an applicable grid group when intending to use already configured grid options.
-             */
-			extend:	null,
             /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
 			dist: 0,
-
 			/**  @cfg {"top"/"left"/"bottom"/"right"} [orient=null] Specifies the direction in which an axis is shown (top, bottom, left or right). */
 			orient: null,
-
             /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
 			hide: false,
-
             /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
 			color: null,
             /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
