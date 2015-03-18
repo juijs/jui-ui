@@ -108,31 +108,18 @@
                     close: "c"
                 }
             }, {
-                x : {
-                    extend : 0
-                },
                 y : {
-                    type : "range",
                     domain : "v",
-                    step : 5,
                     format : function(d) {
                         if(d > 10000) {
                             return Math.floor(d / 10000) + "M"
                         }
 
                         return d;
-                    },
-                    orient : "right"
+                    }
                 },
-                area : { x : 0, y : "60%", width : "100%", height : "30%" },
-                data : dataSource,
-                buffer : 10,
-                keymap : {
-                    low: "l",
-                    high: "h",
-                    open: "o",
-                    close: "c"
-                }
+                area : { y : "60%", width : "100%", height : "30%" },
+                extend : 0
             }],
             brush : [{
                 type : "candlestick",

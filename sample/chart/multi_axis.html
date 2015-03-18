@@ -60,13 +60,13 @@
                 x : { domain : "month", line : true },
                 y : { type : 'range', domain: [0, 300], step : 6, format : function(value) { return value + " mm"} }
             },{
-                data : dataSource,
-                x : { extend : 0, hide : true },
-                y : { orient : 'right', type : 'range', domain : [1008, 1020], step : 6, dist : 60, format : function(value) { return value + " mb"},color : "#434348" }
+                x : { hide : true },
+                y : { orient : 'right', type : 'range', domain : [1008, 1020], step : 6, dist : 60, format : function(value) { return value + " mb"},color : "#434348" },
+                extend : 0
             },{
-                data : dataSource,
-                x : { extend : 0, hide : true },
-                y : { orient : 'right', type : 'range', domain : [5, 35], step : 6, format : function(value) { return value + " ℃" },color: '#90ed7d' }
+                x : { hide : true },
+                y : { orient : 'right', type : 'range', domain : [5, 35], step : 6, format : function(value) { return value + " ℃" },color: '#90ed7d' },
+                extend : 0
             }],
             series : {
                 rainfall : { color : "#7cb5ec" },

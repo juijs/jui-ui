@@ -491,6 +491,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             if(!_.typeCheck("array", _options.widget)) {
                 _options.widget = [ _options.widget ];
             }
+
+            // Axis 확장 설정
+            for(var i = 0; i < _options.axis.length; i++) {
+                var axis = _options.axis[i];
+                _.extend(axis, _options.axis[axis.extend], true);
+            }
         }
 
         function setChartIcons() {

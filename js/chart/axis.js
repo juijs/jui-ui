@@ -62,9 +62,11 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             }
 
             // 다른 그리드 옵션을 사용함
+            /*/
             if(_.typeCheck("integer", axis[k].extend)) {
                 _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
             }
+            /**/
 
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
@@ -357,6 +359,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     Axis.setup = function() {
 
         return {
+            /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
+            extend: null,
+
             /** @cfg {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
