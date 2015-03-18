@@ -13,11 +13,20 @@
       height: auto;
     }
 
+    .mini {
+      display: inline-block;
+    }
   </style>
 </head>
 <body >
 
-<div id="chart"></div>
+<div>안녕하세요? 흠 <span class="mini">1,2,3,4,5</span> 컬럼을 그려보아요.</div>
+<p>
+  다니다 보면 또 다른 차트가 보일꺼에요 <span class="mini">1,2,3</span>
+  파이 차트가 보일꺼에요 <span class="mini" data-type="pie">1,2,3</span>
+
+</p>
+<h1>라인은 어찌 그리면 될까요?<span class="mini" data-type="area">300,5,200</span></h1>
 <textarea id="codemirror"></textarea>
 
 <script>
@@ -35,39 +44,7 @@
 <script id="script_code">
   jui.ready([ "chartx.mini" ], function(mini) {
 
-    mini("#chart", data, { options })
-    
-    c = mini("#chart", {
-      width: 100,
-      height : 50,
-      axis : [{
-        data : [
-          { name : 2, value : 15, test : 7 },
-          { name : -15, value : 6, test : 2 },
-          { name : 8, value : 10, test : 5 },
-          { name : 18, value : 5, test : 12 }
-        ],
-        x : {
-          domain : [ "week1", "week2", "week3", "week4" ],
-          full: true
-        },
-        y : {
-          type : 'range',
-          domain : function(data) {
-            return Math.max(data.name, data.value, data.test);
-          }
-        }
-      }],
-      // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
-      brush : [{
-        type : 'area',
-        target : ["name", "value"],
-        symbol : 'curve'
-      },{
-        type : 'area',
-        target : ["test"]
-      }]
-    });
+    mini(".mini", 'html');
   })
 </script>
 
