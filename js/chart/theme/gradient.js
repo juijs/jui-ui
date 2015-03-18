@@ -132,6 +132,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",

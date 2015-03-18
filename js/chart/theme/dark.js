@@ -130,6 +130,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",

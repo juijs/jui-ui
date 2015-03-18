@@ -14050,6 +14050,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         tooltipBackgroundOpacity : 0.7,
         /** @cfg */
+        scrollBackgroundSize : 7,
+        /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
         /** @cfg */
         scrollThumbBackgroundColor : "#b2b2b2",
@@ -14210,6 +14212,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -14356,6 +14359,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
         tooltipBackgroundOpacity : 1,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#3e3e3e",
         scrollThumbBackgroundColor : "#666666",
         scrollThumbBorderColor : "#686868",
@@ -14498,6 +14502,7 @@ jui.define("chart.theme.pastel", [], function() {
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
 		tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",
@@ -14723,6 +14728,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
         tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
         scrollThumbBackgroundColor : "#b2b2b2",
         scrollThumbBorderColor : "#9f9fa4",
@@ -23987,20 +23993,23 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         function setScrollEvent(thumb) {
             var isMove = false,
                 mouseStart = 0,
-                thumbStart = 0;
+                thumbStart = 0,
+                axies = chart.axis();
 
-            self.on("bg.mousedown", function(e) {
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
                 thumbStart = thumbLeft;
-            });
-
-            self.on("bg.mousemove", mousemove);
-            self.on("bg.mouseup", mouseup);
-            self.on("chart.mousemove", mousemove);
-            self.on("chart.mouseup", mouseup);
+            }
 
             function mousemove(e) {
                 if(!isMove) return;
@@ -24025,7 +24034,9 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                     start += 1;
                 }
 
-                axis.zoom(start, start + bufferCount);
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
 
                 // 차트 렌더링이 활성화되지 않았을 경우
                 if(!chart.isRender()) {
@@ -24052,16 +24063,19 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgY = (widget.orient == "top") ? chart.area("y") - bgSize : chart.area("y2");
+
             return chart.svg.group({}, function() {
                 chart.svg.rect({
                     width: chart.area("width"),
-                    height: 7,
+                    height: bgSize,
                     fill: chart.theme("scrollBackgroundColor")
                 });
 
                 var thumb = chart.svg.rect({
                     width: thumbWidth,
-                    height: 5,
+                    height: bgSize - 2,
                     fill: chart.theme("scrollThumbBackgroundColor"),
                     stroke: chart.theme("scrollThumbBorderColor"),
                     cursor: "pointer",
@@ -24071,7 +24085,13 @@ jui.define("chart.widget.scroll", [ "util.base" ], function (_) {
                 // 차트 스크롤 이벤트
                 setScrollEvent(thumb);
 
-            }).translate(chart.area("x"), chart.area("y2"));
+            }).translate(chart.area("x"), bgY);
+        }
+    }
+
+    ScrollWidget.setup = function() {
+        return {
+            orient : "bottom"
         }
     }
 
@@ -24098,20 +24118,23 @@ jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
         function setScrollEvent(thumb) {
             var isMove = false,
                 mouseStart = 0,
-                thumbStart = 0;
+                thumbStart = 0,
+                axies = chart.axis();
 
-            self.on("chart.mousedown", function(e) {
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
                 if(isMove && thumb.element != e.target) return;
 
                 isMove = true;
                 mouseStart = e.bgY;
                 thumbStart = thumbTop;
-            });
-
-            self.on("bg.mousemove", mousemove);
-            self.on("bg.mouseup", mouseup);
-            self.on("chart.mousemove", mousemove);
-            self.on("chart.mouseup", mouseup);
+            }
 
             function mousemove(e) {
                 if(!isMove) return;
@@ -24136,7 +24159,9 @@ jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
                     start += 1;
                 }
 
-                axis.zoom(start, start + bufferCount);
+                for(var i = 0; i < axies.length; i++) {
+                    axies[i].zoom(start, start + bufferCount);
+                }
 
                 // 차트 렌더링이 활성화되지 않았을 경우
                 if(!chart.isRender()) {
@@ -24163,15 +24188,18 @@ jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
         }
 
         this.draw = function() {
+            var bgSize = chart.theme("scrollBackgroundSize"),
+                bgX = (widget.orient == "right") ? chart.area("x2") : chart.area("x") - bgSize;
+
             return chart.svg.group({}, function() {
                 chart.svg.rect({
-                    width: 7,
+                    width: bgSize,
                     height: chart.area("height"),
                     fill: chart.theme("scrollBackgroundColor")
                 });
 
                 var thumb = chart.svg.rect({
-                    width: 5,
+                    width: bgSize - 2,
                     height: thumbHeight,
                     fill: chart.theme("scrollThumbBackgroundColor"),
                     stroke: chart.theme("scrollThumbBorderColor"),
@@ -24182,7 +24210,13 @@ jui.define("chart.widget.vscroll", [ "util.base" ], function (_) {
                 // 차트 스크롤 이벤트
                 setScrollEvent(thumb);
 
-            }).translate(chart.area("x"), chart.area("y"));
+            }).translate(bgX, chart.area("y"));
+        }
+    }
+
+    VScrollWidget.setup = function() {
+        return {
+            orient : "left"
         }
     }
 

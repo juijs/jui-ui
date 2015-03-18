@@ -240,6 +240,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         tooltipBackgroundOpacity : 0.7,
         /** @cfg */
+        scrollBackgroundSize : 7,
+        /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
         /** @cfg */
         scrollThumbBackgroundColor : "#b2b2b2",

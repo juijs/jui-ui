@@ -126,6 +126,7 @@ jui.define("chart.theme.pastel", [], function() {
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
 		tooltipBackgroundOpacity : 0.7,
+        scrollBackgroundSize : 7,
 		scrollBackgroundColor :	"#f5f5f5",
 		scrollThumbBackgroundColor : "#b2b2b2",
 		scrollThumbBorderColor : "#9f9fa4",

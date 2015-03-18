@@ -87,7 +87,9 @@
                 x : {
                     type : "block",
                     domain : "date",
-                    hide : true
+                    format : function(d) {
+                        return time.format(d, "MM-dd");
+                    }
                 },
                 y : {
                     type : "range",
@@ -96,7 +98,7 @@
                     line : true,
                     orient : "right"
                 },
-                area : { x : 0, y : 0, width : "100%", height : "70%" },
+                area : { x : 0, y : 0, width : "100%", height : "50%" },
                 data : dataSource,
                 buffer : 10,
                 keymap : {
@@ -107,13 +109,7 @@
                 }
             }, {
                 x : {
-                    type : "block",
-                    domain : "date",
-                    format : function(d, day_cnt) {
-                        if(day_cnt % 7 == 0) {
-                            return time.format(d, "MM-dd");
-                        }
-                    }
+                    extend : 0
                 },
                 y : {
                     type : "range",
@@ -128,7 +124,7 @@
                     },
                     orient : "right"
                 },
-                area : { x : 0, y : "75%", width : "100%", height : "25%" },
+                area : { x : 0, y : "60%", width : "100%", height : "30%" },
                 data : dataSource,
                 buffer : 10,
                 keymap : {
@@ -147,14 +143,7 @@
                 axis : 1
             }],
             widget : [{
-                type : "tooltip",
-                brush : 0
-            }, {
-                type : "tooltip",
-                brush : 1
-            }, {
-                type : "scroll",
-                brush : 0
+                type : "scroll"
             }]
         });
 	})
