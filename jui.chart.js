@@ -2442,7 +2442,7 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 				for (var i = 1; i < arguments.length; i += 2) {
 
-					var split = arguments[i];
+					var split = typeof arguments[i] == 'string' ? this[arguments[i]] : arguments[i];
 					var time = arguments[i + 1];
 
 					if (this.years == split) {
@@ -17069,6 +17069,31 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
             period : 5 // minute
         }
+    }
+
+    return UI;
+});
+jui.define("chartx.mini", [ "jquery", "chart.builder" ], function($, builder) {
+
+    /**
+     * @class chartx.realtime
+     *
+     * 심플 차트 구현
+     *
+     * @extends core
+     */
+    var UI = function(selector, options) {
+
+      options.padding = 0; 
+      if (options.axis) {
+        for(var i = 0; i < options.axis.length; i++) {
+          if (options.axis[i].x) { options.axis[i].x.hide = true; }
+          if (options.axis[i].y) { options.axis[i].y.hide = true; }
+          if (options.axis[i].c) { options.axis[i].c.hide = true; }
+        }
+      }
+      return builder(selector, options);
+
     }
 
     return UI;
