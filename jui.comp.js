@@ -3345,6 +3345,7 @@ jui.define("util.svg.element", [], function() {
         }
         
         this.text = function(text) {
+            this.element.innerHTML = "";
         	this.element.appendChild(document.createTextNode(text));
         	
         	return this; 

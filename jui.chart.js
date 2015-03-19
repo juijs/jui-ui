@@ -3345,6 +3345,7 @@ jui.define("util.svg.element", [], function() {
         }
         
         this.text = function(text) {
+            this.element.innerHTML = "";
         	this.element.appendChild(document.createTextNode(text));
         	
         	return this; 
@@ -13607,8 +13608,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @return {util.svg.element}
          */
         this.createScatter = function(pos, index) {
-            var self = this;
-            var elem = null,
+            var self = this,
+                elem = null,
                 target = this.chart.get("series", this.brush.target[index]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
@@ -13664,6 +13665,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         "stroke-width": borderWidth
                     })
                     .hover(function () {
+                        if(elem == self.activeScatter) return;
+
                         elem.attr({
                             fill: self.chart.theme("scatterHoverColor"),
                             stroke: color,
@@ -13671,6 +13674,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             opacity: 1
                         });
                     }, function () {
+                        if(elem == self.activeScatter) return;
+
                         elem.attr({
                             fill: color,
                             stroke: borderColor,
@@ -13693,7 +13698,11 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @return {util.svg.element} g element 리턴
          */
         this.drawScatter = function(points) {
-            var g = this.chart.svg.group();
+            var self = this;
+
+            var g = this.chart.svg.group(),
+                borderColor = this.chart.theme("scatterBorderColor"),
+                borderWidth = this.chart.theme("scatterBorderWidth");
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].length; j++) {
@@ -13701,13 +13710,51 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         continue;
                     }
 
-                    var p = this.createScatter({
+                    var data = {
                         x: points[i].x[j],
                         y: points[i].y[j],
                         max: points[i].max[j],
                         min: points[i].min[j],
                         value: points[i].value[j]
-                    }, i);
+                    };
+
+                    var p = this.createScatter(data, i);
+
+                    // Max & Min 툴팁 생성
+                    if (this.brush.display == "max" && data.max || this.brush.display == "min" && data.min) {
+                        g.append(this.drawTooltip(data.x, data.y, this.format(data.value)));
+                    }
+
+                    // 컬럼 및 기본 브러쉬 이벤트 설정
+                    if(data.value != 0 && this.brush.activeEvent != null) {
+                        (function(scatter, x, y, text, color) {
+                            scatter.on(self.brush.activeEvent, function(e) {
+                                if(self.brush.symbol != "cross") {
+                                    if (self.activeScatter != null) {
+                                        self.activeScatter.attr({
+                                            fill: self.activeScatter.attributes["stroke"],
+                                            stroke: borderColor,
+                                            "stroke-width": borderWidth,
+                                            opacity: (self.brush.hide) ? 0 : 1
+                                        });
+                                    }
+
+                                    self.activeScatter = scatter;
+                                    self.activeScatter.attr({
+                                        fill: self.chart.theme("scatterHoverColor"),
+                                        stroke: color,
+                                        "stroke-width": borderWidth * 2,
+                                        opacity: 1
+                                    });
+                                }
+
+                                self.activeTooltip.html(text);
+                                self.activeTooltip.translate(x, y);
+                            });
+
+                            scatter.attr({ cursor: "pointer" });
+                        })(p, data.x, data.y, this.format(data.value), this.color(i));
+                    }
 
                     if(this.brush.hide) {
                         p.attr({ opacity: 0 });
@@ -13718,7 +13765,19 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                 }
             }
 
+            // 액티브 툴팁
+            this.activeTooltip = this.drawTooltip(0, 0, "");
+            g.append(this.activeTooltip);
+
             return g;
+        }
+
+        this.drawTooltip = function(x, y, text) {
+            return this.chart.text({
+                y: -this.brush.size,
+                "text-anchor" : "middle",
+                "font-weight" : this.chart.theme("tooltipPointFontWeight")
+            }, text).translate(x, y);
         }
 
         /**
@@ -13729,7 +13788,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
-
 
         this.drawAnimate = function() {
             var area = this.chart.area();
@@ -13756,6 +13814,10 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             hide: false,
             /** @cfg {Boolean} [hideZero=false]  When scatter value is zero, will be hidden. */
             hideZero: false,
+            /** @cfg {String} [activeEvent=null]  Activates the scatter in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null,
+            /** @cfg {"max"/"min"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */
+            display: null,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };

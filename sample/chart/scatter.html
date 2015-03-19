@@ -48,13 +48,12 @@
              },
              brush : {
                  type: "scatter",
-                 size: 10,
-                 hideZero: true
+                 hideZero: true,
+                 size : 10,
+                 display : "min",
+                 activeEvent : "click"
              },
-             widget : [
-                 { type : "title", text : "Scatter Sample"},
-                 { type : "tooltip" }
-             ],
+             /*/
             event: {
                 click: function(obj, e) {
                     console.log(obj);
@@ -76,6 +75,7 @@
             tpl: {
                 tooltip: $("#tpl_tooltip").html()
             }
+            /**/
         });
 	})
 </script>
