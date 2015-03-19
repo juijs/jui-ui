@@ -267,11 +267,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 throw new Error("JUI_CRITICAL_ERR: '" + type + "' does not exist");
             }
 
-            if(arguments.length == 2) {
-                options = selector;
-                selector = null;
-            }
-
             return cls["class"](selector, options);
         }
 	}
@@ -670,11 +665,6 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
     UICore.build = function(UI) {
 
         return function(selector, options) {
-            if(arguments.length == 1) {
-                options = selector;
-                selector = null;
-            }
-
             var $root = $(selector || "<div />");
             var list = [];
 
