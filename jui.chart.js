@@ -13721,12 +13721,12 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                     var p = this.createScatter(data, i);
 
                     // Max & Min 툴팁 생성
-                    if (this.brush.display == "max" && data.max || this.brush.display == "min" && data.min) {
+                    if(this.brush.display == "max" && data.max || this.brush.display == "min" && data.min) {
                         g.append(this.drawTooltip(data.x, data.y, this.format(data.value)));
                     }
 
                     // 컬럼 및 기본 브러쉬 이벤트 설정
-                    if(data.value != 0 && this.brush.activeEvent != null) {
+                    if(this.brush.activeEvent != null) {
                         (function(scatter, x, y, text, color) {
                             scatter.on(self.brush.activeEvent, function(e) {
                                 if(self.brush.symbol != "cross") {
