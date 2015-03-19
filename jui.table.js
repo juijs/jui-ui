@@ -2442,7 +2442,7 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 				for (var i = 1; i < arguments.length; i += 2) {
 
-					var split = arguments[i];
+					var split = typeof arguments[i] == 'string' ? this[arguments[i]] : arguments[i];
 					var time = arguments[i + 1];
 
 					if (this.years == split) {

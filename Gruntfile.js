@@ -141,7 +141,8 @@ module.exports = function(grunt) {
         "js/chart/widget/topologyctrl.js",
 
         // chart wrapper
-        "js/chartx/realtime.js"
+        "js/chartx/realtime.js",
+        "js/chartx/mini.js"
     ]
 
     grunt.initConfig({

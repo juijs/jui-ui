@@ -42,15 +42,15 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = +Math.max.apply(Math, value);
-                        value_list.push(+Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = +value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = +Math.max.apply(Math, value);
+                value_list.push(+Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = +value;
+            }
+        }
 
 
 			} else {
@@ -65,8 +65,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = step.call(this.chart, domain);
+				this.grid.step = this.grid.call(this.chart, domain);
 			}
+
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			if (this.grid.reverse) {
 				domain.reverse();

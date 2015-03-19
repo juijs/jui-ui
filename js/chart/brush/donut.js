@@ -228,6 +228,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             if (height < min) {
                 min = height;
             }
+          
+            if (this.brush.size >= min/2) {
+              this.brush.size = min/4;
+            }
 
             // center
             var centerX = width / 2 + x;

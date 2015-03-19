@@ -204,15 +204,15 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = Math.max.apply(Math, value);
-                        value_list.push(Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = Math.max.apply(Math, value);
+                value_list.push(Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = value;
+            }
+        }
 
 			} else {
 				value_list = this.grid.domain;
@@ -232,7 +232,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			if (_.typeCheck("function", step)) {
 				this.grid.step = step.call(this.chart, domain);
-			}
+			} 
+      
+      // default second
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			return domain;
 		}
