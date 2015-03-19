@@ -109,6 +109,10 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].length; j++) {
+                    if(this.brush.hideZero && points[i].value[j] === 0) {
+                        continue;
+                    }
+
                     var p = this.createScatter({
                         x: points[i].x[j],
                         y: points[i].y[j],
@@ -162,6 +166,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             size: 7,
             /** @cfg {Boolean} [hide=false]  Hide the scatter, will be displayed only when the mouse is over. */
             hide: false,
+            /** @cfg {Boolean} [hideZero=false]  When scatter value is zero, will be hidden. */
+            hideZero: false,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };

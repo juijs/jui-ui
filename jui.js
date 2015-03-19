@@ -2442,7 +2442,7 @@ jui.define("util.time", [ "util.base" ], function(_) {
 
 				for (var i = 1; i < arguments.length; i += 2) {
 
-					var split = arguments[i];
+					var split = typeof arguments[i] == 'string' ? this[arguments[i]] : arguments[i];
 					var time = arguments[i + 1];
 
 					if (this.years == split) {
@@ -15935,15 +15935,15 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = Math.max.apply(Math, value);
-                        value_list.push(Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = Math.max.apply(Math, value);
+                value_list.push(Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = value;
+            }
+        }
 
 			} else {
 				value_list = this.grid.domain;
@@ -15963,7 +15963,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			if (_.typeCheck("function", step)) {
 				this.grid.step = step.call(this.chart, domain);
-			}
+			} 
+      
+      // default second
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			return domain;
 		}
@@ -16077,15 +16082,15 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				var index = data.length;
 				while(index--) {
 
-                    var value = this.grid.domain.call(this.chart, data[index]);
+            var value = this.grid.domain.call(this.chart, data[index]);
 
-                    if (_.typeCheck("array", value)) {
-                        value_list[index] = +Math.max.apply(Math, value);
-                        value_list.push(+Math.min.apply(Math, value));
-                    } else {
-                        value_list[index]  = +value;
-                    }
-                }
+            if (_.typeCheck("array", value)) {
+                value_list[index] = +Math.max.apply(Math, value);
+                value_list.push(+Math.min.apply(Math, value));
+            } else {
+                value_list[index]  = +value;
+            }
+        }
 
 
 			} else {
@@ -16100,8 +16105,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var domain = [this.grid.min, this.grid.max];
 
 			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = step.call(this.chart, domain);
+				this.grid.step = this.grid.call(this.chart, domain);
 			}
+
+      if (_.typeCheck("number", this.grid.step)) {
+        this.grid.step = ["seconds", this.grid.step];
+      }
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -20726,6 +20735,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             if (height < min) {
                 min = height;
             }
+          
+            if (this.brush.size >= min/2) {
+              this.brush.size = min/4;
+            }
 
             // center
             var centerX = width / 2 + x;
@@ -21146,6 +21159,10 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].length; j++) {
+                    if(this.brush.hideZero && points[i].value[j] === 0) {
+                        continue;
+                    }
+
                     var p = this.createScatter({
                         x: points[i].x[j],
                         y: points[i].y[j],
@@ -21199,6 +21216,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             size: 7,
             /** @cfg {Boolean} [hide=false]  Hide the scatter, will be displayed only when the mouse is over. */
             hide: false,
+            /** @cfg {Boolean} [hideZero=false]  When scatter value is zero, will be hidden. */
+            hideZero: false,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false
         };
@@ -24736,6 +24755,81 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             /** @cfg {Number} [period=1] set interval for realtime (in minute)*/
             period : 5 // minute
         }
+    }
+
+    return UI;
+});
+jui.define("chartx.mini", [ "jquery", "chart.builder" ], function($, builder) {
+
+    /**
+     * @class chartx.mini
+     *
+     * 심플 차트 구현
+     *
+     * @extends core
+     */
+    var UI = function(selector, data, options) {
+
+      options = options || { type : "column" };
+
+      if (typeof options == 'string') {
+        options = { type : options };
+      }
+
+      options.type = options.type || "column";
+      
+      var beforeData = data;
+      $(selector).each(function() {
+        
+        if ($(this).data('type')) {
+          options.type = $(this).data('type');
+        }
+        
+        if (beforeData == 'html') {
+          $(this).attr('data', $(this).text());
+          data = ($(this).text() || $(this).attr('data')).split(",");
+          for(var i = 0; i < data.length; i++) {
+            data[i] = parseFloat(data[i]);
+          }
+          $(this).empty();
+        }
+        var obj = [];
+        var domain = [];
+        var pieObj = [{}];
+        for(var i = 0; i < data.length; i++) {
+          obj.push({ "key" : data[i] });
+          domain.push("key" + i);
+          pieObj[0]["key" + i] = data[i];
+        }
+
+        var realData = obj;
+        var target = "key";
+
+        if (options.type == "pie" || options.type == 'donut') {
+          realData = pieObj;
+          target = false;
+        }
+
+        var opt = $.extend(true, {
+          padding : 0,
+          height : 18,
+          axis : {
+            data : realData,
+            x : { type : 'block', domain : domain, hide : true, full : ( options.type != 'column')   },
+            y : { type : 'range', domain : 'key', hide : true },
+            c : { type : 'panel', hide : true }
+          },
+          brush : {
+            type : "column",
+            target : target
+          }
+        }, { brush : options });
+
+        // 개별 차트 생성 
+        builder(this, opt);
+      })
+      
+
     }
 
     return UI;
