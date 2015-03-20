@@ -16985,7 +16985,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
             this.on("chart.mousemove", function(e) {
                 var left = e.chartX,
-                    top = e.chartY;
+                    top = e.chartY + 2;
 
                 if(xline) {
                     xline.attr({
@@ -17005,7 +17005,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = axis.y.invert(top),
+                    var value = axis.y.invert(top - 2),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
