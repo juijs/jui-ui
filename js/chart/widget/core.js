@@ -11,17 +11,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var CoreWidget = function() {
-        function getIndexArray(brush) {
-            var list = [ 0 ];
-
-            if(_.typeCheck("array", brush)) {
-                list = brush;
-            } else if(_.typeCheck("integer", brush)) {
-                list = [ brush ];
-            }
-
-            return list;
-        }
 
         /**
          * @method drawAfter  
@@ -31,60 +20,16 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 
-        /**
-         * @method eachBrush 
-         * traverse each brush 
-         * @param {Function} callback
-         */
-        this.eachBrush = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
-            var list = getIndexArray(this.widget.brush);
+        this.getIndexArray = function(index) {
+            var list = [ 0 ];
 
-            for(var i = 0; i < list.length; i++) {
-                callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
-            }
-        }
-
-        /**
-         * @method listBrush 
-         * 
-         * 연결된 브러쉬 객체 목록을 가지고 온다. 
-         *  
-         * @returns {Array}
-         */
-        this.listBrush = function() {
-            var list = getIndexArray(this.widget.brush),
-                result = [];
-
-            for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.get("brush", list[i]);
+            if(_.typeCheck("array", index)) {
+                list = index;
+            } else if(_.typeCheck("integer", index)) {
+                list = [ index ];
             }
 
-            return result;
-        }
-
-        /**
-         * @method getBrush 
-         * 연결된 브러쉬를 가지고 온다. 
-         *  
-         * @param {Number} index 
-         * @returns {*}
-         */
-        this.getBrush = function(index) {
-            return this.listBrush()[index];
-        }
-
-        /**
-         * @method existBrush 
-         * 연결된 브러쉬가 존재하는지 체크한다.
-         *
-         * @param {Number} index
-         * @returns {Boolean}
-         */
-        this.existBrush = function(index) {
-            var list = getIndexArray(this.widget.brush);
-
-            return ($.inArray(index, list) == -1) ? false : true;
+            return list;
         }
 
         this.isRender = function() {
@@ -126,10 +71,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {Number} index [Read Only] Index which shows the sequence how a widget is drawn. */
 
         return {
-            /**
-             * @cfg {Number} [brush=0] Specifies a brush index for which a widget is used.
-             */
-            brush: 0,
             /**
              * @cfg {Boolean} [render=false] Determines whether a widget is to be rendered.
              */            

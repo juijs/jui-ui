@@ -77,6 +77,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             }
         }
 
+        function existBrush(index) {
+            var list = self.getIndexArray(self.widget.brush);
+
+            return ($.inArray(index, list) == -1) ? false : true;
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
@@ -102,7 +108,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             this.on("mouseover", function(obj, e) {
-                if(isActive || !self.existBrush(obj.brush.index)) return;
+                if(isActive || !existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
                 // 툴팁 텍스트 출력
@@ -158,7 +164,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
-            format: null
+            format: null,
+            /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
+            brush: 0
         };
     }
 

@@ -63,7 +63,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         x1: 0,
                         y1: 0,
                         x2: 0,
-                        y2: axis.area('height'),
+                        y2: axis.area("height"),
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
                         opacity: chart.theme("crossBorderOpacity")

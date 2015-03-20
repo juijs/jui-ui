@@ -195,11 +195,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     draws[i].index = i;
 
                     // 위젯 기본 프로퍼티 정의
-                    var brush = _brush[_.typeCheck("array", draws[i].brush) ? draws[i].brush[0] : draws[i].brush],
-                        draw = new Obj(self, _axis[brush.axis], draws[i]);
-
+                    var draw = new Obj(self, _axis[0], draws[i]);
                     draw.chart = self;
-                    draw.axis = _axis[brush.axis];
+                    draw.axis = _axis[0];
                     draw.widget = draws[i];
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)

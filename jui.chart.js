@@ -5385,11 +5385,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     draws[i].index = i;
 
                     // 위젯 기본 프로퍼티 정의
-                    var brush = _brush[_.typeCheck("array", draws[i].brush) ? draws[i].brush[0] : draws[i].brush],
-                        draw = new Obj(self, _axis[brush.axis], draws[i]);
-
+                    var draw = new Obj(self, _axis[0], draws[i]);
                     draw.chart = self;
-                    draw.axis = _axis[brush.axis];
+                    draw.axis = _axis[0];
                     draw.widget = draws[i];
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
@@ -15912,17 +15910,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var CoreWidget = function() {
-        function getIndexArray(brush) {
-            var list = [ 0 ];
-
-            if(_.typeCheck("array", brush)) {
-                list = brush;
-            } else if(_.typeCheck("integer", brush)) {
-                list = [ brush ];
-            }
-
-            return list;
-        }
 
         /**
          * @method drawAfter  
@@ -15932,60 +15919,16 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 
-        /**
-         * @method eachBrush 
-         * traverse each brush 
-         * @param {Function} callback
-         */
-        this.eachBrush = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
-            var list = getIndexArray(this.widget.brush);
+        this.getIndexArray = function(index) {
+            var list = [ 0 ];
 
-            for(var i = 0; i < list.length; i++) {
-                callback.apply(this, [ i, this.chart.get("brush", list[i]) ]);
-            }
-        }
-
-        /**
-         * @method listBrush 
-         * 
-         * 연결된 브러쉬 객체 목록을 가지고 온다. 
-         *  
-         * @returns {Array}
-         */
-        this.listBrush = function() {
-            var list = getIndexArray(this.widget.brush),
-                result = [];
-
-            for(var i = 0; i < list.length; i++) {
-                result[i] = this.chart.get("brush", list[i]);
+            if(_.typeCheck("array", index)) {
+                list = index;
+            } else if(_.typeCheck("integer", index)) {
+                list = [ index ];
             }
 
-            return result;
-        }
-
-        /**
-         * @method getBrush 
-         * 연결된 브러쉬를 가지고 온다. 
-         *  
-         * @param {Number} index 
-         * @returns {*}
-         */
-        this.getBrush = function(index) {
-            return this.listBrush()[index];
-        }
-
-        /**
-         * @method existBrush 
-         * 연결된 브러쉬가 존재하는지 체크한다.
-         *
-         * @param {Number} index
-         * @returns {Boolean}
-         */
-        this.existBrush = function(index) {
-            var list = getIndexArray(this.widget.brush);
-
-            return ($.inArray(index, list) == -1) ? false : true;
+            return list;
         }
 
         this.isRender = function() {
@@ -16027,10 +15970,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
         /** @property {Number} index [Read Only] Index which shows the sequence how a widget is drawn. */
 
         return {
-            /**
-             * @cfg {Number} [brush=0] Specifies a brush index for which a widget is used.
-             */
-            brush: 0,
             /**
              * @cfg {Boolean} [render=false] Determines whether a widget is to be rendered.
              */            
@@ -16123,6 +16062,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             }
         }
 
+        function existBrush(index) {
+            var list = self.getIndexArray(self.widget.brush);
+
+            return ($.inArray(index, list) == -1) ? false : true;
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
@@ -16148,7 +16093,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w, h;
 
             this.on("mouseover", function(obj, e) {
-                if(isActive || !self.existBrush(obj.brush.index)) return;
+                if(isActive || !existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
                 // 툴팁 텍스트 출력
@@ -16204,7 +16149,9 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
-            format: null
+            format: null,
+            /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
+            brush: 0
         };
     }
 
@@ -16415,15 +16362,22 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         this.draw = function() {
             var group = chart.svg.group();
             
-            var x = 0, y = 0,
-                total_width = 0, total_height = 0,
-                max_width = 0, max_height = 0;
+            var x = 0,
+                y = 0,
+                total_width = 0,
+                total_height = 0,
+                max_width = 0,
+                max_height = 0,
+                brushes = this.getIndexArray(widget.brush);
 
-            this.eachBrush(function(index, brush) {
+            for(var i = 0; i < brushes.length; i++) {
+                var index = brushes[i];
+
                 // brushSync가 true일 경우, 한번만 실행함
                 if(widget.brushSync && index != 0) return;
 
-                var arr = this.getLegendIcon(brush);
+                var brush = chart.get("brush", brushes[index]),
+                    arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
@@ -16447,7 +16401,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 }
 
                 setLegendStatus(brush);
-            });
+            }
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
@@ -16489,7 +16443,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             /** @cfg {Function/String} [icon=null]   */
             icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
-            brushSync: false
+            brushSync: false,
+            /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
+            brush: 0
         };
     }
 
@@ -16968,7 +16924,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         x1: 0,
                         y1: 0,
                         x2: 0,
-                        y2: axis.area('height'),
+                        y2: axis.area("height"),
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
                         opacity: chart.theme("crossBorderOpacity")

@@ -124,15 +124,22 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         this.draw = function() {
             var group = chart.svg.group();
             
-            var x = 0, y = 0,
-                total_width = 0, total_height = 0,
-                max_width = 0, max_height = 0;
+            var x = 0,
+                y = 0,
+                total_width = 0,
+                total_height = 0,
+                max_width = 0,
+                max_height = 0,
+                brushes = this.getIndexArray(widget.brush);
 
-            this.eachBrush(function(index, brush) {
+            for(var i = 0; i < brushes.length; i++) {
+                var index = brushes[i];
+
                 // brushSync가 true일 경우, 한번만 실행함
                 if(widget.brushSync && index != 0) return;
 
-                var arr = this.getLegendIcon(brush);
+                var brush = chart.get("brush", brushes[index]),
+                    arr = this.getLegendIcon(brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
@@ -156,7 +163,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 }
 
                 setLegendStatus(brush);
-            });
+            }
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
@@ -198,7 +205,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             /** @cfg {Function/String} [icon=null]   */
             icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
-            brushSync: false
+            brushSync: false,
+            /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
+            brush: 0
         };
     }
 
