@@ -69,7 +69,8 @@
                     domain : [0, 700],
                     step : 5
                 },
-                data : data
+                data : data,
+                area : { x : "20%", y : "20%", width : "60%", height : "60%" }
             },
             brush : [{ type : "focus" },
             {
@@ -77,6 +78,10 @@
                 size : 10,
                 target : [ "name", "name2" ]
             }],
+            widget : {
+                type : "cross",
+                yFormat : function(d) { return Math.floor(d); }
+            },
             style : {
                 scatterBorderWidth: 2,
                 crossBalloonBackgroundColor: "red"

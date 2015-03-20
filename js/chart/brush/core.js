@@ -460,9 +460,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {*}
          */
         this.on = function(type, callback) {
-            return this.chart.on(type, callback, "render");
-        }
+            var self = this;
 
+            return this.chart.on(type, function() {
+                callback.apply(self, arguments);
+            }, "render");
+        }
 	}
 
 

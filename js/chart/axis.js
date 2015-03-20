@@ -13,7 +13,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {}, _clipId = "", _clipPath = null;
+        var _area = {}, _padding = {},
+            _clipId = "", _clipPath = null;
 
         function caculatePanel(a, padding) {
 
@@ -211,9 +212,16 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 c : options.c
             });
 
+            // 패딩 옵션 설정
+            if(_.typeCheck("integer", options.padding)) {
+                _padding = { left: options.padding, right: options.padding, bottom: options.padding, top: options.padding };
+            } else {
+                _padding = options.padding;
+            }
+
             _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: area.width, height: area.height
-            }, true), options.padding || {});
+            }, true), _padding);
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
@@ -235,6 +243,16 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         /**
+         * Gets the top, bottom, left and right margin values.
+         *
+         * @param {"top"/"left"/"bottom"/"right"} key
+         * @return {Number/Object}
+         */
+        this.padding = function(key) {
+            return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
+        }
+
+        /**
          * @method get
          *
          * Axis 의 옵션 정보를 리턴한다.
@@ -244,6 +262,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         this.get = function(type) {
             var obj = {
                 area: _area,
+                padding: _padding,
                 clipId: _clipId
             };
 
@@ -383,7 +402,12 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
              * @cfg  {Number} [padding.left=0] axis's left padding
              * @cfg  {Number} [padding.right=0] axis's right padding
              */
-            padding : {},
+            padding : {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
+            },
             /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
             /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */

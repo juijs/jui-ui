@@ -4776,7 +4776,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      */
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
-        var _area = {}, _clipId = "", _clipPath = null;
+        var _area = {}, _padding = {},
+            _clipId = "", _clipPath = null;
 
         function caculatePanel(a, padding) {
 
@@ -4974,9 +4975,16 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 c : options.c
             });
 
+            // 패딩 옵션 설정
+            if(_.typeCheck("integer", options.padding)) {
+                _padding = { left: options.padding, right: options.padding, bottom: options.padding, top: options.padding };
+            } else {
+                _padding = options.padding;
+            }
+
             _area = caculatePanel(_.extend(options.area, {
                 x: 0, y: 0 , width: area.width, height: area.height
-            }, true), options.padding || {});
+            }, true), _padding);
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
@@ -4998,6 +5006,16 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         /**
+         * Gets the top, bottom, left and right margin values.
+         *
+         * @param {"top"/"left"/"bottom"/"right"} key
+         * @return {Number/Object}
+         */
+        this.padding = function(key) {
+            return _.typeCheck("undefined", _padding[key]) ? _padding : _padding[key];
+        }
+
+        /**
          * @method get
          *
          * Axis 의 옵션 정보를 리턴한다.
@@ -5007,6 +5025,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         this.get = function(type) {
             var obj = {
                 area: _area,
+                padding: _padding,
                 clipId: _clipId
             };
 
@@ -5146,7 +5165,12 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
              * @cfg  {Number} [padding.left=0] axis's left padding
              * @cfg  {Number} [padding.right=0] axis's right padding
              */
-            padding : {},
+            padding : {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
+            },
             /** @cfg {Number} [buffer=10000] Limits the number of elements shown on a chart.  */
             buffer: 10000,
             /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
@@ -10797,9 +10821,12 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {*}
          */
         this.on = function(type, callback) {
-            return this.chart.on(type, callback, "render");
-        }
+            var self = this;
 
+            return this.chart.on(type, function() {
+                callback.apply(self, arguments);
+            }, "render");
+        }
 	}
 
 
@@ -15965,8 +15992,30 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return (this.widget.render === true) ? true : false;
         }
 
-        this.on = function(type, callback) {
-            return this.chart.on(type, callback, (this.isRender() ? "render" : "renderAll"));
+        this.on = function(type, callback, axisIndex) {
+            var self = this;
+
+            return this.chart.on(type, function() {
+                if(type.startsWith("chart.") && _.typeCheck("integer", axisIndex)) {
+                    var axis = self.chart.axis(axisIndex),
+                        e = arguments[0];
+
+                    if(_.typeCheck("object", axis)) {
+                        var top = axis.padding("top") + axis.area("y"),
+                            left = axis.padding("left") + axis.area("x");
+
+                        if((e.chartY >= top && e.chartY <= top + axis.area("height")) &&
+                            (e.chartX >= left && e.chartX <= left + axis.area("width"))) {
+                            e.axisX = e.chartX - left;
+                            e.axisY = e.chartY - top
+
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
+            }, this.isRender() ? "render" : "renderAll");
         }
 	}
 
@@ -16871,7 +16920,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xline = chart.svg.line({
                         x1: 0,
                         y1: 0,
-                        x2: chart.area("width"),
+                        x2: axis.area("width"),
                         y2: 0,
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
@@ -16900,7 +16949,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         x1: 0,
                         y1: 0,
                         x2: 0,
-                        y2: chart.area('height'),
+                        y2: axis.area('height'),
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
                         opacity: chart.theme("crossBorderOpacity")
@@ -16920,25 +16969,23 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             x: tw / 2,
                             y: 17
                         });
-                    }).translate(0, chart.area("height") + ta);
+                    }).translate(0, axis.area("height") + ta);
                 }
-            }).translate(chart.area("x"), chart.area("y"));
+            }).translate(chart.area("x") + axis.area("x"), chart.area("y"));
         }
 
         this.draw = function() {
-            var brush = this.getBrush(0);
-
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
-            });
+            }, 0);
 
             this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
-            });
+            }, 0);
 
             this.on("chart.mousemove", function(e) {
-                var left = e.chartX + 2,
-                    top = e.chartY + 2;
+                var left = e.chartX,
+                    top = e.chartY;
 
                 if(xline) {
                     xline.attr({
@@ -16964,13 +17011,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(left - (tw / 2), chart.area("height") + ta);
+                    xTooltip.translate(left - (tw / 2), axis.area("height") + ta);
 
                     var value = axis.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
-            });
+            }, 0);
 
             return g;
         }

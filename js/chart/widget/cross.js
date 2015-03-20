@@ -34,7 +34,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                     xline = chart.svg.line({
                         x1: 0,
                         y1: 0,
-                        x2: chart.area("width"),
+                        x2: axis.area("width"),
                         y2: 0,
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
@@ -63,7 +63,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         x1: 0,
                         y1: 0,
                         x2: 0,
-                        y2: chart.area('height'),
+                        y2: axis.area('height'),
                         stroke: chart.theme("crossBorderColor"),
                         "stroke-width": chart.theme("crossBorderWidth"),
                         opacity: chart.theme("crossBorderOpacity")
@@ -83,25 +83,23 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                             x: tw / 2,
                             y: 17
                         });
-                    }).translate(0, chart.area("height") + ta);
+                    }).translate(0, axis.area("height") + ta);
                 }
-            }).translate(chart.area("x"), chart.area("y"));
+            }).translate(chart.area("x") + axis.area("x"), chart.area("y"));
         }
 
         this.draw = function() {
-            var brush = this.getBrush(0);
-
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
-            });
+            }, 0);
 
             this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
-            });
+            }, 0);
 
             this.on("chart.mousemove", function(e) {
-                var left = e.chartX + 2,
-                    top = e.chartY + 2;
+                var left = e.chartX,
+                    top = e.chartY;
 
                 if(xline) {
                     xline.attr({
@@ -127,13 +125,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 }
 
                 if(xTooltip) {
-                    xTooltip.translate(left - (tw / 2), chart.area("height") + ta);
+                    xTooltip.translate(left - (tw / 2), axis.area("height") + ta);
 
                     var value = axis.x.invert(left),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
-            });
+            }, 0);
 
             return g;
         }

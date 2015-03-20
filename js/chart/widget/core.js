@@ -91,8 +91,30 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             return (this.widget.render === true) ? true : false;
         }
 
-        this.on = function(type, callback) {
-            return this.chart.on(type, callback, (this.isRender() ? "render" : "renderAll"));
+        this.on = function(type, callback, axisIndex) {
+            var self = this;
+
+            return this.chart.on(type, function() {
+                if(type.startsWith("chart.") && _.typeCheck("integer", axisIndex)) {
+                    var axis = self.chart.axis(axisIndex),
+                        e = arguments[0];
+
+                    if(_.typeCheck("object", axis)) {
+                        var top = axis.padding("top") + axis.area("y"),
+                            left = axis.padding("left") + axis.area("x");
+
+                        if((e.chartY >= top && e.chartY <= top + axis.area("height")) &&
+                            (e.chartX >= left && e.chartX <= left + axis.area("width"))) {
+                            e.axisX = e.chartX - left;
+                            e.axisY = e.chartY - top
+
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
+            }, this.isRender() ? "render" : "renderAll");
         }
 	}
 
