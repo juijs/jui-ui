@@ -16977,11 +16977,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         this.draw = function() {
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
-            }, 0);
+            });
 
             this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
-            }, 0);
+            });
 
             this.on("chart.mousemove", function(e) {
                 var left = e.chartX,
@@ -17017,7 +17017,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
-            }, 0);
+            });
 
             return g;
         }
