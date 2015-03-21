@@ -116,12 +116,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             for(var i = 0; i < axisList.length; i++) {
                 jui.defineOptions(Axis, axisList[i]);
 
+                // 엑시스 인덱스 설정
+                axisList[i].index = i;
+
                 if(!_axis[i]) {
                     _axis[i] = new Axis(self, _options.axis[i], axisList[i]);
                 } else {
                     _axis[i].reload(axisList[i]);
                 }
-
             }
         }
 

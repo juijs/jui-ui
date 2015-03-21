@@ -12,6 +12,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     var CrossWidget = function(chart, axis, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
+        var pl = 0, pt = 0; // 엑시스까지의 여백
         var g, xline, yline, xTooltip, yTooltip;
         var tspan = [];
 
@@ -26,6 +27,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
+            // 위젯 옵션에 따라 엑시스 변경
+            axis = this.chart.axis(widget.axis);
+
+            // 엑시스 여백 값 가져오기
+            pl = chart.padding("left") + axis.area("x");
+            pt = chart.padding("top") + axis.area("y");
+
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
@@ -85,21 +93,25 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         });
                     }).translate(0, axis.area("height") + ta);
                 }
-            }).translate(chart.area("x") + axis.area("x"), chart.area("y"));
+            }).translate(pl, pt);
         }
 
         this.draw = function() {
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
-            });
+            }, widget.axis);
+
+            this.on("chart.mouseout", function(e) {
+                g.attr({ visibility: "hidden" });
+            }, widget.axis);
 
             this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
             this.on("chart.mousemove", function(e) {
-                var left = e.chartX,
-                    top = e.chartY + 2;
+                var left = e.bgX - pl,
+                    top = e.bgY - pt + 2;
 
                 if(xline) {
                     xline.attr({
@@ -119,7 +131,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = axis.y.invert(top - 2),
+                    var value = axis.y.invert(e.chartY),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -127,11 +139,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(xTooltip) {
                     xTooltip.translate(left - (tw / 2), axis.area("height") + ta);
 
-                    var value = axis.x.invert(left),
+                    var value = axis.x.invert(e.chartX),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
-            });
+            }, widget.axis);
 
             return g;
         }
@@ -139,6 +151,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     CrossWidget.setup = function() {
         return {
+            axis: 0,
             /**
              * @cfg {Function} [xFormat=null] Sets the format for the value on the X axis shown on the tooltip.
              */            

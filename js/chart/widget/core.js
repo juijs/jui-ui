@@ -44,15 +44,8 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 
-                    if(_.typeCheck("object", axis)) {
-                        var top = axis.padding("top") + axis.area("y"),
-                            left = axis.padding("left") + axis.area("x");
-
-                        if((e.chartY >= top && e.chartY <= top + axis.area("height")) &&
-                            (e.chartX >= left && e.chartX <= left + axis.area("width"))) {
-                            e.axisX = e.chartX - left;
-                            e.axisY = e.chartY - top
-
+                    if (_.typeCheck("object", axis)) {
+                        if (axis.checkAxisPoint(e) || arguments[1] == axisIndex) {
                             callback.apply(self, [ e ]);
                         }
                     }

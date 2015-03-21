@@ -12356,6 +12356,46 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             }
         }
 
+        function createClipPath() {
+            if (_clipPath) {
+                _clipPath.remove();
+                _clipPath = null;
+            }
+
+            _clipId = _.createId("clip-id-");
+
+            _clipPath = chart.svg.clipPath({
+                id: _clipId
+            }, function() {
+                chart.svg.rect({
+                    x: _area.x,
+                    y: _area.y,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipPath);
+        }
+
+        function setAxisMouseEvent() {
+            var isMouseOver = false;
+
+            chart.on("chart.mousemove", function(e) {
+                if(self.checkAxisPoint(e)) {
+                    if(!isMouseOver) {
+                        chart.emit("chart.mouseover", [ e, cloneAxis.index ]);
+                        isMouseOver = true;
+                    }
+                } else {
+                    if(isMouseOver) {
+                        chart.emit("chart.mouseout", [ e, cloneAxis.index ]);
+                        isMouseOver = false;
+                    }
+                }
+            });
+        }
+
         function init() {
             _.extend(self, {
                 data : cloneAxis.data,
@@ -12371,30 +12411,23 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             // 페이지 초기화
             page(1);
 
+            // 엑시스 이벤트 설정
+            setAxisMouseEvent();
+
             // Grid 및 Area 설정
             self.reload(cloneAxis);
         }
         
-        function createClipPath() {
-            if (_clipPath) {
-                _clipPath.remove();
-                _clipPath = null;
-            }
-            
-            _clipId = _.createId("clip-id-");
+        this.checkAxisPoint = function(e) {
+            var top = this.padding("top") + this.area("y"),
+                left = this.padding("left") + this.area("x");
 
-            _clipPath = chart.svg.clipPath({
-                id: _clipId
-            }, function() {
-                chart.svg.rect({
-                    x: _area.x,
-                    y: _area.y,
-                    width: _area.width,
-                    height: _area.height
-                });
-            });
-            
-            chart.appendDefs(_clipPath);
+            if((e.chartY > top && e.chartY < top + this.area("height")) &&
+                (e.chartX > left && e.chartX < left + this.area("width"))) {
+                return true;
+            }
+
+            return false;
         }
 
         /**
@@ -12768,12 +12801,14 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
             for(var i = 0; i < axisList.length; i++) {
                 jui.defineOptions(Axis, axisList[i]);
 
+                // 엑시스 인덱스 설정
+                axisList[i].index = i;
+
                 if(!_axis[i]) {
                     _axis[i] = new Axis(self, _options.axis[i], axisList[i]);
                 } else {
                     _axis[i].reload(axisList[i]);
                 }
-
             }
         }
 
@@ -23405,15 +23440,8 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 
-                    if(_.typeCheck("object", axis)) {
-                        var top = axis.padding("top") + axis.area("y"),
-                            left = axis.padding("left") + axis.area("x");
-
-                        if((e.chartY >= top && e.chartY <= top + axis.area("height")) &&
-                            (e.chartX >= left && e.chartX <= left + axis.area("width"))) {
-                            e.axisX = e.chartX - left;
-                            e.axisY = e.chartY - top
-
+                    if (_.typeCheck("object", axis)) {
+                        if (axis.checkAxisPoint(e) || arguments[1] == axisIndex) {
                             callback.apply(self, [ e ]);
                         }
                     }
@@ -23840,6 +23868,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
                 var brush = chart.get("brush", brushes[index]),
                     arr = this.getLegendIcon(brush);
+
+                console.log(brush);
 
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
@@ -24335,6 +24365,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
     var CrossWidget = function(chart, axis, widget) {
         var self = this;
         var tw = 50, th = 18, ta = tw / 10; // 툴팁 넓이, 높이, 앵커 크기
+        var pl = 0, pt = 0; // 엑시스까지의 여백
         var g, xline, yline, xTooltip, yTooltip;
         var tspan = [];
 
@@ -24349,6 +24380,13 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.drawBefore = function() {
+            // 위젯 옵션에 따라 엑시스 변경
+            axis = this.chart.axis(widget.axis);
+
+            // 엑시스 여백 값 가져오기
+            pl = chart.padding("left") + axis.area("x");
+            pt = chart.padding("top") + axis.area("y");
+
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
@@ -24408,21 +24446,25 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                         });
                     }).translate(0, axis.area("height") + ta);
                 }
-            }).translate(chart.area("x") + axis.area("x"), chart.area("y"));
+            }).translate(pl, pt);
         }
 
         this.draw = function() {
             this.on("chart.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
-            });
+            }, widget.axis);
+
+            this.on("chart.mouseout", function(e) {
+                g.attr({ visibility: "hidden" });
+            }, widget.axis);
 
             this.on("chart.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
             this.on("chart.mousemove", function(e) {
-                var left = e.chartX,
-                    top = e.chartY + 2;
+                var left = e.bgX - pl,
+                    top = e.bgY - pt + 2;
 
                 if(xline) {
                     xline.attr({
@@ -24442,7 +24484,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(yTooltip) {
                     yTooltip.translate(-(tw + ta), top - (th / 2));
 
-                    var value = axis.y.invert(top - 2),
+                    var value = axis.y.invert(e.chartY),
                         message = widget.yFormat.call(self.chart, value);
                     printTooltip(0, yTooltip.get(1), message);
                 }
@@ -24450,11 +24492,11 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 if(xTooltip) {
                     xTooltip.translate(left - (tw / 2), axis.area("height") + ta);
 
-                    var value = axis.x.invert(left),
+                    var value = axis.x.invert(e.chartX),
                         message = widget.xFormat.call(self.chart, value);
                     printTooltip(1, xTooltip.get(1), message);
                 }
-            });
+            }, widget.axis);
 
             return g;
         }
@@ -24462,6 +24504,7 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     CrossWidget.setup = function() {
         return {
+            axis: 0,
             /**
              * @cfg {Function} [xFormat=null] Sets the format for the value on the X axis shown on the tooltip.
              */            

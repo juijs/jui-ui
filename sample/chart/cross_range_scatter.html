@@ -4,33 +4,10 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
 
@@ -52,10 +29,10 @@
         }
 
         c = chart("#chart", {
-            width: 400,
-            height : 400,
+            width: 800,
+            height : 800,
             theme : "jennifer",
-            axis : {
+            axis : [{
                 x : {
                     type : "date",  // default type is block
                     domain : [ start, end ],
@@ -70,18 +47,32 @@
                     step : 5
                 },
                 data : data,
-                //area : { x : "20%", y : "20%", width : "60%", height : "60%" }
-            },
-            brush : [{ type : "focus" },
-            {
+                area : { x : "10%", y : "10%", width : "30%", height : "30%" }
+            }, {
+                extend : 0,
+                area : { x : "40%", y : "40%", width : "30%", height : "30%" }
+            }],
+            brush : [{
                 type : 'scatter',
                 size : 10,
                 target : [ "name", "name2" ]
+            }, {
+                type : 'scatter',
+                size : 10,
+                symbol : "triangle",
+                target : [ "name", "name2" ],
+                axis : 1
             }],
-            widget : {
+            widget : [{
                 type : "cross",
+                xFormat : function(d) { return _.dateFormat(d, "hh:mm"); },
                 yFormat : function(d) { return Math.floor(d); }
-            },
+            }, {
+                type : "cross",
+                xFormat : function(d) { return _.dateFormat(d, "hh:mm"); },
+                yFormat : function(d) { return Math.floor(d); },
+                axis : 1
+            }],
             style : {
                 scatterBorderWidth: 2,
                 crossBalloonBackgroundColor: "red"

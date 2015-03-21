@@ -131,6 +131,46 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             }
         }
 
+        function createClipPath() {
+            if (_clipPath) {
+                _clipPath.remove();
+                _clipPath = null;
+            }
+
+            _clipId = _.createId("clip-id-");
+
+            _clipPath = chart.svg.clipPath({
+                id: _clipId
+            }, function() {
+                chart.svg.rect({
+                    x: _area.x,
+                    y: _area.y,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipPath);
+        }
+
+        function setAxisMouseEvent() {
+            var isMouseOver = false;
+
+            chart.on("chart.mousemove", function(e) {
+                if(self.checkAxisPoint(e)) {
+                    if(!isMouseOver) {
+                        chart.emit("chart.mouseover", [ e, cloneAxis.index ]);
+                        isMouseOver = true;
+                    }
+                } else {
+                    if(isMouseOver) {
+                        chart.emit("chart.mouseout", [ e, cloneAxis.index ]);
+                        isMouseOver = false;
+                    }
+                }
+            });
+        }
+
         function init() {
             _.extend(self, {
                 data : cloneAxis.data,
@@ -146,30 +186,23 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             // 페이지 초기화
             page(1);
 
+            // 엑시스 이벤트 설정
+            setAxisMouseEvent();
+
             // Grid 및 Area 설정
             self.reload(cloneAxis);
         }
         
-        function createClipPath() {
-            if (_clipPath) {
-                _clipPath.remove();
-                _clipPath = null;
-            }
-            
-            _clipId = _.createId("clip-id-");
+        this.checkAxisPoint = function(e) {
+            var top = this.padding("top") + this.area("y"),
+                left = this.padding("left") + this.area("x");
 
-            _clipPath = chart.svg.clipPath({
-                id: _clipId
-            }, function() {
-                chart.svg.rect({
-                    x: _area.x,
-                    y: _area.y,
-                    width: _area.width,
-                    height: _area.height
-                });
-            });
-            
-            chart.appendDefs(_clipPath);
+            if((e.chartY > top && e.chartY < top + this.area("height")) &&
+                (e.chartX > left && e.chartX < left + this.area("width"))) {
+                return true;
+            }
+
+            return false;
         }
 
         /**
