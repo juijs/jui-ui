@@ -153,21 +153,65 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             chart.appendDefs(_clipPath);
         }
 
+        function checkAxisPoint(e) {
+            var top = self.padding("top") + self.area("y"),
+                left = self.padding("left") + self.area("x");
+
+            if((e.chartY > top && e.chartY < top + self.area("height")) &&
+                (e.chartX > left && e.chartX < left + self.area("width"))) {
+
+                e.axisX = e.chartX - left;
+                e.axisY = e.chartY - top;
+
+                return true;
+            }
+
+            return false;
+        }
+
         function setAxisMouseEvent() {
-            var isMouseOver = false;
+            var isMouseOver = false,
+                index = cloneAxis.index;
 
             chart.on("chart.mousemove", function(e) {
-                if(self.checkAxisPoint(e)) {
+                if(checkAxisPoint(e)) {
                     if(!isMouseOver) {
-                        chart.emit("chart.mouseover", [ e, cloneAxis.index ]);
+                        chart.emit("axis.mouseover", [ e, index ]);
                         isMouseOver = true;
                     }
                 } else {
                     if(isMouseOver) {
-                        chart.emit("chart.mouseout", [ e, cloneAxis.index ]);
+                        chart.emit("axis.mouseout", [ e, index ]);
                         isMouseOver = false;
                     }
                 }
+
+                chart.emit("axis.mousemove", [ e, index ]);
+            });
+
+            chart.on("chart.mousedown", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.mousedown", [ e, index ]);
+            });
+
+            chart.on("chart.mouseup", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.mouseup", [ e, index ]);
+            });
+
+            chart.on("chart.click", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.click", [ e, index ]);
+            });
+
+            chart.on("chart.dbclick", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.dbclick", [ e, index ]);
+            });
+
+            chart.on("chart.rclick", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.rclick", [ e, index ]);
             });
         }
 
@@ -177,7 +221,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
-                page : cloneAxis.page
+                page : cloneAxis.page,
+                index : cloneAxis.index
             });
 
             // 원본 데이터 설정
@@ -193,18 +238,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             self.reload(cloneAxis);
         }
         
-        this.checkAxisPoint = function(e) {
-            var top = this.padding("top") + this.area("y"),
-                left = this.padding("left") + this.area("x");
-
-            if((e.chartY > top && e.chartY < top + this.area("height")) &&
-                (e.chartX > left && e.chartX < left + this.area("width"))) {
-                return true;
-            }
-
-            return false;
-        }
-
         /**
          * @method getValue
          *

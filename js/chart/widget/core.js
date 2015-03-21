@@ -40,12 +40,12 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("chart.") && _.typeCheck("integer", axisIndex)) {
+                if(type.startsWith("axis.") && _.typeCheck("integer", axisIndex)) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 
                     if (_.typeCheck("object", axis)) {
-                        if (axis.checkAxisPoint(e) || arguments[1] == axisIndex) {
+                        if (arguments[1] == axisIndex) {
                             callback.apply(self, [ e ]);
                         }
                     }

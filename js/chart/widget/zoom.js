@@ -19,14 +19,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            self.on("chart.mousedown", function(e) {
+            self.on("axis.mousedown", function(e) {
                 if(isMove) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
             }, axisIndex);
 
-            self.on("chart.mousemove", function(e) {
+            self.on("axis.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.bgX - mouseStart;
@@ -46,6 +46,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             }, axisIndex);
 
+            self.on("axis.mouseup", endZoomAction, axisIndex);
             self.on("chart.mouseup", endZoomAction);
             self.on("bg.mouseup", endZoomAction);
             self.on("bg.mouseout", endZoomAction);

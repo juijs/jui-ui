@@ -4916,21 +4916,65 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             chart.appendDefs(_clipPath);
         }
 
+        function checkAxisPoint(e) {
+            var top = self.padding("top") + self.area("y"),
+                left = self.padding("left") + self.area("x");
+
+            if((e.chartY > top && e.chartY < top + self.area("height")) &&
+                (e.chartX > left && e.chartX < left + self.area("width"))) {
+
+                e.axisX = e.chartX - left;
+                e.axisY = e.chartY - top;
+
+                return true;
+            }
+
+            return false;
+        }
+
         function setAxisMouseEvent() {
-            var isMouseOver = false;
+            var isMouseOver = false,
+                index = cloneAxis.index;
 
             chart.on("chart.mousemove", function(e) {
-                if(self.checkAxisPoint(e)) {
+                if(checkAxisPoint(e)) {
                     if(!isMouseOver) {
-                        chart.emit("chart.mouseover", [ e, cloneAxis.index ]);
+                        chart.emit("axis.mouseover", [ e, index ]);
                         isMouseOver = true;
                     }
                 } else {
                     if(isMouseOver) {
-                        chart.emit("chart.mouseout", [ e, cloneAxis.index ]);
+                        chart.emit("axis.mouseout", [ e, index ]);
                         isMouseOver = false;
                     }
                 }
+
+                chart.emit("axis.mousemove", [ e, index ]);
+            });
+
+            chart.on("chart.mousedown", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.mousedown", [ e, index ]);
+            });
+
+            chart.on("chart.mouseup", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.mouseup", [ e, index ]);
+            });
+
+            chart.on("chart.click", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.click", [ e, index ]);
+            });
+
+            chart.on("chart.dbclick", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.dbclick", [ e, index ]);
+            });
+
+            chart.on("chart.rclick", function(e) {
+                if(!checkAxisPoint(e)) return;
+                chart.emit("axis.rclick", [ e, index ]);
             });
         }
 
@@ -4940,7 +4984,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
-                page : cloneAxis.page
+                page : cloneAxis.page,
+                index : cloneAxis.index
             });
 
             // 원본 데이터 설정
@@ -4956,18 +5001,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             self.reload(cloneAxis);
         }
         
-        this.checkAxisPoint = function(e) {
-            var top = this.padding("top") + this.area("y"),
-                left = this.padding("left") + this.area("x");
-
-            if((e.chartY > top && e.chartY < top + this.area("height")) &&
-                (e.chartX > left && e.chartX < left + this.area("width"))) {
-                return true;
-            }
-
-            return false;
-        }
-
         /**
          * @method getValue
          *
@@ -10404,7 +10437,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var CoreBrush = function() {
-        
 
         function getMinMaxValue(data, target) {
             var seriesList = {},
@@ -10857,7 +10889,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                callback.apply(self, arguments);
+                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
+                    var axis = self.chart.axis(self.axis.index),
+                        e = arguments[0];
+
+                    if (_.typeCheck("object", axis)) {
+                        if (arguments[1] == self.axis.index) {
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
             }, "render");
         }
 	}
@@ -15974,12 +16017,12 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("chart.") && _.typeCheck("integer", axisIndex)) {
+                if(type.startsWith("axis.") && _.typeCheck("integer", axisIndex)) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 
                     if (_.typeCheck("object", axis)) {
-                        if (axis.checkAxisPoint(e) || arguments[1] == axisIndex) {
+                        if (arguments[1] == axisIndex) {
                             callback.apply(self, [ e ]);
                         }
                     }
@@ -16407,8 +16450,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var brush = chart.get("brush", brushes[index]),
                     arr = this.getLegendIcon(brush);
 
-                console.log(brush);
-
                 for(var k = 0; k < arr.length; k++) {
                     group.append(arr[k].icon);
                     arr[k].icon.translate(x, y);
@@ -16502,14 +16543,14 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 mouseStart = 0,
                 thumbWidth = 0;
 
-            self.on("chart.mousedown", function(e) {
+            self.on("axis.mousedown", function(e) {
                 if(isMove) return;
 
                 isMove = true;
                 mouseStart = e.bgX;
             }, axisIndex);
 
-            self.on("chart.mousemove", function(e) {
+            self.on("axis.mousemove", function(e) {
                 if(!isMove) return;
 
                 thumbWidth = e.bgX - mouseStart;
@@ -16529,6 +16570,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 }
             }, axisIndex);
 
+            self.on("axis.mouseup", endZoomAction, axisIndex);
             self.on("chart.mouseup", endZoomAction);
             self.on("bg.mouseup", endZoomAction);
             self.on("bg.mouseout", endZoomAction);
@@ -16988,19 +17030,19 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
         }
 
         this.draw = function() {
-            this.on("chart.mouseover", function(e) {
+            this.on("axis.mouseover", function(e) {
                 g.attr({ visibility: "visible" });
             }, widget.axis);
 
-            this.on("chart.mouseout", function(e) {
+            this.on("axis.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             }, widget.axis);
 
-            this.on("chart.mouseout", function(e) {
+            this.on("axis.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             });
 
-            this.on("chart.mousemove", function(e) {
+            this.on("axis.mousemove", function(e) {
                 var left = e.bgX - pl,
                     top = e.bgY - pt + 2;
 

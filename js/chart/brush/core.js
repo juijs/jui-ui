@@ -10,7 +10,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var CoreBrush = function() {
-        
 
         function getMinMaxValue(data, target) {
             var seriesList = {},
@@ -463,7 +462,18 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                callback.apply(self, arguments);
+                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
+                    var axis = self.chart.axis(self.axis.index),
+                        e = arguments[0];
+
+                    if (_.typeCheck("object", axis)) {
+                        if (arguments[1] == self.axis.index) {
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
             }, "render");
         }
 	}
