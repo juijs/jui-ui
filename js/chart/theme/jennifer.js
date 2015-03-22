@@ -252,6 +252,14 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         zoomFocusColor : "gray",
         /** @cfg */
+        zoomScrollBackgroundSize : 50,
+        /** @cfg */
+        zoomScrollBackgroundColor : "#000",
+        /** @cfg */
+        zoomScrollFocusColor : "#fff",
+        /** @cfg */
+        zoomScrollBrushColor : "#000",
+        /** @cfg */
         crossBorderColor : "#a9a9a9",
         /** @cfg */
         crossBorderWidth : 1,

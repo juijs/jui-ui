@@ -221,8 +221,12 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
-                page : cloneAxis.page,
                 index : cloneAxis.index
+                /*/
+                page : cloneAxis.page,
+                start : cloneAxis.start,
+                end : cloneAxis.end
+                /**/
             });
 
             // 원본 데이터 설정
@@ -478,8 +482,13 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             buffer: 10000,
             /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
-            /** @cfg {Number} [page=1]  [For read only] Page number of the data currently drawn. */
+
+            /** @cfg {Number} [page=1]  Page number of the data currently drawn.
             page: 1,
+            /** @cfg {Number} [start=0]
+            start: 0,
+            /** @cfg {Number} [end=0]
+            end: 0, */
 
             /** @cfg {Number} [degree=0]  Set degree of 3d chart */
             degree: 0,
