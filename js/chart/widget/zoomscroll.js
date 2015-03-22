@@ -106,7 +106,7 @@ jui.define("chart.widget.zoomscroll", [ "util.base", "chart.builder" ], function
                 },
                 brush: {
                     type: "area",
-                    target: "c",
+                    target: widget.target,
                     line: false,
                     colors: [ brushColor ]
                 },
@@ -184,6 +184,12 @@ jui.define("chart.widget.zoomscroll", [ "util.base", "chart.builder" ], function
                     setDragEvent(this, false);
                 });
             }).translate(chart.area("x"), chart.area("y2") - h);
+        }
+    }
+
+    ZoomScrollWidget.setup = function() {
+        return {
+            target : null
         }
     }
 
