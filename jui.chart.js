@@ -16814,7 +16814,7 @@ jui.define("chart.widget.zoomscroll", [ "util.base", "chart.builder" ], function
                 height: h,
                 padding: 0,
                 axis: {
-                    x: _.extend({ hide: true, line: false }, axis.get("x"), true),
+                    x: _.extend({ hide: true, line: false, full: true }, axis.get("x"), true),
                     y: _.extend({ hide: true, line: false }, axis.get("y"), true),
                     data: axis.origin
                 },
