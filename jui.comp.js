@@ -3929,7 +3929,7 @@ jui.define("util.svg",
 
             var a = document.createElement("a");
             a.download = (name) ? name + ".svg" : "svg.svg";
-            a.href = this.toDataURL()//;_.svgToBase64(rootElem.innerHTML);
+            a.href = this.toDataURI()//;_.svgToBase64(rootElem.innerHTML);
 
             document.body.appendChild(a);
             a.click();
@@ -3941,7 +3941,7 @@ jui.define("util.svg",
 
             var img = new Image();
             var size = this.size();
-            var uri = this.toDataURL()
+            var uri = this.toDataURI()
                             .replace('width="100%"', 'width="' + size.width + '"')
                             .replace('height="100%"', 'height="' + size.height + '"');
             img.onload = function(){
@@ -3952,7 +3952,7 @@ jui.define("util.svg",
               var context = canvas.getContext('2d');
               context.drawImage(img, 0, 0);
               
-              var png = canvas.toDataURL(type);
+              var png = canvas.toDataURI(type);
               
               if(_.typeCheck("string", name)) {
                   name = name.split(".")[0];
@@ -3982,7 +3982,7 @@ jui.define("util.svg",
             var img = new Image(),
                 size = this.size();
 
-            var uri = this.toDataURL()
+            var uri = this.toDataURI()
                 .replace('width="100%"', 'width="' + size.width + '"')
                 .replace('height="100%"', 'height="' + size.height + '"');
 
@@ -3998,13 +3998,13 @@ jui.define("util.svg",
         }
 
         /**
-         * @method toXml
+         * @method toXML
          *
          * convert xml string
          *
          * @return {String} xml
          */
-        this.toXml = function() {
+        this.toXML = function() {
             var text = rootElem.innerHTML;
 
             text = text.replace('xmlns="http://www.w3.org/2000/svg"', '');
@@ -4016,14 +4016,14 @@ jui.define("util.svg",
         }
 
         /**
-         * @method toDataURL
+         * @method toDataURI
          *
          * convert svg to datauri format
          *
          * @return {String}
          */
-        this.toDataURL = function() {
-            var xml = this.toXml();
+        this.toDataURI = function() {
+            var xml = this.toXML();
 
             if (_.browser.mozilla || _.browser.msie) {
                 xml = encodeURIComponent(xml);
@@ -4034,7 +4034,6 @@ jui.define("util.svg",
             } else {
                 return "data:image/svg+xml;utf8," + xml;
             }
-
         }
 
         /**

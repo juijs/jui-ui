@@ -31,4 +31,4 @@ var chart = jui.create("chart.builder", $("<div></div>"), {
     }
 });
 
-fs.writeFileSync("test.svg", chart.svg.toXml());
+fs.writeFileSync("test.svg", chart.svg.toXML());

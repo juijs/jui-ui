@@ -128,7 +128,7 @@ jui.define("chart.widget.zoomscroll", [ "util.base", "chart.builder" ], function
                 chart.svg.image({
                     width: w,
                     height: h,
-                    "xlink:href": c.svg.toDataURL()
+                    "xlink:href": c.svg.toDataURI()
                 });
 
                 chart.svg.group({}, function() {
