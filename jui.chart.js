@@ -4825,13 +4825,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 axis[k].orient = "custom";
             }
 
-            // 다른 그리드 옵션을 사용함
-            /*/
-            if(_.typeCheck("integer", axis[k].extend)) {
-                _.extend(axis[k], chart.options.axis[axis[k].extend][k], true);
-            }
-            /**/
-
             axis[k].type = axis[k].type || "block";
             var Grid = jui.include("chart.grid." + axis[k].type);
 
@@ -4866,7 +4859,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             return elem.scale;
         }
         
-        function page(pNo) {
+        function setScreen(pNo) {
             var dataList = self.origin,
                 limit = self.buffer,
                 maxPage = Math.ceil(dataList.length / limit);
@@ -4892,6 +4885,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
                 if(dataList.length > 0) self.page++;
             }
+        }
+
+        function setZoom(start, end) {
+            var dataList = self.origin;
+
+            self.end = (end > dataList.length) ? dataList.length : end;
+            self.start = (start < 0) ? 0 : start;
+            self.data = dataList.slice(self.start, self.end);
         }
 
         function createClipPath() {
@@ -4984,19 +4985,21 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 origin : cloneAxis.origin,
                 buffer : cloneAxis.buffer,
                 shift : cloneAxis.shift,
-                index : cloneAxis.index
-                /*/
+                index : cloneAxis.index,
                 page : cloneAxis.page,
                 start : cloneAxis.start,
                 end : cloneAxis.end
-                /**/
             });
 
             // 원본 데이터 설정
             self.origin = self.data;
 
             // 페이지 초기화
-            page(1);
+            if(self.start > 0 || self.end > 0) {
+                setZoom(self.start, self.end);
+            } else {
+                setScreen(self.page);
+            }
 
             // 엑시스 이벤트 설정
             setAxisMouseEvent();
@@ -5139,7 +5142,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
          * @param {Number} pNo 페이지 번호 
          */
         this.screen = function(pNo) {
-            page(pNo);
+            setScreen(pNo);
 
             if(this.end <= this.origin.length) {
                 if(chart.isRender()) chart.render();
@@ -5197,11 +5200,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         this.zoom = function(start, end) {
             if(start == end) return;
 
-            var dataList = this.origin;
-            this.end = (end > dataList.length) ? dataList.length : end;
-            this.start = (start < 0) ? 0 : start;
-            this.data = dataList.slice(this.start, this.end);
-
+            setZoom(start, end);
             if(chart.isRender()) chart.render();
         }
 
@@ -5246,12 +5245,12 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             /** @cfg {Number} [shift=1]  Data shift count for the 'prev' or 'next' method of the chart builder.  */
             shift: 1,
 
-            /** @cfg {Number} [page=1]  Page number of the data currently drawn.
+            /** @cfg {Number} [page=1]  Page number of the data currently drawn. */
             page: 1,
-            /** @cfg {Number} [start=0]
+            /** @cfg {Number} [start=0] */
             start: 0,
-            /** @cfg {Number} [end=0]
-            end: 0, */
+            /** @cfg {Number} [end=0] */
+            end: 0,
 
             /** @cfg {Number} [degree=0]  Set degree of 3d chart */
             degree: 0,
