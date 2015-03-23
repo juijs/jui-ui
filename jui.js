@@ -22923,7 +22923,8 @@ jui.define("chart.brush.topologynode",
         var self = this,
             edges = new EdgeManager(),
             g, tooltip, r, point,
-            textY = 14, padding = 7, anchor = 7; // 엣지 툴팁
+            textY = 14, padding = 7, anchor = 7,
+            active = null; // 활성화된 노드 차트
 
         function getDistanceXY(x1, y1, x2, y2, dist) {
             var a = x1 - x2,
@@ -22981,16 +22982,15 @@ jui.define("chart.brush.topologynode",
         }
 
         function createNodes(index, data) {
-            var xy = axis.c(index);
+            var xy = axis.c(index),
+                color =_.typeCheck("function", brush.nodeColor) ?
+                brush.nodeColor(data) : (brush.nodeColor || self.color(0)),
+                title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "",
+                text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
 
             var node = chart.svg.group({
                 index: index
             }, function() {
-                var color =_.typeCheck("function", brush.nodeColor) ?
-                        brush.nodeColor(data) : (brush.nodeColor || self.color(0));
-                var title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "",
-                    text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
-
                 if(_.typeCheck("function", brush.nodeImage)) {
                     chart.svg.image({
                         "xlink:href": brush.nodeImage(data),
@@ -23002,6 +23002,7 @@ jui.define("chart.brush.topologynode",
                     });
                 } else {
                     chart.svg.circle({
+                        "class": "circle",
                         r: r,
                         fill: color,
                         cursor: "pointer"
@@ -23010,6 +23011,7 @@ jui.define("chart.brush.topologynode",
 
                 if(text && text != "") {
                     chart.text({
+                        "class": "text",
                         x: 0,
                         y: 6,
                         fill: chart.theme("topologyNodeFontColor"),
@@ -23021,6 +23023,7 @@ jui.define("chart.brush.topologynode",
 
                 if(title && title != "") {
                     chart.text({
+                        "class": "title",
                         x: 0,
                         y: r + 13,
                         fill: chart.theme("topologyNodeTitleFontColor"),
@@ -23144,6 +23147,73 @@ jui.define("chart.brush.topologynode",
             edges.add(edge);
         }
 
+        function setNodeCharts(node, data) {
+            var inner = chart.svg.image({ visibility: "hidden" }),
+                c = null,
+                i = null,
+                t = null;
+
+            node.each(function(j, elem) {
+                var attr = elem.attributes;
+
+                if(attr["class"] == "circle")
+                    c = elem;
+                if(attr["class"] == "text")
+                    i = elem;
+                if(attr["class"] == "title")
+                    t = elem;
+            });
+
+            node.append(inner);
+
+            node.on("dblclick", function(e) {
+                if(active != null) resetActiveChart();
+
+                var chart = brush.nodeChart(data, e),
+                    w = chart.padding("left") + chart.padding("right") + chart.area("width"),
+                    h = chart.padding("top") + chart.padding("bottom") + chart.area("height"),
+                    r = Math.sqrt((w * w) + (h * h)) / 2;
+
+                // 노드 반지름 설정
+                c.attr({ r: r });
+
+                inner.attr({
+                    x: -(w / 2),
+                    y: -(h / 2),
+                    width: w,
+                    height: h,
+                    "xlink:href": chart.svg.toDataURI(),
+                    visibility: "visible"
+                });
+
+                i.attr({ visibility: "hidden" });
+                t.attr({ visibility: "hidden" });
+
+                active = {
+                    c: c,
+                    i: i,
+                    t: t,
+                    inner: inner
+                };
+            });
+        }
+
+        function resetActiveChart() {
+            if(active == null) return;
+
+            active.i.attr({ visibility: "visible" });
+            active.t.attr({ visibility: "visible" });
+            active.inner.attr({ visibility: "hidden" });
+
+            if (_.typeCheck("function", brush.nodeImage)) {
+                active.c.attr({ width: r * 2, height: r * 2 });
+            } else {
+                active.c.attr({ r: r });
+            }
+
+            active = null;
+        }
+
         function showTooltip(edge, e) {
             if(!_.typeCheck("function", brush.tooltipTitle) ||
                 !_.typeCheck("function", brush.tooltipText)) return;
@@ -23251,6 +23321,8 @@ jui.define("chart.brush.topologynode",
         }
 
         this.draw = function() {
+            var nodes = [];
+
             this.eachData(function(i, data) {
                 for(var j = 0; j < data.outgoing.length; j++) {
                     // 엣지 데이터 생성
@@ -23263,7 +23335,10 @@ jui.define("chart.brush.topologynode",
 
             // 노드 그리기
             this.eachData(function(i, data) {
-                g.append(createNodes(i, data));
+                var node = createNodes(i, data);
+                g.append(node);
+
+                nodes[i] = { node: node, data: data };
             });
 
             // 툴팁 숨기기 이벤트 (차트 배경 클릭시)
@@ -23284,6 +23359,13 @@ jui.define("chart.brush.topologynode",
                 });
             }
 
+            // 노드 차트 설정
+            if(_.typeCheck("function", brush.nodeChart) && brush.nodeImage == null) {
+                for(var i = 0; i < nodes.length; i++) {
+                    setNodeCharts(nodes[i].node, nodes[i].data);
+                }
+            }
+
             return g;
         }
     }
@@ -23302,11 +23384,15 @@ jui.define("chart.brush.topologynode",
             nodeImage: null,
             /** @cfg {Function/String} [nodeColor=null] */
             nodeColor: null,
+
+            nodeChart: null,
+
             /** @cfg {Array} [edgeData=[]] */
             edgeData: [],
             /** @cfg {String} [edgeText=null] */
             edgeText: null,
             /** @cfg {Function} [tooltipTitle=null] */
+
             tooltipTitle: null,
             /** @cfg {Function} [tooltipText=null] */
             tooltipText: null,

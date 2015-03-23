@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body>
+<div id="chart"></div>
+
+<style>
+    #chart {
+        width: 800px;
+        height: 600px;
+        border: 1px solid black;
+    }
+</style>
+
+<script>
+    function rnd(count) {
+        return Math.floor(Math.random() * count);
+    }
+
+    function getRandomData(count, outer, inner) { // 노드 개수, 바깥 연결 개수, 안쪽 연결 개수
+        var w = 800, h = 600;
+        var data = [];
+
+        for(var i = 0; i < count; i++) {
+            var x = rnd(w),
+                y = rnd(h);
+
+            data.push({ name: "W" + (i + 1), x: x, y: y, outgoing: [], incoming: [] });
+        }
+
+        for(var i = 0; i < outer; i++) {
+            var index = rnd(count),
+                outerIndex = rnd(count);
+
+            data[index].outgoing.push(outerIndex);
+        }
+
+        for(var i = 0; i < inner; i++) {
+            var index = rnd(count),
+                innerIndex = rnd(count);
+
+            data[index].incoming.push(innerIndex);
+        }
+
+        return data;
+    }
+
+    var data = [
+        { key: "1000_1", name: "W1", type: "was", outgoing: [ "1000_2" ] },
+        { key: "1000_2", name: "W2", type: "was", outgoing: [ "1000_3", "1000_4" ] },
+        { key: "1000_3", name: "W3", type: "was", outgoing: [ "1_2_3_4", "1000_2" ] },
+        { key: "1000_4", name: "W4", type: "server", outgoing: [ "1_2_3_4" ] },
+        { key: "1_2_3_4", name: "Oracle", type: "db", outgoing: [] }
+    ];
+
+    var data2 = [
+        { key: "1000_1", name: "W1", type: 1, x: 100, y: 100, outgoing: [] },
+        { key: "1000_2", name: "W2", type: 1, x: 100, y: 200, outgoing: [ "1000_1" ] }
+    ];
+
+    var data3 = [
+        { apple : 26.1, ms : 5, oracle : 22.08 },
+        { apple : -43.83, ms : 27.14, oracle : 30.15 },
+        { apple : 55.03, ms : -24, oracle : 36.88 },
+        { apple : 72.95, ms : 25.39, oracle : -32.78 }
+    ];
+
+    var data4 = [
+        { apple : 26.1, ms : 5, oracle : 22.08 },
+        { apple : -13.83, ms : 27.14, oracle : 0.15 },
+        { apple : 3.03, ms : -24, oracle : 6.88 },
+        { apple : 32.95, ms : 29.39, oracle : -2.78 }
+    ];
+
+    jui.ready([ "chart.builder", "util.base" ], function(builder, _) {
+        inner = builder(null, {
+            padding: 0,
+            width: 200,
+            height : 150,
+            theme : "dark",
+            axis : {
+                x : {
+                    domain : [ "week1", "week2", "week3", "week4" ],
+                    hide : true
+                },
+                y :
+                {
+                    type : 'range',
+                    domain : [ -50, 100 ],
+                    hide : true
+                },
+                data : data3
+            },
+            brush : [
+                {
+                    type : 'column',
+                    display : "max"
+                }
+            ],
+            style : {
+                backgroundColor : "black"
+            }
+        });
+
+        c = builder("#chart", {
+            icon: {
+                type: "jennifer",
+                path: "../../img/icon-list.ttf"
+            },
+            theme: "jennifer",
+            padding: 5,
+            axis: {
+                c: {
+                    type: "topologytable"
+                },
+                data: data
+            },
+            brush: {
+                type: "topologynode",
+                nodeColor: "black",
+                nodeText: function(data) {
+                    if(data.type == "server") {
+                        return "{server}";
+                    } else if(data.type == "was") {
+                        return "{was}";
+                    } else {
+                        return "{db}";
+                    }
+                },
+                nodeTitle: function(data) {
+                    return data.name;
+                },
+                nodeChart: function(data) {
+                    console.log("nodechart ----------")
+                    console.log(data);
+
+                    if(data.name == "Oracle") {
+                        inner.axis(0).update(data4);
+                    } else {
+                        inner.axis(0).update(data3);
+                    }
+
+                    return inner;
+                }
+            },
+            widget: {
+                type: "topologyctrl"
+            },
+            event: {
+                "topology.edgeclick": function(data, e) {
+                    console.log("edgeclick ---------------------");
+                    console.log(data);
+                },
+                "topology.nodeclick": function(data, e) {
+                    console.log("nodeclick ---------------------");
+                    console.log(data);
+                }
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
