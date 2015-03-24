@@ -15723,20 +15723,24 @@ jui.define("chart.brush.topologynode",
             node.on("dblclick", function(e) {
                 if(active != null) resetActiveChart();
 
-                var chart = brush.nodeChart(data, e),
-                    w = chart.padding("left") + chart.padding("right") + chart.area("width"),
-                    h = chart.padding("top") + chart.padding("bottom") + chart.area("height"),
+                var nc = brush.nodeChart(data, e),
+                    w = nc.padding("left") + nc.padding("right") + nc.area("width"),
+                    h = nc.padding("top") + nc.padding("bottom") + nc.area("height"),
                     r = Math.sqrt((w * w) + (h * h)) / 2;
 
                 // 노드 반지름 설정
-                c.attr({ r: r });
+                c.attr({
+                    r: r,
+                    stroke: chart.theme("backgroundColor"),
+                    "stroke-width": 2
+                });
 
                 inner.attr({
                     x: -(w / 2),
                     y: -(h / 2),
                     width: w,
                     height: h,
-                    "xlink:href": chart.svg.toDataURI(),
+                    "xlink:href": nc.svg.toDataURI(),
                     visibility: "visible"
                 });
 
