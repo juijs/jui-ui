@@ -793,7 +793,8 @@
 						if(i == -1) {
 							tmpArr.push('"' + keys[j] + '"');
 						} else {
-							tmpArr.push(dataList[i][keys[j]]);
+                            var value = dataList[i][keys[j]];
+                            tmpArr.push(isNaN(value) ? '"' + value + '"' : value);
 						}
 					}
 				}
@@ -831,7 +832,8 @@
 								tmpArr.push('"' + opts.fields[j] + '"');
 							}
 						} else {
-							tmpArr.push(opts.rows[i][opts.fields[j]]);
+                            var value = opts.rows[i][opts.fields[j]];
+							tmpArr.push(isNaN(value) ? '"' + value + '"' : value);
 						}
 					}
 				}
@@ -885,11 +887,18 @@
 
 			for(var i = 1; i < tmpRowArr.length; i++) {
 				if(tmpRowArr[i] != "") {
-					var tmpArr = tmpRowArr[i].split(","),
+					var tmpArr = tmpRowArr[i].split(","), // TODO: 값 안에 콤마(,)가 있을 경우에 별도로 처리해야 함
 						data = {};
 					
 					for(var j = 0; j < keys.length; j++) {
                         data[keys[j]] = tmpArr[j];
+
+                        // '"' 로 감싸져있는 문자열은 '"' 제거
+                        if(tmpArr[j].startsWith('"') && tmpArr[j].endsWith('"')) {
+                            data[keys[j]] = tmpArr[j].split('"').join('');
+                        } else {
+                            data[keys[j]] = tmpArr[j];
+                        }
 
                         if($.inArray(keys[j], csvNumber) != -1) {
                             data[keys[j]] = parseFloat(tmpArr[j]);
