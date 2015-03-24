@@ -263,9 +263,9 @@
 	        
 	        // BOM 코드 적용 (UTF-8 관련)
 	        var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
-	 
+
 	        for (var n = 0; n < string.length; n++) {
-	 
+
 	            var c = string.charCodeAt(n);
 	 
 	            if (c < 128) {
@@ -280,7 +280,7 @@
 	                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 	                utftext += String.fromCharCode((c & 63) | 128);
 	            }
-	 
+
 	        }
 	 
 	        return utftext;
@@ -791,7 +791,7 @@
 				for(var j = 0; j < keys.length; j++) {
 					if(keys[j]) {
 						if(i == -1) {
-							tmpArr.push(keys[j]);
+							tmpArr.push('"' + keys[j] + '"');
 						} else {
 							tmpArr.push(dataList[i][keys[j]]);
 						}
@@ -826,9 +826,9 @@
 					if(opts.fields[j]) {
 						if(i == -1) {
 							if(opts.names && opts.names[j]) {
-								tmpArr.push(opts.names[j]);
+								tmpArr.push('"' + opts.names[j] + '"');
 							} else {
-								tmpArr.push(opts.fields[j]);
+								tmpArr.push('"' + opts.fields[j] + '"');
 							}
 						} else {
 							tmpArr.push(opts.rows[i][opts.fields[j]]);
@@ -4917,8 +4917,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function checkAxisPoint(e) {
-            var top = self.padding("top") + self.area("y"),
-                left = self.padding("left") + self.area("x");
+            var top = self.area("y"),
+                left = self.area("x");
 
             if((e.chartY > top && e.chartY < top + self.area("height")) &&
                 (e.chartX > left && e.chartX < left + self.area("width"))) {
@@ -4950,6 +4950,13 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 }
 
                 chart.emit("axis.mousemove", [ e, index ]);
+            });
+
+            chart.on("bg.mousemove", function(e) {
+                if(!checkAxisPoint(e) && isMouseOver) {
+                    chart.emit("axis.mouseout", [ e, index ]);
+                    isMouseOver = false;
+                }
             });
 
             chart.on("chart.mousedown", function(e) {
@@ -17351,10 +17358,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
             this.on("axis.mouseout", function(e) {
                 g.attr({ visibility: "hidden" });
             }, widget.axis);
-
-            this.on("axis.mouseout", function(e) {
-                g.attr({ visibility: "hidden" });
-            });
 
             this.on("axis.mousemove", function(e) {
                 var left = e.bgX - pl,

@@ -155,8 +155,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function checkAxisPoint(e) {
-            var top = self.padding("top") + self.area("y"),
-                left = self.padding("left") + self.area("x");
+            var top = self.area("y"),
+                left = self.area("x");
 
             if((e.chartY > top && e.chartY < top + self.area("height")) &&
                 (e.chartX > left && e.chartX < left + self.area("width"))) {
@@ -188,6 +188,13 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 }
 
                 chart.emit("axis.mousemove", [ e, index ]);
+            });
+
+            chart.on("bg.mousemove", function(e) {
+                if(!checkAxisPoint(e) && isMouseOver) {
+                    chart.emit("axis.mouseout", [ e, index ]);
+                    isMouseOver = false;
+                }
             });
 
             chart.on("chart.mousedown", function(e) {

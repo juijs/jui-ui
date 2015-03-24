@@ -91,8 +91,13 @@
                     size : 10
                 },
                 widget : {
-                    type : 'zoom',
-                    render : true
+                    type : 'cross',
+                    yFormat : function(d) {
+                        return d;
+                    },
+                    xFormat : function(d) {
+                        return time.format(d, "mm:ss");
+                    }
                 }
             });
     })

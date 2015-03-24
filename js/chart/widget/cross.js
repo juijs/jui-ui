@@ -105,10 +105,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
                 g.attr({ visibility: "hidden" });
             }, widget.axis);
 
-            this.on("axis.mouseout", function(e) {
-                g.attr({ visibility: "hidden" });
-            });
-
             this.on("axis.mousemove", function(e) {
                 var left = e.bgX - pl,
                     top = e.bgY - pt + 2;
