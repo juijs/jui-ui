@@ -3223,7 +3223,7 @@ jui.define("util.svg.element", [], function() {
             // 기본 속성 설정
             this.attr(attr);
         };
-        
+
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
@@ -3276,10 +3276,10 @@ jui.define("util.svg.element", [], function() {
         }
 
         this.insert = function(index, elem) {
-        	if(elem.parent) {
-        		elem.remove();	
-        	}        	
-        	
+            if(elem.parent) {
+                elem.remove();
+            }
+
             this.childrens.splice(index, 0, elem);
             elem.parent = this;
 
@@ -3311,9 +3311,9 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
-            
+
             if (typeof attr == 'undefined' || !attr) return;
-            
+
             if(typeof attr == "string") {
                 return this.attributes[attr] || this.element.getAttribute(attr);
             }
@@ -3352,14 +3352,14 @@ jui.define("util.svg.element", [], function() {
 
             return this;
         }
-        
+
         this.text = function(text) {
             this.element.innerHTML = "";
-        	this.element.appendChild(document.createTextNode(text));
-        	
-        	return this; 
+            this.element.appendChild(document.createTextNode(text));
+
+            return this;
         }
-        
+
         /**
          * 엘리먼트 DOM 이벤트 메소드
          *
@@ -3760,6 +3760,367 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     return PolyElement;
 }, "util.svg.element.transform");
 
+jui.define("util.svgbase",
+    [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
+        "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
+    function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
+
+    var globalObj = null;
+
+    var SVGBase = function() {
+        this.create = function(obj, type, attr, callback) {
+            obj.create(type, attr);
+            return obj;
+        }
+
+        this.createChild = function(obj, type, attr, callback) {
+            return this.create(obj, type, attr, callback);
+        }
+
+        /**
+         * @method custom
+         *
+         * return custom element
+         *
+         * @param {String} name
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
+        this.custom = function(name, attr, callback) {
+            return this.create(new Element(), name, attr, callback);
+        }
+
+        /**
+         * @method defs
+         *
+         * return defs element
+         *
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
+        this.defs = function(callback) {
+            return this.create(new Element(), "defs", null, callback);
+        }
+
+        /**
+         * @method symbol
+         *
+         * return symbol element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
+        this.symbol = function(attr, callback) {
+            return this.create(new Element(), "symbol", attr, callback);
+        }
+
+        /**
+         * @method g
+         *
+         * return defs element
+         *
+         * @alias group
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
+        this.g = this.group = function(attr, callback) {
+            return this.create(new TransElement(), "g", attr, callback);
+        }
+
+        /**
+         * @method marker
+         *
+         * return marker element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
+        this.marker = function(attr, callback) {
+            return this.create(new Element(), "marker", attr, callback);
+        }
+
+        /**
+         * @method a
+         *
+         * return a element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
+        this.a = function(attr, callback) {
+            return this.create(new TransElement(), "a", attr, callback);
+        }
+
+        /**
+         * @method switch
+         *
+         * return switch element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element}
+         */
+        this.switch = function(attr, callback) {
+            return this.create(new Element(), "switch", attr, callback);
+        }
+
+        /**
+         * @method use
+         *
+         * return use element
+         *
+         * @param {Object} attr
+         * @return {util.svg.element}
+         */
+        this.use = function(attr) {
+            return this.create(new Element(), "use", attr);
+        }
+
+        /**
+         * @method rect
+         *
+         * return rect element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
+        this.rect = function(attr, callback) {
+            return this.create(new TransElement(), "rect", attr, callback);
+        }
+
+        /**
+         * @method line
+         *
+         * return line element
+         *
+         * @param {Object} attr
+         * @param {Function} callback
+         * @return {util.svg.element.transform}
+         */
+        this.line = function(attr, callback) {
+            return this.create(new TransElement(), "line", attr, callback);
+        }
+
+        this.circle = function(attr, callback) {
+            return this.create(new TransElement(), "circle", attr, callback);
+        }
+
+        this.text = function(attr, textOrCallback) {
+            if(arguments.length == 2) {
+                if (_.typeCheck("function", textOrCallback)) {
+                    return this.create(new TransElement(), "text", attr, textOrCallback);
+                }
+
+                return this.create(new TransElement(), "text", attr).text(textOrCallback);
+            }
+
+            return this.create(new TransElement(), "text", attr);
+        }
+
+        this.textPath = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return this.create(new Element(), "textPath", attr).text(text);
+            }
+
+            return this.create(new Element(), "textPath", attr);
+        }
+
+        this.tref = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return this.create(new Element(), "tref", attr).text(text);
+            }
+
+            return this.create(new Element(), "tref", attr);
+        }
+
+        this.tspan = function(attr, text) {
+            if(_.typeCheck("string", text)) {
+                return this.create(new Element(), "tspan", attr).text(text);
+            }
+
+            return this.create(new Element(), "tspan", attr);
+        }
+
+        this.ellipse = function(attr, callback) {
+            return this.create(new TransElement(), "ellipse", attr, callback);
+        }
+
+        this.image = function(attr, callback) {
+            return this.create(new TransElement(), "image", attr, callback);
+        }
+
+        this.path = function(attr, callback) {
+            return this.create(new PathElement(), "path", attr, callback);
+        }
+
+        this.pathSymbol = function(attr, callback) {
+            return this.create(new PathSymbolElement(), "path", attr, callback);
+        }
+
+        this.pathRect = function(attr, callback) {
+            return this.create(new PathRectElement(), "path", attr, callback);
+        }
+
+        this.polyline = function(attr, callback) {
+            return this.create(new PolyElement(), "polyline", attr, callback);
+        }
+
+        this.polygon = function(attr, callback) {
+            return this.create(new PolyElement(), "polygon", attr, callback);
+        }
+
+        this.pattern = function(attr, callback) {
+            return this.create(new Element(), "pattern", attr, callback);
+        }
+
+        this.mask = function(attr, callback) {
+            return this.create(new Element(), "mask", attr, callback);
+        }
+
+        this.clipPath = function(attr, callback) {
+            return this.create(new Element(), "clipPath", attr, callback);
+        }
+
+        this.linearGradient = function(attr, callback) {
+            return this.create(new Element(), "linearGradient", attr, callback);
+        }
+
+        this.radialGradient = function(attr, callback) {
+            return this.create(new Element(), "radialGradient", attr, callback);
+        }
+
+        this.filter = function(attr, callback) {
+            return this.create(new Element(), "filter", attr, callback);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (그라데이션)
+         *
+         */
+
+        this.stop = function(attr) {
+            return this.createChild(new Element(), "stop", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (애니메이션)
+         *
+         */
+
+        this.animate = function(attr) {
+            return this.createChild(new Element(), "animate", attr);
+        }
+
+        this.animateColor = function(attr) {
+            return this.createChild(new Element(), "animateColor", attr);
+        }
+
+        this.animateMotion = function(attr) {
+            return this.createChild(new Element(), "animateMotion", attr);
+        }
+
+        this.animateTransform = function(attr) {
+            return this.createChild(new Element(), "animateTransform", attr);
+        }
+
+        this.mpath = function(attr) {
+            return this.createChild(new Element(), "mpath", attr);
+        }
+
+        this.set = function(attr) {
+            return this.createChild(new Element(), "set", attr);
+        }
+
+        /**
+         * 엘리먼트 관련 메소드 (필터)
+         *
+         */
+
+        this.feBlend = function(attr) {
+            return this.createChild(new Element(), "feBlend", attr);
+        }
+
+        this.feColorMatrix = function(attr) {
+            return this.createChild(new Element(), "feColorMatrix", attr);
+        }
+
+        this.feComponentTransfer = function(attr) {
+            return this.createChild(new Element(), "feComponentTransfer", attr);
+        }
+
+        this.feComposite = function(attr) {
+            return this.createChild(new Element(), "feComposite", attr);
+        }
+
+        this.feConvolveMatrix = function(attr) {
+            return this.createChild(new Element(), "feConvolveMatrix", attr);
+        }
+
+        this.feDiffuseLighting = function(attr) {
+            return this.createChild(new Element(), "feDiffuseLighting", attr);
+        }
+
+        this.feDisplacementMap = function(attr) {
+            return this.createChild(new Element(), "feDisplacementMap", attr);
+        }
+
+        this.feFlood = function(attr) {
+            return this.createChild(new Element(), "feFlood", attr);
+        }
+
+        this.feGaussianBlur = function(attr) {
+            return this.createChild(new Element(), "feGaussianBlur", attr);
+        }
+
+        this.feImage = function(attr) {
+            return this.createChild(new Element(), "feImage", attr);
+        }
+
+        this.feMerge = function(attr, callback) {
+            return this.createChild(new Element(), "feMerge", attr, callback);
+        }
+
+        this.feMergeNode = function(attr) {
+            return this.createChild(new Element(), "feMergeNode", attr);
+        }
+
+        this.feMorphology = function(attr) {
+            return this.createChild(new Element(), "feMorphology", attr);
+        }
+
+        this.feOffset = function(attr) {
+            return this.createChild(new Element(), "feOffset", attr);
+        }
+
+        this.feSpecularLighting = function(attr) {
+            return this.createChild(new Element(), "feSpecularLighting", attr);
+        }
+
+        this.feTile = function(attr) {
+            return this.createChild(new Element(), "feTile", attr);
+        }
+
+        this.feTurbulence = function(attr) {
+            return this.createChild(new Element(), "feTurbulence", attr);
+        }
+    }
+
+    SVGBase.create = function(name, attr, callback) {
+        if(globalObj == null) {
+            globalObj = new SVGBase();
+        }
+
+        return globalObj.custom(name, attr, callback);
+    }
+
+    return SVGBase;
+});
 jui.define("util.svg",
     [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
@@ -3801,34 +4162,6 @@ jui.define("util.svg",
             root.append(sub);
         }
         
-        function create(obj, type, attr, callback) {
-            obj.create(type, attr);
-
-            if(depth == 0) {
-                main.append(obj);
-            } else {
-                parent[depth].append(obj);
-            }
-
-            if(_.typeCheck("function", callback)) {
-                depth++;
-                parent[depth] = obj;
-
-                callback.call(obj);
-                depth--;
-            }
-
-            return obj;
-        }
-
-        function createChild(obj, type, attr, callback) {
-            if(obj.parent == main) {
-                throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
-            }
-
-            return create(obj, type, attr, callback);
-        }
-
         function appendAll(target) {
             var len = target.childrens.length;
             for(var i = 0; i < len; i++) {
@@ -3851,10 +4184,33 @@ jui.define("util.svg",
             }
         }
 
-        /**
-         * 일반 메소드
-         *
-         */
+        this.create = function(obj, type, attr, callback) {
+            obj.create(type, attr);
+
+            if(depth == 0) {
+                main.append(obj);
+            } else {
+                parent[depth].append(obj);
+            }
+
+            if(_.typeCheck("function", callback)) {
+                depth++;
+                parent[depth] = obj;
+
+                callback.call(obj);
+                depth--;
+            }
+
+            return obj;
+        }
+
+        this.createChild = function(obj, type, attr, callback) {
+            if(obj.parent == main) {
+                throw new Error("JUI_CRITICAL_ERR: Parents are required elements of the '" + type + "'");
+            }
+
+            return this.create(obj, type, attr, callback);
+        }
 
         /**
          * @method size
@@ -4091,354 +4447,16 @@ jui.define("util.svg",
         	return { width : rect.width, height : rect.height }; 
         }
 
-        /**
-         * 엘리먼트 생성 메소드
-         *
-         */
-
-        /**
-         * @method custom
-         *
-         * return custom element
-         *
-         * @param {String} name
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element}
-         */
-        this.custom = function(name, attr, callback) {
-            return create(new Element(), name, attr, callback);
-        }
-
-        /**
-         * @method defs
-         *
-         * return defs element
-         *
-         * @param {Function} callback
-         * @return {util.svg.element}
-         */
-        this.defs = function(callback) {
-            return create(new Element(), "defs", null, callback);
-        }
-
-        /**
-         * @method symbol
-         *
-         * return symbol element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element}
-         */
-        this.symbol = function(attr, callback) {
-            return create(new Element(), "symbol", attr, callback);
-        }
-
-        /**
-         * @method g
-         *
-         * return defs element
-         *
-         * @alias group
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element.transform}
-         */
-        this.g = this.group = function(attr, callback) {
-            return create(new TransElement(), "g", attr, callback);
-        }
-
-        /**
-         * @method marker
-         *
-         * return marker element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element}
-         */
-        this.marker = function(attr, callback) {
-            return create(new Element(), "marker", attr, callback);
-        }
-
-        /**
-         * @method a
-         *
-         * return a element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element.transform}
-         */
-        this.a = function(attr, callback) {
-            return create(new TransElement(), "a", attr, callback);
-        }
-
-        /**
-         * @method switch
-         *
-         * return switch element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element}
-         */
-        this.switch = function(attr, callback) {
-            return create(new Element(), "switch", attr, callback);
-        }
-
-        /**
-         * @method use
-         *
-         * return use element
-         *
-         * @param {Object} attr
-         * @return {util.svg.element}
-         */
-        this.use = function(attr) {
-            return create(new Element(), "use", attr);
-        }
-
-        /**
-         * @method rect
-         *
-         * return rect element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element.transform}
-         */
-        this.rect = function(attr, callback) {
-            return create(new TransElement(), "rect", attr, callback);
-        }
-
-        /**
-         * @method line
-         *
-         * return line element
-         *
-         * @param {Object} attr
-         * @param {Function} callback
-         * @return {util.svg.element.transform}
-         */
-        this.line = function(attr, callback) {
-            return create(new TransElement(), "line", attr, callback);
-        }
-
-        this.circle = function(attr, callback) {
-            return create(new TransElement(), "circle", attr, callback);
-        }
-
-        this.text = function(attr, textOrCallback) {
-            if(arguments.length == 2) {
-                if (_.typeCheck("function", textOrCallback)) {
-                    return create(new TransElement(), "text", attr, textOrCallback);
-                }
-
-                return create(new TransElement(), "text", attr).text(textOrCallback);
-            }
-
-            return create(new TransElement(), "text", attr);
-        }
-
-        this.textPath = function(attr, text) {
-            if(_.typeCheck("string", text)) {
-                return create(new Element(), "textPath", attr).text(text);
-            }
-
-            return create(new Element(), "textPath", attr);
-        }
-
-        this.tref = function(attr, text) {
-            if(_.typeCheck("string", text)) {
-                return create(new Element(), "tref", attr).text(text);
-            }
-
-            return create(new Element(), "tref", attr);
-        }
-
-        this.tspan = function(attr, text) {
-            if(_.typeCheck("string", text)) {
-                return create(new Element(), "tspan", attr).text(text);
-            }
-
-            return create(new Element(), "tspan", attr);
-        }
-
-        this.ellipse = function(attr, callback) {
-            return create(new TransElement(), "ellipse", attr, callback);
-        }
-
-        this.image = function(attr, callback) {
-            return create(new TransElement(), "image", attr, callback);
-        }
-
-        this.path = function(attr, callback) {
-            return create(new PathElement(), "path", attr, callback);
-        }
-
-        this.pathSymbol = function(attr, callback) {
-            return create(new PathSymbolElement(), "path", attr, callback);
-        }
-
-        this.pathRect = function(attr, callback) {
-            return create(new PathRectElement(), "path", attr, callback);
-        }
-
-        this.polyline = function(attr, callback) {
-            return create(new PolyElement(), "polyline", attr, callback);
-        }
-
-        this.polygon = function(attr, callback) {
-            return create(new PolyElement(), "polygon", attr, callback);
-        }
-
-        this.pattern = function(attr, callback) {
-            return create(new Element(), "pattern", attr, callback);
-        }
-
-        this.mask = function(attr, callback) {
-            return create(new Element(), "mask", attr, callback);
-        }
-
-        this.clipPath = function(attr, callback) {
-            return create(new Element(), "clipPath", attr, callback);
-        }
-
-        this.linearGradient = function(attr, callback) {
-            return create(new Element(), "linearGradient", attr, callback);
-        }
-
-        this.radialGradient = function(attr, callback) {
-            return create(new Element(), "radialGradient", attr, callback);
-        }
-
-        this.filter = function(attr, callback) {
-            return create(new Element(), "filter", attr, callback);
-        }
-
-        /**
-         * 엘리먼트 관련 메소드 (그라데이션)
-         *
-         */
-
-        this.stop = function(attr) {
-            return createChild(new Element(), "stop", attr);
-        }
-
-        /**
-         * 엘리먼트 관련 메소드 (애니메이션)
-         *
-         */
-
-        this.animate = function(attr) {
-            return createChild(new Element(), "animate", attr);
-        }
-
-        this.animateColor = function(attr) {
-            return createChild(new Element(), "animateColor", attr);
-        }
-
-        this.animateMotion = function(attr) {
-            return createChild(new Element(), "animateMotion", attr);
-        }
-
-        this.animateTransform = function(attr) {
-            return createChild(new Element(), "animateTransform", attr);
-        }
-
-        this.mpath = function(attr) {
-            return createChild(new Element(), "mpath", attr);
-        }
-
-        this.set = function(attr) {
-            return createChild(new Element(), "set", attr);
-        }
-
-        /**
-         * 엘리먼트 관련 메소드 (필터)
-         *
-         */
-
-        this.feBlend = function(attr) {
-            return createChild(new Element(), "feBlend", attr);
-        }
-
-        this.feColorMatrix = function(attr) {
-            return createChild(new Element(), "feColorMatrix", attr);
-        }
-
-        this.feComponentTransfer = function(attr) {
-            return createChild(new Element(), "feComponentTransfer", attr);
-        }
-
-        this.feComposite = function(attr) {
-            return createChild(new Element(), "feComposite", attr);
-        }
-
-        this.feConvolveMatrix = function(attr) {
-            return createChild(new Element(), "feConvolveMatrix", attr);
-        }
-
-        this.feDiffuseLighting = function(attr) {
-            return createChild(new Element(), "feDiffuseLighting", attr);
-        }
-
-        this.feDisplacementMap = function(attr) {
-            return createChild(new Element(), "feDisplacementMap", attr);
-        }
-
-        this.feFlood = function(attr) {
-            return createChild(new Element(), "feFlood", attr);
-        }
-
-        this.feGaussianBlur = function(attr) {
-            return createChild(new Element(), "feGaussianBlur", attr);
-        }
-
-        this.feImage = function(attr) {
-            return createChild(new Element(), "feImage", attr);
-        }
-
-        this.feMerge = function(attr, callback) {
-            return createChild(new Element(), "feMerge", attr, callback);
-        }
-
-        this.feMergeNode = function(attr) {
-            return createChild(new Element(), "feMergeNode", attr);
-        }
-
-        this.feMorphology = function(attr) {
-            return createChild(new Element(), "feMorphology", attr);
-        }
-
-        this.feOffset = function(attr) {
-            return createChild(new Element(), "feOffset", attr);
-        }
-
-        this.feSpecularLighting = function(attr) {
-            return createChild(new Element(), "feSpecularLighting", attr);
-        }
-
-        this.feTile = function(attr) {
-            return createChild(new Element(), "feTile", attr);
-        }
-
-        this.feTurbulence = function(attr) {
-            return createChild(new Element(), "feTurbulence", attr);
-        }
-
         init();
     }
 
     /**
-     * @method createElement
+     * @method create
      *
      * create nested elements by json
      *
      *      @example
-     *      SVG.createElement({
+     *      SVG.create({
      *          tag : "pattern",
      *          attr : { x : 0, y : 0, width : 20, height : 20  },
      *          children : [
@@ -4467,14 +4485,14 @@ jui.define("util.svg",
      * @return {util.svg.element}
      *
      */
-    SVG.createElement = function(obj) {
+    SVG.createObject = function(obj) {
         var el = new Element();
 
         el.create(obj.type, obj.attr);
 
         if (obj.children instanceof Array) {
-            for(var i = 0, len = obj.children.length ; i < obj.children.length; i++) {
-                el.append(SVG.createElement(obj.children[i]));
+            for(var i = 0, len = obj.children.length; i < len; i++) {
+                el.append(SVG.createObject(obj.children[i]));
             }
         }
 
@@ -4482,7 +4500,7 @@ jui.define("util.svg",
     }
 
     return SVG;
-});
+}, "util.svgbase");
 
 jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ], function(_, math, color, SVGUtil) {
     var SVG3D = function(rootElem, rootAttr) {
@@ -4604,8 +4622,9 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
             return g;
         }
     }
-  
-    SVG3D.createElement = SVGUtil.createElement;
+
+    // Set Alias
+    SVG3D.createObject = SVGUtil.createObject;
 
     return SVG3D;
 });
@@ -13088,7 +13107,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
 
             obj.attr.id = id;
 
-            g = SVGUtil.createElement(obj);
+            g = SVGUtil.createObject(obj);
 
             _defs.append(g);
 
@@ -13132,7 +13151,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     patternElement.attr.id = obj;
                 }
 
-                patternElement = SVGUtil.createElement(patternElement);
+                patternElement = SVGUtil.createObject(patternElement);
 
                 _defs.append(patternElement);
                 
@@ -13147,7 +13166,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     return "url(#" + obj.attr.id + ")";
                 }                
                 
-                var patternElement = SVGUtil.createElement(obj);
+                var patternElement = SVGUtil.createObject(obj);
                 
                 _defs.append(patternElement);
                 
@@ -14882,110 +14901,6 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonBackgroundOpacity : 0.5
     }
 });
-jui.define("chart.pattern.white", ["util.svg"], function(SVG){
-
-    /**
-     * @class chart.pattern.white 
-     * 
-     * pattern default sample  
-     * 
-     * @singleton
-     */
-
-    function CreateCirclePattern (id, size) {
-        size = parseInt(size || 1);
-        var el = {
-            type : "pattern",
-            attr : { id : 'pattern-white-circle' + id,  x : 10, y : 10, width : 10, height : 10, patternUnits : "userSpaceOnUse" },
-            children : [
-                { type : 'rect', attr : { width : 10, height : 10, fill : '#ffffff' }},
-                { type : 'circle', attr : { cx : size, cy : size, r : size,  fill : '#000000' }}
-            ]
-        };
-
-        return el; 
-    }
-    
-
-    return {
-
-        /**
-         * @property circle
-         *
-         * create svg element by json
-         *
-         * @return {util.svg.element}
-         */
-        circle : {
-            type: "pattern",
-            attr: { id: 'pattern-white-circle', width: 15, height: 15, patternUnits: "userSpaceOnUse" },
-            children: [
-                { type: 'rect', attr: { width: 50, height: 50, fill: '#282828' }},
-                { type: 'circle', attr: { cx: 3, cy: 4.3, r: 1.8, fill: '#393939' }},
-                { type: 'circle', attr: { cx: 3, cy: 3, r: 1.8, fill: 'black' }},
-                { type: 'circle', attr: { cx: 10.5, cy: 12.5, r: 1.8, fill: '#393939' }},
-                { type: 'circle', attr: { cx: 10.5, cy: 11.3, r: 1.8, fill: 'black' }}
-            ]
-        },
-        
-        /**
-         * @method rect
-         *
-         * create svg element by chart's svg  
-         * 
-         * @return {util.svg.element}
-         */        
-        rect : {
-            type: "pattern",
-            attr: { id: 'pattern-white-rect', width: 20, height: 20, patternUnits: "userSpaceOnUse" },
-            children: [
-                { type: 'rect', attr: { width: 20, height: 20, fill: '#00a9f1' }},
-                { type: 'rect', attr: { width: 20, height: 10, fill: '#26baf4' }}
-            ]
-        },
-
-        circle1 : function() { return CreateCirclePattern.call(this, 1, 1); },
-        circle2 : function() { return CreateCirclePattern.call(this, 2, 1.5); },
-        circle3 : function() { return CreateCirclePattern.call(this, 3, 2); },
-        circle4 : function() { return CreateCirclePattern.call(this, 4, 2.5); },
-        circle5 : function() { return CreateCirclePattern.call(this, 5, 3); },
-        circle6 : function() { return CreateCirclePattern.call(this, 6, 3.5); },
-        circle7 : function() { return CreateCirclePattern.call(this, 7, 4); },
-        circle8 : function() { return CreateCirclePattern.call(this, 8, 4.5); },
-
-        rect1 : {
-            type : 'pattern',
-            attr: { id: 'pattern-white-rect1', width: 70, height: 70, patternUnits: "userSpaceOnUse" },
-            children : [
-                { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iI2JiZDgxNyI+PC9yZWN0Pgo8ZyB0cmFuc2Zvcm09InJvdGF0ZSg0NSkiPgo8cmVjdCB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPHJlY3QgeT0iLTUwIiB3aWR0aD0iOTkiIGhlaWdodD0iMjUiIGZpbGw9IiNhOWNlMDAiPjwvcmVjdD4KPC9nPgo8L3N2Zz4=", width: 70, height : 70}}
-            ]
-        },
-        rect2 : {
-            type : 'pattern',
-            attr: { id: 'pattern-white-rect2', width: 56, height: 100, patternUnits: "userSpaceOnUse", patternTransform : "rotate(45)" },
-            children : [
-                { type : 'image' , attr : { "xlink:href" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjhkMjAzIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZjYyOSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZTUwMyIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+Cjwvc3ZnPg==", width: 56, height : 100}}
-            ]
-        },
-        rect3 : {
-            type : 'pattern',
-            attr: { id: 'pattern-white-rect3', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "scale(2)" },
-            children : [
-                { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
-            ]
-        },
-        rect4 : {
-            type : 'pattern',
-            attr: { id: 'pattern-white-rect4', width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform : "skewX(45)" },
-            children : [
-                { type : 'rect' , attr : { width : 10, height : 10, fill : '#ffffff', stroke : '#000000', "stroke-width" : 0.5 }}
-            ]
-        }
-
-    }
-    
-})
-
 jui.define("chart.pattern.jennifer", [], function() {
 	return {
     "10": {

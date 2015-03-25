@@ -347,7 +347,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
 
             obj.attr.id = id;
 
-            g = SVGUtil.createElement(obj);
+            g = SVGUtil.createObject(obj);
 
             _defs.append(g);
 
@@ -391,7 +391,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     patternElement.attr.id = obj;
                 }
 
-                patternElement = SVGUtil.createElement(patternElement);
+                patternElement = SVGUtil.createObject(patternElement);
 
                 _defs.append(patternElement);
                 
@@ -406,7 +406,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
                     return "url(#" + obj.attr.id + ")";
                 }                
                 
-                var patternElement = SVGUtil.createElement(obj);
+                var patternElement = SVGUtil.createObject(obj);
                 
                 _defs.append(patternElement);
                 

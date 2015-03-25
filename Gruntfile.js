@@ -14,6 +14,7 @@ module.exports = function(grunt) {
         "js/util/time.js",
         "js/util/scale.js",
         "js/util/color.js",
+        "js/util/svgbase.js",
         "js/util/svg.js",
         "js/util/svg3d.js"
     ];
@@ -59,7 +60,6 @@ module.exports = function(grunt) {
         "js/chart/theme/pattern.js",
 
         // chart.pattern 
-        "js/chart/pattern/white.js",
         "js/chart/pattern/jennifer.js",
 
         // chart.icon

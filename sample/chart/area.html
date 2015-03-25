@@ -36,6 +36,7 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
+            theme: "pattern",
             icon: {
                 path: "../../img/icon-list"
             },
@@ -52,7 +53,6 @@
             },
             width: 400,
             height : 400,
-            theme : "jennifer",
             axis : [{
                 data : [
                     { name : 2, value : 15, test : 7 },

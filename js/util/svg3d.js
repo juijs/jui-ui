@@ -118,8 +118,9 @@ jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ],
             return g;
         }
     }
-  
-    SVG3D.createElement = SVGUtil.createElement;
+
+    // Set Alias
+    SVG3D.createObject = SVGUtil.createObject;
 
     return SVG3D;
 });
