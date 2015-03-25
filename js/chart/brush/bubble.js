@@ -80,7 +80,7 @@ jui.define("chart.brush.bubble", [], function() {
          */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
-                var c = elem.childrens[0];
+                var c = elem.children[0];
 
                 c.append(chart.svg.animateTransform({
                     attributeType: "xml",

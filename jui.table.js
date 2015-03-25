@@ -3215,7 +3215,7 @@ jui.define("util.svg.element", [], function() {
         this.create = function(type, attr) {
             // 퍼블릭 프로퍼티
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
-            this.childrens = [];
+            this.children = [];
             this.parent = null;
             this.styles = {};
             this.attributes = {};
@@ -3227,25 +3227,25 @@ jui.define("util.svg.element", [], function() {
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
-            for(var i = 0, len = this.childrens.length; i < len; i++) {
-                var self = this.childrens[i];
+            for(var i = 0, len = this.children.length; i < len; i++) {
+                var self = this.children[i];
                 callback.apply(self, [ i, self ]);
             }
 
-            return this.childrens;
+            return this.children;
         };
 
         this.get = function(index) {
-            if(this.childrens[index]) {
-                return this.childrens[index];
+            if(this.children[index]) {
+                return this.children[index];
             }
 
             return null;
         }
 
         this.index = function(obj) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                if(obj == this.childrens[i]) {
+            for(var i = 0; i < this.children.length; i++) {
+                if(obj == this.children[i]) {
                     return i;
                 }
             }
@@ -3264,7 +3264,7 @@ jui.define("util.svg.element", [], function() {
                     elem.remove();
                 }
 
-                this.childrens.push(elem);
+                this.children.push(elem);
                 elem.parent = this;
             }
 
@@ -3280,7 +3280,7 @@ jui.define("util.svg.element", [], function() {
                 elem.remove();
             }
 
-            this.childrens.splice(index, 0, elem);
+            this.children.splice(index, 0, elem);
             elem.parent = this;
 
             return this;
@@ -3289,7 +3289,7 @@ jui.define("util.svg.element", [], function() {
         this.remove = function() {
             var index = 0,
                 nChild = [],
-                pChild = this.parent.childrens;
+                pChild = this.parent.children;
 
             for(var i = 0; i < pChild.length; i++) {
                 if (pChild[i] == this) {
@@ -3300,7 +3300,7 @@ jui.define("util.svg.element", [], function() {
                 nChild.push(pChild[i]);
             }
 
-            this.parent.childrens = nChild;
+            this.parent.children = nChild;
 
             return this;
         }
@@ -4163,12 +4163,12 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.childrens.length;
+            var len = target.children.length;
             for(var i = 0; i < len; i++) {
-                var child = target.childrens[i];
+                var child = target.children[i];
 
                 if(child) {
-                    if(child.childrens.length > 0) {
+                    if(child.children.length > 0) {
                         appendAll(child);
                     }
                     
@@ -4259,10 +4259,10 @@ jui.define("util.svg",
          */
         this.reset = function(isAll) {
             this.clear(isAll);
-            main.childrens = [];
+            main.children = [];
 
             if(isAll === true) {
-                sub.childrens = [];
+                sub.children = [];
             }
         }
 
@@ -5052,7 +5052,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
 
         this.parent = (pRow) ? pRow : null;
-        this.childrens = [];
+        this.children = [];
         this.depth = 0;
         this.type = "fold";
 
@@ -5079,7 +5079,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         function setIndexChild(row) {
-            var clist = row.childrens;
+            var clist = row.children;
 
             for(var i = 0; i < clist.length; i++) {
                 clist[i].reload(i);
@@ -5115,8 +5115,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         function removeChildAll(row) {
             $(row.element).remove();
 
-            for(var i = 0; i < row.childrens.length; i++) {
-                var c_row = row.childrens[i];
+            for(var i = 0; i < row.children.length; i++) {
+                var c_row = row.children[i];
 
                 if(!c_row.isLeaf()) {
                     removeChildAll(c_row);
@@ -5127,8 +5127,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         function reloadChildAll() {
-            for(var i = 0; i < self.childrens.length; i++) {
-                self.childrens[i].reload(i);
+            for(var i = 0; i < self.children.length; i++) {
+                self.children[i].reload(i);
             }
         }
 
@@ -5170,14 +5170,14 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         this.isLeaf = function() {
-            return (this.childrens.length == 0) ? true : false;
+            return (this.children.length == 0) ? true : false;
         }
 
         this.fold = function() {
             this.type = "fold";
 
-            for(var i = 0; i < this.childrens.length; i++) {
-                var c_row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var c_row = this.children[i];
                 $(c_row.element).hide();
 
                 if(!c_row.isLeaf()) c_row.fold();
@@ -5187,8 +5187,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         this.open = function() {
             this.type = "open";
 
-            for(var i = 0; i < this.childrens.length; i++) {
-                var c_row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var c_row = this.children[i];
                 $(c_row.element).show();
 
                 if(!c_row.isLeaf()) c_row.open();
@@ -5199,17 +5199,17 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
             var lastElem = (this.isLeaf()) ? this.element : this.lastChildLeaf().element;
             $(row.element).insertAfter(lastElem);
 
-            this.childrens.push(row);
+            this.children.push(row);
         }
 
         this.insertChild = function(rownum, row, isReload) {
             var lastElem = this.element;
 
             if(rownum > 0) {
-                var cRow = this.childrens[rownum - 1];
+                var cRow = this.children[rownum - 1];
 
                 // 마지막 자식이거나 대상 로우가 자식이 있을 경우
-                if(!cRow.isLeaf() || this.childrens.length == rownum + 1) {
+                if(!cRow.isLeaf() || this.children.length == rownum + 1) {
                     lastElem = cRow.lastChildLeaf().element;
                 } else {
                     lastElem = cRow.element;
@@ -5219,19 +5219,19 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
             $(row.element).insertAfter(lastElem);
 
-            var preRows = this.childrens.splice(0, rownum);
+            var preRows = this.children.splice(0, rownum);
             preRows.push(row);
 
-            this.childrens = preRows.concat(this.childrens);
+            this.children = preRows.concat(this.children);
             reloadChildAll();
         }
 
         this.removeChild = function(index) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                var row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var row = this.children[i];
 
                 if(row.index == index) {
-                    this.childrens.splice(i, 1); // 배열에서 제거
+                    this.children.splice(i, 1); // 배열에서 제거
                     removeChildAll(row);
                 }
             }
@@ -5241,7 +5241,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
         this.lastChild = function() {
             if(!this.isLeaf())
-                return this.childrens[this.childrens.length - 1];
+                return this.children[this.children.length - 1];
 
             return null;
         }
@@ -5378,13 +5378,13 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
         }
 
         function setRowChildAll(dataList, row) {
-            var c_rows = row.childrens;
+            var c_rows = row.children;
 
             if(c_rows.length > 0) {
                 for(var i = 0; i < c_rows.length; i++) {
                     dataList.push(c_rows[i]);
 
-                    if(c_rows[i].childrens.length > 0) {
+                    if(c_rows[i].children.length > 0) {
                         setRowChildAll(dataList, c_rows[i]);
                     }
                 }
@@ -5398,7 +5398,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             if(tmpKey == undefined) {
                 return row;
             } else {
-                return getRowChildLeaf(keys, row.childrens[tmpKey]);
+                return getRowChildLeaf(keys, row.children[tmpKey]);
             }
         }
 
@@ -5427,7 +5427,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
             if(rows.length == index && !(index == 0 && rows.length == 1)) {
                 var tRow = rows[index - 1];
-                $(row.element).insertAfter((tRow.childrens.length == 0) ? tRow.element : tRow.lastChildLeaf().element);
+                $(row.element).insertAfter((tRow.children.length == 0) ? tRow.element : tRow.lastChildLeaf().element);
             } else {
                 $(row.element).insertBefore(rows[index].element);
             }
@@ -5472,7 +5472,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
         function appendRowDataChild(index, data) {
             var pRow = self.getRow(index),
-                cRow = createRow(data, pRow.childrens.length, pRow);
+                cRow = createRow(data, pRow.children.length, pRow);
 
             pRow.appendChild(cRow);
 
@@ -5762,7 +5762,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
                 if(tmpRows[i]) {
                     dataList.push(tmpRows[i]);
 
-                    if(tmpRows[i].childrens.length > 0) {
+                    if(tmpRows[i].children.length > 0) {
                         setRowChildAll(dataList, tmpRows[i]);
                     }
                 }
@@ -5974,9 +5974,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			
 			for(var i = 0; i < rows.length; i++) {
 				(function(row) {
-					if(row.childrens.length > 0) {
+					if(row.children.length > 0) {
 						setEventRow(self, row);
-						setEventRows(self, row.childrens);
+						setEventRows(self, row.children);
 					} else {
 						setEventRow(self, row);
 					}
@@ -6932,7 +6932,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
 
         this.parent = null;			// 부모 노드
-        this.childrens = [];		// 자식 노드들
+        this.children = [];		// 자식 노드들
         this.depth = 0;				// 해당 노드의 뎁스
 
         this.type = "open";
@@ -6956,18 +6956,18 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
             }
 
             // 자식 인덱스 체크
-            if(self.childrens.length > 0) {
+            if(self.children.length > 0) {
                 setIndexChild(self);
             }
         }
 
         function setIndexChild(node) {
-            var clist = node.childrens;
+            var clist = node.children;
 
             for(var i = 0; i < clist.length; i++) {
                 clist[i].reload(i);
 
-                if(clist[i].childrens.length > 0) {
+                if(clist[i].children.length > 0) {
                     setIndexChild(clist[i]);
                 }
             }
@@ -6990,10 +6990,10 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         function removeChildAll(node) {
             $(node.element).remove();
 
-            for(var i = 0; i < node.childrens.length; i++) {
-                var cNode = node.childrens[i];
+            for(var i = 0; i < node.children.length; i++) {
+                var cNode = node.children[i];
 
-                if(cNode.childrens.length > 0) {
+                if(cNode.children.length > 0) {
                     removeChildAll(cNode);
                 } else {
                     $(cNode.element).remove();
@@ -7002,11 +7002,11 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         function reloadChildAll(node) {
-            for(var i = 0; i < node.childrens.length; i++) {
-                var cNode = node.childrens[i];
+            for(var i = 0; i < node.children.length; i++) {
+                var cNode = node.children[i];
                 cNode.reload(i);
 
-                if(cNode.childrens.length > 0) {
+                if(cNode.children.length > 0) {
                     reloadChildAll(cNode);
                 }
             }
@@ -7052,7 +7052,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         this.isLeaf = function() {
-            return (this.childrens.length == 0) ? true : false;
+            return (this.children.length == 0) ? true : false;
         }
 
         this.fold = function() {
@@ -7067,33 +7067,33 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
         this.appendChild = function(node) {
             $(this.element).children("ul").append(node.element);
-            this.childrens.push(node);
+            this.children.push(node);
         }
 
         this.insertChild = function(nodenum, node) {
             if(nodenum == 0) {
-                if(this.childrens.length == 0) {
+                if(this.children.length == 0) {
                     $(this.element).children("ul").append(node.element);
                 } else {
-                    $(node.element).insertBefore(this.childrens[0].element);
+                    $(node.element).insertBefore(this.children[0].element);
                 }
             } else {
-                $(node.element).insertAfter(this.childrens[nodenum - 1].element);
+                $(node.element).insertAfter(this.children[nodenum - 1].element);
             }
 
-            var preNodes = this.childrens.splice(0, nodenum);
+            var preNodes = this.children.splice(0, nodenum);
             preNodes.push(node);
 
-            this.childrens = preNodes.concat(this.childrens);
+            this.children = preNodes.concat(this.children);
             reloadChildAll(this);
         }
 
         this.removeChild = function(index) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                var node = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var node = this.children[i];
 
                 if(node.index == index) {
-                    this.childrens.splice(i, 1); // 배열에서 제거
+                    this.children.splice(i, 1); // 배열에서 제거
                     removeChildAll(node);
                 }
             }
@@ -7102,8 +7102,8 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         this.lastChild = function() {
-            if(this.childrens.length > 0)
-                return this.childrens[this.childrens.length - 1];
+            if(this.children.length > 0)
+                return this.children[this.children.length - 1];
 
             return null;
         }
@@ -7155,13 +7155,13 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         function setNodeChildAll(dataList, node) {
-            var c_nodes = node.childrens;
+            var c_nodes = node.children;
 
             if(c_nodes.length > 0) {
                 for(var i = 0; i < c_nodes.length; i++) {
                     dataList.push(c_nodes[i]);
 
-                    if(c_nodes[i].childrens.length > 0) {
+                    if(c_nodes[i].children.length > 0) {
                         setNodeChildAll(dataList, c_nodes[i]);
                     }
                 }
@@ -7175,7 +7175,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
             if(tmpKey == undefined) {
                 return node;
             } else {
-                return getNodeChildLeaf(keys, node.childrens[tmpKey]);
+                return getNodeChildLeaf(keys, node.children[tmpKey]);
             }
         }
 
@@ -7197,7 +7197,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
                 root = createNode(data);;
                 $obj.tree.append(root.element);
             } else {
-                var node = createNode(data, root.childrens.length, root);
+                var node = createNode(data, root.children.length, root);
                 root.appendChild(node);
             }
 
@@ -7206,7 +7206,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         function appendNodeDataChild(index, data) {
             var pNode = self.getNode(index),
-                cNode = createNode(data, pNode.childrens.length, pNode);
+                cNode = createNode(data, pNode.children.length, pNode);
 
             pNode.appendChild(cNode);
 
@@ -7252,7 +7252,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         this.insertNode = function(index, data) {
-            if(root.childrens.length == 0 && parseInt(index) == 0) {
+            if(root.children.length == 0 && parseInt(index) == 0) {
                 return this.appendNode(data);
             } else {
                 return insertNodeDataChild(index, data);
@@ -7277,7 +7277,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         this.removeNodes = function() {
-            var nodes = root.childrens;
+            var nodes = root.children;
 
             if(nodes.length > 0) {
                 var node = nodes.pop();
@@ -7329,23 +7329,23 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
             if(!isRelative(node, tpNode)) {
                 // 기존의 데이터
-                node.parent.childrens.splice(node.nodenum, 1);
+                node.parent.children.splice(node.nodenum, 1);
                 node.parent.reloadChildrens();
                 node.parent = tpNode;
 
                 // 이동 대상 데이터 처리
-                var preNodes = tpNode.childrens.splice(0, tNo);
+                var preNodes = tpNode.children.splice(0, tNo);
                 preNodes.push(node);
 
-                tpNode.childrens = preNodes.concat(tpNode.childrens);
+                tpNode.children = preNodes.concat(tpNode.children);
                 tpNode.reloadChildrens();
             }
         }
 
         this.getNode = function(index) {
-            if(index == null) return root.childrens;
+            if(index == null) return root.children;
             else {
-                var nodes = root.childrens;
+                var nodes = root.children;
 
                 if(iParser.isIndexDepth(index)) {
                     var keys = iParser.getIndexList(index);
@@ -7358,13 +7358,13 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         this.getNodeAll = function(index) {
             var dataList = [],
-                tmpNodes = (index == null) ? root.childrens : [ this.getNode(index) ];
+                tmpNodes = (index == null) ? root.children : [ this.getNode(index) ];
 
             for(var i = 0; i < tmpNodes.length; i++) {
                 if(tmpNodes[i]) {
                     dataList.push(tmpNodes[i]);
 
-                    if(tmpNodes[i].childrens.length > 0) {
+                    if(tmpNodes[i].children.length > 0) {
                         setNodeChildAll(dataList, tmpNodes[i]);
                     }
                 }
@@ -7448,7 +7448,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		function toggleNode(self, index, callback) {
 			if(index == null) {
 				if(self.options.rootHide) {
-					var childs = self.uit.getRoot().childrens;
+					var childs = self.uit.getRoot().children;
 					
 					for(var i = 0; i < childs.length; i++) {
 						callback(childs[i].index);
@@ -7533,7 +7533,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 						if(self.options.dragChild !== false) {
 							if(dragIndex.start) {
-								var endIndex = "" + root.childrens.length;
+								var endIndex = "" + root.children.length;
 								
 								self.move(dragIndex.start, endIndex);
 								self.emit("dragend", [ endIndex, e ]);

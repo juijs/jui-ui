@@ -31,7 +31,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             }
 
             for(var i = 0; i < x.length - 1; i++) {
-                if(g.childrens.length == 0) {
+                if(g.children.length == 0) {
                     if ((_.typeCheck("integer", split) && i == split) ||
                         (_.typeCheck("date", split) && this.axis.x.invert(x[i]).getTime() >= split.getTime())) {
                         var color = this.chart.theme("lineSplitBorderColor"),

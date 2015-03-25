@@ -3215,7 +3215,7 @@ jui.define("util.svg.element", [], function() {
         this.create = function(type, attr) {
             // 퍼블릭 프로퍼티
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
-            this.childrens = [];
+            this.children = [];
             this.parent = null;
             this.styles = {};
             this.attributes = {};
@@ -3227,25 +3227,25 @@ jui.define("util.svg.element", [], function() {
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
-            for(var i = 0, len = this.childrens.length; i < len; i++) {
-                var self = this.childrens[i];
+            for(var i = 0, len = this.children.length; i < len; i++) {
+                var self = this.children[i];
                 callback.apply(self, [ i, self ]);
             }
 
-            return this.childrens;
+            return this.children;
         };
 
         this.get = function(index) {
-            if(this.childrens[index]) {
-                return this.childrens[index];
+            if(this.children[index]) {
+                return this.children[index];
             }
 
             return null;
         }
 
         this.index = function(obj) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                if(obj == this.childrens[i]) {
+            for(var i = 0; i < this.children.length; i++) {
+                if(obj == this.children[i]) {
                     return i;
                 }
             }
@@ -3264,7 +3264,7 @@ jui.define("util.svg.element", [], function() {
                     elem.remove();
                 }
 
-                this.childrens.push(elem);
+                this.children.push(elem);
                 elem.parent = this;
             }
 
@@ -3280,7 +3280,7 @@ jui.define("util.svg.element", [], function() {
                 elem.remove();
             }
 
-            this.childrens.splice(index, 0, elem);
+            this.children.splice(index, 0, elem);
             elem.parent = this;
 
             return this;
@@ -3289,7 +3289,7 @@ jui.define("util.svg.element", [], function() {
         this.remove = function() {
             var index = 0,
                 nChild = [],
-                pChild = this.parent.childrens;
+                pChild = this.parent.children;
 
             for(var i = 0; i < pChild.length; i++) {
                 if (pChild[i] == this) {
@@ -3300,7 +3300,7 @@ jui.define("util.svg.element", [], function() {
                 nChild.push(pChild[i]);
             }
 
-            this.parent.childrens = nChild;
+            this.parent.children = nChild;
 
             return this;
         }
@@ -4163,12 +4163,12 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.childrens.length;
+            var len = target.children.length;
             for(var i = 0; i < len; i++) {
-                var child = target.childrens[i];
+                var child = target.children[i];
 
                 if(child) {
-                    if(child.childrens.length > 0) {
+                    if(child.children.length > 0) {
                         appendAll(child);
                     }
                     
@@ -4259,10 +4259,10 @@ jui.define("util.svg",
          */
         this.reset = function(isAll) {
             this.clear(isAll);
-            main.childrens = [];
+            main.children = [];
 
             if(isAll === true) {
-                sub.childrens = [];
+                sub.children = [];
             }
         }
 
@@ -12343,7 +12343,7 @@ jui.define("chart.brush.bubble", [], function() {
          */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
-                var c = elem.childrens[0];
+                var c = elem.children[0];
 
                 c.append(chart.svg.animateTransform({
                     attributeType: "xml",
@@ -15000,7 +15000,7 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
             }
 
             for(var i = 0; i < x.length - 1; i++) {
-                if(g.childrens.length == 0) {
+                if(g.children.length == 0) {
                     if ((_.typeCheck("integer", split) && i == split) ||
                         (_.typeCheck("date", split) && this.axis.x.invert(x[i]).getTime() >= split.getTime())) {
                         var color = this.chart.theme("lineSplitBorderColor"),
@@ -15746,8 +15746,8 @@ jui.define("chart.brush.topologynode",
         function onEdgeActiveHanlder(edge, e) {
             edges.each(function(newEdge) {
                 var elem = newEdge.element(),
-                    circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
-                    line = (elem.childrens.length == 2) ? elem.get(0) : null,
+                    circle = (elem.children.length == 2) ? elem.get(1) : elem.get(0),
+                    line = (elem.children.length == 2) ? elem.get(0) : null,
                     color = chart.theme("topologyEdgeColor"),
                     activeColor = chart.theme("topologyActiveEdgeColor");
 

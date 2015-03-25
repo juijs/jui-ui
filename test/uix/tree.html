@@ -47,9 +47,9 @@ jui.ready([ "uix.tree" ], function(tree) {
         t1.insert("2.0.0", { title: "lol.exe" });
         t1.append("3", { title: "startup.bat" });
 
-        assert.ok(t1.get("0").childrens[1].data.title == t1.get("0.1").data.title, "자식노드 데이터 확인");
-        assert.equal(t1.get("1").childrens[0], t1.get("1.0"), "자식노드 확인");
-        assert.equal(t1.get("2").childrens[0].childrens[0], t1.get("2.0.0"), "자식노드 추가 확인");
+        assert.ok(t1.get("0").children[1].data.title == t1.get("0.1").data.title, "자식노드 데이터 확인");
+        assert.equal(t1.get("1").children[0], t1.get("1.0"), "자식노드 확인");
+        assert.equal(t1.get("2").children[0].children[0], t1.get("2.0.0"), "자식노드 추가 확인");
     });
 
     QUnit.done(function() {

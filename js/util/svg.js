@@ -40,12 +40,12 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.childrens.length;
+            var len = target.children.length;
             for(var i = 0; i < len; i++) {
-                var child = target.childrens[i];
+                var child = target.children[i];
 
                 if(child) {
-                    if(child.childrens.length > 0) {
+                    if(child.children.length > 0) {
                         appendAll(child);
                     }
                     
@@ -136,10 +136,10 @@ jui.define("util.svg",
          */
         this.reset = function(isAll) {
             this.clear(isAll);
-            main.childrens = [];
+            main.children = [];
 
             if(isAll === true) {
-                sub.childrens = [];
+                sub.children = [];
             }
         }
 

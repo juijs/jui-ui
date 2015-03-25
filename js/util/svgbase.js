@@ -14,7 +14,7 @@ jui.define("util.svg.element", [], function() {
         this.create = function(type, attr) {
             // 퍼블릭 프로퍼티
             this.element = document.createElementNS("http://www.w3.org/2000/svg", type);
-            this.childrens = [];
+            this.children = [];
             this.parent = null;
             this.styles = {};
             this.attributes = {};
@@ -26,25 +26,25 @@ jui.define("util.svg.element", [], function() {
         this.each = function(callback) {
             if(typeof(callback) != "function") return;
 
-            for(var i = 0, len = this.childrens.length; i < len; i++) {
-                var self = this.childrens[i];
+            for(var i = 0, len = this.children.length; i < len; i++) {
+                var self = this.children[i];
                 callback.apply(self, [ i, self ]);
             }
 
-            return this.childrens;
+            return this.children;
         };
 
         this.get = function(index) {
-            if(this.childrens[index]) {
-                return this.childrens[index];
+            if(this.children[index]) {
+                return this.children[index];
             }
 
             return null;
         }
 
         this.index = function(obj) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                if(obj == this.childrens[i]) {
+            for(var i = 0; i < this.children.length; i++) {
+                if(obj == this.children[i]) {
                     return i;
                 }
             }
@@ -63,7 +63,7 @@ jui.define("util.svg.element", [], function() {
                     elem.remove();
                 }
 
-                this.childrens.push(elem);
+                this.children.push(elem);
                 elem.parent = this;
             }
 
@@ -79,7 +79,7 @@ jui.define("util.svg.element", [], function() {
                 elem.remove();
             }
 
-            this.childrens.splice(index, 0, elem);
+            this.children.splice(index, 0, elem);
             elem.parent = this;
 
             return this;
@@ -88,7 +88,7 @@ jui.define("util.svg.element", [], function() {
         this.remove = function() {
             var index = 0,
                 nChild = [],
-                pChild = this.parent.childrens;
+                pChild = this.parent.children;
 
             for(var i = 0; i < pChild.length; i++) {
                 if (pChild[i] == this) {
@@ -99,7 +99,7 @@ jui.define("util.svg.element", [], function() {
                 nChild.push(pChild[i]);
             }
 
-            this.parent.childrens = nChild;
+            this.parent.children = nChild;
 
             return this;
         }

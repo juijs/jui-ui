@@ -448,8 +448,8 @@ jui.define("chart.brush.topologynode",
         function onEdgeActiveHanlder(edge, e) {
             edges.each(function(newEdge) {
                 var elem = newEdge.element(),
-                    circle = (elem.childrens.length == 2) ? elem.get(1) : elem.get(0),
-                    line = (elem.childrens.length == 2) ? elem.get(0) : null,
+                    circle = (elem.children.length == 2) ? elem.get(1) : elem.get(0),
+                    line = (elem.children.length == 2) ? elem.get(0) : null,
                     color = chart.theme("topologyEdgeColor"),
                     activeColor = chart.theme("topologyActiveEdgeColor");
 

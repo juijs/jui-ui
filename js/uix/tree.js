@@ -20,7 +20,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
 
         this.parent = null;			// 부모 노드
-        this.childrens = [];		// 자식 노드들
+        this.children = [];		// 자식 노드들
         this.depth = 0;				// 해당 노드의 뎁스
 
         this.type = "open";
@@ -44,18 +44,18 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
             }
 
             // 자식 인덱스 체크
-            if(self.childrens.length > 0) {
+            if(self.children.length > 0) {
                 setIndexChild(self);
             }
         }
 
         function setIndexChild(node) {
-            var clist = node.childrens;
+            var clist = node.children;
 
             for(var i = 0; i < clist.length; i++) {
                 clist[i].reload(i);
 
-                if(clist[i].childrens.length > 0) {
+                if(clist[i].children.length > 0) {
                     setIndexChild(clist[i]);
                 }
             }
@@ -78,10 +78,10 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         function removeChildAll(node) {
             $(node.element).remove();
 
-            for(var i = 0; i < node.childrens.length; i++) {
-                var cNode = node.childrens[i];
+            for(var i = 0; i < node.children.length; i++) {
+                var cNode = node.children[i];
 
-                if(cNode.childrens.length > 0) {
+                if(cNode.children.length > 0) {
                     removeChildAll(cNode);
                 } else {
                     $(cNode.element).remove();
@@ -90,11 +90,11 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         function reloadChildAll(node) {
-            for(var i = 0; i < node.childrens.length; i++) {
-                var cNode = node.childrens[i];
+            for(var i = 0; i < node.children.length; i++) {
+                var cNode = node.children[i];
                 cNode.reload(i);
 
-                if(cNode.childrens.length > 0) {
+                if(cNode.children.length > 0) {
                     reloadChildAll(cNode);
                 }
             }
@@ -140,7 +140,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         this.isLeaf = function() {
-            return (this.childrens.length == 0) ? true : false;
+            return (this.children.length == 0) ? true : false;
         }
 
         this.fold = function() {
@@ -155,33 +155,33 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
         this.appendChild = function(node) {
             $(this.element).children("ul").append(node.element);
-            this.childrens.push(node);
+            this.children.push(node);
         }
 
         this.insertChild = function(nodenum, node) {
             if(nodenum == 0) {
-                if(this.childrens.length == 0) {
+                if(this.children.length == 0) {
                     $(this.element).children("ul").append(node.element);
                 } else {
-                    $(node.element).insertBefore(this.childrens[0].element);
+                    $(node.element).insertBefore(this.children[0].element);
                 }
             } else {
-                $(node.element).insertAfter(this.childrens[nodenum - 1].element);
+                $(node.element).insertAfter(this.children[nodenum - 1].element);
             }
 
-            var preNodes = this.childrens.splice(0, nodenum);
+            var preNodes = this.children.splice(0, nodenum);
             preNodes.push(node);
 
-            this.childrens = preNodes.concat(this.childrens);
+            this.children = preNodes.concat(this.children);
             reloadChildAll(this);
         }
 
         this.removeChild = function(index) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                var node = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var node = this.children[i];
 
                 if(node.index == index) {
-                    this.childrens.splice(i, 1); // 배열에서 제거
+                    this.children.splice(i, 1); // 배열에서 제거
                     removeChildAll(node);
                 }
             }
@@ -190,8 +190,8 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
         }
 
         this.lastChild = function() {
-            if(this.childrens.length > 0)
-                return this.childrens[this.childrens.length - 1];
+            if(this.children.length > 0)
+                return this.children[this.children.length - 1];
 
             return null;
         }
@@ -243,13 +243,13 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         function setNodeChildAll(dataList, node) {
-            var c_nodes = node.childrens;
+            var c_nodes = node.children;
 
             if(c_nodes.length > 0) {
                 for(var i = 0; i < c_nodes.length; i++) {
                     dataList.push(c_nodes[i]);
 
-                    if(c_nodes[i].childrens.length > 0) {
+                    if(c_nodes[i].children.length > 0) {
                         setNodeChildAll(dataList, c_nodes[i]);
                     }
                 }
@@ -263,7 +263,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
             if(tmpKey == undefined) {
                 return node;
             } else {
-                return getNodeChildLeaf(keys, node.childrens[tmpKey]);
+                return getNodeChildLeaf(keys, node.children[tmpKey]);
             }
         }
 
@@ -285,7 +285,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
                 root = createNode(data);;
                 $obj.tree.append(root.element);
             } else {
-                var node = createNode(data, root.childrens.length, root);
+                var node = createNode(data, root.children.length, root);
                 root.appendChild(node);
             }
 
@@ -294,7 +294,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         function appendNodeDataChild(index, data) {
             var pNode = self.getNode(index),
-                cNode = createNode(data, pNode.childrens.length, pNode);
+                cNode = createNode(data, pNode.children.length, pNode);
 
             pNode.appendChild(cNode);
 
@@ -340,7 +340,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         this.insertNode = function(index, data) {
-            if(root.childrens.length == 0 && parseInt(index) == 0) {
+            if(root.children.length == 0 && parseInt(index) == 0) {
                 return this.appendNode(data);
             } else {
                 return insertNodeDataChild(index, data);
@@ -365,7 +365,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
         this.removeNodes = function() {
-            var nodes = root.childrens;
+            var nodes = root.children;
 
             if(nodes.length > 0) {
                 var node = nodes.pop();
@@ -417,23 +417,23 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
             if(!isRelative(node, tpNode)) {
                 // 기존의 데이터
-                node.parent.childrens.splice(node.nodenum, 1);
+                node.parent.children.splice(node.nodenum, 1);
                 node.parent.reloadChildrens();
                 node.parent = tpNode;
 
                 // 이동 대상 데이터 처리
-                var preNodes = tpNode.childrens.splice(0, tNo);
+                var preNodes = tpNode.children.splice(0, tNo);
                 preNodes.push(node);
 
-                tpNode.childrens = preNodes.concat(tpNode.childrens);
+                tpNode.children = preNodes.concat(tpNode.children);
                 tpNode.reloadChildrens();
             }
         }
 
         this.getNode = function(index) {
-            if(index == null) return root.childrens;
+            if(index == null) return root.children;
             else {
-                var nodes = root.childrens;
+                var nodes = root.children;
 
                 if(iParser.isIndexDepth(index)) {
                     var keys = iParser.getIndexList(index);
@@ -446,13 +446,13 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         this.getNodeAll = function(index) {
             var dataList = [],
-                tmpNodes = (index == null) ? root.childrens : [ this.getNode(index) ];
+                tmpNodes = (index == null) ? root.children : [ this.getNode(index) ];
 
             for(var i = 0; i < tmpNodes.length; i++) {
                 if(tmpNodes[i]) {
                     dataList.push(tmpNodes[i]);
 
-                    if(tmpNodes[i].childrens.length > 0) {
+                    if(tmpNodes[i].children.length > 0) {
                         setNodeChildAll(dataList, tmpNodes[i]);
                     }
                 }
@@ -536,7 +536,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		function toggleNode(self, index, callback) {
 			if(index == null) {
 				if(self.options.rootHide) {
-					var childs = self.uit.getRoot().childrens;
+					var childs = self.uit.getRoot().children;
 					
 					for(var i = 0; i < childs.length; i++) {
 						callback(childs[i].index);
@@ -621,7 +621,7 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 						if(self.options.dragChild !== false) {
 							if(dragIndex.start) {
-								var endIndex = "" + root.childrens.length;
+								var endIndex = "" + root.children.length;
 								
 								self.move(dragIndex.start, endIndex);
 								self.emit("dragend", [ endIndex, e ]);

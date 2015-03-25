@@ -60,7 +60,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
 
         this.parent = (pRow) ? pRow : null;
-        this.childrens = [];
+        this.children = [];
         this.depth = 0;
         this.type = "fold";
 
@@ -87,7 +87,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         function setIndexChild(row) {
-            var clist = row.childrens;
+            var clist = row.children;
 
             for(var i = 0; i < clist.length; i++) {
                 clist[i].reload(i);
@@ -123,8 +123,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         function removeChildAll(row) {
             $(row.element).remove();
 
-            for(var i = 0; i < row.childrens.length; i++) {
-                var c_row = row.childrens[i];
+            for(var i = 0; i < row.children.length; i++) {
+                var c_row = row.children[i];
 
                 if(!c_row.isLeaf()) {
                     removeChildAll(c_row);
@@ -135,8 +135,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         function reloadChildAll() {
-            for(var i = 0; i < self.childrens.length; i++) {
-                self.childrens[i].reload(i);
+            for(var i = 0; i < self.children.length; i++) {
+                self.children[i].reload(i);
             }
         }
 
@@ -178,14 +178,14 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         }
 
         this.isLeaf = function() {
-            return (this.childrens.length == 0) ? true : false;
+            return (this.children.length == 0) ? true : false;
         }
 
         this.fold = function() {
             this.type = "fold";
 
-            for(var i = 0; i < this.childrens.length; i++) {
-                var c_row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var c_row = this.children[i];
                 $(c_row.element).hide();
 
                 if(!c_row.isLeaf()) c_row.fold();
@@ -195,8 +195,8 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         this.open = function() {
             this.type = "open";
 
-            for(var i = 0; i < this.childrens.length; i++) {
-                var c_row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var c_row = this.children[i];
                 $(c_row.element).show();
 
                 if(!c_row.isLeaf()) c_row.open();
@@ -207,17 +207,17 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
             var lastElem = (this.isLeaf()) ? this.element : this.lastChildLeaf().element;
             $(row.element).insertAfter(lastElem);
 
-            this.childrens.push(row);
+            this.children.push(row);
         }
 
         this.insertChild = function(rownum, row, isReload) {
             var lastElem = this.element;
 
             if(rownum > 0) {
-                var cRow = this.childrens[rownum - 1];
+                var cRow = this.children[rownum - 1];
 
                 // 마지막 자식이거나 대상 로우가 자식이 있을 경우
-                if(!cRow.isLeaf() || this.childrens.length == rownum + 1) {
+                if(!cRow.isLeaf() || this.children.length == rownum + 1) {
                     lastElem = cRow.lastChildLeaf().element;
                 } else {
                     lastElem = cRow.element;
@@ -227,19 +227,19 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
             $(row.element).insertAfter(lastElem);
 
-            var preRows = this.childrens.splice(0, rownum);
+            var preRows = this.children.splice(0, rownum);
             preRows.push(row);
 
-            this.childrens = preRows.concat(this.childrens);
+            this.children = preRows.concat(this.children);
             reloadChildAll();
         }
 
         this.removeChild = function(index) {
-            for(var i = 0; i < this.childrens.length; i++) {
-                var row = this.childrens[i];
+            for(var i = 0; i < this.children.length; i++) {
+                var row = this.children[i];
 
                 if(row.index == index) {
-                    this.childrens.splice(i, 1); // 배열에서 제거
+                    this.children.splice(i, 1); // 배열에서 제거
                     removeChildAll(row);
                 }
             }
@@ -249,7 +249,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
         this.lastChild = function() {
             if(!this.isLeaf())
-                return this.childrens[this.childrens.length - 1];
+                return this.children[this.children.length - 1];
 
             return null;
         }
@@ -386,13 +386,13 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
         }
 
         function setRowChildAll(dataList, row) {
-            var c_rows = row.childrens;
+            var c_rows = row.children;
 
             if(c_rows.length > 0) {
                 for(var i = 0; i < c_rows.length; i++) {
                     dataList.push(c_rows[i]);
 
-                    if(c_rows[i].childrens.length > 0) {
+                    if(c_rows[i].children.length > 0) {
                         setRowChildAll(dataList, c_rows[i]);
                     }
                 }
@@ -406,7 +406,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             if(tmpKey == undefined) {
                 return row;
             } else {
-                return getRowChildLeaf(keys, row.childrens[tmpKey]);
+                return getRowChildLeaf(keys, row.children[tmpKey]);
             }
         }
 
@@ -435,7 +435,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
             if(rows.length == index && !(index == 0 && rows.length == 1)) {
                 var tRow = rows[index - 1];
-                $(row.element).insertAfter((tRow.childrens.length == 0) ? tRow.element : tRow.lastChildLeaf().element);
+                $(row.element).insertAfter((tRow.children.length == 0) ? tRow.element : tRow.lastChildLeaf().element);
             } else {
                 $(row.element).insertBefore(rows[index].element);
             }
@@ -480,7 +480,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
         function appendRowDataChild(index, data) {
             var pRow = self.getRow(index),
-                cRow = createRow(data, pRow.childrens.length, pRow);
+                cRow = createRow(data, pRow.children.length, pRow);
 
             pRow.appendChild(cRow);
 
@@ -770,7 +770,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
                 if(tmpRows[i]) {
                     dataList.push(tmpRows[i]);
 
-                    if(tmpRows[i].childrens.length > 0) {
+                    if(tmpRows[i].children.length > 0) {
                         setRowChildAll(dataList, tmpRows[i]);
                     }
                 }
@@ -982,9 +982,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			
 			for(var i = 0; i < rows.length; i++) {
 				(function(row) {
-					if(row.childrens.length > 0) {
+					if(row.children.length > 0) {
 						setEventRow(self, row);
-						setEventRows(self, row.childrens);
+						setEventRows(self, row.children);
 					} else {
 						setEventRow(self, row);
 					}

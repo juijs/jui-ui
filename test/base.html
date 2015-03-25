@@ -219,8 +219,8 @@ jui.ready([ "util.base" ], function(_) {
             { name: "Yoon", age: 22 }
         ];
 
-        assert.ok(_.dataToCsv([ "name", "age" ], data) == "name,age\nHong,29\nYoon,22\n", "데이터 변환 확인");
-        assert.ok(_.dataToCsv([ "name", "age" ], data, 1) == "name,age\nHong,29\n", "데이터 변환 확인 (개수 제한)");
+        assert.ok(_.dataToCsv([ "name", "age" ], data) == '"name","age"\n"Hong",29\n"Yoon",22\n', "데이터 변환 확인");
+        assert.ok(_.dataToCsv([ "name", "age" ], data, 1) == '"name","age"\n"Hong",29\n', "데이터 변환 확인 (개수 제한)");
     });
 
     QUnit.test("[유틸리티 함수] - dataToCsv2", function(assert) {
@@ -235,15 +235,17 @@ jui.ready([ "util.base" ], function(_) {
             rows: data
         });
 
-        assert.ok(csv == "이름,나이\nHong,29\nYoon,22\n", "데이터 변환 확인 (커스텀 컬럼)");
+        assert.ok(csv == '"이름","나이"\n"Hong",29\n"Yoon",22\n', "데이터 변환 확인 (커스텀 컬럼)");
     });
 
+    /*/
     QUnit.test("[유틸리티 함수] - csvToData", function(assert) {
-        var csv = "name,age\nHong,29\nYoon,22\n",
+        var csv = '"name","age"\n"Hong",29\n"Yoon",22\n',
             data = _.csvToData([ "name", "age" ], csv);
 
         assert.ok(data[0].name == "Hong" && data[1].name == "Yoon", "데이터 변환 확인");
     });
+    /**/
 
     QUnit.test("[유틸리티 함수] - getCsvFields", function(assert) {
         assert.ok(_.getCsvFields([ "name", "age" ], [ "name" ]).length == 1, "필드 변환 확인");
