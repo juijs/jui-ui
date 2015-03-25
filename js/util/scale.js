@@ -346,7 +346,98 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			return func;
 		},
-		
+
+		/**
+		 * log scale
+		 *
+		 * var log = _.scale.log(10).domain([0, 1000000]).range([0, 300]);
+		 *
+		 * log(0) == 0
+		 * log.ticks(4) == [0, 100, 10000, 1000000]
+		 *
+		 * @param base
+		 */
+		log : function(base) {
+			var that = this;
+
+			var _base = base || 10;
+
+			var func = self.linear();
+			var _domain = [];
+			var _domainMax = null;
+			var _domainMin = null;
+
+			var newFunc = function(x) {
+
+				var value = x;
+
+				if (x > _domainMax) {
+					value = _domainMax;
+				} else if (x < _domainMin) {
+					value = _domainMin;
+				}
+
+				return func(Math.log(value)/Math.log(_base));
+			}
+
+			$.extend(newFunc, func);
+
+			newFunc.log = function() {
+				var log = [];
+				for (var i = 0; i < _domain.length; i++) {
+					log[i] = Math.log(_domain[i]) / Math.log(_base);
+				}
+
+				return log;
+			}
+
+			newFunc.domain = function(values) {
+
+				if (!arguments.length) {
+					return _domain;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_domain[i] = (values[i] <= 0) ? 1 : values[i];
+				}
+
+				_domainMax = Math.max.apply(Math, _domain);
+				_domainMin = Math.min.apply(Math, _domain);
+
+				func.domain(newFunc.log());
+
+				return newFunc;
+			}
+
+			newFunc.base = function(base) {
+				func.domain(newFunc.log());
+
+				return newFunc;
+			}
+
+			newFunc.invert = function(y) {
+				return Math.pow(base, func.invert(y));
+			}
+
+
+			newFunc.ticks = function(count, isNice, intNumber) {
+
+				var arr = func.ticks(count, isNice, intNumber || 100000000000000000000);
+
+				if (arr[arr.length-1] < func.max()) {
+					arr.push(func.max());
+				}
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+					arr[i] = Math.pow(_base, arr[i]);
+				}
+
+				return arr;
+			}
+
+			return newFunc;
+		},
+
 		/**
 		 * 범위에 대한 scale 
 		 * 
