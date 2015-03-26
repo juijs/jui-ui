@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+	<style>
+		.CodeMirror {
+			border: 1px solid #eee;
+			height: auto;
+		}
+
+	</style>
+</head>
+<body >
+
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
+
+<script>
+	$(function() {
+		$("#codemirror").val($("#script_code").html());
+
+		CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+			lineNumbers: true,
+			mode: "javascript"
+		});
+	})
+
+</script>
+
+<script id="script_code">
+    function getDate() {
+        return Math.round((Math.random()*1000) % 300)
+    }
+
+    function getNumber() {
+        return Math.round(Math.random() * 1000  % 500);
+    }
+
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+		var data = [
+			{ quarter : "1Q", sales : 12323000000, profit : 335 },
+			{ quarter : "2Q", sales : 20042340000, profit : 2 },
+			{ quarter : "3Q", sales : 1003300, profit : 10022343 },
+			{ quarter : "4Q", sales : 10322200, profit : 1123213200 }
+		];
+
+		var showEventMessage = function(obj) {
+			alert("[" + obj.dataIndex + "] " +
+			obj.dataKey + "=" + obj.data[obj.dataKey]);
+		}
+
+		var c = chart("#chart", {
+			width : 800,
+			height : 250,
+			padding : { left : 100 },
+			axis : [{
+				x : {
+					type : "block",
+					domain : "quarter",
+					line : true
+				},
+				y : {
+					type : "log",
+					domain : function(data) {
+						return [0, data.sales, data.profit]
+					} ,
+					step : 10,
+					base : 10,
+					nice : true,
+					format : function(value) { return Math.round(value); },
+					line : true
+				},
+				data : data
+			}],
+			brush : [{
+				type : "column",
+				target : [ "sales", "profit" ]
+			}],
+			widget : {
+				type : "tooltip"
+			}
+		});
+
+
+	})
+</script>
+
+
+</body>
+</html>

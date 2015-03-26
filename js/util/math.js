@@ -102,7 +102,6 @@ jui.define("util.math", [], function() {
 			} else {
 				var _min = min;
 				var _max = max;
-
 			}
 
 			var _ticks = ticks;

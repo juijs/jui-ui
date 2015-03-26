@@ -16,7 +16,7 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 
 			var obj = this.getGridSize();
 
-			this.scale = UtilScale.log().domain(domain);
+			this.scale = UtilScale.log(this.grid.base).domain(domain);
 
 			if (this.grid.orient == "left" || this.grid.orient == "right") {
                 var arr = [obj.end, obj.start];
@@ -54,7 +54,7 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 
 			step : 4,
 
-			nice : true
+			nice : false
 		};
 	}
 

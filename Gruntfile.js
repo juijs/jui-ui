@@ -72,6 +72,7 @@ module.exports = function(grunt) {
         "js/chart/grid/dateblock.js",
         "js/chart/grid/radar.js",
         "js/chart/grid/range.js",
+        "js/chart/grid/log.js",
         "js/chart/grid/rule.js",
         "js/chart/grid/panel.js",
         "js/chart/grid/table.js",

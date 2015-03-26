@@ -293,10 +293,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 					start += unit;
 				}
 
-				var end = start;
-				while (end > min) {
-					end -= unit;
-				}
+				var end = min;
 
 				domain = [end, start];
 

@@ -2350,7 +2350,6 @@ jui.define("util.math", [], function() {
 			} else {
 				var _min = min;
 				var _max = max;
-
 			}
 
 			var _ticks = ticks;
@@ -2775,7 +2774,6 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 					start = _time.add(start, type, step);
 
-					//;console.log(start)
 				}
 
 				times.push(new Date(+start));
@@ -2840,7 +2838,138 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			return func;
 		},
-		
+
+		/**
+		 * log scale
+		 *
+		 * var log = _.scale.log(10).domain([0, 1000000]).range([0, 300]);
+		 *
+		 * log(0) == 0
+		 * log.ticks(4) == [0, 100, 10000, 1000000]
+		 *
+		 * @param base
+		 */
+		log : function(base) {
+			var that = this;
+
+			var _base = base || 10;
+
+			var func = self.linear();
+			var _domain = [];
+			var _domainMax = null;
+			var _domainMin = null;
+
+			function log(value) {
+
+				if (value < 0) {
+					return -(Math.log(Math.abs(value)) / Math.log(_base));
+				} else if (value > 0) {
+					return Math.log(value) / Math.log(_base);
+				}
+
+				return 0;
+			}
+
+			function pow(value) {
+				if (value < 0) {
+					return - Math.pow(_base, Math.abs(value));
+				} else if (value > 0) {
+					return Math.pow(_base, value);
+				}
+
+				return 0;
+			}
+
+			function checkMax(value) {
+				return Math.pow(_base, (value+"").length-1) < value;
+			}
+
+			function getNextMax(value) {
+				return Math.pow(_base, (value+"").length);
+			}
+
+			var newFunc = function(x) {
+
+				var value = x;
+
+				if (x > _domainMax) {
+					value = _domainMax;
+				} else if (x < _domainMin) {
+					value = _domainMin;
+				}
+
+				return func(log(value));
+			}
+
+			$.extend(newFunc, func);
+
+			newFunc.log = function() {
+				var newDomain = [];
+				for (var i = 0; i < _domain.length; i++) {
+					newDomain[i] = log(_domain[i]);
+				}
+
+				return newDomain;
+			}
+
+			newFunc.domain = function(values) {
+
+				if (!arguments.length) {
+					return _domain;
+				}
+
+				for (var i = 0; i < values.length; i++) {
+					_domain[i] = values[i];
+				}
+
+				_domainMax = Math.max.apply(Math, _domain);
+				_domainMin = Math.min.apply(Math, _domain);
+
+				if (checkMax(_domainMax)) {
+					_domain[1] = _domainMax = getNextMax(_domainMax);
+				}
+
+				if (checkMax(Math.abs(_domainMin))) {
+
+					var value = getNextMax(Math.abs(_domainMin));
+					_domain[0] = _domainMin = _domainMin < 0  ? -value : value ;
+				}
+
+				func.domain(newFunc.log());
+
+				return newFunc;
+			}
+
+			newFunc.base = function(base) {
+				func.domain(newFunc.log());
+
+				return newFunc;
+			}
+
+			newFunc.invert = function(y) {
+				return pow(func.invert(y));
+			}
+
+
+			newFunc.ticks = function(count, isNice, intNumber) {
+
+				var arr = func.ticks(count, isNice, intNumber || 100000000000000000000, true);
+
+				if (arr[arr.length-1] < func.max()) {
+					arr.push(func.max());
+				}
+
+				var newArr = [];
+				for(var i = 0, len = arr.length; i < len; i++) {
+					newArr[i] = pow(arr[i]);
+				}
+
+				return newArr;
+			}
+
+			return newFunc;
+		},
+
 		/**
 		 * 범위에 대한 scale 
 		 * 
@@ -2972,8 +3101,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber) {
+			func.ticks = function(count, isNice, intNumber, reverse) {
 				intNumber = intNumber || 10000;
+				reverse = reverse || false;
+				var max = func.max();
 
 				if (_domain[0] == 0 && _domain[1] == 0) {
 					return [];
@@ -2983,20 +3114,42 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = obj.min * intNumber;
-				var end = obj.max * intNumber;
-				while (start <= end) {
+				var start = (reverse ? obj.max : obj.min) * intNumber;
+				var end = (reverse ? obj.min : obj.max) * intNumber;
+				while ((reverse ? end <= start : start <= end)) {
+
 					arr.push(start / intNumber);
-					start += obj.spacing * intNumber;
+
+					var unit = obj.spacing * intNumber;
+
+					if (reverse) {
+						start -= unit;
+					} else {
+						start += unit;
+					}
+
 				}
 
-				if (arr[arr.length - 1] * intNumber != end && start > end) {
-					arr.push(end / intNumber);
+				if (reverse) {
+					if (arr[0] != max) {
+						arr.unshift(max);
+					}
+
+					for(var i = 0, len = arr.length; i < len; i++) {
+						arr[i] = Math.abs(arr[i] - max);
+					}
+					//arr.reverse();
+
+				} else {
+					if (arr[arr.length - 1] * intNumber != end && start > end) {
+						arr.push(end / intNumber);
+					}
+
+					if (_domain[0] > _domain[1]) {
+						arr.reverse();
+					}
 				}
-                
-                if (_domain[0] > _domain[1]) {
-                    arr.reverse();
-                }
+
 
 				return arr;
 			}
@@ -16822,10 +16975,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 					start += unit;
 				}
 
-				var end = start;
-				while (end > min) {
-					end -= unit;
-				}
+				var end = min;
 
 				domain = [end, start];
 
@@ -16908,6 +17058,69 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 	return RangeGrid;
 }, "chart.grid.core");
+
+jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, _) {
+
+	/**
+	 * @class chart.grid.log
+	 *
+	 * implements log grid
+	 *
+	 * @extends chart.grid.range
+	 */
+	var LogGrid = function() {
+
+		this.drawBefore = function() {
+			this.grid.unit = false;
+
+			var domain = this.initDomain();
+
+			var obj = this.getGridSize();
+
+			this.scale = UtilScale.log(this.grid.base).domain(domain);
+
+			if (this.grid.orient == "left" || this.grid.orient == "right") {
+                var arr = [obj.end, obj.start];
+			} else {
+                var arr = [obj.start, obj.end]
+			}
+            this.scale.range(arr);
+
+			this.start = obj.start;
+			this.size = obj.size;
+			this.end = obj.end;
+			this.step = this.grid.step;
+			this.nice = this.grid.nice;
+			this.ticks = this.scale.ticks(this.step, this.nice);
+
+			this.bar = 6;
+
+			this.values = [];
+
+			for (var i = 0, len = this.ticks.length; i < len; i++) {
+				this.values[i] = this.scale(this.ticks[i]);
+			}
+
+		}
+
+		this.draw = function() {
+			return this.drawGrid("log");
+		}
+	}
+
+	LogGrid.setup = function() {
+		return {
+			/** @cfg {Number} [base=10] log's base */
+			base : 10,
+
+			step : 4,
+
+			nice : false
+		};
+	}
+
+	return LogGrid;
+}, "chart.grid.range");
 
 jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale, _) {
 

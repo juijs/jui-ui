@@ -281,7 +281,6 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 					start = _time.add(start, type, step);
 
-					//;console.log(start)
 				}
 
 				times.push(new Date(+start));
@@ -367,6 +366,35 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domainMax = null;
 			var _domainMin = null;
 
+			function log(value) {
+
+				if (value < 0) {
+					return -(Math.log(Math.abs(value)) / Math.log(_base));
+				} else if (value > 0) {
+					return Math.log(value) / Math.log(_base);
+				}
+
+				return 0;
+			}
+
+			function pow(value) {
+				if (value < 0) {
+					return - Math.pow(_base, Math.abs(value));
+				} else if (value > 0) {
+					return Math.pow(_base, value);
+				}
+
+				return 0;
+			}
+
+			function checkMax(value) {
+				return Math.pow(_base, (value+"").length-1) < value;
+			}
+
+			function getNextMax(value) {
+				return Math.pow(_base, (value+"").length);
+			}
+
 			var newFunc = function(x) {
 
 				var value = x;
@@ -377,18 +405,18 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					value = _domainMin;
 				}
 
-				return func(Math.log(value)/Math.log(_base));
+				return func(log(value));
 			}
 
 			$.extend(newFunc, func);
 
 			newFunc.log = function() {
-				var log = [];
+				var newDomain = [];
 				for (var i = 0; i < _domain.length; i++) {
-					log[i] = Math.log(_domain[i]) / Math.log(_base);
+					newDomain[i] = log(_domain[i]);
 				}
 
-				return log;
+				return newDomain;
 			}
 
 			newFunc.domain = function(values) {
@@ -398,11 +426,21 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				for (var i = 0; i < values.length; i++) {
-					_domain[i] = (values[i] <= 0) ? 1 : values[i];
+					_domain[i] = values[i];
 				}
 
 				_domainMax = Math.max.apply(Math, _domain);
 				_domainMin = Math.min.apply(Math, _domain);
+
+				if (checkMax(_domainMax)) {
+					_domain[1] = _domainMax = getNextMax(_domainMax);
+				}
+
+				if (checkMax(Math.abs(_domainMin))) {
+
+					var value = getNextMax(Math.abs(_domainMin));
+					_domain[0] = _domainMin = _domainMin < 0  ? -value : value ;
+				}
 
 				func.domain(newFunc.log());
 
@@ -416,23 +454,24 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			}
 
 			newFunc.invert = function(y) {
-				return Math.pow(base, func.invert(y));
+				return pow(func.invert(y));
 			}
 
 
 			newFunc.ticks = function(count, isNice, intNumber) {
 
-				var arr = func.ticks(count, isNice, intNumber || 100000000000000000000);
+				var arr = func.ticks(count, isNice, intNumber || 100000000000000000000, true);
 
 				if (arr[arr.length-1] < func.max()) {
 					arr.push(func.max());
 				}
 
+				var newArr = [];
 				for(var i = 0, len = arr.length; i < len; i++) {
-					arr[i] = Math.pow(_base, arr[i]);
+					newArr[i] = pow(arr[i]);
 				}
 
-				return arr;
+				return newArr;
 			}
 
 			return newFunc;
@@ -569,8 +608,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber) {
+			func.ticks = function(count, isNice, intNumber, reverse) {
 				intNumber = intNumber || 10000;
+				reverse = reverse || false;
+				var max = func.max();
 
 				if (_domain[0] == 0 && _domain[1] == 0) {
 					return [];
@@ -580,20 +621,42 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = obj.min * intNumber;
-				var end = obj.max * intNumber;
-				while (start <= end) {
+				var start = (reverse ? obj.max : obj.min) * intNumber;
+				var end = (reverse ? obj.min : obj.max) * intNumber;
+				while ((reverse ? end <= start : start <= end)) {
+
 					arr.push(start / intNumber);
-					start += obj.spacing * intNumber;
+
+					var unit = obj.spacing * intNumber;
+
+					if (reverse) {
+						start -= unit;
+					} else {
+						start += unit;
+					}
+
 				}
 
-				if (arr[arr.length - 1] * intNumber != end && start > end) {
-					arr.push(end / intNumber);
+				if (reverse) {
+					if (arr[0] != max) {
+						arr.unshift(max);
+					}
+
+					for(var i = 0, len = arr.length; i < len; i++) {
+						arr[i] = Math.abs(arr[i] - max);
+					}
+					//arr.reverse();
+
+				} else {
+					if (arr[arr.length - 1] * intNumber != end && start > end) {
+						arr.push(end / intNumber);
+					}
+
+					if (_domain[0] > _domain[1]) {
+						arr.reverse();
+					}
 				}
-                
-                if (_domain[0] > _domain[1]) {
-                    arr.reverse();
-                }
+
 
 				return arr;
 			}
