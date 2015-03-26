@@ -9,7 +9,9 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
      * 
      */
 	var DonutBrush = function() {
-        
+        var self = this,
+            cache_active = {};
+
         /**
          * @method drawDonut 
          * 
@@ -98,8 +100,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
          * @return {util.svg.element}
          */
 		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
-		    hasCircle = hasCircle || false;
-
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
                 dist = Math.abs(outerRadius - innerRadius);
@@ -131,27 +131,23 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 
 
-            var y = obj.y + 10;
-            var x = obj.x + 5;
-
-            var innerY = innerObj.y + 10;
-            var innerX = innerObj.x + 5;
-
-            var targetX = startX + 5;
-            var targetY = startY + 10;
-
-            var innerTargetX = innerStartX + 5;
-            var innerTargetY = innerStartY + 10;
+            var y = obj.y + 10,
+                x = obj.x + 5,
+                innerY = innerObj.y + 10,
+                innerX = innerObj.x + 5,
+                targetX = startX + 5,
+                targetY = startY + 10,
+                innerTargetX = innerStartX + 5,
+                innerTargetY = innerStartY + 10;
 
             path.LineTo(x, y);
-
             path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
-
             path.ClosePath();
             g.append(path);
 
             // 안쪽 면 그리기
             var innerPath = this.chart.svg.path(attr);
+
             // 시작 하는 위치로 옮김
             innerPath.MoveTo(innerStartX, innerStartY);
             innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 1, innerObj.x, innerObj.y);
@@ -160,13 +156,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             innerPath.ClosePath();
             g.append(innerPath);
 
-
 			return g;
 		}
 
 		this.drawDonut3dBlock = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
-		    hasCircle = hasCircle || false;
-
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
                 dist = Math.abs(outerRadius - innerRadius);
@@ -194,18 +187,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			// 중심점 이동
 			g.translate(centerX, centerY);
 
-            var y = obj.y + 10;
-            var x = obj.x + 5;
-
-            var innerY = innerObj.y + 10;
-            var innerX = innerObj.x + 5;
-
-            var targetX = startX + 5;
-            var targetY = startY + 10;
-
-            var innerTargetX = innerStartX + 5;
-            var innerTargetY = innerStartY + 10;
-
+            var y = obj.y + 10,
+                x = obj.x + 5,
+                innerY = innerObj.y + 10,
+                innerX = innerObj.x + 5;
 
             // 왼쪽면 그리기
             var rect = this.chart.svg.path(attr);
@@ -234,12 +219,13 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             // center
-            var centerX = width / 2 + x;
-            var centerY = height / 2 + y;
-            var outerRadius = min / 2 - this.brush.size/2;
-            var innerRadius = outerRadius - this.brush.size;
+            var centerX = width / 2 + x,
+                centerY = height / 2 + y,
+                outerRadius = min / 2 - this.brush.size / 2,
+                innerRadius = outerRadius - this.brush.size;
 
             var target = this.brush.target,
+                active = this.brush.active,
                 all = 360,
                 startAngle = 0,
                 max = 0;
@@ -249,7 +235,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             if (this.brush['3d']) {
-
                 // 화면 블럭 그리기
                 for (var i = 0; i < target.length; i++) {
                     var value = data[target[i]],
@@ -276,17 +261,42 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             startAngle = 0;
+
             for (var i = 0; i < target.length; i++) {
                 var value = data[target[i]],
                     endAngle = all * (value / max),
+                    centerAngle = startAngle + (endAngle / 2) - 90,
                     donut = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
                         stroke : this.color(i),
                         fill : 'transparent'
                     });
 
+                // 설정된 키 활성화
+                if (active == target[i] || $.inArray(target[i], active) != -1) {
+                    this.setActiveEvent(donut, centerX, centerY, centerAngle);
+                    cache_active[centerAngle] = true;
+                }
+
+                // 활성화 이벤트 설정
+                if (this.brush.activeEvent != null) {
+                    (function (p, cx, cy, ca) {
+                        p.on(self.brush.activeEvent, function (e) {
+                            if (!cache_active[ca]) {
+                                self.setActiveEvent(p, cx, cy, ca);
+                                cache_active[ca] = true;
+                            } else {
+                                p.translate(cx, cy);
+                                cache_active[ca] = false;
+                            }
+                        });
+
+                        p.attr({ cursor: "pointer" });
+                    })(donut, centerX, centerY, centerAngle);
+                }
+
                 if(this.brush.showText) {
                     var text = this.getFormatText(target[i], value),
-                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text, 1.25);
+                        elem = this.drawText(centerX, centerY, centerAngle, outerRadius, text);
 
                     this.addEvent(elem, index, i);
                     g.append(elem);
@@ -297,8 +307,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
                 startAngle += endAngle;
             }
-        }        
-
+        }
 	}
 
 	DonutBrush.setup = function() {

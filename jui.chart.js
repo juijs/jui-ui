@@ -6749,9 +6749,9 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         pieOuterLineSize : 8,
         /** @cfg */
-        donutBorderColor : "white",
+        pieOuterLineRate : 1.3,
         /** @cfg */
-        donutBorderWidth : 1,
+        pieActiveDistance : 5,
         /** @cfg */
     	areaBackgroundOpacity : 0.5,
         /** @cfg */
@@ -6980,8 +6980,8 @@ jui.define("chart.theme.gradient", [], function() {
         pieOuterFontSize : "11px",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
-        donutBorderColor : "white",
-        donutBorderWidth : 1,
+        pieOuterLineRate : 1.3,
+        pieActiveDistance : 5,
         areaBackgroundOpacity : 0.4,
         areaSplitBackgroundColor : "linear(top) #b3b3b3,0.9 #929292",
         bubbleBackgroundOpacity : 0.5,
@@ -7131,8 +7131,8 @@ jui.define("chart.theme.dark", [], function() {
         pieOuterFontSize : "11px",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
-        donutBorderColor : "#232323",
-        donutBorderWidth : 1,
+        pieOuterLineRate : 1.3,
+        pieActiveDistance : 5,
         areaBackgroundOpacity : 0.5,
         areaSplitBackgroundColor : "#ebebeb",
         bubbleBackgroundOpacity : 0.5,
@@ -7278,8 +7278,8 @@ jui.define("chart.theme.pastel", [], function() {
         pieOuterFontSize : "11px",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
-		donutBorderColor : "white",
-		donutBorderWidth : 3,
+        pieOuterLineRate : 1.3,
+        pieActiveDistance : 5,
 		areaBackgroundOpacity : 0.4,
 		areaSplitBackgroundColor : "#ebebeb",
 		bubbleBackgroundOpacity : 0.5,
@@ -7470,9 +7470,9 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         pieOuterLineSize : 8,
         /** */
-        donutBorderColor : "white",
+        pieOuterLineRate : 1.3,
         /** */
-        donutBorderWidth : 1,
+        pieActiveDistance : 5,
         /** */
         areaBackgroundOpacity : 0.5,
         /** */
@@ -13096,13 +13096,35 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 	var PieBrush = function() {
         var self = this, textY = 3;
         var g;
+        var cache_active = {};
+
+        this.setActiveEvent = function(pie, centerX, centerY, centerAngle) {
+            var dist = this.chart.theme("pieActiveDistance"),
+                tx = Math.cos(math.radian(centerAngle)) * dist,
+                ty = Math.sin(math.radian(centerAngle)) * dist;
+
+            pie.translate(centerX + tx, centerY + ty);
+        }
+
+        this.getFormatText = function(target, value) {
+            var series = this.chart.get("series", target),
+                key = (series.text) ? series.text : target;
+
+            if(typeof(this.brush.format) == "function") {
+                return this.format(key, value);
+            } else {
+                if (!value) {
+                    return key;
+                }
+
+                return key + ": " + this.format(value);
+            }
+        }
 
 		this.drawPie = function(centerX, centerY, outerRadius, startAngle, endAngle, color) {
-            
 			var pie = this.chart.svg.group();
 
             if (endAngle == 360) { // if pie is full size, draw a circle as pie brush
-                
                 var circle = this.chart.svg.circle({
                     cx : centerX,
                     cy : centerY,
@@ -13111,16 +13133,17 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
                     stroke : this.chart.theme("pieBorderColor") || color,
                     "stroke-width" : this.chart.theme("pieBorderWidth")
                 });
-                pie.append(circle);
-                return pie; 
 
-            }            
+                pie.append(circle);
+
+                return pie;
+            }
             
             var path = this.chart.svg.path({
-                    fill : color,
-                    stroke : this.chart.theme("pieBorderColor") || color,
-                    "stroke-width" : this.chart.theme("pieBorderWidth")
-                });
+                fill : color,
+                stroke : this.chart.theme("pieBorderColor") || color,
+                "stroke-width" : this.chart.theme("pieBorderWidth")
+            });
 
 			// 바깥 지름 부터 그림
 			var obj = math.rotate(0, -outerRadius, math.radian(startAngle)),
@@ -13169,104 +13192,23 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 			// arc 그림
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y)
 
-            var y = obj.y + 10;
-            var x = obj.x + 5;
-
-            var targetX = startX + 5;
-            var targetY = startY + 10;
+            var y = obj.y + 10,
+                x = obj.x + 5,
+                targetX = startX + 5,
+                targetY = startY + 10;
 
             path.LineTo(x, y);
-
             path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
-
             path.ClosePath();
-
             pie.append(path);
 
 			return pie;
 		}
 
-		this.drawUnit = function (index, data, g) {
-			var obj = this.axis.c(index);
-
-			var width = obj.width,
-                height = obj.height,
-                x = obj.x,
-                y = obj.y,
-                min = width;
-
-			if (height < min) {
-				min = height;
-			}
-
-			// center
-			var centerX = width / 2 + x;
-			var centerY = height / 2 + y;
-			var outerRadius = min / 2;
-
-			var target = this.brush.target,
-				all = 360,
-				startAngle = 0,
-				max = 0;
-
-			for (var i = 0; i < target.length; i++) {
-				max += data[target[i]];
-			}
-
-			for (var i = 0; i < target.length; i++) {
-                var value = data[target[i]],
-                    endAngle = all * (value / max);
-
-                if (this.brush['3d']) {
-                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, ColorUtil.darken(this.color(i), 0.5));
-                    g.append(pie3d);
-                }
-
-				startAngle += endAngle;
-			}
-
-            startAngle = 0;
-			for (var i = 0; i < target.length; i++) {
-                var value = data[target[i]],
-                    endAngle = all * (value / max),
-                    pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
-
-                if (this.brush.showText) {
-                    var text = this.getFormatText(target[i], value, max),
-                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text);
-
-                    this.addEvent(elem, index, i);
-                    g.append(elem);
-                }
-
-                self.addEvent(pie, index, i);
-
-                g.append(pie);
-
-				startAngle += endAngle;
-			}
-		}
-
-        this.getFormatText = function(target, value) {
-            var series = this.chart.get("series", target),
-                key = (series.text) ? series.text : target;
-
-            if(typeof(this.brush.format) == "function") {
-                return this.format(key, value);
-            } else {
-                if (!value) {
-                    return key;
-                }
-
-                return key + ": " + this.format(value);
-            }
-        }
-
-        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text, rate) {
+        this.drawText = function(centerX, centerY, centerAngle, outerRadius, text) {
             var c = this.chart,
                 dist = c.theme("pieOuterLineSize"),
-                rate = rate || 1.2,
-                r = outerRadius * rate,
+                r = outerRadius * c.theme("pieOuterLineRate"),
                 cx = centerX + (Math.cos(math.radian(centerAngle)) * outerRadius),
                 cy = centerY + (Math.sin(math.radian(centerAngle)) * outerRadius),
                 tx = centerX + (Math.cos(math.radian(centerAngle)) * r),
@@ -13293,6 +13235,92 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
             });
         }
 
+		this.drawUnit = function (index, data, g) {
+			var obj = this.axis.c(index);
+
+			var width = obj.width,
+                height = obj.height,
+                x = obj.x,
+                y = obj.y,
+                min = width;
+
+			if (height < min) {
+				min = height;
+			}
+
+			// center
+			var centerX = width / 2 + x,
+                centerY = height / 2 + y,
+                outerRadius = min / 2;
+
+			var target = this.brush.target,
+                active = this.brush.active,
+				all = 360,
+				startAngle = 0,
+				max = 0;
+
+			for (var i = 0; i < target.length; i++) {
+				max += data[target[i]];
+			}
+
+			for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max);
+
+                if (this.brush['3d']) {
+                    var pie3d = this.drawPie3d(centerX, centerY, outerRadius, startAngle, endAngle, ColorUtil.darken(this.color(i), 0.5));
+                    g.append(pie3d);
+                }
+
+				startAngle += endAngle;
+			}
+
+            startAngle = 0;
+
+			for (var i = 0; i < target.length; i++) {
+                var value = data[target[i]],
+                    endAngle = all * (value / max),
+                    centerAngle = startAngle + (endAngle / 2) - 90,
+                    pie = this.drawPie(centerX, centerY, outerRadius, startAngle, endAngle, this.color(i));
+
+                // 설정된 키 활성화
+                if (active == target[i] || $.inArray(target[i], active) != -1) {
+                    this.setActiveEvent(pie, centerX, centerY, centerAngle);
+                    cache_active[centerAngle] = true;
+                }
+
+                // 활성화 이벤트 설정
+                if (this.brush.activeEvent != null) {
+                    (function(p, cx, cy, ca) {
+                        p.on(self.brush.activeEvent, function(e) {
+                            if(!cache_active[ca]) {
+                                self.setActiveEvent(p, cx, cy, ca);
+                                cache_active[ca] = true;
+                            } else {
+                                p.translate(cx, cy);
+                                cache_active[ca] = false;
+                            }
+                        });
+
+                        p.attr({ cursor: "pointer" });
+                    })(pie, centerX, centerY, centerAngle);
+                }
+
+                if (this.brush.showText) {
+                    var text = this.getFormatText(target[i], value, max),
+                        elem = this.drawText(centerX, centerY, centerAngle, outerRadius, text);
+
+                    this.addEvent(elem, index, i);
+                    g.append(elem);
+                }
+
+                self.addEvent(pie, index, i);
+                g.append(pie);
+
+				startAngle += endAngle;
+			}
+		}
+
         this.drawBefore = function() {
             g = this.chart.svg.group();
         }
@@ -13315,7 +13343,11 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
             /** @cfg {Function} [format=null] Returns a value from the format callback function of a defined option. */
             format: null,
             /** @cfg {Boolean} [3d=false] check 3d support */
-            "3d" : false
+            "3d": false,
+            /** @cfg {String|Array} [active=null] Activates the pie of an applicable property's name. */
+            active: null,
+            /** @cfg {String} [activeEvent=null]  Activates the pie in question when a configured event occurs (click, mouseover, etc). */
+            activeEvent: null
         }
     }
 
@@ -13333,7 +13365,9 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
      * 
      */
 	var DonutBrush = function() {
-        
+        var self = this,
+            cache_active = {};
+
         /**
          * @method drawDonut 
          * 
@@ -13422,8 +13456,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
          * @return {util.svg.element}
          */
 		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
-		    hasCircle = hasCircle || false;
-
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
                 dist = Math.abs(outerRadius - innerRadius);
@@ -13455,27 +13487,23 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 1, obj.x, obj.y);
 
 
-            var y = obj.y + 10;
-            var x = obj.x + 5;
-
-            var innerY = innerObj.y + 10;
-            var innerX = innerObj.x + 5;
-
-            var targetX = startX + 5;
-            var targetY = startY + 10;
-
-            var innerTargetX = innerStartX + 5;
-            var innerTargetY = innerStartY + 10;
+            var y = obj.y + 10,
+                x = obj.x + 5,
+                innerY = innerObj.y + 10,
+                innerX = innerObj.x + 5,
+                targetX = startX + 5,
+                targetY = startY + 10,
+                innerTargetX = innerStartX + 5,
+                innerTargetY = innerStartY + 10;
 
             path.LineTo(x, y);
-
             path.Arc(outerRadius, outerRadius, 0, (endAngle > 180) ? 1 : 0, 0, targetX, targetY)
-
             path.ClosePath();
             g.append(path);
 
             // 안쪽 면 그리기
             var innerPath = this.chart.svg.path(attr);
+
             // 시작 하는 위치로 옮김
             innerPath.MoveTo(innerStartX, innerStartY);
             innerPath.Arc(innerRadius, innerRadius, 0, (endAngle > 180) ? 1 : 0, 1, innerObj.x, innerObj.y);
@@ -13484,13 +13512,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             innerPath.ClosePath();
             g.append(innerPath);
 
-
 			return g;
 		}
 
 		this.drawDonut3dBlock = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
-		    hasCircle = hasCircle || false;
-
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
                 dist = Math.abs(outerRadius - innerRadius);
@@ -13518,18 +13543,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			// 중심점 이동
 			g.translate(centerX, centerY);
 
-            var y = obj.y + 10;
-            var x = obj.x + 5;
-
-            var innerY = innerObj.y + 10;
-            var innerX = innerObj.x + 5;
-
-            var targetX = startX + 5;
-            var targetY = startY + 10;
-
-            var innerTargetX = innerStartX + 5;
-            var innerTargetY = innerStartY + 10;
-
+            var y = obj.y + 10,
+                x = obj.x + 5,
+                innerY = innerObj.y + 10,
+                innerX = innerObj.x + 5;
 
             // 왼쪽면 그리기
             var rect = this.chart.svg.path(attr);
@@ -13558,12 +13575,13 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             // center
-            var centerX = width / 2 + x;
-            var centerY = height / 2 + y;
-            var outerRadius = min / 2 - this.brush.size/2;
-            var innerRadius = outerRadius - this.brush.size;
+            var centerX = width / 2 + x,
+                centerY = height / 2 + y,
+                outerRadius = min / 2 - this.brush.size / 2,
+                innerRadius = outerRadius - this.brush.size;
 
             var target = this.brush.target,
+                active = this.brush.active,
                 all = 360,
                 startAngle = 0,
                 max = 0;
@@ -13573,7 +13591,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             if (this.brush['3d']) {
-
                 // 화면 블럭 그리기
                 for (var i = 0; i < target.length; i++) {
                     var value = data[target[i]],
@@ -13600,17 +13617,42 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
             }
 
             startAngle = 0;
+
             for (var i = 0; i < target.length; i++) {
                 var value = data[target[i]],
                     endAngle = all * (value / max),
+                    centerAngle = startAngle + (endAngle / 2) - 90,
                     donut = this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, {
                         stroke : this.color(i),
                         fill : 'transparent'
                     });
 
+                // 설정된 키 활성화
+                if (active == target[i] || $.inArray(target[i], active) != -1) {
+                    this.setActiveEvent(donut, centerX, centerY, centerAngle);
+                    cache_active[centerAngle] = true;
+                }
+
+                // 활성화 이벤트 설정
+                if (this.brush.activeEvent != null) {
+                    (function (p, cx, cy, ca) {
+                        p.on(self.brush.activeEvent, function (e) {
+                            if (!cache_active[ca]) {
+                                self.setActiveEvent(p, cx, cy, ca);
+                                cache_active[ca] = true;
+                            } else {
+                                p.translate(cx, cy);
+                                cache_active[ca] = false;
+                            }
+                        });
+
+                        p.attr({ cursor: "pointer" });
+                    })(donut, centerX, centerY, centerAngle);
+                }
+
                 if(this.brush.showText) {
                     var text = this.getFormatText(target[i], value),
-                        elem = this.drawText(centerX, centerY, startAngle + (endAngle / 2) - 90, outerRadius, text, 1.25);
+                        elem = this.drawText(centerX, centerY, centerAngle, outerRadius, text);
 
                     this.addEvent(elem, index, i);
                     g.append(elem);
@@ -13621,8 +13663,7 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
                 startAngle += endAngle;
             }
-        }        
-
+        }
 	}
 
 	DonutBrush.setup = function() {

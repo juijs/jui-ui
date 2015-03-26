@@ -114,9 +114,9 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         pieOuterLineSize : 8,
         /** @cfg */
-        donutBorderColor : "white",
+        pieOuterLineRate : 1.3,
         /** @cfg */
-        donutBorderWidth : 1,
+        pieActiveDistance : 5,
         /** @cfg */
     	areaBackgroundOpacity : 0.5,
         /** @cfg */

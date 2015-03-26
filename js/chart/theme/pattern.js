@@ -106,9 +106,9 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         pieOuterLineSize : 8,
         /** */
-        donutBorderColor : "white",
+        pieOuterLineRate : 1.3,
         /** */
-        donutBorderWidth : 1,
+        pieActiveDistance : 5,
         /** */
         areaBackgroundOpacity : 0.5,
         /** */
