@@ -3913,7 +3913,7 @@ jui.define("util.svg.element.poly", [], function() { // polygon, polyline
     return PolyElement;
 }, "util.svg.element.transform");
 
-jui.define("util.svgbase",
+jui.define("util.svg.base",
     [ "util.base", "util.math", "util.color", "util.svg.element", "util.svg.element.transform",
         "util.svg.element.path", "util.svg.element.path.symbol", "util.svg.element.path.rect", "util.svg.element.poly" ],
     function(_, math, color, Element, TransElement, PathElement, PathSymbolElement, PathRectElement, PolyElement) {
@@ -4653,7 +4653,7 @@ jui.define("util.svg",
     }
 
     return SVG;
-}, "util.svgbase");
+}, "util.svg.base");
 
 jui.define("util.svg3d", [ "util.base", "util.math", "util.color", "util.svg" ], function(_, math, color, SVGUtil) {
     var SVG3D = function(rootElem, rootAttr) {

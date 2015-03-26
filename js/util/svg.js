@@ -377,4 +377,4 @@ jui.define("util.svg",
     }
 
     return SVG;
-}, "util.svgbase");
+}, "util.svg.base");
