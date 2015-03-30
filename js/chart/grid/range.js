@@ -9,184 +9,44 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x2 : this.size
-				}));
-			}
+			this.drawBaseLine(g, { x2 : this.size });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					y2 : (this.grid.line) ? this.axis.area('height') : -bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawTop(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.bottom = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
+			this.drawBaseLine(g, {  x2 : this.size });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					y2 : (this.grid.line) ? -this.axis.area('height') : bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)))
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.left = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
 
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-            
-            var activeBorderColor = this.color("gridActiveBorderColor");
-            var borderColor = this.color("gridBorderColor");
-
-			for (var i = 0; i < ticks.length; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				})
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? this.axis.area('width') : -bar,
-					stroke : isZero ? activeBorderColor : borderColor,
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x : -bar - 4,
-						y : bar,
-						"text-anchor" : "end",
-						fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, domain)));
-				}
-
-				g.append(axis);
-
-			}
+			this.drawLeft(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.right = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : bar + 4,
-					y : bar,
-					"text-anchor" : "start",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawRight(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
         this.wrapper = function(scale, key) {

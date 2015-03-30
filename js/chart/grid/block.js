@@ -14,42 +14,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          *
          * @protected
          */
+		/*
 		this.top = function(g) {
-			var full_height = this.axis.area('height');
-			
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}))
-			}
-
-			for (var i = 0; i < this.points.length; i++) {
-				var domain = this.format(this.domain[i], i);
-
-                if (!domain && domain !== 0) {
-                    continue;
-                }
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.points[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					x1 : -this.half_band,
-					y1 : 0,
-					x2 : -this.half_band,
-					y2 : (this.grid.line) ? full_height : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : -20,
-					"text-anchor" : "middle"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawTop(g, this.domain, this.points, null, -this.half_band);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -57,53 +25,21 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? full_height : this.bar
+					y2 : (this.grid.line) ? this.axis.area('height') : this.bar
 				}));
 
 				g.append(axis);
 			}
 		}
+
         /**
          * @method bottom
          *
          * @protected
          */
 		this.bottom = function(g) {
-			var full_height = this.axis.area('height');
-
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-                    continue;
-                }
-                
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.points[i] + ", 0)"
-				});
-				
-				axis.append(this.line({
-					x1 : -this.half_band,
-					y1 : 0,
-					x2 : -this.half_band,
-					y2 : (this.grid.line) ? -full_height : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : 20,
-					"text-anchor" : "middle"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -111,50 +47,22 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? -full_height : this.bar
+					y2 : (this.grid.line) ? -this.axis.area('height') : this.bar
 				}));
 
 				g.append(axis);
 			}
+
 		}
+
         /**
          * @method left
          *
          * @protected
          */
 		this.left = function(g) {
-			var full_width = this.axis.area('width');
-
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}))
-			}
-
-			for (var i = 0; i < this.points.length; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? full_width : -this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : -this.bar - 4,
-					y : this.half_band,
-					"text-anchor" : "end"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawLeft(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -175,36 +83,8 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : this.bar + 4,
-					y : this.half_band,
-					"text-anchor" : "start"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawRight(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -217,7 +97,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 				g.append(axis);
 			}
+
 		}
+
+
 
 		/**
 		 * @method initDomain

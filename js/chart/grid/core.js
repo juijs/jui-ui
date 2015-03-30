@@ -7,6 +7,210 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 	 */
 	var CoreGrid = function() {
 
+		this.bar = 4;
+
+		this.drawBaseLine = function(g, obj) {
+			if (!this.grid.line) { g.append(this.axisLine( obj )); }
+		}
+
+		this.drawItem = function(g, tick, value, i) {
+
+		}
+
+		/**
+		 * @method top
+		 *
+		 * draw top
+		 *
+		 * @param {chart.util.svg} g
+		 * @param {Array} ticks
+		 * @param {Array} values
+		 * @param {Number} min
+		 * @param {Function} checkActive
+		 */
+		this.drawTop = function(g, ticks, values, checkActive, moveX) {
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				});
+
+				// TODO : 작은선 그리기
+				axis.append(this.line({
+					x1 : moveX || 0,
+					x2 : moveX || 0,
+					y2 : (this.grid.line) ? this.axis.area('height') : -this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+
+				if (this.grid.line) {
+					// TODO : 선 그리기
+					axis.append(this.line({
+						x1 : moveX || 0,
+						x2 : moveX || 0,
+						y2 : this.axis.area('height') ,
+						stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+						"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth"),
+						"stroke-dasharray" : (this.grid.line.indexOf("dashed") > -1) ? "5,5" : "none"
+					}));
+				}
+
+				// TODO : 점선 그리기
+				// TODO : Gradient 그리기
+				// TODO : 숨기기
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : 0,
+					y : -this.bar - 4,
+					"text-anchor" : "middle",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)));
+
+				g.append(axis);
+			}
+
+		}
+
+		this.drawBottom = function(g, ticks, values, checkActive, moveX){
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				});
+
+				axis.append(this.line({
+					x1 : moveX || 0,
+					x2 : moveX || 0,
+					y2 : (this.grid.line) ? -this.axis.area('height') : this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : 0,
+					y : this.bar * 3,
+					"text-anchor" : "middle",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)))
+
+				g.append(axis);
+			}
+		}
+
+		this.drawLeft = function(g, ticks, values, checkActive, moveY){
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line({
+					y1 : moveY || 0,
+					y2 : moveY || 0,
+					x2 : -this.bar,
+					stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				if (this.grid.line) {
+					// TODO : 선 그리기
+					axis.append(this.line({
+						y1 : moveY || 0,
+						y2 : moveY || 0,
+						x2 : this.axis.area('width'),
+						stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+						"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth"),
+						"stroke-dasharray" : ((this.grid.line + "").indexOf("dashed") > -1) ? "5,5" : "none"
+					}));
+				}
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x : -this.bar - 4,
+						y : this.bar,
+						"text-anchor" : "end",
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+					}, domain)));
+				}
+
+				g.append(axis);
+
+			}
+		}
+
+		this.drawRight = function(g, ticks, values, checkActive, moveY){
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({ "transform" : "translate(0, " + values[i] + ")" });
+
+				axis.append(this.line({
+					y1 : moveY || 0,
+					y2 : moveY || 0,
+					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : this.bar + 4,
+					y : this.bar,
+					"text-anchor" : "start",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)));
+
+				g.append(axis);
+			}
+		}
+
         /**
          * @method drawAfter
          *

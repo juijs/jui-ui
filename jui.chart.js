@@ -7911,6 +7911,210 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 	 */
 	var CoreGrid = function() {
 
+		this.bar = 4;
+
+		this.drawBaseLine = function(g, obj) {
+			if (!this.grid.line) { g.append(this.axisLine( obj )); }
+		}
+
+		this.drawItem = function(g, tick, value, i) {
+
+		}
+
+		/**
+		 * @method top
+		 *
+		 * draw top
+		 *
+		 * @param {chart.util.svg} g
+		 * @param {Array} ticks
+		 * @param {Array} values
+		 * @param {Number} min
+		 * @param {Function} checkActive
+		 */
+		this.drawTop = function(g, ticks, values, checkActive, moveX) {
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				});
+
+				// TODO : 작은선 그리기
+				axis.append(this.line({
+					x1 : moveX || 0,
+					x2 : moveX || 0,
+					y2 : (this.grid.line) ? this.axis.area('height') : -this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+
+				if (this.grid.line) {
+					// TODO : 선 그리기
+					axis.append(this.line({
+						x1 : moveX || 0,
+						x2 : moveX || 0,
+						y2 : this.axis.area('height') ,
+						stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+						"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth"),
+						"stroke-dasharray" : (this.grid.line.indexOf("dashed") > -1) ? "5,5" : "none"
+					}));
+				}
+
+				// TODO : 점선 그리기
+				// TODO : Gradient 그리기
+				// TODO : 숨기기
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : 0,
+					y : -this.bar - 4,
+					"text-anchor" : "middle",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)));
+
+				g.append(axis);
+			}
+
+		}
+
+		this.drawBottom = function(g, ticks, values, checkActive, moveX){
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(" + values[i] + ", 0)"
+				});
+
+				axis.append(this.line({
+					x1 : moveX || 0,
+					x2 : moveX || 0,
+					y2 : (this.grid.line) ? -this.axis.area('height') : this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : 0,
+					y : this.bar * 3,
+					"text-anchor" : "middle",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)))
+
+				g.append(axis);
+			}
+		}
+
+		this.drawLeft = function(g, ticks, values, checkActive, moveY){
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({
+					"transform" : "translate(0, " + values[i] + ")"
+				})
+
+				axis.append(this.line({
+					y1 : moveY || 0,
+					y2 : moveY || 0,
+					x2 : -this.bar,
+					stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				if (this.grid.line) {
+					// TODO : 선 그리기
+					axis.append(this.line({
+						y1 : moveY || 0,
+						y2 : moveY || 0,
+						x2 : this.axis.area('width'),
+						stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+						"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth"),
+						"stroke-dasharray" : ((this.grid.line + "").indexOf("dashed") > -1) ? "5,5" : "none"
+					}));
+				}
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x : -this.bar - 4,
+						y : this.bar,
+						"text-anchor" : "end",
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+					}, domain)));
+				}
+
+				g.append(axis);
+
+			}
+		}
+
+		this.drawRight = function(g, ticks, values, checkActive, moveY){
+
+			for (var i = 0, len = ticks.length; i < len; i++) {
+
+				var domain = this.format(ticks[i], i);
+
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				var isActive = false;
+				if (typeof checkActive == 'function') {
+					isActive = checkActive(ticks[i], i);
+				}
+
+				var axis = this.chart.svg.group({ "transform" : "translate(0, " + values[i] + ")" });
+
+				axis.append(this.line({
+					y1 : moveY || 0,
+					y2 : moveY || 0,
+					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar,
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}));
+
+				axis.append(this.getTextRotate(this.chart.text({
+					x : this.bar + 4,
+					y : this.bar,
+					"text-anchor" : "start",
+					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+				}, domain)));
+
+				g.append(axis);
+			}
+		}
+
         /**
          * @method drawAfter
          *
@@ -8166,42 +8370,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          *
          * @protected
          */
+		/*
 		this.top = function(g) {
-			var full_height = this.axis.area('height');
-			
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}))
-			}
-
-			for (var i = 0; i < this.points.length; i++) {
-				var domain = this.format(this.domain[i], i);
-
-                if (!domain && domain !== 0) {
-                    continue;
-                }
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.points[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					x1 : -this.half_band,
-					y1 : 0,
-					x2 : -this.half_band,
-					y2 : (this.grid.line) ? full_height : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : -20,
-					"text-anchor" : "middle"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawTop(g, this.domain, this.points, null, -this.half_band);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -8209,53 +8381,21 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? full_height : this.bar
+					y2 : (this.grid.line) ? this.axis.area('height') : this.bar
 				}));
 
 				g.append(axis);
 			}
 		}
+
         /**
          * @method bottom
          *
          * @protected
          */
 		this.bottom = function(g) {
-			var full_height = this.axis.area('height');
-
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-                    continue;
-                }
-                
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.points[i] + ", 0)"
-				});
-				
-				axis.append(this.line({
-					x1 : -this.half_band,
-					y1 : 0,
-					x2 : -this.half_band,
-					y2 : (this.grid.line) ? -full_height : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : 20,
-					"text-anchor" : "middle"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -8263,50 +8403,22 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? -full_height : this.bar
+					y2 : (this.grid.line) ? -this.axis.area('height') : this.bar
 				}));
 
 				g.append(axis);
 			}
+
 		}
+
         /**
          * @method left
          *
          * @protected
          */
 		this.left = function(g) {
-			var full_width = this.axis.area('width');
-
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}))
-			}
-
-			for (var i = 0; i < this.points.length; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + (this.points[i] - this.half_band ) + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? full_width : -this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : -this.bar - 4,
-					y : this.half_band,
-					"text-anchor" : "end"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawLeft(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -8327,36 +8439,8 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			for (var i = 0, len = this.points.length; i < len; i++) {
-				var domain = this.format(this.domain[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + (this.points[i] - this.half_band) + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : this.bar + 4,
-					y : this.half_band,
-					"text-anchor" : "start"
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawRight(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -8369,7 +8453,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 				g.append(axis);
 			}
+
 		}
+
+
 
 		/**
 		 * @method initDomain
@@ -8485,155 +8572,23 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	var DateGrid = function() {
 
 		this.top = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					y2 : (this.grid.line) ? this.axis.area('height') : -bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : this.chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawTop(g, this.ticks, this.values);
 		}
 
 		this.bottom = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var group = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				group.append(this.line({
-					y2 : (this.grid.line) ? -this.axis.area('height') : bar
-				}));
-
-				group.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : this.chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(group);
-			}
+			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBottom(g, this.ticks, this.values);
 		}
 
 		this.left = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? this.axis.area('width') : -bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : -bar-2,
-					y : bar-2,
-					"text-anchor" : "end",
-					fill : this.chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawLeft(g, this.ticks, this.values);
 		}
 
 		this.right = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
-
-			var ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-			
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0," + values[i] + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : bar
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : bar + 4,
-					y : -bar,
-					"text-anchor" : "start",
-					fill : this.chart.theme("gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawRight(g, this.ticks, this.values);
 		}
 
         this.wrapper = function(scale, key) {
@@ -9229,184 +9184,44 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x2 : this.size
-				}));
-			}
+			this.drawBaseLine(g, { x2 : this.size });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					y2 : (this.grid.line) ? this.axis.area('height') : -bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : -bar - 4,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawTop(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.bottom = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					x1 : this.start,
-					x2 : this.end
-				}));
-			}
+			this.drawBaseLine(g, {  x2 : this.size });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + values[i] + ", 0)"
-				});
-
-				axis.append(this.line({
-					y2 : (this.grid.line) ? -this.axis.area('height') : bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : 0,
-					y : bar * 3,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)))
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.left = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
 
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-            
-            var activeBorderColor = this.color("gridActiveBorderColor");
-            var borderColor = this.color("gridBorderColor");
-
-			for (var i = 0; i < ticks.length; i++) {
-
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				})
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? this.axis.area('width') : -bar,
-					stroke : isZero ? activeBorderColor : borderColor,
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x : -bar - 4,
-						y : bar,
-						"text-anchor" : "end",
-						fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-					}, domain)));
-				}
-
-				g.append(axis);
-
-			}
+			this.drawLeft(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
 		this.right = function(g) {
-			if (!this.grid.line) {
-				g.append(this.axisLine({
-					y1 : this.start,
-					y2 : this.end
-				}));
-			}
+			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
 
-			var min = this.scale.min(),
-				ticks = this.ticks,
-				values = this.values,
-				bar = this.bar;
-
-			for (var i = 0; i < ticks.length; i++) {
-				var domain = this.format(ticks[i], i);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isZero = (ticks[i] == 0 && ticks[i] != min);
-
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + values[i] + ")"
-				});
-
-				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : bar,
-					stroke : this.color(isZero, "gridActiveBorderColor", "gridAxisBorderColor"),
-					"stroke-width" : this.chart.theme(isZero, "gridActiveBorderWidth", "gridBorderWidth")
-				}));
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : bar + 4,
-					y : bar,
-					"text-anchor" : "start",
-					fill : this.chart.theme(isZero, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
-
-				g.append(axis);
-			}
+			var min = this.scale.min();
+			var max = this.scale.max();
+			this.drawRight(g, this.ticks, this.values, function(tick, index) {
+				return tick == 0 && tick != min && tick != max;
+			});
 		}
 
         this.wrapper = function(scale, key) {
