@@ -14,10 +14,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          *
          * @protected
          */
-		/*
+
 		this.top = function(g) {
-			this.drawBaseLine(g, { x2 : this.size  });
 			this.drawTop(g, this.domain, this.points, null, -this.half_band);
+			this.drawBaseLine(g, { x2 : this.size  });
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -38,8 +38,8 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.bottom = function(g) {
-			this.drawBaseLine(g, {  x2 : this.size });
 			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+			this.drawBaseLine(g, {  x2 : this.size });
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -61,8 +61,8 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.left = function(g) {
+			this.drawLeft(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
-			this.drawLeft(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -83,8 +83,8 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
+			this.drawRight(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
-			this.drawRight(g, this.domain, this.points);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({

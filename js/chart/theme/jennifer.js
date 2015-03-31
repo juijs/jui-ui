@@ -47,14 +47,18 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveFontColor : "#ff7800",
         /** @cfg Grid Border Color */
         gridBorderColor : "#ebebeb",
+        /** @cfg Grid Rect Color */
+        gridRectColor : "#ababab",
         /** @cfg Grid Border Width */
     	gridBorderWidth : 1,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
+        /** @cfg  Grid Bar Size */
+        gridBarSize : 3,
         /** @cfg */
-		gridAxisBorderColor : "#ebebeb",
+		gridAxisBorderColor : "#bfbfbf",
         /** @cfg */
-		gridAxisBorderWidth : 1,
+		gridAxisBorderWidth : 2,
         /** @cfg */
     	gridActiveBorderColor : "#ff7800",
         /** @cfg */

@@ -55,22 +55,21 @@
 				height : 400,
 	            theme : "jennifer",
 				axis : {
-					y : {
+					x : {
 						type : "date",  // default type is block 
 						domain : [ start, end ],
 						step : [time.hours, 1],
 						format : "hh:mm",
 					    key: "value",
-						color : "red",
-						dist : 10
+						line : "rect dashed"
 					},
-					x : {
+					y : {
 						type : 'range', 
 						domain : function(d) {
                             return [d.name, d.name2];
                         },
 						step : 10,
-						line : true
+						line : 'solid'
 					},
 					data : data
 				},

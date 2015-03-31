@@ -2996,7 +2996,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var distDomain = null;
 			var distRange = null;
             
-            var callFunction = null; 
+            var callFunction = null;
+			var _rangeBand = null;
 
 			function func(x) {
 
@@ -3095,6 +3096,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return func.range(values);
 			}
 
+			func.rangeBand = function() {
+				return _rangeBand;
+			}
+
 			func.invert = function(y) {
 
 				var f = self.linear().domain(_range).range(_domain);
@@ -3150,6 +3155,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					}
 				}
 
+				var first = func(arr[0]);
+				var second = func(arr[1]);
+
+				_rangeBand = Math.abs(second - first);
 
 				return arr;
 			}

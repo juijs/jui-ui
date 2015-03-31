@@ -34,9 +34,14 @@ jui.define("chart.theme.gradient", [], function() {
         gridActiveFontColor : "#ff7800",
         gridBorderColor : "#efefef",
         gridBorderWidth : 1,
+        /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
+        /** @cfg  Grid Bar Size */
+        gridBarSize : 3,
+        /** @cfg Grid Rect Color */
+        gridRectColor : "#ababab",
         gridAxisBorderColor : "#efefef",
-        gridAxisBorderWidth : 1,
+        gridAxisBorderWidth : 2,
         gridActiveBorderColor : "#ff7800",
         gridActiveBorderWidth: 1,
 

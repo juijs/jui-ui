@@ -28,6 +28,10 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveFontColor : "#ff7800",
 		gridBorderColor : "#bfbfbf",
 		gridBorderWidth : 1,
+		/** @cfg  Grid Bar Size */
+		gridBarSize : 3,
+		/** @cfg Grid Rect Color */
+		gridRectColor : "#ababab",
 		gridBorderDashArray : "1, 3",
 		gridAxisBorderColor : "#bfbfbf",
 		gridAxisBorderWidth : 1,

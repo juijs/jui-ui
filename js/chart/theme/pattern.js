@@ -41,8 +41,12 @@ jui.define("chart.theme.pattern", [], function() {
         gridBorderColor : "#ebebeb",
         /** Grid Border Width */
         gridBorderWidth : 1,
-        /** Grid Border Dash Array */
+        /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
+        /** @cfg  Grid Bar Size */
+        gridBarSize : 3,
+        /** @cfg Grid Rect Color */
+        gridRectColor : "#ababab",
         /** */
         gridAxisBorderColor : "#ebebeb",
         /** */
