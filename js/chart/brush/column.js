@@ -31,7 +31,7 @@ jui.define("chart.brush.column", [], function() {
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
 						tooltipX = startX + (col_width / 2),
-						tooltipY = axis.y((value == 0) ? brush.minValue : value),
+						tooltipY = axis.y(value),
 						position = (tooltipY <= zeroY) ? "top" : "bottom";
 
                     // 최소 크기 설정
