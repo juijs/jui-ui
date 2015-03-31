@@ -34,6 +34,11 @@ jui.define("chart.brush.column", [], function() {
 						tooltipY = axis.y((value == 0) ? brush.minValue : value),
 						position = (tooltipY <= zeroY) ? "top" : "bottom";
 
+                    // 최소 크기 설정
+                    if(Math.abs(zeroY - tooltipY) < brush.minSize) {
+                        tooltipY = (position == "top") ? tooltipY - brush.minSize : tooltipY + brush.minSize;
+                    }
+
 					var	height = Math.abs(zeroY - tooltipY),
 						radius = (col_width < style.borderRadius || height < style.borderRadius) ? 0 : style.borderRadius,
 						r = this.getBarElement(i, j, {

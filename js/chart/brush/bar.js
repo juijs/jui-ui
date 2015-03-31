@@ -172,6 +172,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 						tooltipY = startY + (bar_height / 2),
 						position = (tooltipX >= zeroX) ? "right" : "left";
 
+                    // 최소 크기 설정
+                    if(Math.abs(zeroX - tooltipX) < brush.minSize) {
+                        tooltipX = (position == "right") ? tooltipX + brush.minSize : tooltipX - brush.minSize;
+                    }
+
 					var width = Math.abs(zeroX - tooltipX),
 						radius = (width < style.borderRadius || bar_height < style.borderRadius) ? 0 : style.borderRadius,
                         r = this.getBarElement(i, j, {
@@ -249,6 +254,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 		return {
             /** @cfg {Number} [minValue=0] Sets the minimum value as it is not possible to draw a bar when the value is 0. */
 			minValue: 0,
+            /** @cfg {Number} [minSize=0] Sets the minimum size as it is not possible to draw a bar when the value is 0. */
+            minSize: 0,
             /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
 			outerPadding: 2,
             /** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */

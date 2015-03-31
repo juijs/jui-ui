@@ -51,15 +51,14 @@
                         { quarter : "08", sales : 36 },
                         { quarter : "09", sales : 56 },
                         { quarter : "10", sales : 30 },
-                        { quarter : "11", sales : 32 },
+                        { quarter : "11", sales : 50000 },
                         { quarter : "12", sales : 25 }
                     ],
                     y : {
                         type : "range",
-                        domain : "sales",
+                        domain : [ 0, 70000 ],
                         step : 10,
-                        line : true,
-                        reverse : true
+                        line : true
                     },
                     x : {
                         type : "block",
@@ -75,6 +74,7 @@
                 display : "max",
                 activeEvent : "mouseover",
                 active : 1,
+                minSize : 5,
                 animate : "top"
             },
             widget : {
