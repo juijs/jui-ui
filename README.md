@@ -52,7 +52,7 @@ Get started right now in NodeJS.
 
 #### Install
 ```
-node install jui
+npm install jui
 ```
 
 #### Example
