@@ -17851,6 +17851,18 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             degree = 0,
             radian = 0;
 
+        function getElementAttr(root) {
+            var attr = null;
+
+            root.each(function(i, elem) {
+                if(elem.element.nodeName == "line") {
+                    attr = elem.attributes;
+                }
+            });
+
+            return attr;
+        }
+
         /**
          * @method drawBefore
          *
@@ -17908,12 +17920,15 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
          * @protected
          */
         this.draw = function() {
+            var xRoot = this.axis.x.root,
+                yRoot = this.axis.y.root;
+
             var y2 = Math.sin(radian) * depth,
                 x2 = Math.cos(radian) * depth;
 
-            this.axis.y.root.each(function(i, elem) {
-                if(i == 0) {
-                    self.axis.y.root.append(self.line({
+            yRoot.each(function(i, elem) {
+                if(elem.element.nodeName == "line") {
+                    yRoot.append(self.line({
                         x1 : x2,
                         y1 : 0,
                         x2 : x2,
@@ -17921,7 +17936,7 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
                     }));
                 } else {
                     // X축 라인 속성 가져오기
-                    var xAttr = self.axis.x.root.get(0).attributes;
+                    var xAttr = getElementAttr(xRoot);
 
                     elem.append(self.line({
                         x1 : 0,
@@ -17939,14 +17954,14 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
                 }
             });
 
-            this.axis.x.root.each(function(i, elem) {
-                var attr = (i == 0) ? elem.attributes : elem.get(0).attributes,
+            xRoot.each(function(i, elem) {
+                var attr = (elem.element.nodeName == "line") ? elem.attributes : elem.get(0).attributes,
                     y2 = attr.y1 + Math.sin(radian) * depth,
                     x2 = attr.x1 + Math.cos(radian) * depth;
 
-                if(i > 1) {
+                if(i > 0) {
                     // Y축 라인 속성 가져오기
-                    var yAttr = self.axis.y.root.get(0).attributes;
+                    var yAttr = getElementAttr(yRoot);
 
                     elem.append(self.line({
                         x1 : attr.x1,
@@ -17957,9 +17972,9 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
                     elem.append(self.line({
                         x1 : x2,
-                        y1 : -yAttr.y1,
+                        y1 : y2,
                         x2 : x2,
-                        y2 : -yAttr.y2
+                        y2 : -(yAttr.y2 - y2)
                     }));
                 }
             });
