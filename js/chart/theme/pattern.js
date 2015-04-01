@@ -37,24 +37,34 @@ jui.define("chart.theme.pattern", [], function() {
         gridFontColor : "#333333",
         /** Grid Active Font color */
         gridActiveFontColor : "#ff7800",
-        /** Grid Border Color */
-        gridBorderColor : "#ebebeb",
-        /** Grid Border Width */
-        gridBorderWidth : 1.5,
+
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-        /** @cfg  Grid Bar Size */
-        gridBarSize : 3,
+
+
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
+
         /** */
         gridAxisBorderColor : "#ebebeb",
         /** */
         gridAxisBorderWidth : 2,
+
         /** */
         gridActiveBorderColor : "#ff7800",
-        /** */
-        gridActiveBorderWidth: 1.5,
+
+        /** Grid Border Color */
+        gridBorderColor : "#ebebeb",
+
+        /** Grid Border Width */
+        gridBorderWidth : 1,
+
+        /** @cfg  Grid Bar Size */
+        gridTickSize : 3,
+
+        gridTickPadding : 5,
+
+        gridTickBorderWidth : 1.5,
 
         // brush styles
         /** */

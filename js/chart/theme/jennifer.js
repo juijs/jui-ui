@@ -45,24 +45,35 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridFontColor : "#333333",
         /** @cfg Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
-        /** @cfg Grid Border Color */
-        gridBorderColor : "#ebebeb",
+
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
+
+        /** @cfg Grid Border Color */
+        gridBorderColor : "#ebebeb",
         /** @cfg Grid Border Width */
-    	gridBorderWidth : 1.5,
+    	gridBorderWidth : 1,
+
+        /** @cfg */
+        gridActiveBorderColor : "#ff7800",
+
+        /** @cfg */
+        gridAxisBorderColor : "#bfbfbf",
+        /** @cfg */
+        gridAxisBorderWidth : 2,
+
+        /** @cfg  Grid Bar Size */
+        gridTickSize : 3,
+
+        gridTickBorderWidth : 1.5,
+
+        gridTickPadding : 5,
+
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-        /** @cfg  Grid Bar Size */
-        gridBarSize : 3,
-        /** @cfg */
-		gridAxisBorderColor : "#bfbfbf",
-        /** @cfg */
-		gridAxisBorderWidth : 2,
-        /** @cfg */
-    	gridActiveBorderColor : "#ff7800",
-        /** @cfg */
-    	gridActiveBorderWidth: 1,
+
+
+
 
         // brush-item styles
         /** @cfg */

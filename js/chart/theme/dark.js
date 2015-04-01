@@ -31,17 +31,21 @@ jui.define("chart.theme.dark", [], function() {
     	gridFontColor : "#868686",
     	gridActiveFontColor : "#ff762d",
         gridBorderColor : "#464646",
-        gridBorderWidth : 1.5,
+        gridBorderWidth : 1,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
-        gridBarSize : 3,
+        gridTickSize : 3,
+
+        gridTickPadding : 5,
+
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
 		gridAxisBorderColor : "#464646",
 		gridAxisBorderWidth : 2,
     	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1.5,
+
+        gridTickBorderWidth : 1.5,
 
         // brush styles
         tooltipPointRadius : 5, // common

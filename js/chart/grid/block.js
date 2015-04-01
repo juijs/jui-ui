@@ -25,7 +25,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					y2 : -this.chart.theme("gridBarSize")
+					y2 : -this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -47,7 +47,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					y2 : this.chart.theme("gridBarSize")
+					y2 : this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -70,7 +70,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					x2 : -this.chart.theme("gridBarSize")
+					x2 : -this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -92,7 +92,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					x2 : this.chart.theme("gridBarSize")
+					x2 : this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
