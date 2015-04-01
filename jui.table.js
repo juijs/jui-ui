@@ -1298,7 +1298,12 @@
             });
           
             globalClass[name] = uiFunc;
-            globalFunc[name] = true; 
+            globalFunc[name] = true;
+
+          // support AMD module
+          if (typeof define == 'function' && define.amd) {
+            define(name, function() { return global[name] });
+          }
 		},
 
         /**
@@ -1337,6 +1342,11 @@
             global[name] = uiFunc;
             globalClass[name] = uiFunc; // original function
             globalFunc[name] = true;
+          
+            // support AMD module
+            if (typeof define === 'function' && define.amd) {
+              define(name, function() { return global[name] });
+            }
         },
 
 		/**
