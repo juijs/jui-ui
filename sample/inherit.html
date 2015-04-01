@@ -1,0 +1,66 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Inherit</title>
+
+<link rel="stylesheet" href="../jui.css" />
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../jui.js"></script>
+<script>
+jui.defineUI("base.ui.select", [], function() {
+  
+   var UI = function() {
+     
+     this.init = function() {
+       console.log('base.ui.select init called');
+     }
+     
+     this.start = function() {
+       this.emit('start', [ 'test' ]);
+     }
+     
+   };
+  
+   UI.setup = function() {
+     return {
+       testParam : false
+     }
+     
+   }
+  
+   return UI;
+});
+
+jui.defineUI("test.ui.select", [], function() {
+    var UI = function() {
+      
+      this.init = function() {
+        
+        this.super('init');
+        
+        console.log('test.ui.select init called.');
+        
+      }
+      
+    };
+  
+    return UI;
+}, "base.ui.select");
+
+jui.ready([ "base.ui.select", "test.ui.select" ], function(base, test) {
+  base(".jui");
+  var obj = test(".jui", { testParam : true });
+  obj.on('start', function(param) {
+    console.log('start ', param);
+    
+  });
+  obj.start();  // execute parent's method
+});
+</script>
+</head>
+<body class="jui">
+
+</body>
+</html>

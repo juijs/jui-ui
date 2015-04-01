@@ -1,5 +1,5 @@
 (function($, window, nodeGlobal) {
-	var global = { jquery: $ }, globalFunc = {};
+	var global = { jquery: $ }, globalFunc = {}, globalClass = {} ;
     var navigator = window.navigator;
 
 	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
@@ -1269,33 +1269,36 @@
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
-            if(utility.typeCheck("function", global[name])) {
-                throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
-            }
+      if(utility.typeCheck("function", globalClass[name])) {
+          throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+      }
 
-            if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
-                parent = "core";
-            }
+      if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+          parent = "core";
+      }
 
-            if(!utility.typeCheck("function", global[parent])) {
-                throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
-            } else {
-                if(globalFunc[parent] !== true) {
-                    throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
-                }
-            }
+      if(!utility.typeCheck("function", globalClass[parent])) {
+          throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
+      } else {
+          if(globalFunc[parent] !== true) {
+              throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
+          }
+      }
 			
 			var args = getDepends(depends),
                 uiFunc = callback.apply(null, args);
 
             // 상속
-            utility.inherit(uiFunc, global[parent]);
+            utility.inherit(uiFunc, globalClass[parent]);
 
             // UI 고유 설정
-            global[name] = global["core"].init({
+            global[name] = globalClass["core"].init({
                 type: name,
                 "class": uiFunc
             });
+          
+            globalClass[name] = uiFunc;
+            globalFunc[name] = true; 
 		},
 
         /**
@@ -1315,23 +1318,24 @@
                 throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
             }
 
-            if(utility.typeCheck("function", global[name])) {
+            if(utility.typeCheck("function", globalClass[name])) {
                 throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
             }
 
             var args = getDepends(depends),
                 uiFunc = callback.apply(null, args);
 
-            if(utility.typeCheck("function", global[parent])) {
+            if(utility.typeCheck("function", globalClass[parent])) {
                 if(globalFunc[parent] !== true) {
                     throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
                 } else {
-                    utility.inherit(uiFunc, global[parent]);
+                    utility.inherit(uiFunc, globalClass[parent]);
                 }
             }
 
             // 함수 고유 설정
             global[name] = uiFunc;
+            globalClass[name] = uiFunc; // original function
             globalFunc[name] = true;
         },
 
