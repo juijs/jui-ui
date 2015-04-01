@@ -31,8 +31,20 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			return line;
 		}
 
-		this.drawBaseLine = function(g, obj) {
-			g.append(this.axisLine( obj ));
+		this.drawBaseLine = function(position, g) {
+
+			var obj = this.getGridSize();
+			var pos = {};
+
+			if (position == 'bottom' || position == 'top') {
+				pos = { x1 : obj.start, x2 : obj.end };
+			} else if (position == 'left' || position == 'right') {
+				pos = { y1 : obj.start, y2 : obj.end };
+			} else {
+				// TODO: custom base line
+			}
+
+			g.append(this.axisLine(pos));
 		}
 
 		this.makeColor = function(color) {

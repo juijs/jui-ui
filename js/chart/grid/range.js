@@ -14,7 +14,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawTop(g, this.ticks, this.values, function(tick, index) {
 				return tick == 0 && tick != min && tick != max;
 			});
-			this.drawBaseLine(g, { x2 : this.size });
+			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
@@ -23,7 +23,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
 				return tick == 0 && tick != min && tick != max;
 			});
-			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
@@ -34,7 +34,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				return tick == 0 && tick != min && tick != max;
 			});
 
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
@@ -44,7 +44,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				return tick == 0 && tick != min && tick != max;
 			});
 
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("right", g);
 		}
 
         this.wrapper = function(scale, key) {

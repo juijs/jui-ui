@@ -11,22 +11,22 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 		this.top = function(g) {
 			this.drawTop(g, this.ticks, this.values);
-			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
 			this.drawBottom(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
 			this.drawLeft(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
 			this.drawRight(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("right", g);
 		}
 
         this.wrapper = function(scale, key) {

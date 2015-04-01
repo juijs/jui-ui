@@ -15428,8 +15428,20 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			return line;
 		}
 
-		this.drawBaseLine = function(g, obj) {
-			g.append(this.axisLine( obj ));
+		this.drawBaseLine = function(position, g) {
+
+			var obj = this.getGridSize();
+			var pos = {};
+
+			if (position == 'bottom' || position == 'top') {
+				pos = { x1 : obj.start, x2 : obj.end };
+			} else if (position == 'left' || position == 'right') {
+				pos = { y1 : obj.start, y2 : obj.end };
+			} else {
+				// TODO: custom base line
+			}
+
+			g.append(this.axisLine(pos));
 		}
 
 		this.makeColor = function(color) {
@@ -15935,7 +15947,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		this.top = function(g) {
 			this.drawTop(g, this.domain, this.points, null, -this.half_band);
-			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawBaseLine("top", g);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -15957,7 +15969,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          */
 		this.bottom = function(g) {
 			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
-			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBaseLine("bottom", g);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -15980,7 +15992,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          */
 		this.left = function(g) {
 			this.drawLeft(g, this.domain, this.points, null, -this.half_band);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("left", g);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -16002,7 +16014,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          */
 		this.right = function(g) {
 			this.drawRight(g, this.domain, this.points, null, -this.half_band);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("right", g);
 
 			if (!this.grid.full) {
 				var axis = this.chart.svg.group({
@@ -16135,22 +16147,22 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 		this.top = function(g) {
 			this.drawTop(g, this.ticks, this.values);
-			this.drawBaseLine(g, { x2 : this.size  });
+			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
 			this.drawBottom(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
 			this.drawLeft(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
 			this.drawRight(g, this.ticks, this.values);
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("right", g);
 		}
 
         this.wrapper = function(scale, key) {
@@ -16751,7 +16763,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawTop(g, this.ticks, this.values, function(tick, index) {
 				return tick == 0 && tick != min && tick != max;
 			});
-			this.drawBaseLine(g, { x2 : this.size });
+			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
@@ -16760,7 +16772,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
 				return tick == 0 && tick != min && tick != max;
 			});
-			this.drawBaseLine(g, {  x2 : this.size });
+			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
@@ -16771,7 +16783,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				return tick == 0 && tick != min && tick != max;
 			});
 
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
@@ -16781,7 +16793,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 				return tick == 0 && tick != min && tick != max;
 			});
 
-			this.drawBaseLine(g, {  y1 : this.start, y2 : this.end });
+			this.drawBaseLine("right", g);
 		}
 
         this.wrapper = function(scale, key) {
