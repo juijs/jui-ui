@@ -4761,7 +4761,7 @@
   text-decoration: none;
 }
 .jui .tab li > a {
-  color: #6633cc;
+  color: #6836c4;
   border: 1px solid #e6e6e6;
   background-color: #ffffff;
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
@@ -4832,7 +4832,7 @@
   border-radius: 0 0 4px 4px;
 }
 .jui .tab-white li > a {
-  color: #6633cc;
+  color: #6836c4;
   border: 1px solid #e6e6e6;
   background-color: #ffffff;
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
