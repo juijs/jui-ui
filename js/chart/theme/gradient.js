@@ -33,7 +33,7 @@ jui.define("chart.theme.gradient", [], function() {
         gridFontColor : "#666",
         gridActiveFontColor : "#ff7800",
         gridBorderColor : "#efefef",
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -43,7 +43,7 @@ jui.define("chart.theme.gradient", [], function() {
         gridAxisBorderColor : "#efefef",
         gridAxisBorderWidth : 2,
         gridActiveBorderColor : "#ff7800",
-        gridActiveBorderWidth: 1,
+        gridActiveBorderWidth: 1.5,
 
         // brush styles
         tooltipPointRadius : 5, // common

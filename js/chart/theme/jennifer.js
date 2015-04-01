@@ -50,7 +50,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
         /** @cfg Grid Border Width */
-    	gridBorderWidth : 1,
+    	gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */

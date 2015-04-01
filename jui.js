@@ -14156,7 +14156,7 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
         /** @cfg Grid Border Width */
-    	gridBorderWidth : 1,
+    	gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -14421,7 +14421,7 @@ jui.define("chart.theme.gradient", [], function() {
         gridFontColor : "#666",
         gridActiveFontColor : "#ff7800",
         gridBorderColor : "#efefef",
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -14431,7 +14431,7 @@ jui.define("chart.theme.gradient", [], function() {
         gridAxisBorderColor : "#efefef",
         gridAxisBorderWidth : 2,
         gridActiveBorderColor : "#ff7800",
-        gridActiveBorderWidth: 1,
+        gridActiveBorderWidth: 1.5,
 
         // brush styles
         tooltipPointRadius : 5, // common
@@ -14577,7 +14577,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridFontColor : "#868686",
     	gridActiveFontColor : "#ff762d",
         gridBorderColor : "#464646",
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -14585,9 +14585,9 @@ jui.define("chart.theme.dark", [], function() {
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
 		gridAxisBorderColor : "#464646",
-		gridAxisBorderWidth : 1,
+		gridAxisBorderWidth : 2,
     	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
+    	gridActiveBorderWidth: 1.5,
 
         // brush styles
         tooltipPointRadius : 5, // common
@@ -14729,16 +14729,16 @@ jui.define("chart.theme.pastel", [], function() {
 		gridFontColor : "#333333",
 		gridActiveFontColor : "#ff7800",
 		gridBorderColor : "#bfbfbf",
-		gridBorderWidth : 1,
+		gridBorderWidth : 1.5,
 		/** @cfg  Grid Bar Size */
 		gridBarSize : 3,
 		/** @cfg Grid Rect Color */
 		gridRectColor : "#ababab",
 		gridBorderDashArray : "1, 3",
 		gridAxisBorderColor : "#bfbfbf",
-		gridAxisBorderWidth : 1,
+		gridAxisBorderWidth : 2,
 		gridActiveBorderColor : "#ff7800",
-		gridActiveBorderWidth : 1,
+		gridActiveBorderWidth : 1.5,
 
 		// brush styles
 		tooltipPointRadius : 5, // common
@@ -14893,7 +14893,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Grid Border Color */
         gridBorderColor : "#ebebeb",
         /** Grid Border Width */
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -14903,11 +14903,11 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         gridAxisBorderColor : "#ebebeb",
         /** */
-        gridAxisBorderWidth : 1,
+        gridAxisBorderWidth : 2,
         /** */
         gridActiveBorderColor : "#ff7800",
         /** */
-        gridActiveBorderWidth: 1,
+        gridActiveBorderWidth: 1.5,
 
         // brush styles
         /** */
@@ -15538,7 +15538,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				// TODO : 작은선 그리기
 				axis.append(this.line({
-					y2 : (this.grid.line) ? this.axis.area('height') : -this.chart.theme('gridBarSize'),
+					y2 : -this.chart.theme('gridBarSize'),
 					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
@@ -15546,12 +15546,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (line) this.drawValueLine( "top", axis, isActive, line, i, (i == len -1));
 
-				axis.append(this.getTextRotate(this.chart.text({
-					x : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
-					y : -15,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand() / 2 : 0,
+						y: -15,
+						"text-anchor": "middle",
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+					}, domain)));
+				}
 
 				g.append(axis);
 			}
@@ -15588,12 +15590,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (line) this.drawValueLine( "bottom", axis, isActive, line, i, (i == len -1));
 
-				axis.append(this.getTextRotate(this.chart.text({
-					x : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
-					y : 15,
-					"text-anchor" : "middle",
-					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
-				}, domain)))
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
+						y : 15,
+						"text-anchor" : "middle",
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+					}, domain)));
+				}
 
 				g.append(axis);
 			}
@@ -15625,7 +15629,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				axis.append(this.line({
 					x2 : -this.chart.theme('gridBarSize'),
-					stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
+					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
 				}));
 
@@ -15677,13 +15681,14 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (line) this.drawValueLine( "right", axis, isActive, line, i, (i == len -1));
 
-
-				axis.append(this.getTextRotate(this.chart.text({
-					x : this.chart.theme('gridBarSize') + 4,
-					y : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme('gridBarSize'),
-					"text-anchor" : "start",
-					fill : this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
-				}, domain)));
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: this.chart.theme('gridBarSize') + 4,
+						y: (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand() / 2 : this.chart.theme('gridBarSize'),
+						"text-anchor": "start",
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridFontColor")
+					}, domain)));
+				}
 
 				g.append(axis);
 			}
@@ -15955,7 +15960,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? this.axis.area('height') : this.bar
+					y2 : -this.chart.theme("gridBarSize")
 				}));
 
 				g.append(axis);
@@ -15977,7 +15982,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					y2 : (this.grid.line) ? -this.axis.area('height') : this.bar
+					y2 : this.chart.theme("gridBarSize")
 				}));
 
 				g.append(axis);
@@ -16000,7 +16005,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				})
 
 				axis.append(this.line({
-					x2 : (this.grid.line) ? this.axis.area('width') : -this.bar
+					x2 : -this.chart.theme("gridBarSize")
 				}));
 
 				g.append(axis);
@@ -16022,7 +16027,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 				});
 
 				axis.append(this.line({
-					x2 : (this.grid.line) ? -this.axis.area('width') : this.bar
+					x2 : this.chart.theme("gridBarSize")
 				}));
 
 				g.append(axis);

@@ -40,7 +40,7 @@ jui.define("chart.theme.pattern", [], function() {
         /** Grid Border Color */
         gridBorderColor : "#ebebeb",
         /** Grid Border Width */
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -50,11 +50,11 @@ jui.define("chart.theme.pattern", [], function() {
         /** */
         gridAxisBorderColor : "#ebebeb",
         /** */
-        gridAxisBorderWidth : 1,
+        gridAxisBorderWidth : 2,
         /** */
         gridActiveBorderColor : "#ff7800",
         /** */
-        gridActiveBorderWidth: 1,
+        gridActiveBorderWidth: 1.5,
 
         // brush styles
         /** */

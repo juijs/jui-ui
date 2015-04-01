@@ -27,16 +27,16 @@ jui.define("chart.theme.pastel", [], function() {
 		gridFontColor : "#333333",
 		gridActiveFontColor : "#ff7800",
 		gridBorderColor : "#bfbfbf",
-		gridBorderWidth : 1,
+		gridBorderWidth : 1.5,
 		/** @cfg  Grid Bar Size */
 		gridBarSize : 3,
 		/** @cfg Grid Rect Color */
 		gridRectColor : "#ababab",
 		gridBorderDashArray : "1, 3",
 		gridAxisBorderColor : "#bfbfbf",
-		gridAxisBorderWidth : 1,
+		gridAxisBorderWidth : 2,
 		gridActiveBorderColor : "#ff7800",
-		gridActiveBorderWidth : 1,
+		gridActiveBorderWidth : 1.5,
 
 		// brush styles
 		tooltipPointRadius : 5, // common

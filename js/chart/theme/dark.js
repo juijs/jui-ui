@@ -31,7 +31,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridFontColor : "#868686",
     	gridActiveFontColor : "#ff762d",
         gridBorderColor : "#464646",
-        gridBorderWidth : 1,
+        gridBorderWidth : 1.5,
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
         /** @cfg  Grid Bar Size */
@@ -39,9 +39,9 @@ jui.define("chart.theme.dark", [], function() {
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
 		gridAxisBorderColor : "#464646",
-		gridAxisBorderWidth : 1,
+		gridAxisBorderWidth : 2,
     	gridActiveBorderColor : "#ff7800",
-    	gridActiveBorderWidth: 1,
+    	gridActiveBorderWidth: 1.5,
 
         // brush styles
         tooltipPointRadius : 5, // common
