@@ -1,4 +1,4 @@
-jui.define("chart.brush.imagecolumn", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.brush.imagecolumn", [], function() {
 
     /**
      * @class chart.brush.imagecolumn
