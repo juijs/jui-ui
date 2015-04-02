@@ -1269,21 +1269,21 @@
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
-      if(utility.typeCheck("function", globalClass[name])) {
-          throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
-      }
+			if(utility.typeCheck("function", globalClass[name])) {
+				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+			}
 
-      if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
-          parent = "core";
-      }
+			if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+				parent = "core";
+			}
 
-      if(!utility.typeCheck("function", globalClass[parent])) {
-          throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
-      } else {
-          if(globalFunc[parent] !== true) {
-              throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
-          }
-      }
+			if(!utility.typeCheck("function", globalClass[parent])) {
+				throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
+			} else {
+				if(globalFunc[parent] !== true) {
+					throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
+				}
+			}
 			
 			var args = getDepends(depends),
                 uiFunc = callback.apply(null, args);
@@ -1300,10 +1300,10 @@
             globalClass[name] = uiFunc;
             globalFunc[name] = true;
 
-          // support AMD module
-          if (typeof define == 'function' && define.amd) {
-            define(name, function() { return global[name] });
-          }
+			// support AMD module
+			if(typeof define == "function" && define.amd) {
+				define(name, function() { return global[name] });
+			}
 		},
 
         /**
@@ -1343,10 +1343,10 @@
             globalClass[name] = uiFunc; // original function
             globalFunc[name] = true;
           
-            // support AMD module
-            if (typeof define === 'function' && define.amd) {
-              define(name, function() { return global[name] });
-            }
+			// support AMD module
+			if(typeof define == "function" && define.amd) {
+				define(name, function() { return global[name] });
+			}
         },
 
 		/**
