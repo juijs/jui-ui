@@ -1503,227 +1503,275 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.jui .icon-menu:before {
-  content: "\e600";
-}
-.jui .icon-report-build:before {
-  content: "\e601";
-}
-.jui .icon-jennifer-server:before {
-  content: "\e602";
-}
-.jui .icon-user:before {
-  content: "\e603";
-}
-.jui .icon-rule:before {
-  content: "\e604";
-}
-.jui .icon-profile:before {
-  content: "\e605";
-}
-.jui .icon-monitoring:before {
+.jui .icon-analysis:before {
   content: "\e606";
 }
-.jui .icon-device:before {
-  content: "\e607";
-}
-.jui .icon-caution2:before {
-  content: "\e608";
-}
-.jui .icon-tool:before {
-  content: "\e609";
-}
-.jui .icon-report-link:before {
-  content: "\e60a";
-}
-.jui .icon-was:before {
-  content: "\e60b";
-}
-.jui .icon-ws:before {
-  content: "\e60c";
-}
-.jui .icon-server:before {
-  content: "\e60d";
-}
-.jui .icon-db:before {
-  content: "\e60e";
-}
-.jui .icon-minus:before {
-  content: "\e60f";
-}
-.jui .icon-label:before {
-  content: "\e610";
-}
-.jui .icon-checkmark:before {
-  content: "\e611";
-}
-.jui .icon-stoppage:before {
-  content: "\e612";
-}
-.jui .icon-align-right:before {
-  content: "\e613";
-}
-.jui .icon-caution:before {
-  content: "\e614";
-}
-.jui .icon-return:before {
-  content: "\e615";
-}
-.jui .icon-loading:before {
-  content: "\e616";
-}
-.jui .icon-plus:before {
-  content: "\e617";
-}
-.jui .icon-pause:before {
-  content: "\e618";
-}
-.jui .icon-play:before {
-  content: "\e619";
-}
-.jui .icon-resize:before {
-  content: "\e61a";
-}
-.jui .icon-right:before {
-  content: "\e61b";
-}
-.jui .icon-left:before {
-  content: "\e61c";
-}
-.jui .icon-bold:before {
-  content: "\e61d";
-}
-.jui .icon-chart:before {
-  content: "\e61e";
-}
-.jui .icon-document:before {
-  content: "\e61f";
-}
-.jui .icon-link:before {
-  content: "\e620";
-}
-.jui .icon-more:before {
-  content: "\e621";
-}
-.jui .icon-arrow3:before {
-  content: "\e622";
-}
-.jui .icon-arrow1:before {
-  content: "\e623";
-}
-.jui .icon-arrow2:before {
-  content: "\e624";
-}
-.jui .icon-textcolor:before {
-  content: "\e625";
-}
-.jui .icon-text:before {
-  content: "\e626";
-}
-.jui .icon-refresh:before {
-  content: "\e627";
-}
-.jui .icon-chevron-right:before {
-  content: "\e628";
-}
-.jui .icon-chevron-left:before {
-  content: "\e629";
-}
-.jui .icon-align-center:before {
-  content: "\e62a";
-}
-.jui .icon-align-left:before {
-  content: "\e62b";
-}
-.jui .icon-preview:before {
-  content: "\e62c";
-}
-.jui .icon-close:before {
-  content: "\e62d";
-}
-.jui .icon-exit:before {
-  content: "\e62e";
-}
-.jui .icon-image:before {
-  content: "\e62f";
-}
-.jui .icon-dashboardlist:before {
-  content: "\e630";
-}
-.jui .icon-add-dir:before {
-  content: "\e631";
-}
-.jui .icon-add-dir2:before {
-  content: "\e632";
-}
-.jui .icon-calendar:before {
-  content: "\e633";
-}
-.jui .icon-check:before {
-  content: "\e634";
-}
-.jui .icon-download:before {
-  content: "\e635";
-}
-.jui .icon-edit:before {
-  content: "\e636";
-}
-.jui .icon-gear:before {
-  content: "\e637";
-}
-.jui .icon-help:before {
-  content: "\e638";
-}
-.jui .icon-hide:before {
-  content: "\e639";
-}
-.jui .icon-home:before {
-  content: "\e63a";
-}
-.jui .icon-html:before {
-  content: "\e63b";
-}
-.jui .icon-italic:before {
-  content: "\e63c";
-}
-.jui .icon-new-window:before {
-  content: "\e63d";
-}
-.jui .icon-orderedlist:before {
-  content: "\e63e";
-}
-.jui .icon-printer:before {
-  content: "\e63f";
-}
-.jui .icon-realtime:before {
-  content: "\e640";
+.jui .icon-analysis2:before {
+  content: "\e605";
 }
 .jui .icon-refresh2:before {
   content: "\e641";
 }
-.jui .icon-save:before {
+.jui .icon-add-dir:before {
+  content: "\e600";
+}
+.jui .icon-add-dir2:before {
+  content: "\e601";
+}
+.jui .icon-align-center:before {
+  content: "\e602";
+}
+.jui .icon-align-left:before {
+  content: "\e603";
+}
+.jui .icon-align-right:before {
+  content: "\e604";
+}
+.jui .icon-arrow1:before {
+  content: "\e607";
+}
+.jui .icon-arrow2:before {
+  content: "\e608";
+}
+.jui .icon-arrow3:before {
+  content: "\e609";
+}
+.jui .icon-bold:before {
+  content: "\e60a";
+}
+.jui .icon-calendar:before {
+  content: "\e60b";
+}
+.jui .icon-caution:before {
+  content: "\e60c";
+}
+.jui .icon-caution2:before {
+  content: "\e60d";
+}
+.jui .icon-chart-area:before {
+  content: "\e60e";
+}
+.jui .icon-chart-bar:before {
+  content: "\e60f";
+}
+.jui .icon-chart-column:before {
+  content: "\e610";
+}
+.jui .icon-chart-candle:before {
+  content: "\e611";
+}
+.jui .icon-chart-gauge:before {
+  content: "\e612";
+}
+.jui .icon-chart-line:before {
+  content: "\e613";
+}
+.jui .icon-chart-radar:before {
+  content: "\e614";
+}
+.jui .icon-chart-scatter:before {
+  content: "\e615";
+}
+.jui .icon-chart:before {
+  content: "\e616";
+}
+.jui .icon-check:before {
+  content: "\e617";
+}
+.jui .icon-checkmark:before {
+  content: "\e618";
+}
+.jui .icon-chevron-left:before {
+  content: "\e619";
+}
+.jui .icon-chevron-right:before {
+  content: "\e61a";
+}
+.jui .icon-close:before {
+  content: "\e61b";
+}
+.jui .icon-dashboard:before {
+  content: "\e61c";
+}
+.jui .icon-dashboardlist:before {
+  content: "\e61d";
+}
+.jui .icon-db:before {
+  content: "\e61e";
+}
+.jui .icon-device:before {
+  content: "\e61f";
+}
+.jui .icon-document:before {
+  content: "\e620";
+}
+.jui .icon-download:before {
+  content: "\e621";
+}
+.jui .icon-edit:before {
+  content: "\e622";
+}
+.jui .icon-exit:before {
+  content: "\e623";
+}
+.jui .icon-gear:before {
+  content: "\e624";
+}
+.jui .icon-help:before {
+  content: "\e625";
+}
+.jui .icon-hide:before {
+  content: "\e626";
+}
+.jui .icon-home:before {
+  content: "\e627";
+}
+.jui .icon-html:before {
+  content: "\e628";
+}
+.jui .icon-image:before {
+  content: "\e629";
+}
+.jui .icon-info-message:before {
+  content: "\e62a";
+}
+.jui .icon-info:before {
+  content: "\e62b";
+}
+.jui .icon-italic:before {
+  content: "\e62c";
+}
+.jui .icon-jennifer-server:before {
+  content: "\e62d";
+}
+.jui .icon-label:before {
+  content: "\e62e";
+}
+.jui .icon-left:before {
+  content: "\e62f";
+}
+.jui .icon-link:before {
+  content: "\e630";
+}
+.jui .icon-loading:before {
+  content: "\e631";
+}
+.jui .icon-menu:before {
+  content: "\e632";
+}
+.jui .icon-message:before {
+  content: "\e633";
+}
+.jui .icon-minus:before {
+  content: "\e634";
+}
+.jui .icon-monitoring:before {
+  content: "\e635";
+}
+.jui .icon-more:before {
+  content: "\e636";
+}
+.jui .icon-new-window:before {
+  content: "\e637";
+}
+.jui .icon-orderedlist:before {
+  content: "\e638";
+}
+.jui .icon-pause:before {
+  content: "\e639";
+}
+.jui .icon-play:before {
+  content: "\e63a";
+}
+.jui .icon-plus:before {
+  content: "\e63b";
+}
+.jui .icon-preview:before {
+  content: "\e63c";
+}
+.jui .icon-printer:before {
+  content: "\e63d";
+}
+.jui .icon-profile:before {
+  content: "\e63e";
+}
+.jui .icon-realtime:before {
+  content: "\e63f";
+}
+.jui .icon-refresh:before {
+  content: "\e640";
+}
+.jui .icon-report-build:before {
   content: "\e642";
 }
-.jui .icon-search:before {
+.jui .icon-report-link:before {
   content: "\e643";
 }
-.jui .icon-stop:before {
+.jui .icon-report:before {
   content: "\e644";
 }
-.jui .icon-table:before {
+.jui .icon-resize:before {
   content: "\e645";
 }
-.jui .icon-trashcan:before {
+.jui .icon-return:before {
   content: "\e646";
 }
-.jui .icon-underline:before {
+.jui .icon-right:before {
   content: "\e647";
 }
-.jui .icon-unorderedlist:before {
+.jui .icon-rule:before {
   content: "\e648";
 }
-.jui .icon-upload:before {
+.jui .icon-save:before {
   content: "\e649";
+}
+.jui .icon-search:before {
+  content: "\e64a";
+}
+.jui .icon-server:before {
+  content: "\e64b";
+}
+.jui .icon-statistics:before {
+  content: "\e64c";
+}
+.jui .icon-stop:before {
+  content: "\e64d";
+}
+.jui .icon-stoppage:before {
+  content: "\e64e";
+}
+.jui .icon-table:before {
+  content: "\e64f";
+}
+.jui .icon-text:before {
+  content: "\e650";
+}
+.jui .icon-textcolor:before {
+  content: "\e651";
+}
+.jui .icon-tool:before {
+  content: "\e652";
+}
+.jui .icon-trashcan:before {
+  content: "\e653";
+}
+.jui .icon-underline:before {
+  content: "\e654";
+}
+.jui .icon-unorderedlist:before {
+  content: "\e655";
+}
+.jui .icon-upload:before {
+  content: "\e656";
+}
+.jui .icon-user:before {
+  content: "\e657";
+}
+.jui .icon-was:before {
+  content: "\e658";
+}
+.jui .icon-ws:before {
+  content: "\e659";
 }
 .jui .icon-spin {
   -webkit-animation: spin 2s infinite linear;
