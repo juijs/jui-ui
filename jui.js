@@ -13437,22 +13437,29 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color
 
         function setChartIcons() {
             var icon = _options.icon;
-            if(!_.typeCheck("string", icon.path)) return;
+            if(!_.typeCheck([ "string", "array" ], icon.path)) return;
 
-            var path = (icon.path != null) ? icon.path : "",
-                url = "url(" + icon.path + ") ";
+            var pathList = (_.typeCheck("string", icon.path)) ? [ icon.path ] : icon.path,
+                urlList = [];
 
-            if(path.indexOf(".eot") != -1) {
-                url += "format('embedded-opentype')";
-            } else if(path.indexOf(".woff") != -1) {
-                url += "format('woff')";
-            } else if(path.indexOf(".ttf") != -1) {
-                url += "format('truetype')";
-            } else if(path.indexOf(".svg") != -1) {
-                url += "format('svg')";
+            for(var i = 0; i < pathList.length; i++) {
+                var path = pathList[i],
+                    url = "url(" + path + ") ";
+
+                if (path.indexOf(".eot") != -1) {
+                    url += "format('embedded-opentype')";
+                } else if (path.indexOf(".woff") != -1) {
+                    url += "format('woff')";
+                } else if (path.indexOf(".ttf") != -1) {
+                    url += "format('truetype')";
+                } else if (path.indexOf(".svg") != -1) {
+                    url += "format('svg')";
+                }
+
+                urlList.push(url);
             }
 
-            var fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + url;
+            var fontFace = "font-family: " + icon.type + "; font-weight: normal; font-style: normal; src: " + urlList.join(",");
 
             (function(rule) {
                 var sheet = (function() {
