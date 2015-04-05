@@ -82,9 +82,10 @@ module.exports = function(grunt) {
 
         // chart.brush
         "js/chart/brush/core.js",
+        "js/chart/brush/imagebar.js",
+        "js/chart/brush/imagecolumn.js",
         "js/chart/brush/bar.js",
         "js/chart/brush/column.js", // extends bar
-        "js/chart/brush/imagecolumn.js",
         "js/chart/brush/bar3d.js",
         "js/chart/brush/column3d.js",
         "js/chart/brush/cylinder3d.js",

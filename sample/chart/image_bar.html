@@ -55,13 +55,13 @@
                         { quarter : "11", sales : 50 },
                         { quarter : "12", sales : 25 }
                     ],
-                    y : {
+                    x : {
                         type : "range",
                         domain : [ 0, 100 ],
                         step : 10,
                         line : true
                     },
-                    x : {
+                    y : {
                         type : "block",
                         domain : "quarter",
                         line : true
@@ -70,9 +70,9 @@
 
             ],
             brush : {
-                type : "imagecolumn",
+                type : "imagebar",
                 target : "sales",
-                uri : "resource/man.svg"
+                uri : "resource/rect.png"
             },
             widget : {
                 type : "title",

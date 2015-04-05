@@ -64,17 +64,22 @@ jui.define("chart.brush.imagecolumn", [], function() {
 				}
 			});
 
-			this.drawETC(g);
-
             return g;
 		}
 	}
 
 	ImageColumnBrush.setup = function() {
 		return {
+			/** @cfg {Number} [minSize=0] Sets the minimum size as it is not possible to draw a bar when the value is 0. */
+			minSize: 0,
+			/** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
+			outerPadding: 2,
+			/** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
+			innerPadding: 1,
+			/** @cfg {Number} [uri=null] */
 			uri : null
 		}
 	}
 
 	return ImageColumnBrush;
-}, "chart.brush.column");
+}, "chart.brush.core");
