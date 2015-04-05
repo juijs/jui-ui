@@ -6005,7 +6005,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 	var UI = function() {
 		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
 		var rowIndex = null, checkedList = {};
-        var is_resize = false;
+        var is_resize = false, is_edit = false;
 		
 		
 		/**
@@ -6199,6 +6199,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 					
 					(function(colIndex) { 
 						self.addEvent(cell, "dblclick", function(e) {
+                            if(is_edit) return;
+                            is_edit = true;
+
 							if(e.target.tagName == "TD") {
 								setEventEditCell(self, e.currentTarget, row, colIndex);
 							}
@@ -6250,8 +6253,11 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			});
 			
 			function update(e) {
+                if(!is_edit) return;
+
 				if(typeof(callback) == "function") { // editRow일 경우
 					callback();
+                    is_edit = false;
 				} else {
 					var data = {};
 					data[column.name] = $input.val();
@@ -6262,6 +6268,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 					if(res !== false) {
 						self.update(row.index, data);
 						$input.remove();
+                        is_edit = false;
 					}
 				}
 			}
@@ -6912,7 +6919,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 		}
 		
 		this.showEditRow = function(index, e) {
-			if(!this.options.editRow) return;
+			if(!this.options.editRow || is_edit) return;
 			
 			// 초기화
 			this.unselect();
@@ -6921,6 +6928,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 			var self = this,
 				row = this.get(index);
 			var $cells = $(row.element).find("td");
+
+            // 현재 테이블 수정 상태
+            is_edit = true;
 			
 			$cells.each(function(i) {
 				setEventEditCell(self, this, row, i, e, function() {
