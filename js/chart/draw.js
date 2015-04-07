@@ -60,7 +60,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var draw = this.grid || this.brush || this.widget;
+                var draw = this.grid || this.brush || this.widget || this.map;
 
                 if(draw.animate !== false) {
                     this.drawAnimate(obj);

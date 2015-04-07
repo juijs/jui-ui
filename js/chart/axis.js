@@ -95,6 +95,35 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             return elem.scale;
         }
+
+        function drawMapType(axis, k) {
+            if(k !== "map" ) return null;
+
+            // 축 위치 설정
+            axis[k] = axis[k]  || {};
+            axis[k].type = axis[k].type || "world";
+            
+            var Map = jui.include("chart.map." + axis[k].type);
+
+            // 그리드 기본 옵션과 사용자 옵션을 합침
+            jui.defineOptions(Map, axis[k]);
+
+            // 엑시스 기본 프로퍼티 정의
+            var obj = new Map(chart, axis, axis[k]);
+            obj.chart = chart;
+            obj.axis = axis;
+            obj.map = axis[k];
+
+            var elem = obj.render();
+
+            // 그리드 별 위치 선정하기
+            if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+
+            elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
+            
+            return elem.scale;
+        }
         
         function setScreen(pNo) {
             var dataList = self.origin,
@@ -289,7 +318,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             _.extend(this, {
                 x : options.x,
                 y : options.y,
-                c : options.c
+                c : options.c,
+                map : options.map
             });
 
             // 패딩 옵션 설정
@@ -306,7 +336,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
-            
+            this.map = drawMapType(this, "map");
+
             createClipPath();
         }
 
@@ -463,6 +494,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             y: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
+            /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
+            map : null,
             /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
             /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */

@@ -80,6 +80,10 @@ module.exports = function(grunt) {
         "js/chart/grid/topologytable.js",
         "js/chart/grid/grid3d.js",
 
+        // chart.map
+        "js/chart/map/core.js",
+        "js/chart/map/world.js",
+        
         // chart.brush
         "js/chart/brush/core.js",
         "js/chart/brush/imagebar.js",

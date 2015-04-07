@@ -470,7 +470,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             rows.push(row);
 
             // 실제 HTML에 추가
-            $obj.tbody.append(row.element);
+            $obj.tbody[0].appendChlid(row.element);
 
             // Column 배열 세팅
             initColumnRows("append", row);

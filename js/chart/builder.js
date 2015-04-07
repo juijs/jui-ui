@@ -109,7 +109,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @private
          */
         function drawAxis(self) {
-
+            
             // 엑시스 리스트 얻어오기
             var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
