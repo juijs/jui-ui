@@ -15,8 +15,8 @@ module.exports = function(grunt) {
         "js/util/scale.js",
         "js/util/color.js",
         "js/util/svgbase.js",
-        "js/util/svg.js",
-        "js/util/svg3d.js"
+        "js/util/svg3d.js",
+        "js/util/svg.js"
     ];
 
     var ui_src = [

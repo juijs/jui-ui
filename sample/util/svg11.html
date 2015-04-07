@@ -13,12 +13,12 @@
 <script src="../../js/util/math.js"></script>
 <script src="../../js/util/color.js"></script>
 <script src="../../js/util/svgbase.js"></script>
-<script src="../../js/util/svg.js"></script>
 <script src="../../js/util/svg3d.js"></script>
+<script src="../../js/util/svg.js"></script>
 
 <script>
 
-jui.ready([ "util.svg3d" ], function(SVGUtil) {
+jui.ready([ "util.svg" ], function(SVGUtil) {
     svg = new SVGUtil($("#svg").get(0), { width: 1300, height: 200 });
     r = svg.rect3d("#CC0000", 50, 100, 60, 30);
     svg.render();

@@ -1,4 +1,4 @@
-jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg3d", "util.color", "chart.axis" ],
+jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
     /**
