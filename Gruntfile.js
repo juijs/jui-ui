@@ -136,6 +136,9 @@ module.exports = function(grunt) {
         "js/chart/brush/focus.js", // brush supporter
         "js/chart/brush/pin.js",  // brush supporter
 
+        // map brush
+        "js/chart/brush/over.js",
+
         // chart.widget
         "js/chart/widget/core.js",
         "js/chart/widget/tooltip.js",
@@ -151,7 +154,7 @@ module.exports = function(grunt) {
         // chart wrapper
         "js/chartx/realtime.js",
         "js/chartx/mini.js"
-    ]
+    ];
 
     grunt.initConfig({
         watch : {

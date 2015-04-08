@@ -1314,7 +1314,7 @@
          * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} parent 상속받을 클래스
          */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -8778,7 +8778,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             rows.push(row);
 
             // 실제 HTML에 추가
-            $obj.tbody.append(row.element);
+            $obj.tbody[0].appendChlid(row.element);
 
             // Column 배열 세팅
             initColumnRows("append", row);

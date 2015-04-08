@@ -102,7 +102,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
             axis[k].type = axis[k].type || "world";
-            
+
             var Map = jui.include("chart.map." + axis[k].type);
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
@@ -173,8 +173,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 id: _clipId
             }, function() {
                 chart.svg.rect({
-                    x: _area.x,
-                    y: _area.y,
+                    x: 0, //_area.x,
+                    y: 0, //_area.y,
                     width: _area.width,
                     height: _area.height
                 });
@@ -333,12 +333,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 x: 0, y: 0 , width: area.width, height: area.height
             }, true), _padding);
 
+
+            createClipPath();
+
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
 
-            createClipPath();
         }
 
         /**
@@ -376,6 +378,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 padding: _padding,
                 clipId: _clipId
             };
+
+            console.log([type, obj[type], _clipId].join("::/"));
 
             return obj[type] || cloneAxis[type];
         }

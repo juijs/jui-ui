@@ -10,8 +10,19 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
      */
     var WorldMap = function() {
 
-        this.map = function(g) {
-            console.log(g);
+        this.custom = function() {
+            console.log($(this.pathGroup.element).offset());
+            console.log($(this.pathGroup.element).width());
+            console.log($(this.pathGroup.element).height());
+            console.log($(this.pathGroup.element).position());
+        }
+
+        this.scale = function(i) {
+            if (typeof i == 'number') {
+                return self.pathGroup.children[i];
+            } else {
+                return self.pathIndex[i];
+            }
         }
 
         /**
@@ -21,6 +32,7 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
          */
         this.drawBefore = function() {
 
+            var self = this;
         }
 
         /**
@@ -37,7 +49,9 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
 
     WorldMap.setup = function() {
         return {
-            map : 'worldHigh.svg'
+            map : 'worldHigh.svg',
+            width : 1013,
+            height : 669
         };
     }
 

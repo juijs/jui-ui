@@ -7,6 +7,8 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
      */
     var CoreMap = function() {
 
+        this.pathIndex = {};
+
         this.makeColor = function(color) {
             return this.chart.color(0, { colors: [ color ] })
         }
@@ -21,6 +23,12 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
          */
         this.drawAfter = function(obj) {
             obj.root.attr({ "class": "map map-" + this.map.type});
+            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipId") + ")" });
+
+            var widthRate = this.axis.area('width')/this.map.width;
+            var heightRate = this.axis.area('height')/this.map.height;
+
+            this.scaleGroup.scale((widthRate > 1) ? heightRate : widthRate, (heightRate > 1) ? widthRate : heightRate);
         }
 
         /**
@@ -41,7 +49,7 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
          * @protected
          */
         this.wrapper = function(scale, key) {
-            return scale || {};
+            return scale || (function() {});
         }
 
         /**
@@ -117,15 +125,42 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
                             }
                         });
 
-                        children.push(SVG.createObject({ type : 'path', attr : obj }));
+                        children.push( obj );
 
                     })
-                    
                 }
                 
             });
 
-            return children;
+            return this.loadArray(children);
+        }
+
+        this.makeIndex = function(item) {
+            if (item.attr('id')) {
+                this.pathIndex[item.attr('id')] = item;
+            }
+        }
+
+        this.makePathGroup = function(root) {
+            // create path element
+            var pathGroup = this.chart.svg.group({
+                'class' : 'map-path'
+            });
+
+            root.append(pathGroup);
+
+            var list = _.typeCheck("array", this.map.map) ? this.loadArray(this.map.map) : this.loadPath(this.map.map);
+
+            for(var i = 0, len = list.length; i < len; i++) {
+                pathGroup.append(list[i]);
+                this.makeIndex(list[i]);
+            }
+
+            return pathGroup;
+        }
+
+        this.scale = function(key) {
+            return {};
         }
 
         /**
@@ -138,34 +173,31 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
          * @param {Map} map
          */
         this.drawMap = function() {
+            var self = this;
             // create group
             var root = this.chart.svg.group(),
-                func = this.map;
+                func = this.custom;
 
+            this.scaleGroup = this.chart.svg.group();
+            root.append(this.scaleGroup);
             // wrapped scale
-            this.scale = this.wrapper(this.scale, this.map.key);
-            
-            // create path element 
-            var pathGroup = this.chart.svg.group({
-                'class' : 'map-path'
-            });
-           
-            root.append(pathGroup);
+            //this.scale = this.wrapper(this.scale, this.map.key);
 
-            var list = _.typeCheck("array", this.map.map) ? this.loadArray(this.map.map) : this.loadPath(this.map.map);
-            
-            for(var i = 0, len = list.length; i < len; i++) {
-                pathGroup.append(list[i]);
-            }
-            
+            this.pathIndex = {};
+            this.pathGroup = this.makePathGroup(this.scaleGroup);
+
             // render axis
             if(_.typeCheck("function", func)) {
-                func.call(this, pathGroup);
+                func.call(this);
             }
 
             // hide map
             if(this.map.hide) {
                 root.attr({ display : "none" })
+            }
+
+            this.scale.getMapGroup = function() {
+                return self.pathGroup;
             }
 
             return {
@@ -199,8 +231,14 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
             format: null,
             /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
             textRotate : null,
+            /** @cfg {String} [mapBase=''] Set a map base url */
             mapBase : '',
-            map : ''
+            /** @cfg {String} [map=''] Set a map file's name */
+            map : '',
+            /** @cfg {Number} [width=-1] Set map's width */
+            width : -1,
+            /** @cfg {Number} [height=-1] Set map's height */
+            height : -1
         };
     }
 
