@@ -462,7 +462,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
                     var axis = self.chart.axis(self.axis.index),
                         e = arguments[0];
 

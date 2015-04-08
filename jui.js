@@ -442,8 +442,8 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
-			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
+			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
@@ -688,7 +688,6 @@
 		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {
-
 				if(typeof(type) != "string") return false;
 
 				if (type == "string") {
@@ -894,7 +893,7 @@
                         data[keys[j]] = tmpArr[j];
 
                         // '"' 로 감싸져있는 문자열은 '"' 제거
-                        if(tmpArr[j].startsWith('"') && tmpArr[j].endsWith('"')) {
+                        if(this.startsWith(tmpArr[j], '"') && this.endsWith(tmpArr[j], '"')) {
                             data[keys[j]] = tmpArr[j].split('"').join('');
                         } else {
                             data[keys[j]] = tmpArr[j];
@@ -1077,25 +1076,23 @@
          * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
 		 */
 		loop : function(total, context) {
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+			var start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, first, 1); first++;
-					if (second < secondMax && second < end) { callback.call(context, second, 2); second++; }
-					if (third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
+
+					if(second < secondMax && second < end) { callback.call(context, second, 2); second++; }
+					if(third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
+					if(fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
+					if(fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
 				}
 			};
-
 		},
         
 		/**
@@ -1109,16 +1106,14 @@
          * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
 		 */
 		loopArray : function(data, context) {
-            var total = data.length;
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+            var total = data.length,
+				start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, data[first], first, 1); first++;
@@ -1143,11 +1138,10 @@
          * @return {Object} 생성된 인덱스  
          */
         makeIndex : function(data, keyField) {
-            var list = {};
+            var list = {},
+				func = this.loopArray(data);
             
-            var func = this.loopArray(data);
-            
-            func(function(d, i, group) {
+            func(function(d, i) {
                 var value = d[keyField];
                 
                 if (typeof list[value] == 'undefined') {
@@ -1155,12 +1149,29 @@
                 }
                 
                 list[value].push(i);
-                
-            })
+            });
             
             return list; 
-        }
+        },
 
+		startsWith : function(str, searchString, position) {
+			position = position || 0;
+
+			return str.lastIndexOf(searchString, position) === position;
+		},
+
+		endsWith : function(str, searchString, position) {
+			var subjectString = str;
+
+			if(position === undefined || position > subjectString.length) {
+				position = subjectString.length;
+			}
+
+			position -= searchString.length;
+			var lastIndex = subjectString.indexOf(searchString, position);
+
+			return lastIndex !== -1 && lastIndex === position;
+		}
 	}
 
 
@@ -8778,7 +8789,7 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             rows.push(row);
 
             // 실제 HTML에 추가
-            $obj.tbody[0].appendChlid(row.element);
+            $obj.tbody.append(row.element);
 
             // Column 배열 세팅
             initColumnRows("append", row);
@@ -12532,7 +12543,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function drawMapType(axis, k) {
-            if(k !== "map" ) return null;
+            if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -12608,8 +12619,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 id: _clipId
             }, function() {
                 chart.svg.rect({
-                    x: 0, //_area.x,
-                    y: 0, //_area.y,
+                    x: _area.x,
+                    y: _area.y,
                     width: _area.width,
                     height: _area.height
                 });
@@ -12775,7 +12786,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
-
         }
 
         /**
@@ -12813,8 +12823,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 padding: _padding,
                 clipId: _clipId
             };
-
-            console.log([type, obj[type], _clipId].join("::/"));
 
             return obj[type] || cloneAxis[type];
         }
@@ -18890,7 +18898,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
                     var axis = self.chart.axis(self.axis.index),
                         e = arguments[0];
 
@@ -24376,7 +24384,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", axisIndex)) {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", axisIndex)) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 

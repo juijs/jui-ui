@@ -97,7 +97,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function drawMapType(axis, k) {
-            if(k !== "map" ) return null;
+            if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -173,8 +173,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 id: _clipId
             }, function() {
                 chart.svg.rect({
-                    x: 0, //_area.x,
-                    y: 0, //_area.y,
+                    x: _area.x,
+                    y: _area.y,
                     width: _area.width,
                     height: _area.height
                 });
@@ -340,7 +340,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
-
         }
 
         /**
@@ -378,8 +377,6 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 padding: _padding,
                 clipId: _clipId
             };
-
-            console.log([type, obj[type], _clipId].join("::/"));
 
             return obj[type] || cloneAxis[type];
         }
