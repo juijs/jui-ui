@@ -942,6 +942,7 @@
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
+
 		/**
 		 * @method dateFormat
 		 *
@@ -1154,14 +1155,30 @@
             return list; 
         },
 
-		startsWith : function(str, searchString, position) {
+		/**
+		 * @method startsWith
+		 * Check that it matches the starting string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		startsWith : function(string, searchString, position) {
 			position = position || 0;
 
-			return str.lastIndexOf(searchString, position) === position;
+			return string.lastIndexOf(searchString, position) === position;
 		},
 
-		endsWith : function(str, searchString, position) {
-			var subjectString = str;
+		/**
+		 * @method endsWith
+		 * Check that it matches the end of a string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		endsWith : function(string, searchString, position) {
+			var subjectString = string;
 
 			if(position === undefined || position > subjectString.length) {
 				position = subjectString.length;

@@ -257,6 +257,18 @@ jui.ready([ "util.base" ], function(_) {
         assert.ok(_.dateFormat(date, "yy.MM.dd") == "86.06.15", "날짜 변경 확인");
         assert.ok(_.dateFormat(date, "yy.MM.dd hh-mm") == "86.06.15 09-15", "날짜/숫자 변경 확인");
     });
+
+    QUnit.test("[유틸리티 함수] - startsWith", function(assert) {
+        assert.ok(_.startsWith("startsWith", "startsW"), "시작 문자열이 맞는지 확인");
+        assert.ok(_.startsWith("startsWith", "arts", 2), "시작 문자열의 위치가 맞는지 확인");
+        assert.ok(!_.startsWith("startsWith", "sttsW"), "시작 문자열이 틀렸는지 확인");
+    });
+
+    QUnit.test("[유틸리티 함수] - endsWith", function(assert) {
+        assert.ok(_.endsWith("endsWith", "With"), "끝 문자열이 맞는지 확인");
+        assert.ok(_.endsWith("endsWith", "sW", 5), "끝 문자열의 위치가 맞는지 확인");
+        assert.ok(!_.endsWith("endsWith", "endsW"), "끝 문자열이 틀렸는지 확인");
+    });
 });
 </script>
 
