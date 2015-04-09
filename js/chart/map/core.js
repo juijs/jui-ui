@@ -110,6 +110,7 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
         
         this.loadPath = function(mapLink) {
             var children = [];
+
             $.ajax({
                 url : this.map.mapBase + mapLink,
                 async : false, 
@@ -117,20 +118,22 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
                     var $path = $(xml).find("path");
 
                     $path.each(function() {
-
                         var obj = {};
+
                         $.each(this.attributes, function() {
-                            if(this.specified) {
+                            if(this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
 
-                        children.push( obj );
-
-                    })
+                        children.push(obj);
+                    });
                 }
-                
             });
+
+            function isLoadAttribute(name) {
+                return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class");
+            }
 
             return this.loadArray(children);
         }

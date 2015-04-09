@@ -10739,8 +10739,6 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
 
             var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
 
-            console.log(size.width, size.height, this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
-
             this.scaleGroup.scale(size.width / this.map.width, size.height / this.map.height);
             this.scaleGroup.translate((this.axis.area('width') - size.width)/2, (this.axis.area('height') - size.height)/2);
         }
@@ -10824,6 +10822,7 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
         
         this.loadPath = function(mapLink) {
             var children = [];
+
             $.ajax({
                 url : this.map.mapBase + mapLink,
                 async : false, 
@@ -10831,20 +10830,22 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
                     var $path = $(xml).find("path");
 
                     $path.each(function() {
-
                         var obj = {};
+
                         $.each(this.attributes, function() {
-                            if(this.specified) {
+                            if(this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
 
-                        children.push( obj );
-
-                    })
+                        children.push(obj);
+                    });
                 }
-                
             });
+
+            function isLoadAttribute(name) {
+                return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class");
+            }
 
             return this.loadArray(children);
         }
@@ -16865,62 +16866,39 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.over", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.over 
      * implements over brush 
      * @extends chart.brush.core
      */
-	var OverBrush = function() {
-		var g;
-		var zeroX, height, half_height, over_height;
-
-        /**
-         * @method drawBefore 
-         * 
-         * @protected 
-         */
-		this.drawBefore = function() {
-
-		}
-
-
+	var MapOverBrush = function() {
 
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
-			this.axis.map
 			this.axis.map.getMapGroup().each(function(i, path) {
-				path.on('mouseover', function() {
+				path.hover(function() {
 					$(this).attr({
-						fill : 'blue',
-						stroke : 'red',
+						fill : "blue",
+						stroke : "red",
 						'stroke-width' : 0.5
 					});
-				});
-
-				path.on('mouseout', function() {
+				}, function() {
 					$(this).attr({
-						fill : '',
-						stroke : '',
-						'stroke-width' : 0
+						fill: "",
+						stroke: "",
+						'stroke-width': 0
 					});
-				})
-			})
+				});
+			});
 
 			return g;
 		}
-
 	}
 
-	OverBrush.setup = function() {
-		return {
-
-		};
-	}
-
-	return OverBrush;
+	return MapOverBrush;
 }, "chart.brush.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {

@@ -36,20 +36,18 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
-            height : 800,
+            width : 600,
+            height : 900,
             axis : [{
-                map :  { type : 'world',  mapBase : '../../img/map/' },
-                area : {
-                    x : '50%',
-                    width : '50%'
-                }
-            },{
-                map :  { type : 'world',  mapBase : '../../img/map/' },
-                area : {
-                    width : '50%'
+                map : {
+                    map : "../../img/map/southKoreaLow.svg",
+                    width : 524,
+                    height : 630
                 }
             }],
-            brush : [{ type : 'map.over' } ]
+            brush : [{
+                type : "map.over"
+            }]
         });
 	})
 </script>

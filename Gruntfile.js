@@ -137,7 +137,7 @@ module.exports = function(grunt) {
         "js/chart/brush/pin.js",  // brush supporter
 
         // map brush
-        "js/chart/brush/over.js",
+        "js/chart/brush/map.over.js",
 
         // chart.widget
         "js/chart/widget/core.js",
