@@ -32,6 +32,10 @@
 
 </script>
 
+<script id="marker" type="text/template">
+    <image xlink:href="http://www.clker.com/cliparts/I/l/L/S/W/9/map-marker.svg" width="50" height="70" x="-10" y="-25"/>
+</script>
+
 <script id="script_code">
     jui.ready([ "chart.builder" ], function(chart) {
 
@@ -47,23 +51,36 @@
                     height : 750
                 },
                 data : [
-                    { id : 'KR-11', title : "seoul"}
+                    { id : 'KR-11', title : "seoul", description : 'Beautiful City!!'}
                         
                 ]
             }],
+            tpl : {
+                marker : $("#marker").html()
+            },
             brush : [{
                 type : "map.template",
+
                 callback : function(i, data, centerPos) {
+                    
                     var g = this.chart.svg.group();
+                    g.html(this.chart.tpl.marker($.extend(data, centerPos)));
+                    
                     var rect = this.chart.svg.rect({
-                        width : 50,
-                        height : 50,
+                        x : 30,
+                        y : 0,
+                        width : 200,
+                        height : 60,
+                        rx : 5,
+                        ry : 5,
                         stroke : 'red',
-                        fill: 'yellow'
+                        fill: 'white'
                     });
                     
                     g.append(rect);
-                    g.append(this.chart.svg.text({x : 25, y : 30, 'text-anchor' : 'middle', 'font-size' : '13px'}, data.title));
+                    g.append(this.chart.svg.text({x : 140, y : 20, 'text-anchor' : 'middle', 'font-weight' : 'bold', 'font-size' : '16px'}, data.title));
+                    g.append(this.chart.svg.text({x : 40, y : 50, 'text-anchor' : 'start', 'font-size' : '13px'}, data.description));
+
                     return g;
                 }
             }]
