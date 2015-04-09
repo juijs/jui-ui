@@ -2319,6 +2319,20 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		resize : function(maxWidth, maxHeight, objectWidth, objectHeight) {
+			var ratio = objectHeight / objectWidth;
+
+			if (objectWidth >= maxWidth && ratio <= 1) {
+				objectWidth = maxWidth;
+				objectHeight = maxHeight * ratio;
+			} else if (objectHeight >= maxHeight) {
+				objectHeight = maxHeight;
+				objectWidth = maxWidth / ratio;
+			}
+
+			return { width : objectWidth, height : objectHeight};
+		},
+
 		/**
 		 * @method radian
 		 *
@@ -12477,7 +12491,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
         var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null;
+            _clipId = "", _clipPath = null,
+            _clipRectId = "", _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -12625,6 +12640,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function createClipPath() {
+            // clippath with x, y
             if (_clipPath) {
                 _clipPath.remove();
                 _clipPath = null;
@@ -12642,8 +12658,28 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                     height: _area.height
                 });
             });
-
             chart.appendDefs(_clipPath);
+
+            // clippath without x, y
+            if (_clipRect) {
+                _clipRect.remove();
+                _clipRect = null;
+            }
+
+            _clipRectId = _.createId("clip-rect-id-");
+
+            _clipRect = chart.svg.clipPath({
+                id: _clipRectId
+            }, function() {
+                chart.svg.rect({
+                    x: 0,
+                    y: 0,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipRect);
         }
 
         function checkAxisPoint(e) {
@@ -12838,7 +12874,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             var obj = {
                 area: _area,
                 padding: _padding,
-                clipId: _clipId
+                clipId: _clipId,
+                clipRectId : _clipRectId
             };
 
             return obj[type] || cloneAxis[type];
@@ -18170,12 +18207,14 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
          */
         this.drawAfter = function(obj) {
             obj.root.attr({ "class": "map map-" + this.map.type});
-            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipId") + ")" });
+            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipRectId") + ")" });
 
-            var widthRate = this.axis.area('width')/this.map.width;
-            var heightRate = this.axis.area('height')/this.map.height;
+            var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
 
-            this.scaleGroup.scale((widthRate > 1) ? heightRate : widthRate, (heightRate > 1) ? widthRate : heightRate);
+            console.log(size.width, size.height, this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
+
+            this.scaleGroup.scale(size.width / this.map.width, size.height / this.map.height);
+            this.scaleGroup.translate((this.axis.area('width') - size.width)/2, (this.axis.area('height') - size.height)/2);
         }
 
         /**
@@ -18404,10 +18443,7 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
     var WorldMap = function() {
 
         this.custom = function() {
-            console.log($(this.pathGroup.element).offset());
-            console.log($(this.pathGroup.element).width());
-            console.log($(this.pathGroup.element).height());
-            console.log($(this.pathGroup.element).position());
+
         }
 
         this.scale = function(i) {
@@ -18442,9 +18478,9 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
 
     WorldMap.setup = function() {
         return {
-            map : 'worldHigh.svg',
-            width : 1013,
-            height : 669
+            map : 'worldLow.svg',
+            width : 1012,
+            height : 655
         };
     }
 
@@ -24326,21 +24362,21 @@ jui.define("chart.brush.over", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
+			this.axis.map
 			this.axis.map.getMapGroup().each(function(i, path) {
 				path.on('mouseover', function() {
 					$(this).attr({
 						fill : 'blue',
 						stroke : 'red',
-						'stroke-width' : 5
+						'stroke-width' : 0.5
 					});
-
-					console.log(path.size());
 				});
 
 				path.on('mouseout', function() {
 					$(this).attr({
 						fill : '',
-						stroke : ''
+						stroke : '',
+						'stroke-width' : 0
 					});
 				})
 			})

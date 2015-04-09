@@ -29,6 +29,20 @@ jui.define("util.math", [], function() {
 			}
 		},
 
+		resize : function(maxWidth, maxHeight, objectWidth, objectHeight) {
+			var ratio = objectHeight / objectWidth;
+
+			if (objectWidth >= maxWidth && ratio <= 1) {
+				objectWidth = maxWidth;
+				objectHeight = maxHeight * ratio;
+			} else if (objectHeight >= maxHeight) {
+				objectHeight = maxHeight;
+				objectWidth = maxWidth / ratio;
+			}
+
+			return { width : objectWidth, height : objectHeight};
+		},
+
 		/**
 		 * @method radian
 		 *

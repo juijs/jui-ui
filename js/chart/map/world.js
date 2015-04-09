@@ -11,10 +11,7 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
     var WorldMap = function() {
 
         this.custom = function() {
-            console.log($(this.pathGroup.element).offset());
-            console.log($(this.pathGroup.element).width());
-            console.log($(this.pathGroup.element).height());
-            console.log($(this.pathGroup.element).position());
+
         }
 
         this.scale = function(i) {
@@ -49,9 +46,9 @@ jui.define("chart.map.world", [ "util.scale", "util.base" ], function(UtilScale,
 
     WorldMap.setup = function() {
         return {
-            map : 'worldHigh.svg',
-            width : 1013,
-            height : 669
+            map : 'worldLow.svg',
+            width : 1012,
+            height : 655
         };
     }
 

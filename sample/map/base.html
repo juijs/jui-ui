@@ -36,7 +36,6 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
-            width: 800,
             height : 800,
             axis : [{
                 map :  { type : 'world',  mapBase : '../../img/map/' },
@@ -44,38 +43,13 @@
                     x : '50%',
                     width : '50%'
                 }
-            }, {
-                data : [
-                    { name : 2, value : 15 },
-                    { name : -15, value : -35 },
-                    { name : 8, value : 10 },
-                    { name : 18, value : 5 }
-                ],
-                y : {
-                    orient : 'right',
-                    domain : [ "week1", "week2", "week3", "week4" ],
-                    color : "#22bbcc",
-                    line : 'solid'
-                },
-                x : {
-                    type : 'range',
-                    domain : [ -40, 20 ],
-                    step : 10
-                },
-                area : { width : '40%', height : '40%' }
-
-            }],
-            brush : [{ type : 'over' },
-                {
-                    type : 'bar',
-                    target : ['name', 'value'],
-                    innerPadding : 2,
-                    display : "min",
-                    activeEvent : "click",
-                    axis : 1,
-                    colors : [ 5, 6 ]
+            },{
+                map :  { type : 'world',  mapBase : '../../img/map/' },
+                area : {
+                    width : '50%'
                 }
-            ]
+            }],
+            brush : [{ type : 'over' } ]
         });
 	})
 </script>

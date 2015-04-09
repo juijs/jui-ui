@@ -14,7 +14,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     var Axis = function(chart, originAxis, cloneAxis) {
         var self = this;
         var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null;
+            _clipId = "", _clipPath = null,
+            _clipRectId = "", _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -162,6 +163,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function createClipPath() {
+            // clippath with x, y
             if (_clipPath) {
                 _clipPath.remove();
                 _clipPath = null;
@@ -179,8 +181,28 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                     height: _area.height
                 });
             });
-
             chart.appendDefs(_clipPath);
+
+            // clippath without x, y
+            if (_clipRect) {
+                _clipRect.remove();
+                _clipRect = null;
+            }
+
+            _clipRectId = _.createId("clip-rect-id-");
+
+            _clipRect = chart.svg.clipPath({
+                id: _clipRectId
+            }, function() {
+                chart.svg.rect({
+                    x: 0,
+                    y: 0,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipRect);
         }
 
         function checkAxisPoint(e) {
@@ -375,7 +397,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             var obj = {
                 area: _area,
                 padding: _padding,
-                clipId: _clipId
+                clipId: _clipId,
+                clipRectId : _clipRectId
             };
 
             return obj[type] || cloneAxis[type];

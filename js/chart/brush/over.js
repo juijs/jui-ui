@@ -23,21 +23,21 @@ jui.define("chart.brush.over", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
+			this.axis.map
 			this.axis.map.getMapGroup().each(function(i, path) {
 				path.on('mouseover', function() {
 					$(this).attr({
 						fill : 'blue',
 						stroke : 'red',
-						'stroke-width' : 5
+						'stroke-width' : 0.5
 					});
-
-					console.log(path.size());
 				});
 
 				path.on('mouseout', function() {
 					$(this).attr({
 						fill : '',
-						stroke : ''
+						stroke : '',
+						'stroke-width' : 0
 					});
 				})
 			})

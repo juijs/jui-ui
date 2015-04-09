@@ -23,12 +23,12 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
          */
         this.drawAfter = function(obj) {
             obj.root.attr({ "class": "map map-" + this.map.type});
-            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipId") + ")" });
+            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipRectId") + ")" });
 
-            var widthRate = this.axis.area('width')/this.map.width;
-            var heightRate = this.axis.area('height')/this.map.height;
+            var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
 
-            this.scaleGroup.scale((widthRate > 1) ? heightRate : widthRate, (heightRate > 1) ? widthRate : heightRate);
+            this.scaleGroup.scale(size.width / this.map.width, size.height / this.map.height);
+            this.scaleGroup.translate((this.axis.area('width') - size.width)/2, (this.axis.area('height') - size.height)/2);
         }
 
         /**
