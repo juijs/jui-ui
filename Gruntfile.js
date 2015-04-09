@@ -50,6 +50,7 @@ module.exports = function(grunt) {
         // chart (core)
         "js/chart/draw.js",
         "js/chart/axis.js",
+        "js/chart/map.js",
         "js/chart/builder.js",
 
         // chart.theme
@@ -79,10 +80,6 @@ module.exports = function(grunt) {
         "js/chart/grid/overlap.js",
         "js/chart/grid/topologytable.js",
         "js/chart/grid/grid3d.js",
-
-        // chart.map
-        "js/chart/map/core.js",
-        "js/chart/map/world.js",
         
         // chart.brush
         "js/chart/brush/core.js",
@@ -138,6 +135,7 @@ module.exports = function(grunt) {
 
         // map brush
         "js/chart/brush/map.over.js",
+        "js/chart/brush/map.template.js",
 
         // chart.widget
         "js/chart/widget/core.js",

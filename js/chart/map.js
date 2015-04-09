@@ -1,4 +1,4 @@
-jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
+jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
     /**
      * @class chart.grid.core
      * Grid Core 객체
@@ -6,6 +6,8 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
      * @abstract
      */
     var CoreMap = function() {
+        
+        var self = this;
 
         this.pathIndex = {};
 
@@ -112,7 +114,7 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
             var children = [];
 
             $.ajax({
-                url : this.map.mapBase + mapLink,
+                url : mapLink,
                 async : false, 
                 success : function(xml) {
                     var $path = $(xml).find("path");
@@ -152,7 +154,7 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
 
             root.append(pathGroup);
 
-            var list = _.typeCheck("array", this.map.map) ? this.loadArray(this.map.map) : this.loadPath(this.map.map);
+            var list = _.typeCheck("array", this.map.path) ? this.loadArray(this.map.path) : this.loadPath(this.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
                 pathGroup.append(list[i]);
@@ -162,8 +164,16 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
             return pathGroup;
         }
 
-        this.scale = function(key) {
-            return {};
+        this.scale = function(i) {
+            if (typeof i == 'number') {
+                return self.pathGroup.children[i];
+            } else {
+                return self.pathIndex[i];
+            }
+        }
+
+        this.scale.getMapGroup = function() {
+            return self.pathGroup;
         }
 
         /**
@@ -183,8 +193,6 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
 
             this.scaleGroup = this.chart.svg.group();
             root.append(this.scaleGroup);
-            // wrapped scale
-            //this.scale = this.wrapper(this.scale, this.map.key);
 
             this.pathIndex = {};
             this.pathGroup = this.makePathGroup(this.scaleGroup);
@@ -199,16 +207,25 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
                 root.attr({ display : "none" })
             }
 
-            this.scale.getMapGroup = function() {
-                return self.pathGroup;
-            }
+
 
             return {
                 root : root,
                 scale : this.scale
             };
         }
-
+        
+        /**
+         * @method draw
+         *
+         * @protected
+         * @return {Mixed}
+         */
+        this.draw = function() {
+            return this.drawMap("core");
+        }
+        
+        
     }
 
     CoreMap.setup = function() {
@@ -234,10 +251,8 @@ jui.define("chart.map.core", [ "jquery", "util.base", "util.math", "util.svg" ],
             format: null,
             /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
             textRotate : null,
-            /** @cfg {String} [mapBase=''] Set a map base url */
-            mapBase : '',
             /** @cfg {String} [map=''] Set a map file's name */
-            map : '',
+            path : '',
             /** @cfg {Number} [width=-1] Set map's width */
             width : -1,
             /** @cfg {Number} [height=-1] Set map's height */

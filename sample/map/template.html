@@ -39,15 +39,33 @@
             width : 600,
             height : 800,
             padding: 0,
+            
             axis : [{
                 map : {
                     path : "../../img/map/southKoreaLow.svg",
                     width : 524,
                     height : 750
-                }
+                },
+                data : [
+                    { id : 'KR-11', title : "seoul"}
+                        
+                ]
             }],
             brush : [{
-                type : "map.over"
+                type : "map.template",
+                callback : function(i, data, centerPos) {
+                    var g = this.chart.svg.group();
+                    var rect = this.chart.svg.rect({
+                        width : 50,
+                        height : 50,
+                        stroke : 'red',
+                        fill: 'yellow'
+                    });
+                    
+                    g.append(rect);
+                    g.append(this.chart.svg.text({x : 25, y : 30, 'text-anchor' : 'middle', 'font-size' : '13px'}, data.title));
+                    return g;
+                }
             }]
         });
 	})

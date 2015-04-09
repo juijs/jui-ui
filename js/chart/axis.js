@@ -102,9 +102,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
-            axis[k].type = axis[k].type || "world";
 
-            var Map = jui.include("chart.map." + axis[k].type);
+            var Map = (typeof axis[k].type !== 'undefined') ? jui.include("chart.map." + axis[k].type) : jui.include("chart.map");
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Map, axis[k]);
