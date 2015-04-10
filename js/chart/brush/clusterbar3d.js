@@ -14,9 +14,12 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
         }
 
         this.draw = function() {
-            var count = brush.target.length;
+            var count = brush.target.length,
+                dataList = this.listData();
 
-            this.eachData(function(i, data) {
+            for(var i = dataList.length - 1; i >= 0; i--) {
+                var data = dataList[i];
+
                 for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
                         xy = axis.c(value, i, j, count),
@@ -36,7 +39,7 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
                     // 그룹에 컬럼 엘리먼트 추가
                     g.prepend(r);
                 }
-            });
+            }
 
             return g;
         }
