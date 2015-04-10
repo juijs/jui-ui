@@ -13213,7 +13213,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             return {
                 x: self.axis.area("x") + x,
-                y: self.axis.area("y") + y
+                y: self.axis.area("y") + y,
+                element: path
             }
         }
 
