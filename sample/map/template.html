@@ -40,8 +40,8 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
-            width : 525,
-            height : 714,
+            width : 1000,
+            height : 1000,
             padding: 0,
             axis : [{
                 map : {
@@ -51,7 +51,13 @@
                 },
                 data : [
                     { id : 'KR-11', title : "seoul", description : 'Beautiful City!!'}
-                ]
+                ],
+                area : {
+                    x : 200,
+                    y : 150,
+                    width : 525 * 0.7,
+                    height : 714 * 0.7
+                }
             }],
             tpl : {
                 marker : $("#marker").html()

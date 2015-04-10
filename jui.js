@@ -13047,13 +13047,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      * @abstract
      */
     var CoreMap = function() {
-        
         var self = this;
 
-        this.pathIndex = {};
-
-        this.makeColor = function(color) {
-            return this.chart.color(0, { colors: [ color ] })
+        this.makeColor = function (color) {
+            return this.chart.color(0, {colors: [color]})
         }
 
         /**
@@ -13064,9 +13061,9 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          * @param {Object} obj
          * @protected
          */
-        this.drawAfter = function(obj) {
-            obj.root.attr({ "class": "map map-" + this.map.type});
-            obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipRectId") + ")" });
+        this.drawAfter = function (obj) {
+            obj.root.attr({"class": "map map-" + this.map.type});
+            obj.root.attr({"clip-path": "url(#" + this.axis.get("clipRectId") + ")"});
         }
 
         /**
@@ -13079,15 +13076,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          *
          *      @example
          *      // 그리드 속성에 키가 없을 때
-         *      scale(0);		// 0 인덱스에 대한 값  (block, radar)
+         *      scale(0);        // 0 인덱스에 대한 값  (block, radar)
          *      // grid 속성에 key 가 있을 때
          *      grid { key : "field" }
-         *      scale(0)			// field 값으로 scale 설정 (range, date)
+         *      scale(0)            // field 값으로 scale 설정 (range, date)
          *
          * @protected
          */
-        this.wrapper = function(scale, key) {
-            return scale || (function() {});
+        this.wrapper = function (scale, key) {
+            return scale || (function () {
+                });
         }
 
         /**
@@ -13096,7 +13094,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          * @param theme
          * @return {Mixed}
          */
-        this.color  = function(theme) {
+        this.color = function (theme) {
             if (arguments.length == 3) {
                 return (this.map.color) ? this.makeColor(this.map.color) : this.chart.theme.apply(this.chart, arguments);
             }
@@ -13111,8 +13109,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          * @param {Number} index
          * @param {String} field
          */
-        this.data = function(index, field) {
-            if(this.axis.data && this.axis.data[index]) {
+        this.data = function (index, field) {
+            if (this.axis.data && this.axis.data[index]) {
                 return this.axis.data[index][field] || this.axis.data[index];
             }
 
@@ -13120,10 +13118,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         /**
-         * @method loadPath 
-         * 
-         * load path's info 
-         *      
+         * @method loadPath
+         *
+         * load path's info
+         *
          *      this.loadPath([
          *          { id : 'KR', d : "", .. },
          *          { id : 'en', d : "", .. },
@@ -13131,35 +13129,35 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          *      ]);
          * @param {Array} data
          */
-        this.loadArray = function(data) {
+        this.loadArray = function (data) {
             if (!_.typeCheck("array", data)) {
                 data = [data];
             }
-            
+
             var children = [];
-            for(var i = 0, len = data.length; i < len; i++) {
+            for (var i = 0, len = data.length; i < len; i++) {
                 if (data[i]) {
-                    children.push(SVG.createObject({ type : 'path' , attr : data[i] }));
+                    children.push(SVG.createObject({type: 'path', attr: data[i]}));
                 }
             }
-            
+
             return children;
         }
-        
-        this.loadPath = function(mapLink) {
+
+        this.loadPath = function (mapLink) {
             var children = [];
 
             $.ajax({
-                url : mapLink,
-                async : false, 
-                success : function(xml) {
+                url: mapLink,
+                async: false,
+                success: function (xml) {
                     var $path = $(xml).find("path");
 
-                    $path.each(function() {
+                    $path.each(function () {
                         var obj = {};
 
-                        $.each(this.attributes, function() {
-                            if(this.specified && isLoadAttribute(this.name)) {
+                        $.each(this.attributes, function () {
+                            if (this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
@@ -13176,23 +13174,23 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return this.loadArray(children);
         }
 
-        this.makeIndex = function(item) {
+        this.makeIndex = function (item) {
             if (item.attr('id')) {
                 this.pathIndex[item.attr('id')] = item;
             }
         }
 
-        this.makePathGroup = function(root) {
+        this.makePathGroup = function (root) {
             // create path element
             var pathGroup = this.chart.svg.group({
-                'class' : 'map-path'
+                'class': 'map-path'
             });
 
             root.append(pathGroup);
 
             var list = _.typeCheck("array", this.map.path) ? this.loadArray(this.map.path) : this.loadPath(this.map.path);
 
-            for(var i = 0, len = list.length; i < len; i++) {
+            for (var i = 0, len = list.length; i < len; i++) {
                 pathGroup.append(list[i]);
                 this.makeIndex(list[i]);
             }
@@ -13200,15 +13198,26 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return pathGroup;
         }
 
-        this.scale = function(i) {
-            if (typeof i == 'number') {
-                return self.pathGroup.children[i];
+        this.scale = function (i) {
+            var path = null;
+
+            if (typeof i == "number") {
+                path = self.pathGroup.children[i];
             } else {
-                return self.pathIndex[i];
+                path = self.pathIndex[i];
+            }
+
+            var arr = path.attr("position").split(","),
+                x = parseFloat(arr[0]) * self.axis.map.ratio.width,
+                y = parseFloat(arr[1]) * self.axis.map.ratio.height;
+
+            return {
+                x: self.axis.area("x") + x,
+                y: self.axis.area("y") + y
             }
         }
 
-        this.scale.getMapGroup = function() {
+        this.scale.getMapGroup = function () {
             return self.pathGroup;
         }
 
@@ -13221,8 +13230,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          * @param {String} cls
          * @param {Map} map
          */
-        this.drawMap = function() {
-            var self = this;
+        this.draw = function () {
             // create group
             var root = this.chart.svg.group(),
                 func = this.custom;
@@ -13234,17 +13242,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             this.pathGroup = this.makePathGroup(this.scaleGroup);
 
             // caculate ratio
-            var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
+            var area = this.axis.area();
 
             this.scale.ratio = {
-                x : (this.axis.area('width') - size.width)/2,
-                y : (this.axis.area('height') - size.height)/2,
-                width : size.width / this.map.width,
-                height : size.height / this.map.height
+                width: area.width / this.map.width,
+                height: area.height / this.map.height
             };
 
             this.scaleGroup.scale(this.scale.ratio.width, this.scale.ratio.height);
-            this.scaleGroup.translate(this.scale.ratio.x, this.scale.ratio.y);
 
             // render axis
             if(_.typeCheck("function", func)) {
@@ -13253,26 +13258,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             // hide map
             if(this.map.hide) {
-                root.attr({ display : "none" })
+                root.attr({display: "none"})
             }
 
             return {
-                root : root,
-                scale : this.scale
+                root: root,
+                scale: this.scale
             };
         }
-        
-        /**
-         * @method draw
-         *
-         * @protected
-         * @return {Mixed}
-         */
-        this.draw = function() {
-            return this.drawMap("core");
-        }
-        
-        
     }
 
     CoreMap.setup = function() {
@@ -24347,31 +24340,28 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapTemplateBrush = function() {
+        var self = this;
 
 		this.draw = function() {
-            var self = this;
             var g = this.chart.svg.group();
+
             this.eachData(function(i, data) {
-                var path = self.axis.map(data.id);
-                var arr = path.attr('position').split(",");
-                var x = parseFloat(arr[0]) * self.axis.map.ratio.width;
-                var y = parseFloat(arr[1]) * self.axis.map.ratio.height;
-                var result = self.brush.callback.call(self, i, data, { x : x, y : y});
-                
-                result.translate(x, y);
-                
+                var xy = self.axis.map(data.id),
+                    result = self.brush.callback.call(self, i, data, { x: xy.x, y: xy.y });
+
+                result.translate(xy.x, xy.y);
                 g.append(result);
-                
             });
+
 			return g;
 		}
 	}
-    
+
     MapTemplateBrush.setup = function() {
         return {
             callback : function(data) { return ''; }
         }
-        
+
     }
 
 	return MapTemplateBrush;

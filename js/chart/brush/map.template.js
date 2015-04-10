@@ -6,31 +6,28 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapTemplateBrush = function() {
+        var self = this;
 
 		this.draw = function() {
-            var self = this;
             var g = this.chart.svg.group();
+
             this.eachData(function(i, data) {
-                var path = self.axis.map(data.id);
-                var arr = path.attr('position').split(",");
-                var x = parseFloat(arr[0]) * self.axis.map.ratio.width;
-                var y = parseFloat(arr[1]) * self.axis.map.ratio.height;
-                var result = self.brush.callback.call(self, i, data, { x : x, y : y});
-                
-                result.translate(x, y);
-                
+                var xy = self.axis.map(data.id),
+                    result = self.brush.callback.call(self, i, data, { x: xy.x, y: xy.y });
+
+                result.translate(xy.x, xy.y);
                 g.append(result);
-                
             });
+
 			return g;
 		}
 	}
-    
+
     MapTemplateBrush.setup = function() {
         return {
             callback : function(data) { return ''; }
         }
-        
+
     }
 
 	return MapTemplateBrush;
