@@ -5595,11 +5595,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.drawAfter = function(obj) {
             obj.root.attr({ "class": "map map-" + this.map.type});
             obj.root.attr({ "clip-path" : "url(#" + this.axis.get("clipRectId") + ")" });
-
-            var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
-
-            this.scaleGroup.scale(size.width / this.map.width, size.height / this.map.height);
-            this.scaleGroup.translate((this.axis.area('width') - size.width)/2, (this.axis.area('height') - size.height)/2);
         }
 
         /**
@@ -5766,6 +5761,19 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             this.pathIndex = {};
             this.pathGroup = this.makePathGroup(this.scaleGroup);
 
+            // caculate ratio
+            var size =  math.resize(this.axis.area('width'), this.axis.area('height'), this.map.width, this.map.height);
+
+            this.scale.ratio = {
+                x : (this.axis.area('width') - size.width)/2,
+                y : (this.axis.area('height') - size.height)/2,
+                width : size.width / this.map.width,
+                height : size.height / this.map.height
+            };
+
+            this.scaleGroup.scale(this.scale.ratio.width, this.scale.ratio.height);
+            this.scaleGroup.translate(this.scale.ratio.x, this.scale.ratio.y);
+
             // render axis
             if(_.typeCheck("function", func)) {
                 func.call(this);
@@ -5775,8 +5783,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             if(this.map.hide) {
                 root.attr({ display : "none" })
             }
-
-
 
             return {
                 root : root,
@@ -16876,8 +16882,8 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
             this.eachData(function(i, data) {
                 var path = self.axis.map(data.id);
                 var arr = path.attr('position').split(",");
-                var x = parseFloat(arr[0]);
-                var y = parseFloat(arr[1]);
+                var x = parseFloat(arr[0]) * self.axis.map.ratio.width;
+                var y = parseFloat(arr[1]) * self.axis.map.ratio.height;
                 var result = self.brush.callback.call(self, i, data, { x : x, y : y});
                 
                 result.translate(x, y);

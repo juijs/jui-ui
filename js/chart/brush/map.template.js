@@ -13,8 +13,8 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
             this.eachData(function(i, data) {
                 var path = self.axis.map(data.id);
                 var arr = path.attr('position').split(",");
-                var x = parseFloat(arr[0]);
-                var y = parseFloat(arr[1]);
+                var x = parseFloat(arr[0]) * self.axis.map.ratio.width;
+                var y = parseFloat(arr[1]) * self.axis.map.ratio.height;
                 var result = self.brush.callback.call(self, i, data, { x : x, y : y});
                 
                 result.translate(x, y);
