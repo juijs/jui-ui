@@ -12461,6 +12461,34 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return points.join(" ");
         }
+
+        /**
+         * @method on
+         *
+         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수
+         *
+         * @param {String} type event name
+         * @param {Function} callback
+         * @return {*}
+         */
+        this.on = function(type, callback) {
+            var self = this;
+
+            return this.chart.on(type, function() {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
+                    var axis = self.chart.axis(self.axis.index),
+                        e = arguments[0];
+
+                    if (_.typeCheck("object", axis)) {
+                        if (arguments[1] == self.axis.index) {
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
+            }, "render");
+        }
 	}
 
     Draw.setup = function() {
@@ -13047,104 +13075,75 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      * @abstract
      */
     var CoreMap = function() {
-        var self = this;
+        var self = this,
+            pathGroup = null,
+            pathIndex = {},
+            pathScale = 1,
+            pathX = 0,
+            pathY = 0;
 
-        this.makeColor = function (color) {
-            return this.chart.color(0, {colors: [color]})
+        function setZoomEvent() {
+            $(pathGroup.element).on("mousewheel DOMMouseScroll", function(e){
+                if(e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
+                    if(pathScale < 2) {
+                        pathScale += 0.1;
+                    }
+                } else {
+                    if(pathScale > 0.5) {
+                        pathScale -= 0.1;
+                    }
+                }
+
+                self.scale.scale(pathScale);
+                return false;
+            });
         }
 
-        /**
-         * @method drawAfter
-         *
-         *
-         *
-         * @param {Object} obj
-         * @protected
-         */
-        this.drawAfter = function (obj) {
-            obj.root.attr({"class": "map map-" + this.map.type});
-            obj.root.attr({"clip-path": "url(#" + this.axis.get("clipRectId") + ")"});
-        }
+        function setMoveEvent() {
+            var startX = null, startY = null;
 
-        /**
-         * @method wrapper
-         * scale wrapper
-         *
-         * grid 의 x 좌표 값을 같은 형태로 가지고 오기 위한 wrapper 함수
-         *
-         * grid 속성에 key 가 있다면  key 의 속성값으로 실제 값을 처리
-         *
-         *      @example
-         *      // 그리드 속성에 키가 없을 때
-         *      scale(0);        // 0 인덱스에 대한 값  (block, radar)
-         *      // grid 속성에 key 가 있을 때
-         *      grid { key : "field" }
-         *      scale(0)            // field 값으로 scale 설정 (range, date)
-         *
-         * @protected
-         */
-        this.wrapper = function (scale, key) {
-            return scale || (function () {
-                });
-        }
+            self.on("axis.mousedown", function(e) {
+                if(startX != null || startY != null) return;
 
-        /**
-         * @method color
-         * grid 에서 color 를 위한 유틸리티 함수
-         * @param theme
-         * @return {Mixed}
-         */
-        this.color = function (theme) {
-            if (arguments.length == 3) {
-                return (this.map.color) ? this.makeColor(this.map.color) : this.chart.theme.apply(this.chart, arguments);
+                startX = pathX + e.axisX;
+                startY = pathY + e.axisY;
+            });
+
+            self.on("axis.mousemove", function(e) {
+                if(startX == null || startY == null) return;
+
+                var xy = self.scale.view(startX - e.axisX, startY - e.axisY);
+                pathX = xy.x;
+                pathY = xy.y;
+            });
+
+            self.on("axis.mouseup", endMoveAction);
+            self.on("axis.mouseout", endMoveAction);
+
+            function endMoveAction(e) {
+                if(startX == null || startY == null) return;
+
+                startX = null;
+                startY = null;
             }
-
-            return (this.map.color) ? this.makeColor(this.map.color) : this.chart.theme(theme);
         }
 
-        /**
-         * @method data
-         * get data for axis
-         * @protected
-         * @param {Number} index
-         * @param {String} field
-         */
-        this.data = function (index, field) {
-            if (this.axis.data && this.axis.data[index]) {
-                return this.axis.data[index][field] || this.axis.data[index];
-            }
-
-            return this.axis.data || [];
-        }
-
-        /**
-         * @method loadPath
-         *
-         * load path's info
-         *
-         *      this.loadPath([
-         *          { id : 'KR', d : "", .. },
-         *          { id : 'en', d : "", .. },
-         *          { id : 'us', d : "", .. }
-         *      ]);
-         * @param {Array} data
-         */
-        this.loadArray = function (data) {
-            if (!_.typeCheck("array", data)) {
+        function loadArray(data) {
+            if(!_.typeCheck("array", data)) {
                 data = [data];
             }
 
             var children = [];
-            for (var i = 0, len = data.length; i < len; i++) {
-                if (data[i]) {
-                    children.push(SVG.createObject({type: 'path', attr: data[i]}));
+            for(var i = 0, len = data.length; i < len; i++) {
+                if(data[i]) {
+                    children.push(SVG.createObject({ type: "path", attr: data[i] }));
                 }
             }
 
             return children;
         }
 
-        this.loadPath = function (mapLink) {
+        function loadPath(mapLink) {
             var children = [];
 
             $.ajax({
@@ -13157,7 +13156,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         var obj = {};
 
                         $.each(this.attributes, function () {
-                            if (this.specified && isLoadAttribute(this.name)) {
+                            if(this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
@@ -13171,45 +13170,40 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class");
             }
 
-            return this.loadArray(children);
+            return loadArray(children);
         }
 
-        this.makeIndex = function (item) {
-            if (item.attr('id')) {
-                this.pathIndex[item.attr('id')] = item;
+        function makeIndex(item) {
+            if(item.attr("id")) {
+                pathIndex[item.attr("id")] = item;
             }
         }
 
-        this.makePathGroup = function (root) {
+        function makePathGroup() {
             // create path element
-            var pathGroup = this.chart.svg.group({
-                'class': 'map-path'
-            });
-
-            root.append(pathGroup);
-
-            var list = _.typeCheck("array", this.map.path) ? this.loadArray(this.map.path) : this.loadPath(this.map.path);
+            var group = self.chart.svg.group(),
+                list = _.typeCheck("array", self.map.path) ? loadArray(self.map.path) : loadPath(self.map.path);
 
             for (var i = 0, len = list.length; i < len; i++) {
-                pathGroup.append(list[i]);
-                this.makeIndex(list[i]);
+                group.append(list[i]);
+                makeIndex(list[i]);
             }
 
-            return pathGroup;
+            return group;
         }
 
-        this.scale = function (i) {
+        this.scale = function(i) {
             var path = null;
 
             if (typeof i == "number") {
-                path = self.pathGroup.children[i];
+                path = pathGroup.children[i];
             } else {
-                path = self.pathIndex[i];
+                path = pathIndex[i];
             }
 
             var arr = path.attr("position").split(","),
-                x = parseFloat(arr[0]) * self.axis.map.ratio.width,
-                y = parseFloat(arr[1]) * self.axis.map.ratio.height;
+                x = parseFloat(arr[0]) * pathScale,
+                y = parseFloat(arr[1]) * pathScale;
 
             return {
                 x: self.axis.area("x") + x,
@@ -13218,8 +13212,40 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        this.scale.getMapGroup = function () {
-            return self.pathGroup;
+        this.scale.each = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            var self = this;
+            pathGroup.each(function() {
+                callback.apply(self, arguments);
+            });
+        }
+
+        this.scale.scale = function(scale) {
+            if(!scale || scale < 0) return pathScale;
+
+            pathScale = scale;
+            pathGroup.scale(pathScale);
+
+            return pathScale;
+        }
+
+        this.scale.view = function(x, y) {
+            var xy = {
+                x: pathX,
+                y: pathY
+            };
+
+            if(!_.typeCheck("number", x) || !_.typeCheck("number", y)) return xy;
+
+            pathX = x;
+            pathY = y;
+            pathGroup.translate(-pathX, -pathY);
+
+            return {
+                x: pathX,
+                y: pathY
+            }
         }
 
         /**
@@ -13231,35 +13257,33 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
          * @param {String} cls
          * @param {Map} map
          */
-        this.draw = function () {
-            // create group
-            var root = this.chart.svg.group(),
-                func = this.custom;
+        this.draw = function() {
+            var root = this.chart.svg.group();
 
-            this.scaleGroup = this.chart.svg.group();
-            root.append(this.scaleGroup);
+            pathScale = this.map.scale;
+            pathX = this.map.view.x;
+            pathY = this.map.view.y;
+            pathGroup = makePathGroup();
+            root.append(pathGroup);
 
-            this.pathIndex = {};
-            this.pathGroup = this.makePathGroup(this.scaleGroup);
-
-            // caculate ratio
-            var area = this.axis.area();
-
-            this.scale.ratio = {
-                width: area.width / this.map.width,
-                height: area.height / this.map.height
-            };
-
-            this.scaleGroup.scale(this.scale.ratio.width, this.scale.ratio.height);
-
-            // render axis
-            if(_.typeCheck("function", func)) {
-                func.call(this);
+            if(this.map.scale != 1) {
+                this.scale.scale(pathScale);
             }
 
-            // hide map
+            if(this.map.view.x != 0 || this.map.view.y != 0) {
+                this.scale.view(pathX, pathY);
+            }
+
+            if(this.map.move) {
+                setMoveEvent();
+            }
+
+            if(this.map.zoom) {
+                setZoomEvent();
+            }
+
             if(this.map.hide) {
-                root.attr({display: "none"})
+                root.attr({ visibility: "hidden" });
             }
 
             return {
@@ -13267,37 +13291,40 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 scale: this.scale
             };
         }
+
+        /**
+         * @method drawAfter
+         *
+         *
+         *
+         * @param {Object} obj
+         * @protected
+         */
+        this.drawAfter = function(obj) {
+            obj.root.attr({ "clip-path": "url(#" + this.axis.get("clipRectId") + ")" });
+        }
     }
 
     CoreMap.setup = function() {
-
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} map */
 
         return {
-            /**  @cfg {Number} [dist=0] Able to change the locatn of an axis.  */
-            dist: 0,
+            color: null,
+            scale: 1,
+            view: { x: 0, y: 0 },
+            move: false,
+            zoom: false,
+
             /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
             hide: false,
-            /** @cfg {String/Object/Number} [color=null] Specifies the color of a grid. */
-            color: null,
-            /** @cfg {String} [title=null] Specifies the text shown on a grid.*/
-            title: null,
-            /** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
-            line: false,
-            /** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
-            baseline : true,
-            /** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
-            format: null,
-            /** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
-            textRotate : null,
             /** @cfg {String} [map=''] Set a map file's name */
-            path : '',
+            path: "",
             /** @cfg {Number} [width=-1] Set map's width */
-            width : -1,
+            width: -1,
             /** @cfg {Number} [height=-1] Set map's height */
-            height : -1
+            height: -1
         };
     }
 
@@ -18895,34 +18922,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
             return this.chart.color(key, this.brush);
         }
-
-        /**
-         * @method on 
-         * 
-         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수 
-         * 
-         * @param {String} type event name 
-         * @param {Function} callback
-         * @return {*}
-         */
-        this.on = function(type, callback) {
-            var self = this;
-
-            return this.chart.on(type, function() {
-                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
-                    var axis = self.chart.axis(self.axis.index),
-                        e = arguments[0];
-
-                    if (_.typeCheck("object", axis)) {
-                        if (arguments[1] == self.axis.index) {
-                            callback.apply(self, [ e ]);
-                        }
-                    }
-                } else {
-                    callback.apply(self, arguments);
-                }
-            }, "render");
-        }
 	}
 
 
@@ -24310,7 +24309,7 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
-			this.axis.map.getMapGroup().each(function(i, path) {
+			this.axis.map.each(function(i, path) {
 				path.hover(function() {
 					$(this).attr({
 						fill : "blue",
@@ -24325,6 +24324,8 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 					});
 				});
 			});
+
+			this.axis.map.view(-50, -50);
 
 			return g;
 		}
