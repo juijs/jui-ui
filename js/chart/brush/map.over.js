@@ -26,8 +26,6 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 				});
 			});
 
-			this.axis.map.view(-50, -50);
-
 			return g;
 		}
 	}

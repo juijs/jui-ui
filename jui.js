@@ -13274,12 +13274,13 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 this.scale.view(pathX, pathY);
             }
 
-            if(this.map.move) {
-                setMoveEvent();
-            }
-
             if(this.map.zoom) {
                 setZoomEvent();
+            }
+
+            if(this.map.move) {
+                setMoveEvent();
+                root.attr({ cursor: "move" });
             }
 
             if(this.map.hide) {
@@ -13311,7 +13312,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         /** @property {Object} map */
 
         return {
-            color: null,
             scale: 1,
             view: { x: 0, y: 0 },
             move: false,
@@ -24324,8 +24324,6 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 					});
 				});
 			});
-
-			this.axis.map.view(-50, -50);
 
 			return g;
 		}

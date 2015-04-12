@@ -205,12 +205,13 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 this.scale.view(pathX, pathY);
             }
 
-            if(this.map.move) {
-                setMoveEvent();
-            }
-
             if(this.map.zoom) {
                 setZoomEvent();
+            }
+
+            if(this.map.move) {
+                setMoveEvent();
+                root.attr({ cursor: "move" });
             }
 
             if(this.map.hide) {
