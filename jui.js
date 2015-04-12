@@ -13075,7 +13075,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      * @abstract
      */
     var CoreMap = function() {
-        var self = this,
+        var self = this;
+        var pathData = null,
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -13130,7 +13131,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         function loadArray(data) {
             if(!_.typeCheck("array", data)) {
-                data = [data];
+                data = [ data ];
             }
 
             var children = [];
@@ -13144,7 +13145,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(mapLink) {
-            var children = [];
+            pathData = [];
 
             $.ajax({
                 url: mapLink,
@@ -13161,7 +13162,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                             }
                         });
 
-                        children.push(obj);
+                        pathData.push(obj);
                     });
                 }
             });
@@ -13170,7 +13171,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class");
             }
 
-            return loadArray(children);
+            return loadArray(pathData);
         }
 
         function makeIndex(item) {
@@ -13180,9 +13181,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function makePathGroup() {
-            // create path element
             var group = self.chart.svg.group(),
-                list = _.typeCheck("array", self.map.path) ? loadArray(self.map.path) : loadPath(self.map.path);
+                list = (_.typeCheck("array", self.map.path)) ? loadArray(self.map.path) : loadPath(self.map.path);
 
             for (var i = 0, len = list.length; i < len; i++) {
                 group.append(list[i]);
@@ -13195,7 +13195,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale = function(i) {
             var path = null;
 
-            if (typeof i == "number") {
+            if(_.typeCheck("integer", i)) {
                 path = pathGroup.children[i];
             } else {
                 path = pathIndex[i];
@@ -13206,8 +13206,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 y = parseFloat(arr[1]) * pathScale;
 
             return {
-                x: self.axis.area("x") + x,
-                y: self.axis.area("y") + y,
+                x: self.axis.area("x") + x - pathX,
+                y: self.axis.area("y") + y - pathY,
                 element: path
             }
         }
@@ -13219,6 +13219,15 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathGroup.each(function() {
                 callback.apply(self, arguments);
             });
+        }
+
+        this.scale.eachData = function(callback) {
+            if(!_.typeCheck("function", callback)) return;
+
+            var self = this;
+            for(var i = 0, len = pathData.length; i < len; i++) {
+                callback.apply(self, [ i, pathData[i] ]);
+            }
         }
 
         this.scale.scale = function(scale) {
@@ -13261,8 +13270,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             var root = this.chart.svg.group();
 
             pathScale = this.map.scale;
-            pathX = this.map.view.x;
-            pathY = this.map.view.y;
+            pathX = this.map.viewX;
+            pathY = this.map.viewY;
             pathGroup = makePathGroup();
             root.append(pathGroup);
 
@@ -13270,7 +13279,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 this.scale.scale(pathScale);
             }
 
-            if(this.map.view.x != 0 || this.map.view.y != 0) {
+            if(this.map.viewX != 0 || this.map.viewY != 0) {
                 this.scale.view(pathX, pathY);
             }
 
@@ -13313,7 +13322,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         return {
             scale: 1,
-            view: { x: 0, y: 0 },
+            viewX: 0,
+            viewY: 0,
             move: false,
             zoom: false,
 
@@ -24365,6 +24375,40 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
     }
 
 	return MapTemplateBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.map.bubble
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapBubbleBrush = function(chart, axis, brush) {
+		this.draw = function() {
+            var g = chart.svg.group(),
+                color = this.color(0),
+                size = 5 * axis.map.scale();
+
+            axis.map.eachData(function(i, data) {
+                var xy = axis.map(data.id),
+                    c = chart.svg.circle({
+                        r: size,
+                        "fill": color,
+                        "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                        "stroke": color,
+                        "stroke-width": chart.theme("bubbleBorderWidth")
+                    });
+
+                c.translate(xy.x, xy.y);
+                g.append(c);
+            });
+
+			return g;
+		}
+	}
+
+	return MapBubbleBrush;
 }, "chart.brush.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {

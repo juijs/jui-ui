@@ -136,6 +136,7 @@ module.exports = function(grunt) {
         // map brush
         "js/chart/brush/map.over.js",
         "js/chart/brush/map.template.js",
+        "js/chart/brush/map.bubble.js",
 
         // chart.widget
         "js/chart/widget/core.js",

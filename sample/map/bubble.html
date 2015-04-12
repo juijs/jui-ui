@@ -49,44 +49,20 @@
                     width : 525,
                     height : 714,
                     move : true,
-                    zoom : true
+                    zoom : true,
+                    scale : 1,
+                    viewX : -100
                 },
                 data : [
-                    { id : 'KR-11', title : "seoul", description : 'Beautiful City!!'}
+                    { id : "KR-11",  value : 10 }
                 ],
                 area : {
-                    width : 525 * 0.5,
-                    height : 714 * 0.5
+                    width : 525 * 2,
+                    height : 714 * 2
                 }
             }],
-            tpl : {
-                marker : $("#marker").html()
-            },
             brush : [{
-                type : "map.template",
-
-                callback : function(i, data, centerPos) {
-                    
-                    var g = this.chart.svg.group();
-                    g.html(this.chart.tpl.marker($.extend(data, centerPos)));
-                    
-                    var rect = this.chart.svg.rect({
-                        x : 30,
-                        y : 0,
-                        width : 200,
-                        height : 60,
-                        rx : 5,
-                        ry : 5,
-                        stroke : 'red',
-                        fill: 'white'
-                    });
-                    
-                    g.append(rect);
-                    g.append(this.chart.svg.text({x : 140, y : 20, 'text-anchor' : 'middle', 'font-weight' : 'bold', 'font-size' : '16px'}, data.title));
-                    g.append(this.chart.svg.text({x : 40, y : 50, 'text-anchor' : 'start', 'font-size' : '13px'}, data.description));
-
-                    return g;
-                }
+                type : "map.bubble"
             }]
         });
 	})
