@@ -5730,18 +5730,18 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
 
             var arr = path.attr("position").split(","),
-                x = parseFloat(arr[0]) * pathScale,
-                y = parseFloat(arr[1]) * pathScale;
+                x = parseFloat(arr[0]),
+                y = parseFloat(arr[1]);
 
             return {
-                x: self.axis.area("x") + x - pathX,
-                y: self.axis.area("y") + y - pathY,
+                x: x,
+                y: y,
                 element: path
             }
         }
 
-        this.scale.each = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
+        this.scale.group = function(callback) {
+            if(!_.typeCheck("function", callback)) return pathGroup;
 
             var self = this;
             pathGroup.each(function() {
@@ -5749,8 +5749,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             });
         }
 
-        this.scale.eachData = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
+        this.scale.data = function(callback) {
+            if(!_.typeCheck("function", callback)) return pathData;
 
             var self = this;
             for(var i = 0, len = pathData.length; i < len; i++) {
@@ -16835,6 +16835,26 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
+jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
+    /**
+     * @class chart.brush.map.core
+     *
+     * implements core method for brush
+     *
+     * @abstract
+     * @extends chart.brush.core
+     * @requires jquery
+     * @requires util.base
+     */
+	var MapCoreBrush = function() {
+
+        this.drawAfter = function(g) {
+            this.axis.map.group().append(g);
+        }
+	}
+
+	return MapCoreBrush;
+}, "chart.brush.core");
 jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 
     /**
@@ -16847,7 +16867,7 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
-			this.axis.map.each(function(i, path) {
+			this.axis.map.group(function(i, path) {
 				path.hover(function() {
 					$(this).attr({
 						fill : "blue",
@@ -16868,7 +16888,7 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 	}
 
 	return MapOverBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");
 
 jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
 
@@ -16903,7 +16923,7 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
     }
 
 	return MapTemplateBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");
 
 jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
@@ -16918,7 +16938,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                 color = this.color(0),
                 size = 5 * axis.map.scale();
 
-            axis.map.eachData(function(i, data) {
+            axis.map.data(function(i, data) {
                 var xy = axis.map(data.id),
                     c = chart.svg.circle({
                         r: size,
@@ -16937,7 +16957,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 	}
 
 	return MapBubbleBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 

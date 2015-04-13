@@ -31,4 +31,4 @@ jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
     }
 
 	return MapTemplateBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");

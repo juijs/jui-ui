@@ -42,7 +42,6 @@
         c = chart("#chart", {
             width : 1000,
             height : 1000,
-            padding: 0,
             axis : [{
                 map : {
                     path : "../../img/map/southKoreaLow.svg",
@@ -50,15 +49,14 @@
                     height : 714,
                     move : true,
                     zoom : true,
-                    scale : 1,
-                    viewX : -100
                 },
-                data : [
-                    { id : "KR-11",  value : 10 }
-                ],
+                data : [{
+                    id : "KR-11",
+                    value : 10
+                }],
                 area : {
-                    width : 525 * 2,
-                    height : 714 * 2
+                    width : 525 / 2,
+                    height : 714 / 2
                 }
             }],
             brush : [{

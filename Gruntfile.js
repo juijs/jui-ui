@@ -134,6 +134,7 @@ module.exports = function(grunt) {
         "js/chart/brush/pin.js",  // brush supporter
 
         // map brush
+        "js/chart/brush/map.core.js",
         "js/chart/brush/map.over.js",
         "js/chart/brush/map.template.js",
         "js/chart/brush/map.bubble.js",

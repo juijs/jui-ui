@@ -11,7 +11,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                 color = this.color(0),
                 size = 5 * axis.map.scale();
 
-            axis.map.eachData(function(i, data) {
+            axis.map.data(function(i, data) {
                 var xy = axis.map(data.id),
                     c = chart.svg.circle({
                         r: size,
@@ -30,4 +30,4 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 	}
 
 	return MapBubbleBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");

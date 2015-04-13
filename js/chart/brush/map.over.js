@@ -10,7 +10,7 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = this.chart.svg.group();
 
-			this.axis.map.each(function(i, path) {
+			this.axis.map.group(function(i, path) {
 				path.hover(function() {
 					$(this).attr({
 						fill : "blue",
@@ -31,4 +31,4 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 	}
 
 	return MapOverBrush;
-}, "chart.brush.core");
+}, "chart.brush.map.core");

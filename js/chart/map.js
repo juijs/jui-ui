@@ -133,18 +133,18 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
 
             var arr = path.attr("position").split(","),
-                x = parseFloat(arr[0]) * pathScale,
-                y = parseFloat(arr[1]) * pathScale;
+                x = parseFloat(arr[0]),
+                y = parseFloat(arr[1]);
 
             return {
-                x: self.axis.area("x") + x - pathX,
-                y: self.axis.area("y") + y - pathY,
+                x: x,
+                y: y,
                 element: path
             }
         }
 
-        this.scale.each = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
+        this.scale.group = function(callback) {
+            if(!_.typeCheck("function", callback)) return pathGroup;
 
             var self = this;
             pathGroup.each(function() {
@@ -152,8 +152,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             });
         }
 
-        this.scale.eachData = function(callback) {
-            if(!_.typeCheck("function", callback)) return;
+        this.scale.data = function(callback) {
+            if(!_.typeCheck("function", callback)) return pathData;
 
             var self = this;
             for(var i = 0, len = pathData.length; i < len; i++) {
