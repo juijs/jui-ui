@@ -40,33 +40,37 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         c = chart("#chart", {
-            width : 700,
-            height : 700,
+            width : 500,
+            height : 325,
             padding : 0,
             axis : [{
                 map : {
-                    path : "../../img/map/southKoreaLow.svg",
-                    width : 525,
-                    height : 714,
+                    path : "../../img/map/worldLow.svg",
+                    width : 1012,
+                    height : 655,
                     move : true,
                     zoom : true,
                     changeEvent : "click"
                 },
-                data : [{
-                    id : "KR-11",
-                    value : 10
-                }],
-                area : {
-                    width : 525 / 2,
-                    height : 714 / 2
-                }
+                data : []
             }],
             brush : [{
                 type : "map.bubble"
             }],
             event : {
                 "map.change": function(data, e) {
-                    console.log(arguments);
+                    if(data.id == "KR") {
+                        this.axis(0).updateMap({
+                            path : "../../img/map/southKoreaLow.svg",
+                            width : 525,
+                            height : 714,
+                            move : true,
+                            zoom : true
+                        }, [{
+                            id : "KR-11",
+                            value : 10
+                        }]);
+                    }
                 }
             }
         });

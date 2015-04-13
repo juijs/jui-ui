@@ -12,8 +12,10 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                 size = 5 * axis.map.scale();
 
             axis.map.data(function(i, data) {
-                var xy = axis.map(data.id),
-                    c = chart.svg.circle({
+                var xy = axis.map(data.id);
+
+                if(xy.x != null && xy.y != null) {
+                    var c = chart.svg.circle({
                         r: size,
                         "fill": color,
                         "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
@@ -21,8 +23,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                         "stroke-width": chart.theme("bubbleBorderWidth")
                     });
 
-                c.translate(xy.x, xy.y);
-                g.append(c);
+                    c.translate(xy.x, xy.y);
+                    g.append(c);
+                }
             });
 
 			return g;

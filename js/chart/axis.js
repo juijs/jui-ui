@@ -417,6 +417,24 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         /**
+         * @method updateMap
+         *
+         * map 정보를 업데이트 한다.
+         *
+         * @param {Object} map
+         * @param {Array} data
+         */
+        this.updateMap = function(map, data) {
+            _.extend(originAxis["map"], map);
+
+            if(_.typeCheck("array", data)) {
+                this.update(data);
+            } else {
+                if(chart.isRender()) chart.render();
+            }
+        }
+
+        /**
          * @method update 
          * 
          * data 를 업데이트 한다.
