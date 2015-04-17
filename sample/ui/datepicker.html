@@ -57,6 +57,9 @@
             }
         });
 
+        // 해당 메소드 호출시 select 이벤트가 발생함
+        datepicker4.select(new Date());
+
         $("#datepicker4_group").find("a").on("click", function(e) {
             var $r = $(datepicker4.root);
 
