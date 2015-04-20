@@ -151,6 +151,10 @@ module.exports = function(grunt) {
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
 
+        // map brush
+        "js/chart/widget/map.core.js",
+        "js/chart/widget/map.control.js",
+
         // chart wrapper
         "js/chartx/realtime.js",
         "js/chartx/mini.js"

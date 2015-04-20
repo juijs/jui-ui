@@ -47,10 +47,7 @@
                 map : {
                     path : "resource/southKoreaLow.svg",
                     width : 525,
-                    height : 714,
-                    move : true,
-                    zoom : true,
-                    changeEvent : "click"
+                    height : 714
                 },
                 data : [{
                     id : "KR-11",
@@ -64,11 +61,11 @@
             brush : [{
                 type : "map.bubble"
             }],
-            event : {
-                "map.change": function(data, e) {
-                    console.log(arguments);
-                }
-            }
+            widget : [{
+                type : "map.control",
+                move : true,
+                zoom : true
+            }]
         });
 	})
 </script>

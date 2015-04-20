@@ -12,58 +12,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathIndex = {},
             pathScale = 1,
             pathX = 0,
-            pathY = 0,
-            isDragEnd = false;
-
-        function setZoomEvent() {
-            $(pathGroup.element).on("mousewheel DOMMouseScroll", function(e){
-                if(e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-                    if(pathScale < 2) {
-                        pathScale += 0.1;
-                    }
-                } else {
-                    if(pathScale > 0.5) {
-                        pathScale -= 0.1;
-                    }
-                }
-
-                self.scale.scale(pathScale);
-                return false;
-            });
-        }
-
-        function setMoveEvent() {
-            var startX = null,
-                startY = null,
-                tmpXY = null;
-
-            self.on("axis.mousedown", function(e) {
-                if(startX != null || startY != null) return;
-
-                startX = pathX + e.axisX;
-                startY = pathY + e.axisY;
-                tmpXY = pathX + "," + pathY;
-            });
-
-            self.on("axis.mousemove", function(e) {
-                if(startX == null || startY == null) return;
-
-                var xy = self.scale.view(startX - e.axisX, startY - e.axisY);
-                pathX = xy.x;
-                pathY = xy.y;
-            });
-
-            self.on("axis.mouseup", endMoveAction);
-            self.on("axis.mouseout", endMoveAction);
-
-            function endMoveAction(e) {
-                if(startX == null || startY == null) return;
-
-                startX = null;
-                startY = null;
-                isDragEnd = (pathX + "," + pathY != tmpXY);
-            }
-        }
+            pathY = 0;
 
         function loadArray(data) {
             var children = [];
@@ -74,21 +23,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             for(var i = 0, len = data.length; i < len; i++) {
                 if(_.typeCheck("object", data[i])) {
-                    var elem = SVG.createObject({ type: "path", attr: data[i] }),
-                        event = self.map.changeEvent;
-
-                    if(_.typeCheck("string", event)) {
-                        elem.attr({ cursor: "pointer" });
-
-                        (function(d) {
-                            elem.on(event, function(e) {
-                                if(!isDragEnd) {
-                                    self.chart.emit("map.change", [ d, e ]);
-                                }
-                            });
-                        })(data[i]);
-                    }
-
+                    var elem = SVG.createObject({ type: "path", attr: data[i] });
                     children.push(elem);
                 }
             }
@@ -244,14 +179,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 this.scale.view(pathX, pathY);
             }
 
-            if(this.map.zoom) {
-                setZoomEvent();
-            }
-
-            if(this.map.move) {
-                setMoveEvent();
-            }
-
             if(this.map.hide) {
                 root.attr({ visibility: "hidden" });
             }
@@ -284,9 +211,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             scale: 1,
             viewX: 0,
             viewY: 0,
-            move: false,
-            zoom: false,
-            changeEvent: null,
 
             /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
             hide: false,
