@@ -13143,15 +13143,17 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(mapLink) {
+            var svg = self.chart.svg;
             pathData = [];
 
             $.ajax({
                 url: mapLink,
                 async: false,
                 success: function (xml) {
-                    var $path = $(xml).find("path");
+                    var $path = $(xml).find("path"),
+                        $style = $(xml).find("style");
 
-                    $path.each(function () {
+                    $path.each(function() {
                         var obj = {};
 
                         $.each(this.attributes, function () {
@@ -13161,6 +13163,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         });
 
                         pathData.push(obj);
+                    });
+
+                    $style.each(function() {
+                        self.chart.svg.root.element.appendChild(this);
                     });
                 }
             });
