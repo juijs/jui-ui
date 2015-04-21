@@ -13110,9 +13110,33 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             for(var i = 0, len = data.length; i < len; i++) {
                 if(_.typeCheck("object", data[i])) {
+                    var style = {};
+
+                    if(_.typeCheck("string", data[i].style)) {
+                        style = getStyleObj(data[i].style);
+                        delete data[i].style;
+                    }
+
                     var elem = SVG.createObject({ type: "path", attr: data[i] });
+                    elem.css(style);
+
                     children.push(elem);
                 }
+            }
+
+            function getStyleObj(str) {
+                var style = {},
+                    list = str.split(";");
+
+                for(var i = 0; i < list.length; i++) {
+                    if(list[i].indexOf(":") != -1) {
+                        var obj = list[i].split(":");
+
+                        style[$.trim(obj[0])] = $.trim(obj[1]);
+                    }
+                }
+
+                return style;
             }
 
             return children;
@@ -13142,7 +13166,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             });
 
             function isLoadAttribute(name) {
-                return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class");
+                return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class" || name == "style");
             }
 
             return loadArray(pathData);
@@ -24313,17 +24337,18 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 			var g = this.chart.svg.group();
 
 			this.axis.map.group(function(i, path) {
+				var originFill = path.styles.fill,
+					originStroke = path.styles.stroke;
+
 				path.hover(function() {
-					$(this).attr({
-						fill : "blue",
-						stroke : "red",
-						'stroke-width' : 0.5
+					$(this).css({
+						fill: "blue",
+						stroke: "red"
 					});
 				}, function() {
-					$(this).attr({
-						fill: "",
-						stroke: "",
-						'stroke-width': 0
+					$(this).css({
+						fill: originFill,
+						stroke: originStroke
 					});
 				});
 			});

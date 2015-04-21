@@ -11,17 +11,18 @@ jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
 			var g = this.chart.svg.group();
 
 			this.axis.map.group(function(i, path) {
+				var originFill = path.styles.fill,
+					originStroke = path.styles.stroke;
+
 				path.hover(function() {
-					$(this).attr({
-						fill : "blue",
-						stroke : "red",
-						'stroke-width' : 0.5
+					$(this).css({
+						fill: "blue",
+						stroke: "red"
 					});
 				}, function() {
-					$(this).attr({
-						fill: "",
-						stroke: "",
-						'stroke-width': 0
+					$(this).css({
+						fill: originFill,
+						stroke: originStroke
 					});
 				});
 			});
