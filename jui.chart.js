@@ -11773,18 +11773,19 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			this.active = this.drawTooltip();
             group.append(this.active.tooltip);
 
-			for (var i = 0; i < this.barList.length; i++) {
-				var r = this.barList[i];
+			for(var i = 0; i < this.barList.length; i++) {
+				var r = this.barList[i],
+					d = this.brush.display;
 
 				// Max & Min 툴팁 생성
-				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
+				if((d == "max" && r.max) || (d == "min" && r.min) || d == "all") {
 					r.minmax = this.drawTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
                     group.append(r.minmax.tooltip);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
-				if (r.value != 0 && this.brush.activeEvent != null) {
+				if(r.value != 0 && this.brush.activeEvent != null) {
 					(function(bar) {
 						self.active.style(bar.color, style.circleColor, 1);
 
