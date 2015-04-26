@@ -13143,7 +13143,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(mapLink) {
-            var svg = self.chart.svg;
             pathData = [];
 
             $.ajax({
@@ -13162,6 +13161,15 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                             }
                         });
 
+                        if(_.typeCheck("string", obj["id"]) && !obj["position"]) {
+                            var pos = getPositionInData(obj["id"]);
+
+                            if(pos != null) {
+                                obj["x"] = pos.x;
+                                obj["y"] = pos.y;
+                            }
+                        }
+
                         pathData.push(obj);
                     });
 
@@ -13172,16 +13180,32 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             });
 
             function isLoadAttribute(name) {
-                return (name == "id" || name == "title" || name == "position" || name == "d" || name == "class" || name == "style");
+                return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
             }
 
             return loadArray(pathData);
         }
 
-        function makeIndex(item) {
-            if(item.attr("id")) {
-                pathIndex[item.attr("id")] = item;
+        function getPositionInData(id) {
+            var list = self.axis.data;
+
+            for(var i = 0; i < list.length; i++) {
+                var dataId = self.axis.getValue(list[i], "id", null);
+
+                if(dataId == id) {
+                    var x = self.axis.getValue(list[i], "x", null),
+                        y = self.axis.getValue(list[i], "y", null);
+
+                    if(_.typeCheck("number", x) && _.typeCheck("number", y)) {
+                        return {
+                            x: x,
+                            y: y
+                        }
+                    }
+                }
             }
+
+            return null;
         }
 
         function makePathGroup() {
@@ -13190,7 +13214,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             for (var i = 0, len = list.length; i < len; i++) {
                 group.append(list[i]);
-                makeIndex(list[i]);
+
+                if(list[i].attr("id")) {
+                    pathIndex[list[i].attr("id")] = list[i];
+                }
             }
 
             return group;
@@ -13208,14 +13235,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
 
             if(_.typeCheck("object", path)) {
-                var pos = path.attr("position");
-
-                if(_.typeCheck("string", pos) && pos.indexOf(",") != -1) {
-                    var arr = pos.split(",");
-
-                    x = parseFloat(arr[0]);
-                    y = parseFloat(arr[1]);
-                }
+                if(path.attr("x") != null)
+                    x = parseFloat(path.attr("x"));
+                if(path.attr("y") != null)
+                    y = parseFloat(path.attr("y"));
             }
 
             return {
