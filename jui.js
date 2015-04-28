@@ -3663,7 +3663,13 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
      * @constructor
      */
     var TransElement = function() {
-        var orders = {};
+        var orders = {
+            translate: null,
+            scale: null,
+            rotate: null,
+            skew: null,
+            matrix: null
+        };
 
         function applyOrders(self) {
             var orderArr = [];
@@ -13099,7 +13105,9 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathIndex = {},
             pathScale = 1,
             pathX = 0,
-            pathY = 0;
+            pathY = 0,
+            viewX = 0,
+            viewY = 0;
 
         function loadArray(data) {
             var children = [];
@@ -13269,19 +13277,32 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale.scale = function(scale) {
             if(!scale || scale < 0) return pathScale;
 
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * scale) - w) / 2,
+                py = ((h * scale) - h) / 2;
+
+            this.view(px + viewX, py + viewY, true);
+
             pathScale = scale;
             pathGroup.scale(pathScale);
 
             return pathScale;
         }
 
-        this.scale.view = function(x, y) {
+        this.scale.view = function(x, y, isScale) {
             var xy = {
                 x: pathX,
                 y: pathY
             };
 
-            if(!_.typeCheck("number", x) || !_.typeCheck("number", y)) return xy;
+            if(!_.typeCheck("number", x) || !_.typeCheck("number", y))
+                return xy;
+
+            if(!isScale) {
+                viewX = x;
+                viewY = y;
+            }
 
             pathX = x;
             pathY = y;

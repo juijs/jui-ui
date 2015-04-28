@@ -244,7 +244,13 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
      * @constructor
      */
     var TransElement = function() {
-        var orders = {};
+        var orders = {
+            translate: null,
+            scale: null,
+            rotate: null,
+            skew: null,
+            matrix: null
+        };
 
         function applyOrders(self) {
             var orderArr = [];
