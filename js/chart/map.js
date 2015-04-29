@@ -5,7 +5,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      * @extends chart.draw
      * @abstract
      */
-    var CoreMap = function() {
+    var Map = function() {
         var self = this;
         var pathData = null,
             pathGroup = null,
@@ -33,6 +33,17 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     }
 
                     var elem = SVG.createObject({ type: "path", attr: data[i] });
+
+                    // Set theme styles
+                    elem.attr({
+                        fill: self.chart.theme("mapPathBackgroundColor"),
+                        "fill-opacity": self.chart.theme("mapPathBackgroundOpacity"),
+                        stroke: self.chart.theme("mapPathBorderColor"),
+                        "stroke-width": self.chart.theme("mapPathBorderWidth"),
+                        "stroke-opacity": self.chart.theme("mapPathBorderOpacity")
+                    });
+
+                    // Set resource styles
                     elem.css(style);
 
                     children.push(elem);
@@ -270,7 +281,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
     }
 
-    CoreMap.setup = function() {
+    Map.setup = function() {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} map */
@@ -291,5 +302,5 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         };
     }
 
-    return CoreMap;
+    return Map;
 }, "chart.draw"); 

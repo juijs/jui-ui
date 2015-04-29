@@ -155,6 +155,15 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1
+        crossBalloonBackgroundOpacity : 1,
+
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });

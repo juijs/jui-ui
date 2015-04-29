@@ -5626,7 +5626,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      * @extends chart.draw
      * @abstract
      */
-    var CoreMap = function() {
+    var Map = function() {
         var self = this;
         var pathData = null,
             pathGroup = null,
@@ -5654,6 +5654,17 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     }
 
                     var elem = SVG.createObject({ type: "path", attr: data[i] });
+
+                    // Set theme styles
+                    elem.attr({
+                        fill: self.chart.theme("mapPathBackgroundColor"),
+                        "fill-opacity": self.chart.theme("mapPathBackgroundOpacity"),
+                        stroke: self.chart.theme("mapPathBorderColor"),
+                        "stroke-width": self.chart.theme("mapPathBorderWidth"),
+                        "stroke-opacity": self.chart.theme("mapPathBorderOpacity")
+                    });
+
+                    // Set resource styles
                     elem.css(style);
 
                     children.push(elem);
@@ -5891,7 +5902,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
     }
 
-    CoreMap.setup = function() {
+    Map.setup = function() {
         /** @property {chart.builder} chart */
         /** @property {chart.axis} axis */
         /** @property {Object} map */
@@ -5912,7 +5923,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         };
     }
 
-    return CoreMap;
+    return Map;
 }, "chart.draw"); 
 jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
@@ -7135,7 +7146,6 @@ jui.define("chart.theme.jennifer", [], function() {
         "#9228E4"
     ];
 
-
     return {
         /** @cfg  */
     	backgroundColor : "white",
@@ -7171,16 +7181,11 @@ jui.define("chart.theme.jennifer", [], function() {
 
         /** @cfg  Grid Bar Size */
         gridTickSize : 3,
-
         gridTickBorderWidth : 1.5,
-
         gridTickPadding : 5,
 
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-
-
-
 
         // brush-item styles
         /** @cfg */
@@ -7394,8 +7399,17 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundColor : "black",
         /** @cfg */
-        crossBalloonBackgroundOpacity : 0.5
+        crossBalloonBackgroundOpacity : 0.5,
 
+
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -7557,7 +7571,16 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonBackgroundOpacity : 0.8
+        crossBalloonBackgroundOpacity : 0.8,
+
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -7717,7 +7740,16 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1
+        crossBalloonBackgroundOpacity : 1,
+
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -7872,7 +7904,16 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonBackgroundOpacity : 0.7
+		crossBalloonBackgroundOpacity : 0.7,
+
+		mapPathBackgroundColor : "#67B7DC",
+		mapPathBackgroundOpacity : 1,
+		mapPathBorderColor : "white",
+		mapPathBorderWidth : 0,
+		mapPathBorderOpacity : 0,
+		mapControlButtonColor : "#3994e2",
+		mapControlScrollColor : "#000",
+		mapControlScrollLineColor : "#fff"
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -8116,7 +8157,16 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonBackgroundOpacity : 0.5
+        crossBalloonBackgroundOpacity : 0.5,
+
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -8654,8 +8704,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
@@ -8701,8 +8751,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
@@ -18496,96 +18546,123 @@ jui.define("chart.widget.map.core", [], function() {
     return MapCoreWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
+    var SCROLL_MIN_Y = 21.5,
+        SCROLL_MAX_Y = 149;
 
     /**
      * @class chart.widget.map.control
      * @extends chart.widget.map.core
      */
     var MapControlWidget = function(chart, axis, widget) {
-        var self = this,
-            map = null;
-        var pathGroup = null,
-            pathScale = null,
-            pathX = null,
-            pathY = null,
-            isDragEnd = false;
+        var scale = 1,
+            view = { x: 0, y: 0 },
+            step = 0,
+            tick = 0,
+            btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
 
-        function initZoomEvent() {
-            $(pathGroup.element).on("mousewheel DOMMouseScroll", function(e) {
-                if(e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-                    if(pathScale < 2) {
-                        pathScale += 0.1;
-                    }
-                } else {
-                    if(pathScale > 0.5) {
-                        pathScale -= 0.1;
-                    }
+        function createBtnGroup(type, opacity, x, y, url) {
+            btn[type] = chart.svg.group({
+                cursor: (url != null) ? "pointer" : "move"
+            }, function() {
+                chart.svg.rect({
+                    x: 0.5,
+                    y: 0.5,
+                    width: 20,
+                    height: 20,
+                    rx: 2,
+                    ry: 2,
+                    stroke: 0,
+                    fill: chart.theme("mapControlButtonColor"),
+                    "fill-opacity": opacity
+                });
+
+                if(url != null) {
+                    chart.svg.image({
+                        x: 4.5,
+                        y: 4.5,
+                        width: 11,
+                        height: 11,
+                        "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                        "xlink:href": url,
+                        opacity: 0.6
+                    });
                 }
+            }).translate(x, y);
 
-                map.scale(pathScale);
-                return false;
+            return btn[type];
+        }
+
+        function createScrollThumbLines() {
+            return chart.svg.group({}, function() {
+                for(var i = 0; i < 6; i++) {
+                    var y = 22 * i;
+
+                    chart.svg.path({
+                        fill: "none",
+                        "stroke-width": 1,
+                        "stroke-opacity": 0.6,
+                        stroke: chart.theme("mapControlScrollLineColor")
+                    }).MoveTo(1.5, 41.5 + y).LineTo(18.5, 41.5 + y);
+                }
             });
         }
 
-        function initMoveEvent() {
-            var startX = null,
-                startY = null,
-                tmpXY = null;
+        function getScrollThumbY(nowScale) {
+            for(var i = 0; i < tick; i++) {
+                if(nowScale == scale) {
+                    return SCROLL_MAX_Y - (tick * i);
+                }
 
-            self.on("axis.mousedown", function(e) {
-                if(startX != null || startY != null) return;
-
-                startX = pathX + e.axisX;
-                startY = pathY + e.axisY;
-                tmpXY = pathX + "," + pathY;
-            });
-
-            self.on("axis.mousemove", function(e) {
-                if(startX == null || startY == null) return;
-
-                var xy = map.view(startX - e.axisX, startY - e.axisY);
-                pathX = xy.x;
-                pathY = xy.y;
-            });
-
-            self.on("axis.mouseup", endMoveAction);
-            self.on("axis.mouseout", endMoveAction);
-
-            function endMoveAction(e) {
-                if(startX == null || startY == null) return;
-
-                startX = null;
-                startY = null;
-                isDragEnd = (pathX + "," + pathY != tmpXY);
+                tmpScale += 0.1;
             }
+        }
+
+        this.drawBefore = function() {
+            scale = axis.map.scale();
+            view = axis.map.view();
+            tick = (widget.maxScale - widget.minScale) * 10;
+            step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
         }
 
         this.draw = function() {
-            map = chart.axis(widget.axis).map;
-            pathGroup = map.group();
-            pathScale = map.scale();
-            pathX = map.view().x;
-            pathY = map.view().y;
+            return chart.svg.group({}, function() {
+                var top = chart.svg.group(),
+                    bottom = chart.svg.group().translate(20, 80);
 
-            if(widget.zoom) {
-                initZoomEvent();
-            }
+                top.append(createBtnGroup("left", 0.8, 0, 20, "http://www.amcharts.com/lib/3/images/panLeft.gif"));
+                top.append(createBtnGroup("right", 0.8, 40, 20, "http://www.amcharts.com/lib/3/images/panRight.gif"));
+                top.append(createBtnGroup("top", 0.8, 20, 0, "http://www.amcharts.com/lib/3/images/panUp.gif"));
+                top.append(createBtnGroup("bottom", 0.8, 20, 40, "http://www.amcharts.com/lib/3/images/panDown.gif"));
+                top.append(createBtnGroup("home", 0, 20, 20, "http://www.amcharts.com/lib/3/images/homeIcon.gif"));
 
-            if(widget.move) {
-                initMoveEvent();
-                chart.svg.root.attr({ cursor: "move" });
-            }
-
-            return chart.svg.group();
+                bottom.append(chart.svg.rect({
+                    x: 0.5,
+                    y: 0.5,
+                    width: 26,
+                    height: 196,
+                    rx: 4,
+                    ry: 4,
+                    stroke: 0,
+                    fill: chart.theme("mapControlScrollColor"),
+                    "fill-opacity": 0.15
+                }).translate(-3, -3));
+                bottom.append(createScrollThumbLines());
+                bottom.append(createBtnGroup("up", 0.8, 0, 0, "http://www.amcharts.com/lib/3/images/plus.gif"));
+                bottom.append(createBtnGroup("down", 0.8, 0, 170, "http://www.amcharts.com/lib/3/images/minus.gif"));
+                bottom.append(createBtnGroup("thumb", 0.8, 0, getScrollThumbY(widget.minScale)));
+            });
         }
     }
 
     MapControlWidget.setup = function() {
         return {
-            /** @cfg {Boolean} [move=false] Set to be moved to see the point of view of the topology map. */
-            move: false,
-            /** @cfg {Boolean} [zoom=false] Set the zoom-in / zoom-out features of the topology map. */
-            zoom: false
+            /** @cfg {"top"/"bottom" } Sets the location where the label is displayed (top, bottom). */
+            orient: "top",
+            /** @cfg {"start"/"end" } Aligns the label (center, start, end). */
+            align: "start",
+
+            minScale: 1,
+            maxScale: 3
         }
     }
 

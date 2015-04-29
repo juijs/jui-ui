@@ -206,8 +206,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
@@ -253,8 +253,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
