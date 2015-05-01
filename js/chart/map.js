@@ -192,23 +192,31 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
+        this.scale.size = function() {
+            return {
+                width: self.map.width,
+                height: self.map.height
+            }
+        }
+
         this.scale.scale = function(scale) {
             if(!scale || scale < 0) return pathScale;
 
+            pathScale = scale;
+            pathGroup.scale(pathScale);
+
+            // 중심 좌표를 기준으로 스케일
             var w = self.map.width,
                 h = self.map.height,
                 px = ((w * scale) - w) / 2,
                 py = ((h * scale) - h) / 2;
 
-            this.view(px + viewX, py + viewY, true);
-
-            pathScale = scale;
-            pathGroup.scale(pathScale);
+            this.view(px + viewX, py + viewY);
 
             return pathScale;
         }
 
-        this.scale.view = function(x, y, isScale) {
+        this.scale.view = function(x, y) {
             var xy = {
                 x: pathX,
                 y: pathY
@@ -217,10 +225,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             if(!_.typeCheck("number", x) || !_.typeCheck("number", y))
                 return xy;
 
-            if(!isScale) {
-                viewX = x;
-                viewY = y;
-            }
+            // 현재 스케일에 따른 계산이 필요함
 
             pathX = x;
             pathY = y;

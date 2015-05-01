@@ -8,7 +8,10 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
      */
     var MapControlWidget = function(chart, axis, widget) {
         var scale = 1,
-            view = { x: 0, y: 0 },
+            viewX = 0,
+            viewY = 0,
+            blockX = 0,
+            blockY = 0,
             step = 0,
             tick = 0,
             btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
@@ -65,14 +68,51 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 if(nowScale == scale) {
                     return SCROLL_MAX_Y - (tick * i);
                 }
-
-                tmpScale += 0.1;
             }
+        }
+
+        function setButtonEvents() {
+            var originViewX = viewX,
+                originViewY = viewY;
+
+            btn.top.on("click", function(e) {
+                viewY -= blockY;
+                axis.map.view(viewX, viewY);
+            });
+            btn.right.on("click", function(e) {
+                viewX += blockX;
+                axis.map.view(viewX, viewY);
+            });
+            btn.bottom.on("click", function(e) {
+                viewY += blockY;
+                axis.map.view(viewX, viewY);
+            });
+            btn.left.on("click", function(e) {
+                viewX -= blockX;
+                axis.map.view(viewX, viewY);
+            });
+            btn.home.on("click", function(e) {
+                viewX = originViewX;
+                viewY = originViewY;
+                axis.map.view(viewX, viewY);
+            });
+
+            btn.up.on("click", function(e) {
+                scale += 0.1;
+                axis.map.scale(scale);
+            });
+            btn.down.on("click", function(e) {
+                scale -= 0.1;
+                axis.map.scale(scale);
+            });
         }
 
         this.drawBefore = function() {
             scale = axis.map.scale();
-            view = axis.map.view();
+            viewX = axis.map.view().x;
+            viewY = axis.map.view().y;
+            blockX = axis.map.size().width / 10;
+            blockY = axis.map.size().height / 10;
             tick = (widget.maxScale - widget.minScale) * 10;
             step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
         }
@@ -99,10 +139,14 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                     fill: chart.theme("mapControlScrollColor"),
                     "fill-opacity": 0.15
                 }).translate(-3, -3));
+
                 bottom.append(createScrollThumbLines());
                 bottom.append(createBtnGroup("up", 0.8, 0, 0, "http://www.amcharts.com/lib/3/images/plus.gif"));
                 bottom.append(createBtnGroup("down", 0.8, 0, 170, "http://www.amcharts.com/lib/3/images/minus.gif"));
                 bottom.append(createBtnGroup("thumb", 0.8, 0, getScrollThumbY(widget.minScale)));
+
+                // 버튼 클릭 이벤트 설정
+                setButtonEvents();
             });
         }
     }
