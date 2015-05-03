@@ -18566,7 +18566,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
         function createBtnGroup(type, opacity, x, y, url) {
             btn[type] = chart.svg.group({
-                cursor: (url != null) ? "pointer" : "none"
+                cursor: (url != null) ? "pointer" : "move"
             }, function() {
                 chart.svg.rect({
                     x: 0.5,
@@ -18612,24 +18612,11 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollThumbY(nowScale) {
-            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
-            console.log(nowScale, y);
-
-            return y;
+            return SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
         }
 
         function getScrollScale(y) {
-            var start = SCROLL_MIN_Y,
-                scale = widget.maxScale;
-
-            for(var i = 0; i < tick; i++) {
-                if(y == Math.round(start)) {
-                    return scale;
-                }
-
-                start += step;
-                scale -= 0.1;
-            }
+            return parseFloat((widget.minScale + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
         }
 
         function setButtonEvents() {
@@ -18697,13 +18684,10 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
                 if(sy >= SCROLL_MIN_Y && sy <= SCROLL_MAX_Y) {
                     moveY = e.y - startY;
-                    btn.thumb.translate(0, sy);
+                    scale = getScrollScale(sy);
 
-                    var newScale = getScrollScale(sy);
-                    if(!_.typeCheck("undefined", newScale)) {
-                        scale = newScale;
-                        axis.map.scale(newScale);
-                    }
+                    axis.map.scale(scale);
+                    btn.thumb.translate(0, getScrollThumbY(scale));
                 }
             }
 
@@ -18756,7 +18740,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
                 // ��ư Ŭ�� �̺�Ʈ ����
                 setButtonEvents();
-                //setScrollEvent(bar);
+                setScrollEvent(bar);
             });
 
             // ��Ʈ�ѷ� ��ġ ����
