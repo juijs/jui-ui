@@ -5633,9 +5633,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathIndex = {},
             pathScale = 1,
             pathX = 0,
-            pathY = 0,
-            viewX = 0,
-            viewY = 0;
+            pathY = 0;
 
         function loadArray(data) {
             var children = [];
@@ -5825,14 +5823,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             pathScale = scale;
             pathGroup.scale(pathScale);
-
-            // 중심 좌표를 기준으로 스케일
-            var w = self.map.width,
-                h = self.map.height,
-                px = ((w * scale) - w) / 2,
-                py = ((h * scale) - h) / 2;
-
-            this.view(px + viewX, py + viewY);
+            this.view(pathX, pathY);
 
             return pathScale;
         }
@@ -5847,10 +5838,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 return xy;
 
             // 현재 스케일에 따른 계산이 필요함
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * pathScale) - w) / 2,
+                py = ((h * pathScale) - h) / 2;
 
             pathX = x;
             pathY = y;
-            pathGroup.translate(-pathX, -pathY);
+            pathGroup.translate(-(pathX + px), -(pathY + py));
 
             return {
                 x: pathX,
@@ -18564,13 +18559,14 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             viewY = 0,
             blockX = 0,
             blockY = 0,
+            scrollY = 0,
             step = 0,
             tick = 0,
             btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
 
         function createBtnGroup(type, opacity, x, y, url) {
             btn[type] = chart.svg.group({
-                cursor: (url != null) ? "pointer" : "move"
+                cursor: (url != null) ? "pointer" : "none"
             }, function() {
                 chart.svg.rect({
                     x: 0.5,
@@ -18616,10 +18612,23 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollThumbY(nowScale) {
+            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+            console.log(nowScale, y);
+
+            return y;
+        }
+
+        function getScrollScale(y) {
+            var start = SCROLL_MIN_Y,
+                scale = widget.maxScale;
+
             for(var i = 0; i < tick; i++) {
-                if(nowScale == scale) {
-                    return SCROLL_MAX_Y - (tick * i);
+                if(y == Math.round(start)) {
+                    return scale;
                 }
+
+                start += step;
+                scale -= 0.1;
             }
         }
 
@@ -18650,13 +18659,60 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
 
             btn.up.on("click", function(e) {
+                if(scale > widget.maxScale) return;
+
                 scale += 0.1;
                 axis.map.scale(scale);
+                btn.thumb.translate(0, getScrollThumbY(scale));
             });
             btn.down.on("click", function(e) {
+                if(scale - 0.09 < widget.minScale) return;
+
                 scale -= 0.1;
                 axis.map.scale(scale);
+                btn.thumb.translate(0, getScrollThumbY(scale));
             });
+        }
+
+        function setScrollEvent(bar) {
+            var startY = 0,
+                moveY = 0;
+
+            btn.thumb.on("mousedown", function(e) {
+                if(startY > 0) return;
+
+                startY = e.y;
+            });
+
+            btn.thumb.on("mousemove", moveThumb);
+            bar.on("mousemove", moveThumb);
+
+            btn.thumb.on("mouseup", endMoveThumb);
+            bar.on("mouseup", endMoveThumb);
+            bar.on("mouseout", endMoveThumb);
+
+            function moveThumb(e) {
+                if(startY == 0) return;
+                var sy = scrollY + e.y - startY;
+
+                if(sy >= SCROLL_MIN_Y && sy <= SCROLL_MAX_Y) {
+                    moveY = e.y - startY;
+                    btn.thumb.translate(0, sy);
+
+                    var newScale = getScrollScale(sy);
+                    if(!_.typeCheck("undefined", newScale)) {
+                        scale = newScale;
+                        axis.map.scale(newScale);
+                    }
+                }
+            }
+
+            function endMoveThumb(e) {
+                if(startY == 0) return;
+
+                startY = 0;
+                scrollY += moveY;
+            }
         }
 
         this.drawBefore = function() {
@@ -18667,12 +18723,24 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             blockY = axis.map.size().height / 10;
             tick = (widget.maxScale - widget.minScale) * 10;
             step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
+            scrollY = getScrollThumbY(scale);
         }
 
         this.draw = function() {
-            return chart.svg.group({}, function() {
+            var g = chart.svg.group({}, function() {
                 var top = chart.svg.group(),
-                    bottom = chart.svg.group().translate(20, 80);
+                    bottom = chart.svg.group().translate(20, 80),
+                    bar = chart.svg.rect({
+                        x: 0.5,
+                        y: 0.5,
+                        width: 26,
+                        height: 196,
+                        rx: 4,
+                        ry: 4,
+                        stroke: 0,
+                        fill: chart.theme("mapControlScrollColor"),
+                        "fill-opacity": 0.15
+                    }).translate(-3, -3);
 
                 top.append(createBtnGroup("left", 0.8, 0, 20, "http://www.amcharts.com/lib/3/images/panLeft.gif"));
                 top.append(createBtnGroup("right", 0.8, 40, 20, "http://www.amcharts.com/lib/3/images/panRight.gif"));
@@ -18680,26 +18748,27 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 top.append(createBtnGroup("bottom", 0.8, 20, 40, "http://www.amcharts.com/lib/3/images/panDown.gif"));
                 top.append(createBtnGroup("home", 0, 20, 20, "http://www.amcharts.com/lib/3/images/homeIcon.gif"));
 
-                bottom.append(chart.svg.rect({
-                    x: 0.5,
-                    y: 0.5,
-                    width: 26,
-                    height: 196,
-                    rx: 4,
-                    ry: 4,
-                    stroke: 0,
-                    fill: chart.theme("mapControlScrollColor"),
-                    "fill-opacity": 0.15
-                }).translate(-3, -3));
-
+                bottom.append(bar);
                 bottom.append(createScrollThumbLines());
                 bottom.append(createBtnGroup("up", 0.8, 0, 0, "http://www.amcharts.com/lib/3/images/plus.gif"));
                 bottom.append(createBtnGroup("down", 0.8, 0, 170, "http://www.amcharts.com/lib/3/images/minus.gif"));
-                bottom.append(createBtnGroup("thumb", 0.8, 0, getScrollThumbY(widget.minScale)));
+                bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
 
                 // ��ư Ŭ�� �̺�Ʈ ����
                 setButtonEvents();
+                //setScrollEvent(bar);
             });
+
+            // ��Ʈ�ѷ� ��ġ ����
+            if(widget.orient == "bottom" && widget.align == "start") {
+                g.translate(0, axis.area("y2") - 273);
+            } else if(widget.orient == "bottom" && widget.align == "end") {
+                g.translate(axis.area("x2") - 60, axis.area("y2") - 273);
+            } else if(widget.orient == "top" && widget.align == "end") {
+                g.translate(axis.area("x2") - 60, 0);
+            }
+
+            return g;
         }
     }
 

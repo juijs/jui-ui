@@ -12,9 +12,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathIndex = {},
             pathScale = 1,
             pathX = 0,
-            pathY = 0,
-            viewX = 0,
-            viewY = 0;
+            pathY = 0;
 
         function loadArray(data) {
             var children = [];
@@ -204,14 +202,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             pathScale = scale;
             pathGroup.scale(pathScale);
-
-            // 중심 좌표를 기준으로 스케일
-            var w = self.map.width,
-                h = self.map.height,
-                px = ((w * scale) - w) / 2,
-                py = ((h * scale) - h) / 2;
-
-            this.view(px + viewX, py + viewY);
+            this.view(pathX, pathY);
 
             return pathScale;
         }
@@ -226,10 +217,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 return xy;
 
             // 현재 스케일에 따른 계산이 필요함
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * pathScale) - w) / 2,
+                py = ((h * pathScale) - h) / 2;
 
             pathX = x;
             pathY = y;
-            pathGroup.translate(-pathX, -pathY);
+            pathGroup.translate(-(pathX + px), -(pathY + py));
 
             return {
                 x: pathX,
