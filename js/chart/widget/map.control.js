@@ -83,44 +83,59 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
             btn.top.on("click", function(e) {
                 viewY -= blockY;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.right.on("click", function(e) {
                 viewX += blockX;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.bottom.on("click", function(e) {
                 viewY += blockY;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.left.on("click", function(e) {
                 viewX -= blockX;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.home.on("click", function(e) {
                 viewX = originViewX;
                 viewY = originViewY;
-                axis.map.view(viewX, viewY);
+                move();
             });
 
             btn.up.on("click", function(e) {
                 if(scale > widget.maxScale) return;
 
                 scale += 0.1;
-                scrollY = getScrollThumbY(scale);
-
-                axis.map.scale(scale);
-                btn.thumb.translate(0, scrollY);
+                zoom();
             });
             btn.down.on("click", function(e) {
                 if(scale - 0.09 < widget.minScale) return;
 
                 scale -= 0.1;
-                scrollY = getScrollThumbY(scale);
+                zoom();
+            });
 
+            function move() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                axis.map.view(viewX, viewY);
+            }
+            function zoom() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                scrollY = getScrollThumbY(scale);
                 axis.map.scale(scale);
                 btn.thumb.translate(0, scrollY);
-            });
+            }
         }
 
         function setScrollEvent(bar) {
@@ -147,6 +162,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 if(sy >= SCROLL_MIN_Y && sy <= SCROLL_MAX_Y) {
                     moveY = e.y - startY;
                     scale = getScrollScale(sy);
+
+                    axis.updateMap({
+                        scale: scale,
+                        viewX: viewX,
+                        viewY: viewY
+                    });
 
                     axis.map.scale(scale);
                     btn.thumb.translate(0, getScrollThumbY(scale));

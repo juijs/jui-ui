@@ -5692,6 +5692,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 url: mapLink,
                 async: false,
                 success: function (xml) {
+                    console.log(mapLink)
+
                     var $path = $(xml).find("path"),
                         $style = $(xml).find("style");
 
@@ -5766,10 +5768,24 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return group;
         }
 
+        function getScaleXY() {
+            // 현재 스케일에 따른 계산이 필요함
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * pathScale) - w) / 2,
+                py = ((h * pathScale) - h) / 2;
+
+            return {
+                x: px + pathX,
+                y: py + pathY
+            }
+        }
+
         this.scale = function(i) {
             var path = null,
                 x = null,
-                y = null;
+                y = null,
+                pxy = getScaleXY();
 
             if(_.typeCheck("integer", i)) {
                 path = pathGroup.children[i];
@@ -5783,6 +5799,9 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 if(path.attr("y") != null)
                     y = parseFloat(path.attr("y"));
             }
+
+            if(x != null) x = (x * pathScale) - pxy.x;
+            if(y != null) y = (y * pathScale) - pxy.y;
 
             return {
                 x: x,
@@ -5827,23 +5846,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         this.scale.view = function(x, y) {
-            var xy = {
-                x: pathX,
-                y: pathY
-            };
+            var xy = { x: pathX, y: pathY };
 
             if(!_.typeCheck("number", x) || !_.typeCheck("number", y))
                 return xy;
 
-            // 현재 스케일에 따른 계산이 필요함
-            var w = self.map.width,
-                h = self.map.height,
-                px = ((w * pathScale) - w) / 2,
-                py = ((h * pathScale) - h) / 2;
-
             pathX = x;
             pathY = y;
-            pathGroup.translate(-(pathX + px), -(pathY + py));
+
+            var pxy = getScaleXY();
+            pathGroup.translate(-pxy.x, -pxy.y);
 
             return {
                 x: pathX,
@@ -16944,9 +16956,12 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
      */
 	var MapCoreBrush = function() {
 
+        /*/
         this.drawAfter = function(g) {
             this.axis.map.group().append(g);
         }
+        /**/
+
 	}
 
 	return MapCoreBrush;
@@ -17033,7 +17048,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 		this.draw = function() {
             var g = chart.svg.group(),
                 color = this.color(0),
-                size = 5 * axis.map.scale();
+                size = 10;
 
             axis.map.data(function(i, data) {
                 var xy = axis.map(data.id);
@@ -18628,44 +18643,59 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
             btn.top.on("click", function(e) {
                 viewY -= blockY;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.right.on("click", function(e) {
                 viewX += blockX;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.bottom.on("click", function(e) {
                 viewY += blockY;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.left.on("click", function(e) {
                 viewX -= blockX;
-                axis.map.view(viewX, viewY);
+                move();
             });
             btn.home.on("click", function(e) {
                 viewX = originViewX;
                 viewY = originViewY;
-                axis.map.view(viewX, viewY);
+                move();
             });
 
             btn.up.on("click", function(e) {
                 if(scale > widget.maxScale) return;
 
                 scale += 0.1;
-                scrollY = getScrollThumbY(scale);
-
-                axis.map.scale(scale);
-                btn.thumb.translate(0, scrollY);
+                zoom();
             });
             btn.down.on("click", function(e) {
                 if(scale - 0.09 < widget.minScale) return;
 
                 scale -= 0.1;
-                scrollY = getScrollThumbY(scale);
+                zoom();
+            });
 
+            function move() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                axis.map.view(viewX, viewY);
+            }
+            function zoom() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                scrollY = getScrollThumbY(scale);
                 axis.map.scale(scale);
                 btn.thumb.translate(0, scrollY);
-            });
+            }
         }
 
         function setScrollEvent(bar) {
@@ -18692,6 +18722,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 if(sy >= SCROLL_MIN_Y && sy <= SCROLL_MAX_Y) {
                     moveY = e.y - startY;
                     scale = getScrollScale(sy);
+
+                    axis.updateMap({
+                        scale: scale,
+                        viewX: viewX,
+                        viewY: viewY
+                    });
 
                     axis.map.scale(scale);
                     btn.thumb.translate(0, getScrollThumbY(scale));

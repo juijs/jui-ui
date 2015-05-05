@@ -11,9 +11,12 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
      */
 	var MapCoreBrush = function() {
 
+        /*/
         this.drawAfter = function(g) {
             this.axis.map.group().append(g);
         }
+        /**/
+
 	}
 
 	return MapCoreBrush;

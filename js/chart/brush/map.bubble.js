@@ -9,7 +9,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 		this.draw = function() {
             var g = chart.svg.group(),
                 color = this.color(0),
-                size = 5 * axis.map.scale();
+                size = 10;
 
             axis.map.data(function(i, data) {
                 var xy = axis.map(data.id);

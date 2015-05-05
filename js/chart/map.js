@@ -147,10 +147,24 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return group;
         }
 
+        function getScaleXY() {
+            // 현재 스케일에 따른 계산이 필요함
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * pathScale) - w) / 2,
+                py = ((h * pathScale) - h) / 2;
+
+            return {
+                x: px + pathX,
+                y: py + pathY
+            }
+        }
+
         this.scale = function(i) {
             var path = null,
                 x = null,
-                y = null;
+                y = null,
+                pxy = getScaleXY();
 
             if(_.typeCheck("integer", i)) {
                 path = pathGroup.children[i];
@@ -164,6 +178,9 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 if(path.attr("y") != null)
                     y = parseFloat(path.attr("y"));
             }
+
+            if(x != null) x = (x * pathScale) - pxy.x;
+            if(y != null) y = (y * pathScale) - pxy.y;
 
             return {
                 x: x,
@@ -208,23 +225,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         this.scale.view = function(x, y) {
-            var xy = {
-                x: pathX,
-                y: pathY
-            };
+            var xy = { x: pathX, y: pathY };
 
             if(!_.typeCheck("number", x) || !_.typeCheck("number", y))
                 return xy;
 
-            // 현재 스케일에 따른 계산이 필요함
-            var w = self.map.width,
-                h = self.map.height,
-                px = ((w * pathScale) - w) / 2,
-                py = ((h * pathScale) - h) / 2;
-
             pathX = x;
             pathY = y;
-            pathGroup.translate(-(pathX + px), -(pathY + py));
+
+            var pxy = getScaleXY();
+            pathGroup.translate(-pxy.x, -pxy.y);
 
             return {
                 x: pathX,
