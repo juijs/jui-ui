@@ -11,40 +11,39 @@
 <div id="chart"></div>
 
 <script id="script_code">
-    /*/
     var d = [{
         id: "south korea",
         x: 790,
-        y: 205
+        y: 205,
+        value: 10
     }, {
         id: "china",
         x: 730,
-        y: 220
+        y: 220,
+        value: 100
     }, {
         id: "usa",
         x: 195,
-        y: 200
-    }, {
-        id: "usa",
-        x: 195,
-        y: 200
+        y: 200,
+        value: 70
     }, {
         id: "france",
         x: 460,
-        y: 195
+        y: 195,
+        value: 50
     }, {
         id: "brazil",
         x: 310,
-        y: 370
+        y: 370,
+        value: 80
     }, {
         id: "australia",
         x: 820,
-        y: 435
+        y: 435,
+        value: 20
     }];
-    /**/
 
     jui.ready([ "chart.builder" ], function(chart) {
-
         c = chart("#chart", {
             width : 950,
             height : 620,
@@ -55,10 +54,20 @@
                     width : 950,
                     height : 620,
                     scale : 2
-                }
+                },
+                data : d
             }],
             brush : [{
-                type : "map.bubble"
+                type : "map.bubble",
+                color : function(d) {
+                    if(d.value > 70) {
+                        return "red";
+                    } else if(d.value > 35) {
+                        return "orange";
+                    }
+
+                    return "blue;"
+                }
             }],
             widget : {
                 type : "map.control",

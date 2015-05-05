@@ -5692,8 +5692,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 url: mapLink,
                 async: false,
                 success: function (xml) {
-                    console.log(mapLink)
-
                     var $path = $(xml).find("path"),
                         $style = $(xml).find("style");
 
@@ -17045,15 +17043,41 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapBubbleBrush = function(chart, axis, brush) {
+        var self = this;
+
+        function getMinMaxValues() {
+            var min = 0,
+                max = 0,
+                dataList = self.listData();
+
+            for(var i = 0; i < dataList.length; i++) {
+                var value = axis.getValue(dataList[i], "value");
+
+                min = (i == 0) ? value : Math.min(value, min);
+                max = (i == 0) ? value : Math.max(value, max);
+            }
+
+            return {
+                min: min,
+                max: max
+            }
+        }
+
 		this.draw = function() {
             var g = chart.svg.group(),
-                color = this.color(0),
-                size = 10;
+                color = _.typeCheck("string", brush.color) ? brush.color : this.color(0),
+                minmax = getMinMaxValues();
 
-            axis.map.data(function(i, data) {
-                var xy = axis.map(data.id);
+            this.eachData(function(i, d) {
+                var value = axis.getValue(d, "value", 0),
+                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    xy = axis.map(axis.getValue(d, "id", null));
 
                 if(xy.x != null && xy.y != null) {
+                    if(_.typeCheck("function", brush.color)) {
+                        color = brush.color.call(chart, d) || color;
+                    }
+
                     var c = chart.svg.circle({
                         r: size,
                         "fill": color,
@@ -17070,6 +17094,14 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 			return g;
 		}
 	}
+
+    MapBubbleBrush.setup = function() {
+        return {
+            color : null,
+            min : 10,
+            max : 30
+        }
+    }
 
 	return MapBubbleBrush;
 }, "chart.brush.map.core");
