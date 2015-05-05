@@ -179,16 +179,16 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                         "fill-opacity": 0.15
                     }).translate(-3, -3);
 
-                top.append(createBtnGroup("left", 0.8, 0, 20, "http://www.amcharts.com/lib/3/images/panLeft.gif"));
-                top.append(createBtnGroup("right", 0.8, 40, 20, "http://www.amcharts.com/lib/3/images/panRight.gif"));
-                top.append(createBtnGroup("top", 0.8, 20, 0, "http://www.amcharts.com/lib/3/images/panUp.gif"));
-                top.append(createBtnGroup("bottom", 0.8, 20, 40, "http://www.amcharts.com/lib/3/images/panDown.gif"));
-                top.append(createBtnGroup("home", 0, 20, 20, "http://www.amcharts.com/lib/3/images/homeIcon.gif"));
+                top.append(createBtnGroup("left", 0.8, 0, 20, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI9poMcdXpOKTujw0pGjAgA7"));
+                top.append(createBtnGroup("right", 0.8, 40, 20, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI8JycvonomSKhksxBqbAgA7"));
+                top.append(createBtnGroup("top", 0.8, 20, 0, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI+pCmvd2IkzUYqw27yfAgA7"));
+                top.append(createBtnGroup("bottom", 0.8, 20, 40, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI+pyw37TDxTUhhq0q2fAgA7"));
+                top.append(createBtnGroup("home", 0, 20, 20, "data:image/gif;base64,R0lGODlhCwALAPABAAAAAAAAACH5BAUAAAEALAAAAAALAAsAAAIZjI8ZoAffIERzMVMxm+9KvIBh6Imb2aVMAQA7"));
 
                 bottom.append(bar);
                 bottom.append(createScrollThumbLines());
-                bottom.append(createBtnGroup("up", 0.8, 0, 0, "http://www.amcharts.com/lib/3/images/plus.gif"));
-                bottom.append(createBtnGroup("down", 0.8, 0, 170, "http://www.amcharts.com/lib/3/images/minus.gif"));
+                bottom.append(createBtnGroup("up", 0.8, 0, 0, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAISjI8ZoMhtHpQH2HsV1TD29SkFADs="));
+                bottom.append(createBtnGroup("down", 0.8, 0, 170, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIMjI+py+0BopSv2qsKADs="));
                 bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
 
                 // 버튼 클릭 이벤트 설정
@@ -196,13 +196,22 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 setScrollEvent(bar);
             });
 
+            var ot = widget.orient,
+                ag = widget.align,
+                dx = widget.dx,
+                dy = widget.dy,
+                x2 = axis.area("x2"),
+                y2 = axis.area("y2");
+
             // 컨트롤러 위치 설정
-            if(widget.orient == "bottom" && widget.align == "start") {
-                g.translate(0, axis.area("y2") - 273);
-            } else if(widget.orient == "bottom" && widget.align == "end") {
-                g.translate(axis.area("x2") - 60, axis.area("y2") - 273);
-            } else if(widget.orient == "top" && widget.align == "end") {
-                g.translate(axis.area("x2") - 60, 0);
+            if(ot == "bottom" && ag == "start") {
+                g.translate(dx, y2 - (273 + dy));
+            } else if(ot == "bottom" && ag == "end") {
+                g.translate(x2 - (60 + dx), y2 - (273 + dy));
+            } else if(ot == "top" && ag == "end") {
+                g.translate(x2 - (60 + dx), dy);
+            } else {
+                g.translate(dx, dy);
             }
 
             return g;
@@ -217,7 +226,10 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             align: "start",
 
             minScale: 1,
-            maxScale: 3
+            maxScale: 3,
+
+            dx: 5,
+            dy: 5
         }
     }
 
