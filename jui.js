@@ -12614,7 +12614,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
 
-            var Map = (typeof axis[k].type !== 'undefined') ? jui.include("chart.map." + axis[k].type) : jui.include("chart.map");
+            var Map = jui.include("chart.map");
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Map, axis[k]);
@@ -12625,11 +12625,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             obj.axis = axis;
             obj.map = axis[k];
 
-            var elem = obj.render();
-
             // 그리드 별 위치 선정하기
-            if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
-
+            var elem = obj.render();
+            elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             elem.scale.type = axis[k].type;
             elem.scale.root = elem.root;
             
@@ -26084,7 +26082,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollThumbY(nowScale) {
-            return SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+
+            if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
+            else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
+
+            return y;
         }
 
         function getScrollScale(y) {
@@ -26121,15 +26124,19 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 if(scale > widget.maxScale) return;
 
                 scale += 0.1;
+                scrollY = getScrollThumbY(scale);
+
                 axis.map.scale(scale);
-                btn.thumb.translate(0, getScrollThumbY(scale));
+                btn.thumb.translate(0, scrollY);
             });
             btn.down.on("click", function(e) {
                 if(scale - 0.09 < widget.minScale) return;
 
                 scale -= 0.1;
+                scrollY = getScrollThumbY(scale);
+
                 axis.map.scale(scale);
-                btn.thumb.translate(0, getScrollThumbY(scale));
+                btn.thumb.translate(0, scrollY);
             });
         }
 

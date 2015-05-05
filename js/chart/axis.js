@@ -103,7 +103,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
 
-            var Map = (typeof axis[k].type !== 'undefined') ? jui.include("chart.map." + axis[k].type) : jui.include("chart.map");
+            var Map = jui.include("chart.map");
 
             // 그리드 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Map, axis[k]);
@@ -114,11 +114,9 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             obj.axis = axis;
             obj.map = axis[k];
 
-            var elem = obj.render();
-
             // 그리드 별 위치 선정하기
-            if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
-
+            var elem = obj.render();
+            elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             elem.scale.type = axis[k].type;
             elem.scale.root = elem.root;
             

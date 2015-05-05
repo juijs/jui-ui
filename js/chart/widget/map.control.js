@@ -65,7 +65,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollThumbY(nowScale) {
-            return SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+
+            if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
+            else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
+
+            return y;
         }
 
         function getScrollScale(y) {
@@ -102,15 +107,19 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 if(scale > widget.maxScale) return;
 
                 scale += 0.1;
+                scrollY = getScrollThumbY(scale);
+
                 axis.map.scale(scale);
-                btn.thumb.translate(0, getScrollThumbY(scale));
+                btn.thumb.translate(0, scrollY);
             });
             btn.down.on("click", function(e) {
                 if(scale - 0.09 < widget.minScale) return;
 
                 scale -= 0.1;
+                scrollY = getScrollThumbY(scale);
+
                 axis.map.scale(scale);
-                btn.thumb.translate(0, getScrollThumbY(scale));
+                btn.thumb.translate(0, scrollY);
             });
         }
 
