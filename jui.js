@@ -12509,7 +12509,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
+jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.axis
@@ -12523,10 +12523,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      *
      */
     var Axis = function(chart, originAxis, cloneAxis) {
-        var self = this;
-        var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null,
-            _clipRectId = "", _clipRect = null;
+        var self = this,
+            map = null;
+        var _area = {},
+            _padding = {},
+            _clipId = "",
+            _clipPath = null,
+            _clipRectId = "",
+            _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -12608,6 +12612,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             return elem.scale;
         }
 
+        var mapObj = null;
+
         function drawMapType(axis, k) {
             if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
@@ -12616,17 +12622,21 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             var Map = jui.include("chart.map");
 
-            // 그리드 기본 옵션과 사용자 옵션을 합침
+            // 맵 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Map, axis[k]);
 
-            // 엑시스 기본 프로퍼티 정의
-            var obj = new Map(chart, axis, axis[k]);
-            obj.chart = chart;
-            obj.axis = axis;
-            obj.map = axis[k];
+            // 맵 객체는 한번만 생성함
+            if(map == null) {
+                map = new Map(chart, axis, axis[k]);
+            }
+
+            // 맵 기본 프로퍼티 설정
+            map.chart = chart;
+            map.axis = axis;
+            map.map = axis[k];
 
             // 그리드 별 위치 선정하기
-            var elem = obj.render();
+            var elem = map.render();
             elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             elem.scale.type = axis[k].type;
             elem.scale.root = elem.root;
@@ -13098,7 +13108,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      */
     var Map = function() {
         var self = this;
-        var pathData = null,
+        var pathURI = null,
+            pathData = null,
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -13157,29 +13168,29 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return children;
         }
 
-        function loadPath(mapLink) {
+        function loadPath(uri) {
             pathData = [];
 
             $.ajax({
-                url: mapLink,
+                url: uri,
                 async: false,
                 success: function (xml) {
                     var $path = $(xml).find("path"),
                         $style = $(xml).find("style");
 
-                    $path.each(function() {
+                    $path.each(function () {
                         var obj = {};
 
                         $.each(this.attributes, function () {
-                            if(this.specified && isLoadAttribute(this.name)) {
+                            if (this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
 
-                        if(_.typeCheck("string", obj["id"]) && !obj["position"]) {
+                        if (_.typeCheck("string", obj["id"]) && !obj["position"]) {
                             var pos = getPositionInData(obj["id"]);
 
-                            if(pos != null) {
+                            if (pos != null) {
                                 obj["x"] = pos.x;
                                 obj["y"] = pos.y;
                             }
@@ -13188,7 +13199,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         pathData.push(obj);
                     });
 
-                    $style.each(function() {
+                    $style.each(function () {
                         self.chart.svg.root.element.appendChild(this);
                     });
                 }
@@ -13227,7 +13238,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             var group = self.chart.svg.group(),
                 list = (_.typeCheck("array", self.map.path)) ? loadArray(self.map.path) : loadPath(self.map.path);
 
-            for (var i = 0, len = list.length; i < len; i++) {
+            for(var i = 0, len = list.length; i < len; i++) {
                 group.append(list[i]);
 
                 if(list[i].attr("id")) {
@@ -13348,7 +13359,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathScale = this.map.scale;
             pathX = this.map.viewX;
             pathY = this.map.viewY;
-            pathGroup = makePathGroup();
+
+            // pathURI가 다를 경우에만 pathGroup을 생성함
+            if(pathURI != this.map.path) {
+                pathGroup = makePathGroup();
+                pathURI = this.map.path;
+            }
+
+            // pathGroup 루트에 추가
             root.append(pathGroup);
 
             if(this.map.scale != 1) {
@@ -14881,7 +14899,6 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundOpacity : 0.5,
 
-
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
@@ -14889,7 +14906,11 @@ jui.define("chart.theme.jennifer", [], function() {
         mapPathBorderOpacity : 0,
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000"
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -15060,7 +15081,9 @@ jui.define("chart.theme.gradient", [], function() {
         mapPathBorderOpacity : 0,
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -15229,7 +15252,9 @@ jui.define("chart.theme.dark", [], function() {
         mapPathBorderOpacity : 0,
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -15393,7 +15418,9 @@ jui.define("chart.theme.pastel", [], function() {
 		mapPathBorderOpacity : 0,
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
-		mapControlScrollLineColor : "#fff"
+		mapControlScrollLineColor : "#fff",
+		mapBubbleBackgroundOpacity : 0.5,
+		mapBubbleBorderWidth : 1
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -15646,7 +15673,9 @@ jui.define("chart.theme.pattern", [], function() {
         mapPathBorderOpacity : 0,
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -19032,9 +19061,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key) {
-            if (typeof key == 'string') {
-                return this.chart.color(0, { colors : [key] });
+            if(_.typeCheck("string", key)) {
+                return this.chart.color(0, { colors : [ key ] });
             }
+
             return this.chart.color(key, this.brush);
         }
 	}
@@ -24436,40 +24466,67 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
 
 	return MapCoreBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.map.over", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.over 
      * implements over brush 
      * @extends chart.brush.core
      */
-	var MapOverBrush = function() {
+	var MapSelectorBrush = function(chart, axis, brush) {
+		var activePath = null;
 
 		this.draw = function() {
-			var g = this.chart.svg.group();
+			var g = chart.svg.group();
 
-			this.axis.map.group(function(i, path) {
-				var originFill = path.styles.fill,
-					originStroke = path.styles.stroke;
+			axis.map.group(function(i, path) {
+				var originFill = path.styles.fill || path.attributes.fill;
 
 				path.hover(function() {
+					if(activePath == this) return;
+
 					$(this).css({
-						fill: "blue",
-						stroke: "red"
+						fill: chart.theme("mapSelectorColor")
 					});
 				}, function() {
+					if(activePath == this) return;
+
 					$(this).css({
-						fill: originFill,
-						stroke: originStroke
+						fill: originFill
 					});
 				});
+
+				// �� �н� ��Ƽ�� �̺�Ʈ
+				if(brush.activeEvent != null) {
+					path.attr({ cursor: "pointer" });
+
+					path.on(brush.activeEvent, function () {
+						activePath = this;
+
+						axis.map.group(function (i, path) {
+							path.css({
+								fill: originFill
+							});
+						});
+
+						$(this).css({
+							fill: chart.theme("mapSelectorActiveColor")
+						});
+					});
+				}
 			});
 
 			return g;
 		}
 	}
 
-	return MapOverBrush;
+	MapSelectorBrush.setup = function() {
+		return {
+			activeEvent: null
+		}
+	}
+
+	return MapSelectorBrush;
 }, "chart.brush.map.core");
 
 jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
@@ -24553,9 +24610,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                     var c = chart.svg.circle({
                         r: size,
                         "fill": color,
-                        "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                        "fill-opacity": chart.theme("mapBubbleBackgroundOpacity"),
                         "stroke": color,
-                        "stroke-width": chart.theme("bubbleBorderWidth")
+                        "stroke-width": chart.theme("mapBubbleBorderWidth")
                     });
 
                     c.translate(xy.x, xy.y);
@@ -26329,6 +26386,17 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
     return MapControlWidget;
 }, "chart.widget.map.core");
+jui.define("chart.widget.map.tooltip", [], function() {
+
+    /**
+     * @class chart.widget.map.core
+     * @extends chart.widget.core
+     */
+    var MapTooltipWidget = function(chart, axis, widget) {
+    }
+
+    return MapTooltipWidget;
+}, "chart.widget.tooltip");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     /**

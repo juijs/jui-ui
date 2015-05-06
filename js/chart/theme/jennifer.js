@@ -283,7 +283,6 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundOpacity : 0.5,
 
-
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
@@ -291,6 +290,10 @@ jui.define("chart.theme.jennifer", [], function() {
         mapPathBorderOpacity : 0,
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000"
     }
 });

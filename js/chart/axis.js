@@ -1,4 +1,4 @@
-jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
+jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.axis
@@ -12,10 +12,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      *
      */
     var Axis = function(chart, originAxis, cloneAxis) {
-        var self = this;
-        var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null,
-            _clipRectId = "", _clipRect = null;
+        var self = this,
+            map = null;
+        var _area = {},
+            _padding = {},
+            _clipId = "",
+            _clipPath = null,
+            _clipRectId = "",
+            _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -97,6 +101,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             return elem.scale;
         }
 
+        var mapObj = null;
+
         function drawMapType(axis, k) {
             if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
@@ -105,17 +111,21 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             var Map = jui.include("chart.map");
 
-            // 그리드 기본 옵션과 사용자 옵션을 합침
+            // 맵 기본 옵션과 사용자 옵션을 합침
             jui.defineOptions(Map, axis[k]);
 
-            // 엑시스 기본 프로퍼티 정의
-            var obj = new Map(chart, axis, axis[k]);
-            obj.chart = chart;
-            obj.axis = axis;
-            obj.map = axis[k];
+            // 맵 객체는 한번만 생성함
+            if(map == null) {
+                map = new Map(chart, axis, axis[k]);
+            }
+
+            // 맵 기본 프로퍼티 설정
+            map.chart = chart;
+            map.axis = axis;
+            map.map = axis[k];
 
             // 그리드 별 위치 선정하기
-            var elem = obj.render();
+            var elem = map.render();
             elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
             elem.scale.type = axis[k].type;
             elem.scale.root = elem.root;

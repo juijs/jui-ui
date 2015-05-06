@@ -159,6 +159,8 @@ jui.define("chart.theme.pastel", [], function() {
 		mapPathBorderOpacity : 0,
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
-		mapControlScrollLineColor : "#fff"
+		mapControlScrollLineColor : "#fff",
+		mapBubbleBackgroundOpacity : 0.5,
+		mapBubbleBorderWidth : 1
 	}
 }); 

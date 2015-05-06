@@ -443,9 +443,10 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key) {
-            if (typeof key == 'string') {
-                return this.chart.color(0, { colors : [key] });
+            if(_.typeCheck("string", key)) {
+                return this.chart.color(0, { colors : [ key ] });
             }
+
             return this.chart.color(key, this.brush);
         }
 	}

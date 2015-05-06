@@ -135,7 +135,7 @@ module.exports = function(grunt) {
 
         // map brush
         "js/chart/brush/map.core.js",
-        "js/chart/brush/map.over.js",
+        "js/chart/brush/map.selector.js",
         "js/chart/brush/map.template.js",
         "js/chart/brush/map.bubble.js",
 
@@ -151,9 +151,10 @@ module.exports = function(grunt) {
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
 
-        // map brush
+        // map widget
         "js/chart/widget/map.core.js",
         "js/chart/widget/map.control.js",
+        "js/chart/widget/map.tooltip.js",
 
         // chart wrapper
         "js/chartx/realtime.js",

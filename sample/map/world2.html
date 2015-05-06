@@ -66,16 +66,25 @@
                         return "orange";
                     }
 
-                    return "blue;"
+                    return "blue";
                 }
+            }, {
+                type : "map.selector",
+                activeEvent : "click"
             }],
-            widget : {
+            widget : [{
                 type : "map.control",
                 align : "start",
                 orient : "top",
                 dx : 10,
                 dy : 10
-            }
+            }, {
+                type : "tooltip",
+                format : function(d) {
+                    return "123123";
+                },
+                brush : 1
+            }]
         });
 	})
 </script>

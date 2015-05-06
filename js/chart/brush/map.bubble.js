@@ -44,9 +44,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                     var c = chart.svg.circle({
                         r: size,
                         "fill": color,
-                        "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                        "fill-opacity": chart.theme("mapBubbleBackgroundOpacity"),
                         "stroke": color,
-                        "stroke-width": chart.theme("bubbleBorderWidth")
+                        "stroke-width": chart.theme("mapBubbleBorderWidth")
                     });
 
                     c.translate(xy.x, xy.y);
