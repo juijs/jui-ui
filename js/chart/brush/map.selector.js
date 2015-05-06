@@ -11,8 +11,9 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = chart.svg.group();
 
-			axis.map.group(function(i, path) {
-				var originFill = path.styles.fill || path.attributes.fill;
+			axis.map.each(function(i, obj) {
+				var path = obj.element,
+					originFill = path.styles.fill || path.attributes.fill;
 
 				path.hover(function() {
 					if(activePath == this) return;
@@ -35,8 +36,8 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 					path.on(brush.activeEvent, function () {
 						activePath = this;
 
-						axis.map.group(function (i, path) {
-							path.css({
+						axis.map.each(function (i, obj) {
+							obj.element.css({
 								fill: originFill
 							});
 						});

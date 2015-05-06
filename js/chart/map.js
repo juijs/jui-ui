@@ -8,7 +8,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
     var Map = function() {
         var self = this;
         var pathURI = null,
-            pathData = null,
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -17,10 +16,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         function loadArray(data) {
             var children = [];
-
-            if(!_.typeCheck("array", data)) {
-                data = [ data ];
-            }
 
             for(var i = 0, len = data.length; i < len; i++) {
                 if(_.typeCheck("object", data[i])) {
@@ -45,7 +40,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     // Set resource styles
                     elem.css(style);
 
-                    children.push(elem);
+                    children.push({
+                        element: elem,
+                        data: data[i]
+                    });
                 }
             }
 
@@ -68,7 +66,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(uri) {
-            pathData = [];
+            var pathData = [];
 
             $.ajax({
                 url: uri,
@@ -124,7 +122,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     if(_.typeCheck("number", x) && _.typeCheck("number", y)) {
                         return {
                             x: x,
-                            y: y
+                            y: y,
+                            data: list[i]
                         }
                     }
                 }
@@ -135,13 +134,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         function makePathGroup() {
             var group = self.chart.svg.group(),
-                list = (_.typeCheck("array", self.map.path)) ? loadArray(self.map.path) : loadPath(self.map.path);
+                list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                group.append(list[i]);
+                var path = list[i].element;
+                group.append(path);
 
-                if(list[i].attr("id")) {
-                    pathIndex[list[i].attr("id")] = list[i];
+                if(path.attr("id")) {
+                    pathIndex[path.attr("id")] = list[i];
                 }
             }
 
@@ -161,17 +161,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        this.scale = function(i) {
-            var path = null,
+        this.scale = function(id) {
+            if(!_.typeCheck("string", id)) return;
+
+            var path = pathIndex[id].element,
+                data = pathIndex[id].data,
                 x = null,
                 y = null,
                 pxy = getScaleXY();
-
-            if(_.typeCheck("integer", i)) {
-                path = pathGroup.children[i];
-            } else {
-                path = pathIndex[i];
-            }
 
             if(_.typeCheck("object", path)) {
                 if(path.attr("x") != null)
@@ -186,25 +183,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: x,
                 y: y,
-                element: path
+                element: path,
+                data: data
             }
         }
 
-        this.scale.group = function(callback) {
-            if(!_.typeCheck("function", callback)) return pathGroup;
-
+        this.scale.each = function(callback) {
             var self = this;
-            pathGroup.each(function() {
-                callback.apply(self, arguments);
-            });
-        }
 
-        this.scale.data = function(callback) {
-            if(!_.typeCheck("function", callback)) return pathData;
-
-            var self = this;
-            for(var i = 0, len = pathData.length; i < len; i++) {
-                callback.apply(self, [ i, pathData[i] ]);
+            for(var id in pathIndex) {
+                callback.apply(self, [ id, pathIndex[id] ]);
             }
         }
 

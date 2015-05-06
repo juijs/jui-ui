@@ -13109,7 +13109,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
     var Map = function() {
         var self = this;
         var pathURI = null,
-            pathData = null,
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -13118,10 +13117,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         function loadArray(data) {
             var children = [];
-
-            if(!_.typeCheck("array", data)) {
-                data = [ data ];
-            }
 
             for(var i = 0, len = data.length; i < len; i++) {
                 if(_.typeCheck("object", data[i])) {
@@ -13146,7 +13141,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     // Set resource styles
                     elem.css(style);
 
-                    children.push(elem);
+                    children.push({
+                        element: elem,
+                        data: data[i]
+                    });
                 }
             }
 
@@ -13169,7 +13167,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(uri) {
-            pathData = [];
+            var pathData = [];
 
             $.ajax({
                 url: uri,
@@ -13225,7 +13223,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     if(_.typeCheck("number", x) && _.typeCheck("number", y)) {
                         return {
                             x: x,
-                            y: y
+                            y: y,
+                            data: list[i]
                         }
                     }
                 }
@@ -13236,13 +13235,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
         function makePathGroup() {
             var group = self.chart.svg.group(),
-                list = (_.typeCheck("array", self.map.path)) ? loadArray(self.map.path) : loadPath(self.map.path);
+                list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                group.append(list[i]);
+                var path = list[i].element;
+                group.append(path);
 
-                if(list[i].attr("id")) {
-                    pathIndex[list[i].attr("id")] = list[i];
+                if(path.attr("id")) {
+                    pathIndex[path.attr("id")] = list[i];
                 }
             }
 
@@ -13262,17 +13262,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        this.scale = function(i) {
-            var path = null,
+        this.scale = function(id) {
+            if(!_.typeCheck("string", id)) return;
+
+            var path = pathIndex[id].element,
+                data = pathIndex[id].data,
                 x = null,
                 y = null,
                 pxy = getScaleXY();
-
-            if(_.typeCheck("integer", i)) {
-                path = pathGroup.children[i];
-            } else {
-                path = pathIndex[i];
-            }
 
             if(_.typeCheck("object", path)) {
                 if(path.attr("x") != null)
@@ -13287,25 +13284,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: x,
                 y: y,
-                element: path
+                element: path,
+                data: data
             }
         }
 
-        this.scale.group = function(callback) {
-            if(!_.typeCheck("function", callback)) return pathGroup;
-
+        this.scale.each = function(callback) {
             var self = this;
-            pathGroup.each(function() {
-                callback.apply(self, arguments);
-            });
-        }
 
-        this.scale.data = function(callback) {
-            if(!_.typeCheck("function", callback)) return pathData;
-
-            var self = this;
-            for(var i = 0, len = pathData.length; i < len; i++) {
-                callback.apply(self, [ i, pathData[i] ]);
+            for(var id in pathIndex) {
+                callback.apply(self, [ id, pathIndex[id] ]);
             }
         }
 
@@ -24479,8 +24467,9 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 		this.draw = function() {
 			var g = chart.svg.group();
 
-			axis.map.group(function(i, path) {
-				var originFill = path.styles.fill || path.attributes.fill;
+			axis.map.each(function(i, obj) {
+				var path = obj.element,
+					originFill = path.styles.fill || path.attributes.fill;
 
 				path.hover(function() {
 					if(activePath == this) return;
@@ -24503,8 +24492,8 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 					path.on(brush.activeEvent, function () {
 						activePath = this;
 
-						axis.map.group(function (i, path) {
-							path.css({
+						axis.map.each(function (i, obj) {
+							obj.element.css({
 								fill: originFill
 							});
 						});
@@ -26393,6 +26382,103 @@ jui.define("chart.widget.map.tooltip", [], function() {
      * @extends chart.widget.core
      */
     var MapTooltipWidget = function(chart, axis, widget) {
+        var self = this;
+        var g, text, rect;
+        var padding = 7, anchor = 7, textY = 14;
+
+        function getFormat(data) {
+            if(typeof(widget.format) == "function") {
+                return self.format(data);
+            }
+
+            return null;
+        }
+
+        function printTooltip(data) {
+            // ���� �����ǿ� ���� ���� ó��
+            if(widget.orient == "bottom") {
+                text.attr({ y: textY + anchor });
+            }
+
+            var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            elem.textContent = getFormat(data);
+
+            text.element.appendChild(elem);
+            text.attr({ "text-anchor": "middle" });
+        }
+
+        this.drawBefore = function() {
+            g = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                rect = chart.svg.polygon({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": 1
+                });
+
+                text = chart.text({
+                    "font-size": chart.theme("tooltipFontSize"),
+                    "fill": chart.theme("tooltipFontColor"),
+                    y: textY
+                });
+            });
+        }
+
+        this.draw = function() {
+            var isActive = false,
+                w, h;
+
+            axis.map.group(function(i, path) {
+
+            });
+
+            this.on("mouseover", function(obj, e) {
+                // ���� �ؽ�Ʈ ����
+                printTooltip(obj);
+
+                var size = text.size();
+                w = size.width + (padding * 2);
+                h = size.height + padding;
+
+                text.attr({ x: w / 2 });
+                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
+                g.attr({ visibility: "visible" });
+
+                isActive = true;
+            });
+
+            this.on("mousemove", function(obj, e) {
+                if(!isActive) return;
+
+                var x = e.bgX - (w / 2),
+                    y = e.bgY - h - anchor - (padding / 2);
+
+                if(widget.orient == "left" || widget.orient == "right") {
+                    y = e.bgY - (h / 2) - (padding / 2);
+                }
+
+                if(widget.orient == "left") {
+                    x = e.bgX - w - anchor;
+                } else if(widget.orient == "right") {
+                    x = e.bgX + anchor;
+                } else if(widget.orient == "bottom") {
+                    y = e.bgY + (anchor * 2);
+                }
+
+                g.translate(x, y);
+            });
+
+            this.on("mouseout", function(obj, e) {
+                if(!isActive) return;
+
+                g.attr({ visibility: "hidden" });
+                isActive = false;
+            });
+
+            return g;
+        }
     }
 
     return MapTooltipWidget;
