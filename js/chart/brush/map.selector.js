@@ -6,7 +6,8 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
-		var activePath = null;
+		var self = this,
+			activePath = null;
 
 		this.draw = function() {
 			var g = chart.svg.group();
@@ -51,6 +52,9 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 						});
 					});
 				}
+
+				// 커스텀 이벤트 설정
+				self.addEvent(path, obj.data);
 			});
 
 			return g;

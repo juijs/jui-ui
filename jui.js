@@ -24469,12 +24469,69 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
      */
 	var MapCoreBrush = function() {
 
-        /*/
-        this.drawAfter = function(g) {
-            this.axis.map.group().append(g);
-        }
-        /**/
+        /**
+         * @method addEvent
+         * �귯�� ������Ʈ�� ���� ���� �̺�Ʈ ����
+         *
+         * @param {Element} element
+         * @param {Integer} dataIndex
+         * @param {Integer} targetIndex
+         */
+        this.addEvent = function(elem, obj) {
+            var chart = this.chart;
 
+            elem.on("click", function(e) {
+                setMouseEvent(e);
+                chart.emit("click", [ obj, e ]);
+            });
+
+            elem.on("dblclick", function(e) {
+                setMouseEvent(e);
+                chart.emit("dblclick", [ obj, e ]);
+            });
+
+            elem.on("contextmenu", function(e) {
+                setMouseEvent(e);
+                chart.emit("rclick", [ obj, e ]);
+                e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                setMouseEvent(e);
+                chart.emit("mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                setMouseEvent(e);
+                chart.emit("mouseout", [ obj, e ]);
+            });
+
+            elem.on("mousemove", function(e) {
+                setMouseEvent(e);
+                chart.emit("mousemove", [ obj, e ]);
+            });
+
+            elem.on("mousedown", function(e) {
+                setMouseEvent(e);
+                chart.emit("mousedown", [ obj, e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                setMouseEvent(e);
+                chart.emit("mouseup", [ obj, e ]);
+            });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
+            }
+        }
 	}
 
 	return MapCoreBrush;
@@ -24487,7 +24544,8 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
-		var activePath = null;
+		var self = this,
+			activePath = null;
 
 		this.draw = function() {
 			var g = chart.svg.group();
@@ -24532,6 +24590,9 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 						});
 					});
 				}
+
+				// Ŀ���� �̺�Ʈ ����
+				self.addEvent(path, obj.data);
 			});
 
 			return g;
@@ -26404,7 +26465,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
 
     return MapControlWidget;
 }, "chart.widget.map.core");
-jui.define("chart.widget.map.tooltip", [], function() {
+jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.map.core
@@ -26416,24 +26477,27 @@ jui.define("chart.widget.map.tooltip", [], function() {
         var padding = 7, anchor = 7, textY = 14;
 
         function getFormat(data) {
-            if(typeof(widget.format) == "function") {
+            if(_.typeCheck("function", widget.format)) {
                 return self.format(data);
             }
 
-            return null;
+            return data.id;
         }
 
         function printTooltip(data) {
+            var msg = getFormat(data);
+
             // ���� �����ǿ� ���� ���� ó��
             if(widget.orient == "bottom") {
                 text.attr({ y: textY + anchor });
             }
 
-            var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-            elem.textContent = getFormat(data);
+            if(_.typeCheck("string", msg) && msg != "") {
+                text.text(getFormat(data));
+                text.attr({ "text-anchor": "middle" });
+            }
 
-            text.element.appendChild(elem);
-            text.attr({ "text-anchor": "middle" });
+            return msg;
         }
 
         this.drawBefore = function() {
@@ -26459,13 +26523,8 @@ jui.define("chart.widget.map.tooltip", [], function() {
             var isActive = false,
                 w, h;
 
-            axis.map.group(function(i, path) {
-
-            });
-
-            this.on("mouseover", function(obj, e) {
-                // ���� �ؽ�Ʈ ����
-                printTooltip(obj);
+            this.on("mouseover", function(data, e) {
+                if(!printTooltip(data)) return;
 
                 var size = text.size();
                 w = size.width + (padding * 2);
@@ -26478,7 +26537,7 @@ jui.define("chart.widget.map.tooltip", [], function() {
                 isActive = true;
             });
 
-            this.on("mousemove", function(obj, e) {
+            this.on("mousemove", function(data, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -26499,7 +26558,7 @@ jui.define("chart.widget.map.tooltip", [], function() {
                 g.translate(x, y);
             });
 
-            this.on("mouseout", function(obj, e) {
+            this.on("mouseout", function(data, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });
