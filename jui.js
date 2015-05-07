@@ -3424,6 +3424,7 @@ jui.define("util.svg.element", [], function() {
      * @constructor
      */
     var Element = function() {
+        var events = [];
 
         /**
          * 엘리먼트 생성 및 조회 메소드
@@ -3529,8 +3530,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
-
-            if (typeof attr == 'undefined' || !attr) return;
+            if(typeof attr == "undefined" || !attr) return;
 
             if(typeof attr == "string") {
                 return this.attributes[attr] || this.element.getAttribute(attr);
@@ -3584,27 +3584,52 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.on = function(type, handler) {
-            this.element.addEventListener(type, function(e) {
+            var callback = function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener(type, callback, false);
+            events.push({ type: type, callback: callback });
 
             return this;
         }
 
+        this.off = function(type) {
+            var newEvents = [];
+
+            for(var i = 0, len = events.length; i < len; i++) {
+                var event = events[i];
+
+                if(event.type != type) {
+                    newEvents.push(event);
+                } else {
+                    this.element.removeEventListener(type, event.callback, false);
+                }
+            }
+
+            events = newEvents;
+            return this;
+        }
+
         this.hover = function(overHandler, outHandler) {
-            this.element.addEventListener("mouseover", function(e) {
+            var callback1 = function(e) {
                 if(typeof(overHandler) == "function") {
                     overHandler.call(this, e);
                 }
-            }, false);
+            }
 
-            this.element.addEventListener("mouseout", function(e) {
+            var callback2 = function(e) {
                 if(typeof(outHandler) == "function") {
                     outHandler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener("mouseover", callback1, false);
+            this.element.addEventListener("mouseout", callback2, false);
+            events.push({ type: "mouseover", callback: callback1 });
+            events.push({ type: "mouseout", callback: callback2 });
 
             return this;
         }
@@ -24471,6 +24496,10 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				var path = obj.element,
 					originFill = path.styles.fill || path.attributes.fill;
 
+				// �� ���� ȿ�� �̺�Ʈ ����
+				path.off("mouseover").off("mouseout");
+
+				// �� ���� ȿ�� �̺�Ʈ
 				path.hover(function() {
 					if(activePath == this) return;
 
@@ -24489,7 +24518,7 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				if(brush.activeEvent != null) {
 					path.attr({ cursor: "pointer" });
 
-					path.on(brush.activeEvent, function () {
+					path.off(brush.activeEvent).on(brush.activeEvent, function () {
 						activePath = this;
 
 						axis.map.each(function (i, obj) {

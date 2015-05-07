@@ -15,6 +15,10 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				var path = obj.element,
 					originFill = path.styles.fill || path.attributes.fill;
 
+				// 맵 오버 효과 이벤트 제거
+				path.off("mouseover").off("mouseout");
+
+				// 맵 오버 효과 이벤트
 				path.hover(function() {
 					if(activePath == this) return;
 
@@ -33,7 +37,7 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				if(brush.activeEvent != null) {
 					path.attr({ cursor: "pointer" });
 
-					path.on(brush.activeEvent, function () {
+					path.off(brush.activeEvent).on(brush.activeEvent, function () {
 						activePath = this;
 
 						axis.map.each(function (i, obj) {
