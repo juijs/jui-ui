@@ -6,56 +6,45 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
-		var self = this,
-			activePath = null;
+		var activePath = null;
 
 		this.draw = function() {
-			var g = chart.svg.group();
+			var g = chart.svg.group(),
+				originFill = null;
 
-			axis.map.each(function(i, obj) {
-				var path = obj.element,
-					originFill = path.styles.fill || path.attributes.fill;
+			// 맵 오버 효과 이벤트
+			this.on("map.mouseover", function(obj, e) {
+				if(activePath == obj.element) return;
 
-				// 맵 오버 효과 이벤트 제거
-				path.off("mouseover").off("mouseout");
+				originFill = obj.element.styles.fill || obj.element.attributes.fill;
+				obj.element.css({
+					fill: chart.theme("mapSelectorColor")
+				});
+			});
+			this.on("map.mouseout", function(obj, e) {
+				if(activePath == obj.element) return;
 
-				// 맵 오버 효과 이벤트
-				path.hover(function() {
-					if(activePath == this) return;
+				obj.element.css({
+					fill: originFill
+				});
+			});
 
-					$(this).css({
-						fill: chart.theme("mapSelectorColor")
+			// 맵 패스 액티브 이벤트
+			if(brush.activeEvent != null) {
+				this.on(brush.activeEvent, function(obj, e) {
+					activePath = obj.element;
+
+					axis.map.each(function (i, obj) {
+						obj.element.css({
+							fill: originFill
+						});
 					});
-				}, function() {
-					if(activePath == this) return;
 
-					$(this).css({
-						fill: originFill
+					obj.element.css({
+						fill: chart.theme("mapSelectorActiveColor")
 					});
 				});
-
-				// 맵 패스 액티브 이벤트
-				if(brush.activeEvent != null) {
-					path.attr({ cursor: "pointer" });
-
-					path.off(brush.activeEvent).on(brush.activeEvent, function () {
-						activePath = this;
-
-						axis.map.each(function (i, obj) {
-							obj.element.css({
-								fill: originFill
-							});
-						});
-
-						$(this).css({
-							fill: chart.theme("mapSelectorActiveColor")
-						});
-					});
-				}
-
-				// 커스텀 이벤트 설정
-				self.addEvent(path, obj.data);
-			});
+			}
 
 			return g;
 		}

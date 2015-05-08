@@ -56,8 +56,8 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
             var isActive = false,
                 w, h;
 
-            this.on("mouseover", function(data, e) {
-                if(!printTooltip(data)) return;
+            this.on("map.mouseover", function(obj, e) {
+                if(!printTooltip(obj.data)) return;
 
                 var size = text.size();
                 w = size.width + (padding * 2);
@@ -70,7 +70,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 isActive = true;
             });
 
-            this.on("mousemove", function(data, e) {
+            this.on("map.mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -91,7 +91,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 g.translate(x, y);
             });
 
-            this.on("mouseout", function(data, e) {
+            this.on("map.mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });

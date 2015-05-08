@@ -138,6 +138,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             for(var i = 0, len = list.length; i < len; i++) {
                 var path = list[i].element;
+
+                addEvent(path, list[i]);
                 group.append(path);
 
                 if(path.attr("id")) {
@@ -158,6 +160,69 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: px + pathX,
                 y: py + pathY
+            }
+        }
+
+        /**
+         * @method addEvent
+         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param {Element} element
+         * @param {Object} obj
+         */
+        function addEvent(elem, obj) {
+            var chart = self.chart;
+
+            elem.on("click", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.click", [ obj, e ]);
+            });
+
+            elem.on("dblclick", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.dblclick", [ obj, e ]);
+            });
+
+            elem.on("contextmenu", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.rclick", [ obj, e ]);
+                e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseout", [ obj, e ]);
+            });
+
+            elem.on("mousemove", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousemove", [ obj, e ]);
+            });
+
+            elem.on("mousedown", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousedown", [ obj, e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseup", [ obj, e ]);
+            });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
             }
         }
 

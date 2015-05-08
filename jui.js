@@ -13264,6 +13264,8 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
             for(var i = 0, len = list.length; i < len; i++) {
                 var path = list[i].element;
+
+                addEvent(path, list[i]);
                 group.append(path);
 
                 if(path.attr("id")) {
@@ -13284,6 +13286,69 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: px + pathX,
                 y: py + pathY
+            }
+        }
+
+        /**
+         * @method addEvent
+         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param {Element} element
+         * @param {Object} obj
+         */
+        function addEvent(elem, obj) {
+            var chart = self.chart;
+
+            elem.on("click", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.click", [ obj, e ]);
+            });
+
+            elem.on("dblclick", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.dblclick", [ obj, e ]);
+            });
+
+            elem.on("contextmenu", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.rclick", [ obj, e ]);
+                e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseout", [ obj, e ]);
+            });
+
+            elem.on("mousemove", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousemove", [ obj, e ]);
+            });
+
+            elem.on("mousedown", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousedown", [ obj, e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseup", [ obj, e ]);
+            });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
             }
         }
 
@@ -24468,70 +24533,6 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
 	var MapCoreBrush = function() {
-
-        /**
-         * @method addEvent
-         * �귯�� ������Ʈ�� ���� ���� �̺�Ʈ ����
-         *
-         * @param {Element} element
-         * @param {Integer} dataIndex
-         * @param {Integer} targetIndex
-         */
-        this.addEvent = function(elem, obj) {
-            var chart = this.chart;
-
-            elem.on("click", function(e) {
-                setMouseEvent(e);
-                chart.emit("click", [ obj, e ]);
-            });
-
-            elem.on("dblclick", function(e) {
-                setMouseEvent(e);
-                chart.emit("dblclick", [ obj, e ]);
-            });
-
-            elem.on("contextmenu", function(e) {
-                setMouseEvent(e);
-                chart.emit("rclick", [ obj, e ]);
-                e.preventDefault();
-            });
-
-            elem.on("mouseover", function(e) {
-                setMouseEvent(e);
-                chart.emit("mouseover", [ obj, e ]);
-            });
-
-            elem.on("mouseout", function(e) {
-                setMouseEvent(e);
-                chart.emit("mouseout", [ obj, e ]);
-            });
-
-            elem.on("mousemove", function(e) {
-                setMouseEvent(e);
-                chart.emit("mousemove", [ obj, e ]);
-            });
-
-            elem.on("mousedown", function(e) {
-                setMouseEvent(e);
-                chart.emit("mousedown", [ obj, e ]);
-            });
-
-            elem.on("mouseup", function(e) {
-                setMouseEvent(e);
-                chart.emit("mouseup", [ obj, e ]);
-            });
-
-            function setMouseEvent(e) {
-                var pos = $(chart.root).offset(),
-                    offsetX = e.pageX - pos.left,
-                    offsetY = e.pageY - pos.top;
-
-                e.bgX = offsetX;
-                e.bgY = offsetY;
-                e.chartX = offsetX - chart.padding("left");
-                e.chartY = offsetY - chart.padding("top");
-            }
-        }
 	}
 
 	return MapCoreBrush;
@@ -24544,56 +24545,45 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
-		var self = this,
-			activePath = null;
+		var activePath = null;
 
 		this.draw = function() {
-			var g = chart.svg.group();
+			var g = chart.svg.group(),
+				originFill = null;
 
-			axis.map.each(function(i, obj) {
-				var path = obj.element,
-					originFill = path.styles.fill || path.attributes.fill;
+			// �� ���� ȿ�� �̺�Ʈ
+			this.on("map.mouseover", function(obj, e) {
+				if(activePath == obj.element) return;
 
-				// �� ���� ȿ�� �̺�Ʈ ����
-				path.off("mouseover").off("mouseout");
+				originFill = obj.element.styles.fill || obj.element.attributes.fill;
+				obj.element.css({
+					fill: chart.theme("mapSelectorColor")
+				});
+			});
+			this.on("map.mouseout", function(obj, e) {
+				if(activePath == obj.element) return;
 
-				// �� ���� ȿ�� �̺�Ʈ
-				path.hover(function() {
-					if(activePath == this) return;
+				obj.element.css({
+					fill: originFill
+				});
+			});
 
-					$(this).css({
-						fill: chart.theme("mapSelectorColor")
+			// �� �н� ��Ƽ�� �̺�Ʈ
+			if(brush.activeEvent != null) {
+				this.on(brush.activeEvent, function(obj, e) {
+					activePath = obj.element;
+
+					axis.map.each(function (i, obj) {
+						obj.element.css({
+							fill: originFill
+						});
 					});
-				}, function() {
-					if(activePath == this) return;
 
-					$(this).css({
-						fill: originFill
+					obj.element.css({
+						fill: chart.theme("mapSelectorActiveColor")
 					});
 				});
-
-				// �� �н� ��Ƽ�� �̺�Ʈ
-				if(brush.activeEvent != null) {
-					path.attr({ cursor: "pointer" });
-
-					path.off(brush.activeEvent).on(brush.activeEvent, function () {
-						activePath = this;
-
-						axis.map.each(function (i, obj) {
-							obj.element.css({
-								fill: originFill
-							});
-						});
-
-						$(this).css({
-							fill: chart.theme("mapSelectorActiveColor")
-						});
-					});
-				}
-
-				// Ŀ���� �̺�Ʈ ����
-				self.addEvent(path, obj.data);
-			});
+			}
 
 			return g;
 		}
@@ -26523,8 +26513,8 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
             var isActive = false,
                 w, h;
 
-            this.on("mouseover", function(data, e) {
-                if(!printTooltip(data)) return;
+            this.on("map.mouseover", function(obj, e) {
+                if(!printTooltip(obj.data)) return;
 
                 var size = text.size();
                 w = size.width + (padding * 2);
@@ -26537,7 +26527,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 isActive = true;
             });
 
-            this.on("mousemove", function(data, e) {
+            this.on("map.mousemove", function(obj, e) {
                 if(!isActive) return;
 
                 var x = e.bgX - (w / 2),
@@ -26558,7 +26548,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 g.translate(x, y);
             });
 
-            this.on("mouseout", function(data, e) {
+            this.on("map.mouseout", function(obj, e) {
                 if(!isActive) return;
 
                 g.attr({ visibility: "hidden" });
