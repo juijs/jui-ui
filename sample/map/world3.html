@@ -53,7 +53,9 @@
                     path : "resource/worldFree.svg",
                     width : 950,
                     height : 620,
-                    scale : 2
+                    scale : 2.5,
+                    viewX : -200,
+                    viewY : -300
                 },
                 data : d
             }],
@@ -68,26 +70,21 @@
 
                     return "blue";
                 }
-            }, {
-                type : "map.selector",
-                activeEvent : "map.click"
             }],
             widget : [{
                 type : "map.control",
                 align : "start",
                 orient : "top",
                 dx : 10,
-                dy : 10
-            }, {
-                type : "map.tooltip",
-                format : function(d) {
-                    if(d.id == "south korea") {
-                        return "Korea";
-                    }
-
-                    return d.id;
-                }
-            }]
+                dy : 10,
+                minScale : 2,
+                maxScale : 4
+            }],
+            style : {
+                mapPathBackgroundColor : "#FFCC00",
+                mapPathBackgroundOpacity : 0.4,
+                mapControlButtonColor : "#FFCC00"
+            }
         });
 	})
 </script>
