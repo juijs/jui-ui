@@ -11,36 +11,46 @@
 <div id="chart"></div>
 
 <script id="script_code">
-    var d = [{
-        id: "south korea",
-        x: 790,
-        y: 205,
-        value: 10
-    }, {
-        id: "china",
-        x: 730,
-        y: 220,
-        value: 100
-    }, {
+    var data = [{
         id: "usa",
-        x: 195,
-        y: 200,
-        value: 70
+        airport: "small"
+    }, {
+        id: "britain",
+        routes: [ "usa", "iceland", "sweden", "lithuania", "portugal", "spain", "italy", "ukraine" ],
+        airport: "large"
+    }, {
+        id: "iceland",
+        airport: "small"
+    }, {
+        id: "portugal",
+        airport: "small"
+    }, {
+        id: "spain",
+        airport: "small"
     }, {
         id: "france",
-        x: 460,
-        y: 195,
-        value: 50
+        airport: "small"
     }, {
-        id: "brazil",
-        x: 310,
-        y: 370,
-        value: 80
+        id: "sweden",
+        airport: "small"
     }, {
-        id: "australia",
-        x: 820,
-        y: 435,
-        value: 20
+        id: "ukraine",
+        airport: "small"
+    }, {
+        id: "italy",
+        airport: "small"
+    }, {
+        id: "ireland",
+        airport: "small"
+    }, {
+        id: "norway",
+        airport: "small"
+    }, {
+        id: "greece",
+        airport: "small"
+    }, {
+        id: "lithuania",
+        airport: "large"
     }];
 
     jui.ready([ "chart.builder" ], function(chart) {
@@ -50,26 +60,17 @@
             padding : 0,
             axis : [{
                 map : {
-                    path : "resource/worldFree.svg",
+                    path : "resource/worldFree2.svg",
                     width : 950,
                     height : 620,
                     scale : 2.5,
                     viewX : -200,
                     viewY : -300
                 },
-                data : d
+                data : data
             }],
             brush : [{
-                type : "map.bubble",
-                color : function(d) {
-                    if(d.value > 70) {
-                        return "red";
-                    } else if(d.value > 35) {
-                        return "orange";
-                    }
-
-                    return "blue";
-                }
+                type : "map.flightroute"
             }],
             widget : [{
                 type : "map.control",

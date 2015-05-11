@@ -191,6 +191,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {*}
          */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
+            // 최소/최대 값이 같을 경우 처리
+            minValue = (minValue == maxValue) ? 0 : minValue;
+
             var range = maxRadius - minRadius,
                 tg = range * getPer();
 

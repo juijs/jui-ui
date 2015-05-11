@@ -14,7 +14,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                 dataList = self.listData();
 
             for(var i = 0; i < dataList.length; i++) {
-                var value = axis.getValue(dataList[i], "value");
+                var value = axis.getValue(dataList[i], "value", 0);
 
                 min = (i == 0) ? value : Math.min(value, min);
                 max = (i == 0) ? value : Math.max(value, max);
