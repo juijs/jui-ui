@@ -241,15 +241,26 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.5,
 
+        // Map Common
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
         mapPathBorderWidth : 0,
         mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff",
-        mapBubbleBackgroundOpacity : 0.5,
-        mapBubbleBorderWidth : 1
+        mapControlScrollLineColor : "#fff"
     }
 });

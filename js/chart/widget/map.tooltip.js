@@ -17,16 +17,15 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
             return data.id;
         }
 
-        function printTooltip(data) {
-            var msg = getFormat(data);
+        function printTooltip(obj) {
+            var msg = getFormat(obj);
 
-            // 위젯 포지션에 따른 별도 처리
             if(widget.orient == "bottom") {
                 text.attr({ y: textY + anchor });
             }
 
             if(_.typeCheck("string", msg) && msg != "") {
-                text.text(getFormat(data));
+                text.text(msg);
                 text.attr({ "text-anchor": "middle" });
             }
 
@@ -57,7 +56,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 w, h;
 
             this.on("map.mouseover", function(obj, e) {
-                if(!printTooltip(obj.data)) return;
+                if(!printTooltip(obj)) return;
 
                 var size = text.size();
                 w = size.width + (padding * 2);

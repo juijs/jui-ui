@@ -13167,7 +13167,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     elem.css(style);
 
                     children.push({
-                        element: elem,
+                        path: elem,
                         data: data[i]
                     });
                 }
@@ -13210,7 +13210,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                             }
                         });
 
-                        if (_.typeCheck("string", obj["id"]) && !obj["position"]) {
+                        if (_.typeCheck("string", obj["id"])) {
                             var pos = getPositionInData(obj["id"]);
 
                             if (pos != null) {
@@ -13263,7 +13263,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                var path = list[i].element;
+                var path = list[i].path;
 
                 addEvent(path, list[i]);
                 group.append(path);
@@ -13355,7 +13355,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale = function(id) {
             if(!_.typeCheck("string", id)) return;
 
-            var path = pathIndex[id].element,
+            var path = pathIndex[id].path,
                 data = pathIndex[id].data,
                 x = null,
                 y = null,
@@ -13374,7 +13374,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: x,
                 y: y,
-                element: path,
+                path: path,
                 data: data
             }
         }
@@ -14977,18 +14977,27 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundOpacity : 0.5,
 
+        // Map Common
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
         mapPathBorderWidth : 0,
         mapPathBorderOpacity : 0,
-        mapControlButtonColor : "#3994e2",
-        mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff",
+        // Map Brushes
         mapBubbleBackgroundOpacity : 0.5,
         mapBubbleBorderWidth : 1,
         mapSelectorColor : "#5a73db",
-        mapSelectorActiveColor : "#CC0000"
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -15152,16 +15161,27 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.8,
 
+        // Map Common
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
         mapPathBorderWidth : 0,
         mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff",
-        mapBubbleBackgroundOpacity : 0.5,
-        mapBubbleBorderWidth : 1
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -15323,16 +15343,27 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonBackgroundColor : "white",
         crossBalloonBackgroundOpacity : 1,
 
+        // Map Common
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
         mapPathBorderWidth : 0,
         mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff",
-        mapBubbleBackgroundOpacity : 0.5,
-        mapBubbleBorderWidth : 1
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -15489,16 +15520,27 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonBackgroundColor : "black",
 		crossBalloonBackgroundOpacity : 0.7,
 
+		// Map Common
 		mapPathBackgroundColor : "#67B7DC",
 		mapPathBackgroundOpacity : 1,
 		mapPathBorderColor : "white",
 		mapPathBorderWidth : 0,
 		mapPathBorderOpacity : 0,
+		// Map Brushes
+		mapBubbleBackgroundOpacity : 0.5,
+		mapBubbleBorderWidth : 1,
+		mapSelectorColor : "#5a73db",
+		mapSelectorActiveColor : "#CC0000",
+		mapFlightRouteAirportSmallColor : "#CC0000",
+		mapFlightRouteAirportLargeColor : "#000",
+		mapFlightRouteAirportBorderWidth : 2,
+		mapFlightRouteAirportRadius : 8,
+		mapFlightRouteLineBorderColor : "red",
+		mapFlightRouteLineBorderWidth : 1,
+		// Map Widgets
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
-		mapControlScrollLineColor : "#fff",
-		mapBubbleBackgroundOpacity : 0.5,
-		mapBubbleBorderWidth : 1
+		mapControlScrollLineColor : "#fff"
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -15744,16 +15786,27 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.5,
 
+        // Map Common
         mapPathBackgroundColor : "#67B7DC",
         mapPathBackgroundOpacity : 1,
         mapPathBorderColor : "white",
         mapPathBorderWidth : 0,
         mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff",
-        mapBubbleBackgroundOpacity : 0.5,
-        mapBubbleBorderWidth : 1
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -24716,23 +24769,23 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {
         var g;
+        var smallColor, largeColor, borderWidth, lineColor, lineWidth, outerSize;
+        var smallRate = 0.4, largeRate = 1.33;
 
         this.drawAirport = function(type, xy) {
-            var color = (type == "large") ? "black" : "#CC0000",
-                outerSize = 8,
-                innerSize = outerSize * 0.4,
-                borderWidth = 2;
+            var color = (type == "large") ? largeColor : smallColor,
+                innerSize = outerSize * smallRate;
 
             var outer = chart.svg.circle({
-                r: (type == "large") ? outerSize * 1.33 : outerSize,
-                "stroke-width": (type == "large") ? borderWidth * 1.33 : borderWidth,
+                r: (type == "large") ? outerSize * largeRate : outerSize,
+                "stroke-width": (type == "large") ? borderWidth * largeRate : borderWidth,
                 "fill": "transparent",
                 "fill-opacity": 0,
                 "stroke": color
             }).translate(xy.x, xy.y);
 
             var inner = chart.svg.circle({
-                r: (type == "large") ? innerSize * 1.33 : innerSize,
+                r: (type == "large") ? innerSize * largeRate : innerSize,
                 "stroke-width": 0,
                 "fill": color
             }).translate(xy.x, xy.y);
@@ -24747,8 +24800,8 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
                 y1: xy.y,
                 x2: target.x,
                 y2: target.y,
-                stroke: "red",
-                "stroke-width": 1
+                stroke: lineColor,
+                "stroke-width": lineWidth
             });
 
             g.append(line);
@@ -24756,6 +24809,12 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
         this.drawBefore = function() {
             g = chart.svg.group();
+            smallColor = chart.theme("mapFlightRouteAirportSmallColor");
+            largeColor = chart.theme("mapFlightRouteAirportLargeColor");
+            borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
+            outerSize = chart.theme("mapFlightRouteAirportRadius");
+            lineColor = chart.theme("mapFlightRouteLineBorderColor");
+            lineWidth = chart.theme("mapFlightRouteLineBorderWidth");
         }
 
 		this.draw = function() {
@@ -24783,9 +24842,6 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
     MapFlightRouteBrush.setup = function() {
         return {
-            color : null,
-            min : 10,
-            max : 30
         }
     }
 
@@ -26562,16 +26618,15 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
             return data.id;
         }
 
-        function printTooltip(data) {
-            var msg = getFormat(data);
+        function printTooltip(obj) {
+            var msg = getFormat(obj);
 
-            // ���� �����ǿ� ���� ���� ó��
             if(widget.orient == "bottom") {
                 text.attr({ y: textY + anchor });
             }
 
             if(_.typeCheck("string", msg) && msg != "") {
-                text.text(getFormat(data));
+                text.text(msg);
                 text.attr({ "text-anchor": "middle" });
             }
 
@@ -26602,7 +26657,7 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
                 w, h;
 
             this.on("map.mouseover", function(obj, e) {
-                if(!printTooltip(obj.data)) return;
+                if(!printTooltip(obj)) return;
 
                 var size = text.size();
                 w = size.width + (padding * 2);

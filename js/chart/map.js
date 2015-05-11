@@ -41,7 +41,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                     elem.css(style);
 
                     children.push({
-                        element: elem,
+                        path: elem,
                         data: data[i]
                     });
                 }
@@ -79,15 +79,16 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         var obj = {};
 
                         $.each(this.attributes, function () {
-                            if (this.specified && isLoadAttribute(this.name)) {
+                            if(this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
 
-                        if (_.typeCheck("string", obj["id"]) && !obj["position"]) {
+                        // 실제 데이터의 x, y 추가
+                        if(_.typeCheck("string", obj["id"])) {
                             var pos = getPositionInData(obj["id"]);
 
-                            if (pos != null) {
+                            if(pos != null) {
                                 obj["x"] = pos.x;
                                 obj["y"] = pos.y;
                             }
@@ -137,7 +138,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                var path = list[i].element;
+                var path = list[i].path;
 
                 addEvent(path, list[i]);
                 group.append(path);
@@ -229,7 +230,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale = function(id) {
             if(!_.typeCheck("string", id)) return;
 
-            var path = pathIndex[id].element,
+            var path = pathIndex[id].path,
                 data = pathIndex[id].data,
                 x = null,
                 y = null,
@@ -248,7 +249,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return {
                 x: x,
                 y: y,
-                element: path,
+                path: path,
                 data: data
             }
         }
