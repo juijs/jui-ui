@@ -60,7 +60,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var draw = this.grid || this.brush || this.widget;
+                var draw = this.grid || this.brush || this.widget || this.map;
 
                 if(draw.animate !== false) {
                     this.drawAnimate(obj);
@@ -142,6 +142,34 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             }
 
             return points.join(" ");
+        }
+
+        /**
+         * @method on
+         *
+         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수
+         *
+         * @param {String} type event name
+         * @param {Function} callback
+         * @return {*}
+         */
+        this.on = function(type, callback) {
+            var self = this;
+
+            return this.chart.on(type, function() {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
+                    var axis = self.chart.axis(self.axis.index),
+                        e = arguments[0];
+
+                    if (_.typeCheck("object", axis)) {
+                        if (arguments[1] == self.axis.index) {
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
+            }, "render");
         }
 	}
 

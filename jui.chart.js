@@ -442,8 +442,8 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
-			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
+			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
@@ -688,7 +688,6 @@
 		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {
-
 				if(typeof(type) != "string") return false;
 
 				if (type == "string") {
@@ -894,7 +893,7 @@
                         data[keys[j]] = tmpArr[j];
 
                         // '"' 로 감싸져있는 문자열은 '"' 제거
-                        if(tmpArr[j].startsWith('"') && tmpArr[j].endsWith('"')) {
+                        if(this.startsWith(tmpArr[j], '"') && this.endsWith(tmpArr[j], '"')) {
                             data[keys[j]] = tmpArr[j].split('"').join('');
                         } else {
                             data[keys[j]] = tmpArr[j];
@@ -943,6 +942,7 @@
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
+
 		/**
 		 * @method dateFormat
 		 *
@@ -1077,25 +1077,23 @@
          * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
 		 */
 		loop : function(total, context) {
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+			var start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, first, 1); first++;
-					if (second < secondMax && second < end) { callback.call(context, second, 2); second++; }
-					if (third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
+
+					if(second < secondMax && second < end) { callback.call(context, second, 2); second++; }
+					if(third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
+					if(fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
+					if(fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
 				}
 			};
-
 		},
         
 		/**
@@ -1109,16 +1107,14 @@
          * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
 		 */
 		loopArray : function(data, context) {
-            var total = data.length;
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+            var total = data.length,
+				start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, data[first], first, 1); first++;
@@ -1143,11 +1139,10 @@
          * @return {Object} 생성된 인덱스  
          */
         makeIndex : function(data, keyField) {
-            var list = {};
+            var list = {},
+				func = this.loopArray(data);
             
-            var func = this.loopArray(data);
-            
-            func(function(d, i, group) {
+            func(function(d, i) {
                 var value = d[keyField];
                 
                 if (typeof list[value] == 'undefined') {
@@ -1155,12 +1150,45 @@
                 }
                 
                 list[value].push(i);
-                
-            })
+            });
             
             return list; 
-        }
+        },
 
+		/**
+		 * @method startsWith
+		 * Check that it matches the starting string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		startsWith : function(string, searchString, position) {
+			position = position || 0;
+
+			return string.lastIndexOf(searchString, position) === position;
+		},
+
+		/**
+		 * @method endsWith
+		 * Check that it matches the end of a string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		endsWith : function(string, searchString, position) {
+			var subjectString = string;
+
+			if(position === undefined || position > subjectString.length) {
+				position = subjectString.length;
+			}
+
+			position -= searchString.length;
+			var lastIndex = subjectString.indexOf(searchString, position);
+
+			return lastIndex !== -1 && lastIndex === position;
+		}
 	}
 
 
@@ -1314,7 +1342,7 @@
          * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} parent 상속받을 클래스
          */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -2289,6 +2317,20 @@ jui.define("util.math", [], function() {
 				x : x * Math.cos(radian) - y * Math.sin(radian),
 				y : x * Math.sin(radian) + y * Math.cos(radian)
 			}
+		},
+
+		resize : function(maxWidth, maxHeight, objectWidth, objectHeight) {
+			var ratio = objectHeight / objectWidth;
+
+			if (objectWidth >= maxWidth && ratio <= 1) {
+				objectWidth = maxWidth;
+				objectHeight = maxHeight * ratio;
+			} else if (objectHeight >= maxHeight) {
+				objectHeight = maxHeight;
+				objectWidth = maxWidth / ratio;
+			}
+
+			return { width : objectWidth, height : objectHeight};
 		},
 
 		/**
@@ -3382,6 +3424,7 @@ jui.define("util.svg.element", [], function() {
      * @constructor
      */
     var Element = function() {
+        var events = [];
 
         /**
          * 엘리먼트 생성 및 조회 메소드
@@ -3487,8 +3530,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
-
-            if (typeof attr == 'undefined' || !attr) return;
+            if(typeof attr == "undefined" || !attr) return;
 
             if(typeof attr == "string") {
                 return this.attributes[attr] || this.element.getAttribute(attr);
@@ -3542,27 +3584,52 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.on = function(type, handler) {
-            this.element.addEventListener(type, function(e) {
+            var callback = function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener(type, callback, false);
+            events.push({ type: type, callback: callback });
 
             return this;
         }
 
+        this.off = function(type) {
+            var newEvents = [];
+
+            for(var i = 0, len = events.length; i < len; i++) {
+                var event = events[i];
+
+                if(event.type != type) {
+                    newEvents.push(event);
+                } else {
+                    this.element.removeEventListener(type, event.callback, false);
+                }
+            }
+
+            events = newEvents;
+            return this;
+        }
+
         this.hover = function(overHandler, outHandler) {
-            this.element.addEventListener("mouseover", function(e) {
+            var callback1 = function(e) {
                 if(typeof(overHandler) == "function") {
                     overHandler.call(this, e);
                 }
-            }, false);
+            }
 
-            this.element.addEventListener("mouseout", function(e) {
+            var callback2 = function(e) {
                 if(typeof(outHandler) == "function") {
                     outHandler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener("mouseover", callback1, false);
+            this.element.addEventListener("mouseout", callback2, false);
+            events.push({ type: "mouseover", callback: callback1 });
+            events.push({ type: "mouseout", callback: callback2 });
 
             return this;
         }
@@ -3621,7 +3688,13 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
      * @constructor
      */
     var TransElement = function() {
-        var orders = {};
+        var orders = {
+            translate: null,
+            scale: null,
+            rotate: null,
+            skew: null,
+            matrix: null
+        };
 
         function applyOrders(self) {
             var orderArr = [];
@@ -4864,7 +4937,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             // Call drawAnimate method (All)
             if(_.typeCheck("function", this.drawAnimate)) {
-                var draw = this.grid || this.brush || this.widget;
+                var draw = this.grid || this.brush || this.widget || this.map;
 
                 if(draw.animate !== false) {
                     this.drawAnimate(obj);
@@ -4947,6 +5020,34 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 
             return points.join(" ");
         }
+
+        /**
+         * @method on
+         *
+         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수
+         *
+         * @param {String} type event name
+         * @param {Function} callback
+         * @return {*}
+         */
+        this.on = function(type, callback) {
+            var self = this;
+
+            return this.chart.on(type, function() {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", self.axis.index)) {
+                    var axis = self.chart.axis(self.axis.index),
+                        e = arguments[0];
+
+                    if (_.typeCheck("object", axis)) {
+                        if (arguments[1] == self.axis.index) {
+                            callback.apply(self, [ e ]);
+                        }
+                    }
+                } else {
+                    callback.apply(self, arguments);
+                }
+            }, "render");
+        }
 	}
 
     Draw.setup = function() {
@@ -4961,7 +5062,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
 	return Draw;
 });
 
-jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
+jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.axis
@@ -4975,9 +5076,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      *
      */
     var Axis = function(chart, originAxis, cloneAxis) {
-        var self = this;
-        var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null;
+        var self = this,
+            map = null;
+        var _area = {},
+            _padding = {},
+            _clipId = "",
+            _clipPath = null,
+            _clipRectId = "",
+            _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -5058,6 +5164,38 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             return elem.scale;
         }
+
+        var mapObj = null;
+
+        function drawMapType(axis, k) {
+            if(k == "map" && !_.typeCheck("object", axis[k])) return null;
+
+            // 축 위치 설정
+            axis[k] = axis[k]  || {};
+
+            var Map = jui.include("chart.map");
+
+            // 맵 기본 옵션과 사용자 옵션을 합침
+            jui.defineOptions(Map, axis[k]);
+
+            // 맵 객체는 한번만 생성함
+            if(map == null) {
+                map = new Map(chart, axis, axis[k]);
+            }
+
+            // 맵 기본 프로퍼티 설정
+            map.chart = chart;
+            map.axis = axis;
+            map.map = axis[k];
+
+            // 그리드 별 위치 선정하기
+            var elem = map.render();
+            elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
+            
+            return elem.scale;
+        }
         
         function setScreen(pNo) {
             var dataList = self.origin,
@@ -5096,6 +5234,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function createClipPath() {
+            // clippath with x, y
             if (_clipPath) {
                 _clipPath.remove();
                 _clipPath = null;
@@ -5113,8 +5252,28 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                     height: _area.height
                 });
             });
-
             chart.appendDefs(_clipPath);
+
+            // clippath without x, y
+            if (_clipRect) {
+                _clipRect.remove();
+                _clipRect = null;
+            }
+
+            _clipRectId = _.createId("clip-rect-id-");
+
+            _clipRect = chart.svg.clipPath({
+                id: _clipRectId
+            }, function() {
+                chart.svg.rect({
+                    x: 0,
+                    y: 0,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipRect);
         }
 
         function checkAxisPoint(e) {
@@ -5252,7 +5411,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             _.extend(this, {
                 x : options.x,
                 y : options.y,
-                c : options.c
+                c : options.c,
+                map : options.map
             });
 
             // 패딩 옵션 설정
@@ -5266,11 +5426,13 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 x: 0, y: 0 , width: area.width, height: area.height
             }, true), _padding);
 
+
+            createClipPath();
+
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
-            
-            createClipPath();
+            this.map = drawMapType(this, "map");
         }
 
         /**
@@ -5306,7 +5468,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             var obj = {
                 area: _area,
                 padding: _padding,
-                clipId: _clipId
+                clipId: _clipId,
+                clipRectId : _clipRectId
             };
 
             return obj[type] || cloneAxis[type];
@@ -5323,6 +5486,24 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
+        }
+
+        /**
+         * @method updateMap
+         *
+         * map 정보를 업데이트 한다.
+         *
+         * @param {Object} map
+         * @param {Array} data
+         */
+        this.updateMap = function(map, data) {
+            _.extend(originAxis["map"], map);
+
+            if(_.typeCheck("array", data)) {
+                this.update(data);
+            } else {
+                if(chart.isRender()) chart.render();
+            }
         }
 
         /**
@@ -5426,6 +5607,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             y: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
+            /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
+            map : null,
             /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
             /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */
@@ -5469,6 +5652,374 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
     return Axis;
 });
 
+jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
+    /**
+     * @class chart.grid.core
+     * Grid Core 객체
+     * @extends chart.draw
+     * @abstract
+     */
+    var Map = function() {
+        var self = this;
+        var pathURI = null,
+            pathGroup = null,
+            pathIndex = {},
+            pathScale = 1,
+            pathX = 0,
+            pathY = 0;
+
+        function loadArray(data) {
+            var children = [];
+
+            for(var i = 0, len = data.length; i < len; i++) {
+                if(_.typeCheck("object", data[i])) {
+                    var style = {};
+
+                    if(_.typeCheck("string", data[i].style)) {
+                        style = getStyleObj(data[i].style);
+                        delete data[i].style;
+                    }
+
+                    var elem = SVG.createObject({ type: "path", attr: data[i] });
+
+                    // Set theme styles
+                    elem.attr({
+                        fill: self.chart.theme("mapPathBackgroundColor"),
+                        "fill-opacity": self.chart.theme("mapPathBackgroundOpacity"),
+                        stroke: self.chart.theme("mapPathBorderColor"),
+                        "stroke-width": self.chart.theme("mapPathBorderWidth"),
+                        "stroke-opacity": self.chart.theme("mapPathBorderOpacity")
+                    });
+
+                    // Set resource styles
+                    elem.css(style);
+
+                    children.push({
+                        path: elem,
+                        data: data[i]
+                    });
+                }
+            }
+
+            function getStyleObj(str) {
+                var style = {},
+                    list = str.split(";");
+
+                for(var i = 0; i < list.length; i++) {
+                    if(list[i].indexOf(":") != -1) {
+                        var obj = list[i].split(":");
+
+                        style[$.trim(obj[0])] = $.trim(obj[1]);
+                    }
+                }
+
+                return style;
+            }
+
+            return children;
+        }
+
+        function loadPath(uri) {
+            var pathData = [];
+
+            $.ajax({
+                url: uri,
+                async: false,
+                success: function (xml) {
+                    var $path = $(xml).find("path"),
+                        $style = $(xml).find("style");
+
+                    $path.each(function () {
+                        var obj = {};
+
+                        $.each(this.attributes, function () {
+                            if(this.specified && isLoadAttribute(this.name)) {
+                                obj[this.name] = this.value;
+                            }
+                        });
+
+                        if(_.typeCheck("string", obj.id)) {
+                            _.extend(obj, getDataById(obj.id));
+                            pathData.push(obj);
+                        }
+                    });
+
+                    $style.each(function () {
+                        self.chart.svg.root.element.appendChild(this);
+                    });
+                }
+            });
+
+            function isLoadAttribute(name) {
+                return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
+            }
+
+            return loadArray(pathData);
+        }
+
+        function getDataById(id) {
+            var list = self.axis.data;
+
+            for(var i = 0; i < list.length; i++) {
+                var dataId = self.axis.getValue(list[i], "id", null);
+
+                if(dataId == id) {
+                    return list[i];
+                }
+            }
+
+            return null;
+        }
+
+        function makePathGroup() {
+            var group = self.chart.svg.group(),
+                list = loadPath(self.map.path);
+
+            for(var i = 0, len = list.length; i < len; i++) {
+                var path = list[i].path,
+                    data = list[i].data;
+
+                addEvent(path, list[i]);
+                group.append(path);
+
+                if(_.typeCheck("string", data.id)) {
+                    pathIndex[data.id] = list[i];
+                }
+            }
+
+            return group;
+        }
+
+        function getScaleXY() {
+            // 현재 스케일에 따른 계산이 필요함
+            var w = self.map.width,
+                h = self.map.height,
+                px = ((w * pathScale) - w) / 2,
+                py = ((h * pathScale) - h) / 2;
+
+            return {
+                x: px + pathX,
+                y: py + pathY
+            }
+        }
+
+        /**
+         * @method addEvent
+         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
+         *
+         * @param {Element} element
+         * @param {Object} obj
+         */
+        function addEvent(elem, obj) {
+            var chart = self.chart;
+
+            elem.on("click", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.click", [ obj, e ]);
+            });
+
+            elem.on("dblclick", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.dblclick", [ obj, e ]);
+            });
+
+            elem.on("contextmenu", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.rclick", [ obj, e ]);
+                e.preventDefault();
+            });
+
+            elem.on("mouseover", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseover", [ obj, e ]);
+            });
+
+            elem.on("mouseout", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseout", [ obj, e ]);
+            });
+
+            elem.on("mousemove", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousemove", [ obj, e ]);
+            });
+
+            elem.on("mousedown", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mousedown", [ obj, e ]);
+            });
+
+            elem.on("mouseup", function(e) {
+                setMouseEvent(e);
+                chart.emit("map.mouseup", [ obj, e ]);
+            });
+
+            function setMouseEvent(e) {
+                var pos = $(chart.root).offset(),
+                    offsetX = e.pageX - pos.left,
+                    offsetY = e.pageY - pos.top;
+
+                e.bgX = offsetX;
+                e.bgY = offsetY;
+                e.chartX = offsetX - chart.padding("left");
+                e.chartY = offsetY - chart.padding("top");
+            }
+        }
+
+        this.scale = function(id) {
+            if(!_.typeCheck("string", id)) return;
+
+            var x = null,
+                y = null,
+                path = null,
+                data = null,
+                pxy = getScaleXY();
+
+            if(_.typeCheck("object", pathIndex[id])) {
+                path = pathIndex[id].path;
+                data = pathIndex[id].data;
+
+                if(data.x != null) {
+                    var cx = parseFloat(data.x);
+                    x = (cx * pathScale) - pxy.x;
+                }
+
+                if(data.y != null) {
+                    var cy = parseFloat(data.y);
+                    y = (cy * pathScale) - pxy.y;
+                }
+            }
+
+            return {
+                x: x,
+                y: y,
+                path: path,
+                data: data
+            }
+        }
+
+        this.scale.each = function(callback) {
+            var self = this;
+
+            for(var id in pathIndex) {
+                callback.apply(self, [ id, pathIndex[id] ]);
+            }
+        }
+
+        this.scale.size = function() {
+            return {
+                width: self.map.width,
+                height: self.map.height
+            }
+        }
+
+        this.scale.scale = function(scale) {
+            if(!scale || scale < 0) return pathScale;
+
+            pathScale = scale;
+            pathGroup.scale(pathScale);
+            this.view(pathX, pathY);
+
+            return pathScale;
+        }
+
+        this.scale.view = function(x, y) {
+            var xy = { x: pathX, y: pathY };
+
+            if(!_.typeCheck("number", x) || !_.typeCheck("number", y))
+                return xy;
+
+            pathX = x;
+            pathY = y;
+
+            var pxy = getScaleXY();
+            pathGroup.translate(-pxy.x, -pxy.y);
+
+            return {
+                x: pathX,
+                y: pathY
+            }
+        }
+
+        /**
+         * @method drawGrid
+         * draw base grid structure
+         * @protected
+         * @param {chart.builder} chart
+         * @param {String} orient
+         * @param {String} cls
+         * @param {Map} map
+         */
+        this.draw = function() {
+            var root = this.chart.svg.group();
+
+            pathScale = this.map.scale;
+            pathX = this.map.viewX;
+            pathY = this.map.viewY;
+
+            // pathURI가 다를 경우에만 pathGroup을 생성함
+            if(pathURI != this.map.path) {
+                pathGroup = makePathGroup();
+                pathURI = this.map.path;
+            }
+
+            // pathGroup 루트에 추가
+            root.append(pathGroup);
+
+            if(this.map.scale != 1) {
+                this.scale.scale(pathScale);
+            }
+
+            if(this.map.viewX != 0 || this.map.viewY != 0) {
+                this.scale.view(pathX, pathY);
+            }
+
+            if(this.map.hide) {
+                root.attr({ visibility: "hidden" });
+            }
+
+            return {
+                root: root,
+                scale: this.scale
+            };
+        }
+
+        /**
+         * @method drawAfter
+         *
+         *
+         *
+         * @param {Object} obj
+         * @protected
+         */
+        this.drawAfter = function(obj) {
+            obj.root.attr({ "clip-path": "url(#" + this.axis.get("clipRectId") + ")" });
+        }
+    }
+
+    Map.setup = function() {
+        /** @property {chart.builder} chart */
+        /** @property {chart.axis} axis */
+        /** @property {Object} map */
+
+        return {
+            scale: 1,
+            viewX: 0,
+            viewY: 0,
+
+            /** @cfg {Boolean} [hide=false] Determines whether to display an applicable grid.  */
+            hide: false,
+            /** @cfg {String} [map=''] Set a map file's name */
+            path: "",
+            /** @cfg {Number} [width=-1] Set map's width */
+            width: -1,
+            /** @cfg {Number} [height=-1] Set map's height */
+            height: -1
+        };
+    }
+
+    return Map;
+}, "chart.draw"); 
 jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
@@ -5580,7 +6131,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @private
          */
         function drawAxis(self) {
-
+            
             // 엑시스 리스트 얻어오기
             var axisList = _.deepClone(_options.axis, { data : true, origin : true });
 
@@ -6099,28 +6650,33 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @return {String} Selected color string
          */
         this.color = function(i, brush) {
-            var color;
+            var color = null;
 
-            // 테마 & 브러쉬 옵션 컬러 설정
-            if(_.typeCheck("array", brush.colors)) {
-                color = brush.colors[i];
-
-                if(_.typeCheck("integer", color)) {
-                    color = nextColor(color);
-                }
+            // 직접 색상을 추가할 경우 (+그라데이션, +필터)
+            if(_.typeCheck("string", i)) {
+                color = i;
             } else {
-                color = nextColor();
-            }
-
-            // 시리즈 컬러 설정
-            if(_.typeCheck("array", brush.target)) {
-                var series = _series[brush.target[i]];
-
-                if(series && series.color) {
-                    color = series.color;
+                // 테마 & 브러쉬 옵션 컬러 설정
+                if(_.typeCheck("array", brush.colors)) {
+                    color = brush.colors[i];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
+                    }
+                } else {
+                    color = nextColor();
+                }
+
+                // 시리즈 컬러 설정
+                if(_.typeCheck("array", brush.target)) {
+                    var series = _series[brush.target[i]];
+
+                    if(series && series.color) {
+                        color = series.color;
+
+                        if(_.typeCheck("integer", color)) {
+                            color = nextColor(color);
+                        }
                     }
                 }
             }
@@ -6690,7 +7246,6 @@ jui.define("chart.theme.jennifer", [], function() {
         "#9228E4"
     ];
 
-
     return {
         /** @cfg  */
     	backgroundColor : "white",
@@ -6726,16 +7281,11 @@ jui.define("chart.theme.jennifer", [], function() {
 
         /** @cfg  Grid Bar Size */
         gridTickSize : 3,
-
         gridTickBorderWidth : 1.5,
-
         gridTickPadding : 5,
 
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-
-
-
 
         // brush-item styles
         /** @cfg */
@@ -6949,8 +7499,29 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundColor : "black",
         /** @cfg */
-        crossBalloonBackgroundOpacity : 0.5
+        crossBalloonBackgroundOpacity : 0.5,
 
+        // Map Common
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -7112,7 +7683,29 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonBackgroundOpacity : 0.8
+        crossBalloonBackgroundOpacity : 0.8,
+
+        // Map Common
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -7272,7 +7865,29 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
-        crossBalloonBackgroundOpacity : 1
+        crossBalloonBackgroundOpacity : 1,
+
+        // Map Common
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -7427,7 +8042,29 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontSize : "11px",
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
-		crossBalloonBackgroundOpacity : 0.7
+		crossBalloonBackgroundOpacity : 0.7,
+
+		// Map Common
+		mapPathBackgroundColor : "#67B7DC",
+		mapPathBackgroundOpacity : 1,
+		mapPathBorderColor : "white",
+		mapPathBorderWidth : 0,
+		mapPathBorderOpacity : 0,
+		// Map Brushes
+		mapBubbleBackgroundOpacity : 0.5,
+		mapBubbleBorderWidth : 1,
+		mapSelectorColor : "#5a73db",
+		mapSelectorActiveColor : "#CC0000",
+		mapFlightRouteAirportSmallColor : "#CC0000",
+		mapFlightRouteAirportLargeColor : "#000",
+		mapFlightRouteAirportBorderWidth : 2,
+		mapFlightRouteAirportRadius : 8,
+		mapFlightRouteLineBorderColor : "red",
+		mapFlightRouteLineBorderWidth : 1,
+		// Map Widgets
+		mapControlButtonColor : "#3994e2",
+		mapControlScrollColor : "#000",
+		mapControlScrollLineColor : "#fff"
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -7671,7 +8308,29 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonFontSize : "11px",
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
-        crossBalloonBackgroundOpacity : 0.5
+        crossBalloonBackgroundOpacity : 0.5,
+
+        // Map Common
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -7908,14 +8567,13 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"analysis" : "\ue606",
-		"analysis2" : "\ue605",
-		"refresh2" : "\ue641",
 		"add-dir" : "\ue600",
 		"add-dir2" : "\ue601",
 		"align-center" : "\ue602",
 		"align-left" : "\ue603",
 		"align-right" : "\ue604",
+		"analysis" : "\ue605",
+		"analysis2" : "\ue606",
 		"arrow1" : "\ue607",
 		"arrow2" : "\ue608",
 		"arrow3" : "\ue609",
@@ -7925,8 +8583,8 @@ jui.define("chart.icon.jennifer", [], function() {
 		"caution2" : "\ue60d",
 		"chart-area" : "\ue60e",
 		"chart-bar" : "\ue60f",
-		"chart-column" : "\ue610",
-		"chart-candle" : "\ue611",
+		"chart-candle" : "\ue610",
+		"chart-column" : "\ue611",
 		"chart-gauge" : "\ue612",
 		"chart-line" : "\ue613",
 		"chart-radar" : "\ue614",
@@ -7944,60 +8602,62 @@ jui.define("chart.icon.jennifer", [], function() {
 		"document" : "\ue620",
 		"download" : "\ue621",
 		"edit" : "\ue622",
-		"exit" : "\ue623",
-		"gear" : "\ue624",
-		"help" : "\ue625",
-		"hide" : "\ue626",
-		"home" : "\ue627",
-		"html" : "\ue628",
-		"image" : "\ue629",
-		"info-message" : "\ue62a",
-		"info" : "\ue62b",
-		"italic" : "\ue62c",
-		"jennifer-server" : "\ue62d",
-		"label" : "\ue62e",
-		"left" : "\ue62f",
-		"link" : "\ue630",
-		"loading" : "\ue631",
-		"menu" : "\ue632",
-		"message" : "\ue633",
-		"minus" : "\ue634",
-		"monitoring" : "\ue635",
-		"more" : "\ue636",
-		"new-window" : "\ue637",
-		"orderedlist" : "\ue638",
-		"pause" : "\ue639",
-		"play" : "\ue63a",
-		"plus" : "\ue63b",
-		"preview" : "\ue63c",
-		"printer" : "\ue63d",
-		"profile" : "\ue63e",
-		"realtime" : "\ue63f",
-		"refresh" : "\ue640",
-		"report-build" : "\ue642",
-		"report-link" : "\ue643",
-		"report" : "\ue644",
-		"resize" : "\ue645",
-		"return" : "\ue646",
-		"right" : "\ue647",
-		"rule" : "\ue648",
-		"save" : "\ue649",
-		"search" : "\ue64a",
-		"server" : "\ue64b",
-		"statistics" : "\ue64c",
-		"stop" : "\ue64d",
-		"stoppage" : "\ue64e",
-		"table" : "\ue64f",
-		"text" : "\ue650",
-		"textcolor" : "\ue651",
-		"tool" : "\ue652",
-		"trashcan" : "\ue653",
-		"underline" : "\ue654",
-		"unorderedlist" : "\ue655",
-		"upload" : "\ue656",
-		"user" : "\ue657",
-		"was" : "\ue658",
-		"ws" : "\ue659"
+		"etc" : "\ue623",
+		"exit" : "\ue624",
+		"gear" : "\ue625",
+		"help" : "\ue626",
+		"hide" : "\ue627",
+		"home" : "\ue628",
+		"html" : "\ue629",
+		"image" : "\ue62a",
+		"info-message" : "\ue62b",
+		"info" : "\ue62c",
+		"italic" : "\ue62d",
+		"jennifer-server" : "\ue62e",
+		"label" : "\ue62f",
+		"left" : "\ue630",
+		"link" : "\ue631",
+		"loading" : "\ue632",
+		"menu" : "\ue633",
+		"message" : "\ue634",
+		"minus" : "\ue635",
+		"monitoring" : "\ue636",
+		"more" : "\ue637",
+		"new-window" : "\ue638",
+		"orderedlist" : "\ue639",
+		"pause" : "\ue63a",
+		"play" : "\ue63b",
+		"plus" : "\ue63c",
+		"preview" : "\ue63d",
+		"printer" : "\ue63e",
+		"profile" : "\ue63f",
+		"realtime" : "\ue640",
+		"refresh" : "\ue641",
+		"refresh2" : "\ue642",
+		"report-build" : "\ue643",
+		"report-link" : "\ue644",
+		"report" : "\ue645",
+		"resize" : "\ue646",
+		"return" : "\ue647",
+		"right" : "\ue648",
+		"rule" : "\ue649",
+		"save" : "\ue64a",
+		"search" : "\ue64b",
+		"server" : "\ue64c",
+		"statistics" : "\ue64d",
+		"stop" : "\ue64e",
+		"stoppage" : "\ue64f",
+		"table" : "\ue650",
+		"text" : "\ue651",
+		"textcolor" : "\ue652",
+		"tool" : "\ue653",
+		"trashcan" : "\ue654",
+		"underline" : "\ue655",
+		"unorderedlist" : "\ue656",
+		"upload" : "\ue657",
+		"user" : "\ue658",
+		"was" : "\ue659",
+		"ws" : "\ue65a"
 	}
 });
 jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {
@@ -8208,8 +8868,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
@@ -8255,8 +8915,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			moveY = moveY || 0;
 			var line = this.getLineOption();
 
-			ticks.reverse();
-			values.reverse();
+			//ticks.reverse();
+			//values.reverse();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
 
@@ -10804,6 +11464,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {*}
          */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
+            // 최소/최대 값이 같을 경우 처리
+            minValue = (minValue == maxValue) ? 0 : minValue;
+
             var range = maxRadius - minRadius,
                 tg = range * getPer();
 
@@ -11056,38 +11719,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key) {
-            if (typeof key == 'string') {
-                return this.chart.color(0, { colors : [key] });
+            if(_.typeCheck("string", key)) {
+                return this.chart.color(0, { colors : [ key ] });
             }
+
             return this.chart.color(key, this.brush);
-        }
-
-        /**
-         * @method on 
-         * 
-         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수 
-         * 
-         * @param {String} type event name 
-         * @param {Function} callback
-         * @return {*}
-         */
-        this.on = function(type, callback) {
-            var self = this;
-
-            return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
-                    var axis = self.chart.axis(self.axis.index),
-                        e = arguments[0];
-
-                    if (_.typeCheck("object", axis)) {
-                        if (arguments[1] == self.axis.index) {
-                            callback.apply(self, [ e ]);
-                        }
-                    }
-                } else {
-                    callback.apply(self, arguments);
-                }
-            }, "render");
         }
 	}
 
@@ -11399,18 +12035,19 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			this.active = this.drawTooltip();
             group.append(this.active.tooltip);
 
-			for (var i = 0; i < this.barList.length; i++) {
-				var r = this.barList[i];
+			for(var i = 0; i < this.barList.length; i++) {
+				var r = this.barList[i],
+					d = this.brush.display;
 
 				// Max & Min 툴팁 생성
-				if (this.brush.display == "max" && r.max || this.brush.display == "min" && r.min) {
+				if((d == "max" && r.max) || (d == "min" && r.min) || d == "all") {
 					r.minmax = this.drawTooltip(r.color, style.circleColor, 1);
 					r.minmax.control(r.position, r.tooltipX, r.tooltipY, this.format(r.value));
                     group.append(r.minmax.tooltip);
 				}
 
 				// 컬럼 및 기본 브러쉬 이벤트 설정
-				if (r.value != 0 && this.brush.activeEvent != null) {
+				if(r.value != 0 && this.brush.activeEvent != null) {
 					(function(bar) {
 						self.active.style(bar.color, style.circleColor, 1);
 
@@ -11822,9 +12459,12 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
         }
 
         this.draw = function() {
-            var count = brush.target.length;
+            var count = brush.target.length,
+                dataList = this.listData();
 
-            this.eachData(function(i, data) {
+            for(var i = dataList.length - 1; i >= 0; i--) {
+                var data = dataList[i];
+
                 for(var j = 0; j < count; j++) {
                     var value = data[brush.target[j]],
                         xy = axis.c(value, i, j, count),
@@ -11844,7 +12484,7 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
                     // 그룹에 컬럼 엘리먼트 추가
                     g.prepend(r);
                 }
-            });
+            }
 
             return g;
         }
@@ -16461,6 +17101,342 @@ jui.define("chart.brush.pin", [], function() {
 
     return PinBrush;
 }, "chart.brush.core");
+jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
+    /**
+     * @class chart.brush.map.core
+     *
+     * implements core method for brush
+     *
+     * @abstract
+     * @extends chart.brush.core
+     * @requires jquery
+     * @requires util.base
+     */
+	var MapCoreBrush = function() {
+	}
+
+	return MapCoreBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.over 
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapSelectorBrush = function(chart, axis, brush) {
+		var activePath = null;
+
+		this.draw = function() {
+			var g = chart.svg.group(),
+				originFill = null;
+
+			this.on("map.mouseover", function(obj, e) {
+				if(activePath == obj.path) return;
+
+				originFill = obj.path.styles.fill || obj.path.attributes.fill;
+				obj.path.css({
+					fill: chart.theme("mapSelectorColor")
+				});
+			});
+			this.on("map.mouseout", function(obj, e) {
+				if(activePath == obj.path) return;
+
+				obj.path.css({
+					fill: originFill
+				});
+			});
+
+			if(brush.activeEvent != null) {
+				this.on(brush.activeEvent, function(obj, e) {
+					activePath = obj.path;
+
+					axis.map.each(function(i, obj) {
+						obj.path.css({
+							fill: originFill
+						});
+					});
+
+					obj.path.css({
+						fill: chart.theme("mapSelectorActiveColor")
+					});
+				});
+			}
+
+			return g;
+		}
+	}
+
+	MapSelectorBrush.setup = function() {
+		return {
+			activeEvent: null
+		}
+	}
+
+	return MapSelectorBrush;
+}, "chart.brush.map.core");
+
+jui.define("chart.brush.map.template", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.map.template
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapTemplateBrush = function() {
+        var self = this;
+
+		this.draw = function() {
+            var g = this.chart.svg.group();
+
+            this.eachData(function(i, data) {
+                var xy = self.axis.map(data.id),
+                    result = self.brush.callback.call(self, i, data, { x: xy.x, y: xy.y });
+
+                result.translate(xy.x, xy.y);
+                g.append(result);
+            });
+
+			return g;
+		}
+	}
+
+    MapTemplateBrush.setup = function() {
+        return {
+            callback : function(data) { return ''; }
+        }
+
+    }
+
+	return MapTemplateBrush;
+}, "chart.brush.map.core");
+
+jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.map.bubble
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapBubbleBrush = function(chart, axis, brush) {
+        var self = this;
+
+        function getMinMaxValues() {
+            var min = 0,
+                max = 0,
+                dataList = self.listData();
+
+            for(var i = 0; i < dataList.length; i++) {
+                var value = axis.getValue(dataList[i], "value", 0);
+
+                min = (i == 0) ? value : Math.min(value, min);
+                max = (i == 0) ? value : Math.max(value, max);
+            }
+
+            return {
+                min: min,
+                max: max
+            }
+        }
+
+		this.draw = function() {
+            var g = chart.svg.group(),
+                color = _.typeCheck("string", brush.color) ? chart.color(brush.color) : this.color(0),
+                minmax = getMinMaxValues();
+
+            this.eachData(function(i, d) {
+                var value = axis.getValue(d, "value", 0),
+                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    xy = axis.map(axis.getValue(d, "id", null));
+
+                if(xy != null) {
+                    if(_.typeCheck("function", brush.color)) {
+                        color = chart.color(brush.color.call(chart, d) || color);
+                    }
+
+                    var c = chart.svg.circle({
+                        r: size,
+                        "fill": color,
+                        "fill-opacity": chart.theme("mapBubbleBackgroundOpacity"),
+                        "stroke": color,
+                        "stroke-width": chart.theme("mapBubbleBorderWidth")
+                    });
+
+                    c.translate(xy.x, xy.y);
+                    g.append(c);
+                }
+            });
+
+			return g;
+		}
+	}
+
+    MapBubbleBrush.setup = function() {
+        return {
+            color : null,
+            min : 10,
+            max : 30
+        }
+    }
+
+	return MapBubbleBrush;
+}, "chart.brush.map.core");
+
+jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.map.flightroute
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapFlightRouteBrush = function(chart, axis, brush) {
+        var self = this;
+        var g, tooltip;
+        var smallColor, largeColor, borderWidth, lineColor, lineWidth, outerSize;
+        var smallRate = 0.4, largeRate = 1.33, padding = 7, anchor = 7, textY = 14;
+
+        function printTooltip(obj) {
+            var msg = obj.data.title;
+
+            if(_.typeCheck("string", msg) && msg != "") {
+                tooltip.get(1).text(msg);
+                tooltip.get(1).attr({ "text-anchor": "middle" });
+            }
+
+            return msg;
+        }
+
+        function setOverEffect(type, xy, outer, inner) {
+            outer.hover(over, out);
+            inner.hover(over, out);
+
+            function over(e) {
+                if(!printTooltip(xy)) return;
+
+                var color = (type == "large") ? smallColor : largeColor,
+                    size = tooltip.get(1).size(),
+                    innerSize = outerSize * smallRate,
+                    w = size.width + (padding * 2),
+                    h = size.height + padding;
+
+                tooltip.get(1).attr({ x: w / 2 });
+                tooltip.get(0).attr({
+                    points: self.balloonPoints("top", w, h, anchor),
+                    stroke: color
+                });
+                tooltip.attr({ visibility: "visible" });
+                tooltip.translate(xy.x - (w / 2), xy.y - h - anchor - innerSize);
+
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+
+            function out(e) {
+                var color = (type == "large") ? largeColor : smallColor;
+
+                tooltip.attr({ visibility: "hidden" });
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+        }
+
+        this.drawAirport = function(type, xy) {
+            var color = (type == "large") ? largeColor : smallColor,
+                innerSize = outerSize * smallRate;
+
+            var outer = chart.svg.circle({
+                r: (type == "large") ? outerSize * largeRate : outerSize,
+                "stroke-width": (type == "large") ? borderWidth * largeRate : borderWidth,
+                "fill": "transparent",
+                "fill-opacity": 0,
+                "stroke": color
+            }).translate(xy.x, xy.y);
+
+            var inner = chart.svg.circle({
+                r: (type == "large") ? innerSize * largeRate : innerSize,
+                "stroke-width": 0,
+                "fill": color
+            }).translate(xy.x, xy.y);
+
+            g.append(outer);
+            g.append(inner);
+
+            // 마우스오버 이벤트 설정
+            setOverEffect(type, xy, outer, inner);
+        }
+
+        this.drawRoutes = function(target, xy) {
+            var line = chart.svg.line({
+                x1: xy.x,
+                y1: xy.y,
+                x2: target.x,
+                y2: target.y,
+                stroke: lineColor,
+                "stroke-width": lineWidth
+            });
+
+            g.append(line);
+        }
+
+        this.drawBefore = function() {
+            g = chart.svg.group();
+            tooltip = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                chart.svg.polygon({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": 2
+                });
+
+                chart.text({
+                    "font-size": chart.theme("tooltipFontSize"),
+                    "fill": chart.theme("tooltipFontColor"),
+                    y: textY
+                });
+            });
+
+            smallColor = chart.theme("mapFlightRouteAirportSmallColor");
+            largeColor = chart.theme("mapFlightRouteAirportLargeColor");
+            borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
+            outerSize = chart.theme("mapFlightRouteAirportRadius");
+            lineColor = chart.theme("mapFlightRouteLineBorderColor");
+            lineWidth = chart.theme("mapFlightRouteLineBorderWidth");
+        }
+
+		this.draw = function() {
+            this.eachData(function(i, d) {
+                var id = axis.getValue(d, "id", null),
+                    type = axis.getValue(d, "airport", null),
+                    routes = axis.getValue(d, "routes", []),
+                    xy = axis.map(id);
+
+                if(type != null && xy != null) {
+                    for(var j = 0; j < routes.length; j++) {
+                        var target = axis.map(routes[j]);
+
+                        if(target != null) {
+                            this.drawRoutes(target, xy);
+                        }
+                    }
+
+                    this.drawAirport(type, xy);
+                }
+            });
+
+			return g;
+		}
+	}
+
+    MapFlightRouteBrush.setup = function() {
+        return {
+        }
+    }
+
+	return MapFlightRouteBrush;
+}, "chart.brush.map.core");
+
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 
@@ -16503,7 +17479,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", axisIndex)) {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", axisIndex)) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 
@@ -17928,6 +18904,395 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     return TopologyControlWidget;
 }, "chart.widget.core");
+jui.define("chart.widget.map.core", [], function() {
+
+    /**
+     * @class chart.widget.map.core
+     * @extends chart.widget.core
+     */
+    var MapCoreWidget = function(chart, axis, widget) {
+    }
+
+    MapCoreWidget.setup = function() {
+        return {
+            axis: 0
+        }
+    }
+
+    return MapCoreWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
+    var SCROLL_MIN_Y = 21.5,
+        SCROLL_MAX_Y = 149;
+
+    /**
+     * @class chart.widget.map.control
+     * @extends chart.widget.map.core
+     */
+    var MapControlWidget = function(chart, axis, widget) {
+        var scale = 1,
+            viewX = 0,
+            viewY = 0,
+            blockX = 0,
+            blockY = 0,
+            scrollY = 0,
+            step = 0,
+            tick = 0,
+            btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
+
+        function createBtnGroup(type, opacity, x, y, url) {
+            btn[type] = chart.svg.group({
+                cursor: (url != null) ? "pointer" : "move"
+            }, function() {
+                chart.svg.rect({
+                    x: 0.5,
+                    y: 0.5,
+                    width: 20,
+                    height: 20,
+                    rx: 2,
+                    ry: 2,
+                    stroke: 0,
+                    fill: chart.theme("mapControlButtonColor"),
+                    "fill-opacity": opacity
+                });
+
+                if(url != null) {
+                    chart.svg.image({
+                        x: 4.5,
+                        y: 4.5,
+                        width: 11,
+                        height: 11,
+                        "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                        "xlink:href": url,
+                        opacity: 0.6
+                    });
+                }
+            }).translate(x, y);
+
+            return btn[type];
+        }
+
+        function createScrollThumbLines() {
+            return chart.svg.group({}, function() {
+                for(var i = 0; i < 6; i++) {
+                    var y = 22 * i;
+
+                    chart.svg.path({
+                        fill: "none",
+                        "stroke-width": 1,
+                        "stroke-opacity": 0.6,
+                        stroke: chart.theme("mapControlScrollLineColor")
+                    }).MoveTo(1.5, 41.5 + y).LineTo(18.5, 41.5 + y);
+                }
+            });
+        }
+
+        function getScrollThumbY(nowScale) {
+            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+
+            if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
+            else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
+
+            return y;
+        }
+
+        function getScrollScale(y) {
+            return parseFloat((widget.minScale + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
+        }
+
+        function setButtonEvents() {
+            var originViewX = viewX,
+                originViewY = viewY;
+
+            btn.top.on("click", function(e) {
+                viewY -= blockY;
+                move();
+            });
+            btn.right.on("click", function(e) {
+                viewX += blockX;
+                move();
+            });
+            btn.bottom.on("click", function(e) {
+                viewY += blockY;
+                move();
+            });
+            btn.left.on("click", function(e) {
+                viewX -= blockX;
+                move();
+            });
+            btn.home.on("click", function(e) {
+                viewX = originViewX;
+                viewY = originViewY;
+                move();
+            });
+
+            btn.up.on("click", function(e) {
+                if(scale > widget.maxScale) return;
+
+                scale += 0.1;
+                zoom();
+            });
+            btn.down.on("click", function(e) {
+                if(scale - 0.09 < widget.minScale) return;
+
+                scale -= 0.1;
+                zoom();
+            });
+
+            function move() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                axis.map.view(viewX, viewY);
+            }
+            function zoom() {
+                axis.updateMap({
+                    scale: scale,
+                    viewX: viewX,
+                    viewY: viewY
+                });
+
+                scrollY = getScrollThumbY(scale);
+                axis.map.scale(scale);
+                btn.thumb.translate(0, scrollY);
+            }
+        }
+
+        function setScrollEvent(bar) {
+            var startY = 0,
+                moveY = 0;
+
+            btn.thumb.on("mousedown", function(e) {
+                if(startY > 0) return;
+
+                startY = e.y;
+            });
+
+            btn.thumb.on("mousemove", moveThumb);
+            bar.on("mousemove", moveThumb);
+
+            btn.thumb.on("mouseup", endMoveThumb);
+            bar.on("mouseup", endMoveThumb);
+            bar.on("mouseout", endMoveThumb);
+
+            function moveThumb(e) {
+                if(startY == 0) return;
+                var sy = scrollY + e.y - startY;
+
+                if(sy >= SCROLL_MIN_Y && sy <= SCROLL_MAX_Y) {
+                    moveY = e.y - startY;
+                    scale = getScrollScale(sy);
+
+                    axis.updateMap({
+                        scale: scale,
+                        viewX: viewX,
+                        viewY: viewY
+                    });
+
+                    axis.map.scale(scale);
+                    btn.thumb.translate(0, getScrollThumbY(scale));
+                }
+            }
+
+            function endMoveThumb(e) {
+                if(startY == 0) return;
+
+                startY = 0;
+                scrollY += moveY;
+            }
+        }
+
+        this.drawBefore = function() {
+            scale = axis.map.scale();
+            viewX = axis.map.view().x;
+            viewY = axis.map.view().y;
+            blockX = axis.map.size().width / 10;
+            blockY = axis.map.size().height / 10;
+            tick = (widget.maxScale - widget.minScale) * 10;
+            step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
+            scrollY = getScrollThumbY(scale);
+        }
+
+        this.draw = function() {
+            var g = chart.svg.group({}, function() {
+                var top = chart.svg.group(),
+                    bottom = chart.svg.group().translate(20, 80),
+                    bar = chart.svg.rect({
+                        x: 0.5,
+                        y: 0.5,
+                        width: 26,
+                        height: 196,
+                        rx: 4,
+                        ry: 4,
+                        stroke: 0,
+                        fill: chart.theme("mapControlScrollColor"),
+                        "fill-opacity": 0.15
+                    }).translate(-3, -3);
+
+                top.append(createBtnGroup("left", 0.8, 0, 20, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI9poMcdXpOKTujw0pGjAgA7"));
+                top.append(createBtnGroup("right", 0.8, 40, 20, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI8JycvonomSKhksxBqbAgA7"));
+                top.append(createBtnGroup("top", 0.8, 20, 0, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI+pCmvd2IkzUYqw27yfAgA7"));
+                top.append(createBtnGroup("bottom", 0.8, 20, 40, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIQjI+pyw37TDxTUhhq0q2fAgA7"));
+                top.append(createBtnGroup("home", 0, 20, 20, "data:image/gif;base64,R0lGODlhCwALAPABAAAAAAAAACH5BAUAAAEALAAAAAALAAsAAAIZjI8ZoAffIERzMVMxm+9KvIBh6Imb2aVMAQA7"));
+
+                bottom.append(bar);
+                bottom.append(createScrollThumbLines());
+                bottom.append(createBtnGroup("up", 0.8, 0, 0, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAISjI8ZoMhtHpQH2HsV1TD29SkFADs="));
+                bottom.append(createBtnGroup("down", 0.8, 0, 170, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIMjI+py+0BopSv2qsKADs="));
+                bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
+
+                // ��ư Ŭ�� �̺�Ʈ ����
+                setButtonEvents();
+                setScrollEvent(bar);
+            });
+
+            var ot = widget.orient,
+                ag = widget.align,
+                dx = widget.dx,
+                dy = widget.dy,
+                x2 = axis.area("x2"),
+                y2 = axis.area("y2");
+
+            // ��Ʈ�ѷ� ��ġ ����
+            if(ot == "bottom" && ag == "start") {
+                g.translate(dx, y2 - (273 + dy));
+            } else if(ot == "bottom" && ag == "end") {
+                g.translate(x2 - (60 + dx), y2 - (273 + dy));
+            } else if(ot == "top" && ag == "end") {
+                g.translate(x2 - (60 + dx), dy);
+            } else {
+                g.translate(dx, dy);
+            }
+
+            return g;
+        }
+    }
+
+    MapControlWidget.setup = function() {
+        return {
+            /** @cfg {"top"/"bottom" } Sets the location where the label is displayed (top, bottom). */
+            orient: "top",
+            /** @cfg {"start"/"end" } Aligns the label (center, start, end). */
+            align: "start",
+
+            minScale: 1,
+            maxScale: 3,
+
+            dx: 5,
+            dy: 5
+        }
+    }
+
+    return MapControlWidget;
+}, "chart.widget.map.core");
+jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.widget.map.core
+     * @extends chart.widget.core
+     */
+    var MapTooltipWidget = function(chart, axis, widget) {
+        var self = this;
+        var g, text, rect;
+        var padding = 7, anchor = 7, textY = 14;
+
+        function getFormat(data) {
+            if(_.typeCheck("function", widget.format)) {
+                return self.format(data);
+            }
+
+            return data.id;
+        }
+
+        function printTooltip(obj) {
+            var msg = getFormat(obj);
+
+            if(widget.orient == "bottom") {
+                text.attr({ y: textY + anchor });
+            }
+
+            if(_.typeCheck("string", msg) && msg != "") {
+                text.text(msg);
+                text.attr({ "text-anchor": "middle" });
+            }
+
+            return msg;
+        }
+
+        this.drawBefore = function() {
+            g = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                rect = chart.svg.polygon({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": 1
+                });
+
+                text = chart.text({
+                    "font-size": chart.theme("tooltipFontSize"),
+                    "fill": chart.theme("tooltipFontColor"),
+                    y: textY
+                });
+            });
+        }
+
+        this.draw = function() {
+            var isActive = false,
+                w, h;
+
+            this.on("map.mouseover", function(obj, e) {
+                if(!printTooltip(obj)) return;
+
+                var size = text.size();
+                w = size.width + (padding * 2);
+                h = size.height + padding;
+
+                text.attr({ x: w / 2 });
+                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
+                g.attr({ visibility: "visible" });
+
+                isActive = true;
+            });
+
+            this.on("map.mousemove", function(obj, e) {
+                if(!isActive) return;
+
+                var x = e.bgX - (w / 2),
+                    y = e.bgY - h - anchor - (padding / 2);
+
+                if(widget.orient == "left" || widget.orient == "right") {
+                    y = e.bgY - (h / 2) - (padding / 2);
+                }
+
+                if(widget.orient == "left") {
+                    x = e.bgX - w - anchor;
+                } else if(widget.orient == "right") {
+                    x = e.bgX + anchor;
+                } else if(widget.orient == "bottom") {
+                    y = e.bgY + (anchor * 2);
+                }
+
+                g.translate(x, y);
+            });
+
+            this.on("map.mouseout", function(obj, e) {
+                if(!isActive) return;
+
+                g.attr({ visibility: "hidden" });
+                isActive = false;
+            });
+
+            return g;
+        }
+    }
+
+    return MapTooltipWidget;
+}, "chart.widget.tooltip");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     /**

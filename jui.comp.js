@@ -442,8 +442,8 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != 'undefined') ? true : false,
-			mozilla: (typeof window.mozInnerScreenX != 'undefined') ? true : false,
+			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
 		/**
@@ -688,7 +688,6 @@
 		 */
 		typeCheck: function(t, v) {
 			function check(type, value) {
-
 				if(typeof(type) != "string") return false;
 
 				if (type == "string") {
@@ -894,7 +893,7 @@
                         data[keys[j]] = tmpArr[j];
 
                         // '"' 로 감싸져있는 문자열은 '"' 제거
-                        if(tmpArr[j].startsWith('"') && tmpArr[j].endsWith('"')) {
+                        if(this.startsWith(tmpArr[j], '"') && this.endsWith(tmpArr[j], '"')) {
                             data[keys[j]] = tmpArr[j].split('"').join('');
                         } else {
                             data[keys[j]] = tmpArr[j];
@@ -943,6 +942,7 @@
         svgToBase64: function(xml) {
             return "data:image/svg+xml;base64," + Base64.encode(xml);
         },
+
 		/**
 		 * @method dateFormat
 		 *
@@ -1077,25 +1077,23 @@
          * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
 		 */
 		loop : function(total, context) {
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+			var start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, first, 1); first++;
-					if (second < secondMax && second < end) { callback.call(context, second, 2); second++; }
-					if (third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
+
+					if(second < secondMax && second < end) { callback.call(context, second, 2); second++; }
+					if(third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
+					if(fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
+					if(fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
 				}
 			};
-
 		},
         
 		/**
@@ -1109,16 +1107,14 @@
          * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
 		 */
 		loopArray : function(data, context) {
-            var total = data.length;
-			var start = 0;
-			var end = total;
-
-			var unit = Math.ceil(total/5);
+            var total = data.length,
+				start = 0,
+				end = total,
+				unit = Math.ceil(total/5);
 
 			return function(callback) {
-
-				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4;
-				var firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
+				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
+					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
 				while(first < firstMax && first < end) {
 					callback.call(context, data[first], first, 1); first++;
@@ -1143,11 +1139,10 @@
          * @return {Object} 생성된 인덱스  
          */
         makeIndex : function(data, keyField) {
-            var list = {};
+            var list = {},
+				func = this.loopArray(data);
             
-            var func = this.loopArray(data);
-            
-            func(function(d, i, group) {
+            func(function(d, i) {
                 var value = d[keyField];
                 
                 if (typeof list[value] == 'undefined') {
@@ -1155,12 +1150,45 @@
                 }
                 
                 list[value].push(i);
-                
-            })
+            });
             
             return list; 
-        }
+        },
 
+		/**
+		 * @method startsWith
+		 * Check that it matches the starting string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		startsWith : function(string, searchString, position) {
+			position = position || 0;
+
+			return string.lastIndexOf(searchString, position) === position;
+		},
+
+		/**
+		 * @method endsWith
+		 * Check that it matches the end of a string search string.
+		 *
+		 * @param {String} string
+		 * @param {String} searchString
+		 * @return {Integer} position
+		 */
+		endsWith : function(string, searchString, position) {
+			var subjectString = string;
+
+			if(position === undefined || position > subjectString.length) {
+				position = subjectString.length;
+			}
+
+			position -= searchString.length;
+			var lastIndex = subjectString.indexOf(searchString, position);
+
+			return lastIndex !== -1 && lastIndex === position;
+		}
 	}
 
 
@@ -1314,7 +1342,7 @@
          * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
          * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
          * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+         * @param {String} parent 상속받을 클래스
          */
         define: function(name, depends, callback, parent) {
             if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
@@ -2289,6 +2317,20 @@ jui.define("util.math", [], function() {
 				x : x * Math.cos(radian) - y * Math.sin(radian),
 				y : x * Math.sin(radian) + y * Math.cos(radian)
 			}
+		},
+
+		resize : function(maxWidth, maxHeight, objectWidth, objectHeight) {
+			var ratio = objectHeight / objectWidth;
+
+			if (objectWidth >= maxWidth && ratio <= 1) {
+				objectWidth = maxWidth;
+				objectHeight = maxHeight * ratio;
+			} else if (objectHeight >= maxHeight) {
+				objectHeight = maxHeight;
+				objectWidth = maxWidth / ratio;
+			}
+
+			return { width : objectWidth, height : objectHeight};
 		},
 
 		/**
@@ -3382,6 +3424,7 @@ jui.define("util.svg.element", [], function() {
      * @constructor
      */
     var Element = function() {
+        var events = [];
 
         /**
          * 엘리먼트 생성 및 조회 메소드
@@ -3487,8 +3530,7 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.attr = function(attr) {
-
-            if (typeof attr == 'undefined' || !attr) return;
+            if(typeof attr == "undefined" || !attr) return;
 
             if(typeof attr == "string") {
                 return this.attributes[attr] || this.element.getAttribute(attr);
@@ -3542,27 +3584,52 @@ jui.define("util.svg.element", [], function() {
          */
 
         this.on = function(type, handler) {
-            this.element.addEventListener(type, function(e) {
+            var callback = function(e) {
                 if(typeof(handler) == "function") {
                     handler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener(type, callback, false);
+            events.push({ type: type, callback: callback });
 
             return this;
         }
 
+        this.off = function(type) {
+            var newEvents = [];
+
+            for(var i = 0, len = events.length; i < len; i++) {
+                var event = events[i];
+
+                if(event.type != type) {
+                    newEvents.push(event);
+                } else {
+                    this.element.removeEventListener(type, event.callback, false);
+                }
+            }
+
+            events = newEvents;
+            return this;
+        }
+
         this.hover = function(overHandler, outHandler) {
-            this.element.addEventListener("mouseover", function(e) {
+            var callback1 = function(e) {
                 if(typeof(overHandler) == "function") {
                     overHandler.call(this, e);
                 }
-            }, false);
+            }
 
-            this.element.addEventListener("mouseout", function(e) {
+            var callback2 = function(e) {
                 if(typeof(outHandler) == "function") {
                     outHandler.call(this, e);
                 }
-            }, false);
+            }
+
+            this.element.addEventListener("mouseover", callback1, false);
+            this.element.addEventListener("mouseout", callback2, false);
+            events.push({ type: "mouseover", callback: callback1 });
+            events.push({ type: "mouseout", callback: callback2 });
 
             return this;
         }
@@ -3621,7 +3688,13 @@ jui.define("util.svg.element.transform", [ "util.base" ], function(_) { // polyg
      * @constructor
      */
     var TransElement = function() {
-        var orders = {};
+        var orders = {
+            translate: null,
+            scale: null,
+            rotate: null,
+            skew: null,
+            matrix: null
+        };
 
         function applyOrders(self) {
             var orderArr = [];

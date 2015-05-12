@@ -46,6 +46,29 @@
                 }
             }
         });
+
+        datepicker4 = datepicker("#datepicker4", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker4_group").find("input").val(this.getFormat("yyyyMMdd"));
+                }
+            }
+        });
+
+        // 해당 메소드 호출시 select 이벤트가 발생함
+        datepicker4.select(new Date());
+
+        $("#datepicker4_group").find("a").on("click", function(e) {
+            var $r = $(datepicker4.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
     });
 </script>
 
@@ -84,6 +107,26 @@
     <table class="body">
     </table>
 </div>
+<br/>
+
+<div id="datepicker4_group" class="group">
+    <input type="text" class="input" style="width: 157px;" />
+    <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+</div>
+
+<div id="datepicker4" class="datepicker" style="display: none;">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+<br/>
 
 <script data-jui="#datepicker1" data-tpl="dates" type="text/template">
     <tr>
@@ -105,6 +148,14 @@
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
         <td><!= dates[i] !>년</td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker4" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
         <! } !>
     </tr>
 </script>

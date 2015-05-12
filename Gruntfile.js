@@ -50,6 +50,7 @@ module.exports = function(grunt) {
         // chart (core)
         "js/chart/draw.js",
         "js/chart/axis.js",
+        "js/chart/map.js",
         "js/chart/builder.js",
 
         // chart.theme
@@ -79,7 +80,7 @@ module.exports = function(grunt) {
         "js/chart/grid/overlap.js",
         "js/chart/grid/topologytable.js",
         "js/chart/grid/grid3d.js",
-
+        
         // chart.brush
         "js/chart/brush/core.js",
         "js/chart/brush/imagebar.js",
@@ -132,6 +133,13 @@ module.exports = function(grunt) {
         "js/chart/brush/focus.js", // brush supporter
         "js/chart/brush/pin.js",  // brush supporter
 
+        // map brush
+        "js/chart/brush/map.core.js",
+        "js/chart/brush/map.selector.js",
+        "js/chart/brush/map.template.js",
+        "js/chart/brush/map.bubble.js",
+        "js/chart/brush/map.flightroute.js",
+
         // chart.widget
         "js/chart/widget/core.js",
         "js/chart/widget/tooltip.js",
@@ -144,10 +152,15 @@ module.exports = function(grunt) {
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
 
+        // map widget
+        "js/chart/widget/map.core.js",
+        "js/chart/widget/map.control.js",
+        "js/chart/widget/map.tooltip.js",
+
         // chart wrapper
         "js/chartx/realtime.js",
         "js/chartx/mini.js"
-    ]
+    ];
 
     grunt.initConfig({
         watch : {
@@ -194,7 +207,6 @@ module.exports = function(grunt) {
                 dest : "jui.chart.js"
             }            
         },
-
         uglify: {
             dist : {
                 files : {

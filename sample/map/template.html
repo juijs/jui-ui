@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body >
+
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
+
+<script>
+    $(function() {
+        $("#codemirror").val($("#script_code").html());
+
+        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+    })
+
+</script>
+
+<script id="marker" type="text/template">
+    <image xlink:href="http://www.clker.com/cliparts/I/l/L/S/W/9/map-marker.svg" width="50" height="70" x="-10" y="-25"/>
+</script>
+
+<script id="script_code">
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        c = chart("#chart", {
+            width : 1000,
+            height : 1000,
+            padding: 0,
+            axis : [{
+                map : {
+                    path : "resource/southKoreaLow.svg",
+                    width : 525,
+                    height : 714,
+                    move : true,
+                    zoom : true
+                },
+                data : [
+                    { id : 'KR-11', title : "seoul", description : 'Beautiful City!!'}
+                ],
+                area : {
+                    width : 525 * 0.5,
+                    height : 714 * 0.5
+                }
+            }],
+            tpl : {
+                marker : $("#marker").html()
+            },
+            brush : [{
+                type : "map.template",
+
+                callback : function(i, data, centerPos) {
+                    
+                    var g = this.chart.svg.group();
+                    g.html(this.chart.tpl.marker($.extend(data, centerPos)));
+                    
+                    var rect = this.chart.svg.rect({
+                        x : 30,
+                        y : 0,
+                        width : 200,
+                        height : 60,
+                        rx : 5,
+                        ry : 5,
+                        stroke : 'red',
+                        fill: 'white'
+                    });
+                    
+                    g.append(rect);
+                    g.append(this.chart.svg.text({x : 140, y : 20, 'text-anchor' : 'middle', 'font-weight' : 'bold', 'font-size' : '16px'}, data.title));
+                    g.append(this.chart.svg.text({x : 40, y : 50, 'text-anchor' : 'start', 'font-size' : '13px'}, data.description));
+
+                    return g;
+                }
+            }]
+        });
+	})
+</script>
+
+
+</body>
+</html>

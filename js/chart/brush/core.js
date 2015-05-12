@@ -191,6 +191,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {*}
          */
         this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
+            // 최소/최대 값이 같을 경우 처리
+            minValue = (minValue == maxValue) ? 0 : minValue;
+
             var range = maxRadius - minRadius,
                 tg = range * getPer();
 
@@ -443,38 +446,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key) {
-            if (typeof key == 'string') {
-                return this.chart.color(0, { colors : [key] });
+            if(_.typeCheck("string", key)) {
+                return this.chart.color(0, { colors : [ key ] });
             }
+
             return this.chart.color(key, this.brush);
-        }
-
-        /**
-         * @method on 
-         * 
-         * chart.on() 을 쉽게 사용 할 수 있게 해주는 유틸리티 함수 
-         * 
-         * @param {String} type event name 
-         * @param {Function} callback
-         * @return {*}
-         */
-        this.on = function(type, callback) {
-            var self = this;
-
-            return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", self.axis.index)) {
-                    var axis = self.chart.axis(self.axis.index),
-                        e = arguments[0];
-
-                    if (_.typeCheck("object", axis)) {
-                        if (arguments[1] == self.axis.index) {
-                            callback.apply(self, [ e ]);
-                        }
-                    }
-                } else {
-                    callback.apply(self, arguments);
-                }
-            }, "render");
         }
 	}
 

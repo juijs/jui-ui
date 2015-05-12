@@ -1,4 +1,4 @@
-jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, math) {
+jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.axis
@@ -12,9 +12,14 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
      *
      */
     var Axis = function(chart, originAxis, cloneAxis) {
-        var self = this;
-        var _area = {}, _padding = {},
-            _clipId = "", _clipPath = null;
+        var self = this,
+            map = null;
+        var _area = {},
+            _padding = {},
+            _clipId = "",
+            _clipPath = null,
+            _clipRectId = "",
+            _clipRect = null;
 
         function caculatePanel(a, padding) {
 
@@ -95,6 +100,38 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
 
             return elem.scale;
         }
+
+        var mapObj = null;
+
+        function drawMapType(axis, k) {
+            if(k == "map" && !_.typeCheck("object", axis[k])) return null;
+
+            // 축 위치 설정
+            axis[k] = axis[k]  || {};
+
+            var Map = jui.include("chart.map");
+
+            // 맵 기본 옵션과 사용자 옵션을 합침
+            jui.defineOptions(Map, axis[k]);
+
+            // 맵 객체는 한번만 생성함
+            if(map == null) {
+                map = new Map(chart, axis, axis[k]);
+            }
+
+            // 맵 기본 프로퍼티 설정
+            map.chart = chart;
+            map.axis = axis;
+            map.map = axis[k];
+
+            // 그리드 별 위치 선정하기
+            var elem = map.render();
+            elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            elem.scale.type = axis[k].type;
+            elem.scale.root = elem.root;
+            
+            return elem.scale;
+        }
         
         function setScreen(pNo) {
             var dataList = self.origin,
@@ -133,6 +170,7 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         }
 
         function createClipPath() {
+            // clippath with x, y
             if (_clipPath) {
                 _clipPath.remove();
                 _clipPath = null;
@@ -150,8 +188,28 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                     height: _area.height
                 });
             });
-
             chart.appendDefs(_clipPath);
+
+            // clippath without x, y
+            if (_clipRect) {
+                _clipRect.remove();
+                _clipRect = null;
+            }
+
+            _clipRectId = _.createId("clip-rect-id-");
+
+            _clipRect = chart.svg.clipPath({
+                id: _clipRectId
+            }, function() {
+                chart.svg.rect({
+                    x: 0,
+                    y: 0,
+                    width: _area.width,
+                    height: _area.height
+                });
+            });
+
+            chart.appendDefs(_clipRect);
         }
 
         function checkAxisPoint(e) {
@@ -289,7 +347,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             _.extend(this, {
                 x : options.x,
                 y : options.y,
-                c : options.c
+                c : options.c,
+                map : options.map
             });
 
             // 패딩 옵션 설정
@@ -303,11 +362,13 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
                 x: 0, y: 0 , width: area.width, height: area.height
             }, true), _padding);
 
+
+            createClipPath();
+
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
             this.c = drawGridType(this, "c");
-            
-            createClipPath();
+            this.map = drawMapType(this, "map");
         }
 
         /**
@@ -343,7 +404,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             var obj = {
                 area: _area,
                 padding: _padding,
-                clipId: _clipId
+                clipId: _clipId,
+                clipRectId : _clipRectId
             };
 
             return obj[type] || cloneAxis[type];
@@ -360,6 +422,24 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
         this.updateGrid = function(type, grid) {
             _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
+        }
+
+        /**
+         * @method updateMap
+         *
+         * map 정보를 업데이트 한다.
+         *
+         * @param {Object} map
+         * @param {Array} data
+         */
+        this.updateMap = function(map, data) {
+            _.extend(originAxis["map"], map);
+
+            if(_.typeCheck("array", data)) {
+                this.update(data);
+            } else {
+                if(chart.isRender()) chart.render();
+            }
         }
 
         /**
@@ -463,6 +543,8 @@ jui.define("chart.axis", [ "jquery", "util.base", "util.math" ], function($, _, 
             y: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
+            /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
+            map : null,
             /** @cfg {Array} [data=[]]  Sets the row set data which constitute a chart.  */
             data: [],
             /** @cfg {Array} [origin=[]]  [Fore read only] Original data initially set. */

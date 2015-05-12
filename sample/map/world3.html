@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    var data = [{
+        id: "usa",
+        airport: "small"
+    }, {
+        id: "britain",
+        routes: [ "usa", "iceland", "sweden", "lithuania", "portugal", "spain", "italy", "ukraine" ],
+        airport: "large"
+    }, {
+        id: "iceland",
+        airport: "small"
+    }, {
+        id: "portugal",
+        airport: "small"
+    }, {
+        id: "spain",
+        airport: "small"
+    }, {
+        id: "france",
+        airport: "small"
+    }, {
+        id: "sweden",
+        airport: "small"
+    }, {
+        id: "ukraine",
+        airport: "small"
+    }, {
+        id: "italy",
+        airport: "small"
+    }, {
+        id: "ireland",
+        airport: "small"
+    }, {
+        id: "norway",
+        airport: "small"
+    }, {
+        id: "greece",
+        airport: "small"
+    }, {
+        id: "lithuania",
+        airport: "large"
+    }];
+
+    jui.ready([ "chart.builder" ], function(chart) {
+        c = chart("#chart", {
+            width : 950,
+            height : 620,
+            padding : 0,
+            axis : [{
+                map : {
+                    path : "resource/worldFree2.svg",
+                    width : 950,
+                    height : 620,
+                    scale : 2.5,
+                    viewX : -200,
+                    viewY : -300
+                },
+                data : data
+            }],
+            brush : [{
+                type : "map.flightroute"
+            }],
+            widget : [{
+                type : "map.control",
+                align : "start",
+                orient : "top",
+                dx : 10,
+                dy : 10,
+                minScale : 2,
+                maxScale : 4
+            }],
+            style : {
+                mapPathBackgroundColor : "#FFCC00",
+                mapPathBackgroundOpacity : 0.4,
+                mapControlButtonColor : "#FFCC00"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

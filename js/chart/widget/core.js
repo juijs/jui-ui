@@ -40,7 +40,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             var self = this;
 
             return this.chart.on(type, function() {
-                if(type.startsWith("axis.") && _.typeCheck("integer", axisIndex)) {
+                if(_.startsWith(type, "axis.") && _.typeCheck("integer", axisIndex)) {
                     var axis = self.chart.axis(axisIndex),
                         e = arguments[0];
 

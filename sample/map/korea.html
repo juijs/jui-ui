@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        c = chart("#chart", {
+            width : 600,
+            height : 800,
+            padding: 0,
+            axis : [{
+                map : {
+                    path : "resource/southKoreaLow.svg",
+                    width : 524,
+                    height : 750,
+                    zoom : false,
+                    move : false
+                },
+                area : {
+                    width : 524,
+                    height : 750
+                }
+            }],
+            brush : [{
+                type : "map.over"
+            }]
+        });
+	})
+</script>
+
+
+</body>
+</html>

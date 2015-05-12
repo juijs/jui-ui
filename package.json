@@ -1,6 +1,6 @@
 {
   "name": "jui",
-  "version": "1.3.4.1",
+  "version": "1.3.5",
   "description": "JENNIFER UI is all free. a simple, fast, many: JUI is all-in-one desktop UI framework. Bootstrap support, Independent style & script components, SVG-based chart components.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

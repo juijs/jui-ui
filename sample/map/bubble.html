@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body >
+
+<div id="chart"></div>
+<textarea id="codemirror"></textarea>
+
+<script>
+    $(function() {
+        $("#codemirror").val($("#script_code").html());
+
+        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+    })
+
+</script>
+
+<script id="marker" type="text/template">
+    <image xlink:href="http://www.clker.com/cliparts/I/l/L/S/W/9/map-marker.svg" width="50" height="70" x="-10" y="-25"/>
+</script>
+
+<script id="script_code">
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        c = chart("#chart", {
+            width : 700,
+            height : 700,
+            padding : 0,
+            axis : [{
+                map : {
+                    path : "resource/southKoreaLow.svg",
+                    width : 525,
+                    height : 714
+                },
+                data : [{
+                    id : "KR-11",
+                    value : 10
+                }],
+                area : {
+                    width : 525 / 2,
+                    height : 714 / 2
+                }
+            }],
+            brush : [{
+                type : "map.bubble"
+            }, {
+                type : "map.over"
+            }],
+            widget : [{
+                type : "map.control",
+                move : true,
+                zoom : true
+            }]
+        });
+	})
+</script>
+
+
+</body>
+</html>

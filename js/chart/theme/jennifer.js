@@ -28,7 +28,6 @@ jui.define("chart.theme.jennifer", [], function() {
         "#9228E4"
     ];
 
-
     return {
         /** @cfg  */
     	backgroundColor : "white",
@@ -64,16 +63,11 @@ jui.define("chart.theme.jennifer", [], function() {
 
         /** @cfg  Grid Bar Size */
         gridTickSize : 3,
-
         gridTickBorderWidth : 1.5,
-
         gridTickPadding : 5,
 
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-
-
-
 
         // brush-item styles
         /** @cfg */
@@ -287,7 +281,28 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         crossBalloonBackgroundColor : "black",
         /** @cfg */
-        crossBalloonBackgroundOpacity : 0.5
+        crossBalloonBackgroundOpacity : 0.5,
 
+        // Map Common
+        mapPathBackgroundColor : "#67B7DC",
+        mapPathBackgroundOpacity : 1,
+        mapPathBorderColor : "white",
+        mapPathBorderWidth : 0,
+        mapPathBorderOpacity : 0,
+        // Map Brushes
+        mapBubbleBackgroundOpacity : 0.5,
+        mapBubbleBorderWidth : 1,
+        mapSelectorColor : "#5a73db",
+        mapSelectorActiveColor : "#CC0000",
+        mapFlightRouteAirportSmallColor : "#CC0000",
+        mapFlightRouteAirportLargeColor : "#000",
+        mapFlightRouteAirportBorderWidth : 2,
+        mapFlightRouteAirportRadius : 8,
+        mapFlightRouteLineBorderColor : "red",
+        mapFlightRouteLineBorderWidth : 1,
+        // Map Widgets
+        mapControlButtonColor : "#3994e2",
+        mapControlScrollColor : "#000",
+        mapControlScrollLineColor : "#fff"
     }
 });
