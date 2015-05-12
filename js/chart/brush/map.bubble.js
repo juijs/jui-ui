@@ -28,7 +28,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
 		this.draw = function() {
             var g = chart.svg.group(),
-                color = _.typeCheck("string", brush.color) ? brush.color : this.color(0),
+                color = _.typeCheck("string", brush.color) ? chart.color(brush.color) : this.color(0),
                 minmax = getMinMaxValues();
 
             this.eachData(function(i, d) {
@@ -36,9 +36,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                     size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null));
 
-                if(xy.x != null && xy.y != null) {
+                if(xy != null) {
                     if(_.typeCheck("function", brush.color)) {
-                        color = brush.color.call(chart, d) || color;
+                        color = chart.color(brush.color.call(chart, d) || color);
                     }
 
                     var c = chart.svg.circle({

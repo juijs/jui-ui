@@ -6,9 +6,55 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {
-        var g;
+        var self = this;
+        var g, tooltip;
         var smallColor, largeColor, borderWidth, lineColor, lineWidth, outerSize;
-        var smallRate = 0.4, largeRate = 1.33;
+        var smallRate = 0.4, largeRate = 1.33, padding = 7, anchor = 7, textY = 14;
+
+        function printTooltip(obj) {
+            var msg = obj.data.title;
+
+            if(_.typeCheck("string", msg) && msg != "") {
+                tooltip.get(1).text(msg);
+                tooltip.get(1).attr({ "text-anchor": "middle" });
+            }
+
+            return msg;
+        }
+
+        function setOverEffect(type, xy, outer, inner) {
+            outer.hover(over, out);
+            inner.hover(over, out);
+
+            function over(e) {
+                if(!printTooltip(xy)) return;
+
+                var color = (type == "large") ? smallColor : largeColor,
+                    size = tooltip.get(1).size(),
+                    innerSize = outerSize * smallRate,
+                    w = size.width + (padding * 2),
+                    h = size.height + padding;
+
+                tooltip.get(1).attr({ x: w / 2 });
+                tooltip.get(0).attr({
+                    points: self.balloonPoints("top", w, h, anchor),
+                    stroke: color
+                });
+                tooltip.attr({ visibility: "visible" });
+                tooltip.translate(xy.x - (w / 2), xy.y - h - anchor - innerSize);
+
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+
+            function out(e) {
+                var color = (type == "large") ? largeColor : smallColor;
+
+                tooltip.attr({ visibility: "hidden" });
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+        }
 
         this.drawAirport = function(type, xy) {
             var color = (type == "large") ? largeColor : smallColor,
@@ -30,9 +76,12 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
             g.append(outer);
             g.append(inner);
+
+            // 마우스오버 이벤트 설정
+            setOverEffect(type, xy, outer, inner);
         }
 
-        this.drawRoutes = function(xy, target) {
+        this.drawRoutes = function(target, xy) {
             var line = chart.svg.line({
                 x1: xy.x,
                 y1: xy.y,
@@ -47,6 +96,23 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
         this.drawBefore = function() {
             g = chart.svg.group();
+            tooltip = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                chart.svg.polygon({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": 2
+                });
+
+                chart.text({
+                    "font-size": chart.theme("tooltipFontSize"),
+                    "fill": chart.theme("tooltipFontColor"),
+                    y: textY
+                });
+            });
+
             smallColor = chart.theme("mapFlightRouteAirportSmallColor");
             largeColor = chart.theme("mapFlightRouteAirportLargeColor");
             borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
@@ -57,16 +123,17 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
 		this.draw = function() {
             this.eachData(function(i, d) {
-                var type = axis.getValue(d, "airport", null),
+                var id = axis.getValue(d, "id", null),
+                    type = axis.getValue(d, "airport", null),
                     routes = axis.getValue(d, "routes", []),
-                    xy = axis.map(axis.getValue(d, "id", null));
+                    xy = axis.map(id);
 
                 if(type != null && xy != null) {
                     for(var j = 0; j < routes.length; j++) {
                         var target = axis.map(routes[j]);
 
                         if(target != null) {
-                            this.drawRoutes(xy, target);
+                            this.drawRoutes(target, xy);
                         }
                     }
 

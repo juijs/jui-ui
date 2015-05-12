@@ -13205,21 +13205,15 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         var obj = {};
 
                         $.each(this.attributes, function () {
-                            if (this.specified && isLoadAttribute(this.name)) {
+                            if(this.specified && isLoadAttribute(this.name)) {
                                 obj[this.name] = this.value;
                             }
                         });
 
-                        if (_.typeCheck("string", obj["id"])) {
-                            var pos = getPositionInData(obj["id"]);
-
-                            if (pos != null) {
-                                obj["x"] = pos.x;
-                                obj["y"] = pos.y;
-                            }
+                        if(_.typeCheck("string", obj.id)) {
+                            _.extend(obj, getDataById(obj.id));
+                            pathData.push(obj);
                         }
-
-                        pathData.push(obj);
                     });
 
                     $style.each(function () {
@@ -13235,23 +13229,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return loadArray(pathData);
         }
 
-        function getPositionInData(id) {
+        function getDataById(id) {
             var list = self.axis.data;
 
             for(var i = 0; i < list.length; i++) {
                 var dataId = self.axis.getValue(list[i], "id", null);
 
                 if(dataId == id) {
-                    var x = self.axis.getValue(list[i], "x", null),
-                        y = self.axis.getValue(list[i], "y", null);
-
-                    if(_.typeCheck("number", x) && _.typeCheck("number", y)) {
-                        return {
-                            x: x,
-                            y: y,
-                            data: list[i]
-                        }
-                    }
+                    return list[i];
                 }
             }
 
@@ -13263,13 +13248,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                var path = list[i].path;
+                var path = list[i].path,
+                    data = list[i].data;
 
                 addEvent(path, list[i]);
                 group.append(path);
 
-                if(path.attr("id")) {
-                    pathIndex[path.attr("id")] = list[i];
+                if(_.typeCheck("string", data.id)) {
+                    pathIndex[data.id] = list[i];
                 }
             }
 
@@ -13355,21 +13341,26 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale = function(id) {
             if(!_.typeCheck("string", id)) return;
 
-            var path = pathIndex[id].path,
-                data = pathIndex[id].data,
-                x = null,
+            var x = null,
                 y = null,
+                path = null,
+                data = null,
                 pxy = getScaleXY();
 
-            if(_.typeCheck("object", path)) {
-                if(path.attr("x") != null)
-                    x = parseFloat(path.attr("x"));
-                if(path.attr("y") != null)
-                    y = parseFloat(path.attr("y"));
-            }
+            if(_.typeCheck("object", pathIndex[id])) {
+                path = pathIndex[id].path;
+                data = pathIndex[id].data;
 
-            if(x != null) x = (x * pathScale) - pxy.x;
-            if(y != null) y = (y * pathScale) - pxy.y;
+                if(data.x != null) {
+                    var cx = parseFloat(data.x);
+                    x = (cx * pathScale) - pxy.x;
+                }
+
+                if(data.y != null) {
+                    var cy = parseFloat(data.y);
+                    y = (cy * pathScale) - pxy.y;
+                }
+            }
 
             return {
                 x: x,
@@ -14131,28 +14122,33 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @return {String} Selected color string
          */
         this.color = function(i, brush) {
-            var color;
+            var color = null;
 
-            // 테마 & 브러쉬 옵션 컬러 설정
-            if(_.typeCheck("array", brush.colors)) {
-                color = brush.colors[i];
-
-                if(_.typeCheck("integer", color)) {
-                    color = nextColor(color);
-                }
+            // 직접 색상을 추가할 경우 (+그라데이션, +필터)
+            if(_.typeCheck("string", i)) {
+                color = i;
             } else {
-                color = nextColor();
-            }
-
-            // 시리즈 컬러 설정
-            if(_.typeCheck("array", brush.target)) {
-                var series = _series[brush.target[i]];
-
-                if(series && series.color) {
-                    color = series.color;
+                // 테마 & 브러쉬 옵션 컬러 설정
+                if(_.typeCheck("array", brush.colors)) {
+                    color = brush.colors[i];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
+                    }
+                } else {
+                    color = nextColor();
+                }
+
+                // 시리즈 컬러 설정
+                if(_.typeCheck("array", brush.target)) {
+                    var series = _series[brush.target[i]];
+
+                    if(series && series.color) {
+                        color = series.color;
+
+                        if(_.typeCheck("integer", color)) {
+                            color = nextColor(color);
+                        }
                     }
                 }
             }
@@ -24607,35 +24603,33 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 			var g = chart.svg.group(),
 				originFill = null;
 
-			// �� ���� ȿ�� �̺�Ʈ
 			this.on("map.mouseover", function(obj, e) {
-				if(activePath == obj.element) return;
+				if(activePath == obj.path) return;
 
-				originFill = obj.element.styles.fill || obj.element.attributes.fill;
-				obj.element.css({
+				originFill = obj.path.styles.fill || obj.path.attributes.fill;
+				obj.path.css({
 					fill: chart.theme("mapSelectorColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {
-				if(activePath == obj.element) return;
+				if(activePath == obj.path) return;
 
-				obj.element.css({
+				obj.path.css({
 					fill: originFill
 				});
 			});
 
-			// �� �н� ��Ƽ�� �̺�Ʈ
 			if(brush.activeEvent != null) {
 				this.on(brush.activeEvent, function(obj, e) {
-					activePath = obj.element;
+					activePath = obj.path;
 
-					axis.map.each(function (i, obj) {
-						obj.element.css({
+					axis.map.each(function(i, obj) {
+						obj.path.css({
 							fill: originFill
 						});
 					});
 
-					obj.element.css({
+					obj.path.css({
 						fill: chart.theme("mapSelectorActiveColor")
 					});
 				});
@@ -24719,7 +24713,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
 		this.draw = function() {
             var g = chart.svg.group(),
-                color = _.typeCheck("string", brush.color) ? brush.color : this.color(0),
+                color = _.typeCheck("string", brush.color) ? chart.color(brush.color) : this.color(0),
                 minmax = getMinMaxValues();
 
             this.eachData(function(i, d) {
@@ -24727,9 +24721,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                     size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null));
 
-                if(xy.x != null && xy.y != null) {
+                if(xy != null) {
                     if(_.typeCheck("function", brush.color)) {
-                        color = brush.color.call(chart, d) || color;
+                        color = chart.color(brush.color.call(chart, d) || color);
                     }
 
                     var c = chart.svg.circle({
@@ -24768,9 +24762,55 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {
-        var g;
+        var self = this;
+        var g, tooltip;
         var smallColor, largeColor, borderWidth, lineColor, lineWidth, outerSize;
-        var smallRate = 0.4, largeRate = 1.33;
+        var smallRate = 0.4, largeRate = 1.33, padding = 7, anchor = 7, textY = 14;
+
+        function printTooltip(obj) {
+            var msg = obj.data.title;
+
+            if(_.typeCheck("string", msg) && msg != "") {
+                tooltip.get(1).text(msg);
+                tooltip.get(1).attr({ "text-anchor": "middle" });
+            }
+
+            return msg;
+        }
+
+        function setOverEffect(type, xy, outer, inner) {
+            outer.hover(over, out);
+            inner.hover(over, out);
+
+            function over(e) {
+                if(!printTooltip(xy)) return;
+
+                var color = (type == "large") ? smallColor : largeColor,
+                    size = tooltip.get(1).size(),
+                    innerSize = outerSize * smallRate,
+                    w = size.width + (padding * 2),
+                    h = size.height + padding;
+
+                tooltip.get(1).attr({ x: w / 2 });
+                tooltip.get(0).attr({
+                    points: self.balloonPoints("top", w, h, anchor),
+                    stroke: color
+                });
+                tooltip.attr({ visibility: "visible" });
+                tooltip.translate(xy.x - (w / 2), xy.y - h - anchor - innerSize);
+
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+
+            function out(e) {
+                var color = (type == "large") ? largeColor : smallColor;
+
+                tooltip.attr({ visibility: "hidden" });
+                outer.attr({ stroke: color });
+                inner.attr({ fill: color });
+            }
+        }
 
         this.drawAirport = function(type, xy) {
             var color = (type == "large") ? largeColor : smallColor,
@@ -24792,9 +24832,12 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
             g.append(outer);
             g.append(inner);
+
+            // 마우스오버 이벤트 설정
+            setOverEffect(type, xy, outer, inner);
         }
 
-        this.drawRoutes = function(xy, target) {
+        this.drawRoutes = function(target, xy) {
             var line = chart.svg.line({
                 x1: xy.x,
                 y1: xy.y,
@@ -24809,6 +24852,23 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
         this.drawBefore = function() {
             g = chart.svg.group();
+            tooltip = chart.svg.group({
+                visibility: "hidden"
+            }, function() {
+                chart.svg.polygon({
+                    fill: chart.theme("tooltipBackgroundColor"),
+                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                    stroke: chart.theme("tooltipBorderColor"),
+                    "stroke-width": 2
+                });
+
+                chart.text({
+                    "font-size": chart.theme("tooltipFontSize"),
+                    "fill": chart.theme("tooltipFontColor"),
+                    y: textY
+                });
+            });
+
             smallColor = chart.theme("mapFlightRouteAirportSmallColor");
             largeColor = chart.theme("mapFlightRouteAirportLargeColor");
             borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
@@ -24819,16 +24879,17 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
 		this.draw = function() {
             this.eachData(function(i, d) {
-                var type = axis.getValue(d, "airport", null),
+                var id = axis.getValue(d, "id", null),
+                    type = axis.getValue(d, "airport", null),
                     routes = axis.getValue(d, "routes", []),
-                    xy = axis.map(axis.getValue(d, "id", null));
+                    xy = axis.map(id);
 
                 if(type != null && xy != null) {
                     for(var j = 0; j < routes.length; j++) {
                         var target = axis.map(routes[j]);
 
                         if(target != null) {
-                            this.drawRoutes(xy, target);
+                            this.drawRoutes(target, xy);
                         }
                     }
 

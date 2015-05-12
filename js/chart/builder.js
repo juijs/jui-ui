@@ -628,28 +628,33 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @return {String} Selected color string
          */
         this.color = function(i, brush) {
-            var color;
+            var color = null;
 
-            // 테마 & 브러쉬 옵션 컬러 설정
-            if(_.typeCheck("array", brush.colors)) {
-                color = brush.colors[i];
-
-                if(_.typeCheck("integer", color)) {
-                    color = nextColor(color);
-                }
+            // 직접 색상을 추가할 경우 (+그라데이션, +필터)
+            if(_.typeCheck("string", i)) {
+                color = i;
             } else {
-                color = nextColor();
-            }
-
-            // 시리즈 컬러 설정
-            if(_.typeCheck("array", brush.target)) {
-                var series = _series[brush.target[i]];
-
-                if(series && series.color) {
-                    color = series.color;
+                // 테마 & 브러쉬 옵션 컬러 설정
+                if(_.typeCheck("array", brush.colors)) {
+                    color = brush.colors[i];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
+                    }
+                } else {
+                    color = nextColor();
+                }
+
+                // 시리즈 컬러 설정
+                if(_.typeCheck("array", brush.target)) {
+                    var series = _series[brush.target[i]];
+
+                    if(series && series.color) {
+                        color = series.color;
+
+                        if(_.typeCheck("integer", color)) {
+                            color = nextColor(color);
+                        }
                     }
                 }
             }

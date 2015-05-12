@@ -12,35 +12,33 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 			var g = chart.svg.group(),
 				originFill = null;
 
-			// 맵 오버 효과 이벤트
 			this.on("map.mouseover", function(obj, e) {
-				if(activePath == obj.element) return;
+				if(activePath == obj.path) return;
 
-				originFill = obj.element.styles.fill || obj.element.attributes.fill;
-				obj.element.css({
+				originFill = obj.path.styles.fill || obj.path.attributes.fill;
+				obj.path.css({
 					fill: chart.theme("mapSelectorColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {
-				if(activePath == obj.element) return;
+				if(activePath == obj.path) return;
 
-				obj.element.css({
+				obj.path.css({
 					fill: originFill
 				});
 			});
 
-			// 맵 패스 액티브 이벤트
 			if(brush.activeEvent != null) {
 				this.on(brush.activeEvent, function(obj, e) {
-					activePath = obj.element;
+					activePath = obj.path;
 
-					axis.map.each(function (i, obj) {
-						obj.element.css({
+					axis.map.each(function(i, obj) {
+						obj.path.css({
 							fill: originFill
 						});
 					});
 
-					obj.element.css({
+					obj.path.css({
 						fill: chart.theme("mapSelectorActiveColor")
 					});
 				});

@@ -84,17 +84,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                             }
                         });
 
-                        // 실제 데이터의 x, y 추가
-                        if(_.typeCheck("string", obj["id"])) {
-                            var pos = getPositionInData(obj["id"]);
-
-                            if(pos != null) {
-                                obj["x"] = pos.x;
-                                obj["y"] = pos.y;
-                            }
+                        if(_.typeCheck("string", obj.id)) {
+                            _.extend(obj, getDataById(obj.id));
+                            pathData.push(obj);
                         }
-
-                        pathData.push(obj);
                     });
 
                     $style.each(function () {
@@ -110,23 +103,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return loadArray(pathData);
         }
 
-        function getPositionInData(id) {
+        function getDataById(id) {
             var list = self.axis.data;
 
             for(var i = 0; i < list.length; i++) {
                 var dataId = self.axis.getValue(list[i], "id", null);
 
                 if(dataId == id) {
-                    var x = self.axis.getValue(list[i], "x", null),
-                        y = self.axis.getValue(list[i], "y", null);
-
-                    if(_.typeCheck("number", x) && _.typeCheck("number", y)) {
-                        return {
-                            x: x,
-                            y: y,
-                            data: list[i]
-                        }
-                    }
+                    return list[i];
                 }
             }
 
@@ -138,13 +122,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 list = loadPath(self.map.path);
 
             for(var i = 0, len = list.length; i < len; i++) {
-                var path = list[i].path;
+                var path = list[i].path,
+                    data = list[i].data;
 
                 addEvent(path, list[i]);
                 group.append(path);
 
-                if(path.attr("id")) {
-                    pathIndex[path.attr("id")] = list[i];
+                if(_.typeCheck("string", data.id)) {
+                    pathIndex[data.id] = list[i];
                 }
             }
 
@@ -230,21 +215,26 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         this.scale = function(id) {
             if(!_.typeCheck("string", id)) return;
 
-            var path = pathIndex[id].path,
-                data = pathIndex[id].data,
-                x = null,
+            var x = null,
                 y = null,
+                path = null,
+                data = null,
                 pxy = getScaleXY();
 
-            if(_.typeCheck("object", path)) {
-                if(path.attr("x") != null)
-                    x = parseFloat(path.attr("x"));
-                if(path.attr("y") != null)
-                    y = parseFloat(path.attr("y"));
-            }
+            if(_.typeCheck("object", pathIndex[id])) {
+                path = pathIndex[id].path;
+                data = pathIndex[id].data;
 
-            if(x != null) x = (x * pathScale) - pxy.x;
-            if(y != null) y = (y * pathScale) - pxy.y;
+                if(data.x != null) {
+                    var cx = parseFloat(data.x);
+                    x = (cx * pathScale) - pxy.x;
+                }
+
+                if(data.y != null) {
+                    var cy = parseFloat(data.y);
+                    y = (cy * pathScale) - pxy.y;
+                }
+            }
 
             return {
                 x: x,
