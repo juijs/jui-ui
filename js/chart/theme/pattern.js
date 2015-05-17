@@ -222,6 +222,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
+        tooltipBorderWidth : 2,
         tooltipBackgroundOpacity : 0.7,
         scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",

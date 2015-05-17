@@ -14937,6 +14937,8 @@ jui.define("chart.theme.jennifer", [], function() {
         /** @cfg */
         tooltipBorderColor : "#aaaaaa",
         /** @cfg */
+        tooltipBorderWidth : 2,
+        /** @cfg */
         tooltipBackgroundOpacity : 0.7,
         /** @cfg */
         scrollBackgroundSize : 7,
@@ -15138,6 +15140,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "none",
+        tooltipBorderWidth : 2,
         tooltipBackgroundOpacity : 1,
         scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
@@ -15320,6 +15323,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "white",
+        tooltipBorderWidth : 2,
         tooltipBackgroundOpacity : 1,
         scrollBackgroundSize : 7,
         scrollBackgroundColor : "#3e3e3e",
@@ -15497,6 +15501,7 @@ jui.define("chart.theme.pastel", [], function() {
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "black",
         tooltipBorderColor : "black",
+		tooltipBorderWidth : 2,
 		tooltipBackgroundOpacity : 0.7,
         scrollBackgroundSize : 7,
 		scrollBackgroundColor :	"#f5f5f5",
@@ -15763,6 +15768,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipFontSize : "12px",
         tooltipBackgroundColor : "white",
         tooltipBorderColor : "#aaaaaa",
+        tooltipBorderWidth : 2,
         tooltipBackgroundOpacity : 0.7,
         scrollBackgroundSize : 7,
         scrollBackgroundColor : "#dcdcdc",
@@ -25073,6 +25079,16 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return ($.inArray(index, list) == -1) ? false : true;
         }
 
+        function getColorByKey(obj) {
+            for(var i = 0; i < obj.brush.target.length; i++) {
+                if(obj.brush.target[i] == obj.dataKey) {
+                    return self.chart.color(i, obj.brush);
+                }
+            }
+
+            return self.chart.color(0, obj.brush);;
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
@@ -25081,7 +25097,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     fill: chart.theme("tooltipBackgroundColor"),
                     "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
                     stroke: chart.theme("tooltipBorderColor"),
-                    "stroke-width": 1
+                    "stroke-width": chart.theme("tooltipBorderWidth")
                 });
 
                 text = chart.text({
@@ -25093,8 +25109,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.draw = function() {
-            var self = this,
-                isActive = false,
+            var isActive = false,
                 w, h;
 
             this.on("mouseover", function(obj, e) {
@@ -25108,8 +25123,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w = size.width + (padding * 2);
                 h = size.height + padding;
 
+                rect.attr({
+                    points: self.balloonPoints(widget.orient, w, h, anchor),
+                    stroke: getColorByKey(obj)
+                });
+
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;

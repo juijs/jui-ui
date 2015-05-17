@@ -83,6 +83,16 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return ($.inArray(index, list) == -1) ? false : true;
         }
 
+        function getColorByKey(obj) {
+            for(var i = 0; i < obj.brush.target.length; i++) {
+                if(obj.brush.target[i] == obj.dataKey) {
+                    return self.chart.color(i, obj.brush);
+                }
+            }
+
+            return self.chart.color(0, obj.brush);;
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
@@ -91,7 +101,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                     fill: chart.theme("tooltipBackgroundColor"),
                     "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
                     stroke: chart.theme("tooltipBorderColor"),
-                    "stroke-width": 1
+                    "stroke-width": chart.theme("tooltipBorderWidth")
                 });
 
                 text = chart.text({
@@ -103,8 +113,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.draw = function() {
-            var self = this,
-                isActive = false,
+            var isActive = false,
                 w, h;
 
             this.on("mouseover", function(obj, e) {
@@ -118,8 +127,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w = size.width + (padding * 2);
                 h = size.height + padding;
 
+                rect.attr({
+                    points: self.balloonPoints(widget.orient, w, h, anchor),
+                    stroke: getColorByKey(obj)
+                });
+
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
