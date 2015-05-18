@@ -139,6 +139,7 @@ module.exports = function(grunt) {
         "js/chart/brush/map.template.js",
         "js/chart/brush/map.bubble.js",
         "js/chart/brush/map.flightroute.js",
+        "js/chart/brush/map.marker.js",
 
         // chart.widget
         "js/chart/widget/core.js",

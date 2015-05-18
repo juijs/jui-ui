@@ -4248,6 +4248,10 @@ jui.define("util.svg.base",
             return this.create(new Element(), "filter", attr, callback);
         }
 
+        this.foreignObject = function(attr, callback) {
+            return this.create(new TransElement(), "foreignObject", attr, callback);
+        }
+
         /**
          * 엘리먼트 관련 메소드 (그라데이션)
          *
