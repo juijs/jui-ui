@@ -15136,9 +15136,9 @@ jui.define("chart.theme.gradient", [], function() {
         legendFontColor : "#666",
         legendFontSize : "12px",
         legendIconRadius : 6,
-        tooltipFontColor : "#fff",
+        tooltipFontColor : "#333",
         tooltipFontSize : "12px",
-        tooltipBackgroundColor : "black",
+        tooltipBackgroundColor : "white",
         tooltipBorderColor : "none",
         tooltipBorderWidth : 2,
         tooltipBackgroundOpacity : 1,
@@ -24994,7 +24994,7 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
 	return CoreWidget;
 }, "chart.draw"); 
-jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
+jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, ColorUtil) {
     /**
      * @class chart.widget.tooltip
      * implements tooltip widget
@@ -25082,11 +25082,11 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         function getColorByKey(obj) {
             for(var i = 0; i < obj.brush.target.length; i++) {
                 if(obj.brush.target[i] == obj.dataKey) {
-                    return self.chart.color(i, obj.brush);
+                    return ColorUtil.lighten(self.chart.color(i, obj.brush));
                 }
             }
 
-            return self.chart.color(0, obj.brush);;
+            return chart.theme("tooltipBorderColor");
         }
 
         this.drawBefore = function() {
@@ -25096,7 +25096,6 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 rect = chart.svg.polygon({
                     fill: chart.theme("tooltipBackgroundColor"),
                     "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
-                    stroke: chart.theme("tooltipBorderColor"),
                     "stroke-width": chart.theme("tooltipBorderWidth")
                 });
 
