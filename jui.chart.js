@@ -17434,7 +17434,7 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
                         cx = xy.x - w / 2,
                         cy = xy.y - h / 2;
 
-                    if(html != "") {
+                    if(_.typeCheck("string", html) && html != "") {
                         var obj = chart.svg.foreignObject({
                             width: w,
                             height: h
@@ -17443,7 +17443,7 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
                         g.append(obj);
                     }
 
-                    if(svg != "") {
+                    if(_.typeCheck("string", svg) && svg != "") {
                         var obj = chart.svg.group();
                         obj.html(svg).translate(cx, cy);
 
