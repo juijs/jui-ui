@@ -82,17 +82,25 @@
                 },
                 data : data
             }],
+            tpl : {
+                test : "<div class='marker-<!= airport !>'></div>"
+            },
             brush : [{
                 type : "map.marker",
                 width : 10,
                 height : 10,
-                markup : function(d) {
+                html : function(d) {
+                    return this.tpl.test(d);
+                }
+                /*/
+                svg : function(d) {
                     if(d.airport == "large") {
-                        return "<div class='marker-large'></div>";
+                        return "<rect fill='black' width='10' height='10'></rect>";
                     }
 
-                    return "<div class='marker-small'></div>";
+                    return "<rect fill='gray' width='10' height='10'></rect>";
                 }
+                /**/
             }],
             widget : [{
                 type : "map.control",

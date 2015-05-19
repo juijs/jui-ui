@@ -6,25 +6,33 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapMarkerBrush = function(chart, axis, brush) {
-        var g;
-
 		this.draw = function() {
-            g = chart.svg.group();
+            var g = chart.svg.group(),
+                w = brush.width,
+                h = brush.height;
 
             this.eachData(function(i, d) {
                 var id = axis.getValue(d, "id", null),
                     xy = axis.map(id);
 
                 if(xy != null) {
-                    var w = brush.width,
-                        h = brush.height,
-                        html = _.typeCheck("function", brush.markup) ? brush.markup(d) : brush.markup;
+                    var html = _.typeCheck("function", brush.html) ? brush.html.call(chart, d) : brush.html,
+                        svg = _.typeCheck("function", brush.svg) ? brush.svg.call(chart, d) : brush.svg,
+                        cx = xy.x - w / 2,
+                        cy = xy.y - h / 2;
 
                     if(html != "") {
                         var obj = chart.svg.foreignObject({
                             width: w,
                             height: h
-                        }).html(html).translate(xy.x - w / 2, xy.y - h / 2);
+                        }).html(html).translate(cx, cy);
+
+                        g.append(obj);
+                    }
+
+                    if(svg != "") {
+                        var obj = chart.svg.group();
+                        obj.html(svg).translate(cx, cy);
 
                         g.append(obj);
                     }
@@ -39,7 +47,8 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
         return {
             width : 0,
             height : 0,
-            markup : null
+            html : null,
+            svg : null
         }
     }
 
