@@ -65,18 +65,17 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return children;
         }
 
-        function loadPath(uri) {
-            var pathData = [];
-
-            $.ajax({
-                url: uri,
-                async: false,
-                success: function (xml) {
-                    var $path = $(xml).find("path"),
-                        $style = $(xml).find("style");
-
-                    $path.each(function () {
+        function getPathList(el, rootId) {
+            if (el.id) {
+                var pathData = [];
+                var groupId = el.id;
+                $(el).children().each(function(i) {
+                    if (this.nodeName.toLowerCase() == 'g') {
+                        pathData = pathData.concat(getPathList(this, rootId));
+                    } else if (this.nodeName.toLowerCase() == 'path') {
                         var obj = {};
+                        obj['groupId'] = groupId;
+                        obj['rootId'] = rootId;
 
                         $.each(this.attributes, function () {
                             if(this.specified && isLoadAttribute(this.name)) {
@@ -88,6 +87,46 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                             _.extend(obj, getDataById(obj.id));
                             pathData.push(obj);
                         }
+                    }
+                });
+
+                return pathData;
+            }
+
+
+
+            return [];
+        }
+
+        function loadPath(uri) {
+            var pathData = [];
+
+            $.ajax({
+                url: uri,
+                async: false,
+                success: function (xml) {
+                    var $path = $(xml).find("svg").children(),
+                        $style = $(xml).find("style");
+
+                    $path.each(function () {
+
+                        if (this.nodeName.toLowerCase() == 'g') {
+                            pathData = pathData.concat(getPathList(this, this.id));
+                        } else {
+                            var obj = {};
+
+                            $.each(this.attributes, function () {
+                                if(this.specified && isLoadAttribute(this.name)) {
+                                    obj[this.name] = this.value;
+                                }
+                            });
+
+                            if(_.typeCheck("string", obj.id)) {
+                                _.extend(obj, getDataById(obj.id));
+                                pathData.push(obj);
+                            }
+                        }
+
                     });
 
                     $style.each(function () {
@@ -96,11 +135,11 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 }
             });
 
-            function isLoadAttribute(name) {
-                return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
-            }
-
             return loadArray(pathData);
+        }
+
+        function isLoadAttribute(name) {
+            return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style" || name == "groupId" || name == "rootId");
         }
 
         function getDataById(id) {
