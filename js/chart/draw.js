@@ -178,9 +178,7 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {String} [type=null] Specifies the type of a widget/brush/grid to be added.*/
             type: null,
             /** @cfg {Boolean} [animate=false] Run the animation effect.*/
-            animate: false,
-
-            format : null
+            animate: false
         }
     }
 

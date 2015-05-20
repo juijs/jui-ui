@@ -65,37 +65,34 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return children;
         }
 
-        function getPathList(el, rootId) {
-            if (el.id) {
-                var pathData = [];
-                var groupId = el.id;
-                $(el).children().each(function(i) {
-                    if (this.nodeName.toLowerCase() == 'g') {
-                        pathData = pathData.concat(getPathList(this, rootId));
-                    } else if (this.nodeName.toLowerCase() == 'path') {
-                        var obj = {};
-                        obj['groupId'] = groupId;
-                        obj['rootId'] = rootId;
+        function getPathList(root) {
+            if(!_.typeCheck("string", root.id)) return;
 
-                        $.each(this.attributes, function () {
-                            if(this.specified && isLoadAttribute(this.name)) {
-                                obj[this.name] = this.value;
-                            }
-                        });
+            var pathData = [];
 
-                        if(_.typeCheck("string", obj.id)) {
-                            _.extend(obj, getDataById(obj.id));
-                            pathData.push(obj);
+            $(root).children().each(function(i) {
+                var name = this.nodeName.toLowerCase();
+
+                if(name == "g") {
+                    pathData = pathData.concat(getPathList(this));
+                } else if(name == "path") {
+                    var obj = { group: root.id };
+
+                    $.each(this.attributes, function () {
+                        if(this.specified && isLoadAttribute(this.name)) {
+                            obj[this.name] = this.value;
                         }
+                    });
+
+                    if(_.typeCheck("string", obj.id)) {
+                        _.extend(obj, getDataById(obj.id));
                     }
-                });
 
-                return pathData;
-            }
+                    pathData.push(obj);
+                }
+            });
 
-
-
-            return [];
+            return pathData;
         }
 
         function loadPath(uri) {
@@ -109,10 +106,11 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         $style = $(xml).find("style");
 
                     $path.each(function () {
+                        var name = this.nodeName.toLowerCase();
 
-                        if (this.nodeName.toLowerCase() == 'g') {
-                            pathData = pathData.concat(getPathList(this, this.id));
-                        } else {
+                        if(name == "g") {
+                            pathData = pathData.concat(getPathList(this));
+                        } else if(name == "path") {
                             var obj = {};
 
                             $.each(this.attributes, function () {
@@ -123,10 +121,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
                             if(_.typeCheck("string", obj.id)) {
                                 _.extend(obj, getDataById(obj.id));
-                                pathData.push(obj);
                             }
-                        }
 
+                            pathData.push(obj);
+                        }
                     });
 
                     $style.each(function () {
@@ -139,7 +137,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function isLoadAttribute(name) {
-            return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style" || name == "groupId" || name == "rootId");
+            return (name == "group" || name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
         }
 
         function getDataById(id) {

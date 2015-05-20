@@ -72,11 +72,16 @@
             ],
             brush : [
                 { type : "column", target : "발생 건수", display : "max" },
-                { type : "line", target : "인구수 대비 발생비율", axis : 1, colors : ["red"], display : "min", format : function(value) { return Math.round(value); } }
+                { type : "line", target : "인구수 대비 발생비율", axis : 1, colors : ["red"], display : "min" }
             ],
             widget : [
                 { type : 'title', text : "전국 시도별 성폭력 발생건수"}
-            ]
+            ],
+            format : function(d) {
+                if(typeof(d) == "number") {
+                    return Math.round(d);
+                }
+            }
         });
 	})
 </script>
