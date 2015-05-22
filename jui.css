@@ -7047,8 +7047,10 @@
   line-height: 25px;
 }
 .jui .datepicker {
+  position: relative;
   width: 190px;
   height: 168px;
+  padding-top: 26px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -7056,36 +7058,57 @@
   background: #fff;
 }
 .jui .datepicker > .head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
   font-size: 14px;
-  font-weight: bold;
   height: 26px;
+  text-align: center;
+}
+.jui .datepicker > .head > * {
+  display: inline-block;
+}
+.jui .datepicker > .head > .title {
+  text-align: center;
+  padding-top: 5px;
 }
 .jui .datepicker > .head > .prev,
 .jui .datepicker > .head .next {
-  border-style: solid;
-  border-width: 6px;
-  margin-top: 7px;
-  width: 0;
-  height: 0;
+  position: absolute;
+  top: 10px;
+  font-size: 9px;
   cursor: pointer;
+  color: #b9b9b9;
+  font-family: 'jennifer';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .jui .datepicker > .head > .prev {
-  float: left;
-  margin-left: 3px;
+  left: 5px;
 }
-.jui .datepicker > .head > .title {
-  float: left;
-  text-align: center;
-  width: 160px;
-  padding-top: 5px;
-  height: 21px;
+.jui .datepicker > .head > .prev:before {
+  content: "\e619";
 }
 .jui .datepicker > .head > .next {
-  float: right;
-  margin-right: 3px;
+  right: 5px;
+}
+.jui .datepicker > .head > .next:before {
+  content: "\e61a";
 }
 .jui .datepicker > table.body {
+  width: 100%;
+  height: 100%;
   border-spacing: 0;
+  border-top-style: solid;
 }
 .jui .datepicker > table.body th,
 .jui .datepicker > table.body td {
@@ -7105,17 +7128,17 @@
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
 }
+.jui .datepicker > table.body td {
+  width: 14.28%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 .jui .datepicker > table.body td:last-child {
   border-right-width: 0px;
 }
 .jui .datepicker > table.body td:not(.none) {
   cursor: pointer;
-}
-.jui .datepicker > .head {
-  border-bottom: 1px solid #ebebeb;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
 }
 .jui .datepicker > .head > .prev {
   border-color: transparent #dcdcdc transparent transparent;
@@ -7126,25 +7149,20 @@
 .jui .datepicker > .head > .title {
   color: #333;
 }
-.jui .datepicker > table.body th,
-.jui .datepicker > table.body td {
+.jui .datepicker > table.body {
+  border-top-color: #ebebeb;
+}
+.jui .datepicker > table.body th {
   border-bottom: 1px solid #ebebeb;
 }
 .jui .datepicker > table.body th {
-  color: #868686;
-}
-.jui .datepicker > table.body th:first-child {
-  color: #ff7470;
-}
-.jui .datepicker > table.body th:last-child {
-  color: #3191f3;
+  color: #c1c1c1;
 }
 .jui .datepicker > table.body td {
   color: #333;
-  border-right: 1px solid #ebebeb;
 }
 .jui .datepicker > table.body td.none {
-  color: #c2c2c2;
+  color: transparent;
 }
 .jui .datepicker > table.body td.now {
   color: #6600cc;
@@ -7160,9 +7178,11 @@
 .jui .datepicker > table.body td:hover:not(.active):not(.none) {
   background-color: #f8f3ff;
 }
+.jui .datepicker > table.body {
+  border-top-width: 0px;
+}
 .jui .datepicker > table.body th {
   font-size: 9px;
-  padding-top: 3px;
   height: 17px;
 }
 .jui .datepicker > table.body td {
@@ -7171,9 +7191,11 @@
   height: 17px;
   line-height: 17px;
 }
+.jui .datepicker-normal > table.body {
+  border-top-width: 0px;
+}
 .jui .datepicker-normal > table.body th {
   font-size: 9px;
-  padding-top: 3px;
   height: 17px;
 }
 .jui .datepicker-normal > table.body td {
@@ -7181,6 +7203,9 @@
   width: 26px;
   height: 17px;
   line-height: 17px;
+}
+.jui .datepicker-large > table.body {
+  border-top-width: 1px;
 }
 .jui .datepicker-large > table.body td {
   width: 60.6px;
@@ -7193,12 +7218,6 @@
   border: 1px solid #cdcdcd;
   background: #fff;
 }
-.jui .datepicker-white > .head {
-  border-bottom: 1px solid #ebebeb;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-}
 .jui .datepicker-white > .head > .prev {
   border-color: transparent #dcdcdc transparent transparent;
 }
@@ -7208,25 +7227,20 @@
 .jui .datepicker-white > .head > .title {
   color: #333;
 }
-.jui .datepicker-white > table.body th,
-.jui .datepicker-white > table.body td {
+.jui .datepicker-white > table.body {
+  border-top-color: #ebebeb;
+}
+.jui .datepicker-white > table.body th {
   border-bottom: 1px solid #ebebeb;
 }
 .jui .datepicker-white > table.body th {
-  color: #868686;
-}
-.jui .datepicker-white > table.body th:first-child {
-  color: #ff7470;
-}
-.jui .datepicker-white > table.body th:last-child {
-  color: #3191f3;
+  color: #c1c1c1;
 }
 .jui .datepicker-white > table.body td {
   color: #333;
-  border-right: 1px solid #ebebeb;
 }
 .jui .datepicker-white > table.body td.none {
-  color: #c2c2c2;
+  color: transparent;
 }
 .jui .datepicker-white > table.body td.now {
   color: #6600cc;
@@ -7241,11 +7255,6 @@
 }
 .jui .datepicker-white > table.body td:hover:not(.active):not(.none) {
   background-color: #f8f3ff;
-}
-.jui .datepicker-layer {
-  position: absolute;
-  z-index: 1000;
-  display: none;
 }
 .jui .calendar {
   position: relative;
@@ -7335,10 +7344,12 @@
 }
 .jui .calendar > table.body td > .task > * {
   display: block;
-  border-radius: 10px;
   border-width: 1px;
   border-style: solid;
   padding: 0px 8px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
