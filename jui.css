@@ -7247,6 +7247,178 @@
   z-index: 1000;
   display: none;
 }
+.jui .calendar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 80px;
+}
+.jui .calendar > .head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.jui .calendar > .head > * {
+  display: inline-block;
+}
+.jui .calendar > .head > .title {
+  font-size: 20px;
+}
+.jui .calendar > .head > .prev,
+.jui .calendar > .head .next {
+  font-size: 14px;
+  cursor: pointer;
+  color: #b9b9b9;
+  font-family: 'jennifer';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.jui .calendar > .head > .prev:before {
+  content: "\e619";
+  margin-right: 12px;
+}
+.jui .calendar > .head > .next:before {
+  content: "\e61a";
+  margin-left: 12px;
+}
+.jui .calendar > table.body {
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+}
+.jui .calendar > table.body th,
+.jui .calendar > table.body td {
+  text-align: right;
+  border-width: 0px;
+  border-right-width: 0px;
+}
+.jui .calendar > table.body th {
+  border-bottom-width: 2px;
+  font-size: 11px;
+  padding-top: 3px;
+  height: 17px;
+}
+.jui .calendar > table.body td {
+  position: relative;
+  padding: 8px;
+  vertical-align: top;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-top-width: 0px;
+  font-size: 13px;
+  font-weight: bold;
+  width: 14.28%;
+}
+.jui .calendar > table.body td:last-child {
+  border-right-width: 1px;
+}
+.jui .calendar > table.body td > .task {
+  position: absolute;
+  left: 0px;
+  top: 30px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: normal;
+  width: 100%;
+}
+.jui .calendar > table.body td > .task > * {
+  display: block;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 0px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jui .calendar > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .calendar > .head > .prev {
+  border-color: transparent #dcdcdc transparent transparent;
+}
+.jui .calendar > .head > .next {
+  border-color: transparent transparent transparent #dcdcdc;
+}
+.jui .calendar > .head > .title {
+  color: #333;
+}
+.jui .calendar > table.body th,
+.jui .calendar > table.body td {
+  border-color: #f1f1f1;
+  border-style: solid;
+}
+.jui .calendar > table.body th {
+  color: #b6b6b6;
+}
+.jui .calendar > table.body td {
+  color: #333;
+}
+.jui .calendar > table.body td.none {
+  color: transparent;
+}
+.jui .calendar > table.body td.now {
+  color: #6600cc;
+}
+.jui .calendar > table.body td.active {
+  background-color: #f4f0f9;
+}
+.jui .calendar > table.body td > .task {
+  color: #fff;
+}
+.jui .calendar > table.body td > .task > * {
+  border-color: #fff;
+}
+.jui .calendar-white > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .calendar-white > .head > .prev {
+  border-color: transparent #dcdcdc transparent transparent;
+}
+.jui .calendar-white > .head > .next {
+  border-color: transparent transparent transparent #dcdcdc;
+}
+.jui .calendar-white > .head > .title {
+  color: #333;
+}
+.jui .calendar-white > table.body th,
+.jui .calendar-white > table.body td {
+  border-color: #f1f1f1;
+  border-style: solid;
+}
+.jui .calendar-white > table.body th {
+  color: #b6b6b6;
+}
+.jui .calendar-white > table.body td {
+  color: #333;
+}
+.jui .calendar-white > table.body td.none {
+  color: transparent;
+}
+.jui .calendar-white > table.body td.now {
+  color: #6600cc;
+}
+.jui .calendar-white > table.body td.active {
+  background-color: #f4f0f9;
+}
+.jui .calendar-white > table.body td > .task {
+  color: #fff;
+}
+.jui .calendar-white > table.body td > .task > * {
+  border-color: #fff;
+}
 .jui .notify {
   position: relative;
   width: 268px;
