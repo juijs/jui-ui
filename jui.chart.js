@@ -8704,11 +8704,7 @@ jui.define("chart.icon.jennifer", [], function() {
 		"upload" : "\ue657",
 		"user" : "\ue658",
 		"was" : "\ue659",
-		"ws" : "\ue65a",
-		".jui .datepicker > .head > .prev" : "\ue619",
-		".jui .datepicker > .head > .next" : "\ue61a",
-		".jui .calendar > .head > .prev" : "\ue619",
-		".jui .calendar > .head > .next" : "\ue61a"
+		"ws" : "\ue65a"
 	}
 });
 jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {

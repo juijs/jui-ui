@@ -292,13 +292,19 @@ module.exports = function(grunt) {
             icons = [];
 
         obj.stylesheet.rules.forEach(function(item) {
-            if (item.declarations && item.declarations[0] && item.declarations[0].property == "content") {
-                var obj = {
-                    name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
-                    content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
+            if (item.declarations && item.declarations[0] && item.declarations[0].property == "content"  ) {
+
+                if (item.selectors[0].indexOf(".datepicker") > -1 || item.selectors[0].indexOf(".calendar") > -1) {
+
+                }  else {
+                    var obj = {
+                        name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
+                        content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
+                    }
+
+                    icons.push('\t\t"' + obj.name + '" : "' + obj.content + '"');
                 }
 
-                icons.push('\t\t"' + obj.name + '" : "' + obj.content + '"');
             }
         })
 
