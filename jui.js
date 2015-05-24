@@ -25333,6 +25333,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
      */
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
+        var colorIndex = {};
 
         function setLegendStatus(brush) {
             if(!widget.filter) return;
@@ -25348,16 +25349,18 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
         function changeTargetOption(brushList) {
             var target = [],
-                index = brushList[0].index;
+                index = brushList[0].index,
+                colors = [];
 
             for(var key in columns[index]) {
                 if(columns[index][key]) {
                     target.push(key);
+                    colors.push(colorIndex[key]);
                 }
             }
 
             for(var i = 0; i < brushList.length; i++) {
-                chart.updateBrush(brushList[i].index, { target: target });
+                chart.updateBrush(brushList[i].index, { target: target, colors : colors });
             }
 
             // 차트 렌더링이 활성화되지 않았을 경우
@@ -25387,6 +25390,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     text = chart.get("series", target).text || target,
                     color = chart.color(i, brush),
                     rect = chart.svg.getTextRect(text);
+
+                colorIndex[target] = color;
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
