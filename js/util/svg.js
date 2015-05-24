@@ -194,7 +194,7 @@ jui.define("util.svg",
               var context = canvas.getContext('2d');
               context.drawImage(img, 0, 0);
               
-              var png = canvas.toDataURI(type);
+              var png = canvas.toDataURL(type);
               
               if(_.typeCheck("string", name)) {
                   name = name.split(".")[0];
