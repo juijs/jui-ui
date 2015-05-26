@@ -7347,9 +7347,9 @@
   border-width: 1px;
   border-style: solid;
   padding: 0px 8px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -7368,7 +7368,7 @@
 }
 .jui .calendar > table.body th,
 .jui .calendar > table.body td {
-  border-color: #f1f1f1;
+  border-color: #eeeeee;
   border-style: solid;
 }
 .jui .calendar > table.body th {
@@ -7406,7 +7406,7 @@
 }
 .jui .calendar-white > table.body th,
 .jui .calendar-white > table.body td {
-  border-color: #f1f1f1;
+  border-color: #eeeeee;
   border-style: solid;
 }
 .jui .calendar-white > table.body th {
