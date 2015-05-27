@@ -62,9 +62,9 @@
 
             // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
             series : {
-                name : { text : "ì´ë¦„" },
-                value : { text : "ê°’" },
-                test : { text : "ê°’" }
+                name : { text : "이름" },
+                value : { text : "값" },
+                test : { text : "테스트" }
             },
             brush : [{
                 type : 'stackarea'
@@ -75,12 +75,12 @@
                 symbol : "circle",
                 size: 8
             }],
-
-            event: {
-                click: function(elem, data) {
-                    console.log(elem, data);
-                }
-            }
+            widget : [{
+                type : "legend",
+                filter : true,
+                brush : [ 0, 1, 2 ],
+                brushSync : true
+            }]
         });
 	})
 </script>

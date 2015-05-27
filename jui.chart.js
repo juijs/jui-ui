@@ -17863,6 +17863,29 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         var columns = [];
         var colorIndex = {};
 
+        function getIndexArray(brush) {
+            var list = [ 0 ];
+
+            if(_.typeCheck("array", brush)) {
+                list = brush;
+            } else if(_.typeCheck("integer", brush)) {
+                list = [ brush ];
+            }
+
+            return list;
+        }
+
+        function getBrushAll() {
+            var list = getIndexArray(widget.brush),
+                result = [];
+
+            for(var i = 0; i < list.length; i++) {
+                result[i] = chart.get("brush", list[i]);
+            }
+
+            return result;
+        }
+
         function setLegendStatus(brush) {
             if(!widget.filter) return;
 
@@ -17906,8 +17929,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
          * @param {object} brush
          */
 		this.getLegendIcon = function(brush) {
-            var self = this,
-                arr = [],
+            var arr = [],
                 data = brush.target,
                 count = data.length,
                 r = chart.theme("legendIconRadius");
@@ -17968,7 +17990,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                                 columns[brush.index][key] = true;
                             }
 
-                            changeTargetOption((widget.brushSync) ? self.listBrush() : [ brush ]);
+                            changeTargetOption((widget.brushSync) ? getBrushAll() : [ brush ]);
                         });
                     })(target, group);
                 }
@@ -17986,13 +18008,13 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 total_height = 0,
                 max_width = 0,
                 max_height = 0,
-                brushes = this.getIndexArray(widget.brush);
+                brushes = getIndexArray(widget.brush);
 
             for(var i = 0; i < brushes.length; i++) {
                 var index = brushes[i];
 
                 // brushSync가 true일 경우, 한번만 실행함
-                if(widget.brushSync && index != 0) return;
+                if(widget.brushSync && i > 0) continue;
 
                 var brush = chart.get("brush", brushes[index]),
                     arr = this.getLegendIcon(brush);
@@ -18062,7 +18084,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             icon: null,
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false,
-            /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
+            /** @cfg {Number/Array} [brush=0] Specifies a brush index for which a widget is used. */
             brush: 0
         };
     }
