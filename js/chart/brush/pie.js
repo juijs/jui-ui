@@ -20,12 +20,12 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
             pie.translate(centerX + tx, centerY + ty);
         }
 
-        this.getFormatText = function(target, value) {
+        this.getFormatText = function(target, value, max) {
             var series = this.chart.get("series", target),
                 key = (series.text) ? series.text : target;
 
             if(typeof(this.brush.format) == "function") {
-                return this.format(key, value);
+                return this.format(key, value, max);
             } else {
                 if (!value) {
                     return key;

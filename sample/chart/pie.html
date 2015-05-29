@@ -37,7 +37,7 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
-            padding: 100,
+            padding: 130,
             width: 400,
             height : 400,
             theme : "jennifer",
@@ -49,8 +49,8 @@
             brush : [{
                 type : "pie",
                 showText : true,
-                format : function(k, v) {
-                    return this.icon("check") + k + ": " + v;
+                format : function(k, v, max) {
+                    return this.icon("check") + k + ": " + v + "(" + ((v/max)*100).toFixed(2) + "%)";
                 },
                 active : [ "yellow", "red" ],
                 activeEvent : "click"
