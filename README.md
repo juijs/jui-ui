@@ -98,6 +98,8 @@ fs.writeFileSync("test.svg", chart.svg.toXml());
 ## Documentation
 
 http://jui.io
+http://uiplay.jui.io
+http://chartplay.jui.io
 
 ## Maintainers
 
