@@ -4,34 +4,79 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
 </head>
 <body >
 
 <div id="chart"></div>
 
 <script id="script_code">
-    jui.ready([ "chart.builder" ], function(chart) {
+    var d = [{
+        id: "south korea",
+        x: 790,
+        y: 205,
+        value: 10
+    }, {
+        id: "china",
+        x: 730,
+        y: 220,
+        value: 100
+    }, {
+        id: "usa",
+        x: 195,
+        y: 200,
+        value: 70
+    }, {
+        id: "france",
+        x: 460,
+        y: 195,
+        value: 50
+    }, {
+        id: "brazil",
+        x: 310,
+        y: 370,
+        value: 80
+    }, {
+        id: "australia",
+        x: 820,
+        y: 435,
+        value: 20
+    }];
 
+    jui.ready([ "chart.builder" ], function(chart) {
         c = chart("#chart", {
-            width : 600,
-            height : 800,
-            padding: 0,
+            width : 650,
+            height : 500,
+            padding : 0,
             axis : [{
                 map : {
-                    path : "resource/southKoreaLow.svg",
-                    width : 524,
-                    height : 750,
-                    zoom : false,
-                    move : false
+                    path : "../../img/map/korea.svg",
+                    width : 650,
+                    height : 500,
+                    scale : 1
                 },
-                area : {
-                    width : 524,
-                    height : 750
-                }
+                data : d
             }],
             brush : [{
-                type : "map.over"
-            }]
+                type : "map.bubble",
+                color : function(d) {
+                    if(d.value > 70) {
+                        return "linear(top) #ff686c,0.9 #fa5559";
+                    } else if(d.value > 35) {
+                        return "linear(top) #ff9d46,0.9 #ff7800";
+                    }
+
+                    return "linear(top) #9694e0,0.9 #7977C2";
+                }
+            }, {
+                type : "map.selector",
+                activeEvent : "map.click"
+            }],
+            style : {
+                mapPathBackgroundColor : "#acacac",
+                mapPathBorderWidth : 1,
+                mapPathBorderOpacity : 1
+            }
         });
 	})
 </script>

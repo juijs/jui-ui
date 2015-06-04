@@ -5737,19 +5737,19 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         delete data[i].style;
                     }
 
-                    var elem = SVG.createObject({ type: "path", attr: data[i] });
+                    var elem = SVG.createObject({
+                        type: (data[i].d != null) ? "path" : "polygon",
+                        attr: data[i]
+                    });
 
-                    // Set theme styles
-                    elem.attr({
+                    // Set styles
+                    elem.attr(_.extend(style, {
                         fill: self.chart.theme("mapPathBackgroundColor"),
                         "fill-opacity": self.chart.theme("mapPathBackgroundOpacity"),
                         stroke: self.chart.theme("mapPathBorderColor"),
                         "stroke-width": self.chart.theme("mapPathBorderWidth"),
                         "stroke-opacity": self.chart.theme("mapPathBorderOpacity")
-                    });
-
-                    // Set resource styles
-                    elem.css(style);
+                    }));
 
                     children.push({
                         path: elem,
@@ -5786,10 +5786,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 
                 if(name == "g") {
                     pathData = pathData.concat(getPathList(this));
-                } else if(name == "path") {
+                } else if(name == "path" || name == "polygon") {
                     var obj = { group: root.id };
 
-                    $.each(this.attributes, function () {
+                    $.each(this.attributes, function() {
                         if(this.specified && isLoadAttribute(this.name)) {
                             obj[this.name] = this.value;
                         }
@@ -5812,19 +5812,19 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             $.ajax({
                 url: uri,
                 async: false,
-                success: function (xml) {
+                success: function(xml) {
                     var $path = $(xml).find("svg").children(),
                         $style = $(xml).find("style");
 
-                    $path.each(function () {
+                    $path.each(function() {
                         var name = this.nodeName.toLowerCase();
 
                         if(name == "g") {
                             pathData = pathData.concat(getPathList(this));
-                        } else if(name == "path") {
+                        } else if(name == "path" || name == "polygon") {
                             var obj = {};
 
-                            $.each(this.attributes, function () {
+                            $.each(this.attributes, function() {
                                 if(this.specified && isLoadAttribute(this.name)) {
                                     obj[this.name] = this.value;
                                 }
@@ -5848,7 +5848,10 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function isLoadAttribute(name) {
-            return (name == "group" || name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
+            return (
+                name == "group" || name == "id" || name == "title" || name == "x" || name == "y" ||
+                name == "d" || name == "points" || name == "class" || name == "style"
+            );
         }
 
         function getDataById(id) {
