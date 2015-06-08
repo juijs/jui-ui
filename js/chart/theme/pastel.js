@@ -157,8 +157,8 @@ jui.define("chart.theme.pastel", [], function() {
 		mapPathBackgroundColor : "#67B7DC",
 		mapPathBackgroundOpacity : 1,
 		mapPathBorderColor : "white",
-		mapPathBorderWidth : 0,
-		mapPathBorderOpacity : 0,
+		mapPathBorderWidth : 1,
+		mapPathBorderOpacity : 1,
 		// Map Brushes
 		mapBubbleBackgroundOpacity : 0.5,
 		mapBubbleBorderWidth : 1,

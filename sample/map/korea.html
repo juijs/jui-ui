@@ -12,48 +12,36 @@
 
 <script id="script_code">
     var d = [{
-        id: "south korea",
-        x: 790,
-        y: 205,
+        id: "광주",
         value: 10
     }, {
-        id: "china",
-        x: 730,
-        y: 220,
+        id: "서울",
         value: 100
     }, {
-        id: "usa",
-        x: 195,
-        y: 200,
+        id: "인천",
         value: 70
     }, {
-        id: "france",
-        x: 460,
-        y: 195,
+        id: "대전",
         value: 50
     }, {
-        id: "brazil",
-        x: 310,
-        y: 370,
+        id: "부산",
         value: 80
     }, {
-        id: "australia",
-        x: 820,
-        y: 435,
+        id: "대구",
         value: 20
     }];
 
     jui.ready([ "chart.builder" ], function(chart) {
         c = chart("#chart", {
-            width : 650,
-            height : 500,
+            width : 500,
+            height : 650,
             padding : 0,
+            theme : "pattern",
             axis : [{
                 map : {
-                    path : "../../img/map/korea.svg",
-                    width : 650,
-                    height : 500,
-                    scale : 1
+                    path : "../../img/map/korea-500x650.svg",
+                    width : 500,
+                    height : 650
                 },
                 data : d
             }],
@@ -73,9 +61,7 @@
                 activeEvent : "map.click"
             }],
             style : {
-                mapPathBackgroundColor : "#acacac",
-                mapPathBorderWidth : 1,
-                mapPathBorderOpacity : 1
+                mapPathBackgroundColor : "pattern-jennifer-01"
             }
         });
 	})

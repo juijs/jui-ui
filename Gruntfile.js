@@ -264,7 +264,7 @@ module.exports = function(grunt) {
             list = {};
 
         arr.forEach(function(it) {
-            var filename = it.split("/").pop().replace(".png", "").replace("pattern_", "");
+            var filename = it.split("/").pop().replace(".png", "").replace("pattern-", "");
 
             var obj = {
                 type : "pattern",
