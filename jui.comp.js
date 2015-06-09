@@ -11824,6 +11824,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			body.on("select", function(obj, e) {
 				self.emit("select", [ obj, e ]);
 			});
+
+			body.on("click", function(obj, e) {
+				self.emit("click", [ obj, e ]);
+			});
+
+			body.on("dblclick", function(obj, e) {
+				self.emit("dblclick", [ obj, e ]);
+			});
 			
 			body.on("rowmenu", function(obj, e) {
 				self.emit("rowmenu", [ obj, e ]);
