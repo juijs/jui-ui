@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+<a href="javascript:changeGrid()">Change grid</a>
+
+<script>
+    jui.ready([ "chart.builder" ], function(chart) {
+        c = chart("#chart", {
+            width: 400,
+            height : 400,
+            axis: {
+                x: {
+                    type : "block",
+                    domain : [ "국어", "영어", "수학", "과학" ],
+                    line : true
+                },
+                y: {
+                    type : "range",
+                    domain : [ 0, 100 ]
+                }
+            },
+            theme : "jennifer",
+            brush : {
+                type: "scatter",
+                target: "score",
+                size: 10
+            }
+        });
+	});
+
+    function changeGrid() {
+        var axis = c.axis(0);
+
+        axis.updateGrid("y", {
+            type : "block",
+            domain : [ "국어", "영어", "수학", "과학" ],
+            line : true
+        });
+
+        axis.updateGrid("x", {
+            type : "range",
+            domain : [ 0, 100 ]
+        });
+    }
+</script>
+
+
+</body>
+</html>
