@@ -145,10 +145,5 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 		}
 	}
 
-    MapFlightRouteBrush.setup = function() {
-        return {
-        }
-    }
-
 	return MapFlightRouteBrush;
 }, "chart.brush.map.core");

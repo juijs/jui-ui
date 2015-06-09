@@ -177,6 +177,10 @@ jui.define("chart.theme.gradient", [], function() {
         mapFlightRouteAirportRadius : 8,
         mapFlightRouteLineBorderColor : "red",
         mapFlightRouteLineBorderWidth : 1,
+        mapWeatherBackgroundColor : "white",
+        mapWeatherBorderColor : "#a9a9a9",
+        mapWeatherTitleFontColor : "#666",
+        mapWeatherInfoFontColor : "red",
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
