@@ -941,7 +941,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Object} brush
          */
         this.updateBrush = function(index, brush) {
-            _options.brush[index] = brush;
+            _.extend(_options.brush[index], brush);
             if(this.isRender()) this.render();
         }
 
@@ -973,7 +973,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Object} widget
          */
         this.updateWidget = function(index, widget) {
-            _options.widget[index] = widget;
+            _.extend(_options.widget[index], widget);
             if(this.isRender()) this.render();
         }
 

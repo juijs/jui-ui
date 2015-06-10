@@ -420,7 +420,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Object} grid
          */
         this.updateGrid = function(type, grid) {
-            originAxis[type] = grid;
+            _.extend(originAxis[type], grid);
             if(chart.isRender()) chart.render();
         }
 
@@ -433,7 +433,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * @param {Array} data
          */
         this.updateMap = function(map, data) {
-            originAxis["map"] = map;
+            _.extend(originAxis["map"], map);
 
             if(_.typeCheck("array", data)) {
                 this.update(data);
