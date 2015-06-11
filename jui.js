@@ -20190,7 +20190,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			this.eachData(function(i, data) {
 				var startY = axis.y(i) - (half_height / 2);
 
-				// x축 그리드의 full 옵션 처리
+				// y축 그리드의 full 옵션 처리
 				if(is_full) {
 					startY += height / 2;
 				}
@@ -20716,7 +20716,7 @@ jui.define("chart.brush.stackbar", [], function() {
 	 *
 	 */
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, height, bar_width;
+		var g, height, bar_width, is_full;
 
 		this.addBarElement = function(elem) {
 			if(this.barList == null) {
@@ -20781,6 +20781,7 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("y").full;
 			height = axis.y.rangeBand();
 			bar_width = height - brush.outerPadding * 2;
 		}
@@ -20792,8 +20793,13 @@ jui.define("chart.brush.stackbar", [], function() {
 				var startY = axis.y(i) - bar_width/ 2,
                     startX = axis.x(0),
                     value = 0;
+
+				// y축 그리드의 full 옵션 처리
+				if(is_full) {
+					startY += height / 2;
+				}
 				
-				for (var j = 0; j < brush.target.length; j++) {
+				for(var j = 0; j < brush.target.length; j++) {
 					var xValue = data[brush.target[j]] + value,
                         endX = axis.x(xValue),
 						r = this.getBarElement(i, j);
@@ -20843,10 +20849,11 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	 * @extends chart.brush.stackbar
 	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
-		var g, zeroY, width, bar_width;
+		var g, zeroY, width, bar_width, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
@@ -20859,6 +20866,11 @@ jui.define("chart.brush.stackcolumn", [], function() {
 				var startX = axis.x(i) - bar_width / 2,
                     startY = axis.y(0),
                     value = 0;
+
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startX += width / 2;
+				}
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var yValue = data[brush.target[j]] + value,
@@ -21047,10 +21059,11 @@ jui.define("chart.brush.fullstackbar", [], function() {
      * @extends chart.brush.stackbar 
      */
 	var FullStackBarBrush = function(chart, axis, brush) {
-		var g, zeroX, height, bar_height;
+		var g, zeroX, height, bar_height, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
@@ -21074,7 +21087,12 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					sum = 0,
 					list = [];
 
-				for (var j = 0; j < brush.target.length; j++) {
+				// y축 그리드의 full 옵션 처리
+				if(is_full) {
+					startY += height / 2;
+				}
+
+				for(var j = 0; j < brush.target.length; j++) {
 					var width = data[brush.target[j]];
 
 					sum += width;
@@ -21084,7 +21102,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 				var startX = 0,
 					max = axis.x.max();
 
-				for (var j = list.length - 1; j >= 0; j--) {
+				for(var j = list.length - 1; j >= 0; j--) {
 					var width = axis.x.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 
@@ -21145,10 +21163,11 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
      * @extends chart.brush.fullstackbar
      */
 	var FullStackColumnBrush = function(chart, axis, brush) {
-		var g, zeroY, width, bar_width;
+		var g, zeroY, width, bar_width, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
@@ -21164,7 +21183,12 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
                     sum = 0,
                     list = [];
 
-				for (var j = 0; j < brush.target.length; j++) {
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startX += width / 2;
+				}
+
+				for(var j = 0; j < brush.target.length; j++) {
 					var height = data[brush.target[j]];
 
 					sum += height;
@@ -21174,7 +21198,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 				var startY = 0,
                     max = axis.y.max();
 				
-				for (var j = list.length - 1; j >= 0; j--) {
+				for(var j = list.length - 1; j >= 0; j--) {
 					var height = chart_height - axis.y.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 

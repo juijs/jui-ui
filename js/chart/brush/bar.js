@@ -168,7 +168,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			this.eachData(function(i, data) {
 				var startY = axis.y(i) - (half_height / 2);
 
-				// x축 그리드의 full 옵션 처리
+				// y축 그리드의 full 옵션 처리
 				if(is_full) {
 					startY += height / 2;
 				}

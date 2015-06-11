@@ -8,10 +8,11 @@ jui.define("chart.brush.fullstackbar", [], function() {
      * @extends chart.brush.stackbar 
      */
 	var FullStackBarBrush = function(chart, axis, brush) {
-		var g, zeroX, height, bar_height;
+		var g, zeroX, height, bar_height, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			bar_height = height - brush.outerPadding * 2;
@@ -35,7 +36,12 @@ jui.define("chart.brush.fullstackbar", [], function() {
 					sum = 0,
 					list = [];
 
-				for (var j = 0; j < brush.target.length; j++) {
+				// y축 그리드의 full 옵션 처리
+				if(is_full) {
+					startY += height / 2;
+				}
+
+				for(var j = 0; j < brush.target.length; j++) {
 					var width = data[brush.target[j]];
 
 					sum += width;
@@ -45,7 +51,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 				var startX = 0,
 					max = axis.x.max();
 
-				for (var j = list.length - 1; j >= 0; j--) {
+				for(var j = list.length - 1; j >= 0; j--) {
 					var width = axis.x.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 

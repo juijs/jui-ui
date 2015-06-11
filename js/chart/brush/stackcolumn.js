@@ -8,10 +8,11 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	 * @extends chart.brush.stackbar
 	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
-		var g, zeroY, width, bar_width;
+		var g, zeroY, width, bar_width, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			bar_width = width - brush.outerPadding * 2;
@@ -24,6 +25,11 @@ jui.define("chart.brush.stackcolumn", [], function() {
 				var startX = axis.x(i) - bar_width / 2,
                     startY = axis.y(0),
                     value = 0;
+
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startX += width / 2;
+				}
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var yValue = data[brush.target[j]] + value,
