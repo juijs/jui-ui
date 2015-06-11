@@ -7045,9 +7045,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * Updates the brush of a specified index and performs rendering again.
          * @param {Number} index
          * @param {Object} brush
+         * @param {Boolean} isReset
          */
-        this.updateBrush = function(index, brush) {
-            _.extend(_options.brush[index], brush);
+        this.updateBrush = function(index, brush, isReset) {
+            if(isReset === true) {
+                _options.brush[index] = brush;
+            } else {
+                _.extend(_options.brush[index], brush);
+            }
+
             if(this.isRender()) this.render();
         }
 
@@ -7077,9 +7083,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * Updates the widget of a specified index and performs rendering again
          * @param {Number} index
          * @param {Object} widget
+         * @param {Boolean} isReset
          */
-        this.updateWidget = function(index, widget) {
-            _.extend(_options.widget[index], widget);
+        this.updateWidget = function(index, widget, isReset) {
+            if(isReset === true) {
+                _options.widget[index] = widget;
+            } else {
+                _.extend(_options.widget[index], widget);
+            }
+
             if(this.isRender()) this.render();
         }
 
