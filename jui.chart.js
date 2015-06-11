@@ -17148,8 +17148,16 @@ jui.define("chart.brush.focus", [], function() {
 			}
 
 			if(axis.x.type == "block") {
-				start = axis.x(brush.start) - axis.x.rangeBand() / 2;
-				end = axis.x(brush.end) + axis.x.rangeBand() / 2;
+				var is_full = axis.get("x").full,
+					width = axis.x.rangeBand();
+
+				start = axis.x(brush.start) - width / 2;
+				end = axis.x(brush.end) + width / 2;
+
+				if(is_full) {
+					start += width / 2;
+					end += width / 2;
+				}
 			} else  {
 				start = axis.x(brush.start);
 				end = axis.x(brush.end);
