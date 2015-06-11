@@ -24,15 +24,24 @@
                 },
                 y: {
                     type : "range",
-                    domain : [ 0, 100 ]
-                }
+                    domain : [ 0, 200 ],
+                    step : 5
+                },
+                data: [
+                    { score: 30, score2: 40 },
+                    { score: 90, score2: 40 },
+                    { score: 60, score2: 40 },
+                    { score: 40, score2: 40 },
+                ]
+
             },
             theme : "jennifer",
             brush : {
                 type: "scatter",
-                target: "score",
+                target: [ "score" ],
                 size: 10
-            }
+            },
+            render : false
         });
 	});
 
@@ -43,12 +52,15 @@
             type : "block",
             domain : [ "국어", "영어", "수학", "과학" ],
             line : true
-        });
+        }, true);
 
         axis.updateGrid("x", {
             type : "range",
-            domain : [ 0, 100 ]
-        });
+            domain : [ 0, 200 ],
+            step : 5
+        }, true);
+
+        c.render();
     }
 </script>
 
