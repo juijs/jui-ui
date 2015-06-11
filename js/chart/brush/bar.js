@@ -7,7 +7,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
      */
 	var BarBrush = function(chart, axis, brush) {
 		var g;
-		var zeroX, height, half_height, bar_height;
+		var zeroX, height, half_height, bar_height, is_full;
 
         /**
          * bar style 을 얻어온다. 
@@ -101,6 +101,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
          */
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
@@ -166,6 +167,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 			this.eachData(function(i, data) {
 				var startY = axis.y(i) - (half_height / 2);
+
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startY += height / 2;
+				}
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],

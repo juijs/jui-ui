@@ -12041,7 +12041,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
      */
 	var BarBrush = function(chart, axis, brush) {
 		var g;
-		var zeroX, height, half_height, bar_height;
+		var zeroX, height, half_height, bar_height, is_full;
 
         /**
          * bar style 을 얻어온다. 
@@ -12135,6 +12135,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
          */
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
 			half_height = height - (brush.outerPadding * 2);
@@ -12200,6 +12201,11 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 			this.eachData(function(i, data) {
 				var startY = axis.y(i) - (half_height / 2);
+
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startY += height / 2;
+				}
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
@@ -12316,10 +12322,11 @@ jui.define("chart.brush.column", [], function() {
      */
 	var ColumnBrush = function(chart, axis, brush) {
 		var g;
-		var zeroY, width, col_width, half_width;
+		var zeroY, width, col_width, half_width, is_full;
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
+			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
 			half_width = (width - brush.outerPadding * 2);
@@ -12333,7 +12340,12 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) - (half_width / 2);
+				var startX = axis.x(i) -(half_width / 2);
+
+				// x축 그리드의 full 옵션 처리
+				if(is_full) {
+					startX += width / 2;
+				}
 
 				for (var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
