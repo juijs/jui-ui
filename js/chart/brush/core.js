@@ -307,20 +307,26 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 };
             }
             
-            var axisData = this.axis.data;
-            var x = this.axis.x;
-            var y = this.axis.y;
-
-            var func = _.loop(i);
+            var axisData = this.axis.data,
+                isRangeY = (this.axis.y.type == "range"),
+                x = this.axis.x,
+                y = this.axis.y,
+                func = _.loop(i);
 
             func(function(i, group) {
                 var data = axisData[i],
-                    startX = x(i);
+                    startX = 0,
+                    startY = 0;
+
+                if(isRangeY) startX = x(i);
+                else startY = y(i);
 
                 for(var j = 0; j < targetLength ; j++) {
                     var key = target[j],
-                        value = data[key],
-                        startY = y(value);
+                        value = data[key];
+
+                    if(isRangeY) startY = y(value);
+                    else startX = x(value);
 
                     xy[j].x[i] = startX;
                     xy[j].y[i] = startY;
@@ -347,7 +353,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {Array}
          */
         this.getStackXY = function(isCheckMinMax) {
-            var xy = this.getXY(isCheckMinMax);
+            var xy = this.getXY(isCheckMinMax),
+                isRangeY = (this.axis.y.type == "range");
 
             this.eachData(function(i, data) {
                 var valueSum = 0;
@@ -360,7 +367,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         valueSum += data[this.brush.target[j - 1]];
                     }
 
-                    xy[j].y[i] = this.axis.y(value + valueSum);
+                    if(isRangeY) {
+                        xy[j].y[i] = this.axis.y(value + valueSum);
+                    } else {
+                        xy[j].x[i] = this.axis.x(value + valueSum);
+                    }
                 }
             });
 
