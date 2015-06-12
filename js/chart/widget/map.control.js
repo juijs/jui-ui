@@ -117,7 +117,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
 
             function move() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -126,7 +126,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 axis.map.view(viewX, viewY);
             }
             function zoom() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -163,7 +163,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                     moveY = e.y - startY;
                     scale = getScrollScale(sy);
 
-                    axis.updateMap({
+                    axis.updateGrid("map", {
                         scale: scale,
                         viewX: viewX,
                         viewY: viewY
@@ -221,7 +221,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 bottom.append(createBtnGroup("down", 0.8, 0, 170, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIMjI+py+0BopSv2qsKADs="));
                 bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
 
-                // ¹öÆ° Å¬¸¯ ÀÌº¥Æ® ¼³Á¤
+                // ï¿½ï¿½Æ° Å¬ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
                 setButtonEvents();
                 setScrollEvent(bar);
             });
@@ -233,7 +233,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 x2 = axis.area("x2"),
                 y2 = axis.area("y2");
 
-            // ÄÁÆ®·Ñ·¯ À§Ä¡ ¼³Á¤
+            // ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
             if(ot == "bottom" && ag == "start") {
                 g.translate(dx, y2 - (273 + dy));
             } else if(ot == "bottom" && ag == "end") {

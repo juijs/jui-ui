@@ -266,12 +266,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 data = pathIndex[id].data;
 
                 if(data.x != null) {
-                    var cx = parseFloat(data.x);
+                    var dx = self.axis.getValue(data, "dx", 0),
+                        cx = parseFloat(data.x) + dx;
                     x = (cx * pathScale) - pxy.x;
                 }
 
                 if(data.y != null) {
-                    var cy = parseFloat(data.y);
+                    var dy = self.axis.getValue(data, "dy", 0),
+                        cy = parseFloat(data.y) + dy;
                     y = (cy * pathScale) - pxy.y;
                 }
             }

@@ -5964,12 +5964,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 data = pathIndex[id].data;
 
                 if(data.x != null) {
-                    var cx = parseFloat(data.x);
+                    var dx = self.axis.getValue(data, "dx", 0),
+                        cx = parseFloat(data.x) + dx;
                     x = (cx * pathScale) - pxy.x;
                 }
 
                 if(data.y != null) {
-                    var cy = parseFloat(data.y);
+                    var dy = self.axis.getValue(data, "dy", 0),
+                        cy = parseFloat(data.y) + dy;
                     y = (cy * pathScale) - pxy.y;
                 }
             }
@@ -19371,7 +19373,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
 
             function move() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -19380,7 +19382,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 axis.map.view(viewX, viewY);
             }
             function zoom() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -19417,7 +19419,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                     moveY = e.y - startY;
                     scale = getScrollScale(sy);
 
-                    axis.updateMap({
+                    axis.updateGrid("map", {
                         scale: scale,
                         viewX: viewX,
                         viewY: viewY
