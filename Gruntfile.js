@@ -152,6 +152,7 @@ module.exports = function(grunt) {
         "js/chart/widget/vscroll.js", // vertical scroll
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
+        "js/chart/widget/dragselect.js",
 
         // map widget
         "js/chart/widget/map.core.js",
