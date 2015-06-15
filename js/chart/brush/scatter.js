@@ -25,7 +25,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.color(index),
+            var color = this.color(index, pos.value),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -129,16 +129,21 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         value: points[i].value[j]
                     };
 
-                    var p = this.createScatter(data, i);
+                    var p = this.createScatter(data, i),
+                        d = this.brush.display;
 
                     // Max & Min 툴팁 생성
-                    if(this.brush.display == "max" && data.max || this.brush.display == "min" && data.min) {
+                    if((d == "max" && data.max) || (d == "min" && data.min) || d == "all") {
                         g.append(this.drawTooltip(data.x, data.y, this.format(data.value)));
                     }
 
                     // 컬럼 및 기본 브러쉬 이벤트 설정
                     if(this.brush.activeEvent != null) {
-                        (function(scatter, x, y, text, color) {
+                        (function(scatter, data, color) {
+                            var x = data.x,
+                                y = data.y,
+                                text = self.format(data.value);
+
                             scatter.on(self.brush.activeEvent, function(e) {
                                 if(self.brush.symbol != "cross") {
                                     if (self.activeScatter != null) {
@@ -164,7 +169,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data.x, data.y, this.format(data.value), this.color(i));
+                        })(p, data, this.color(i, data.value));
                     }
 
                     if(this.brush.hide) {
@@ -227,7 +232,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             hideZero: false,
             /** @cfg {String} [activeEvent=null]  Activates the scatter in question when a configured event occurs (click, mouseover, etc). */
             activeEvent: null,
-            /** @cfg {"max"/"min"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */
+            /** @cfg {"max"/"min"/"all"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */
             display: null,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false

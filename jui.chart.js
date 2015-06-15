@@ -6731,20 +6731,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * Gets a color defined in the theme or the color set.
          *
-         * @param {Number} i
-         * @param {chart.brush.core} brush
+         * @param {Number/String} key
+         * @param {Array} colors
+         * @param {Array} target
          * @return {String} Selected color string
          */
-        this.color = function(i, brush) {
+        this.color = function(key, colors, target) {
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
-            if(_.typeCheck("string", i)) {
-                color = i;
+            if(_.typeCheck("string", key)) {
+                color = key;
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
-                if(_.typeCheck("array", brush.colors)) {
-                    color = brush.colors[i];
+                if(_.typeCheck("array", colors)) {
+                    color = colors[key];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
@@ -6754,8 +6755,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
 
                 // 시리즈 컬러 설정
-                if(_.typeCheck("array", brush.target)) {
-                    var series = _series[brush.target[i]];
+                if(_.typeCheck("array", target)) {
+                    var series = _series[target[key]];
 
                     if(series && series.color) {
                         color = series.color;
@@ -6773,7 +6774,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             function nextColor(newIndex) {
                 var c = _theme["colors"],
-                    index = newIndex || i;
+                    index = newIndex || key;
 
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
@@ -11756,12 +11757,24 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
          * @returns {*}
          */
-        this.color = function(key) {
+        this.color = function(key, value) {
             if(_.typeCheck("string", key)) {
-                return this.chart.color(0, { colors : [ key ] });
-            }
+                return this.chart.color(0, [ key ]);
+            } else {
+                var color = this.chart.color(key, this.brush.colors, this.brush.target);
 
-            return this.chart.color(key, this.brush);
+                // 값에 의한 컬러 설정
+                if(!_.typeCheck("undefined", value) &&
+                    _.typeCheck("function", this.brush.color)) {
+                    var c = this.brush.color.call(this, [ value ]);
+
+                    if(_.typeCheck("string", c)) {
+                        color = c;
+                    }
+                }
+
+                return color;
+            }
         }
 	}
 
@@ -11775,6 +11788,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
+            /** @cfg {Function} [color=null] Set the color for the current value. */
+            color: null,
             /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
             /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
@@ -12218,7 +12233,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			active: null,
             /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
 			activeEvent: null,
-            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            /** @cfg {"max"/"min"/"all"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
 			display: null
 		};
 	}
@@ -13392,14 +13407,15 @@ jui.define("chart.brush.bubble", [], function() {
          */
         function createBubble(chart, brush, pos, index) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
+                color = self.color(index, pos.value),
                 circle = chart.svg.group();
 
             circle.append(
                 chart.svg.circle({
                     r: radius,
-                    "fill": self.color(index),
+                    "fill": color,
                     "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                    "stroke": self.color(index),
+                    "stroke": color,
                     "stroke-width": chart.theme("bubbleBorderWidth")
                 })
             ).translate(pos.x, pos.y);
@@ -14827,7 +14843,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.color(index),
+            var color = this.color(index, pos.value),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -14931,16 +14947,21 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         value: points[i].value[j]
                     };
 
-                    var p = this.createScatter(data, i);
+                    var p = this.createScatter(data, i),
+                        d = this.brush.display;
 
                     // Max & Min 툴팁 생성
-                    if(this.brush.display == "max" && data.max || this.brush.display == "min" && data.min) {
+                    if((d == "max" && data.max) || (d == "min" && data.min) || d == "all") {
                         g.append(this.drawTooltip(data.x, data.y, this.format(data.value)));
                     }
 
                     // 컬럼 및 기본 브러쉬 이벤트 설정
                     if(this.brush.activeEvent != null) {
-                        (function(scatter, x, y, text, color) {
+                        (function(scatter, data, color) {
+                            var x = data.x,
+                                y = data.y,
+                                text = self.format(data.value);
+
                             scatter.on(self.brush.activeEvent, function(e) {
                                 if(self.brush.symbol != "cross") {
                                     if (self.activeScatter != null) {
@@ -14966,7 +14987,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data.x, data.y, this.format(data.value), this.color(i));
+                        })(p, data, this.color(i, data.value));
                     }
 
                     if(this.brush.hide) {
@@ -15029,7 +15050,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             hideZero: false,
             /** @cfg {String} [activeEvent=null]  Activates the scatter in question when a configured event occurs (click, mouseover, etc). */
             activeEvent: null,
-            /** @cfg {"max"/"min"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */
+            /** @cfg {"max"/"min"/"all"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */
             display: null,
             /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
             clip: false

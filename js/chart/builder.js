@@ -623,20 +623,21 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * Gets a color defined in the theme or the color set.
          *
-         * @param {Number} i
-         * @param {chart.brush.core} brush
+         * @param {Number/String} key
+         * @param {Array} colors
+         * @param {Array} target
          * @return {String} Selected color string
          */
-        this.color = function(i, brush) {
+        this.color = function(key, colors, target) {
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
-            if(_.typeCheck("string", i)) {
-                color = i;
+            if(_.typeCheck("string", key)) {
+                color = key;
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
-                if(_.typeCheck("array", brush.colors)) {
-                    color = brush.colors[i];
+                if(_.typeCheck("array", colors)) {
+                    color = colors[key];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
@@ -646,8 +647,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
 
                 // 시리즈 컬러 설정
-                if(_.typeCheck("array", brush.target)) {
-                    var series = _series[brush.target[i]];
+                if(_.typeCheck("array", target)) {
+                    var series = _series[target[key]];
 
                     if(series && series.color) {
                         color = series.color;
@@ -665,7 +666,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             function nextColor(newIndex) {
                 var c = _theme["colors"],
-                    index = newIndex || i;
+                    index = newIndex || key;
 
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }

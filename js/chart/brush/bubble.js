@@ -22,14 +22,15 @@ jui.define("chart.brush.bubble", [], function() {
          */
         function createBubble(chart, brush, pos, index) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
+                color = self.color(index, pos.value),
                 circle = chart.svg.group();
 
             circle.append(
                 chart.svg.circle({
                     r: radius,
-                    "fill": self.color(index),
+                    "fill": color,
                     "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                    "stroke": self.color(index),
+                    "stroke": color,
                     "stroke-width": chart.theme("bubbleBorderWidth")
                 })
             ).translate(pos.x, pos.y);

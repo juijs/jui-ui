@@ -456,12 +456,24 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
          * @returns {*}
          */
-        this.color = function(key) {
+        this.color = function(key, value) {
             if(_.typeCheck("string", key)) {
-                return this.chart.color(0, { colors : [ key ] });
-            }
+                return this.chart.color(0, [ key ]);
+            } else {
+                var color = this.chart.color(key, this.brush.colors, this.brush.target);
 
-            return this.chart.color(key, this.brush);
+                // 값에 의한 컬러 설정
+                if(!_.typeCheck("undefined", value) &&
+                    _.typeCheck("function", this.brush.color)) {
+                    var c = this.brush.color.call(this, [ value ]);
+
+                    if(_.typeCheck("string", c)) {
+                        color = c;
+                    }
+                }
+
+                return color;
+            }
         }
 	}
 
@@ -475,6 +487,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
+            /** @cfg {Function} [color=null] Set the color for the current value. */
+            color: null,
             /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
             /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
