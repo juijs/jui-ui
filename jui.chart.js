@@ -19204,12 +19204,6 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
             }
 
             function searchDataInDrag(endValueX, endValueY) {
-                var xType = axis.x.type,
-                    yType = axis.y.type,
-                    datas = axis.data,
-                    targets = brush.target,
-                    dataInDrag = [];
-
                 // x축 값 순서 정하기
                 if(startValueX > endValueX) {
                     var temp = startValueX;
@@ -19223,6 +19217,20 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                     startValueY = endValueY;
                     endValueY = temp;
                 }
+
+                if(self.widget.dataType == "area") {
+                    emitDragArea(startValueX, startValueY, endValueX, endValueY);
+                } else {
+                    emitDataList(startValueX, startValueY, endValueX, endValueY);
+                }
+            }
+
+            function emitDataList(startValueX, startValueY, endValueX, endValueY) {
+                var xType = axis.x.type,
+                    yType = axis.y.type,
+                    datas = axis.data,
+                    targets = brush.target,
+                    dataInDrag = [];
 
                 // 해당 브러쉬의 데이터 검색
                 for(var i = 0; i < datas.length; i++) {
@@ -19276,7 +19284,16 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                     };
                 }
 
-                self.chart.emit("dragselect.end", [ dataInDrag, brush.axis ]);
+                self.chart.emit("dragselect.end", [ dataInDrag ]);
+            }
+
+            function emitDragArea(startValueX, startValueY, endValueX, endValueY) {
+                self.chart.emit("dragselect.end", [ {
+                    x1: startValueX,
+                    y1: startValueY,
+                    x2: endValueX,
+                    y2: endValueY
+                } ]);
             }
 
             function resetDragStatus() { // 엘리먼트 및 데이터 초기화
@@ -19329,7 +19346,8 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
 
     DragSelectWidget.setup = function() {
         return {
-            brush: [ 0 ]
+            brush: [ 0 ],
+            dataType: "list" // or area
         }
     }
 
