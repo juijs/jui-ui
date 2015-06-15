@@ -159,6 +159,10 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.8,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",

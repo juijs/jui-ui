@@ -241,6 +241,10 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.5,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",

@@ -8,9 +8,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
      *
      */
     var DragSelectWidget = function() {
-        var self = this,
-            top = 0,
-            left = 0;
+        var self = this;
 
         function setDragEvent(brush, thumb) {
             var axis = self.chart.axis(brush.axis),
@@ -98,7 +96,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueX.getTime() && date.getTime() <= endValueX.getTime()) &&
                                     (v >= startValueY && v <= endValueY) ) {
-                                    dataInDrag.push(d);
+                                    dataInDrag.push(getTargetData(i, targets[j], d));
                                 }
                             }
                         } else if(xType == "range" && yType == "date") {
@@ -107,7 +105,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueY.getTime() && date.getTime() <= endValueY.getTime()) &&
                                     (v >= startValueX && v <= endValueX) ) {
-                                    dataInDrag.push(d);
+                                    dataInDrag.push(getTargetData(i, targets[j], d));
                                 }
                             }
                         }
@@ -116,15 +114,24 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                         if(xType == "block" && yType == "range") {
                             if( (i >= startValueX - 1 && i <= endValueX - 1) &&
                                 (v >= startValueY && v <= endValueY)) {
-                                dataInDrag.push(d);
+                                dataInDrag.push(getTargetData(i, targets[j], d));
                             }
                         } else if(xType == "range" && yType == "block") {
                             if( (i >= startValueY - 1 && i <= endValueY - 1) &&
                                 (v >= startValueX && v <= endValueX) ) {
-                                dataInDrag.push(d);
+                                dataInDrag.push(getTargetData(i, targets[j], d));
                             }
                         }
                     }
+                }
+
+                function getTargetData(index, key, data) {
+                    return {
+                        brush: brush,
+                        dataIndex: index,
+                        dataKey: key,
+                        data: data
+                    };
                 }
 
                 self.chart.emit("dragselect.end", [ dataInDrag, brush.axis ]);
@@ -151,17 +158,14 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                 var thumb = self.chart.svg.rect({
                     width: 0,
                     height: 0,
-                    fill: self.chart.theme("zoomBackgroundColor"),
-                    opacity: 0.3
+                    stroke: self.chart.theme("dragSelectBorderColor"),
+                    "stroke-width": self.chart.theme("dragSelectBorderWidth"),
+                    fill: self.chart.theme("dragSelectBackgroundColor"),
+                    "fill-opacity": self.chart.theme("dragSelectBackgroundOpacity")
                 });
 
                 setDragEvent(brush, thumb);
             });
-        }
-
-        this.drawBefore = function() {
-            top = this.chart.padding("top");
-            left = this.chart.padding("left");
         }
 
         this.draw = function() {

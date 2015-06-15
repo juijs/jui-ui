@@ -7360,246 +7360,133 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridFontColor : "#333333",
         /** @cfg Grid Active Font color */
     	gridActiveFontColor : "#ff7800",
-
         /** @cfg Grid Rect Color */
         gridRectColor : "#ababab",
-
         /** @cfg Grid Border Color */
         gridBorderColor : "#ebebeb",
         /** @cfg Grid Border Width */
     	gridBorderWidth : 1,
-
-        /** @cfg */
         gridActiveBorderColor : "#ff7800",
-
-        /** @cfg */
         gridAxisBorderColor : "#bfbfbf",
-        /** @cfg */
         gridAxisBorderWidth : 2,
-
         /** @cfg  Grid Bar Size */
         gridTickSize : 3,
         gridTickBorderWidth : 1.5,
         gridTickPadding : 5,
-
         /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-
-        // brush-item styles
-        /** @cfg */
+        // Brush styles
         tooltipPointRadius : 5, // common
-        /** @cfg */
         tooltipPointBorderWidth : 1, // common
-        /** @cfg */        
         tooltipPointFontWeight : "bold", // common
-
-        /** @cfg */
         barBorderColor : "none",
-        /** @cfg */        
         barBorderWidth : 0,
-        /** @cfg */
         barBorderOpacity : 0,
-        /** @cfg */
         barBorderRadius : 3,
-        /** @cfg */        
         barPointBorderColor : "white",
-        /** @cfg */
         barDisableBackgroundOpacity : 0.4,
-        /** @cfg */        
     	gaugeBackgroundColor : "#ececec",
-        /** @cfg */        
         gaugeArrowColor : "#666666",
-        /** @cfg */        
         gaugeFontColor : "#666666",
-        /** @cfg */
         gaugeFontSize : "20px",
-        /** @cfg */
         gaugeFontWeight : "bold",
-        /** @cfg */
         gaugeTitleFontSize : "12px",
-        /** @cfg */
         gaugeTitleFontWeight : "normal",
-        /** @cfg */
         gaugeTitleFontColor : "#333",
-        /** @cfg */
         bargaugeBackgroundColor : "#ececec",
-        /** @cfg */
         bargaugeFontSize : "11px",
-        /** @cfg */
         bargaugeFontColor : "#333333",
-
-        /** @cfg */
     	pieBorderColor : "#ececec",
-        /** @cfg */        
         pieBorderWidth : 1,
-        /** @cfg */
         pieOuterFontSize : "11px",
-        /** @cfg */
         pieOuterLineColor : "#a9a9a9",
-        /** @cfg */
         pieOuterLineSize : 8,
-        /** @cfg */
         pieOuterLineRate : 1.3,
-        /** @cfg */
         pieActiveDistance : 5,
-        /** @cfg */
     	areaBackgroundOpacity : 0.5,
-        /** @cfg */
         areaSplitBackgroundColor : "#929292",
-        /** @cfg */
         bubbleBackgroundOpacity : 0.5,
-        /** @cfg */
         bubbleBorderWidth : 1,
-        /** @cfg */
         candlestickBorderColor : "black",
-        /** @cfg */
         candlestickBackgroundColor : "white",
-        /** @cfg */
         candlestickInvertBorderColor : "red",
-        /** @cfg */
         candlestickInvertBackgroundColor : "red",
-        /** @cfg */
         ohlcBorderColor : "black",
-        /** @cfg */
         ohlcInvertBorderColor : "red",
-        /** @cfg */
         ohlcBorderRadius : 5,
-        /** @cfg */
         lineBorderWidth : 2,
-        /** @cfg */
         lineBorderDashArray : "none",
-        /** @cfg */
         lineDisableBorderOpacity : 0.3,
-        /** @cfg */
         linePointBorderColor : "white",
-        /** @cfg */
         lineSplitBorderColor : null,
-        /** @cfg */
         lineSplitBorderOpacity : 0.5,
-        /** @cfg */
         pathBackgroundOpacity : 0.5,
-        /** @cfg */
         pathBorderWidth : 1,
-        /** @cfg */
         scatterBorderColor : "white",
-        /** @cfg */
         scatterBorderWidth : 1,
-        /** @cfg */
         scatterHoverColor : "white",
-        /** @cfg */
         waterfallBackgroundColor : "#87BB66",
-        /** @cfg */
         waterfallInvertBackgroundColor : "#FF7800",
-        /** @cfg */
         waterfallEdgeBackgroundColor : "#7BBAE7",
-        /** @cfg */
         waterfallLineColor : "#a9a9a9",
-        /** @cfg */
         waterfallLineDashArray : "0.9",
-        /** @cfg */
         focusBorderColor : "#FF7800",
-        /** @cfg */
         focusBorderWidth : 1,
-        /** @cfg */
         focusBackgroundColor : "#FF7800",
-        /** @cfg */
         focusBackgroundOpacity : 0.1,
-        /** @cfg */
         pinFontColor : "#FF7800",
-        /** @cfg */
         pinFontSize : "10px",
-        /** @cfg */
         pinBorderColor : "#FF7800",
-        /** @cfg */
         pinBorderWidth : 0.7,
-
-        /** @cfg */
         topologyNodeRadius : 12.5,
-        /** @cfg */
         topologyNodeFontSize : "14px",
-        /** @cfg */
         topologyNodeFontColor : "white",
-        /** @cfg */
         topologyNodeTitleFontSize : "11px",
-        /** @cfg */
         topologyNodeTitleFontColor : "#333",
-        /** @cfg */
         topologyEdgeColor : "#b2b2b2",
-        /** @cfg */
         topologyActiveEdgeColor : "#905ed1",
-        /** @cfg */
         topologyEdgeFontSize : "10px",
-        /** @cfg */
         topologyEdgeFontColor : "#666",
-        /** @cfg */
         topologyEdgePointRadius : 3,
-        /** @cfg */
         topologyTooltipBackgroundColor : "white",
-        /** @cfg */
         topologyTooltipBorderColor : "#ccc",
-        /** @cfg */
         topologyTooltipFontSize : "11px",
-        /** @cfg */
         topologyTooltipFontColor : "#333",
 
-        /** @cfg */
+        // Widget styles
         titleFontColor : "#333",
-        /** @cfg */
         titleFontSize : "13px",
-        /** @cfg */
         titleFontWeight : "normal",
-        /** @cfg */
         legendFontColor : "#333",
-        /** @cfg */
         legendFontSize : "12px",
-        /** @cfg */
         legendIconRadius : 6,
-        /** @cfg */
         tooltipFontColor : "#333",
-        /** @cfg */
         tooltipFontSize : "12px",
-        /** @cfg */
         tooltipBackgroundColor : "white",
-        /** @cfg */
         tooltipBorderColor : "#aaaaaa",
-        /** @cfg */
         tooltipBorderWidth : 2,
-        /** @cfg */
         tooltipBackgroundOpacity : 0.7,
-        /** @cfg */
         scrollBackgroundSize : 7,
-        /** @cfg */
         scrollBackgroundColor : "#dcdcdc",
-        /** @cfg */
         scrollThumbBackgroundColor : "#b2b2b2",
-        /** @cfg */
         scrollThumbBorderColor : "#9f9fa4",
-        /** @cfg */
         zoomBackgroundColor : "red",
-        /** @cfg */
         zoomFocusColor : "gray",
-        /** @cfg */
         zoomScrollBackgroundSize : 50,
-        /** @cfg */
         zoomScrollBackgroundColor : "#000",
-        /** @cfg */
         zoomScrollFocusColor : "#fff",
-        /** @cfg */
         zoomScrollBrushColor : "#000",
-        /** @cfg */
         crossBorderColor : "#a9a9a9",
-        /** @cfg */
         crossBorderWidth : 1,
-        /** @cfg */
         crossBorderOpacity : 0.8,
-        /** @cfg */
         crossBalloonFontSize : "11px",
-        /** @cfg */
         crossBalloonFontColor : "white",
-        /** @cfg */
         crossBalloonBackgroundColor : "black",
-        /** @cfg */
         crossBalloonBackgroundOpacity : 0.5,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",
@@ -7789,6 +7676,10 @@ jui.define("chart.theme.gradient", [], function() {
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.8,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",
@@ -7976,6 +7867,10 @@ jui.define("chart.theme.dark", [], function() {
         crossBalloonFontColor : "#333",
         crossBalloonBackgroundColor : "white",
         crossBalloonBackgroundOpacity : 1,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",
@@ -8158,6 +8053,10 @@ jui.define("chart.theme.pastel", [], function() {
 		crossBalloonFontColor :	"white",
 		crossBalloonBackgroundColor : "black",
 		crossBalloonBackgroundOpacity : 0.7,
+		dragSelectBackgroundColor : "#7BBAE7",
+		dragSelectBackgroundOpacity : 0.3,
+		dragSelectBorderColor : "#7BBAE7",
+		dragSelectBorderWidth : 1,
 
 		// Map Common
 		mapPathBackgroundColor : "#67B7DC",
@@ -8429,6 +8328,10 @@ jui.define("chart.theme.pattern", [], function() {
         crossBalloonFontColor : "white",
         crossBalloonBackgroundColor : "black",
         crossBalloonBackgroundOpacity : 0.5,
+        dragSelectBackgroundColor : "#7BBAE7",
+        dragSelectBackgroundOpacity : 0.3,
+        dragSelectBorderColor : "#7BBAE7",
+        dragSelectBorderWidth : 1,
 
         // Map Common
         mapPathBackgroundColor : "#67B7DC",
@@ -19247,9 +19150,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
      *
      */
     var DragSelectWidget = function() {
-        var self = this,
-            top = 0,
-            left = 0;
+        var self = this;
 
         function setDragEvent(brush, thumb) {
             var axis = self.chart.axis(brush.axis),
@@ -19337,7 +19238,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueX.getTime() && date.getTime() <= endValueX.getTime()) &&
                                     (v >= startValueY && v <= endValueY) ) {
-                                    dataInDrag.push(d);
+                                    dataInDrag.push(getTargetData(i, targets[j], d));
                                 }
                             }
                         } else if(xType == "range" && yType == "date") {
@@ -19346,7 +19247,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueY.getTime() && date.getTime() <= endValueY.getTime()) &&
                                     (v >= startValueX && v <= endValueX) ) {
-                                    dataInDrag.push(d);
+                                    dataInDrag.push(getTargetData(i, targets[j], d));
                                 }
                             }
                         }
@@ -19355,15 +19256,24 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                         if(xType == "block" && yType == "range") {
                             if( (i >= startValueX - 1 && i <= endValueX - 1) &&
                                 (v >= startValueY && v <= endValueY)) {
-                                dataInDrag.push(d);
+                                dataInDrag.push(getTargetData(i, targets[j], d));
                             }
                         } else if(xType == "range" && yType == "block") {
                             if( (i >= startValueY - 1 && i <= endValueY - 1) &&
                                 (v >= startValueX && v <= endValueX) ) {
-                                dataInDrag.push(d);
+                                dataInDrag.push(getTargetData(i, targets[j], d));
                             }
                         }
                     }
+                }
+
+                function getTargetData(index, key, data) {
+                    return {
+                        brush: brush,
+                        dataIndex: index,
+                        dataKey: key,
+                        data: data
+                    };
                 }
 
                 self.chart.emit("dragselect.end", [ dataInDrag, brush.axis ]);
@@ -19390,17 +19300,14 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
                 var thumb = self.chart.svg.rect({
                     width: 0,
                     height: 0,
-                    fill: self.chart.theme("zoomBackgroundColor"),
-                    opacity: 0.3
+                    stroke: self.chart.theme("dragSelectBorderColor"),
+                    "stroke-width": self.chart.theme("dragSelectBorderWidth"),
+                    fill: self.chart.theme("dragSelectBackgroundColor"),
+                    "fill-opacity": self.chart.theme("dragSelectBackgroundOpacity")
                 });
 
                 setDragEvent(brush, thumb);
             });
-        }
-
-        this.drawBefore = function() {
-            top = this.chart.padding("top");
-            left = this.chart.padding("left");
         }
 
         this.draw = function() {
