@@ -19742,27 +19742,32 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *  
          * chart.color() 를 쉽게 사용할 수 있게 만든 유틸리티 함수 
          *  
-         * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
+         * @param {String/Number} key1  문자열일 경우 컬러 코드, Number일 경우 브러쉬에서 사용될 컬러 Index
+         * @param {String/Number} key2  브러쉬에서 사용될 컬러 Index
          * @returns {*}
          */
-        this.color = function(key, value) {
-            if(_.typeCheck("string", key)) {
-                return this.chart.color(0, [ key ]);
-            } else {
-                var color = this.chart.color(key, this.brush.colors, this.brush.target);
+        this.color = function(key1, key2) {
+            var colors = this.brush.colors,
+                targets = this.brush.target;
 
-                // 값에 의한 컬러 설정
-                if(!_.typeCheck("undefined", value) &&
-                    _.typeCheck("function", this.brush.color)) {
-                    var c = this.brush.color.apply(this.chart, [ value, this.brush.target[key] ]);
+            var color = this.chart.color(
+                (_.typeCheck("undefined", key2)) ? key1 : key2,
+                colors,
+                targets
+            );
 
-                    if(_.typeCheck("string", c)) {
-                        color = c;
-                    }
+            // colors 옵션이 콜백일 경우 (key1과 key2가 모두 있어야 함.)
+            if(!_.typeCheck("undefined", key2) && _.typeCheck("function", colors)) {
+                var c = colors.call(this.chart, this.getData(key1));
+
+                if(_.typeCheck("string", c)) {
+                    color = this.chart.color(c);
+                } else {
+                    color = this.chart.color(key2, [], targets);
                 }
-
-                return color;
             }
+
+            return color;
         }
 	}
 
@@ -19776,9 +19781,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
-            /** @cfg {Function} [color=null] Set the color for the current value. */
-            color: null,
-            /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
+            /** @cfg {Array/Function} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
             /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
             axis: 0,
@@ -21393,9 +21396,8 @@ jui.define("chart.brush.bubble", [], function() {
          * @param {Number} index
          * @return {GroupElement}
          */
-        function createBubble(chart, brush, pos, index) {
+        function createBubble(chart, brush, pos, color) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
-                color = self.color(index, pos.value),
                 circle = chart.svg.group();
 
             circle.append(
@@ -21427,7 +21429,7 @@ jui.define("chart.brush.bubble", [], function() {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
-                    }, i);
+                    }, this.color(j, i));
 
                     this.addEvent(b, j, i);
                     g.append(b);
@@ -22824,14 +22826,14 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @param {Number} index
          * @return {util.svg.element}
          */
-        this.createScatter = function(pos, index) {
+        this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                target = this.chart.get("series", this.brush.target[index]),
+                target = this.chart.get("series", this.brush.target[targetIndex]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.color(index, pos.value),
+            var color = this.color(dataIndex, targetIndex),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -22935,7 +22937,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         value: points[i].value[j]
                     };
 
-                    var p = this.createScatter(data, i),
+                    var p = this.createScatter(data, j, i),
                         d = this.brush.display;
 
                     // Max & Min 툴팁 생성
@@ -22975,7 +22977,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data, this.color(i, data.value));
+                        })(p, data, this.color(j, i));
                     }
 
                     if(this.brush.hide) {
@@ -25296,19 +25298,15 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
 		this.draw = function() {
             var g = chart.svg.group(),
-                color = _.typeCheck("string", brush.color) ? chart.color(brush.color) : this.color(0),
                 minmax = getMinMaxValues();
 
             this.eachData(function(i, d) {
                 var value = axis.getValue(d, "value", 0),
                     size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
-                    xy = axis.map(axis.getValue(d, "id", null));
+                    xy = axis.map(axis.getValue(d, "id", null)),
+                    color = this.color(i, 0);
 
                 if(xy != null) {
-                    if(_.typeCheck("function", brush.color)) {
-                        color = chart.color(brush.color.call(chart, d) || color);
-                    }
-
                     var c = chart.svg.circle({
                         r: size,
                         "fill": color,
@@ -25328,7 +25326,6 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
     MapBubbleBrush.setup = function() {
         return {
-            color : null,
             min : 10,
             max : 30
         }

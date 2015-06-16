@@ -18,14 +18,14 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @param {Number} index
          * @return {util.svg.element}
          */
-        this.createScatter = function(pos, index) {
+        this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                target = this.chart.get("series", this.brush.target[index]),
+                target = this.chart.get("series", this.brush.target[targetIndex]),
                 symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
                 w = h = this.brush.size;
 
-            var color = this.color(index, pos.value),
+            var color = this.color(dataIndex, targetIndex),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
@@ -129,7 +129,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         value: points[i].value[j]
                     };
 
-                    var p = this.createScatter(data, i),
+                    var p = this.createScatter(data, j, i),
                         d = this.brush.display;
 
                     // Max & Min 툴팁 생성
@@ -169,7 +169,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data, this.color(i, data.value));
+                        })(p, data, this.color(j, i));
                     }
 
                     if(this.brush.hide) {

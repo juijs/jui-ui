@@ -65,9 +65,9 @@
                 type : 'scatter',
                 size : 10,
                 target : [ "name", "name2" ],
-                color : function(value) {
-                    if(value > 700) return "red";
-                    else if(value > 500) return "blue";
+                colors : function(data) {
+                    if(data.name > 700) return "red";
+                    else if(data.name > 500) return "blue";
                     return "black";
                 }
             },
