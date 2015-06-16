@@ -11766,7 +11766,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 // 값에 의한 컬러 설정
                 if(!_.typeCheck("undefined", value) &&
                     _.typeCheck("function", this.brush.color)) {
-                    var c = this.brush.color.call(this, [ value ]);
+                    var c = this.brush.color.apply(this, [ value, this.brush.target[key] ]);
 
                     if(_.typeCheck("string", c)) {
                         color = c;

@@ -69,8 +69,11 @@
                 target : [ 'name', 'value'],
                 min : 1,
                 max : 50,
-                color : function(value) {
-                    if(value > 10) return "red";
+                color : function(value, key) {
+                    if(value > 5) {
+                        return "red";
+                    }
+
                     return "blue";
                 }
             },
