@@ -8736,7 +8736,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 		}
 
 		this.makeColor = function(color) {
-			return this.chart.color(0, { colors: [ color ] })
+			return this.chart.color(color);
 		}
 
 		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
@@ -18085,7 +18085,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = chart.get("series", target).text || target,
-                    color = chart.color(i, brush),
+                    color = chart.color(i, brush.colors, data),
                     rect = chart.svg.getTextRect(text);
 
                 colorIndex[target] = color;

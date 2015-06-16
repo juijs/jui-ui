@@ -46,7 +46,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 		}
 
 		this.makeColor = function(color) {
-			return this.chart.color(0, { colors: [ color ] })
+			return this.chart.color(color);
 		}
 
 		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {

@@ -87,7 +87,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = chart.get("series", target).text || target,
-                    color = chart.color(i, brush),
+                    color = chart.color(i, brush.colors, data),
                     rect = chart.svg.getTextRect(text);
 
                 colorIndex[target] = color;
