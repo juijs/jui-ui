@@ -15,6 +15,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
         function setDragEvent(axisIndex, thumb, bg) {
             var axis = self.chart.axis(axisIndex),
+                xtype = axis.get("x").type,
+                startDate = null, // only date
                 isMove = false,
                 mouseStart = 0,
                 thumbWidth = 0;
@@ -24,6 +26,10 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 isMove = true;
                 mouseStart = e.bgX;
+
+                if(xtype == "date") { // x축이 date일 때
+                    startDate = axis.x.invert(e.chartX);
+                }
             }, axisIndex);
 
             self.on("axis.mousemove", function(e) {
@@ -51,10 +57,22 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             self.on("bg.mouseup", endZoomAction);
             self.on("bg.mouseout", endZoomAction);
 
-            function endZoomAction() {
+            function endZoomAction(e) {
                 isMove = false;
                 if(thumbWidth == 0) return;
 
+                if(xtype == "block") {
+                    updateBlockGrid();
+                } else if(xtype == "date") {
+                    if(startDate != null) {
+                        updateDateGrid(axis.x.invert(e.chartX));
+                    }
+                }
+
+                resetDragStatus();
+            }
+
+            function updateBlockGrid() {
                 var tick = axis.area("width") / (axis.end - axis.start),
                     x = ((thumbWidth > 0) ? mouseStart : mouseStart + thumbWidth) - left,
                     start = Math.floor(x / tick) + axis.start,
@@ -70,14 +88,45 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         self.chart.render();
                     }
                 }
+            }
 
-                resetDragStatus();
+            function updateDateGrid(endDate) {
+                var stime = startDate.getTime(),
+                    etime = endDate.getTime();
+
+                if(stime >= etime) return;
+
+                var step = self.widget.dateStep,
+                    format = self.widget.dateFormat;
+
+                // step 콜백 옵션 설정
+                if(_.typeCheck("function", step)) {
+                    step = step.apply(self.chart, [ stime, etime ]);
+                }
+
+                // format 콜백 옵션 설정
+                if(_.typeCheck("function", format)) {
+                    format = format.apply(self.chart, [ stime, etime ]);
+                }
+
+                axis.updateGrid("x", {
+                    domain: [ stime, etime ],
+                    step: (step != null) ? step : axis.get("x").step,
+                    format: (format != null) ? format : axis.get("x").format
+                });
+                bg.attr({ "visibility": "visible" });
+
+                // 차트 렌더링이 활성화되지 않았을 경우
+                if(!self.chart.isRender()) {
+                    self.chart.render();
+                }
             }
 
             function resetDragStatus() { // 엘리먼트 및 데이터 초기화
                 isMove = false;
                 mouseStart = 0;
                 thumbWidth = 0;
+                startDate = null;
 
                 thumb.attr({
                     width: 0
@@ -87,6 +136,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
         this.drawSection = function(axisIndex) {
             var axis = this.chart.axis(axisIndex),
+                xtype = axis.get("x").type,
                 cw = axis.area("width"),
                 ch = axis.area("height"),
                 r = 12;
@@ -124,7 +174,16 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         }).translate(cw - r, -r);
                     }).on("click", function(e) {
                         bg.attr({ visibility: "hidden" });
-                        axis.screen(1);
+
+                        if(xtype == "block") {
+                            axis.screen(1);
+                        } else if(xtype == "date") {
+                            axis.updateGrid("x", {
+                                domain: axis.get("x").domain,
+                                step: axis.get("x").step,
+                                format: axis.get("x").format
+                            });
+                        }
 
                         // 차트 렌더링이 활성화되지 않았을 경우
                         if(!self.chart.isRender()) {
@@ -152,6 +211,13 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             }
 
             return g;
+        }
+    }
+
+    ZoomWidget.setup = function() {
+        return {
+            dateStep: null,    // x축이 date일 때만 적용됨
+            dateFormat: null   // 위와 동일
         }
     }
 
