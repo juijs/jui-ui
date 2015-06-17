@@ -1,4 +1,5 @@
 jui.define("chart.brush.topologynode.edge", [], function() {
+
     /**
      * @class chart.brush.topologynode.edge
      * 
@@ -154,7 +155,7 @@ jui.define("chart.brush.topologynode",
 
         function createNodes(index, data) {
             var xy = axis.c(index),
-                color =_.typeCheck("function", brush.nodeColor) ? brush.nodeColor.call(chart, data) : (brush.nodeColor || self.color(0)),
+                color = self.color(index, 0),
                 title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle.call(chart, data) : "",
                 text =_.typeCheck("function", brush.nodeText) ? brush.nodeText.call(chart, data) : "";
 
@@ -556,9 +557,7 @@ jui.define("chart.brush.topologynode",
             nodeText: null,
             /** @cfg {Function} [nodeImage=null] */
             nodeImage: null,
-            /** @cfg {Function/String} [nodeColor=null] */
-            nodeColor: null,
-
+            /** @cfg {Function} [nodeChart=null] */
             nodeChart: null,
 
             /** @cfg {Array} [edgeData=[]] */

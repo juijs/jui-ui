@@ -453,28 +453,33 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *  
          * chart.color() 를 쉽게 사용할 수 있게 만든 유틸리티 함수 
          *  
-         * @param {String/Number} key1  문자열일 경우 컬러 코드, Number일 경우 브러쉬에서 사용될 컬러 Index
-         * @param {String/Number} key2  브러쉬에서 사용될 컬러 Index
+         * @param {Number} key1  브러쉬에서 사용될 컬러 Index
+         * @param {Number} key2  브러쉬에서 사용될 컬러 Index
          * @returns {*}
          */
         this.color = function(key1, key2) {
-            var colors = this.brush.colors,
-                targets = this.brush.target;
+            var targets = this.brush.target,
+                colors = this.brush.colors,
+                color = null,
+                colorIndex = 0,
+                rowIndex = 0;
 
-            var color = this.chart.color(
-                (_.typeCheck("undefined", key2)) ? key1 : key2,
-                colors,
-                targets
-            );
+            if(!_.typeCheck("undefined", key2)) {
+                colorIndex = key2;
+                rowIndex = key1;
+            } else {
+                colorIndex = key1;
+            }
 
-            // colors 옵션이 콜백일 경우 (key1과 key2가 모두 있어야 함.)
-            if(!_.typeCheck("undefined", key2) && _.typeCheck("function", colors)) {
-                var c = colors.call(this.chart, this.getData(key1));
+            if(_.typeCheck([ "array", "null" ], colors)) {
+                color = this.chart.color(colorIndex, colors, targets);
+            } else if(_.typeCheck("function", colors)) {
+                var newColor = colors.call(this.chart, this.getData(rowIndex));
 
-                if(_.typeCheck("string", c)) {
-                    color = this.chart.color(c);
+                if(_.typeCheck([ "string", "integer" ], newColor)) {
+                    color = this.chart.color(newColor);
                 } else {
-                    color = this.chart.color(key2, [], targets);
+                    color = this.chart.color(0);
                 }
             }
 
