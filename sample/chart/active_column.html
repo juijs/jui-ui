@@ -75,7 +75,14 @@
                 activeEvent : "mouseover",
                 active : 1,
                 minSize : 5,
-                animate : "top"
+                animate : "top",
+                colors : function(data, dataKey) {
+                    if(data.sales > 10000) {
+                        return "red";
+                    }
+
+                    return "blue";
+                }
             },
             widget : {
                 type : "title",

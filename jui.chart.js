@@ -11777,7 +11777,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             if(_.typeCheck([ "array", "null" ], colors)) {
                 color = this.chart.color(colorIndex, colors, targets);
             } else if(_.typeCheck("function", colors)) {
-                var newColor = colors.call(this.chart, this.getData(rowIndex));
+                var newColor = colors.apply(this.chart, [ this.getData(rowIndex), targets[colorIndex] ]);
 
                 if(_.typeCheck([ "string", "integer" ], newColor)) {
                     color = this.chart.color(newColor);
@@ -12019,7 +12019,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
          */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
-				color = this.color(targetIndex),
+				color = this.color(dataIndex, targetIndex),
 				value = this.getData(dataIndex)[this.brush.target[targetIndex]];
 
 			var r = this.chart.svg.pathRect({
@@ -16475,6 +16475,7 @@ jui.define("chart.brush.rangebar", [], function() {
 }, "chart.brush.core");
 
 jui.define("chart.brush.topologynode.edge", [], function() {
+
     /**
      * @class chart.brush.topologynode.edge
      * 
