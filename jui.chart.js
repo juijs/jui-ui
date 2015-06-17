@@ -2530,14 +2530,14 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	var self = {
 
 		// unit
-		years : 0x01,
-		months : 0x02,
-		days : 0x03,
-		hours : 0x04,
-		minutes : 0x05,
-		seconds : 0x06,
-		milliseconds : 0x07,
-		weeks : 0x08,
+		years : "years",
+		months : "months",
+		days : "days",
+		hours : "hours",
+		minutes : "minutes",
+		seconds : "seconds",
+		milliseconds : "milliseconds",
+		weeks : "weeks",
 
 		/**
 		 * 시간 더하기 
@@ -2873,7 +2873,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return func(func.max() * (value / max));
 			}
 
-			func.ticks = function(type, step) {
+			func.ticks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
@@ -2881,29 +2881,27 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				while (start < end) {
 					times.push(new Date(+start));
 
-					start = _time.add(start, type, step);
+					start = _time.add(start, type, interval);
 
 				}
 
 				times.push(new Date(+start));
-				
-				var first = func(times[0]);
-				var second = func(times[1]);
-				
-				_rangeBand = second - first; 
+
+				_rangeBand = interval;
 				
 
 				return times;
 
 			}
 
-			func.realTicks = function(type, step) {
+			func.realTicks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
 				var times = [];
 				var date = new Date(+start)
 				var realStart = null;
+
 				if (type == _time.years) {
 					realStart = new Date(date.getFullYear(), 0, 1);
 				} else if (type == _time.months) {
@@ -2920,13 +2918,13 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
 
 				}
+				realStart = _time.add(realStart, type, interval);
 
-				realStart = _time.add(realStart, type, step);
 				while (+realStart < +end) {
 					times.push(new Date(+realStart));
-					realStart = _time.add(realStart, type, step);
+					realStart = _time.add(realStart, type, interval);
 				}
-				
+
 				var first = func(times[1]);
 				var second = func(times[2]);
 				
@@ -9484,7 +9482,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		this.initDomain = function() {
 
 			var domain = [];
-			var step = [];
+			var interval = [];
 
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined;
@@ -9522,21 +9520,18 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			this.grid.max = max;
 			this.grid.min = min;
 			domain = [this.grid.min, this.grid.max];
-			step = this.grid.step;
+			interval = this.grid.interval;
 
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
 
-			if (_.typeCheck("function", step)) {
-				this.grid.step = step.call(this.chart, domain);
-			} 
-      
-      // default second
-      if (_.typeCheck("number", this.grid.step)) {
-        this.grid.step = ["seconds", this.grid.step];
-      }
+			domain.interval = interval;
 
+			if (_.typeCheck("function", interval)) {
+				domain.interval = interval.call(this.chart, domain);
+			}
+      
 			return domain;
 		}
 
@@ -9548,10 +9543,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
-			if (this.grid.realtime) {
-				this.ticks = this.scale.realTicks(this.grid.step[0], this.grid.step[1]);
+			if (this.grid.intervalType.length > 0 && UtilTime[this.grid.intervalType] == this.grid.intervalType) {
+				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
 			} else {
-				this.ticks = this.scale.ticks(this.grid.step[0], this.grid.step[1]);
+				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
 			if (this.axis.data.length == 0) {
@@ -9566,7 +9561,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				})(this.grid, this.grid.format)
 			}
 
-			// step = [this.time.days, 1];
+			// interval = [this.time.days, 1];
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
@@ -9587,8 +9582,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		return {
             /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Array} [step=[]] Sets the interval of the scale displayed on a grid.*/
-			step: [],
+            /** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
+			interval : 1000,
             /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
             /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
@@ -9597,8 +9592,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			reverse: false,
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {Boolean} [realtime=false] Determines whether to use as a real-time grid. */
-			realtime: false
+            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
+			intervalType: ""
 		};
 	}
 
@@ -9671,13 +9666,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			this.grid.min = min;
 			var domain = [this.grid.min, this.grid.max];
 
-			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = this.grid.call(this.chart, domain);
-			}
 
-      if (_.typeCheck("number", this.grid.step)) {
-        this.grid.step = ["seconds", this.grid.step];
-      }
+			domain.interval = interval;
+
+			if (_.typeCheck("function", interval)) {
+				domain.interval = interval.call(this.chart, domain);
+			}
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -9699,11 +9693,10 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
 			var half_unit = unit/2;
 
-
-			if (this.grid.realtime) {
-				this.ticks = time.realTicks(this.grid.step[0], this.grid.step[1]);
+			if (this.grid.intervalType.length > 0) {
+				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
 			} else {
-				this.ticks = time.ticks(this.grid.step[0], this.grid.step[1]);
+				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
 			if ( typeof this.grid.format == "string") {
@@ -9714,7 +9707,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				})(this.grid, this.grid.format)
 			}
 
-			// step = [this.time.days, 1];
+			// interval = [this.time.days, 1];
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;

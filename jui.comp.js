@@ -2530,14 +2530,14 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	var self = {
 
 		// unit
-		years : 0x01,
-		months : 0x02,
-		days : 0x03,
-		hours : 0x04,
-		minutes : 0x05,
-		seconds : 0x06,
-		milliseconds : 0x07,
-		weeks : 0x08,
+		years : "years",
+		months : "months",
+		days : "days",
+		hours : "hours",
+		minutes : "minutes",
+		seconds : "seconds",
+		milliseconds : "milliseconds",
+		weeks : "weeks",
 
 		/**
 		 * 시간 더하기 
@@ -2873,7 +2873,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return func(func.max() * (value / max));
 			}
 
-			func.ticks = function(type, step) {
+			func.ticks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
@@ -2881,29 +2881,27 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				while (start < end) {
 					times.push(new Date(+start));
 
-					start = _time.add(start, type, step);
+					start = _time.add(start, type, interval);
 
 				}
 
 				times.push(new Date(+start));
-				
-				var first = func(times[0]);
-				var second = func(times[1]);
-				
-				_rangeBand = second - first; 
+
+				_rangeBand = interval;
 				
 
 				return times;
 
 			}
 
-			func.realTicks = function(type, step) {
+			func.realTicks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
 				var times = [];
 				var date = new Date(+start)
 				var realStart = null;
+
 				if (type == _time.years) {
 					realStart = new Date(date.getFullYear(), 0, 1);
 				} else if (type == _time.months) {
@@ -2920,13 +2918,13 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
 
 				}
+				realStart = _time.add(realStart, type, interval);
 
-				realStart = _time.add(realStart, type, step);
 				while (+realStart < +end) {
 					times.push(new Date(+realStart));
-					realStart = _time.add(realStart, type, step);
+					realStart = _time.add(realStart, type, interval);
 				}
-				
+
 				var first = func(times[1]);
 				var second = func(times[2]);
 				

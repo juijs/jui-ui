@@ -64,13 +64,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			this.grid.min = min;
 			var domain = [this.grid.min, this.grid.max];
 
-			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = this.grid.call(this.chart, domain);
-			}
 
-      if (_.typeCheck("number", this.grid.step)) {
-        this.grid.step = ["seconds", this.grid.step];
-      }
+			domain.interval = interval;
+
+			if (_.typeCheck("function", interval)) {
+				domain.interval = interval.call(this.chart, domain);
+			}
 
 			if (this.grid.reverse) {
 				domain.reverse();
@@ -92,11 +91,10 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
 			var half_unit = unit/2;
 
-
-			if (this.grid.realtime) {
-				this.ticks = time.realTicks(this.grid.step[0], this.grid.step[1]);
+			if (this.grid.intervalType.length > 0) {
+				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
 			} else {
-				this.ticks = time.ticks(this.grid.step[0], this.grid.step[1]);
+				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
 			if ( typeof this.grid.format == "string") {
@@ -107,7 +105,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				})(this.grid, this.grid.format)
 			}
 
-			// step = [this.time.days, 1];
+			// interval = [this.time.days, 1];
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
