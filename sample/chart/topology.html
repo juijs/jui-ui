@@ -92,6 +92,7 @@
             },
             brush: {
                 type: "topologynode",
+                colors: [ "#729ff1" ],
                 edgeData: edgeData,
                 edgeText: function(data, align) {
                     var text = data.time + "/" + data.count;
@@ -119,7 +120,6 @@
                     return "resource/" + data.type + ".png";
                 },
                 /**/
-                nodeColor: "#729ff1",
                 nodeText: function(data) {
                     if(data.type == "server") {
                         return "{server}";
