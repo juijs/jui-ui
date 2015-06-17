@@ -54,7 +54,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		this.initDomain = function() {
 
 			var domain = [];
-			var step = [];
+			var interval = [];
 
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined;
@@ -92,21 +92,18 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			this.grid.max = max;
 			this.grid.min = min;
 			domain = [this.grid.min, this.grid.max];
-			step = this.grid.step;
+			interval = this.grid.interval;
 
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
 
-			if (_.typeCheck("function", step)) {
-				this.grid.step = step.call(this.chart, domain);
-			} 
-      
-      // default second
-      if (_.typeCheck("number", this.grid.step)) {
-        this.grid.step = ["seconds", this.grid.step];
-      }
+			domain.interval = interval;
 
+			if (_.typeCheck("function", interval)) {
+				domain.interval = interval.call(this.chart, domain);
+			}
+      
 			return domain;
 		}
 
@@ -118,10 +115,10 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
-			if (this.grid.realtime) {
-				this.ticks = this.scale.realTicks(this.grid.step[0], this.grid.step[1]);
+			if (this.grid.intervalType.length > 0 && UtilTime[this.grid.intervalType] == this.grid.intervalType) {
+				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
 			} else {
-				this.ticks = this.scale.ticks(this.grid.step[0], this.grid.step[1]);
+				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
 			if (this.axis.data.length == 0) {
@@ -136,7 +133,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				})(this.grid, this.grid.format)
 			}
 
-			// step = [this.time.days, 1];
+			// interval = [this.time.days, 1];
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
@@ -157,8 +154,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		return {
             /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Array} [step=[]] Sets the interval of the scale displayed on a grid.*/
-			step: [],
+            /** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
+			interval : 1000,
             /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
             /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
@@ -167,8 +164,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			reverse: false,
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {Boolean} [realtime=false] Determines whether to use as a real-time grid. */
-			realtime: false
+            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
+			intervalType: ""
 		};
 	}
 

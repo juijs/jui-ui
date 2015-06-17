@@ -7,14 +7,14 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	var self = {
 
 		// unit
-		years : 0x01,
-		months : 0x02,
-		days : 0x03,
-		hours : 0x04,
-		minutes : 0x05,
-		seconds : 0x06,
-		milliseconds : 0x07,
-		weeks : 0x08,
+		years : "years",
+		months : "months",
+		days : "days",
+		hours : "hours",
+		minutes : "minutes",
+		seconds : "seconds",
+		milliseconds : "milliseconds",
+		weeks : "weeks",
 
 		/**
 		 * 시간 더하기 
