@@ -1503,6 +1503,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.jui .icon-connection:before {
+  content: "\e65b";
+}
 .jui .icon-add-dir:before {
   content: "\e600";
 }
