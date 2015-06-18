@@ -84,9 +84,11 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
         }
 
         function getColorByKey(obj) {
-            for(var i = 0; i < obj.brush.target.length; i++) {
-                if(obj.brush.target[i] == obj.dataKey) {
-                    return ColorUtil.lighten(self.chart.color(i, obj.brush));
+            var targets = obj.brush.target;
+
+            for(var i = 0; i < targets.length; i++) {
+                if(targets[i] == obj.dataKey) {
+                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors, targets));
                 }
             }
 
