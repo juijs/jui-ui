@@ -70,6 +70,7 @@
             ],
             brush : {
                 type : "column",
+                size : 10,
                 target : "sales",
                 display : "max",
                 activeEvent : "mouseover",
@@ -93,6 +94,9 @@
                 "axis.click" : function(e) {
                     console.log(e);
                 }
+            },
+            style : {
+                tooltipPointRadius : 0
             }
         });
 	})

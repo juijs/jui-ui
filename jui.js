@@ -16581,6 +16581,7 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"connection" : "\ue65b",
 		"add-dir" : "\ue600",
 		"add-dir2" : "\ue601",
 		"align-center" : "\ue602",
@@ -19958,7 +19959,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
      * implements bar brush 
      * @extends chart.brush.core
      */
-	var BarBrush = function(chart, axis, brush) {
+	var BarBrush = function() {
 		var g;
 		var zeroX, height, half_height, bar_height, is_full;
 
@@ -20053,14 +20054,23 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
          * @protected 
          */
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			is_full = axis.get("y").full;
-			zeroX = axis.x(0);
-			height = axis.y.rangeBand();
-			half_height = height - (brush.outerPadding * 2);
+			var op = this.brush.outerPadding,
+				ip = this.brush.innerPadding,
+				len = this.brush.target.length;
 
-			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            bar_height = (bar_height < 0) ? 0 : bar_height;
+			g = this.chart.svg.group();
+			is_full = this.axis.get("y").full;
+			zeroX = this.axis.x(0);
+			height = this.axis.y.rangeBand();
+
+			if(this.brush.size > 0) {
+				bar_height = this.brush.size;
+				half_height = (bar_height * len) + ((len - 1) * ip);
+			} else {
+				half_height = height - (op * 2);
+				bar_height = (half_height - (len - 1) * ip) / len;
+				bar_height = (bar_height < 0) ? 0 : bar_height;
+			}
 		}
 
         /**
@@ -20119,22 +20129,22 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startY = axis.y(i) - (half_height / 2);
+				var startY = this.axis.y(i) - (half_height / 2);
 
 				// y축 그리드의 full 옵션 처리
 				if(is_full) {
 					startY += height / 2;
 				}
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
-						tooltipX = axis.x(value),
+				for(var j = 0; j < this.brush.target.length; j++) {
+					var value = data[this.brush.target[j]],
+						tooltipX = this.axis.x(value),
 						tooltipY = startY + (bar_height / 2),
 						position = (tooltipX >= zeroX) ? "right" : "left";
 
                     // 최소 크기 설정
-                    if(Math.abs(zeroX - tooltipX) < brush.minSize) {
-                        tooltipX = (position == "right") ? tooltipX + brush.minSize : tooltipX - brush.minSize;
+                    if(Math.abs(zeroX - tooltipX) < this.brush.minSize) {
+                        tooltipX = (position == "right") ? tooltipX + this.brush.minSize : tooltipX - this.brush.minSize;
                     }
 
 					var width = Math.abs(zeroX - tooltipX),
@@ -20150,7 +20160,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 							min: points[j].min[i]
 						});
 
-					if (tooltipX >= zeroX) {
+					if(tooltipX >= zeroX) {
 						r.round(width, bar_height, 0, radius, radius, 0);
 						r.translate(zeroX, startY);
 					} else {
@@ -20162,7 +20172,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 					g.append(r);
 
 					// 다음 컬럼 좌표 설정
-					startY += bar_height + brush.innerPadding;
+					startY += bar_height + this.brush.innerPadding;
 				}
 			});
 
@@ -20212,6 +20222,8 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
 	BarBrush.setup = function() {
 		return {
+			/** @cfg {Number} [size=0] Set a fixed size of the bar. */
+			size: 0,
             /** @cfg {Number} [minSize=0] Sets the minimum size as it is not possible to draw a bar when the value is 0. */
             minSize: 0,
             /** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
@@ -20239,19 +20251,28 @@ jui.define("chart.brush.column", [], function() {
      *
      * @extends chart.brush.bar
      */
-	var ColumnBrush = function(chart, axis, brush) {
+	var ColumnBrush = function() {
 		var g;
 		var zeroY, width, col_width, half_width, is_full;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			is_full = axis.get("x").full;
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
+			var op = this.brush.outerPadding,
+				ip = this.brush.innerPadding,
+				len = this.brush.target.length;
 
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
+			g = this.chart.svg.group();
+			is_full = this.axis.get("x").full;
+			zeroY = this.axis.y(0);
+			width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				col_width = this.brush.size;
+				half_width = (col_width * len) + ((len - 1) * ip);
+			} else {
+				half_width = (width - op * 2);
+				col_width = (width - op * 2 - (len - 1) * ip) / len;
+				col_width = (col_width < 0) ? 0 : col_width;
+			}
 		}
 
 		this.draw = function() {
@@ -20259,22 +20280,22 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) -(half_width / 2);
+				var startX = this.axis.x(i) -(half_width / 2);
 
 				// x축 그리드의 full 옵션 처리
 				if(is_full) {
 					startX += width / 2;
 				}
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
+				for (var j = 0; j < this.brush.target.length; j++) {
+					var value = data[this.brush.target[j]],
 						tooltipX = startX + (col_width / 2),
-						tooltipY = axis.y(value),
+						tooltipY = this.axis.y(value),
 						position = (tooltipY <= zeroY) ? "top" : "bottom";
 
                     // 최소 크기 설정
-                    if(Math.abs(zeroY - tooltipY) < brush.minSize) {
-                        tooltipY = (position == "top") ? tooltipY - brush.minSize : tooltipY + brush.minSize;
+                    if(Math.abs(zeroY - tooltipY) < this.brush.minSize) {
+                        tooltipY = (position == "top") ? tooltipY - this.brush.minSize : tooltipY + this.brush.minSize;
                     }
 
 					var	height = Math.abs(zeroY - tooltipY),
@@ -20302,7 +20323,7 @@ jui.define("chart.brush.column", [], function() {
 					g.append(r);
 
 					// 다음 컬럼 좌표 설정
-					startX += col_width + brush.innerPadding;
+					startX += col_width + this.brush.innerPadding;
 				}
 			});
 
@@ -20647,7 +20668,7 @@ jui.define("chart.brush.stackbar", [], function() {
 	 *
 	 */
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, height, bar_width, is_full;
+		var g, height, bar_height, is_full;
 
 		this.addBarElement = function(elem) {
 			if(this.barList == null) {
@@ -20710,18 +20731,28 @@ jui.define("chart.brush.stackbar", [], function() {
 			}
 		}
 
+		this.getTargetSize = function() {
+			var height = this.axis.y.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return height - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			is_full = axis.get("y").full;
 			height = axis.y.rangeBand();
-			bar_width = height - brush.outerPadding * 2;
+			bar_height = this.getTargetSize();
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = axis.y(i) - bar_width/ 2,
+				var startY = axis.y(i) - bar_height / 2,
                     startX = axis.x(0),
                     value = 0;
 
@@ -20739,7 +20770,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						x : (startX < endX) ? startX : endX,
 						y : startY,
 						width : Math.abs(startX - endX),
-						height : bar_width
+						height : bar_height
 					});
 
 					group.append(r);
@@ -20782,12 +20813,22 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width, is_full;
 
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {
@@ -20997,7 +21038,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
-			bar_height = height - brush.outerPadding * 2;
+			bar_height = this.getTargetSize();
 		}
 
 		this.drawText = function(percent, x, y) {
@@ -21101,7 +21142,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {

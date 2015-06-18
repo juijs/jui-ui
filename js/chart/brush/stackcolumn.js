@@ -10,12 +10,22 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width, is_full;
 
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {

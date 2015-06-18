@@ -7,19 +7,28 @@ jui.define("chart.brush.column", [], function() {
      *
      * @extends chart.brush.bar
      */
-	var ColumnBrush = function(chart, axis, brush) {
+	var ColumnBrush = function() {
 		var g;
 		var zeroY, width, col_width, half_width, is_full;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			is_full = axis.get("x").full;
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
+			var op = this.brush.outerPadding,
+				ip = this.brush.innerPadding,
+				len = this.brush.target.length;
 
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
+			g = this.chart.svg.group();
+			is_full = this.axis.get("x").full;
+			zeroY = this.axis.y(0);
+			width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				col_width = this.brush.size;
+				half_width = (col_width * len) + ((len - 1) * ip);
+			} else {
+				half_width = (width - op * 2);
+				col_width = (width - op * 2 - (len - 1) * ip) / len;
+				col_width = (col_width < 0) ? 0 : col_width;
+			}
 		}
 
 		this.draw = function() {
@@ -27,22 +36,22 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) -(half_width / 2);
+				var startX = this.axis.x(i) -(half_width / 2);
 
 				// x축 그리드의 full 옵션 처리
 				if(is_full) {
 					startX += width / 2;
 				}
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
+				for (var j = 0; j < this.brush.target.length; j++) {
+					var value = data[this.brush.target[j]],
 						tooltipX = startX + (col_width / 2),
-						tooltipY = axis.y(value),
+						tooltipY = this.axis.y(value),
 						position = (tooltipY <= zeroY) ? "top" : "bottom";
 
                     // 최소 크기 설정
-                    if(Math.abs(zeroY - tooltipY) < brush.minSize) {
-                        tooltipY = (position == "top") ? tooltipY - brush.minSize : tooltipY + brush.minSize;
+                    if(Math.abs(zeroY - tooltipY) < this.brush.minSize) {
+                        tooltipY = (position == "top") ? tooltipY - this.brush.minSize : tooltipY + this.brush.minSize;
                     }
 
 					var	height = Math.abs(zeroY - tooltipY),
@@ -70,7 +79,7 @@ jui.define("chart.brush.column", [], function() {
 					g.append(r);
 
 					// 다음 컬럼 좌표 설정
-					startX += col_width + brush.innerPadding;
+					startX += col_width + this.brush.innerPadding;
 				}
 			});
 

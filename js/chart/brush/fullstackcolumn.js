@@ -15,7 +15,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			is_full = axis.get("x").full;
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {

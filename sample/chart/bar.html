@@ -44,10 +44,10 @@
             axis : [
                 {
                     data : [
-                        { name : 2, value : 15 },
-                        { name : -15, value : -35 },
-                        { name : 8, value : 10 },
-                        { name : 18, value : 5 }
+                        { name : 2, value : 15, etc: 10 },
+                        { name : -15, value : -35, etc: 10 },
+                        { name : 8, value : 10, etc: 10 },
+                        { name : 18, value : 5, etc: 10 }
                     ],
                     y : {
                         orient : 'right',
@@ -80,11 +80,12 @@
             ],
             brush : {
                 type : 'bar',
-                target : ['name', 'value'],
-                innerPadding : 2,
+                size : 15,
+                target : ['name', 'value', 'etc' ],
+                innerPadding : 10,
                 display : "all",
                 activeEvent : "click",
-                colors : [ 5, 6 ]
+                colors : [ 5, 6, 7 ]
             },
             style : {
                 barBorderWidth : 1,

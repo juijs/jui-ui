@@ -15,7 +15,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			is_full = axis.get("y").full;
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
-			bar_height = height - brush.outerPadding * 2;
+			bar_height = this.getTargetSize();
 		}
 
 		this.drawText = function(percent, x, y) {
