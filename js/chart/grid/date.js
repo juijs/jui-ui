@@ -115,8 +115,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
-			if (this.grid.intervalType.length > 0 && UtilTime[this.grid.intervalType] == this.grid.intervalType) {
-				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
+			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
+				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
@@ -165,7 +165,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
             /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
-			intervalType: ""
+			realtime: null
 		};
 	}
 

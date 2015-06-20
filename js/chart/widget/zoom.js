@@ -96,12 +96,12 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 if(stime >= etime) return;
 
-                var step = self.widget.dateStep,
+                var interval = self.widget.dateInterval,
                     format = self.widget.dateFormat;
 
-                // step 콜백 옵션 설정
-                if(_.typeCheck("function", step)) {
-                    step = step.apply(self.chart, [ stime, etime ]);
+                // interval 콜백 옵션 설정
+                if(_.typeCheck("function", interval)) {
+                    interval = interval.apply(self.chart, [ stime, etime ]);
                 }
 
                 // format 콜백 옵션 설정
@@ -111,7 +111,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 axis.updateGrid("x", {
                     domain: [ stime, etime ],
-                    step: (step != null) ? step : axis.get("x").step,
+                    interval: (interval != null) ? interval : axis.get("x").interval,
                     format: (format != null) ? format : axis.get("x").format
                 });
                 bg.attr({ "visibility": "visible" });
@@ -180,7 +180,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         } else if(xtype == "date") {
                             axis.updateGrid("x", {
                                 domain: axis.get("x").domain,
-                                step: axis.get("x").step,
+                                interval: axis.get("x").interval,
                                 format: axis.get("x").format
                             });
                         }
@@ -216,7 +216,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     ZoomWidget.setup = function() {
         return {
-            dateStep: null,    // x축이 date일 때만 적용됨
+            dateInterval: null,    // x축이 date일 때만 적용됨
             dateFormat: null   // 위와 동일
         }
     }

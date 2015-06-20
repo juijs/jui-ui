@@ -75,8 +75,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                     x : {
                         type : "date",
                         domain : initDomain(this),
-                        step : [ time.minutes, opts.axis.xstep ],
-                        realtime : true,
+                        interval : opts.axis.xstep,
+                        realtime : "minutes",
                         format : opts.axis.format,
                         key : opts.axis.key,
                         line : opts.axis.xline,

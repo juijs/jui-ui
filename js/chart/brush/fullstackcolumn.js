@@ -10,6 +10,16 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 	var FullStackColumnBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width, is_full;
 
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			is_full = axis.get("x").full;

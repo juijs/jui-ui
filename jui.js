@@ -17453,8 +17453,8 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
-			if (this.grid.intervalType.length > 0 && UtilTime[this.grid.intervalType] == this.grid.intervalType) {
-				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
+			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
+				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
@@ -17503,7 +17503,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
             /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
-			intervalType: ""
+			realtime: null
 		};
 	}
 
@@ -17603,8 +17603,8 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
 			var half_unit = unit/2;
 
-			if (this.grid.intervalType.length > 0) {
-				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
+			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
+				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
@@ -21063,6 +21063,16 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
      */
 	var FullStackColumnBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width, is_full;
+
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
@@ -26295,12 +26305,12 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 if(stime >= etime) return;
 
-                var step = self.widget.dateStep,
+                var interval = self.widget.dateInterval,
                     format = self.widget.dateFormat;
 
-                // step 콜백 옵션 설정
-                if(_.typeCheck("function", step)) {
-                    step = step.apply(self.chart, [ stime, etime ]);
+                // interval 콜백 옵션 설정
+                if(_.typeCheck("function", interval)) {
+                    interval = interval.apply(self.chart, [ stime, etime ]);
                 }
 
                 // format 콜백 옵션 설정
@@ -26310,7 +26320,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 axis.updateGrid("x", {
                     domain: [ stime, etime ],
-                    step: (step != null) ? step : axis.get("x").step,
+                    interval: (interval != null) ? interval : axis.get("x").interval,
                     format: (format != null) ? format : axis.get("x").format
                 });
                 bg.attr({ "visibility": "visible" });
@@ -26379,7 +26389,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                         } else if(xtype == "date") {
                             axis.updateGrid("x", {
                                 domain: axis.get("x").domain,
-                                step: axis.get("x").step,
+                                interval: axis.get("x").interval,
                                 format: axis.get("x").format
                             });
                         }
@@ -26415,7 +26425,7 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     ZoomWidget.setup = function() {
         return {
-            dateStep: null,    // x축이 date일 때만 적용됨
+            dateInterval: null,    // x축이 date일 때만 적용됨
             dateFormat: null   // 위와 동일
         }
     }
@@ -27862,8 +27872,8 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
                     x : {
                         type : "date",
                         domain : initDomain(this),
-                        step : [ time.minutes, opts.axis.xstep ],
-                        realtime : true,
+                        interval : opts.axis.xstep,
+                        realtime : "minutes",
                         format : opts.axis.format,
                         key : opts.axis.key,
                         line : opts.axis.xline,

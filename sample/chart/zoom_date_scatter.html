@@ -40,7 +40,7 @@
                 x : {
                     type : "date",  // default type is block
                     domain : [ start, end ],
-                    step : [ time.minutes, 1 ],
+                    interval : 1000 * 60,
                     format : "hh:mm",
                     key: "value",
                     line : true
@@ -73,16 +73,16 @@
             },
             widget : {
                 type : 'zoom',
-                dateStep : function(stime, etime) {
+                dateInterval : function(stime, etime) {
                     var dist = etime - stime;
 
                     if(dist < 1000 * 10) {
-                        return [ time.seconds, 2 ];
+                        return 1000 * 2; // 2sec
                     } else if(dist < 1000 * 60) {
-                        return [ time.seconds, 10 ];
+                        return 1000 * 10; // 10sec
                     }
 
-                    return [ time.minutes, 1 ];
+                    return 1000 * 60; // 1min
                 },
                 dateFormat : function(stime, etime) {
                     if(etime - stime < 1000 * 60) {

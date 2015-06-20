@@ -91,8 +91,8 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
 			var half_unit = unit/2;
 
-			if (this.grid.intervalType.length > 0) {
-				this.ticks = this.scale.realTicks(this.grid.intervalType, domain.interval);
+			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
+				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
