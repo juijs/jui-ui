@@ -29,40 +29,43 @@ jui.define("chart.theme.jennifer", [], function() {
     ];
 
     return {
-        /** @cfg  */
+        fontFamily : "arial,Tahoma,verdana",
     	backgroundColor : "white",
-        /** @cfg  */
-    	fontSize : "11px",
-        /** @cfg   */
-    	fontColor : "#333333",
-        /** @cfg  */
-		fontFamily : "arial,Tahoma,verdana",
-        /** @cfg   */
         colors : themeColors,
 
-        /** @cfg Grid Font Color */
-    	gridFontColor : "#333333",
-        /** @cfg Grid Active Font color */
+        // Grid styles
+        gridTopFontSize : "11px",
+        gridRightFontSize : "11px",
+        gridBottomFontSize : "11px",
+        gridLeftFontSize : "11px",
+    	gridTopFontColor : "#333",
+        gridRightFontColor : "#333",
+        gridBottomFontColor : "#333",
+        gridLeftFontColor : "#333",
+        gridTopFontWeight : "normal",
+        gridRightFontWeight : "normal",
+        gridBottomFontWeight : "normal",
+        gridLeftFontWeight : "normal",
+
     	gridActiveFontColor : "#ff7800",
-        /** @cfg Grid Rect Color */
-        gridRectColor : "#ababab",
-        /** @cfg Grid Border Color */
-        gridBorderColor : "#ebebeb",
-        /** @cfg Grid Border Width */
-    	gridBorderWidth : 1,
         gridActiveBorderColor : "#ff7800",
+        gridRectColor : "#ababab",
+        gridBorderColor : "#ebebeb",
+    	gridBorderWidth : 1,
+        gridBorderDashArray : "none",
+        gridBorderOpacity : 1,
         gridAxisBorderColor : "#bfbfbf",
         gridAxisBorderWidth : 2,
-        /** @cfg  Grid Bar Size */
         gridTickSize : 3,
         gridTickBorderWidth : 1.5,
         gridTickPadding : 5,
-        /** @cfg Grid Border Dash Array */
-        gridBorderDashArray : "none",
+
         // Brush styles
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontSize : "11px",
+        barFontSize : "11px",
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,

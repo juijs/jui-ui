@@ -1,5 +1,4 @@
 jui.define("chart.theme.dark", [], function() {
-
     var themeColors = [
         "#12f2e8",
         "#26f67c",
@@ -20,37 +19,43 @@ jui.define("chart.theme.dark", [], function() {
     ];
 
     return {
-        // common styles
+        fontFamily : "arial,Tahoma,verdana",
     	backgroundColor : "#222222",
-    	fontSize : "12px",
-    	fontColor : "#c5c5c5",
-		fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
-        // grid styles
-    	gridFontColor : "#868686",
+        // Grid styles
+        gridTopFontSize : "11px",
+        gridRightFontSize : "11px",
+        gridBottomFontSize : "11px",
+        gridLeftFontSize : "11px",
+        gridTopFontColor : "#868686",
+        gridRightFontColor : "#868686",
+        gridBottomFontColor : "#868686",
+        gridLeftFontColor : "#868686",
+        gridTopFontWeight : "normal",
+        gridRightFontWeight : "normal",
+        gridBottomFontWeight : "normal",
+        gridLeftFontWeight : "normal",
+
     	gridActiveFontColor : "#ff762d",
+        gridActiveBorderColor : "#ff7800",
+        gridRectColor : "#ababab",
         gridBorderColor : "#464646",
         gridBorderWidth : 1,
-        /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-        /** @cfg  Grid Bar Size */
+        gridBorderOpacity : 1,
+        gridAxisBorderColor : "#464646",
+        gridAxisBorderWidth : 2,
         gridTickSize : 3,
-
         gridTickPadding : 5,
-
-        /** @cfg Grid Rect Color */
-        gridRectColor : "#ababab",
-		gridAxisBorderColor : "#464646",
-		gridAxisBorderWidth : 2,
-    	gridActiveBorderColor : "#ff7800",
-
         gridTickBorderWidth : 1.5,
 
-        // brush styles
+        // Brush styles
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontSize : "11px",
+        barFontSize : "11px",
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,

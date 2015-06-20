@@ -632,8 +632,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
-            if(_.typeCheck("string", key)) {
-                color = key;
+            if(arguments.length == 1) {
+                if(_.typeCheck("string", key)) {
+                    color = key;
+                } else if(_.typeCheck("integer", key)) {
+                    color = nextColor(key);
+                }
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
                 if(_.typeCheck("array", colors)) {
@@ -882,8 +886,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // SVG 기본 테마 설정
             this.svg.root.css({
                 "font-family": this.theme("fontFamily") + "," + _options.icon.type,
-                "font-size": this.theme("fontSize"),
-                fill: this.theme("fontColor"),
                 background: this.theme("backgroundColor")
             });
 

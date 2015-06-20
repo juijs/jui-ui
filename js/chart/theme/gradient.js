@@ -22,34 +22,38 @@ jui.define("chart.theme.gradient", [], function() {
     ];
 
     return {
-        // common styles
         backgroundColor : "white",
-        fontSize : "11px",
-        fontColor : "#666",
         fontFamily : "arial,Tahoma,verdana",
         colors : themeColors,
 
-        // grid styles
-        gridFontColor : "#666",
+        // Grid styles
+        gridTopFontSize : "11px",
+        gridRightFontSize : "11px",
+        gridBottomFontSize : "11px",
+        gridLeftFontSize : "11px",
+        gridTopFontColor : "#666",
+        gridRightFontColor : "#666",
+        gridBottomFontColor : "#666",
+        gridLeftFontColor : "#666",
+        gridTopFontWeight : "normal",
+        gridRightFontWeight : "normal",
+        gridBottomFontWeight : "normal",
+        gridLeftFontWeight : "normal",
+
         gridActiveFontColor : "#ff7800",
+        gridActiveBorderColor : "#ff7800",
+        gridRectColor : "#ababab",
         gridBorderColor : "#efefef",
         gridBorderWidth : 1,
-        /** @cfg Grid Border Dash Array */
         gridBorderDashArray : "none",
-        /** @cfg  Grid Bar Size */
-        gridTickSize : 3,
-        /** @cfg Grid Rect Color */
-        gridRectColor : "#ababab",
+        gridBorderOpacity : 1,
         gridAxisBorderColor : "#efefef",
         gridAxisBorderWidth : 2,
-        gridActiveBorderColor : "#ff7800",
-
+        gridTickSize : 3,
+        gridTickPadding : 5,
         gridTickBorderWidth : 1.5,
 
-        gridTickPadding : 5,
-
-
-        // brush styles
+        // Brush styles
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common

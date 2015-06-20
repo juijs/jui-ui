@@ -16,36 +16,43 @@ jui.define("chart.theme.pastel", [], function() {
 	];
 
 	return {
-		// common styles
-		backgroundColor : "white",
-		fontSize : "11px",
-		fontColor : "#333333",
 		fontFamily : "Caslon540BT-Regular,Times,New Roman,serif",
+		backgroundColor : "white",
 		colors : themeColors,
 
-		// grid styles
-		gridFontColor : "#333333",
+		// Grid styles
+		gridTopFontSize : "11px",
+		gridRightFontSize : "11px",
+		gridBottomFontSize : "11px",
+		gridLeftFontSize : "11px",
+		gridTopFontColor : "#333",
+		gridRightFontColor : "#333",
+		gridBottomFontColor : "#333",
+		gridLeftFontColor : "#333",
+		gridTopFontWeight : "normal",
+		gridRightFontWeight : "normal",
+		gridBottomFontWeight : "normal",
+		gridLeftFontWeight : "normal",
+
 		gridActiveFontColor : "#ff7800",
+		gridActiveBorderColor : "#ff7800",
+		gridRectColor : "#ababab",
 		gridBorderColor : "#bfbfbf",
 		gridBorderWidth : 1,
-
-		/** @cfg Grid Rect Color */
-		gridRectColor : "#ababab",
 		gridBorderDashArray : "1, 3",
+		gridBorderOpacity : 1,
 		gridAxisBorderColor : "#bfbfbf",
 		gridAxisBorderWidth : 2,
-		gridActiveBorderColor : "#ff7800",
-
-		/** @cfg  Grid Bar Size */
 		gridTickSize : 3,
-
 		gridTickPadding : 5,
 		gridTickBorderWidth : 1.5,
 
-		// brush styles
+		// Brush styles
 		tooltipPointRadius : 5, // common
 		tooltipPointBorderWidth : 1, // common
 		tooltipPointFontWeight : "bold", // common
+		tooltipPointFontSize : "11px",
+		barFontSize : "11px",
 		barBorderColor : "none",
 		barBorderWidth : 0,
 		barBorderOpacity : 0,
