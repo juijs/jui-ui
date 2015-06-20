@@ -53,6 +53,7 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
                 title = chart.svg.text({
                     x: W / 2,
                     dy: -4,
+                    "font-size" : chart.theme("mapWeatherFontSize"),
                     "font-weight": "bold",
                     "text-anchor": "middle",
                     fill: chart.theme("mapWeatherTitleFontColor")
@@ -60,6 +61,7 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
                 info = chart.svg.text({
                     x: W / 2,
                     dy: 54,
+                    "font-size" : chart.theme("mapWeatherFontSize"),
                     "text-anchor": "middle",
                     fill: chart.theme("mapWeatherInfoFontColor")
                 }).text(temp);

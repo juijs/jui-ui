@@ -141,9 +141,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : 0,
 						y: -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding") * 2,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridTopFontColor"),
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridTopFontSize")
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
 					}, domain)));
 				}
 
@@ -185,9 +186,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x : (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
 						y : this.chart.theme("gridTickSize") + this.chart.theme("gridTickPadding") * 2,
-						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridBottomFontColor"),
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor" : "middle",
-						"font-size": this.chart.theme("gridBottomFontSize")
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
 					}, domain)));
 				}
 
@@ -227,9 +229,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x : -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding"),
 						y : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
-						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridLeftFontColor"),
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor" : "end",
-						"font-size": this.chart.theme("gridLeftFontSize")
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
 					}, domain)));
 				}
 
@@ -269,9 +272,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x: this.chart.theme('gridTickSize') + this.chart.theme("gridTickPadding"),
 						y: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : this.chart.theme("gridTickSize"),
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridRightFontColor"),
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",
-						"font-size": this.chart.theme("gridRightFontSize")
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
 					}, domain)));
 				}
 

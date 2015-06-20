@@ -7351,18 +7351,15 @@ jui.define("chart.theme.jennifer", [], function() {
         colors : themeColors,
 
         // Grid styles
-        gridTopFontSize : "11px",
-        gridRightFontSize : "11px",
-        gridBottomFontSize : "11px",
-        gridLeftFontSize : "11px",
-    	gridTopFontColor : "#333",
-        gridRightFontColor : "#333",
-        gridBottomFontColor : "#333",
-        gridLeftFontColor : "#333",
-        gridTopFontWeight : "normal",
-        gridRightFontWeight : "normal",
-        gridBottomFontWeight : "normal",
-        gridLeftFontWeight : "normal",
+        gridXFontSize : "11px",
+        gridYFontSize : "11px",
+        gridCFontSize : "11px",
+    	gridXFontColor : "#333",
+        gridYFontColor : "#333",
+        gridCFontColor : "#333",
+        gridXFontWeight : "normal",
+        gridYFontWeight : "normal",
+        gridCFontWeight : "normal",
 
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -7511,6 +7508,7 @@ jui.define("chart.theme.jennifer", [], function() {
         mapFlightRouteLineBorderWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
+        mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
         // Map Widgets
@@ -7548,18 +7546,15 @@ jui.define("chart.theme.gradient", [], function() {
         colors : themeColors,
 
         // Grid styles
-        gridTopFontSize : "11px",
-        gridRightFontSize : "11px",
-        gridBottomFontSize : "11px",
-        gridLeftFontSize : "11px",
-        gridTopFontColor : "#666",
-        gridRightFontColor : "#666",
-        gridBottomFontColor : "#666",
-        gridLeftFontColor : "#666",
-        gridTopFontWeight : "normal",
-        gridRightFontWeight : "normal",
-        gridBottomFontWeight : "normal",
-        gridLeftFontWeight : "normal",
+        gridXFontSize : "11px",
+        gridYFontSize : "11px",
+        gridCFontSize : "11px",
+        gridXFontColor : "#666",
+        gridYFontColor : "#666",
+        gridCFontColor : "#666",
+        gridXFontWeight : "normal",
+        gridYFontWeight : "normal",
+        gridCFontWeight : "normal",
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -7708,6 +7703,7 @@ jui.define("chart.theme.gradient", [], function() {
         mapFlightRouteLineBorderWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
+        mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
         // Map Widgets
@@ -7742,18 +7738,15 @@ jui.define("chart.theme.dark", [], function() {
         colors : themeColors,
 
         // Grid styles
-        gridTopFontSize : "11px",
-        gridRightFontSize : "11px",
-        gridBottomFontSize : "11px",
-        gridLeftFontSize : "11px",
-        gridTopFontColor : "#868686",
-        gridRightFontColor : "#868686",
-        gridBottomFontColor : "#868686",
-        gridLeftFontColor : "#868686",
-        gridTopFontWeight : "normal",
-        gridRightFontWeight : "normal",
-        gridBottomFontWeight : "normal",
-        gridLeftFontWeight : "normal",
+        gridXFontSize : "11px",
+        gridYFontSize : "11px",
+        gridCFontSize : "11px",
+        gridXFontColor : "#868686",
+        gridYFontColor : "#868686",
+        gridCFontColor : "#868686",
+        gridXFontWeight : "normal",
+        gridYFontWeight : "normal",
+        gridCFontWeight : "normal",
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
@@ -7904,6 +7897,7 @@ jui.define("chart.theme.dark", [], function() {
         mapFlightRouteLineBorderWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
+        mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
         // Map Widgets
@@ -7935,18 +7929,15 @@ jui.define("chart.theme.pastel", [], function() {
 		colors : themeColors,
 
 		// Grid styles
-		gridTopFontSize : "11px",
-		gridRightFontSize : "11px",
-		gridBottomFontSize : "11px",
-		gridLeftFontSize : "11px",
-		gridTopFontColor : "#333",
-		gridRightFontColor : "#333",
-		gridBottomFontColor : "#333",
-		gridLeftFontColor : "#333",
-		gridTopFontWeight : "normal",
-		gridRightFontWeight : "normal",
-		gridBottomFontWeight : "normal",
-		gridLeftFontWeight : "normal",
+		gridXFontSize : "11px",
+		gridYFontSize : "11px",
+		gridCFontSize : "11px",
+		gridXFontColor : "#333",
+		gridYFontColor : "#333",
+		gridCFontColor : "#333",
+		gridXFontWeight : "normal",
+		gridYFontWeight : "normal",
+		gridCFontWeight : "normal",
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
@@ -8097,6 +8088,7 @@ jui.define("chart.theme.pastel", [], function() {
 		mapFlightRouteLineBorderWidth : 1,
 		mapWeatherBackgroundColor : "white",
 		mapWeatherBorderColor : "#a9a9a9",
+		mapWeatherFontSize : "11px",
 		mapWeatherTitleFontColor : "#666",
 		mapWeatherInfoFontColor : "red",
 		// Map Widgets
@@ -8127,18 +8119,15 @@ jui.define("chart.theme.pattern", [], function() {
         colors : themeColors,
 
         // Grid styles
-        gridTopFontSize : "11px",
-        gridRightFontSize : "11px",
-        gridBottomFontSize : "11px",
-        gridLeftFontSize : "11px",
-        gridTopFontColor : "#333",
-        gridRightFontColor : "#333",
-        gridBottomFontColor : "#333",
-        gridLeftFontColor : "#333",
-        gridTopFontWeight : "normal",
-        gridRightFontWeight : "normal",
-        gridBottomFontWeight : "normal",
-        gridLeftFontWeight : "normal",
+        gridXFontSize : "11px",
+        gridYFontSize : "11px",
+        gridCFontSize : "11px",
+        gridXFontColor : "#333",
+        gridYFontColor : "#333",
+        gridCFontColor : "#333",
+        gridXFontWeight : "normal",
+        gridYFontWeight : "normal",
+        gridCFontWeight : "normal",
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -8290,6 +8279,7 @@ jui.define("chart.theme.pattern", [], function() {
         mapFlightRouteLineBorderWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
+        mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
         // Map Widgets
@@ -8769,9 +8759,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : 0,
 						y: -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding") * 2,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridTopFontColor"),
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridTopFontSize")
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
 					}, domain)));
 				}
 
@@ -8813,9 +8804,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x : (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
 						y : this.chart.theme("gridTickSize") + this.chart.theme("gridTickPadding") * 2,
-						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridBottomFontColor"),
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor" : "middle",
-						"font-size": this.chart.theme("gridBottomFontSize")
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
 					}, domain)));
 				}
 
@@ -8855,9 +8847,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x : -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding"),
 						y : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
-						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridLeftFontColor"),
+						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor" : "end",
-						"font-size": this.chart.theme("gridLeftFontSize")
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
 					}, domain)));
 				}
 
@@ -8897,9 +8890,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					axis.append(this.getTextRotate(this.chart.text({
 						x: this.chart.theme('gridTickSize') + this.chart.theme("gridTickPadding"),
 						y: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : this.chart.theme("gridTickSize"),
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridRightFontColor"),
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",
-						"font-size": this.chart.theme("gridRightFontSize")
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
 					}, domain)));
 				}
 
@@ -9880,7 +9874,9 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 						x : tx,
 						y : ty,
 						"text-anchor" : talign,
-						fill : this.chart.theme("gridFontColor")
+						"font-size" : this.chart.theme("gridCFontSize"),
+						"font-weight" : this.chart.theme("gridCFontWeight"),
+						fill : this.chart.theme("gridCFontColor")
 					}, this.domain[i]))
 				}
 				
@@ -9918,7 +9914,9 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 					root.append(this.chart.text({
 						x : centerX,
 						y : centerY + (startY + h - 5),
-						fill : this.chart.theme("gridFontColor")
+						"font-size" : this.chart.theme("gridCFontSize"),
+						"font-weight" : this.chart.theme("gridCFontWeight"),
+						fill : this.chart.theme("gridCFontColor")
 					}, (this.grid.max - stepBase) + ""))
 				}
 
@@ -13173,6 +13171,7 @@ jui.define("chart.brush.fullstackbar3d", [], function() {
 
         this.drawText = function(percent, x, y) {
             var text = this.chart.text({
+                "font-size" : this.chart.theme("barFontSize"),
                 x : x,
                 y : y,
                 "text-anchor" : "middle"
@@ -14980,6 +14979,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             return this.chart.text({
                 y: -this.brush.size,
                 "text-anchor" : "middle",
+                "font-size" : this.chart.theme("tooltipPointFontSize"),
                 "font-weight" : this.chart.theme("tooltipPointFontWeight")
             }, text).translate(x, y);
         }
@@ -17575,6 +17575,7 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
                 title = chart.svg.text({
                     x: W / 2,
                     dy: -4,
+                    "font-size" : chart.theme("mapWeatherFontSize"),
                     "font-weight": "bold",
                     "text-anchor": "middle",
                     fill: chart.theme("mapWeatherTitleFontColor")
@@ -17582,6 +17583,7 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
                 info = chart.svg.text({
                     x: W / 2,
                     dy: 54,
+                    "font-size" : chart.theme("mapWeatherFontSize"),
                     "text-anchor": "middle",
                     fill: chart.theme("mapWeatherInfoFontColor")
                 }).text(temp);
