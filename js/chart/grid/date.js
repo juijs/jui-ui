@@ -52,15 +52,12 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		 *
 		 */
 		this.initDomain = function() {
-
-			var domain = [];
-			var interval = [];
-
+			var domain = [],
+				interval = [];
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined;
-			var data = this.data();
-
-            var value_list = [] ;
+			var data = this.data(),
+				value_list = [] ;
 
 			if (_.typeCheck("string", this.grid.domain) ) {
 				if (data.length > 0) {
@@ -70,18 +67,17 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				}
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var index = data.length;
+
 				while(index--) {
+					var value = this.grid.domain.call(this.chart, data[index]);
 
-            var value = this.grid.domain.call(this.chart, data[index]);
-
-            if (_.typeCheck("array", value)) {
-                value_list[index] = Math.max.apply(Math, value);
-                value_list.push(Math.min.apply(Math, value));
-            } else {
-                value_list[index]  = value;
-            }
-        }
-
+					if (_.typeCheck("array", value)) {
+						value_list[index] = Math.max.apply(Math, value);
+						value_list.push(Math.min.apply(Math, value));
+					} else {
+						value_list[index]  = value;
+					}
+				}
 			} else {
 				value_list = this.grid.domain;
 			}
@@ -91,17 +87,17 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.grid.max = max;
 			this.grid.min = min;
-			domain = [this.grid.min, this.grid.max];
+			domain = [ this.grid.min, this.grid.max ];
 			interval = this.grid.interval;
 
 			if (this.grid.reverse) {
 				domain.reverse();
 			}
 
-			domain.interval = interval;
-
 			if (_.typeCheck("function", interval)) {
 				domain.interval = interval.call(this.chart, domain);
+			} else {
+				domain.interval = interval;
 			}
       
 			return domain;
