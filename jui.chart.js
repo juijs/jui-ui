@@ -8715,7 +8715,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					}));
 				} else if (line.type.indexOf("rect") > -1) {
 					axis.append(this.chart.svg.rect({x : x, y : y, height : height, width : width,
-						fill : this.chart.color( line.fill ? line.fill : this.chart.theme("ridRectColor") ),
+						fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridRectColor") ),
 						"fill-opacity" : 0.1
 					}));
 				}
