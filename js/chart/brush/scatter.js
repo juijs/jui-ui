@@ -9,6 +9,32 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
      */
     var ScatterBrush = function() {
 
+        this.getSymbolType = function(key, value) {
+            var symbol = this.brush.symbol,
+                target = this.brush.target[key];
+
+            if(_.typeCheck("function", symbol)) {
+                var res = symbol.apply(this.chart, [ target, value ]);
+
+                if (res == "triangle" || res == "cross" || res == "rectangle" || res == "rect" || res == "circle") {
+                    return {
+                        type : "default",
+                        uri : res
+                    };
+                } else {
+                    return {
+                        type : "image",
+                        uri : res
+                    };
+                }
+            }
+
+            return {
+                type : "default",
+                uri : symbol
+            };
+        }
+
         /**
          * @method createScatter
          *
@@ -21,25 +47,25 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
         this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                symbol = this.brush.symbol,
+                symbol = this.getSymbolType(targetIndex, pos.value),
                 w = h = this.brush.size;
 
             var color = this.color(dataIndex, targetIndex),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
-            if(_.typeCheck("function", symbol)) {
+            if(symbol.type == "image") {
                 elem = this.chart.svg.image({
-                    "xlink:href": symbol(pos.value),
+                    "xlink:href": symbol.uri,
                     width: w + borderWidth,
                     height: h + borderWidth,
                     x: pos.x - (w / 2) - borderWidth,
                     y: pos.y - (h / 2)
                 });
             } else {
-                if(symbol == "triangle" || symbol == "cross") {
+                if(symbol.uri == "triangle" || symbol.uri == "cross") {
                     elem = this.chart.svg.group({ width: w, height: h }, function() {
-                        if(symbol == "triangle") {
+                        if(symbol.uri == "triangle") {
                             var poly = self.chart.svg.polygon();
 
                             poly.point(0, h)
@@ -51,7 +77,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         }
                     }).translate(pos.x - (w / 2), pos.y - (h / 2));
                 } else {
-                    if(symbol == "rectangle") {
+                    if(symbol.uri == "rectangle" || symbol.uri == "rect") {
                         elem = this.chart.svg.rect({
                             width: w,
                             height: h,
@@ -68,7 +94,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                     }
                 }
 
-                if(symbol != "cross") {
+                if(symbol.uri != "cross") {
                     elem.attr({
                         fill: color,
                         stroke: borderColor,
@@ -138,13 +164,13 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
                     // 컬럼 및 기본 브러쉬 이벤트 설정
                     if(this.brush.activeEvent != null) {
-                        (function(scatter, data, color) {
+                        (function(scatter, data, color, symbol) {
                             var x = data.x,
                                 y = data.y,
                                 text = self.format(data.value);
 
                             scatter.on(self.brush.activeEvent, function(e) {
-                                if(self.brush.symbol != "cross") {
+                                if(symbol.type == "default" && symbol.uri != "cross") {
                                     if (self.activeScatter != null) {
                                         self.activeScatter.attr({
                                             fill: self.activeScatter.attributes["stroke"],
@@ -168,7 +194,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data, this.color(j, i));
+                        })(p, data, this.color(j, i), this.getSymbolType(i, data.value));
                     }
 
                     if(this.brush.hide) {

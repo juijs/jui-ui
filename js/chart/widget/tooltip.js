@@ -55,7 +55,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
-                        t = chart.get("series", key),
                         x = padding,
                         y = (textY * i) + (padding * 2),
                         d = (obj.data != null) ? obj.data[key] : null;
@@ -65,7 +64,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                         y = y + anchor;
                     }
 
-                    var message = getFormat((t.text) ? t.text : key, d, obj.data);
+                    var message = getFormat(key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);

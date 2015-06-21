@@ -20,11 +20,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
             var opt = {
                 fill : "none",
-                    stroke : color,
+                stroke : color,
                 "stroke-width" : strokeWidth,
                 "stroke-opacity" : 1,
                 "stroke-linecap" : "butt",
-                "stroke-linejoin" :  "round"
+                "stroke-linejoin" : "round"
             };
 
             var g = this.chart.svg.group(),

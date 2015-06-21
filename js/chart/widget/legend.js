@@ -87,10 +87,16 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = target,
-                    color = chart.color(i, brush.colors, data),
+                    color = chart.color(i, brush.colors),
                     rect = chart.svg.getTextRect(text);
 
+                // 컬러 인덱스 설정
                 colorIndex[target] = color;
+
+                // 타겟 별 포맷 설정
+                if(_.typeCheck("function", widget.format)) {
+                    text = this.format(target);
+                }
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
@@ -234,7 +240,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false,
             /** @cfg {Number/Array} [brush=0] Specifies a brush index for which a widget is used. */
-            brush: 0
+            brush: 0,
+            /** @cfg {Function} [format=null] Sets the format of the key that is displayed on the legend. */
+            format: null
         };
     }
 

@@ -22765,6 +22765,32 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
      */
     var ScatterBrush = function() {
 
+        this.getSymbolType = function(key, value) {
+            var symbol = this.brush.symbol,
+                target = this.brush.target[key];
+
+            if(_.typeCheck("function", symbol)) {
+                var res = symbol.apply(this.chart, [ target, value ]);
+
+                if (res == "triangle" || res == "cross" || res == "rectangle" || res == "rect" || res == "circle") {
+                    return {
+                        type : "default",
+                        uri : res
+                    };
+                } else {
+                    return {
+                        type : "image",
+                        uri : res
+                    };
+                }
+            }
+
+            return {
+                type : "default",
+                uri : symbol
+            };
+        }
+
         /**
          * @method createScatter
          *
@@ -22777,25 +22803,25 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
         this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                symbol = this.brush.symbol,
+                symbol = this.getSymbolType(targetIndex, pos.value),
                 w = h = this.brush.size;
 
             var color = this.color(dataIndex, targetIndex),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
-            if(_.typeCheck("function", symbol)) {
+            if(symbol.type == "image") {
                 elem = this.chart.svg.image({
-                    "xlink:href": symbol(pos.value),
+                    "xlink:href": symbol.uri,
                     width: w + borderWidth,
                     height: h + borderWidth,
                     x: pos.x - (w / 2) - borderWidth,
                     y: pos.y - (h / 2)
                 });
             } else {
-                if(symbol == "triangle" || symbol == "cross") {
+                if(symbol.uri == "triangle" || symbol.uri == "cross") {
                     elem = this.chart.svg.group({ width: w, height: h }, function() {
-                        if(symbol == "triangle") {
+                        if(symbol.uri == "triangle") {
                             var poly = self.chart.svg.polygon();
 
                             poly.point(0, h)
@@ -22807,7 +22833,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         }
                     }).translate(pos.x - (w / 2), pos.y - (h / 2));
                 } else {
-                    if(symbol == "rectangle") {
+                    if(symbol.uri == "rectangle" || symbol.uri == "rect") {
                         elem = this.chart.svg.rect({
                             width: w,
                             height: h,
@@ -22824,7 +22850,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                     }
                 }
 
-                if(symbol != "cross") {
+                if(symbol.uri != "cross") {
                     elem.attr({
                         fill: color,
                         stroke: borderColor,
@@ -22894,13 +22920,13 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
                     // 컬럼 및 기본 브러쉬 이벤트 설정
                     if(this.brush.activeEvent != null) {
-                        (function(scatter, data, color) {
+                        (function(scatter, data, color, symbol) {
                             var x = data.x,
                                 y = data.y,
                                 text = self.format(data.value);
 
                             scatter.on(self.brush.activeEvent, function(e) {
-                                if(self.brush.symbol != "cross") {
+                                if(symbol.type == "default" && symbol.uri != "cross") {
                                     if (self.activeScatter != null) {
                                         self.activeScatter.attr({
                                             fill: self.activeScatter.attributes["stroke"],
@@ -22924,7 +22950,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                             });
 
                             scatter.attr({ cursor: "pointer" });
-                        })(p, data, this.color(j, i));
+                        })(p, data, this.color(j, i), this.getSymbolType(i, data.value));
                     }
 
                     if(this.brush.hide) {
@@ -23019,11 +23045,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
             var opt = {
                 fill : "none",
-                    stroke : color,
+                stroke : color,
                 "stroke-width" : strokeWidth,
                 "stroke-opacity" : 1,
                 "stroke-linecap" : "butt",
-                "stroke-linejoin" :  "round"
+                "stroke-linejoin" : "round"
             };
 
             var g = this.chart.svg.group(),
@@ -25724,7 +25750,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
-                        t = chart.get("series", key),
                         x = padding,
                         y = (textY * i) + (padding * 2),
                         d = (obj.data != null) ? obj.data[key] : null;
@@ -25734,7 +25759,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                         y = y + anchor;
                     }
 
-                    var message = getFormat((t.text) ? t.text : key, d, obj.data);
+                    var message = getFormat(key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -26022,10 +26047,16 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = target,
-                    color = chart.color(i, brush.colors, data),
+                    color = chart.color(i, brush.colors),
                     rect = chart.svg.getTextRect(text);
 
+                // 컬러 인덱스 설정
                 colorIndex[target] = color;
+
+                // 타겟 별 포맷 설정
+                if(_.typeCheck("function", widget.format)) {
+                    text = this.format(target);
+                }
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
@@ -26169,7 +26200,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             /** @cfg {Boolean} [brushSync=false] Applies all brushes equally when using a filter function. */
             brushSync: false,
             /** @cfg {Number/Array} [brush=0] Specifies a brush index for which a widget is used. */
-            brush: 0
+            brush: 0,
+            /** @cfg {Function} [format=null] Sets the format of the key that is displayed on the legend. */
+            format: null
         };
     }
 
