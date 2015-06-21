@@ -87,8 +87,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
                     text = target,
-                    color = chart.color(i, brush.colors),
-                    rect = chart.svg.getTextRect(text);
+                    color = chart.color(i, brush.colors);
 
                 // 컬러 인덱스 설정
                 colorIndex[target] = color;
@@ -97,6 +96,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 if(_.typeCheck("function", widget.format)) {
                     text = this.format(target);
                 }
+
+                // 텍스트 길이 구하기
+                var rect = chart.svg.getTextRect(text);
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;
