@@ -33,16 +33,6 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 			return id;
 		}
 
-		this.getImageURI = function(key, value) {
-			var uri = this.brush.uri;
-
-			if(_.typeCheck("function", uri)) {
-				uri = uri.apply(this.chart, [ key, value ]);
-			}
-
-			return uri;
-		}
-
 		this.drawBefore = function() {
 			g = this.chart.svg.group();
 			targets = this.brush.target;
@@ -75,10 +65,14 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 							"stroke-width": 0
 						});
 
-					if (startX <= zeroX) {
-						r.translate(startX, startY);
-					} else {
+					if(value != 0) {
+						this.addEvent(r, i, j);
+					}
+
+					if (startX >= zeroX) {
 						r.translate(zeroX, startY);
+					} else {
+						r.translate(zeroX - width, startY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
@@ -103,4 +97,4 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 	}
 
 	return PatternBarBrush;
-}, "chart.brush.core");
+}, "chart.brush.imagebar");

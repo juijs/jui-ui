@@ -43,6 +43,10 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 							"stroke-width": 0
 						});
 
+					if(value != 0) {
+						this.addEvent(r, i, j);
+					}
+
 					if (startY <= zeroY) {
 						r.translate(startX, startY);
 					} else {

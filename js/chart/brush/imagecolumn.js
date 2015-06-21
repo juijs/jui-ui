@@ -1,4 +1,4 @@
-jui.define("chart.brush.imagecolumn", [], function() {
+jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagecolumn
@@ -9,50 +9,45 @@ jui.define("chart.brush.imagecolumn", [], function() {
      */
 	var ImageColumnBrush = function(chart, axis, brush) {
 		var g;
-		var zeroY, width, col_width, half_width;
+		var targets, padding, zeroY, width, half_width, col_width, col_height;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
-
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
+			g = this.chart.svg.group();
+			targets = this.brush.target;
+			padding = this.brush.innerPadding;
+			zeroY = this.axis.y(0);
+			width = this.axis.x.rangeBand();
+			col_width = this.brush.width;
+			col_height = this.brush.height;
+			half_width = (col_width * targets.length) + ((targets.length - 1) * padding);
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var startX = axis.x(i) - (half_width / 2);
 
-				for(var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
-						tooltipY = axis.y(value),
-						position = (tooltipY <= zeroY) ? "top" : "bottom";
+				for (var j = 0; j < targets.length; j++) {
+					var value = data[targets[j]],
+						startY = axis.y(value);
 
-                    // 최소 크기 설정
-                    if(Math.abs(zeroY - tooltipY) < brush.minSize) {
-                        tooltipY = (position == "top") ? tooltipY - brush.minSize : tooltipY + brush.minSize;
-                    }
-
-					var	height = Math.abs(zeroY - tooltipY),
+					var	height = Math.abs(zeroY - startY),
 						r = this.chart.svg.image({
 							width : col_width,
 							height : col_width,
-							"xlink:href" : brush.uri
+							"xlink:href" : this.getImageURI(targets[j], value)
 						});
 
 					if(value != 0) {
 						this.addEvent(r, i, j);
 					}
 
-					if (tooltipY <= zeroY) {
-						r.translate(startX, tooltipY);
+					if (startY <= zeroY) {
+						r.translate(startX, startY);
 					} else {
 						r.translate(startX, zeroY);
 					}
 
-					if(height > 0) {
+					if(height > 0 && col_height > 0) {
 						r.scale(1, (height > col_width) ? height / col_width : col_width / height);
 					}
 
@@ -60,7 +55,7 @@ jui.define("chart.brush.imagecolumn", [], function() {
 					g.append(r);
 
 					// 다음 컬럼 좌표 설정
-					startX += col_width + brush.innerPadding;
+					startX += col_width + padding;
 				}
 			});
 
