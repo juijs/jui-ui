@@ -11862,6 +11862,179 @@ jui.define("chart.brush.imagecolumn", [], function() {
 	return ImageColumnBrush;
 }, "chart.brush.imagebar");
 
+jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.patternbar
+     *
+     * implements column brush
+     *
+     * @extends chart.brush.core
+     */
+	var PatternBarBrush = function() {
+		var g;
+		var targets, padding, zeroX, height, half_height, col_width, col_height;
+
+		this.createPattern = function(width, height, key, value) {
+			var id = _.createId("pattern-"),
+				pattern = this.chart.svg.pattern({
+					id: id,
+					x: 0,
+					y: 0,
+					width: width,
+					height: height,
+					patternUnits: "userSpaceOnUse"
+				}),
+				image = this.chart.svg.image({
+					width: width,
+					height: height,
+					"xlink:href" : this.getImageURI(key, value)
+				});
+
+			pattern.append(image);
+			this.chart.appendDefs(pattern);
+
+			return id;
+		}
+
+		this.getImageURI = function(key, value) {
+			var uri = this.brush.uri;
+
+			if(_.typeCheck("function", uri)) {
+				uri = uri.apply(this.chart, [ key, value ]);
+			}
+
+			return uri;
+		}
+
+		this.drawBefore = function() {
+			g = this.chart.svg.group();
+			targets = this.brush.target;
+			padding = this.brush.innerPadding;
+			zeroX = this.axis.x(0);
+			height = this.axis.y.rangeBand();
+			col_width = this.brush.width;
+			col_height = this.brush.height;
+			half_height = (col_height * targets.length) + ((targets.length - 1) * padding);
+		}
+
+		this.draw = function() {
+			this.eachData(function(i, data) {
+				var startY = this.axis.y(i) -(half_height / 2);
+
+				// x축 그리드의 full 옵션 처리
+				if(this.axis.get("y").full) {
+					startY += height / 2;
+				}
+
+				for (var j = 0; j < targets.length; j++) {
+					var value = data[targets[j]],
+						patternId = this.createPattern(col_width, col_height, targets[j], value),
+						startX = this.axis.x(value),
+						width = Math.abs(zeroX - startX),
+						r = this.chart.svg.rect({
+							width: width,
+							height: col_height,
+							fill: "url(#" + patternId + ")",
+							"stroke-width": 0
+						});
+
+					if (startX <= zeroX) {
+						r.translate(startX, startY);
+					} else {
+						r.translate(zeroX, startY);
+					}
+
+					// 그룹에 컬럼 엘리먼트 추가
+					g.append(r);
+
+					// 다음 컬럼 좌표 설정
+					startY += col_height + padding;
+				}
+			});
+
+            return g;
+		}
+	}
+
+	PatternBarBrush.setup = function() {
+		return {
+			innerPadding: 2,
+			width: 0,
+			height: 0,
+			uri: null
+		}
+	}
+
+	return PatternBarBrush;
+}, "chart.brush.core");
+
+jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
+
+    /**
+     * @class chart.brush.patterncolumn
+     *
+     * implements column brush
+     *
+     * @extends chart.brush.column
+     */
+	var PatternColumnBrush = function() {
+		var g;
+		var targets, padding, zeroY, width, half_width, col_width, col_height;
+
+		this.drawBefore = function() {
+			g = this.chart.svg.group();
+			targets = this.brush.target;
+			padding = this.brush.innerPadding;
+			zeroY = this.axis.y(0);
+			width = this.axis.x.rangeBand();
+			col_width = this.brush.width;
+			col_height = this.brush.height;
+			half_width = (col_width * targets.length) + ((targets.length - 1) * padding);
+		}
+
+		this.draw = function() {
+			this.eachData(function(i, data) {
+				var startX = this.axis.x(i) -(half_width / 2);
+
+				// x축 그리드의 full 옵션 처리
+				if(this.axis.get("x").full) {
+					startX += width / 2;
+				}
+
+				for (var j = 0; j < targets.length; j++) {
+					var value = data[targets[j]],
+						patternId = this.createPattern(col_width, col_height, targets[j], value);
+						startY = this.axis.y(value),
+						height = Math.abs(zeroY - startY),
+						r = this.chart.svg.rect({
+							width: col_width,
+							height: height,
+							fill: "url(#" + patternId + ")",
+							"stroke-width": 0
+						});
+
+					if (startY <= zeroY) {
+						r.translate(startX, startY);
+					} else {
+						r.translate(startX, zeroY);
+					}
+
+					// 그룹에 컬럼 엘리먼트 추가
+					g.append(r);
+
+					// 다음 컬럼 좌표 설정
+					startX += col_width + padding;
+				}
+			});
+
+            return g;
+		}
+	}
+
+	return PatternColumnBrush;
+}, "chart.brush.patternbar");
+
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
     /**
