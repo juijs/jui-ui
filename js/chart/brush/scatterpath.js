@@ -42,8 +42,7 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
             var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
-                var target = this.chart.get("series", this.brush.target[i]),
-                    symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
+                var symbol = this.brush.symbol;
 
                 loop(function(index, group) {
                     list[group].add(points[i].x[index]|0, points[i].y[index]|0, tpl[symbol]);

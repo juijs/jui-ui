@@ -172,8 +172,6 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series Sets additional information for a specific data property. */
-            series: {},
             /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
             /** @cfg {Array} widget Determines a widget to be added to a chart. */

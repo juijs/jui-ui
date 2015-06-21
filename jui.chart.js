@@ -6151,7 +6151,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
-        var _padding, _series, _area,  _theme, _hash = {};
+        var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
@@ -6191,13 +6191,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method drawBefore 
          * 
-         * option copy (series, brush, widget)
+         * option copy (brush, widget)
          *  
          * @param {chart.builder} self
          * @private  
          */
         function drawBefore(self) {
-            _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
@@ -6673,9 +6672,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method get  
          *
-         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         * Gets a named axis, brush, widget (type: axis, brush, widget, padding, area)
          *
-         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {"axis"/"brush"/"widget"/"padding"/"area"} type
          * @param {String} key  Property name
          * @return {Mixed/Object}
          */
@@ -6684,7 +6683,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 axis: _axis,
                 brush: _brush,
                 widget: _widget,
-                series: _series,
                 padding: _padding,
                 area: _area
             };
@@ -6734,7 +6732,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Array} target
          * @return {String} Selected color string
          */
-        this.color = function(key, colors, target) {
+        this.color = function(key, colors) {
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
@@ -6754,19 +6752,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     }
                 } else {
                     color = nextColor();
-                }
-
-                // 시리즈 컬러 설정
-                if(_.typeCheck("array", target)) {
-                    var series = _series[target[key]];
-
-                    if(series && series.color) {
-                        color = series.color;
-
-                        if(_.typeCheck("integer", color)) {
-                            color = nextColor(color);
-                        }
-                    }
                 }
             }
 
@@ -7172,8 +7157,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series Sets additional information for a specific data property. */
-            series: {},
             /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
             /** @cfg {Array} widget Determines a widget to be added to a chart. */
@@ -11669,8 +11652,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key1, key2) {
-            var targets = this.brush.target,
-                colors = this.brush.colors,
+            var colors = this.brush.colors,
                 color = null,
                 colorIndex = 0,
                 rowIndex = 0;
@@ -11683,7 +11665,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             if(_.typeCheck([ "array", "null" ], colors)) {
-                color = this.chart.color(colorIndex, colors, targets);
+                color = this.chart.color(colorIndex, colors);
             } else if(_.typeCheck("function", colors)) {
                 var newColor = colors.call(this.chart, this.getData(rowIndex));
 
@@ -13986,8 +13968,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
         }
 
         this.getFormatText = function(target, value, max) {
-            var series = this.chart.get("series", target),
-                key = (series.text) ? series.text : target;
+            var key = target;
 
             if(typeof(this.brush.format) == "function") {
                 return this.format(key, value, max);
@@ -14808,8 +14789,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
         this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                target = this.chart.get("series", this.brush.target[targetIndex]),
-                symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
+                symbol = this.brush.symbol,
                 w = h = this.brush.size;
 
             var color = this.color(dataIndex, targetIndex),
@@ -15073,8 +15053,7 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
             var loop = _.loop(points[0].x.length);
 
             for(var i = 0; i < points.length; i++) {
-                var target = this.chart.get("series", this.brush.target[i]),
-                    symbol = (target && target.symbol) ? target.symbol : this.brush.symbol;
+                var symbol = this.brush.symbol;
 
                 loop(function(index, group) {
                     list[group].add(points[i].x[index]|0, points[i].y[index]|0, tpl[symbol]);
@@ -17739,8 +17718,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
-                var t = chart.get("series", obj.dataKey),
-                    k = obj.dataKey,
+                var k = obj.dataKey,
                     d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
@@ -17749,7 +17727,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                 }
 
                 // 툴팁 값 설정
-                var message = getFormat((t.text) ? t.text : k, d, obj.data);
+                var message = getFormat(k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
@@ -18055,7 +18033,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 			for(var i = 0; i < count; i++) {
                 var group = chart.svg.group(),
                     target = brush.target[i],
-                    text = chart.get("series", target).text || target,
+                    text = target,
                     color = chart.color(i, brush.colors, data),
                     rect = chart.svg.getTextRect(text);
 
@@ -19971,8 +19949,6 @@ jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.bui
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series Sets additional information for a specific data property. */
-            series: {},
             /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
             /** @cfg {Array} widget Determines a widget to be added to a chart. */

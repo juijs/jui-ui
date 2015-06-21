@@ -21,8 +21,7 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
         this.createScatter = function(pos, dataIndex, targetIndex) {
             var self = this,
                 elem = null,
-                target = this.chart.get("series", this.brush.target[targetIndex]),
-                symbol = (!target.symbol) ? this.brush.symbol : target.symbol,
+                symbol = this.brush.symbol,
                 w = h = this.brush.size;
 
             var color = this.color(dataIndex, targetIndex),

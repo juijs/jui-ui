@@ -459,8 +459,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @returns {*}
          */
         this.color = function(key1, key2) {
-            var targets = this.brush.target,
-                colors = this.brush.colors,
+            var colors = this.brush.colors,
                 color = null,
                 colorIndex = 0,
                 rowIndex = 0;
@@ -473,7 +472,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             if(_.typeCheck([ "array", "null" ], colors)) {
-                color = this.chart.color(colorIndex, colors, targets);
+                color = this.chart.color(colorIndex, colors);
             } else if(_.typeCheck("function", colors)) {
                 var newColor = colors.call(this.chart, this.getData(rowIndex));
 

@@ -21,8 +21,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
         }
 
         this.getFormatText = function(target, value, max) {
-            var series = this.chart.get("series", target),
-                key = (series.text) ? series.text : target;
+            var key = target;
 
             if(typeof(this.brush.format) == "function") {
                 return this.format(key, value, max);

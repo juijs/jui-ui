@@ -45,7 +45,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
-        var _padding, _series, _area,  _theme, _hash = {};
+        var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
@@ -85,13 +85,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method drawBefore 
          * 
-         * option copy (series, brush, widget)
+         * option copy (brush, widget)
          *  
          * @param {chart.builder} self
          * @private  
          */
         function drawBefore(self) {
-            _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
@@ -567,9 +566,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method get  
          *
-         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         * Gets a named axis, brush, widget (type: axis, brush, widget, padding, area)
          *
-         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {"axis"/"brush"/"widget"/"padding"/"area"} type
          * @param {String} key  Property name
          * @return {Mixed/Object}
          */
@@ -578,7 +577,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 axis: _axis,
                 brush: _brush,
                 widget: _widget,
-                series: _series,
                 padding: _padding,
                 area: _area
             };
@@ -628,7 +626,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Array} target
          * @return {String} Selected color string
          */
-        this.color = function(key, colors, target) {
+        this.color = function(key, colors) {
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
@@ -648,19 +646,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     }
                 } else {
                     color = nextColor();
-                }
-
-                // 시리즈 컬러 설정
-                if(_.typeCheck("array", target)) {
-                    var series = _series[target[key]];
-
-                    if(series && series.color) {
-                        color = series.color;
-
-                        if(_.typeCheck("integer", color)) {
-                            color = nextColor(color);
-                        }
-                    }
                 }
             }
 
@@ -1066,8 +1051,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series Sets additional information for a specific data property. */
-            series: {},
             /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
             /** @cfg {Array} widget Determines a widget to be added to a chart. */

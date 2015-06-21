@@ -37,8 +37,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
-                var t = chart.get("series", obj.dataKey),
-                    k = obj.dataKey,
+                var k = obj.dataKey,
                     d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
@@ -47,7 +46,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                 }
 
                 // 툴팁 값 설정
-                var message = getFormat((t.text) ? t.text : k, d, obj.data);
+                var message = getFormat(k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
