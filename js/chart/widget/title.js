@@ -32,7 +32,7 @@ jui.define("chart.widget.title", [], function() {
         }
 
         this.draw = function() {
-            var obj = chart.svg.getTextRect(widget.text);
+            var obj = chart.svg.getTextSize(widget.text);
 
             var half_text_width = obj.width / 2,
                 half_text_height = obj.height / 2;

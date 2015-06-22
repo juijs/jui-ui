@@ -98,7 +98,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 }
 
                 // 텍스트 길이 구하기
-                var rect = chart.svg.getTextRect(text);
+                var rect = chart.svg.getTextSize(text);
 
                 if(widget.icon != null) {
                     var icon = _.typeCheck("function", widget.icon) ? widget.icon(brush.index) : widget.icon;

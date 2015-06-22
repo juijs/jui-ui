@@ -4846,7 +4846,7 @@ jui.define("util.svg",
         }
 
         /**
-         * @method getTextRect
+         * @method getTextSize
          *
          * caculate real pixel size of text element
          *
@@ -4855,8 +4855,7 @@ jui.define("util.svg",
          * @return {Integer} return.width  text element's width (px)
          * @return {Integer} return.height text element's height(px)
          */
-        this.getTextRect = function(text) {
-
+        this.getTextSize = function(text) {
             if (text == "") {
                 return { width : 0, height : 0 };
             }
@@ -4866,10 +4865,8 @@ jui.define("util.svg",
             el.setAttributeNS(null, "y", -200);
             el.appendChild(document.createTextNode(text));
 
-
         	root.element.appendChild(el);
         	var rect = el.getBoundingClientRect();
-
             root.element.removeChild(el);
 
         	return { width : rect.width, height : rect.height }; 
