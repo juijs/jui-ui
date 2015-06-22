@@ -44,8 +44,8 @@
             x : {
                 type : "dateblock",
                 domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
-                step : [time.hours, 6],
-                format : "dd HH:mm",
+                interval : 6 * 1000 * 60 * 60,
+                format : "HH:mm",
                 line : true,
                 full : false
             },

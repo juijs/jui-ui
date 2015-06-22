@@ -40,17 +40,6 @@
             icon: {
                 path: "../../img/icon-list"
             },
-            series : {
-                name : {
-                    text : "이름"
-                },
-                value : {
-                    text : "값"
-                },
-                test : {
-                    text : "Test"
-                }
-            },
             width: 400,
             height : 400,
             axis : [{
@@ -62,40 +51,19 @@
                 ],
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    full: true
+                    line : 'solid gradient',
+                    orient : 'top'
                 },
                 y : {
                     type : 'range',
                     domain : function(data) {
                         return Math.max(data.name, data.value, data.test);
                     },
-                    step : 10
+                    step : 10,
+                    line : 'gradient dashed'
+
                 }
-            }],
-            // 부가정보, 텍스트 & 컬러 & 보더컬러 & 기타 등등...
-            brush : [{
-                type : 'area',
-                target : ["name", "value"],
-                symbol : 'curve'
-            },{
-                type : 'area',
-                target : ["test"],
-                colors : [ 2 ]
-            }],
-            
-            widget : [
-            	{
-                    type : 'title',
-                    text : 'Text'
-                }, {
-                    type : 'legend',
-                    icon : '{chart}',
-                    //icon : function(i) {
-                        //return (i === 0) ? "{chart}" : "{gear}";
-                    //},
-                    brush : [ 0, 1 ]
-                }
-            ]
+            }]
         });
 	})
 </script>

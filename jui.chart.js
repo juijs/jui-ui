@@ -8608,19 +8608,19 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 		this.getLineOption = function() {
 			var line = this.grid.line;
 
-			if (typeof line === 'string') {
-				line = { type : line || 'solid'}
-			} else if (typeof line === 'number') {
-				line = { type : 'solid', 'stroke-width' : line }
-			} else if (typeof line !== 'object') {
+			if (typeof line === "string") {
+				line = { type : line || "solid"}
+			} else if (typeof line === "number") {
+				line = { type : "solid", "stroke-width" : line }
+			} else if (typeof line !== "object") {
 				line = !!line;
 
 				if (line) {
-					line = { type : 'solid' }
+					line = { type : "solid" }
 				}
 			}
 
-			if (line && !line.type == 'string') {
+			if (line && !line.type == "string") {
 				line.type = line.type.split(/ /g);
 			}
 
@@ -8643,19 +8643,99 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			g.append(this.axisLine(pos));
 		}
 
+		this.getLineForArea = function(orient, obj) {
+			return obj;
+		}
+
+		this.checkDrawLineTop = function(index, isLast) {
+
+			var y = this.axis.get("y");
+
+			var orient = y.orient;
+
+			if (y && y.hide) {
+
+			} else if (orient == "left") {
+				if (index == 0) return;
+			} else if (orient == "right") {
+				if (isLast) return;
+			}
+
+			return true;
+		}
+
+		this.checkDrawLineBottom  = function(index, isLast) {
+			var y = this.axis.get("y");
+
+			var orient = y.orient;
+
+			if (y && y.hide) {
+
+			} else if (orient == "left") {
+				if (index == 0 ) return;
+			} else if (orient == "right") {
+				if (isLast) return;
+			}
+
+			return true;
+		}
+
+		this.checkDrawLineLeft = function(index, isLast) {
+			var x = this.axis.get("x");
+
+			var orient = x.orient;
+
+			if (x && x.hide) {
+
+			} else if (orient == "top") {
+				if (index == 0) return;
+			} else if (orient == "bottom") {
+				if (isLast) return;
+			}
+
+			return true;
+		}
+
+		this.checkDrawLineRight = function(index, isLast) {
+			var x = this.axis.get("x");
+
+			var orient = x.orient;
+
+			if (x && x.hide) {
+
+			} else if (orient == "top") {
+				if (index == 0) return;
+			} else if (orient == "bottom") {
+				if (isLast) return;
+			}
+
+			return true;
+		}
+
 		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
 
-			if (isLast && this.grid.type != "block") return;
 
 			var area = { };
 			if (position == "top") {
-				area = {x1: 0, x2: 0, y1: 0, y2: this.axis.area("height")};
+
+				if (!this.checkDrawLineTop(index, isLast)) return;
+
+				area = this.getLineForArea('top', {x1: 0, x2: 0, y1: 0, y2: this.axis.area("height")});
 			} else if (position == "bottom" ) {
-				area = {x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
+
+				if (!this.checkDrawLineBottom(index, isLast)) return;
+
+				area = this.getLineForArea('bottom', {x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") });
 			} else if (position == "left") {
-				area = {x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0};
+
+				if (!this.checkDrawLineLeft(index, isLast)) return;
+
+				area = this.getLineForArea('left', {x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0});
 			} else if (position == "right" ) {
-				area = {x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0};
+
+				if (!this.checkDrawLineRight(index, isLast)) return;
+
+				area = this.getLineForArea('right', {x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0});
 			}
 
 			var lineObject = this.line($.extend({
@@ -8665,7 +8745,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 
 			if (line.type.indexOf("dashed") > -1) {
-				lineObject.attr({ 'stroke-dasharray' : "5,5" });
+				lineObject.attr({ "stroke-dasharray" : "5,5" });
 			}
 
 			var x = 0;
@@ -8816,7 +8896,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				})
 
 				axis.append(this.line({
-					x2 : -this.chart.theme('gridTickSize'),
+					x2 : -this.chart.theme("gridTickSize"),
 					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : this.chart.theme("gridTickBorderWidth")
 				}));
@@ -8826,7 +8906,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x : -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding"),
-						y : (this.grid.type == 'block' && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
+						y : (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
 						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor" : "end",
 						"font-size": this.chart.theme("gridYFontSize"),
@@ -8858,7 +8938,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				var axis = this.chart.svg.group({ "transform" : "translate(0, " + (values[i] + moveY) + ")" });
 
 				axis.append(this.line({
-					x2 : this.chart.theme('gridTickSize'),
+					x2 : this.chart.theme("gridTickSize"),
 					stroke : this.color(isActive, "gridActiveBorderColor", "gridAxisBorderColor"),
 					"stroke-width" : this.chart.theme("gridTickBorderWidth")
 				}));
@@ -8868,7 +8948,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: this.chart.theme('gridTickSize') + this.chart.theme("gridTickPadding"),
+						x: this.chart.theme("gridTickSize") + this.chart.theme("gridTickPadding"),
 						y: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : this.chart.theme("gridTickSize"),
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",
@@ -9133,23 +9213,73 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
      * @extends chart.grid.core
      */
 	var BlockGrid = function() {
-        /**
-         * @method top
-         *
-         * @protected
-         */
+
+
+		this.getLineForArea = function(orient, area) {
+
+			if (!this.grid.full) {
+				if (orient == 'right' || orient == 'left') {
+					var x  = this.axis.get('x');
+
+					x.orient = (x.orient == 'top') ? 'top' : 'bottom';
+
+					if (x && (x.orient == 'top')) {
+						area.y1 += this.scale.rangeBand();
+						area.y2 += this.scale.rangeBand();
+					}
+
+				} else if (orient == 'top' || orient == 'bottom') {
+					var y  = this.axis.get('y');
+
+					y.orient = y.orient == 'right' ? 'right' : 'left';
+
+					if (y && (y.orient == 'left')) {
+						area.x1 += this.scale.rangeBand();
+						area.x2 += this.scale.rangeBand();
+					}
+
+				}
+			}
+
+			return area;
+		}
+
+
+		this.checkDrawLineTop = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineBottom  = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineLeft = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineRight = function(index, isLast) {
+			return true;
+		}
+
+		/**
+		 * @method top
+		 *
+		 * @protected
+		 */
 
 		this.top = function(g) {
 			this.drawTop(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine("top", g);
 
 			if (!this.grid.full) {
+				var y = this.axis.get('y');
 				var axis = this.chart.svg.group({
 					"transform" : "translate(" + this.end + ", 0)"
 				});
 
 				axis.append(this.line({
-					y2 : -this.chart.theme("gridTickSize")
+					y1 : (y && y.hide) ? -this.chart.theme("gridTickSize") : 0,
+					y2 : (y && y.hide) ? this.axis.area('height') : -this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -9166,15 +9296,18 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBaseLine("bottom", g);
 
 			if (!this.grid.full) {
+				var y = this.axis.get('y');
 				var axis = this.chart.svg.group({
 					"transform" : "translate(" + this.end + ", 0)"
 				})
 
 				axis.append(this.line({
-					y2 : this.chart.theme("gridTickSize")
+					y1 : (y && y.hide) ? this.chart.theme("gridTickSize") : 0,
+					y2 : (y && y.hide) ? -this.axis.area('height') : this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
+
 			}
 
 		}
@@ -9189,12 +9322,15 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBaseLine("left", g);
 
 			if (!this.grid.full) {
+				var x = this.axis.get('x');
+
 				var axis = this.chart.svg.group({
 					"transform" : "translate(0, " + this.end + ")"
 				})
 
 				axis.append(this.line({
-					x2 : -this.chart.theme("gridTickSize")
+					x1 : (x && x.hide) ? -this.chart.theme("gridTickSize") : 0,
+					x2 : (x && x.hide) ? this.axis.area('width') : -this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -9211,12 +9347,15 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBaseLine("right", g);
 
 			if (!this.grid.full) {
+				var x = this.axis.get('x');
+
 				var axis = this.chart.svg.group({
 					"transform" : "translate(0, " + this.end + ")"
 				});
 
 				axis.append(this.line({
-					x2 : this.chart.theme("gridTickSize")
+					x1 : (x && x.hide) ? this.chart.theme("gridTickSize") : 0,
+					x2 : (x && x.hide) ? -this.axis.area('width') : this.chart.theme("gridTickSize")
 				}));
 
 				g.append(axis);
@@ -9490,7 +9629,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			reverse: false,
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
+            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
 			realtime: null
 		};
 	}
@@ -10112,6 +10251,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
                 var arr = [obj.start, obj.end]
 			}
+
             this.scale.range(arr);
 			this.scale.clamp(this.grid.clamp)
 
@@ -10121,6 +10261,10 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
+
+			if (this.grid.orient == 'left' || this.grid.orient == 'right') {
+				this.ticks.reverse();
+			}
 
 			this.bar = 6;
 

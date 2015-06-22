@@ -160,7 +160,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			reverse: false,
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [intervalType=""] Determines whether to use as a real-time grid. */
+            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
 			realtime: null
 		};
 	}

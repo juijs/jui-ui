@@ -180,6 +180,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			} else {
                 var arr = [obj.start, obj.end]
 			}
+
             this.scale.range(arr);
 			this.scale.clamp(this.grid.clamp)
 
@@ -189,6 +190,10 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
+
+			if (this.grid.orient == 'left' || this.grid.orient == 'right') {
+				this.ticks.reverse();
+			}
 
 			this.bar = 6;
 
