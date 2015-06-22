@@ -8,8 +8,8 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
      * @extends chart.brush.column
      */
 	var ImageColumnBrush = function(chart, axis, brush) {
-		var g;
-		var targets, padding, zeroY, width, half_width, col_width, col_height;
+		var self = this;
+		var g, targets, padding, zeroY, width, half_width, col_width, col_height;
 
 		this.drawBefore = function() {
 			g = this.chart.svg.group();
@@ -31,28 +31,48 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 						startY = axis.y(value);
 
 					var	height = Math.abs(zeroY - startY),
-						r = this.chart.svg.image({
-							width : col_width,
-							height : col_width,
-							"xlink:href" : this.getImageURI(targets[j], value)
+						bar = this.chart.svg.group({}, function() {
+							var img = self.chart.svg.image({
+								width: col_width,
+								height: col_height,
+								"xlink:href": self.getImageURI(targets[j], value)
+							});
+
+							if(self.brush.fixed) {
+								var h = height - col_height,
+									style = self.getBarStyle();
+
+								// 컬럼 크기 음수 처리
+								if(h < 0) h = 0;
+
+								self.chart.svg.rect({
+									y: col_height,
+									width: col_width,
+									height: h,
+									fill: self.color(i, j),
+									stroke : style.borderColor,
+									"stroke-width" : style.borderWidth,
+									"stroke-opacity" : style.borderOpacity
+								});
+							} else {
+								if(height > 0 && col_height > 0) {
+									img.scale(1, (height > col_height) ? height / col_height : col_height / height);
+								}
+							}
 						});
 
 					if(value != 0) {
-						this.addEvent(r, i, j);
+						this.addEvent(bar, i, j);
 					}
 
 					if (startY <= zeroY) {
-						r.translate(startX, startY);
+						bar.translate(startX, startY);
 					} else {
-						r.translate(startX, zeroY);
-					}
-
-					if(height > 0 && col_height > 0) {
-						r.scale(1, (height > col_width) ? height / col_width : col_width / height);
+						bar.translate(startX, zeroY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
-					g.append(r);
+					g.append(bar);
 
 					// 다음 컬럼 좌표 설정
 					startX += col_width + padding;
