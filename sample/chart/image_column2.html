@@ -55,13 +55,13 @@
                         { quarter : "11", sales : 50 },
                         { quarter : "12", sales : 25 }
                     ],
-                    x : {
+                    y : {
                         type : "range",
                         domain : [ 0, 100 ],
                         step : 10,
                         line : true
                     },
-                    y : {
+                    x : {
                         type : "block",
                         domain : "quarter",
                         line : true
@@ -70,12 +70,11 @@
 
             ],
             brush : {
-                type : "imagebar",
+                type : "imagecolumn",
                 target : "sales",
-                uri : "resource/twitter.png",
-                width: 20,
-                height : 20,
-                fixed : false
+                width : 30,
+                height : 30,
+                uri : "resource/twitter.png"
             },
             widget : {
                 type : "title",
