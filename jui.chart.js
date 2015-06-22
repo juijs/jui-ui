@@ -11826,7 +11826,7 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
      *
      * @extends chart.brush.column
      */
-	var ImageColumnBrush = function(chart, axis, brush) {
+	var ImageColumnBrush = function() {
 		var self = this;
 		var g, targets, padding, zeroY, width, half_width, col_width, col_height;
 
@@ -11843,11 +11843,11 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) - (half_width / 2);
+				var startX = this.axis.x(i) - (half_width / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],
-						startY = axis.y(value);
+						startY = this.axis.y(value);
 
 					var	height = Math.abs(zeroY - startY),
 						bar = this.chart.svg.group({}, function() {
