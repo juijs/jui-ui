@@ -101,8 +101,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return elem.scale;
         }
 
-        var mapObj = null;
-
         function drawMapType(axis, k) {
             if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 

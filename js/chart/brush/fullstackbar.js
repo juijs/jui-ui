@@ -21,6 +21,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		this.drawText = function(percent, x, y) {
 			var text = this.chart.text({
 				"font-size" : this.chart.theme("barFontSize"),
+				fill : this.chart.theme("barFontColor"),
 				x : x,
 				y : y,
 				"text-anchor" : "middle"

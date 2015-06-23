@@ -11,47 +11,6 @@
 <div id="chart"></div>
 
 <script id="script_code">
-    var data = [{
-        id: "US",
-        airport: "small"
-    }, {
-        id: "GB",
-        routes: [ "US", "IS", "SE", "LT", "PT", "ES", "IT", "UA" ],
-        airport: "large"
-    }, {
-        id: "IS",
-        airport: "small"
-    }, {
-        id: "PT",
-        airport: "small"
-    }, {
-        id: "ES",
-        airport: "small"
-    }, {
-        id: "FR",
-        airport: "small"
-    }, {
-        id: "SE",
-        airport: "small"
-    }, {
-        id: "UA",
-        airport: "small"
-    }, {
-        id: "IT",
-        airport: "small"
-    }, {
-        id: "IE",
-        airport: "small"
-    }, {
-        id: "NO",
-        airport: "small"
-    }, {
-        id: "GR",
-        airport: "small"
-    }, {
-        id: "LT",
-        airport: "large"
-    }];
 
     jui.ready([ "chart.builder" ], function(chart) {
         c = chart("#chart", {
@@ -62,29 +21,26 @@
                 map : {
                     path : "../../img/map/world-1040x660.svg",
                     width : 1040,
-                    height : 660,
-                    scale : 2,
-                    viewX : -550,
-                    viewY : 15
+                    height : 660
                 },
-                data : data
+                data : [{
+                    title : "2014",
+                    value : 2.6
+                }, {
+                    title : "2013",
+                    value : 2.2
+                }]
             }],
             brush : [{
-                type : "map.flightroute"
-            }],
-            widget : [{
-                type : "map.control",
-                align : "start",
-                orient : "top",
-                dx : 10,
-                dy : 10,
-                minScale : 1,
-                maxScale : 3
+                type : "map.comparebubble",
+                size : 150,
+                colors : [ "#ffc000", "#fffc00" ],
+                format : function(value) {
+                    return "$" + value + " Billion";
+                }
             }],
             style : {
-                mapPathBackgroundColor : "#FFCC00",
-                mapPathBackgroundOpacity : 0.4,
-                mapControlButtonColor : "#FFCC00"
+                backgroundColor : "black"
             }
         });
 	})

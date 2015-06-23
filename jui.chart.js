@@ -5217,8 +5217,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return elem.scale;
         }
 
-        var mapObj = null;
-
         function drawMapType(axis, k) {
             if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
@@ -6741,7 +6739,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
-                if(_.typeCheck("array", colors)) {
+                if(_.typeCheck([ "array", "object" ], colors)) {
                     color = colors[key];
 
                     if(_.typeCheck("integer", color)) {
@@ -7360,6 +7358,7 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : "11px",
         barFontSize : "11px",
+        barFontColor : "#333",
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -7478,19 +7477,29 @@ jui.define("chart.theme.jennifer", [], function() {
         // Map Brushes
         mapBubbleBackgroundOpacity : 0.5,
         mapBubbleBorderWidth : 1,
+        mapBubbleFontSize : "11px",
+        mapBubbleFontColor : "#fff",
         mapSelectorColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
         mapFlightRouteAirportBorderWidth : 2,
         mapFlightRouteAirportRadius : 8,
-        mapFlightRouteLineBorderColor : "red",
-        mapFlightRouteLineBorderWidth : 1,
+        mapFlightRouteLineColor : "red",
+        mapFlightRouteLineWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
+        mapCompareBubbleMaxLineColor : "#fff",
+        mapCompareBubbleMaxLineDashArray : "2,2",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "36px",
+        mapCompareBubbleMaxFontColor : "#fff",
+        mapCompareBubbleMinBorderColor : "#ffff00",
+        mapCompareBubbleMinFontSize : "24px",
+        mapCompareBubbleMinFontColor : "#000",
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
@@ -7553,6 +7562,8 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        barFontSize : "11px",
+        barFontColor : "#333",
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -7673,19 +7684,29 @@ jui.define("chart.theme.gradient", [], function() {
         // Map Brushes
         mapBubbleBackgroundOpacity : 0.5,
         mapBubbleBorderWidth : 1,
+        mapBubbleFontSize : "11px",
+        mapBubbleFontColor : "white",
         mapSelectorColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
         mapFlightRouteAirportBorderWidth : 2,
         mapFlightRouteAirportRadius : 8,
-        mapFlightRouteLineBorderColor : "red",
-        mapFlightRouteLineBorderWidth : 1,
+        mapFlightRouteLineColor : "red",
+        mapFlightRouteLineWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "40px",
+        mapCompareBubbleMaxFontColor : "#fff",
+        mapCompareBubbleMaxLineColor : "#fff",
+        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMinBorderColor : "#ffff00",
+        mapCompareBubbleMinFontSize : "24px",
+        mapCompareBubbleMinFontColor : "#000",
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
@@ -7747,6 +7768,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : "11px",
         barFontSize : "11px",
+        barFontColor : "#868686",
         barBorderColor : "none",
         barBorderWidth : 0,
         barBorderOpacity : 0,
@@ -7867,19 +7889,29 @@ jui.define("chart.theme.dark", [], function() {
         // Map Brushes
         mapBubbleBackgroundOpacity : 0.5,
         mapBubbleBorderWidth : 1,
+        mapBubbleFontSize : "11px",
+        mapBubbleFontColor : "#868686",
         mapSelectorColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
         mapFlightRouteAirportBorderWidth : 2,
         mapFlightRouteAirportRadius : 8,
-        mapFlightRouteLineBorderColor : "red",
-        mapFlightRouteLineBorderWidth : 1,
+        mapFlightRouteLineColor : "red",
+        mapFlightRouteLineWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "40px",
+        mapCompareBubbleMaxFontColor : "#fff",
+        mapCompareBubbleMaxLineColor : "#fff",
+        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMinBorderColor : "#ffff00",
+        mapCompareBubbleMinFontSize : "24px",
+        mapCompareBubbleMinFontColor : "#000",
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
@@ -7938,6 +7970,7 @@ jui.define("chart.theme.pastel", [], function() {
 		tooltipPointFontWeight : "bold", // common
 		tooltipPointFontSize : "11px",
 		barFontSize : "11px",
+		barFontColor : "#333",
 		barBorderColor : "none",
 		barBorderWidth : 0,
 		barBorderOpacity : 0,
@@ -8058,19 +8091,29 @@ jui.define("chart.theme.pastel", [], function() {
 		// Map Brushes
 		mapBubbleBackgroundOpacity : 0.5,
 		mapBubbleBorderWidth : 1,
+		mapBubbleFontSize : "11px",
+		mapBubbleFontColor : "white",
 		mapSelectorColor : "#5a73db",
 		mapSelectorActiveColor : "#CC0000",
 		mapFlightRouteAirportSmallColor : "#CC0000",
 		mapFlightRouteAirportLargeColor : "#000",
 		mapFlightRouteAirportBorderWidth : 2,
 		mapFlightRouteAirportRadius : 8,
-		mapFlightRouteLineBorderColor : "red",
-		mapFlightRouteLineBorderWidth : 1,
+		mapFlightRouteLineColor : "red",
+		mapFlightRouteLineWidth : 1,
 		mapWeatherBackgroundColor : "white",
 		mapWeatherBorderColor : "#a9a9a9",
 		mapWeatherFontSize : "11px",
 		mapWeatherTitleFontColor : "#666",
 		mapWeatherInfoFontColor : "red",
+		mapCompareBubbleMaxBorderColor : "#fff",
+		mapCompareBubbleMaxFontSize : "40px",
+		mapCompareBubbleMaxFontColor : "#fff",
+		mapCompareBubbleMaxLineColor : "#fff",
+		mapCompareBubbleMaxLineDashArray : "5,5",
+		mapCompareBubbleMinBorderColor : "#ffff00",
+		mapCompareBubbleMinFontSize : "24px",
+		mapCompareBubbleMinFontColor : "#000",
 		// Map Widgets
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
@@ -8128,6 +8171,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : "11px",
         barFontSize : "11px",
+        barFontColor : "#333",
         barBorderColor : "black",
         barBorderWidth : 1,
         barBorderOpacity : 1,
@@ -8249,19 +8293,29 @@ jui.define("chart.theme.pattern", [], function() {
         // Map Brushes
         mapBubbleBackgroundOpacity : 0.5,
         mapBubbleBorderWidth : 1,
+        mapBubbleFontSize : "11px",
+        mapBubbleFontColor : "white",
         mapSelectorColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
         mapFlightRouteAirportBorderWidth : 2,
         mapFlightRouteAirportRadius : 8,
-        mapFlightRouteLineBorderColor : "red",
-        mapFlightRouteLineBorderWidth : 1,
+        mapFlightRouteLineColor : "red",
+        mapFlightRouteLineWidth : 1,
         mapWeatherBackgroundColor : "white",
         mapWeatherBorderColor : "#a9a9a9",
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "40px",
+        mapCompareBubbleMaxFontColor : "#fff",
+        mapCompareBubbleMaxLineColor : "#fff",
+        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMinBorderColor : "#ffff00",
+        mapCompareBubbleMinFontSize : "24px",
+        mapCompareBubbleMinFontColor : "#000",
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
@@ -11822,9 +11876,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 colorIndex = key1;
             }
 
-            if(_.typeCheck([ "array", "null" ], colors)) {
-                color = this.chart.color(colorIndex, colors);
-            } else if(_.typeCheck("function", colors)) {
+            if(_.typeCheck("function", colors)) {
                 var newColor = colors.call(this.chart, this.getData(rowIndex));
 
                 if(_.typeCheck([ "string", "integer" ], newColor)) {
@@ -11832,6 +11884,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 } else {
                     color = this.chart.color(0);
                 }
+            } else {
+                color = this.chart.color(colorIndex, colors);
             }
 
             return color;
@@ -13329,6 +13383,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 		this.drawText = function(percent, x, y) {
 			var text = this.chart.text({
 				"font-size" : this.chart.theme("barFontSize"),
+				fill : this.chart.theme("barFontColor"),
 				x : x,
 				y : y,
 				"text-anchor" : "middle"
@@ -17655,6 +17710,24 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
             }
         }
 
+        this.drawText = function(value, x, y) {
+            var text = value;
+
+            if(_.typeCheck("function", this.brush.format)) {
+                text = this.format(value);
+            }
+
+            var elem = this.chart.text({
+                "font-size" : this.chart.theme("mapBubbleFontSize"),
+                fill : this.chart.theme("mapBubbleFontColor"),
+                x : x,
+                y : y + 3,
+                "text-anchor" : "middle"
+            }, text);
+
+            return elem;
+        }
+
 		this.draw = function() {
             var g = chart.svg.group(),
                 minmax = getMinMaxValues();
@@ -17667,6 +17740,8 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
                 if(xy != null) {
                     var c = chart.svg.circle({
+                        cx: xy.x,
+                        cy: xy.y,
                         r: size,
                         "fill": color,
                         "fill-opacity": chart.theme("mapBubbleBackgroundOpacity"),
@@ -17674,8 +17749,12 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                         "stroke-width": chart.theme("mapBubbleBorderWidth")
                     });
 
-                    c.translate(xy.x, xy.y);
                     g.append(c);
+
+                    // 가운데 텍스트 보이기
+                    if(this.brush.showText) {
+                        g.append(this.drawText(value, xy.x, xy.y));
+                    }
                 }
             });
 
@@ -17686,11 +17765,181 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
     MapBubbleBrush.setup = function() {
         return {
             min : 10,
-            max : 30
+            max : 30,
+            showText : false,
+            format : null
         }
     }
 
 	return MapBubbleBrush;
+}, "chart.brush.map.core");
+
+jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], function(_, math) {
+    var BORDER_WIDTH = 1.5,
+        MAX_OPACITY = 0.8,
+        MIN_OPACITY = 0.6,
+        LINE_ANGLE = 315,
+        TITLE_RATE = 0.6;
+
+    /**
+     * @class chart.brush.map.bubble
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapCompareBubbleBrush = function(chart, axis, brush) {
+        var self = this;
+        var g, min, max, minValue, maxValue;
+
+        function getTextInBubble(color, align, size, title, value, x, y) {
+            return self.chart.svg.text({
+                fill: color,
+                "text-anchor": align,
+                y: 7
+            }, function() {
+                self.chart.svg.tspan({
+                    "font-size": size
+                }, value);
+                self.chart.svg.tspan({
+                    "font-size": size * TITLE_RATE,
+                    x: 0,
+                    y: size
+                }, title);
+            }).translate(x, y);
+        }
+
+        this.drawBefore = function() {
+            var data = this.listData();
+            g = chart.svg.group();
+
+            if(data.length == 2) {
+                min = data[0];
+                max = data[1];
+                minValue = axis.getValue(min, "value");
+                maxValue = axis.getValue(max, "value");
+
+                // 맥스 값 설정
+                if (minValue > maxValue) {
+                    min = data[1];
+                    max = data[0];
+                    minValue = axis.getValue(min, "value");
+                    maxValue = axis.getValue(max, "value");
+                }
+            }
+        }
+
+        this.drawMaxText = function(centerX, centerY, gap) {
+            var r = gap * 2.5,
+                cx = centerX + Math.cos(math.radian(LINE_ANGLE)),
+                cy = centerY + Math.sin(math.radian(LINE_ANGLE)),
+                tx = centerX + (Math.cos(math.radian(LINE_ANGLE)) * r),
+                ty = centerY + (Math.sin(math.radian(LINE_ANGLE)) * r),
+                ex = tx + brush.size,
+                title = axis.getValue(max, "title", ""),
+                value = axis.getValue(max, "value", 0),
+                size = _.pxToInt(self.chart.theme("mapCompareBubbleMaxFontSize"));
+
+            if(_.typeCheck("function", brush.format)) {
+                value = this.format(value);
+            }
+
+            if(_.typeCheck("string", size)) {
+                size = parseInt(size);
+            }
+
+            var group = chart.svg.group({}, function() {
+                var path = self.chart.svg.path({
+                    fill: "transparent",
+                    stroke: self.chart.theme("mapCompareBubbleMaxLineColor"),
+                    "stroke-width": BORDER_WIDTH,
+                    "stroke-dasharray": self.chart.theme("mapCompareBubbleMaxLineDashArray")
+                });
+
+                path.MoveTo(cx, cy)
+                    .LineTo(tx, ty)
+                    .LineTo(ex, ty);
+
+                self.chart.svg.circle({
+                    cx: cx,
+                    cy: cy,
+                    r: 3,
+                    fill: self.chart.theme("mapCompareBubbleMaxLineColor")
+                });
+            });
+
+            group.append(getTextInBubble(
+                self.chart.theme("mapCompareBubbleMaxFontColor"), "start",
+                size, title, value, ex + 5, ty
+            ));
+
+            return group;
+        }
+
+        this.drawMinText = function(centerX, centerY) {
+            var title = axis.getValue(min, "title", ""),
+                value = axis.getValue(min, "value", 0),
+                group = chart.svg.group(),
+                size = _.pxToInt(self.chart.theme("mapCompareBubbleMinFontSize"));
+
+            if(_.typeCheck("function", brush.format)) {
+                value = this.format(value);
+            }
+
+            if(_.typeCheck("string", size)) {
+                size = parseInt(size);
+            }
+
+            group.append(getTextInBubble(
+                self.chart.theme("mapCompareBubbleMinFontColor"), "middle",
+                size, title, value, centerX, centerY - (size * TITLE_RATE / 2)
+            ));
+        }
+
+		this.draw = function() {
+            if(min != null && max != null) {
+                var maxSize = brush.size,
+                    minSize = brush.size * (minValue / maxValue),
+                    gap = maxSize - minSize,
+                    cx = axis.area("width") / 2,
+                    cy = axis.area("height") / 2;
+
+                var c1 = chart.svg.circle({
+                    r: maxSize,
+                    fill: this.color(0),
+                    "fill-opacity": MAX_OPACITY,
+                    stroke: chart.theme("mapCompareBubbleMaxBorderColor"),
+                    "stroke-width": BORDER_WIDTH,
+                    cx: cx,
+                    cy: cy
+                });
+
+                var c2 = chart.svg.circle({
+                    r: minSize,
+                    fill: this.color(1),
+                    "fill-opacity": MIN_OPACITY,
+                    stroke: chart.theme("mapCompareBubbleMinBorderColor"),
+                    "stroke-width": BORDER_WIDTH,
+                    cx: cx,
+                    cy: cy + gap - BORDER_WIDTH
+                });
+
+                g.append(c1);
+                g.append(c2);
+                g.append(this.drawMaxText(cx, cy - minSize, gap));
+                g.append(this.drawMinText(cx, cy + gap - BORDER_WIDTH));
+            }
+
+			return g;
+		}
+	}
+
+    MapCompareBubbleBrush.setup = function() {
+        return {
+            size: 100,
+            format: null
+        }
+    }
+
+	return MapCompareBubbleBrush;
 }, "chart.brush.map.core");
 
 jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
@@ -17812,8 +18061,8 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
             largeColor = chart.theme("mapFlightRouteAirportLargeColor");
             borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
             outerSize = chart.theme("mapFlightRouteAirportRadius");
-            lineColor = chart.theme("mapFlightRouteLineBorderColor");
-            lineWidth = chart.theme("mapFlightRouteLineBorderWidth");
+            lineColor = chart.theme("mapFlightRouteLineColor");
+            lineWidth = chart.theme("mapFlightRouteLineWidth");
         }
 
 		this.draw = function() {
@@ -18309,9 +18558,9 @@ jui.define("chart.widget.title", [], function() {
                 x : x + widget.dx,
                 y : y + widget.dy,
                 "text-anchor" : anchor,
+                "fill" : widget.color || chart.theme("titleFontColor"),
                 "font-size" : widget.size || chart.theme("titleFontSize"),
-                "font-weight" : chart.theme("titleFontWeight"),
-                "fill" : chart.theme("titleFontColor")
+                "font-weight" : chart.theme("titleFontWeight")
             }, widget.text);
 
             if (widget.orient == "center") {
@@ -18339,7 +18588,9 @@ jui.define("chart.widget.title", [], function() {
             /** @cfg {Number} [dy=0] Moves the y coordinate by a set value from the location where the chart is drawn. */
             dy: 0,
             /** @cfg {Number} [size=null] Sets the title message size. */
-            size: null
+            size: null,
+            /** @cfg {String} [string=null] Sets the title message color. */
+            color: null
         }
     }
 

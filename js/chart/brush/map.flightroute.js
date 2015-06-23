@@ -117,8 +117,8 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
             largeColor = chart.theme("mapFlightRouteAirportLargeColor");
             borderWidth = chart.theme("mapFlightRouteAirportBorderWidth");
             outerSize = chart.theme("mapFlightRouteAirportRadius");
-            lineColor = chart.theme("mapFlightRouteLineBorderColor");
-            lineWidth = chart.theme("mapFlightRouteLineBorderWidth");
+            lineColor = chart.theme("mapFlightRouteLineColor");
+            lineWidth = chart.theme("mapFlightRouteLineWidth");
         }
 
 		this.draw = function() {

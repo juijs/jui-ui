@@ -26,6 +26,24 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
             }
         }
 
+        this.drawText = function(value, x, y) {
+            var text = value;
+
+            if(_.typeCheck("function", this.brush.format)) {
+                text = this.format(value);
+            }
+
+            var elem = this.chart.text({
+                "font-size" : this.chart.theme("mapBubbleFontSize"),
+                fill : this.chart.theme("mapBubbleFontColor"),
+                x : x,
+                y : y + 3,
+                "text-anchor" : "middle"
+            }, text);
+
+            return elem;
+        }
+
 		this.draw = function() {
             var g = chart.svg.group(),
                 minmax = getMinMaxValues();
@@ -38,6 +56,8 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
                 if(xy != null) {
                     var c = chart.svg.circle({
+                        cx: xy.x,
+                        cy: xy.y,
                         r: size,
                         "fill": color,
                         "fill-opacity": chart.theme("mapBubbleBackgroundOpacity"),
@@ -45,8 +65,12 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
                         "stroke-width": chart.theme("mapBubbleBorderWidth")
                     });
 
-                    c.translate(xy.x, xy.y);
                     g.append(c);
+
+                    // 가운데 텍스트 보이기
+                    if(this.brush.showText) {
+                        g.append(this.drawText(value, xy.x, xy.y));
+                    }
                 }
             });
 
@@ -57,7 +81,9 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
     MapBubbleBrush.setup = function() {
         return {
             min : 10,
-            max : 30
+            max : 30,
+            showText : false,
+            format : null
         }
     }
 

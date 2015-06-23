@@ -471,9 +471,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 colorIndex = key1;
             }
 
-            if(_.typeCheck([ "array", "null" ], colors)) {
-                color = this.chart.color(colorIndex, colors);
-            } else if(_.typeCheck("function", colors)) {
+            if(_.typeCheck("function", colors)) {
                 var newColor = colors.call(this.chart, this.getData(rowIndex));
 
                 if(_.typeCheck([ "string", "integer" ], newColor)) {
@@ -481,6 +479,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 } else {
                     color = this.chart.color(0);
                 }
+            } else {
+                color = this.chart.color(colorIndex, colors);
             }
 
             return color;

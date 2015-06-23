@@ -638,7 +638,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 }
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
-                if(_.typeCheck("array", colors)) {
+                if(_.typeCheck([ "array", "object" ], colors)) {
                     color = colors[key];
 
                     if(_.typeCheck("integer", color)) {

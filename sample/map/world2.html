@@ -54,7 +54,8 @@
                     }
 
                     return "linear(top) #9694e0,0.9 #7977C2";
-                }
+                },
+                showText : true
             }, {
                 type : "map.selector",
                 activeEvent : "map.click"
@@ -74,7 +75,22 @@
 
                     return obj.data.id;
                 }
-            }]
+            }, {
+                type : "title",
+                text : "1028",
+                color : "#fff000",
+                size : 60,
+                dy : 50
+            }, {
+                type : "title",
+                text : "2014",
+                color : "black",
+                size : 16,
+                dy: 75
+            }],
+            style : {
+                titleFontWeight : "bold"
+            }
         });
 	})
 </script>

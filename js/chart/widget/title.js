@@ -41,9 +41,9 @@ jui.define("chart.widget.title", [], function() {
                 x : x + widget.dx,
                 y : y + widget.dy,
                 "text-anchor" : anchor,
+                "fill" : widget.color || chart.theme("titleFontColor"),
                 "font-size" : widget.size || chart.theme("titleFontSize"),
-                "font-weight" : chart.theme("titleFontWeight"),
-                "fill" : chart.theme("titleFontColor")
+                "font-weight" : chart.theme("titleFontWeight")
             }, widget.text);
 
             if (widget.orient == "center") {
@@ -71,7 +71,9 @@ jui.define("chart.widget.title", [], function() {
             /** @cfg {Number} [dy=0] Moves the y coordinate by a set value from the location where the chart is drawn. */
             dy: 0,
             /** @cfg {Number} [size=null] Sets the title message size. */
-            size: null
+            size: null,
+            /** @cfg {String} [string=null] Sets the title message color. */
+            color: null
         }
     }
 
