@@ -8712,6 +8712,10 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			return true;
 		}
 
+		this.checkDrawRect = function(index, isLast) {
+			return true;
+		}
+
 		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
 
 
@@ -8758,16 +8762,19 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			if (position == "right") x = -width;
 
 			if (index % 2== 0) {
-				if (line.type.indexOf("gradient") > -1) {
-					axis.append(this.chart.svg.rect({  x : x, y : y, height : height, width : width,
-						fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridRectColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
-						"fill-opacity" : 0.1
-					}));
-				} else if (line.type.indexOf("rect") > -1) {
-					axis.append(this.chart.svg.rect({x : x, y : y, height : height, width : width,
-						fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridRectColor") ),
-						"fill-opacity" : 0.1
-					}));
+
+				if (this.checkDrawRect(index, isLast)) {
+					if (line.type.indexOf("gradient") > -1) {
+						axis.append(this.chart.svg.rect({  x : x, y : y, height : height, width : width,
+							fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridRectColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+							"fill-opacity" : 0.1
+						}));
+					} else if (line.type.indexOf("rect") > -1) {
+						axis.append(this.chart.svg.rect({x : x, y : y, height : height, width : width,
+							fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridRectColor") ),
+							"fill-opacity" : 0.1
+						}));
+					}
 				}
 			}
 
@@ -9258,6 +9265,16 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.checkDrawLineRight = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawRect = function(index, isLast) {
+
+			if (this.grid.full) {
+				if (isLast) {
+					return false;
+				}
+			}
 			return true;
 		}
 

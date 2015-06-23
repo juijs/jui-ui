@@ -57,6 +57,16 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			return true;
 		}
 
+		this.checkDrawRect = function(index, isLast) {
+
+			if (this.grid.full) {
+				if (isLast) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		/**
 		 * @method top
 		 *
