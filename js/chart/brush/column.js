@@ -36,7 +36,7 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i);
+				var startX = this.axis.x(i) - half_width/2;
 
 				for (var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],

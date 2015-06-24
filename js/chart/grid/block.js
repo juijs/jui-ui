@@ -217,7 +217,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.domain = this.scale.domain();
 
 			this.band = this.scale.rangeBand();
-			this.half_band = 0;
+			this.half_band = this.band/2;
 			this.bar = 6;
 			this.reverse = this.grid.reverse;
 		}

@@ -2786,7 +2786,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				var range = [];
 				for (var i = 0; i < _domain.length; i++) {
 					if (i == 0) {
-						range[i] = interval[0];
+						range[i] = interval[0] + padding / 2 + unit / 2;
 					} else {
 						range[i] = range[i - 1] + unit;
 					}
@@ -9481,7 +9481,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.domain = this.scale.domain();
 
 			this.band = this.scale.rangeBand();
-			this.half_band = 0;
+			this.half_band = this.band/2;
 			this.bar = 6;
 			this.reverse = this.grid.reverse;
 		}
@@ -12610,7 +12610,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startY = this.axis.y(i);
+				var startY = this.axis.y(i) - half_height/2;
 
 				for(var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],
@@ -12756,7 +12756,7 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i);
+				var startX = this.axis.x(i) - half_width/2;
 
 				for (var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],

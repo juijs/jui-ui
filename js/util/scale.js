@@ -184,7 +184,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				var range = [];
 				for (var i = 0; i < _domain.length; i++) {
 					if (i == 0) {
-						range[i] = interval[0];
+						range[i] = interval[0] + padding / 2 + unit / 2;
 					} else {
 						range[i] = range[i - 1] + unit;
 					}
