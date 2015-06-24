@@ -44,13 +44,18 @@
             theme : "jennifer",
             axis : {
                 x : {
-                    type : "dateblock",  // default type is block
-                    domain : [ new Date(1994,2,1), new Date(1994,2,23) ],
-                    interval : 1000 * 60 * 60 * 24,
-                    format: function(d) {
-                        return time.format(d, "dd");
+                    type : "block",  // default type is block
+                    domain : function() {
+                        var res = [];
+
+                        for(var i = 1; i <=23; i++) {
+                            res.push(i);
+                        }
+
+                        return res;
                     },
-                    line : true
+                    line : true,
+                    full : true
                 },
                 y : {
                     type : 'range',
