@@ -7699,11 +7699,11 @@ jui.define("chart.theme.gradient", [], function() {
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
-        mapCompareBubbleMaxBorderColor : "#fff",
-        mapCompareBubbleMaxFontSize : "40px",
-        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMaxLineColor : "#fff",
-        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMaxLineDashArray : "2,2",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "36px",
+        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMinBorderColor : "#ffff00",
         mapCompareBubbleMinFontSize : "24px",
         mapCompareBubbleMinFontColor : "#000",
@@ -7904,11 +7904,11 @@ jui.define("chart.theme.dark", [], function() {
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
-        mapCompareBubbleMaxBorderColor : "#fff",
-        mapCompareBubbleMaxFontSize : "40px",
-        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMaxLineColor : "#fff",
-        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMaxLineDashArray : "2,2",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "36px",
+        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMinBorderColor : "#ffff00",
         mapCompareBubbleMinFontSize : "24px",
         mapCompareBubbleMinFontColor : "#000",
@@ -8106,11 +8106,11 @@ jui.define("chart.theme.pastel", [], function() {
 		mapWeatherFontSize : "11px",
 		mapWeatherTitleFontColor : "#666",
 		mapWeatherInfoFontColor : "red",
-		mapCompareBubbleMaxBorderColor : "#fff",
-		mapCompareBubbleMaxFontSize : "40px",
-		mapCompareBubbleMaxFontColor : "#fff",
 		mapCompareBubbleMaxLineColor : "#fff",
-		mapCompareBubbleMaxLineDashArray : "5,5",
+		mapCompareBubbleMaxLineDashArray : "2,2",
+		mapCompareBubbleMaxBorderColor : "#fff",
+		mapCompareBubbleMaxFontSize : "36px",
+		mapCompareBubbleMaxFontColor : "#fff",
 		mapCompareBubbleMinBorderColor : "#ffff00",
 		mapCompareBubbleMinFontSize : "24px",
 		mapCompareBubbleMinFontColor : "#000",
@@ -8308,11 +8308,11 @@ jui.define("chart.theme.pattern", [], function() {
         mapWeatherFontSize : "11px",
         mapWeatherTitleFontColor : "#666",
         mapWeatherInfoFontColor : "red",
-        mapCompareBubbleMaxBorderColor : "#fff",
-        mapCompareBubbleMaxFontSize : "40px",
-        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMaxLineColor : "#fff",
-        mapCompareBubbleMaxLineDashArray : "5,5",
+        mapCompareBubbleMaxLineDashArray : "2,2",
+        mapCompareBubbleMaxBorderColor : "#fff",
+        mapCompareBubbleMaxFontSize : "36px",
+        mapCompareBubbleMaxFontColor : "#fff",
         mapCompareBubbleMinBorderColor : "#ffff00",
         mapCompareBubbleMinFontSize : "24px",
         mapCompareBubbleMinFontColor : "#000",
@@ -9569,6 +9569,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			this.drawBaseLine("right", g);
 		}
 
+		this.checkDrawRect = function(index, isLast) {
+			if (isLast) return false;
+			return true;
+		}
+
         this.wrapper = function(scale, key) {
             var old_scale = scale;
             var self = this;
@@ -10187,6 +10192,11 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			});
 
 			this.drawBaseLine("right", g);
+		}
+
+		this.checkDrawRect = function(index, isLast) {
+			if (isLast) return false;
+			return true;
 		}
 
         this.wrapper = function(scale, key) {

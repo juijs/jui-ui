@@ -29,6 +29,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			this.drawBaseLine("right", g);
 		}
 
+		this.checkDrawRect = function(index, isLast) {
+			if (isLast) return false;
+			return true;
+		}
+
         this.wrapper = function(scale, key) {
             var old_scale = scale;
             var self = this;

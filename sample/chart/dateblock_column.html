@@ -46,20 +46,20 @@
                 domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
                 interval : 6 * 1000 * 60 * 60,
                 format : "HH:mm",
-                line : true,
+                line : 'gradient',
                 full : false
             },
             y : {
                 type : "range",
-                domain : function(d) { return [d.sales, d.profit ]; },
+                domain : function(d) { return [d.sales, d.profit, 0 ]; },
                 step : 10,
                 line : true,
                 orient : "right"
             },
             data : [
                 { quarter : "1Q", sales : 50, profit : 35 },
-                { quarter : "2Q", sales : -20, profit : -30 },
-                { quarter : "3Q", sales : 10, profit : -5 },
+                { quarter : "2Q", sales : 20, profit : 30 },
+                { quarter : "3Q", sales : 10, profit : 10 },
                 { quarter : "4Q", sales : 30, profit : 25 }
             ]
         },
