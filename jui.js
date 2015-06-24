@@ -21006,7 +21006,7 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
             for(var i = dataList.length - 1; i >= 0; i--) {
                 var data = dataList[i];
 
-                for(var j = 0; j < count; j++) {
+                for(var j = count - 1; j >= 0; j--) {
                     var value = data[brush.target[j]],
                         xy = axis.c(value, i, j, count),
                         zeroXY = axis.c(0, i, j, count),
@@ -21023,7 +21023,7 @@ jui.define("chart.brush.clusterbar3d", [ "util.math" ], function(math) {
                     r.translate(zeroXY.x, startY);
 
                     // 그룹에 컬럼 엘리먼트 추가
-                    g.prepend(r);
+                    g.append(r);
                 }
             }
 
