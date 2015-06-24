@@ -30,7 +30,7 @@ jui.define("chart.brush.rangebar", [], function() {
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group(),
-					startY = axis.y(i) - (half_height / 2);
+					startY = this.getBlockY(i) - (half_height / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],

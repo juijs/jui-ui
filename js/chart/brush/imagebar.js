@@ -42,7 +42,7 @@ jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startY = this.axis.y(i) - (half_height / 2);
+				var startY = this.getBlockY(i) - (half_height / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],

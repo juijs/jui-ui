@@ -24,12 +24,7 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i) -(half_width / 2);
-
-				// x축 그리드의 full 옵션 처리
-				if(this.axis.get("x").full) {
-					startX += width / 2;
-				}
+				var startX = this.getBlockX(i) -(half_width / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],

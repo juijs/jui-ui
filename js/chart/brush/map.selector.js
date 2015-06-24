@@ -50,7 +50,8 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 
 	MapSelectorBrush.setup = function() {
 		return {
-			activeEvent: null
+			activeEvent: null,
+			active: null
 		}
 	}
 

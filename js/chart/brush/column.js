@@ -9,7 +9,7 @@ jui.define("chart.brush.column", [], function() {
      */
 	var ColumnBrush = function() {
 		var g;
-		var zeroY, width, col_width, half_width, is_full;
+		var zeroY, width, col_width, half_width;
 
 		this.drawBefore = function() {
 			var op = this.brush.outerPadding,
@@ -17,7 +17,6 @@ jui.define("chart.brush.column", [], function() {
 				len = this.brush.target.length;
 
 			g = this.chart.svg.group();
-			is_full = this.axis.get("x").full;
 			zeroY = this.axis.y(0);
 			width = this.axis.x.rangeBand();
 
@@ -36,7 +35,7 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i) - half_width/2;
+				var startX = this.getBlockX(i) - (half_width / 2);
 
 				for (var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],

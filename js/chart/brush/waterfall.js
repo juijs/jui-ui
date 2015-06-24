@@ -28,7 +28,7 @@ jui.define("chart.brush.waterfall", [], function() {
 				stroke = chart.theme("waterfallLineColor");
 
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) - half_width / 2,
+				var startX = this.getBlockX(i) - half_width / 2,
 					startY = axis.y(data[target]),
 					r = null, l = null;
 

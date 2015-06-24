@@ -19,7 +19,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = this.axis.x(i),
+                var startX = this.getBlockX(i),
                     r = null,
                     l = null;
 

@@ -378,6 +378,26 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             return xy;
         }
+
+        this.getBlockX = function(index) {
+            var x = this.axis.x(index);
+
+            if(this.axis.x.type != "block") {
+                x += this.axis.x.rangeBand() / 2;
+            }
+
+            return x;
+        }
+
+        this.getBlockY = function(index) {
+            var y = this.axis.y(index);
+
+            if(this.axis.y.type != "block") {
+                y += this.axis.y.rangeBand() / 2;
+            }
+
+            return y;
+        }
         
         /**
          * @method addEvent 

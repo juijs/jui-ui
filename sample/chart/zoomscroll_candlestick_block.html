@@ -44,7 +44,7 @@
             theme : "jennifer",
             axis : {
                 x : {
-                    type : "block",  // default type is block
+                    type : "fullblock",  // default type is block
                     domain : function() {
                         var res = [];
 
@@ -54,8 +54,7 @@
 
                         return res;
                     },
-                    line : true,
-                    full : true
+                    line : true
                 },
                 y : {
                     type : 'range',

@@ -24,7 +24,7 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i) - (half_width / 2);
+				var startX = this.getBlockX(i) - (half_width / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],

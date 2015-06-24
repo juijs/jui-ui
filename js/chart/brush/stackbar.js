@@ -9,7 +9,7 @@ jui.define("chart.brush.stackbar", [], function() {
 	 *
 	 */
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, height, bar_height, is_full;
+		var g, height, bar_height;
 
 		this.addBarElement = function(elem) {
 			if(this.barList == null) {
@@ -84,7 +84,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 		this.drawBefore = function() {
 			g = chart.svg.group();
-			is_full = axis.get("y").full;
 			height = axis.y.rangeBand();
 			bar_height = this.getTargetSize();
 		}
@@ -93,14 +92,9 @@ jui.define("chart.brush.stackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = axis.y(i) - bar_height / 2,
+				var startY = this.getBlockY(i) - bar_height / 2,
                     startX = axis.x(0),
                     value = 0;
-
-				// y축 그리드의 full 옵션 처리
-				if(is_full) {
-					startY += height / 2;
-				}
 				
 				for(var j = 0; j < brush.target.length; j++) {
 					var xValue = data[brush.target[j]] + value,
