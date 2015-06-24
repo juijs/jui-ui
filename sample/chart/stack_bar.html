@@ -5,16 +5,6 @@
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
     <link rel="stylesheet" href="../../jui.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body class="jui">
 
@@ -34,15 +24,6 @@
             target: "#tab_contents"
         });
     });
-
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
 
 </script>
 
@@ -74,11 +55,6 @@
                     },
                     hide : true
                 }
-            },
-            series : {
-                name : { text : "이름" },
-                value : { text : "값" },
-                test : { text : "테스트값" }
             },
             brush : {
                 type : 'stackbar',

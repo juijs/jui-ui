@@ -36,7 +36,7 @@
                 x : {
                     type : "date",  // default type is block
                     domain : [ start, end ],
-                    step : [ time.hours, 1 ],
+                    interval : 1000 * 60 * 60,
                     format : "hh:mm",
                     key: "value",
                     line : true

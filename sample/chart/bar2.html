@@ -4,45 +4,19 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
 
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
-    var callback = function(d, e) {
-        console.log(d);
-    }
-
     jui.ready([ "chart.builder" ], function(chart) {
         var data = [
             { name : -25, value : 1 },
             { name : 15, value : 3 },
             { name : 0, value : 5 },
-            { name : 18, value : 0 },
+            { name : 18, value : 0 }
         ];
 
         c = chart("#chart", {
@@ -61,14 +35,9 @@
                     line : true
                 }
             },
-            series : {
-                name : { text : "이름" },
-                value : { text : "값" }
-            },
             brush : {
                 type : 'bar',
                 target : ['name'],
-                minValue : 1,
                 active : 1,
                 activeEvent : "click",
                 display : "max"
@@ -84,7 +53,7 @@
             }
         });
 
-        c.update(data);
+        c.axis(0).update(data);
         c.addWidget({ type: "title", text: "testtest" });
 	})
 </script>
