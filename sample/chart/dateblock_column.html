@@ -46,8 +46,7 @@
                 domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
                 interval : 6 * 1000 * 60 * 60,
                 format : "HH:mm",
-                line : 'gradient',
-                full : false
+                line : 'gradient'
             },
             y : {
                 type : "range",
@@ -65,7 +64,7 @@
         },
         brush : {
             type : "column",
-            target : [ "sales", "profit" ]
+            target : [ "sales" ]
         },
         widget : [
             { type : "title", text : "Column Sample" },
@@ -73,8 +72,6 @@
             { type : "legend" }
         ]
     });
-
-    console.log('aaaa');
 
 </script>
 
