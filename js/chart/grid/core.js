@@ -120,7 +120,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
 
-
 			var area = { };
 			if (position == "top") {
 
@@ -226,7 +225,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : 0,
+						x: this.scale.rangeBand()/2,
 						y: -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding") * 2,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor": "middle",
@@ -271,7 +270,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x : (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand()/2 : 0,
+						x : this.scale.rangeBand()/2,
 						y : this.chart.theme("gridTickSize") + this.chart.theme("gridTickPadding") * 2,
 						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
 						"text-anchor" : "middle",
@@ -315,7 +314,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x : -this.chart.theme("gridTickSize") - this.chart.theme("gridTickPadding"),
-						y : (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
+						y : (this.grid.type == 'block') ? this.scale.rangeBand()/2 : this.chart.theme("gridTickSize"),
 						fill : this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor" : "end",
 						"font-size": this.chart.theme("gridYFontSize"),
@@ -358,7 +357,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x: this.chart.theme("gridTickSize") + this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block" && !this.grid.full) ? this.scale.rangeBand() / 2 : this.chart.theme("gridTickSize"),
+						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : this.chart.theme("gridTickSize"),
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",
 						"font-size": this.chart.theme("gridYFontSize"),

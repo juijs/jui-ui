@@ -36,12 +36,7 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = this.axis.x(i) -(half_width / 2);
-
-				// x축 그리드의 full 옵션 처리
-				if(is_full) {
-					startX += width / 2;
-				}
+				var startX = this.axis.x(i);
 
 				for (var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],
