@@ -1,12 +1,12 @@
 jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
-    /**
-     * @class chart.grid.dateblock 
-     * 
-     * implements date block grid
-     *
-     * @extends chart.grid.date  
-     */
+	/**
+	 * @class chart.grid.dateblock
+	 *
+	 * implements date block grid
+	 *
+	 * @extends chart.grid.date
+	 */
 	var DateBlockGrid = function() {
 
 		this.wrapper = function(scale, key) {
@@ -95,7 +95,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
-					}	
+					}
 				})(this.grid, this.grid.format)
 			}
 
