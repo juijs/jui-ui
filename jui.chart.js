@@ -11925,26 +11925,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             return xy;
         }
-
-        this.getBlockX = function(index) {
-            var x = this.axis.x(index);
-
-            if(this.axis.x.type != "block") {
-                x += this.axis.x.rangeBand() / 2;
-            }
-
-            return x;
-        }
-
-        this.getBlockY = function(index) {
-            var y = this.axis.y(index);
-
-            if(this.axis.y.type != "block") {
-                y += this.axis.y.rangeBand() / 2;
-            }
-
-            return y;
-        }
         
         /**
          * @method addEvent 
@@ -12052,6 +12032,25 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             return color;
         }
+
+        /**
+         * @method offset
+         *
+         * 그리드 타입에 따른 시작 좌표 가져오기 (블럭)
+         *
+         * @param {String} 그리드 종류
+         * @param {Number} 인덱스
+         * @returns {*}
+         */
+        this.offset = function(type, index) { // 그리드 타입에 따른 시작 좌표 가져오기
+            var res = this.axis[type](index);
+
+            if(this.axis[type].type != "block") {
+                res += this.axis[type].rangeBand() / 2;
+            }
+
+            return res;
+        }
 	}
 
 
@@ -12121,7 +12120,7 @@ jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startY = this.getBlockY(i) - (half_height / 2);
+				var startY = this.offset("y", i) - (half_height / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],
@@ -12220,7 +12219,7 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = this.getBlockX(i) - (half_width / 2);
+				var startX = this.offset("x", i) - (half_width / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],
@@ -12330,7 +12329,7 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startY = this.getBlockY(i) -(half_height / 2);
+				var startY = this.offset("y", i) -(half_height / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],
@@ -12404,7 +12403,7 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = this.getBlockX(i) -(half_width / 2);
+				var startX = this.offset("x", i) -(half_width / 2);
 
 				for (var j = 0; j < targets.length; j++) {
 					var value = data[targets[j]],
@@ -12619,7 +12618,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startY = this.getBlockY(i) - (half_height / 2);
+				var startY = this.offset("y", i) - (half_height / 2);
 
 				for(var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],
@@ -12764,7 +12763,7 @@ jui.define("chart.brush.column", [], function() {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startX = this.getBlockX(i) - (half_width / 2);
+				var startX = this.offset("x", i) - (half_width / 2);
 
 				for (var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],
@@ -13230,7 +13229,7 @@ jui.define("chart.brush.stackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = this.getBlockY(i) - bar_height / 2,
+				var startY = this.offset("y", i) - bar_height / 2,
                     startX = axis.x(0),
                     value = 0;
 				
@@ -13307,7 +13306,7 @@ jui.define("chart.brush.stackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startX = this.getBlockX(i) - bar_width / 2,
+				var startX = this.offset("x", i) - bar_width / 2,
                     startY = axis.y(0),
                     value = 0;
 
@@ -13523,7 +13522,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startY = this.getBlockY(i) - bar_height / 2,
+				var startY = this.offset("y", i) - bar_height / 2,
 					sum = 0,
 					list = [];
 
@@ -13623,7 +13622,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startX = this.getBlockX(i) - bar_width / 2,
+				var startX = this.offset("x", i) - bar_width / 2,
                     sum = 0,
                     list = [];
 
@@ -14021,7 +14020,7 @@ jui.define("chart.brush.candlestick", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = this.getBlockX(i),
+                var startX = this.offset("x", i),
                     r = null,
                     l = null;
 
@@ -14106,7 +14105,7 @@ jui.define("chart.brush.ohlc", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = this.getBlockX(i);
+                var startX = this.offset("x", i);
 
                 var high = this.getValue(data, "high", 0),
                     low = this.getValue(data, "low", 0),
@@ -14178,7 +14177,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = this.getBlockX(i) - half_width;
+                var startX = this.offset("x", i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
@@ -16569,7 +16568,7 @@ jui.define("chart.brush.waterfall", [], function() {
 				stroke = chart.theme("waterfallLineColor");
 
 			this.eachData(function(i, data) {
-				var startX = this.getBlockX(i) - half_width / 2,
+				var startX = this.offset("x", i) - half_width / 2,
 					startY = axis.y(data[target]),
 					r = null, l = null;
 
@@ -16870,7 +16869,7 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = this.getBlockX(i) - (half_width / 2);
+				var startX = this.offset("x", i) - (half_width / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],
@@ -16943,7 +16942,7 @@ jui.define("chart.brush.rangebar", [], function() {
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group(),
-					startY = this.getBlockY(i) - (half_height / 2);
+					startY = this.offset("y", i) - (half_height / 2);
 
 				for(var j = 0; j < brush.target.length; j++) {
 					var value = data[brush.target[j]],

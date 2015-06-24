@@ -378,26 +378,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             return xy;
         }
-
-        this.getBlockX = function(index) {
-            var x = this.axis.x(index);
-
-            if(this.axis.x.type != "block") {
-                x += this.axis.x.rangeBand() / 2;
-            }
-
-            return x;
-        }
-
-        this.getBlockY = function(index) {
-            var y = this.axis.y(index);
-
-            if(this.axis.y.type != "block") {
-                y += this.axis.y.rangeBand() / 2;
-            }
-
-            return y;
-        }
         
         /**
          * @method addEvent 
@@ -504,6 +484,25 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             return color;
+        }
+
+        /**
+         * @method offset
+         *
+         * 그리드 타입에 따른 시작 좌표 가져오기 (블럭)
+         *
+         * @param {String} 그리드 종류
+         * @param {Number} 인덱스
+         * @returns {*}
+         */
+        this.offset = function(type, index) { // 그리드 타입에 따른 시작 좌표 가져오기
+            var res = this.axis[type](index);
+
+            if(this.axis[type].type != "block") {
+                res += this.axis[type].rangeBand() / 2;
+            }
+
+            return res;
         }
 	}
 

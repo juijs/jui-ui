@@ -33,7 +33,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startY = this.getBlockY(i) - bar_height / 2,
+				var startY = this.offset("y", i) - bar_height / 2,
 					sum = 0,
 					list = [];
 

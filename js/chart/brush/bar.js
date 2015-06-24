@@ -174,7 +174,7 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 				style = this.getBarStyle();
 
 			this.eachData(function(i, data) {
-				var startY = this.getBlockY(i) - (half_height / 2);
+				var startY = this.offset("y", i) - (half_height / 2);
 
 				for(var j = 0; j < this.brush.target.length; j++) {
 					var value = data[this.brush.target[j]],

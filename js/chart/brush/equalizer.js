@@ -20,7 +20,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
         this.draw = function() {
             this.eachData(function(i, data) {
-                var startX = this.getBlockX(i) - half_width;
+                var startX = this.offset("x", i) - half_width;
 
                 for (var j = 0; j < brush.target.length; j++) {
                     var barGroup = chart.svg.group();
