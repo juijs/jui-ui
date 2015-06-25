@@ -13686,7 +13686,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      */
     var Map = function() {
         var self = this;
-        var pathURI = null,
+        var pathData = {},
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -13775,7 +13775,13 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
         }
 
         function loadPath(uri) {
-            var pathData = [];
+            // 해당 URI의 데이터가 존재할 경우
+            if(_.typeCheck("array", pathData[uri])) {
+                return loadArray(pathData[uri]);
+            }
+
+            // 해당 URI의 데이터가 없을 경우
+            pathData[uri] = [];
 
             $.ajax({
                 url: uri,
@@ -13788,7 +13794,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         var name = this.nodeName.toLowerCase();
 
                         if(name == "g") {
-                            pathData = pathData.concat(getPathList(this));
+                            pathData[uri] = pathData[uri].concat(getPathList(this));
                         } else if(name == "path" || name == "polygon") {
                             var obj = {};
 
@@ -13802,7 +13808,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                                 _.extend(obj, getDataById(obj.id));
                             }
 
-                            pathData.push(obj);
+                            pathData[uri].push(obj);
                         }
                     });
 
@@ -13812,7 +13818,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 }
             });
 
-            return loadArray(pathData);
+            return loadArray(pathData[uri]);
         }
 
         function isLoadAttribute(name) {
@@ -14023,12 +14029,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathScale = this.map.scale;
             pathX = this.map.viewX;
             pathY = this.map.viewY;
-
-            // pathURI가 다를 경우에만 pathGroup을 생성함
-            if(pathURI != this.map.path) {
-                pathGroup = makePathGroup();
-                pathURI = this.map.path;
-            }
+            pathGroup = makePathGroup();
 
             // pathGroup 루트에 추가
             root.append(pathGroup);
