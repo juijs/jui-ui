@@ -60,14 +60,10 @@ jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], functi
                 ex = tx + brush.size,
                 title = axis.getValue(max, "title", ""),
                 value = axis.getValue(max, "value", 0),
-                size = _.pxToInt(self.chart.theme("mapCompareBubbleMaxFontSize"));
+                size = self.chart.theme("mapCompareBubbleMaxFontSize");
 
             if(_.typeCheck("function", brush.format)) {
                 value = this.format(value);
-            }
-
-            if(_.typeCheck("string", size)) {
-                size = parseInt(size);
             }
 
             var group = chart.svg.group({}, function() {
@@ -102,14 +98,10 @@ jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], functi
             var title = axis.getValue(min, "title", ""),
                 value = axis.getValue(min, "value", 0),
                 group = chart.svg.group(),
-                size = _.pxToInt(self.chart.theme("mapCompareBubbleMinFontSize"));
+                size = self.chart.theme("mapCompareBubbleMinFontSize");
 
             if(_.typeCheck("function", brush.format)) {
                 value = this.format(value);
-            }
-
-            if(_.typeCheck("string", size)) {
-                size = parseInt(size);
             }
 
             group.append(getTextInBubble(
