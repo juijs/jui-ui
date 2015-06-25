@@ -1,4 +1,4 @@
-jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _) {
 	var PADDING = 7,
 		ANCHOR = 7,
 		TEXT_Y = 14;
@@ -10,12 +10,14 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
 		var self = this;
-		var g = null, activePath = null;
+		var g = null, tooltips = {},
+			activePath = null, activeTooltip = null;
 
 		this.drawTooltip = function() {
 			this.eachData(function(i, d) {
-				var id = axis.getValue(d, "id", null),
+				var id = axis.getValue(d, "id"),
 					value = axis.getValue(d, "value", 0),
+					texts = axis.getValue(d, "texts", []),
 					text = id + ": " + value,
 					xy = axis.map(id);
 
@@ -29,7 +31,7 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 
 				if(xy != null) {
 					var tooltip = chart.svg.group({
-						visibility: "hidden"
+						visibility: ($.inArray(id, brush.tooltip) != -1) ? "visibility" : "hidden"
 					}, function() {
 						chart.svg.polygon({
 							points: self.balloonPoints("top", w, h, ANCHOR),
@@ -46,8 +48,19 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 							x: w / 2,
 							y: TEXT_Y
 						}).html(text);
+
+						for(var i = 0, len = texts.length; i < len; i++) {
+							chart.text({
+								"font-size": chart.theme("tooltipFontSize"),
+								"fill": chart.theme("tooltipFontColor"),
+								"text-anchor": "start",
+								x: 0,
+								y: -(TEXT_Y * (len - i))
+							}).html(texts[i]);
+						}
 					}).translate(xy.x - (w / 2), xy.y - h - ANCHOR);
 
+					tooltips[id] = tooltip;
 					g.append(tooltip);
 				}
 			});
@@ -61,7 +74,7 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 			var originFill = null;
 
 			this.on("map.mouseover", function(obj, e) {
-				if(activePath == obj.path) return;
+				if(activePath == obj.path || $.inArray(obj.path, activePath) != -1) return;
 
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
@@ -69,12 +82,22 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {
-				if(activePath == obj.path) return;
+				if(activePath == obj.path || $.inArray(obj.path, activePath) != -1) return;
 
 				obj.path.css({
 					fill: originFill
 				});
 			});
+
+			if(brush.tooltipEvent != null) {
+				this.on(brush.tooltipEvent, function(obj, e) {
+					var targetId = axis.getValue(obj.data, "id");
+
+					for(var id in tooltips) {
+						tooltips[id].attr({ visibility: (targetId == id) ? "visibility" : "hidden" });
+					}
+				});
+			}
 
 			if(brush.activeEvent != null) {
 				this.on(brush.activeEvent, function(obj, e) {
@@ -92,6 +115,20 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				});
 			}
 
+			if(brush.active.length > 0) {
+				activePath = [];
+
+				axis.map.each(function(i, obj) {
+					if($.inArray(axis.getValue(obj.data, "id"), brush.active) != -1) {
+						activePath.push(obj.path);
+
+						obj.path.css({
+							fill: chart.theme("mapSelectorActiveColor")
+						});
+					}
+				});
+			}
+
 			this.drawTooltip();
 
 			return g;
@@ -100,8 +137,10 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 
 	MapSelectorBrush.setup = function() {
 		return {
+			active: [],
 			activeEvent: null,
-			active: null,
+			tooltip: [],
+			tooltipEvent: null,
 			format: null
 		}
 	}

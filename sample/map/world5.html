@@ -13,13 +13,15 @@
 <script id="script_code">
     var d = [{
         id: "KR",
-        value: 10
+        value: 10,
+        texts: [ "2013 JawaSoft", "2012 Tmax" ]
     }, {
         id: "CN",
         value: 100
     }, {
         id: "US",
-        value: 70
+        value: 70,
+        texts: [ "2013 Apple", " 2013 Google", "2013 Microsoft" ]
     }, {
         id: "FR",
         value: 50
@@ -46,7 +48,10 @@
             }],
             brush : [{
                 type : "map.selector",
-                activeEvent : "map.click"
+                //activeEvent : "map.click",
+                active : [ "KR", "CN", "US" ],
+                tooltip : [ "KR" ],
+                tooltipEvent : "map.mouseover"
             }],
             widget : [{
                 type : "title",
