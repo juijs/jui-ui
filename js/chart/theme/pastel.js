@@ -30,19 +30,21 @@ jui.define("chart.theme.pastel", [], function() {
 		gridXFontWeight : "normal",
 		gridYFontWeight : "normal",
 		gridCFontWeight : "normal",
+		gridXAxisBorderColor : "#bfbfbf",
+		gridYAxisBorderColor : "#bfbfbf",
+		gridXAxisBorderWidth : 2,
+		gridYAxisBorderWidth : 2,
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
-		gridRectColor : "#ababab",
+		gridPatternColor : "#ababab",
 		gridBorderColor : "#bfbfbf",
 		gridBorderWidth : 1,
 		gridBorderDashArray : "1, 3",
 		gridBorderOpacity : 1,
-		gridAxisBorderColor : "#bfbfbf",
-		gridAxisBorderWidth : 2,
-		gridTickSize : 3,
-		gridTickPadding : 5,
+		gridTickBorderSize : 3,
 		gridTickBorderWidth : 1.5,
+		gridTickPadding : 5,
 
 		// Brush styles
 		tooltipPointRadius : 5, // common

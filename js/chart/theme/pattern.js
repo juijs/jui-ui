@@ -29,19 +29,21 @@ jui.define("chart.theme.pattern", [], function() {
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
         gridCFontWeight : "normal",
+        gridXAxisBorderColor : "#ebebeb",
+        gridYAxisBorderColor : "#ebebeb",
+        gridXAxisBorderWidth : 2,
+        gridYAxisBorderWidth : 2,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
-        gridRectColor : "#ababab",
+        gridPatternColor : "#ababab",
         gridBorderColor : "#ebebeb",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridBorderOpacity : 1,
-        gridAxisBorderColor : "#ebebeb",
-        gridAxisBorderWidth : 2,
-        gridTickSize : 3,
-        gridTickPadding : 5,
+        gridTickBorderSize : 3,
         gridTickBorderWidth : 1.5,
+        gridTickPadding : 5,
 
         // Brush styles
         tooltipPointRadius : 5, // common

@@ -35,12 +35,13 @@
                         type : "range",
                         domain : [ 0, 100 ],
                         step : 10,
-                        line : true
+                        line : true,
+                        orient  : "right"
                     },
                     x : {
                         type : "block",
                         domain : "quarter",
-                        line : true
+                        //orient : "top"
                     }
                 }
 
@@ -53,7 +54,7 @@
                 activeEvent : "mouseover",
                 active : 1,
                 minSize : 5,
-                animate : "top",
+                animate : "bottom",
                 colors : function(data, dataKey) {
                     if(data.sales > 99) {
                         return "red";
@@ -77,7 +78,13 @@
                 }
             },
             style : {
-                tooltipPointRadius : 0
+                //gridYFontSize : 20,
+                //gridXFontSize : 20,
+                tooltipPointRadius : 0,
+                gridYAxisBorderWidth : 0,
+                gridXAxisBorderWidth : 1,
+                gridXAxisBorderColor : "#ebebeb",
+                gridTickBorderSize : 0
             }
         });
 	})

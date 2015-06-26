@@ -33,19 +33,21 @@ jui.define("chart.theme.dark", [], function() {
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
         gridCFontWeight : "normal",
+        gridXAxisBorderColor : "#464646",
+        gridYAxisBorderColor : "#464646",
+        gridXAxisBorderWidth : 2,
+        gridYAxisBorderWidth : 2,
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
-        gridRectColor : "#ababab",
+        gridPatternColor : "#ababab",
         gridBorderColor : "#464646",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridBorderOpacity : 1,
-        gridAxisBorderColor : "#464646",
-        gridAxisBorderWidth : 2,
-        gridTickSize : 3,
-        gridTickPadding : 5,
+        gridTickBorderSize : 3,
         gridTickBorderWidth : 1.5,
+        gridTickPadding : 5,
 
         // Brush styles
         tooltipPointRadius : 5, // common
