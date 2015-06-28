@@ -25733,7 +25733,87 @@ jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
 
 	return MapCoreBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _) {
+jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
+
+    /**
+     * @class chart.brush.over 
+     * implements over brush 
+     * @extends chart.brush.core
+     */
+	var MapSelectorBrush = function(chart, axis, brush) {
+		var g = null,
+			activePath = null;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+		}
+
+		this.draw = function() {
+			var originFill = null;
+
+			this.on("map.mouseover", function(obj, e) {
+				if(activePath == obj.path) return;
+
+				originFill = obj.path.styles.fill || obj.path.attributes.fill;
+				obj.path.css({
+					fill: chart.theme("mapSelectorHoverColor")
+				});
+			});
+
+			this.on("map.mouseout", function(obj, e) {
+				if(activePath == obj.path) return;
+
+				obj.path.css({
+					fill: originFill
+				});
+			});
+
+			if(brush.activeEvent != null) {
+				this.on(brush.activeEvent, function(obj, e) {
+					activePath = obj.path;
+
+					axis.map.each(function(i, obj) {
+						obj.path.css({
+							fill: originFill
+						});
+					});
+
+					obj.path.css({
+						fill: chart.theme("mapSelectorActiveColor")
+					});
+				});
+			}
+
+			if(brush.active.length > 0) {
+				activePath = [];
+
+				axis.map.each(function(i, obj) {
+					if($.inArray(axis.getValue(obj.data, "id"), brush.active) != -1) {
+						activePath.push(obj.path);
+
+						obj.path.css({
+							fill: chart.theme("mapSelectorActiveColor")
+						});
+					}
+				});
+			}
+
+			return g;
+		}
+	}
+
+	MapSelectorBrush.setup = function() {
+		return {
+			active: [],
+			activeEvent: null,
+			format: null
+		}
+	}
+
+	return MapSelectorBrush;
+}, "chart.brush.map.core");
+
+jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 	var PADDING = 7,
 		ANCHOR = 7,
 		TEXT_Y = 14;
@@ -25743,12 +25823,28 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
      * implements over brush 
      * @extends chart.brush.core
      */
-	var MapSelectorBrush = function(chart, axis, brush) {
+	var MapNoteBrush = function(chart, axis, brush) {
 		var self = this;
-		var g = null, tooltips = {},
-			activePath = null, activeTooltip = null;
+		var g = null,
+			tooltips = {};
 
-		this.drawTooltip = function() {
+		this.drawBefore = function() {
+			g = chart.svg.group();
+		}
+
+		this.draw = function() {
+			if(brush.activeEvent != null) {
+				this.on(brush.activeEvent, function(obj, e) {
+					var targetId = axis.getValue(obj.data, "id");
+
+					if(tooltips[targetId]) {
+						for (var id in tooltips) {
+							tooltips[id].attr({ visibility: (targetId == id) ? "visibility" : "hidden" });
+						}
+					}
+				});
+			}
+
 			this.eachData(function(i, d) {
 				var id = axis.getValue(d, "id"),
 					value = axis.getValue(d, "value", 0),
@@ -25766,7 +25862,7 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 
 				if(xy != null) {
 					var tooltip = chart.svg.group({
-						visibility: ($.inArray(id, brush.tooltip) != -1) ? "visibility" : "hidden"
+						visibility: ($.inArray(id, brush.active) != -1) ? "visibility" : "hidden"
 					}, function() {
 						chart.svg.polygon({
 							points: self.balloonPoints("top", w, h, ANCHOR),
@@ -25799,90 +25895,20 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 					g.append(tooltip);
 				}
 			});
-		}
-
-		this.drawBefore = function() {
-			g = chart.svg.group();
-		}
-
-		this.draw = function() {
-			var originFill = null;
-
-			this.on("map.mouseover", function(obj, e) {
-				if(activePath == obj.path) return;
-
-				originFill = obj.path.styles.fill || obj.path.attributes.fill;
-				obj.path.css({
-					fill: chart.theme("mapSelectorHoverColor")
-				});
-			});
-			this.on("map.mouseout", function(obj, e) {
-				if(activePath == obj.path) return;
-
-				obj.path.css({
-					fill: originFill
-				});
-			});
-
-			if(brush.tooltipEvent != null) {
-				this.on(brush.tooltipEvent, function(obj, e) {
-					var targetId = axis.getValue(obj.data, "id");
-
-					if(tooltips[targetId]) {
-						for (var id in tooltips) {
-							tooltips[id].attr({visibility: (targetId == id) ? "visibility" : "hidden"});
-						}
-					}
-				});
-			}
-
-			if(brush.activeEvent != null) {
-				this.on(brush.activeEvent, function(obj, e) {
-					activePath = obj.path;
-
-					axis.map.each(function(i, obj) {
-						obj.path.css({
-							fill: originFill
-						});
-					});
-
-					obj.path.css({
-						fill: chart.theme("mapSelectorActiveColor")
-					});
-				});
-			}
-
-			if(brush.active.length > 0) {
-				activePath = [];
-
-				axis.map.each(function(i, obj) {
-					if($.inArray(axis.getValue(obj.data, "id"), brush.active) != -1) {
-						activePath.push(obj.path);
-
-						obj.path.css({
-							fill: chart.theme("mapSelectorActiveColor")
-						});
-					}
-				});
-			}
-
-			this.drawTooltip();
 
 			return g;
 		}
 	}
 
-	MapSelectorBrush.setup = function() {
+	MapNoteBrush.setup = function() {
 		return {
 			active: [],
 			activeEvent: null,
-			tooltip: [],
-			tooltipEvent: null,
 			format: null
 		}
 	}
 
-	return MapSelectorBrush;
+	return MapNoteBrush;
 }, "chart.brush.map.core");
 
 jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {

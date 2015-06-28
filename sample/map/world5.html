@@ -49,9 +49,11 @@
             brush : [{
                 type : "map.selector",
                 //activeEvent : "map.click",
-                active : [ "KR", "CN", "US" ],
-                tooltip : [ "KR" ],
-                tooltipEvent : "map.mouseover"
+                active : [ "KR", "CN", "US" ]
+            }, {
+                type : "map.note",
+                active : [ "KR" ],
+                activeEvent : "map.mouseover"
             }],
             widget : [{
                 type : "title",
