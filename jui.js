@@ -25782,7 +25782,7 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 							"text-anchor": "middle",
 							x: w / 2,
 							y: TEXT_Y
-						}).html(text);
+						}).text(text);
 
 						for(var i = 0, len = texts.length; i < len; i++) {
 							chart.text({
@@ -25791,7 +25791,7 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 								"text-anchor": "start",
 								x: 0,
 								y: -(TEXT_Y * (len - i))
-							}).html(texts[i]);
+							}).text(texts[i]);
 						}
 					}).translate(xy.x - (w / 2), xy.y - h - ANCHOR);
 
@@ -25809,16 +25809,12 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 			var originFill = null;
 
 			this.on("map.mouseover", function(obj, e) {
-				if(activePath == obj.path || $.inArray(obj.path, activePath) != -1) return;
-
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
 					fill: chart.theme("mapSelectorColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {
-				if(activePath == obj.path || $.inArray(obj.path, activePath) != -1) return;
-
 				obj.path.css({
 					fill: originFill
 				});
@@ -25828,8 +25824,10 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 				this.on(brush.tooltipEvent, function(obj, e) {
 					var targetId = axis.getValue(obj.data, "id");
 
-					for(var id in tooltips) {
-						tooltips[id].attr({ visibility: (targetId == id) ? "visibility" : "hidden" });
+					if(tooltips[targetId]) {
+						for (var id in tooltips) {
+							tooltips[id].attr({visibility: (targetId == id) ? "visibility" : "hidden"});
+						}
 					}
 				});
 			}
