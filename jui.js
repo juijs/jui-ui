@@ -25809,12 +25809,16 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 			var originFill = null;
 
 			this.on("map.mouseover", function(obj, e) {
+				if(activePath == obj.path) return;
+
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
 					fill: chart.theme("mapSelectorHoverColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {
+				if(activePath == obj.path) return;
+
 				obj.path.css({
 					fill: originFill
 				});
