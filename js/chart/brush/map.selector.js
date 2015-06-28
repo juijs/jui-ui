@@ -76,7 +76,7 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 			this.on("map.mouseover", function(obj, e) {
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
-					fill: chart.theme("mapSelectorColor")
+					fill: chart.theme("mapSelectorHoverColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {

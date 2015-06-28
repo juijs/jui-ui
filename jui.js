@@ -15470,7 +15470,7 @@ jui.define("chart.theme.jennifer", [], function() {
         mapBubbleBorderWidth : 1,
         mapBubbleFontSize : 11,
         mapBubbleFontColor : "#fff",
-        mapSelectorColor : "#5a73db",
+        mapSelectorHoverColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
@@ -15679,7 +15679,7 @@ jui.define("chart.theme.gradient", [], function() {
         mapBubbleBorderWidth : 1,
         mapBubbleFontSize : 11,
         mapBubbleFontColor : "white",
-        mapSelectorColor : "#5a73db",
+        mapSelectorHoverColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
@@ -15886,7 +15886,7 @@ jui.define("chart.theme.dark", [], function() {
         mapBubbleBorderWidth : 1,
         mapBubbleFontSize : 11,
         mapBubbleFontColor : "#868686",
-        mapSelectorColor : "#5a73db",
+        mapSelectorHoverColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
@@ -16090,7 +16090,7 @@ jui.define("chart.theme.pastel", [], function() {
 		mapBubbleBorderWidth : 1,
 		mapBubbleFontSize : 11,
 		mapBubbleFontColor : "white",
-		mapSelectorColor : "#5a73db",
+		mapSelectorHoverColor : "#5a73db",
 		mapSelectorActiveColor : "#CC0000",
 		mapFlightRouteAirportSmallColor : "#CC0000",
 		mapFlightRouteAirportLargeColor : "#000",
@@ -16294,7 +16294,7 @@ jui.define("chart.theme.pattern", [], function() {
         mapBubbleBorderWidth : 1,
         mapBubbleFontSize : 11,
         mapBubbleFontColor : "white",
-        mapSelectorColor : "#5a73db",
+        mapSelectorHoverColor : "#5a73db",
         mapSelectorActiveColor : "#CC0000",
         mapFlightRouteAirportSmallColor : "#CC0000",
         mapFlightRouteAirportLargeColor : "#000",
@@ -25811,7 +25811,7 @@ jui.define("chart.brush.map.selector", [ "jquery", "util.base" ], function($, _)
 			this.on("map.mouseover", function(obj, e) {
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
-					fill: chart.theme("mapSelectorColor")
+					fill: chart.theme("mapSelectorHoverColor")
 				});
 			});
 			this.on("map.mouseout", function(obj, e) {

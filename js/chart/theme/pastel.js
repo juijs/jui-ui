@@ -175,7 +175,7 @@ jui.define("chart.theme.pastel", [], function() {
 		mapBubbleBorderWidth : 1,
 		mapBubbleFontSize : 11,
 		mapBubbleFontColor : "white",
-		mapSelectorColor : "#5a73db",
+		mapSelectorHoverColor : "#5a73db",
 		mapSelectorActiveColor : "#CC0000",
 		mapFlightRouteAirportSmallColor : "#CC0000",
 		mapFlightRouteAirportLargeColor : "#000",
