@@ -25805,8 +25805,7 @@ jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
 	MapSelectorBrush.setup = function() {
 		return {
 			active: [],
-			activeEvent: null,
-			format: null
+			activeEvent: null
 		}
 	}
 
