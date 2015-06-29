@@ -26484,14 +26484,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      */
 	var CoreWidget = function() {
 
-        /**
-         * @method drawAfter  
-         * @param {Object} obj
-         */
-        this.drawAfter = function(obj) {
-            obj.attr({ "class": "widget widget-" + this.widget.type });
-        }
-
         this.getIndexArray = function(index) {
             var list = [ 0 ];
 
@@ -26502,6 +26494,24 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             return list;
+        }
+
+        this.getScaleToValue = function(scale, minScale, maxScale, minValue, maxValue) {
+            var tick = (maxScale - minScale) * 10,
+                step = (maxValue - minValue) / tick,
+                value = maxValue - (step * ((scale - minScale) / 0.1));
+
+            if(value < minValue) return minValue;
+            else if(value > maxValue) return maxValue;
+
+            return value;
+        }
+
+        this.getValueToScale = function(value, minValue, maxValue, minScale, maxScale) {
+            var tick = (maxScale - minScale) * 10,
+                step = (maxValue - minValue) / tick;
+
+            return parseFloat((minScale + ((maxValue - value) / step) * 0.1).toFixed(1));
         }
 
         this.isRender = function() {
@@ -26525,6 +26535,14 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                     callback.apply(self, arguments);
                 }
             }, this.isRender() ? "render" : "renderAll");
+        }
+
+        /**
+         * @method drawAfter
+         * @param {Object} obj
+         */
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 	}
 
@@ -28293,14 +28311,13 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
      * @extends chart.widget.map.core
      */
     var MapControlWidget = function(chart, axis, widget) {
+        var self = this;
         var scale = 1,
             viewX = 0,
             viewY = 0,
             blockX = 0,
             blockY = 0,
             scrollY = 0,
-            step = 0,
-            tick = 0,
             btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
 
         function createBtnGroup(type, opacity, x, y, url) {
@@ -28350,17 +28367,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
         }
 
-        function getScrollThumbY(nowScale) {
-            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.min) / 0.1));
-
-            if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
-            else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
-
-            return y;
+        function getScrollThumbY(scale) {
+            return self.getScaleToValue(scale, widget.min, widget.max, SCROLL_MIN_Y, SCROLL_MAX_Y);
         }
 
         function getScrollScale(y) {
-            return parseFloat((widget.min + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
+            return self.getValueToScale(y, SCROLL_MIN_Y, SCROLL_MAX_Y, widget.min, widget.max);
         }
 
         function setButtonEvents() {
@@ -28474,8 +28486,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             viewY = axis.map.view().y;
             blockX = axis.map.size().width / 10;
             blockY = axis.map.size().height / 10;
-            tick = (widget.max - widget.min) * 10;
-            step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
             scrollY = getScrollThumbY(scale);
         }
 
