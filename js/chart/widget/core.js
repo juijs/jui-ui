@@ -12,14 +12,6 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
      */
 	var CoreWidget = function() {
 
-        /**
-         * @method drawAfter  
-         * @param {Object} obj
-         */
-        this.drawAfter = function(obj) {
-            obj.attr({ "class": "widget widget-" + this.widget.type });
-        }
-
         this.getIndexArray = function(index) {
             var list = [ 0 ];
 
@@ -30,6 +22,24 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
             }
 
             return list;
+        }
+
+        this.getScaleToValue = function(scale, minScale, maxScale, minValue, maxValue) {
+            var tick = (maxScale - minScale) * 10,
+                step = (maxValue - minValue) / tick,
+                value = maxValue - (step * ((scale - minScale) / 0.1));
+
+            if(value < minValue) return minValue;
+            else if(value > maxValue) return maxValue;
+
+            return value;
+        }
+
+        this.getValueToScale = function(value, minValue, maxValue, minScale, maxScale) {
+            var tick = (maxScale - minScale) * 10,
+                step = (maxValue - minValue) / tick;
+
+            return parseFloat((minScale + ((maxValue - value) / step) * 0.1).toFixed(1));
         }
 
         this.isRender = function() {
@@ -53,6 +63,14 @@ jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
                     callback.apply(self, arguments);
                 }
             }, this.isRender() ? "render" : "renderAll");
+        }
+
+        /**
+         * @method drawAfter
+         * @param {Object} obj
+         */
+        this.drawAfter = function(obj) {
+            obj.attr({ "class": "widget widget-" + this.widget.type });
         }
 	}
 
