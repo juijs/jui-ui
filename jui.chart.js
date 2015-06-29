@@ -2887,8 +2887,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				_rangeBand = interval;
-				
+				var first = func(times[1]);
+				var second = func(times[2]);
+
+				_rangeBand = second - first;
 
 				return times;
 
@@ -3108,18 +3110,25 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			function func(x) {
 
+				x = +x;
+
 				if (domainMax < x) {
 					if (_isClamp) {
 						return func(domainMax);
 					}
 
-					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
+					if (_range[0] < _range[1]) {
+						return _range[1] + Math.abs(x - (+_domain[1])) * distRange / distDomain;
+					} else {
+						return _range[0] - Math.abs(x - (+_domain[0])) * distRange / distDomain;
+					}
+
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
+					return _range[0] - Math.abs(x -  (+_domain[0])) * distRange / distDomain;
 				} else {
 					var pos = (x - _domain[0]) / (distDomain);
 
@@ -3153,7 +3162,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			}
 			
 			func.clamp = function(isClamp) {
-			  _isClamp = isClamp || false; 
+				_isClamp = isClamp || false;
+
+				return this;
 			}
 
 			func.domain = function(values) {
@@ -8820,7 +8831,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var width = (position == "left" || position == "right") ? this.axis.area("width") : this.scale.rangeBand();
 			var height = (position == "top" || position == "bottom") ? this.axis.area("height") : this.scale.rangeBand();
 
-
 			if (position == "bottom") y = -height;
 			if (position == "right") x = -width;
 
@@ -9635,7 +9645,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).range(range);
+			this.scale = UtilScale.time().domain(domain).range(range).clamp(this.grid.clamp);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
@@ -9687,7 +9697,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
             /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null
+			realtime: null,
+
+			clamp : true
 		};
 	}
 
@@ -9776,7 +9788,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var self = this;
 			var domain = this.initDomain(),
 				obj = this.getGridSize(), range = [obj.start, obj.end],
-				time = UtilScale.time().domain(domain).rangeRound(range);
+				time = UtilScale.time().domain(domain).rangeRound(range).clamp(this.grid.clamp);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = time.realTicks(this.grid.realtime, domain.interval);

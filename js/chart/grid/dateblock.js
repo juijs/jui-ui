@@ -80,7 +80,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			var self = this;
 			var domain = this.initDomain(),
 				obj = this.getGridSize(), range = [obj.start, obj.end],
-				time = UtilScale.time().domain(domain).rangeRound(range);
+				time = UtilScale.time().domain(domain).rangeRound(range).clamp(this.grid.clamp);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = time.realTicks(this.grid.realtime, domain.interval);

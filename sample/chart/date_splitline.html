@@ -20,7 +20,7 @@
             var data = [],
                     value = 240;
 
-            for(var i = 0; i < 60 * 23; i++) {
+            for(var i = 0; i < 60 *24; i++) {
                 if(value < 60 * 8) {
                     value += 1;
                 }
@@ -43,10 +43,10 @@
             height: 400,
             axis : {
                 x : {
-                    type : "date",
+                    type : "dateblock",
                     domain : "time",
-                    interval : 1000 * 60 * 60,
-                    format : "HH",
+                    interval : 1000 * 60 * 60 * 4,
+                    format : "dd HH:mm:ss",
                     key: "time"
                 },
                 y : {
@@ -58,25 +58,6 @@
                 },
                 data : today.data,
                 buffer: today.data.length
-            },
-            brush : [{
-                type : "splitarea",
-                target : [ "value" ],
-                split : now
-            }, {
-                type : "splitline",
-                target : [ "value" ],
-                split : now
-            }/*, {
-                type : "pin",
-                split : now,
-                format : function(d) {
-                    return time.format(d, "hh:mm");
-                }
-            }*/],
-            widget : {
-                type : "title",
-                text : "Line Sample"
             }
         });
 	})

@@ -157,7 +157,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var width = (position == "left" || position == "right") ? this.axis.area("width") : this.scale.rangeBand();
 			var height = (position == "top" || position == "bottom") ? this.axis.area("height") : this.scale.rangeBand();
 
-
 			if (position == "bottom") y = -height;
 			if (position == "right") x = -width;
 

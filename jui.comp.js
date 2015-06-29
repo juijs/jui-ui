@@ -2887,8 +2887,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				_rangeBand = interval;
-				
+				var first = func(times[1]);
+				var second = func(times[2]);
+
+				_rangeBand = second - first;
 
 				return times;
 
@@ -3108,18 +3110,25 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			function func(x) {
 
+				x = +x;
+
 				if (domainMax < x) {
 					if (_isClamp) {
 						return func(domainMax);
 					}
 
-					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
+					if (_range[0] < _range[1]) {
+						return _range[1] + Math.abs(x - (+_domain[1])) * distRange / distDomain;
+					} else {
+						return _range[0] - Math.abs(x - (+_domain[0])) * distRange / distDomain;
+					}
+
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
+					return _range[0] - Math.abs(x -  (+_domain[0])) * distRange / distDomain;
 				} else {
 					var pos = (x - _domain[0]) / (distDomain);
 
@@ -3153,7 +3162,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			}
 			
 			func.clamp = function(isClamp) {
-			  _isClamp = isClamp || false; 
+				_isClamp = isClamp || false;
+
+				return this;
 			}
 
 			func.domain = function(values) {

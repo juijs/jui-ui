@@ -114,7 +114,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).range(range);
+			this.scale = UtilScale.time().domain(domain).range(range).clamp(this.grid.clamp);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
@@ -166,7 +166,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
             /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
             /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null
+			realtime: null,
+
+			clamp : true
 		};
 	}
 
