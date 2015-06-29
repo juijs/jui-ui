@@ -28351,7 +28351,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollThumbY(nowScale) {
-            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
+            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.min) / 0.1));
 
             if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
             else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
@@ -28360,7 +28360,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
         }
 
         function getScrollScale(y) {
-            return parseFloat((widget.minScale + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
+            return parseFloat((widget.min + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
         }
 
         function setButtonEvents() {
@@ -28390,13 +28390,13 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
 
             btn.up.on("click", function(e) {
-                if(scale > widget.maxScale) return;
+                if(scale > widget.max) return;
 
                 scale += 0.1;
                 zoom();
             });
             btn.down.on("click", function(e) {
-                if(scale - 0.09 < widget.minScale) return;
+                if(scale - 0.09 < widget.min) return;
 
                 scale -= 0.1;
                 zoom();
@@ -28474,7 +28474,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             viewY = axis.map.view().y;
             blockX = axis.map.size().width / 10;
             blockY = axis.map.size().height / 10;
-            tick = (widget.maxScale - widget.minScale) * 10;
+            tick = (widget.max - widget.min) * 10;
             step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
             scrollY = getScrollThumbY(scale);
         }
@@ -28507,7 +28507,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 bottom.append(createBtnGroup("down", 0.8, 0, 170, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIMjI+py+0BopSv2qsKADs="));
                 bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
 
-                // ��ư Ŭ�� �̺�Ʈ ����
                 setButtonEvents();
                 setScrollEvent(bar);
             });
@@ -28519,7 +28518,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 x2 = axis.area("x2"),
                 y2 = axis.area("y2");
 
-            // ��Ʈ�ѷ� ��ġ ����
             if(ot == "bottom" && ag == "start") {
                 g.translate(dx, y2 - (273 + dy));
             } else if(ot == "bottom" && ag == "end") {
@@ -28541,8 +28539,8 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             /** @cfg {"start"/"end" } Aligns the label (center, start, end). */
             align: "start",
 
-            minScale: 1,
-            maxScale: 3,
+            min: 1,
+            max: 3,
 
             dx: 5,
             dy: 5
