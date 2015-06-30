@@ -44,10 +44,9 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @param {Number} index
          * @return {util.svg.element}
          */
-        this.createScatter = function(pos, dataIndex, targetIndex) {
+        this.createScatter = function(pos, dataIndex, targetIndex, symbol) {
             var self = this,
                 elem = null,
-                symbol = this.getSymbolType(targetIndex, pos.value),
                 w = h = this.brush.size;
 
             var color = this.color(dataIndex, targetIndex),
@@ -103,21 +102,39 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                     .hover(function () {
                         if(elem == self.activeScatter) return;
 
-                        elem.attr({
+                        var opts = {
                             fill: self.chart.theme("scatterHoverColor"),
                             stroke: color,
                             "stroke-width": borderWidth * 2,
                             opacity: 1
-                        });
+                        };
+
+                        if(self.brush.hoverSync) {
+                            for(var i = 0; i < self.cachedSymbol[dataIndex].length; i++) {
+                                opts.stroke = self.color(dataIndex, i);
+                                self.cachedSymbol[dataIndex][i].attr(opts);
+                            }
+                        } else {
+                            elem.attr(opts);
+                        }
                     }, function () {
                         if(elem == self.activeScatter) return;
 
-                        elem.attr({
+                        var opts = {
                             fill: color,
                             stroke: borderColor,
                             "stroke-width": borderWidth,
                             opacity: (self.brush.hide) ? 0 : 1
-                        });
+                        };
+
+                        if(self.brush.hoverSync) {
+                            for(var i = 0; i < self.cachedSymbol[dataIndex].length; i++) {
+                                opts.fill = self.color(dataIndex, i);
+                                self.cachedSymbol[dataIndex][i].attr(opts);
+                            }
+                        } else {
+                            elem.attr(opts);
+                        }
                     });
                 }
             }
@@ -134,14 +151,20 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
          * @return {util.svg.element} g element 리턴
          */
         this.drawScatter = function(points) {
-            var self = this;
+            // hoverSync 옵션 처리를 위한 캐싱 처리
+            this.cachedSymbol = {};
 
-            var g = this.chart.svg.group(),
+            var self = this,
+                g = this.chart.svg.group(),
                 borderColor = this.chart.theme("scatterBorderColor"),
                 borderWidth = this.chart.theme("scatterBorderWidth");
 
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].length; j++) {
+                    if(!this.cachedSymbol[j]) {
+                        this.cachedSymbol[j] = [];
+                    }
+
                     if(this.brush.hideZero && points[i].value[j] === 0) {
                         continue;
                     }
@@ -154,8 +177,14 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
                         value: points[i].value[j]
                     };
 
-                    var p = this.createScatter(data, j, i),
+                    var symbol = this.getSymbolType(i, data.value),
+                        p = this.createScatter(data, j, i, symbol),
                         d = this.brush.display;
+
+                    // hoverSync 옵션을 위한 엘리먼트 캐싱
+                    if(symbol.type == "default" && symbol.uri != "cross") {
+                        this.cachedSymbol[j].push(p);
+                    }
 
                     // Max & Min 툴팁 생성
                     if((d == "max" && data.max) || (d == "min" && data.min) || d == "all") {
@@ -256,6 +285,8 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             hide: false,
             /** @cfg {Boolean} [hideZero=false]  When scatter value is zero, will be hidden. */
             hideZero: false,
+            /** @cfg {Boolean} [hoverSync=false]  Over effect synchronization of all the target's symbol. */
+            hoverSync: false,
             /** @cfg {String} [activeEvent=null]  Activates the scatter in question when a configured event occurs (click, mouseover, etc). */
             activeEvent: null,
             /** @cfg {"max"/"min"/"all"} [display=null]  Shows a tooltip on the scatter for the minimum/maximum value.  */

@@ -127,7 +127,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                 h = size.height + padding;
 
                 rect.attr({
-                    points: self.balloonPoints(widget.orient, w, h, anchor),
+                    points: self.balloonPoints(widget.orient, w, h, (widget.anchor) ? anchor : null),
                     stroke: getColorByKey(obj)
                 });
 
@@ -171,8 +171,10 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
     TooltipWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } Determines the side on which the tool tip is displayed (top, bottom, left, right). */
+            /** @cfg {"bottom"/"top"/"left"/"right"} Determines the side on which the tool tip is displayed (top, bottom, left, right). */
             orient: "top",
+            /** @cfg {Boolean} [anchor=true] Remove tooltip's anchor */
+            anchor: true,
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */

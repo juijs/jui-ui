@@ -38,11 +38,12 @@
             },
             brush : [{
                 type : 'scatter',
-                size : 10
+                size : 10,
+                hoverSync : true
                 //symbol: "rectangle"
             }],
             widget : [
-                { type: "tooltip", brush: 0 },
+                { type: "tooltip", all : true, orient: "right", anchor : false },
                 { type: "title", text : "Title", align : 'left' },
                 { type : 'legend' }
             ],

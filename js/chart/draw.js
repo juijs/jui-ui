@@ -139,6 +139,12 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 points.push([ 0 - anchor, (h / 2) ].join(","));
                 points.push([ 0, (h / 2) - (anchor / 2) ].join(","));
                 points.push([ 0, 0 ].join(","));
+            } else {
+                points.push([ 0, 0 ].join(","));
+                points.push([ w, 0 ].join(","));
+                points.push([ w, h ].join(","));
+                points.push([ 0, h ].join(","));
+                points.push([ 0, 0 ].join(","));
             }
 
             return points.join(" ");
