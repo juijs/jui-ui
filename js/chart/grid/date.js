@@ -1,12 +1,12 @@
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
-    /**
-     * @class chart.grid.date
-     *
-     * implements date grid 
-     *  
-     * @extends chart.grid.core 
-     */
+	/**
+	 * @class chart.grid.date
+	 *
+	 * implements date grid
+	 *
+	 * @extends chart.grid.core
+	 */
 	var DateGrid = function() {
 
 		this.top = function(g) {
@@ -34,21 +34,21 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			return true;
 		}
 
-        this.wrapper = function(scale, key) {
-            var old_scale = scale;
-            var self = this;
+		this.wrapper = function(scale, key) {
+			var old_scale = scale;
+			var self = this;
 
-            function new_scale(i) {
-                if (typeof i == 'number') {
-                    return old_scale(self.axis.data[i][key]);
-                } else {
-                    return old_scale(+i);
-                }
-            }
+			function new_scale(i) {
+				if (typeof i == 'number') {
+					return old_scale(self.axis.data[i][key]);
+				} else {
+					return old_scale(+i);
+				}
+			}
 
-            return (key) ? $.extend(new_scale, old_scale) : old_scale;
-        }
-        
+			return (key) ? $.extend(new_scale, old_scale) : old_scale;
+		}
+
 
 		/**
 		 * date grid 의 domain 설정
@@ -104,7 +104,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			} else {
 				domain.interval = interval;
 			}
-      
+
 			return domain;
 		}
 
@@ -114,7 +114,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).range(range).clamp(this.grid.clamp);
+			this.scale = UtilScale.time().domain(domain).range(range);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
@@ -130,7 +130,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
-					}	
+					}
 				})(this.grid, this.grid.format)
 			}
 
@@ -153,22 +153,20 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
-            /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
+			/** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
+			/** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
 			interval : 1000,
-            /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
+			/** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
-            /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
+			/** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
 			max: null,
 			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null,
-
-			clamp : true
+			/** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
+			realtime: null
 		};
 	}
 

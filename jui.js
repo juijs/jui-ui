@@ -2609,8 +2609,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	var self = {
 
 		/**
-		 * 원형 좌표에 대한 scale 
-		 * 
+		 * 원형 좌표에 대한 scale
+		 *
 		 */
 		circle : function() {// 원형 radar
 
@@ -2706,9 +2706,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 
-		 * 순서를 가지는 리스트에 대한 scale 
-		 * 
+		 *
+		 * 순서를 가지는 리스트에 대한 scale
+		 *
 		 */
 		ordinal : function() {// 순서
 			var that = this;
@@ -2716,14 +2716,14 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [];
 			var _range = [];
 			var _rangeBand = 0;
-            var _cache = {};
+			var _cache = {};
 
 			function func(t) {
 
-                var key = "" + t;
-                if (typeof _cache[key] != 'undefined') {
-                    return _cache[key];
-                }
+				var key = "" + t;
+				if (typeof _cache[key] != 'undefined') {
+					return _cache[key];
+				}
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
@@ -2734,12 +2734,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				if (index > -1) {
-                    _cache[key] = _range[index];
+					_cache[key] = _range[index];
 					return _range[index];
 				} else {
 					if ( typeof _range[t] != 'undefined') {
 						_domain[t] = t;
-                        _cache[key] = _range[t];
+						_cache[key] = _range[t];
 						return _range[t];
 					}
 
@@ -2833,8 +2833,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 시간에 대한 scale 
-		 * 
+		 * 시간에 대한 scale
+		 *
 		 */
 		time : function() {// 시간
 
@@ -2886,10 +2886,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				var first = func(times[1]);
-				var second = func(times[2]);
+				_rangeBand = interval;
 
-				_rangeBand = second - first;
 
 				return times;
 
@@ -2928,8 +2926,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var first = func(times[1]);
 				var second = func(times[2]);
-				
-				_rangeBand = second - first; 				
+
+				_rangeBand = second - first;
 
 				return times;
 			}
@@ -3079,8 +3077,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 범위에 대한 scale 
-		 * 
+		 * 범위에 대한 scale
+		 *
 		 */
 		linear : function() {// 선형
 
@@ -3090,7 +3088,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _range = [0, 1];
 			var _isRound = false;
 			var _isClamp = false;
-            var _cache = {};
+			var _cache = {};
 
 			var roundFunction = null;
 			var numberFunction = null;
@@ -3103,31 +3101,24 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var distDomain = null;
 			var distRange = null;
-            
-            var callFunction = null;
+
+			var callFunction = null;
 			var _rangeBand = null;
 
 			function func(x) {
-
-				x = +x;
 
 				if (domainMax < x) {
 					if (_isClamp) {
 						return func(domainMax);
 					}
 
-					if (_range[0] < _range[1]) {
-						return _range[1] + Math.abs(x - (+_domain[1])) * distRange / distDomain;
-					} else {
-						return _range[0] - Math.abs(x - (+_domain[0])) * distRange / distDomain;
-					}
-
+					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x -  (+_domain[0])) * distRange / distDomain;
+					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
 				} else {
 					var pos = (x - _domain[0]) / (distDomain);
 
@@ -3136,9 +3127,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			}
 
-            func.cache = function() {
-                return _cache;
-            }
+			func.cache = function() {
+				return _cache;
+			}
 
 			func.min = function() {
 				return Math.min.apply(Math, _domain);
@@ -3159,11 +3150,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			func.rate = function(value, max) {
 				return func(func.max() * (value / max));
 			}
-			
+
 			func.clamp = function(isClamp) {
 				_isClamp = isClamp || false;
-
-				return this;
 			}
 
 			func.domain = function(values) {
@@ -3201,15 +3190,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				rangeMax = func.rangeMax();
 
 				distRange = Math.abs(rangeMax - rangeMin);
-                
-                callFunction = _isRound ? roundFunction : numberFunction;
+
+				callFunction = _isRound ? roundFunction : numberFunction;
 
 				return this;
 			}
 
 			func.rangeRound = function(values) {
 				_isRound = true;
-                
+
 				return func.range(values);
 			}
 
@@ -16824,6 +16813,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var width = (position == "left" || position == "right") ? this.axis.area("width") : this.scale.rangeBand();
 			var height = (position == "top" || position == "bottom") ? this.axis.area("height") : this.scale.rangeBand();
 
+
 			if (position == "bottom") y = -height;
 			if (position == "right") x = -width;
 
@@ -17524,13 +17514,13 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
-    /**
-     * @class chart.grid.date
-     *
-     * implements date grid 
-     *  
-     * @extends chart.grid.core 
-     */
+	/**
+	 * @class chart.grid.date
+	 *
+	 * implements date grid
+	 *
+	 * @extends chart.grid.core
+	 */
 	var DateGrid = function() {
 
 		this.top = function(g) {
@@ -17558,21 +17548,21 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			return true;
 		}
 
-        this.wrapper = function(scale, key) {
-            var old_scale = scale;
-            var self = this;
+		this.wrapper = function(scale, key) {
+			var old_scale = scale;
+			var self = this;
 
-            function new_scale(i) {
-                if (typeof i == 'number') {
-                    return old_scale(self.axis.data[i][key]);
-                } else {
-                    return old_scale(+i);
-                }
-            }
+			function new_scale(i) {
+				if (typeof i == 'number') {
+					return old_scale(self.axis.data[i][key]);
+				} else {
+					return old_scale(+i);
+				}
+			}
 
-            return (key) ? $.extend(new_scale, old_scale) : old_scale;
-        }
-        
+			return (key) ? $.extend(new_scale, old_scale) : old_scale;
+		}
+
 
 		/**
 		 * date grid 의 domain 설정
@@ -17628,7 +17618,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			} else {
 				domain.interval = interval;
 			}
-      
+
 			return domain;
 		}
 
@@ -17638,7 +17628,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			var obj = this.getGridSize(),
 				range = [obj.start, obj.end];
 
-			this.scale = UtilScale.time().domain(domain).range(range).clamp(this.grid.clamp);
+			this.scale = UtilScale.time().domain(domain).range(range);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
@@ -17654,7 +17644,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
-					}	
+					}
 				})(this.grid, this.grid.format)
 			}
 
@@ -17677,22 +17667,20 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	DateGrid.setup = function() {
 		return {
-            /** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
+			/** @cfg {Array} [domain=null] Sets the value displayed on a grid. */
 			domain: null,
-            /** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
+			/** @cfg {Number} [interval=1000] Sets the interval of the scale displayed on a grid.*/
 			interval : 1000,
-            /** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
+			/** @cfg {Number} [min=null] Sets the minimum timestamp of a grid.  */
 			min: null,
-            /** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
+			/** @cfg {Number} [max=null] Sets the maximum timestamp of a grid. */
 			max: null,
 			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
+			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
-            /** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null,
-
-			clamp : true
+			/** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
+			realtime: null
 		};
 	}
 
@@ -27168,6 +27156,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(xtype == "date") { // x축이 date일 때
                     startDate = axis.x.invert(e.chartX);
                 }
+
+                self.chart.emit("zoom.start");
             }, axisIndex);
 
             self.on("axis.mousemove", function(e) {
@@ -27196,18 +27186,21 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             self.on("bg.mouseout", endZoomAction);
 
             function endZoomAction(e) {
+                var args = [];
+
                 isMove = false;
                 if(thumbWidth == 0) return;
 
                 if(xtype == "block") {
-                    updateBlockGrid();
+                    args = updateBlockGrid();
                 } else if(xtype == "date") {
                     if(startDate != null) {
-                        updateDateGrid(axis.x.invert(e.chartX));
+                        args = updateDateGrid(axis.x.invert(e.chartX));
                     }
                 }
 
                 resetDragStatus();
+                self.chart.emit("zoom.end", args);
             }
 
             function updateBlockGrid() {
@@ -27225,6 +27218,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     if(!self.chart.isRender()) {
                         self.chart.render();
                     }
+
+                    return [ start, end ];
                 }
             }
 
@@ -27234,14 +27229,13 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 if(stime >= etime) return;
 
-                var interval = self.widget.dateInterval,
-                    format = self.widget.dateFormat;
+                var interval = self.widget.interval,
+                    format = self.widget.format;
 
                 // interval 콜백 옵션 설정
                 if(_.typeCheck("function", interval)) {
                     interval = interval.apply(self.chart, [ stime, etime ]);
                 }
-
                 // format 콜백 옵션 설정
                 if(_.typeCheck("function", format)) {
                     format = format.apply(self.chart, [ stime, etime ]);
@@ -27258,6 +27252,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(!self.chart.isRender()) {
                     self.chart.render();
                 }
+
+                return [ stime, etime ];
             }
 
             function resetDragStatus() { // 엘리먼트 및 데이터 초기화
@@ -27354,8 +27350,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     ZoomWidget.setup = function() {
         return {
-            dateInterval: null,    // x축이 date일 때만 적용됨
-            dateFormat: null   // 위와 동일
+            interval: null, // x축이 date일 때만 적용됨
+            format: null    // 위와 동일
         }
     }
 

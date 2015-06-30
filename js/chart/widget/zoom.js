@@ -30,6 +30,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(xtype == "date") { // x축이 date일 때
                     startDate = axis.x.invert(e.chartX);
                 }
+
+                self.chart.emit("zoom.start");
             }, axisIndex);
 
             self.on("axis.mousemove", function(e) {
@@ -58,18 +60,21 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
             self.on("bg.mouseout", endZoomAction);
 
             function endZoomAction(e) {
+                var args = [];
+
                 isMove = false;
                 if(thumbWidth == 0) return;
 
                 if(xtype == "block") {
-                    updateBlockGrid();
+                    args = updateBlockGrid();
                 } else if(xtype == "date") {
                     if(startDate != null) {
-                        updateDateGrid(axis.x.invert(e.chartX));
+                        args = updateDateGrid(axis.x.invert(e.chartX));
                     }
                 }
 
                 resetDragStatus();
+                self.chart.emit("zoom.end", args);
             }
 
             function updateBlockGrid() {
@@ -87,6 +92,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                     if(!self.chart.isRender()) {
                         self.chart.render();
                     }
+
+                    return [ start, end ];
                 }
             }
 
@@ -96,14 +103,13 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
                 if(stime >= etime) return;
 
-                var interval = self.widget.dateInterval,
-                    format = self.widget.dateFormat;
+                var interval = self.widget.interval,
+                    format = self.widget.format;
 
                 // interval 콜백 옵션 설정
                 if(_.typeCheck("function", interval)) {
                     interval = interval.apply(self.chart, [ stime, etime ]);
                 }
-
                 // format 콜백 옵션 설정
                 if(_.typeCheck("function", format)) {
                     format = format.apply(self.chart, [ stime, etime ]);
@@ -120,6 +126,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                 if(!self.chart.isRender()) {
                     self.chart.render();
                 }
+
+                return [ stime, etime ];
             }
 
             function resetDragStatus() { // 엘리먼트 및 데이터 초기화
@@ -216,8 +224,8 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     ZoomWidget.setup = function() {
         return {
-            dateInterval: null,    // x축이 date일 때만 적용됨
-            dateFormat: null   // 위와 동일
+            interval: null, // x축이 date일 때만 적용됨
+            format: null    // 위와 동일
         }
     }
 

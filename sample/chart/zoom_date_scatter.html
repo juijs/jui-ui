@@ -64,7 +64,7 @@
             },
             widget : {
                 type : 'zoom',
-                dateInterval : function(stime, etime) {
+                interval : function(stime, etime) {
                     var dist = etime - stime;
 
                     if(dist < 1000 * 10) {
@@ -75,7 +75,7 @@
 
                     return 1000 * 60; // 1min
                 },
-                dateFormat : function(stime, etime) {
+                format : function(stime, etime) {
                     if(etime - stime < 1000 * 60) {
                         return "hh:mm:ss";
                     }
@@ -84,8 +84,12 @@
                 }
             },
             event : {
-                "dragselect.end": function(data) {
-                    console.log(data);
+                "zoom.start": function() {
+                    console.log("zoom.start");
+                },
+                "zoom.end": function() {
+                    console.log("zoom.end");
+                    console.log(arguments);
                 }
             }
         });

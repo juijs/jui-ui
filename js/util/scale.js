@@ -8,8 +8,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	var self = {
 
 		/**
-		 * 원형 좌표에 대한 scale 
-		 * 
+		 * 원형 좌표에 대한 scale
+		 *
 		 */
 		circle : function() {// 원형 radar
 
@@ -105,9 +105,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 
-		 * 순서를 가지는 리스트에 대한 scale 
-		 * 
+		 *
+		 * 순서를 가지는 리스트에 대한 scale
+		 *
 		 */
 		ordinal : function() {// 순서
 			var that = this;
@@ -115,14 +115,14 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [];
 			var _range = [];
 			var _rangeBand = 0;
-            var _cache = {};
+			var _cache = {};
 
 			function func(t) {
 
-                var key = "" + t;
-                if (typeof _cache[key] != 'undefined') {
-                    return _cache[key];
-                }
+				var key = "" + t;
+				if (typeof _cache[key] != 'undefined') {
+					return _cache[key];
+				}
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
@@ -133,12 +133,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				if (index > -1) {
-                    _cache[key] = _range[index];
+					_cache[key] = _range[index];
 					return _range[index];
 				} else {
 					if ( typeof _range[t] != 'undefined') {
 						_domain[t] = t;
-                        _cache[key] = _range[t];
+						_cache[key] = _range[t];
 						return _range[t];
 					}
 
@@ -232,8 +232,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 시간에 대한 scale 
-		 * 
+		 * 시간에 대한 scale
+		 *
 		 */
 		time : function() {// 시간
 
@@ -285,10 +285,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				var first = func(times[1]);
-				var second = func(times[2]);
+				_rangeBand = interval;
 
-				_rangeBand = second - first;
 
 				return times;
 
@@ -327,8 +325,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var first = func(times[1]);
 				var second = func(times[2]);
-				
-				_rangeBand = second - first; 				
+
+				_rangeBand = second - first;
 
 				return times;
 			}
@@ -478,8 +476,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 범위에 대한 scale 
-		 * 
+		 * 범위에 대한 scale
+		 *
 		 */
 		linear : function() {// 선형
 
@@ -489,7 +487,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _range = [0, 1];
 			var _isRound = false;
 			var _isClamp = false;
-            var _cache = {};
+			var _cache = {};
 
 			var roundFunction = null;
 			var numberFunction = null;
@@ -502,31 +500,24 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var distDomain = null;
 			var distRange = null;
-            
-            var callFunction = null;
+
+			var callFunction = null;
 			var _rangeBand = null;
 
 			function func(x) {
-
-				x = +x;
 
 				if (domainMax < x) {
 					if (_isClamp) {
 						return func(domainMax);
 					}
 
-					if (_range[0] < _range[1]) {
-						return _range[1] + Math.abs(x - (+_domain[1])) * distRange / distDomain;
-					} else {
-						return _range[0] - Math.abs(x - (+_domain[0])) * distRange / distDomain;
-					}
-
+					return _range[0] + Math.abs(x - _domain[1]) * distDomain / distRange;
 				} else if (domainMin > x) {
 					if (_isClamp) {
 						return func(domainMin);
 					}
 
-					return _range[0] - Math.abs(x -  (+_domain[0])) * distRange / distDomain;
+					return _range[0] - Math.abs(x - _domain[0]) * distDomain / distRange;
 				} else {
 					var pos = (x - _domain[0]) / (distDomain);
 
@@ -535,9 +526,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			}
 
-            func.cache = function() {
-                return _cache;
-            }
+			func.cache = function() {
+				return _cache;
+			}
 
 			func.min = function() {
 				return Math.min.apply(Math, _domain);
@@ -558,11 +549,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			func.rate = function(value, max) {
 				return func(func.max() * (value / max));
 			}
-			
+
 			func.clamp = function(isClamp) {
 				_isClamp = isClamp || false;
-
-				return this;
 			}
 
 			func.domain = function(values) {
@@ -600,15 +589,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				rangeMax = func.rangeMax();
 
 				distRange = Math.abs(rangeMax - rangeMin);
-                
-                callFunction = _isRound ? roundFunction : numberFunction;
+
+				callFunction = _isRound ? roundFunction : numberFunction;
 
 				return this;
 			}
 
 			func.rangeRound = function(values) {
 				_isRound = true;
-                
+
 				return func.range(values);
 			}
 
