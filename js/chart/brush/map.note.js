@@ -63,17 +63,14 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 							"text-anchor": "middle",
 							x: w / 2,
 							y: TEXT_Y
-						}).text(text);
+						}, text);
 
-						for(var i = 0, len = texts.length; i < len; i++) {
-							chart.text({
-								"font-size": chart.theme("tooltipFontSize"),
-								"fill": chart.theme("tooltipFontColor"),
-								"text-anchor": "start",
-								x: 0,
-								y: -(TEXT_Y * (len - i))
-							}).text(texts[i]);
-						}
+						chart.texts({
+							"font-size": chart.theme("tooltipFontSize"),
+							"fill": chart.theme("tooltipFontColor"),
+							"text-anchor": "start"
+						}, texts, 1.2).translate(0, -(TEXT_Y * texts.length));
+
 					}).translate(xy.x - (w / 2), xy.y - h - ANCHOR);
 
 					tooltips[id] = tooltip;

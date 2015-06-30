@@ -538,6 +538,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             })("@font-face {" + fontFace + "}");
         }
 
+        function parseTextInChart(self, text) {
+            var regex = /{([^{}]+)}/g,
+                result = text.match(regex);
+
+            if(result != null) {
+                for(var i = 0; i < result.length; i++) {
+                    var key = result[i].substring(1, result[i].length - 1);
+                    text = text.replace(result[i], self.icon(key));
+                }
+            }
+
+            return text;
+        }
+
         this.init = function() {
             // 기본 옵션 설정
             setDefaultOptions(this);
@@ -682,20 +696,38 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
-                var regex = /{([^{}]+)}/g,
-                    result = textOrCallback.match(regex);
-
-                if(result != null) {
-                    for(var i = 0; i < result.length; i++) {
-                        var key = result[i].substring(1, result[i].length - 1);
-                        textOrCallback = textOrCallback.replace(result[i], this.icon(key));
-                    }
-                }
+                textOrCallback = parseTextInChart(this, textOrCallback);
             } else if(_.typeCheck("undefined", textOrCallback)) {
                 textOrCallback = "";
             }
 
             return this.svg.text(attr, textOrCallback);
+        }
+
+        /**
+         * Creates a text element to which a theme is applied.
+         *
+         * Also it support icon string
+         *
+         * @param {Object} attr
+         * @param {Array} texts
+         * @param {Number} lineBreakRate
+         */
+        this.texts = function(attr, texts, lineBreakRate) {
+            var g = this.svg.group();
+
+            for(var i = 0; i < texts.length; i++) {
+                if(_.typeCheck("string", texts[i])) {
+                    var size = (attr["font-size"] || 10) * (lineBreakRate || 1);
+
+                    g.append(this.svg.text(
+                        _.extend({ y: i * size }, attr, true),
+                        parseTextInChart(this, texts[i])
+                    ));
+                }
+            }
+
+            return g;
         }
 
         /**
