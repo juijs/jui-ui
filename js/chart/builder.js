@@ -538,7 +538,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             })("@font-face {" + fontFace + "}");
         }
 
-        function parseTextInChart(self, text) {
+        function parseIconInText(self, text) {
             var regex = /{([^{}]+)}/g,
                 result = text.match(regex);
 
@@ -696,7 +696,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
-                textOrCallback = parseTextInChart(this, textOrCallback);
+                textOrCallback = parseIconInText(this, textOrCallback);
             } else if(_.typeCheck("undefined", textOrCallback)) {
                 textOrCallback = "";
             }
@@ -722,7 +722,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
                     g.append(this.svg.text(
                         _.extend({ y: i * size }, attr, true),
-                        parseTextInChart(this, texts[i])
+                        parseIconInText(this, texts[i])
                     ));
                 }
             }
