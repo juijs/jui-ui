@@ -30,7 +30,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		}
 
 		this.checkDrawRect = function(index, isLast) {
-			if (isLast) return false;
+			//if (isLast) return false;
 			return true;
 		}
 

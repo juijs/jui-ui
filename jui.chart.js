@@ -9637,7 +9637,7 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 		}
 
 		this.checkDrawRect = function(index, isLast) {
-			if (isLast) return false;
+			//if (isLast) return false;
 			return true;
 		}
 
@@ -9869,7 +9869,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.ticks = time.ticks("milliseconds", domain.interval);
 			}
 
-			var len = this.ticks.length - 1;
+			var len = this.axis.get('data').length  - 1;
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(len);
 
 			if ( typeof this.grid.format == "string") {

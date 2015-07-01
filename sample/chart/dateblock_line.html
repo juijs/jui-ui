@@ -11,12 +11,12 @@
 
 <script id="script_code">
     var data = [
-        { apple : 26.1, ms : 24.86, oracle : 22.08 },
-        { apple : 43.83, ms : 27.14, oracle : 30.15 },
-        { apple : 55.03, ms : 24, oracle : 36.88 },
-        { apple : 55.03, ms : 24, oracle : 36.88 },
-        { apple : 72.95, ms : 25.39, oracle : 32.78 }
+
     ];
+
+    for(var i = 0; i < 288; i++) {
+        data.push({ apple : 55.03 * (Math.random() * 100 / 100) , ms : 24* (Math.random() * 100 / 100) , oracle : 36.88* (Math.random() * 100 / 100)  })
+    }
 
     var data2 = [
         { apple : 55.03, ms : 24, oracle : 36.88 },
