@@ -183,6 +183,43 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			axis.append(lineObject);
 		}
 
+		this.drawImage = function(orient, g, tick, index, x, y) {
+			if (!_.typeCheck("function", this.grid.image)) return;
+
+			var opts = this.grid.image.apply(this.chart, [ tick, index ]);
+
+			if(_.typeCheck("object", opts)) {
+				var image = this.chart.svg.image({
+					"xlink:href": opts.uri,
+					width: opts.width,
+					height: opts.height
+				});
+
+				if(orient == "top" || orient == "bottom") {
+					image.attr({
+						x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
+					});
+				} else if(orient == "left" || orient == "right") {
+					image.attr({
+						y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
+					})
+				}
+
+				if(orient == "bottom") {
+					image.attr({ y: opts.dist });
+				} else if(orient == "top") {
+					image.attr({ y: -(opts.dist + opts.height) });
+				} else if(orient == "left") {
+					image.attr({ x: -(opts.dist + opts.width) });
+				} else if(orient == "right") {
+					image.attr({ x: opts.dist });
+				}
+
+				image.translate(x, y)
+				g.append(image);
+			}
+		}
+
 		/**
 		 * @method top
 		 *
@@ -199,7 +236,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var line = this.getLineOption();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
+				var domain = this.format(ticks[i], i),
+					x = values[i] + moveX;
+
+				// 그리드 이미지 그리기
+				this.drawImage("top", g, ticks[i], i, x, 0);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -210,9 +251,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					isActive = checkActive(ticks[i], i);
 				}
 
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + (values[i] + moveX) + ", 0)"
-				});
+				var axis = this.chart.svg.group().translate(x, 0);
 
 				axis.append(this.line({
 					y2 : -this.chart.theme("gridTickBorderSize"),
@@ -244,7 +283,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var line = this.getLineOption();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
+				var domain = this.format(ticks[i], i),
+					x = values[i] + moveX;
+
+				// 그리드 이미지 그리기
+				this.drawImage("bottom", g, ticks[i], i, x, 0);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -255,9 +298,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					isActive = checkActive(ticks[i], i);
 				}
 
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + (values[i] + moveX) + ", 0)"
-				});
+				var axis = this.chart.svg.group().translate(x, 0);
 
 				axis.append(this.line({
 					y2 : this.chart.theme("gridTickBorderSize"),
@@ -288,7 +329,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var line = this.getLineOption();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
+				var domain = this.format(ticks[i], i),
+					y = values[i] + moveY;
+
+				// 그리드 이미지 그리기
+				this.drawImage("left", g, ticks[i], i, 0, y);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -299,9 +344,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					isActive = checkActive(ticks[i], i);
 				}
 
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + (values[i] + moveY) + ")"
-				})
+				var axis = this.chart.svg.group().translate(0, y);
 
 				axis.append(this.line({
 					x2 : -this.chart.theme("gridTickBorderSize"),
@@ -333,7 +376,11 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			var line = this.getLineOption();
 
 			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i);
+				var domain = this.format(ticks[i], i),
+					y = values[i] + moveY;
+
+				// 그리드 이미지 그리기
+				this.drawImage("right", g, ticks[i], i, 0, y);
 
 				if (!domain && domain !== 0) {
 					continue;
@@ -344,7 +391,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 					isActive = checkActive(ticks[i], i);
 				}
 
-				var axis = this.chart.svg.group({ "transform" : "translate(0, " + (values[i] + moveY) + ")" });
+				var axis = this.chart.svg.group().translate(0, y);
 
 				axis.append(this.line({
 					x2 : this.chart.theme("gridTickBorderSize"),
@@ -607,6 +654,8 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			baseline : true,
 			/** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
+			/** @cfg {Function} [image=null]  Determines whether to image the value on an axis. */
+			image: null,
 			/** @cfg {Number} [textRotate=null] Specifies the slope of text displayed on a grid. */
 			textRotate : null
 		};

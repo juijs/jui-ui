@@ -39,6 +39,17 @@
                         type : "range",
                         domain : [ 0, 100 ],
                         step : 10,
+                        format : function(k, i) {
+                            return k;
+                        },
+                        image : function(k, i) {
+                            return {
+                                uri: "resource/facebook.png",
+                                width: 18,
+                                height: 18,
+                                dist: 30
+                            }
+                        },
                         line : true,
                         orient  : "right"
                     },
@@ -48,17 +59,16 @@
                         format : function(k, i) {
                             return k;
                         },
-                        /*/
                         image : function(k, i) {
                             return {
                                 uri: "resource/facebook.png",
-                                width: 32,
-                                height: 32
+                                width: 24,
+                                height: 24,
+                                dist: 5
                             }
                         },
-                        /**/
-                        line : true
-                        //orient : "top"
+                        line : true,
+                        orient : "top"
                     }
                 }
 
