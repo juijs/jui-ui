@@ -13,8 +13,12 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
-            width: 400,
+            width: 800,
             height : 400,
+            icon: {
+                type: "jennifer",
+                path: "../../img/icon-list.ttf"
+            },
             axis : [
                 {
                     data : [
@@ -41,6 +45,19 @@
                     x : {
                         type : "block",
                         domain : "quarter",
+                        format : function(k, i) {
+                            return k;
+                        },
+                        /*/
+                        image : function(k, i) {
+                            return {
+                                uri: "resource/facebook.png",
+                                width: 32,
+                                height: 32
+                            }
+                        },
+                        /**/
+                        line : true
                         //orient : "top"
                     }
                 }
@@ -80,11 +97,13 @@
             style : {
                 //gridYFontSize : 20,
                 //gridXFontSize : 20,
+                /*/
                 tooltipPointRadius : 0,
                 gridYAxisBorderWidth : 0,
                 gridXAxisBorderWidth : 1,
                 gridXAxisBorderColor : "#ebebeb",
                 gridTickBorderSize : 0
+                /**/
             }
         });
 	})
