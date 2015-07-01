@@ -6072,7 +6072,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				if($(this).hasClass("divider")) return;
+				if($(this).hasClass("divider") || $(this).hasClass("title")) return;
 				
 				var index = getTargetIndex(this),
 					text = $(this).text(),
@@ -17847,10 +17847,9 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		}
 
 		this.drawBefore = function() {
-			var self = this;
 			var domain = this.initDomain(),
 				obj = this.getGridSize(), range = [obj.start, obj.end],
-				time = UtilScale.time().domain(domain).rangeRound(range).clamp(this.grid.clamp);
+				time = UtilScale.time().domain(domain).rangeRound(range);
 
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = time.realTicks(this.grid.realtime, domain.interval);

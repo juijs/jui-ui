@@ -1036,6 +1036,11 @@
   line-height: 20px;
   font-size: 12px;
 }
+.jui .dropup ul > li.title,
+.jui .dropdown ul > li.title,
+.jui .combo ul > li.title {
+  font-weight: bold;
+}
 .jui .dropup ul,
 .jui .dropdown ul,
 .jui .combo ul {
@@ -1048,12 +1053,12 @@
 .jui .combo ul > li {
   color: #333;
 }
-.jui .dropup ul > li:hover:not(.divider),
-.jui .dropdown ul > li:hover:not(.divider),
-.jui .combo ul > li:hover:not(.divider),
-.jui .dropup ul > li:focus:not(.divider),
-.jui .dropdown ul > li:focus:not(.divider),
-.jui .combo ul > li:focus:not(.divider),
+.jui .dropup ul > li:hover:not(.divider):not(.title),
+.jui .dropdown ul > li:hover:not(.divider):not(.title),
+.jui .combo ul > li:hover:not(.divider):not(.title),
+.jui .dropup ul > li:focus:not(.divider):not(.title),
+.jui .dropdown ul > li:focus:not(.divider):not(.title),
+.jui .combo ul > li:focus:not(.divider):not(.title),
 .jui .dropup ul > li.active,
 .jui .dropdown ul > li.active,
 .jui .combo ul > li.active {
@@ -1147,9 +1152,9 @@
   -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
-.jui .dropup ul > li,
-.jui .dropdown ul > li,
-.jui .combo ul > li {
+.jui .dropup ul > li:not(.divider):not(.title),
+.jui .dropdown ul > li:not(.divider):not(.title),
+.jui .combo ul > li:not(.divider):not(.title) {
   position: relative;
   display: block;
   float: none;
@@ -1157,9 +1162,9 @@
   font-weight: normal;
   cursor: pointer;
 }
-.jui .dropup ul > li > *,
-.jui .dropdown ul > li > *,
-.jui .combo ul > li > * {
+.jui .dropup ul > li:not(.divider):not(.title) > *,
+.jui .dropdown ul > li:not(.divider):not(.title) > *,
+.jui .combo ul > li:not(.divider):not(.title) > * {
   display: inline-block;
   color: inherit;
   text-decoration: none;
@@ -1174,10 +1179,16 @@
   padding: 3px 20px !important;
   font-size: 12px !important;
 }
+.jui .dropdown-large ul > li.title {
+  font-weight: bold !important;
+}
 .jui .dropdown-normal ul > li:not(.divider) {
   padding: 0px 10px;
   line-height: 20px;
   font-size: 12px;
+}
+.jui .dropdown-normal ul > li.title {
+  font-weight: bold;
 }
 .jui .dropdown-white ul {
   background-color: #fff;
@@ -1187,8 +1198,8 @@
 .jui .dropdown-white ul > li {
   color: #333;
 }
-.jui .dropdown-white ul > li:hover:not(.divider),
-.jui .dropdown-white ul > li:focus:not(.divider),
+.jui .dropdown-white ul > li:hover:not(.divider):not(.title),
+.jui .dropdown-white ul > li:focus:not(.divider):not(.title),
 .jui .dropdown-white ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
@@ -1255,8 +1266,8 @@
 .jui .dropdown-black ul > li {
   color: #fff;
 }
-.jui .dropdown-black ul > li:hover:not(.divider),
-.jui .dropdown-black ul > li:focus:not(.divider),
+.jui .dropdown-black ul > li:hover:not(.divider):not(.title),
+.jui .dropdown-black ul > li:focus:not(.divider):not(.title),
 .jui .dropdown-black ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
@@ -1417,8 +1428,8 @@
 .jui .combo-black ul > li {
   color: #fff !important;
 }
-.jui .combo-black ul > li:hover:not(.divider),
-.jui .combo-black ul > li:focus:not(.divider),
+.jui .combo-black ul > li:hover:not(.divider):not(.title),
+.jui .combo-black ul > li:focus:not(.divider):not(.title),
 .jui .combo-black ul > li.active {
   background-color: #865de1 !important;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6) !important;
