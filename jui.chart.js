@@ -10093,7 +10093,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : self.color("gridAxisBorderColor"),
+				stroke : self.color("gridBorderColor"),
 				"stroke-width" : self.chart.theme("gridBorderWidth")
 			}));
 		}
@@ -10118,7 +10118,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 			var path = self.chart.svg.path({
 				"fill" : "none",
-				stroke : self.color("gridAxisBorderColor"),
+				stroke : self.color("gridBorderColor"),
 				"stroke-width" : self.chart.theme("gridBorderWidth")
 			});
 
