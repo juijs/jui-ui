@@ -7,14 +7,13 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
      * @extends chart.widget.map.core
      */
     var MapControlWidget = function(chart, axis, widget) {
+        var self = this;
         var scale = 1,
             viewX = 0,
             viewY = 0,
             blockX = 0,
             blockY = 0,
             scrollY = 0,
-            step = 0,
-            tick = 0,
             btn = { top: null, right: null, bottom: null, left: null, home: null, up: null, down: null, thumb: null };
 
         function createBtnGroup(type, opacity, x, y, url) {
@@ -64,17 +63,12 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
         }
 
-        function getScrollThumbY(nowScale) {
-            var y = SCROLL_MAX_Y - (step * ((nowScale - widget.minScale) / 0.1));
-
-            if(y < SCROLL_MIN_Y) return SCROLL_MIN_Y;
-            else if(y > SCROLL_MAX_Y) return SCROLL_MAX_Y;
-
-            return y;
+        function getScrollThumbY(scale) {
+            return self.getScaleToValue(scale, widget.min, widget.max, SCROLL_MIN_Y, SCROLL_MAX_Y);
         }
 
         function getScrollScale(y) {
-            return parseFloat((widget.minScale + ((SCROLL_MAX_Y - y) / step) * 0.1).toFixed(1));
+            return self.getValueToScale(y, SCROLL_MIN_Y, SCROLL_MAX_Y, widget.min, widget.max);
         }
 
         function setButtonEvents() {
@@ -104,20 +98,20 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             });
 
             btn.up.on("click", function(e) {
-                if(scale > widget.maxScale) return;
+                if(scale > widget.max) return;
 
                 scale += 0.1;
                 zoom();
             });
             btn.down.on("click", function(e) {
-                if(scale - 0.09 < widget.minScale) return;
+                if(scale - 0.09 < widget.min) return;
 
                 scale -= 0.1;
                 zoom();
             });
 
             function move() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -126,7 +120,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 axis.map.view(viewX, viewY);
             }
             function zoom() {
-                axis.updateMap({
+                axis.updateGrid("map", {
                     scale: scale,
                     viewX: viewX,
                     viewY: viewY
@@ -163,7 +157,7 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                     moveY = e.y - startY;
                     scale = getScrollScale(sy);
 
-                    axis.updateMap({
+                    axis.updateGrid("map", {
                         scale: scale,
                         viewX: viewX,
                         viewY: viewY
@@ -188,8 +182,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             viewY = axis.map.view().y;
             blockX = axis.map.size().width / 10;
             blockY = axis.map.size().height / 10;
-            tick = (widget.maxScale - widget.minScale) * 10;
-            step = (SCROLL_MAX_Y - SCROLL_MIN_Y) / tick;
             scrollY = getScrollThumbY(scale);
         }
 
@@ -221,7 +213,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 bottom.append(createBtnGroup("down", 0.8, 0, 170, "data:image/gif;base64,R0lGODlhCwALAPABAP///wAAACH5BAUAAAEALAAAAAALAAsAAAIMjI+py+0BopSv2qsKADs="));
                 bottom.append(createBtnGroup("thumb", 0.8, 0, scrollY));
 
-                // 버튼 클릭 이벤트 설정
                 setButtonEvents();
                 setScrollEvent(bar);
             });
@@ -233,7 +224,6 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
                 x2 = axis.area("x2"),
                 y2 = axis.area("y2");
 
-            // 컨트롤러 위치 설정
             if(ot == "bottom" && ag == "start") {
                 g.translate(dx, y2 - (273 + dy));
             } else if(ot == "bottom" && ag == "end") {
@@ -255,8 +245,8 @@ jui.define("chart.widget.map.control", [ "util.base" ], function(_) {
             /** @cfg {"start"/"end" } Aligns the label (center, start, end). */
             align: "start",
 
-            minScale: 1,
-            maxScale: 3,
+            min: 1,
+            max: 3,
 
             dx: 5,
             dy: 5

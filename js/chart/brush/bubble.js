@@ -20,16 +20,16 @@ jui.define("chart.brush.bubble", [], function() {
          * @param {Number} index
          * @return {GroupElement}
          */
-        function createBubble(chart, brush, pos, index) {
+        function createBubble(chart, brush, pos, color) {
             var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
                 circle = chart.svg.group();
 
             circle.append(
                 chart.svg.circle({
                     r: radius,
-                    "fill": self.color(index),
+                    "fill": color,
                     "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
-                    "stroke": self.color(index),
+                    "stroke": color,
                     "stroke-width": chart.theme("bubbleBorderWidth")
                 })
             ).translate(pos.x, pos.y);
@@ -53,7 +53,7 @@ jui.define("chart.brush.bubble", [], function() {
                 for(var j = 0; j < points[i].x.length; j++) {
                     var b = createBubble(chart, brush, {
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
-                    }, i);
+                    }, this.color(j, i));
 
                     this.addEvent(b, j, i);
                     g.append(b);

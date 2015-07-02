@@ -1,4 +1,4 @@
-jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
 
     /**
      * @class chart.brush.over 
@@ -6,20 +6,25 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
-		var activePath = null;
+		var g = null,
+			activePath = null;
+
+		this.drawBefore = function() {
+			g = chart.svg.group();
+		}
 
 		this.draw = function() {
-			var g = chart.svg.group(),
-				originFill = null;
+			var originFill = null;
 
 			this.on("map.mouseover", function(obj, e) {
 				if(activePath == obj.path) return;
 
 				originFill = obj.path.styles.fill || obj.path.attributes.fill;
 				obj.path.css({
-					fill: chart.theme("mapSelectorColor")
+					fill: chart.theme("mapSelectorHoverColor")
 				});
 			});
+
 			this.on("map.mouseout", function(obj, e) {
 				if(activePath == obj.path) return;
 
@@ -44,12 +49,27 @@ jui.define("chart.brush.map.selector", [ "util.base" ], function(_) {
 				});
 			}
 
+			if(brush.active.length > 0) {
+				activePath = [];
+
+				axis.map.each(function(i, obj) {
+					if($.inArray(axis.getValue(obj.data, "id"), brush.active) != -1) {
+						activePath.push(obj.path);
+
+						obj.path.css({
+							fill: chart.theme("mapSelectorActiveColor")
+						});
+					}
+				});
+			}
+
 			return g;
 		}
 	}
 
 	MapSelectorBrush.setup = function() {
 		return {
+			active: [],
 			activeEvent: null
 		}
 	}

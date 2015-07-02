@@ -101,8 +101,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             return elem.scale;
         }
 
-        var mapObj = null;
-
         function drawMapType(axis, k) {
             if(k == "map" && !_.typeCheck("object", axis[k])) return null;
 
@@ -416,30 +414,17 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          * 
          * grid 정보를 업데이트 한다.  
          *  
-         * @param {"x"/"y"/"c"} type
+         * @param {"x"/"y"/"c"/"map"} type
          * @param {Object} grid
          */
-        this.updateGrid = function(type, grid) {
-            _.extend(originAxis[type], grid);
-            if(chart.isRender()) chart.render();
-        }
-
-        /**
-         * @method updateMap
-         *
-         * map 정보를 업데이트 한다.
-         *
-         * @param {Object} map
-         * @param {Array} data
-         */
-        this.updateMap = function(map, data) {
-            _.extend(originAxis["map"], map);
-
-            if(_.typeCheck("array", data)) {
-                this.update(data);
+        this.updateGrid = function(type, grid, isReset) {
+            if(isReset === true) {
+                originAxis[type] = grid;
             } else {
-                if(chart.isRender()) chart.render();
+                _.extend(originAxis[type], grid);
             }
+
+            if(chart.isRender()) chart.render();
         }
 
         /**

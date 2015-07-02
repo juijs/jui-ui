@@ -10,18 +10,28 @@ jui.define("chart.brush.stackcolumn", [], function() {
 	var ColumnStackBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startX = axis.x(i) - bar_width / 2,
+				var startX = this.offset("x", i) - bar_width / 2,
                     startY = axis.y(0),
                     value = 0;
 

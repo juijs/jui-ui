@@ -75,7 +75,7 @@ jui.define("chart.brush.line", [], function() {
             var display = this.brush.display;
 
             for (var i = 0; i < pos.x.length; i++) {
-                if(display == "max" && pos.max[i] || display == "min" && pos.min[i]) {
+                if((display == "max" && pos.max[i]) || (display == "min" && pos.min[i]) || display == "all") {
                     var orient = (display == "max" && pos.max[i]) ? "top" : "bottom";
 
                     var minmax = this.drawTooltip(this.color(index), circleColor, 1);
@@ -186,7 +186,7 @@ jui.define("chart.brush.line", [], function() {
             active: null,
             /** @cfg {String} [activeEvent=null]  Activates the bar in question when a configured event occurs (click, mouseover, etc). */
             activeEvent: null,
-            /** @cfg {"max"/"min"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
+            /** @cfg {"max"/"min"/"all"} [display=null]  Shows a tool tip on the bar for the minimum/maximum value.  */
             display: null
         };
     }

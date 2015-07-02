@@ -71,6 +71,7 @@ module.exports = function(grunt) {
         "js/chart/grid/block.js",
         "js/chart/grid/date.js",
         "js/chart/grid/dateblock.js",
+        "js/chart/grid/fullblock.js",
         "js/chart/grid/radar.js",
         "js/chart/grid/range.js",
         "js/chart/grid/log.js",
@@ -85,6 +86,8 @@ module.exports = function(grunt) {
         "js/chart/brush/core.js",
         "js/chart/brush/imagebar.js",
         "js/chart/brush/imagecolumn.js",
+        "js/chart/brush/patternbar.js",
+        "js/chart/brush/patterncolumn.js",
         "js/chart/brush/bar.js",
         "js/chart/brush/column.js", // extends bar
         "js/chart/brush/bar3d.js",
@@ -136,9 +139,12 @@ module.exports = function(grunt) {
         // map brush
         "js/chart/brush/map.core.js",
         "js/chart/brush/map.selector.js",
-        "js/chart/brush/map.template.js",
+        "js/chart/brush/map.note.js",
         "js/chart/brush/map.bubble.js",
+        "js/chart/brush/map.comparebubble.js",
         "js/chart/brush/map.flightroute.js",
+        "js/chart/brush/map.marker.js",
+        "js/chart/brush/map.weather.js",
 
         // chart.widget
         "js/chart/widget/core.js",
@@ -151,6 +157,7 @@ module.exports = function(grunt) {
         "js/chart/widget/vscroll.js", // vertical scroll
         "js/chart/widget/cross.js",
         "js/chart/widget/topologyctrl.js",
+        "js/chart/widget/dragselect.js",
 
         // map widget
         "js/chart/widget/map.core.js",
@@ -264,7 +271,7 @@ module.exports = function(grunt) {
             list = {};
 
         arr.forEach(function(it) {
-            var filename = it.split("/").pop().replace(".png", "").replace("pattern_", "");
+            var filename = it.split("/").pop().replace(".png", "").replace("pattern-", "");
 
             var obj = {
                 type : "pattern",
@@ -292,13 +299,19 @@ module.exports = function(grunt) {
             icons = [];
 
         obj.stylesheet.rules.forEach(function(item) {
-            if (item.declarations && item.declarations[0] && item.declarations[0].property == "content") {
-                var obj = {
-                    name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
-                    content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
+            if (item.declarations && item.declarations[0] && item.declarations[0].property == "content"  ) {
+
+                if (item.selectors[0].indexOf(".datepicker") > -1 || item.selectors[0].indexOf(".calendar") > -1) {
+
+                }  else {
+                    var obj = {
+                        name : item.selectors[0].replace(".jui .icon-", "").replace(":before", ""),
+                        content : '\\' + item.declarations[0].value.replace(/\"/g, "").replace(/[\\]+/g, 'u')
+                    }
+
+                    icons.push('\t\t"' + obj.name + '" : "' + obj.content + '"');
                 }
 
-                icons.push('\t\t"' + obj.name + '" : "' + obj.content + '"');
             }
         })
 

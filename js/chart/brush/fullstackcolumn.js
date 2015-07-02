@@ -10,11 +10,21 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 	var FullStackColumnBrush = function(chart, axis, brush) {
 		var g, zeroY, width, bar_width;
 
+		this.getTargetSize = function() {
+			var width = this.axis.x.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return width - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			zeroY = axis.y(0);
 			width = axis.x.rangeBand();
-			bar_width = width - brush.outerPadding * 2;
+			bar_width = this.getTargetSize();
 		}
 
 		this.draw = function() {
@@ -23,11 +33,11 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startX = axis.x(i) - bar_width / 2,
+				var startX = this.offset("x", i) - bar_width / 2,
                     sum = 0,
                     list = [];
 
-				for (var j = 0; j < brush.target.length; j++) {
+				for(var j = 0; j < brush.target.length; j++) {
 					var height = data[brush.target[j]];
 
 					sum += height;
@@ -37,7 +47,7 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 				var startY = 0,
                     max = axis.y.max();
 				
-				for (var j = list.length - 1; j >= 0; j--) {
+				for(var j = list.length - 1; j >= 0; j--) {
 					var height = chart_height - axis.y.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 

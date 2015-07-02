@@ -1,4 +1,4 @@
-jui.define("chart.brush.imagebar", [], function() {
+jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagebar
@@ -7,60 +7,94 @@ jui.define("chart.brush.imagebar", [], function() {
      *
      * @extends chart.brush.column
      */
-	var ImageBarBrush = function(chart, axis, brush) {
-		var g;
-		var zeroX, height, half_height, bar_height;
+	var ImageBarBrush = function() {
+		var self = this;
+		var g, targets, padding, zeroX, height, half_height, col_width, col_height;
+
+		this.getImageURI = function(key, value) {
+			var uri = this.brush.uri;
+
+			if(_.typeCheck("function", uri)) {
+				uri = uri.apply(this.chart, [ key, value ]);
+			}
+
+			return uri;
+		}
+
+		this.getBarStyle = function() {
+			return {
+				borderColor: this.chart.theme("barBorderColor"),
+				borderWidth: this.chart.theme("barBorderWidth"),
+				borderOpacity: this.chart.theme("barBorderOpacity")
+			}
+		}
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			zeroX = axis.x(0);
-			height = axis.y.rangeBand();
-			half_height = height - (brush.outerPadding * 2);
-
-			bar_height = (half_height - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-			bar_height = (bar_height < 0) ? 0 : bar_height;
+			g = this.chart.svg.group();
+			targets = this.brush.target;
+			padding = this.brush.innerPadding;
+			zeroX = this.axis.x(0);
+			height = this.axis.y.rangeBand();
+			col_width = this.brush.width;
+			col_height = this.brush.height;
+			half_height = (col_height * targets.length) + ((targets.length - 1) * padding);
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startY = axis.y(i) - (half_height / 2);
+				var startY = this.offset("y", i) - (half_height / 2);
 
-				for (var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
-						tooltipX = axis.x(value),
-						position = (tooltipX >= zeroX) ? "right" : "left";
+				for (var j = 0; j < targets.length; j++) {
+					var value = data[targets[j]],
+						startX = this.axis.x(value);
 
-					// 최소 크기 설정
-					if(Math.abs(zeroX - tooltipX) < brush.minSize) {
-						tooltipX = (position == "right") ? tooltipX + brush.minSize : tooltipX - brush.minSize;
-					}
+					var width = Math.abs(zeroX - startX),
+						bar = this.chart.svg.group({}, function() {
+							var img = self.chart.svg.image({
+								width: col_width,
+								height: col_height,
+								"xlink:href": self.getImageURI(targets[j], value)
+							});
 
-					var width = Math.abs(zeroX - tooltipX),
-						r = this.chart.svg.image({
-							width : bar_height,
-							height : bar_height,
-							"xlink:href" : brush.uri
+							if(self.brush.fixed) {
+								var w = width - col_width,
+									style = self.getBarStyle();
+
+								// 바 크기 음수 처리
+								if(w < 0) w = 0;
+
+								self.chart.svg.rect({
+									width: w,
+									height: col_height,
+									fill: self.color(i, j),
+									stroke : style.borderColor,
+									"stroke-width" : style.borderWidth,
+									"stroke-opacity" : style.borderOpacity
+								});
+
+								img.translate(w, 0);
+							} else {
+								if(width > 0 && col_width > 0) {
+									img.scale((width > col_width) ? width / col_width : col_width / width, 1);
+								}
+							}
 						});
 
 					if(value != 0) {
-						this.addEvent(r, i, j);
+						this.addEvent(bar, i, j);
 					}
 
-					if (tooltipX >= zeroX) {
-						r.translate(zeroX, startY);
+					if (startX >= zeroX) {
+						bar.translate(zeroX, startY);
 					} else {
-						r.translate(zeroX - width, startY);
-					}
-
-					if(width > 0) {
-						r.scale((width > bar_height) ? width / bar_height : bar_height / width, 1);
+						bar.translate(zeroX - width, startY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
-					g.append(r);
+					g.append(bar);
 
 					// 다음 컬럼 좌표 설정
-					startY += bar_height + brush.innerPadding;
+					startY += col_height + padding;
 				}
 			});
 
@@ -70,14 +104,11 @@ jui.define("chart.brush.imagebar", [], function() {
 
 	ImageBarBrush.setup = function() {
 		return {
-			/** @cfg {Number} [minSize=0] Sets the minimum size as it is not possible to draw a bar when the value is 0. */
-			minSize: 0,
-			/** @cfg {Number} [outerPadding=2] Determines the outer margin of a bar.  */
-			outerPadding: 2,
-			/** @cfg {Number} [innerPadding=1] Determines the inner margin of a bar. */
-			innerPadding: 1,
-			/** @cfg {Number} [uri=null] */
-			uri : null
+			innerPadding: 2,
+			width: 0,
+			height: 0,
+			fixed: true,
+			uri: null
 		}
 	}
 

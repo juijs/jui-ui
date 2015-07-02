@@ -21,7 +21,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 				cy : cy,
 				r : r,
 				"fill-opacity" : 0,
-				stroke : self.color("gridAxisBorderColor"),
+				stroke : self.color("gridBorderColor"),
 				"stroke-width" : self.chart.theme("gridBorderWidth")
 			}));
 		}
@@ -46,7 +46,7 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 			var path = self.chart.svg.path({
 				"fill" : "none",
-				stroke : self.color("gridAxisBorderColor"),
+				stroke : self.color("gridBorderColor"),
 				"stroke-width" : self.chart.theme("gridBorderWidth")
 			});
 
@@ -211,7 +211,9 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 						x : tx,
 						y : ty,
 						"text-anchor" : talign,
-						fill : this.chart.theme("gridFontColor")
+						"font-size" : this.chart.theme("gridCFontSize"),
+						"font-weight" : this.chart.theme("gridCFontWeight"),
+						fill : this.chart.theme("gridCFontColor")
 					}, this.domain[i]))
 				}
 				
@@ -249,7 +251,9 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 					root.append(this.chart.text({
 						x : centerX,
 						y : centerY + (startY + h - 5),
-						fill : this.chart.theme("gridFontColor")
+						"font-size" : this.chart.theme("gridCFontSize"),
+						"font-weight" : this.chart.theme("gridCFontWeight"),
+						fill : this.chart.theme("gridCFontColor")
 					}, (this.grid.max - stepBase) + ""))
 				}
 

@@ -9,7 +9,7 @@ jui.define("chart.brush.stackbar", [], function() {
 	 *
 	 */
 	var StackBarBrush = function(chart, axis, brush) {
-		var g, height, bar_width;
+		var g, height, bar_height;
 
 		this.addBarElement = function(elem) {
 			if(this.barList == null) {
@@ -72,21 +72,31 @@ jui.define("chart.brush.stackbar", [], function() {
 			}
 		}
 
+		this.getTargetSize = function() {
+			var height = this.axis.y.rangeBand();
+
+			if(this.brush.size > 0) {
+				return this.brush.size;
+			} else {
+				return height - this.brush.outerPadding * 2;
+			}
+		}
+
 		this.drawBefore = function() {
 			g = chart.svg.group();
 			height = axis.y.rangeBand();
-			bar_width = height - brush.outerPadding * 2;
+			bar_height = this.getTargetSize();
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 				
-				var startY = axis.y(i) - bar_width/ 2,
+				var startY = this.offset("y", i) - bar_height / 2,
                     startX = axis.x(0),
                     value = 0;
 				
-				for (var j = 0; j < brush.target.length; j++) {
+				for(var j = 0; j < brush.target.length; j++) {
 					var xValue = data[brush.target[j]] + value,
                         endX = axis.x(xValue),
 						r = this.getBarElement(i, j);
@@ -95,7 +105,7 @@ jui.define("chart.brush.stackbar", [], function() {
 						x : (startX < endX) ? startX : endX,
 						y : startY,
 						width : Math.abs(startX - endX),
-						height : bar_width
+						height : bar_height
 					});
 
 					group.append(r);

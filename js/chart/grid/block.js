@@ -9,27 +9,69 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
      * @extends chart.grid.core
      */
 	var BlockGrid = function() {
-        /**
-         * @method top
-         *
-         * @protected
-         */
 
+		this.getLineForArea = function(orient, area) {
+			if (orient == "right" || orient == "left") {
+				var x  = this.axis.get("x");
+
+				x.orient = (x.orient == "top") ? "top" : "bottom";
+
+				if (x && (x.orient == "top")) {
+					area.y1 += this.scale.rangeBand();
+					area.y2 += this.scale.rangeBand();
+				}
+
+			} else if (orient == "top" || orient == "bottom") {
+				var y  = this.axis.get("y");
+
+				y.orient = y.orient == "right" ? "right" : "left";
+
+				if (y && (y.orient == "left")) {
+					area.x1 += this.scale.rangeBand();
+					area.x2 += this.scale.rangeBand();
+				}
+			}
+
+			return area;
+		}
+
+		this.checkDrawLineTop = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineBottom  = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineLeft = function(index, isLast) {
+			return true;
+		}
+
+		this.checkDrawLineRight = function(index, isLast) {
+			return true;
+		}
+
+
+		/**
+		 * @method top
+		 *
+		 * @protected
+		 */
 		this.top = function(g) {
 			this.drawTop(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine("top", g);
 
-			if (!this.grid.full) {
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.end + ", 0)"
-				});
+			var y = this.axis.get('y');
+			var axis = this.chart.svg.group({
+				"transform" : "translate(" + this.end + ", 0)"
+			});
 
-				axis.append(this.line({
-					y2 : -this.chart.theme("gridTickSize")
-				}));
+			axis.append(this.line({
+				y1 : (y && y.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
+				y2 : (y && y.hide) ? this.axis.area('height') : -this.chart.theme("gridTickBorderSize")
+			}));
 
-				g.append(axis);
-			}
+			g.append(axis);
 		}
 
         /**
@@ -41,17 +83,17 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine("bottom", g);
 
-			if (!this.grid.full) {
-				var axis = this.chart.svg.group({
-					"transform" : "translate(" + this.end + ", 0)"
-				})
+			var y = this.axis.get('y');
+			var axis = this.chart.svg.group({
+				"transform" : "translate(" + this.end + ", 0)"
+			})
 
-				axis.append(this.line({
-					y2 : this.chart.theme("gridTickSize")
-				}));
+			axis.append(this.line({
+				y1 : (y && y.hide) ? this.chart.theme("gridTickBorderSize") : 0,
+				y2 : (y && y.hide) ? -this.axis.area('height') : this.chart.theme("gridTickBorderSize")
+			}));
 
-				g.append(axis);
-			}
+			g.append(axis);
 
 		}
 
@@ -64,17 +106,19 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawLeft(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine("left", g);
 
-			if (!this.grid.full) {
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + this.end + ")"
-				})
+			var x = this.axis.get('x');
 
-				axis.append(this.line({
-					x2 : -this.chart.theme("gridTickSize")
-				}));
+			var axis = this.chart.svg.group({
+				"transform" : "translate(0, " + this.end + ")"
+			})
 
-				g.append(axis);
-			}
+			axis.append(this.line({
+				x1 : (x && x.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
+				x2 : (x && x.hide) ? this.axis.area('width') : -this.chart.theme("gridTickBorderSize")
+			}));
+
+			g.append(axis);
+
 		}
         
         /**
@@ -86,21 +130,19 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawRight(g, this.domain, this.points, null, -this.half_band);
 			this.drawBaseLine("right", g);
 
-			if (!this.grid.full) {
-				var axis = this.chart.svg.group({
-					"transform" : "translate(0, " + this.end + ")"
-				});
+			var x = this.axis.get('x');
 
-				axis.append(this.line({
-					x2 : this.chart.theme("gridTickSize")
-				}));
+			var axis = this.chart.svg.group({
+				"transform" : "translate(0, " + this.end + ")"
+			});
 
-				g.append(axis);
-			}
+			axis.append(this.line({
+				x1 : (x && x.hide) ? this.chart.theme("gridTickBorderSize") : 0,
+				x2 : (x && x.hide) ? -this.axis.area('width') : this.chart.theme("gridTickBorderSize")
+			}));
 
+			g.append(axis);
 		}
-
-
 
 		/**
 		 * @method initDomain
@@ -158,11 +200,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.scale = UtilScale.ordinal().domain(domain);
 			var range = [obj.start, obj.end];
 
-			if (this.grid.full) {
-				this.scale.rangeBands(range);
-			} else {
-				this.scale.rangePoints(range);
-			}
+			this.scale.rangePoints(range);
 
 			this.start = obj.start;
 			this.size = obj.size;
@@ -171,7 +209,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.domain = this.scale.domain();
 
 			this.band = this.scale.rangeBand();
-			this.half_band = (this.grid.full) ? 0 : this.band / 2;
+			this.half_band = this.band/2;
 			this.bar = 6;
 			this.reverse = this.grid.reverse;
 		}
@@ -195,9 +233,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
             /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
             /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-			max: 10,
-            /** @cfg {Boolean} [full=false] Determines whether to expand the reference coordinates to the entire range.*/
-			full: false
+			max: 10
 		};
 	}
 

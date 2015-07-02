@@ -1,12 +1,12 @@
 jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
-    /**
-     * @class chart.grid.dateblock 
-     * 
-     * implements date block grid
-     *
-     * @extends chart.grid.date  
-     */
+	/**
+	 * @class chart.grid.dateblock
+	 *
+	 * implements date block grid
+	 *
+	 * @extends chart.grid.date
+	 */
 	var DateBlockGrid = function() {
 
 		this.wrapper = function(scale, key) {
@@ -27,12 +27,12 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		 *
 		 */
 		this.initDomain = function() {
-
+			var domain = [],
+				interval = [];
 			var min = this.grid.min || undefined,
 				max = this.grid.max || undefined;
-			var data = this.data();
-
-            var value_list = [] ;
+			var data = this.data(),
+				value_list = [] ;
 
 			if (_.typeCheck("string", this.grid.domain)) {
 				var field = this.grid.domain;
@@ -40,19 +40,17 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				value_list.push(+data[data.length-1][field]);
 			} else if (_.typeCheck("function", this.grid.domain)) {
 				var index = data.length;
+
 				while(index--) {
+					var value = this.grid.domain.call(this.chart, data[index]);
 
-            var value = this.grid.domain.call(this.chart, data[index]);
-
-            if (_.typeCheck("array", value)) {
-                value_list[index] = +Math.max.apply(Math, value);
-                value_list.push(+Math.min.apply(Math, value));
-            } else {
-                value_list[index]  = +value;
-            }
-        }
-
-
+					if (_.typeCheck("array", value)) {
+						value_list[index] = +Math.max.apply(Math, value);
+						value_list.push(+Math.min.apply(Math, value));
+					} else {
+						value_list[index]  = +value;
+					}
+				}
 			} else {
 				value_list = this.grid.domain;
 			}
@@ -62,52 +60,45 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 			this.grid.max = max;
 			this.grid.min = min;
-			var domain = [this.grid.min, this.grid.max];
-
-			if (_.typeCheck("function", this.grid.step)) {
-				this.grid.step = this.grid.call(this.chart, domain);
-			}
-
-      if (_.typeCheck("number", this.grid.step)) {
-        this.grid.step = ["seconds", this.grid.step];
-      }
+			domain = [ this.grid.min, this.grid.max ];
+			interval = this.grid.interval;
 
 			if (this.grid.reverse) {
 				domain.reverse();
+			}
+
+			if (_.typeCheck("function", interval)) {
+				domain.interval = interval.call(this.chart, domain);
+			} else {
+				domain.interval = interval;
 			}
 
 			return domain;
 		}
 
 		this.drawBefore = function() {
+			var domain = this.initDomain(),
+				obj = this.getGridSize(), range = [obj.start, obj.end],
+				time = UtilScale.time().domain(domain).rangeRound(range);
 
-			var self = this;
-			var domain = this.initDomain();
-
-			var obj = this.getGridSize(), range = [obj.start, obj.end];
-
-			var time = UtilScale.time().domain(domain).rangeRound(range);
-			var len = this.axis.data.length;
-
-			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(this.grid.full ? len- 1 : len);
-			var half_unit = unit/2;
-
-
-			if (this.grid.realtime) {
-				this.ticks = time.realTicks(this.grid.step[0], this.grid.step[1]);
+			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
+				this.ticks = time.realTicks(this.grid.realtime, domain.interval);
 			} else {
-				this.ticks = time.ticks(this.grid.step[0], this.grid.step[1]);
+				this.ticks = time.ticks("milliseconds", domain.interval);
 			}
+
+			var len = this.axis.data.length  - 1;
+			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(len);
 
 			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
 					grid.format = function(value) {
 						return UtilTime.format(value, str);
-					}	
+					}
 				})(this.grid, this.grid.format)
 			}
 
-			// step = [this.time.days, 1];
+			// interval = [this.time.days, 1];
 			this.start = obj.start;
 			this.size = obj.size;
 			this.end = obj.end;
@@ -119,7 +110,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			}
 
 			this.scale = $.extend((function(i) {
-				return  i * unit + (self.grid.full ? 0 : half_unit);
+				return  i * unit;
 			}), time);
 
 		}
@@ -131,8 +122,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 	DateBlockGrid.setup = function() {
 		return {
-			/** @cfg {Boolean} [full=true] */
-			full: true
+
 		};
 	}
 

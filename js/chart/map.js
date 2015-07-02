@@ -7,7 +7,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
      */
     var Map = function() {
         var self = this;
-        var pathURI = null,
+        var pathData = {},
             pathGroup = null,
             pathIndex = {},
             pathScale = 1,
@@ -26,19 +26,19 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                         delete data[i].style;
                     }
 
-                    var elem = SVG.createObject({ type: "path", attr: data[i] });
+                    var elem = SVG.createObject({
+                        type: (data[i].d != null) ? "path" : "polygon",
+                        attr: data[i]
+                    });
 
-                    // Set theme styles
-                    elem.attr({
+                    // Set styles
+                    elem.attr(_.extend(style, {
                         fill: self.chart.theme("mapPathBackgroundColor"),
                         "fill-opacity": self.chart.theme("mapPathBackgroundOpacity"),
                         stroke: self.chart.theme("mapPathBorderColor"),
                         "stroke-width": self.chart.theme("mapPathBorderWidth"),
                         "stroke-opacity": self.chart.theme("mapPathBorderOpacity")
-                    });
-
-                    // Set resource styles
-                    elem.css(style);
+                    }));
 
                     children.push({
                         path: elem,
@@ -65,28 +65,71 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             return children;
         }
 
-        function loadPath(uri) {
+        function getPathList(root) {
+            if(!_.typeCheck("string", root.id)) return;
+
             var pathData = [];
+
+            $(root).children().each(function(i) {
+                var name = this.nodeName.toLowerCase();
+
+                if(name == "g") {
+                    pathData = pathData.concat(getPathList(this));
+                } else if(name == "path" || name == "polygon") {
+                    var obj = { group: root.id };
+
+                    $.each(this.attributes, function() {
+                        if(this.specified && isLoadAttribute(this.name)) {
+                            obj[this.name] = this.value;
+                        }
+                    });
+
+                    if(_.typeCheck("string", obj.id)) {
+                        _.extend(obj, getDataById(obj.id));
+                    }
+
+                    pathData.push(obj);
+                }
+            });
+
+            return pathData;
+        }
+
+        function loadPath(uri) {
+            // 해당 URI의 데이터가 존재할 경우
+            if(_.typeCheck("array", pathData[uri])) {
+                return loadArray(pathData[uri]);
+            }
+
+            // 해당 URI의 데이터가 없을 경우
+            pathData[uri] = [];
 
             $.ajax({
                 url: uri,
                 async: false,
-                success: function (xml) {
-                    var $path = $(xml).find("path"),
+                success: function(xml) {
+                    var $path = $(xml).find("svg").children(),
                         $style = $(xml).find("style");
 
-                    $path.each(function () {
-                        var obj = {};
+                    $path.each(function() {
+                        var name = this.nodeName.toLowerCase();
 
-                        $.each(this.attributes, function () {
-                            if(this.specified && isLoadAttribute(this.name)) {
-                                obj[this.name] = this.value;
+                        if(name == "g") {
+                            pathData[uri] = pathData[uri].concat(getPathList(this));
+                        } else if(name == "path" || name == "polygon") {
+                            var obj = {};
+
+                            $.each(this.attributes, function() {
+                                if(this.specified && isLoadAttribute(this.name)) {
+                                    obj[this.name] = this.value;
+                                }
+                            });
+
+                            if(_.typeCheck("string", obj.id)) {
+                                _.extend(obj, getDataById(obj.id));
                             }
-                        });
 
-                        if(_.typeCheck("string", obj.id)) {
-                            _.extend(obj, getDataById(obj.id));
-                            pathData.push(obj);
+                            pathData[uri].push(obj);
                         }
                     });
 
@@ -96,11 +139,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 }
             });
 
-            function isLoadAttribute(name) {
-                return (name == "id" || name == "title" || name == "x" || name == "y" || name == "d" || name == "class" || name == "style");
-            }
+            return loadArray(pathData[uri]);
+        }
 
-            return loadArray(pathData);
+        function isLoadAttribute(name) {
+            return (
+                name == "group" || name == "id" || name == "title" || name == "x" || name == "y" ||
+                name == "d" || name == "points" || name == "class" || name == "style"
+            );
         }
 
         function getDataById(id) {
@@ -226,12 +272,14 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
                 data = pathIndex[id].data;
 
                 if(data.x != null) {
-                    var cx = parseFloat(data.x);
+                    var dx = self.axis.getValue(data, "dx", 0),
+                        cx = parseFloat(data.x) + dx;
                     x = (cx * pathScale) - pxy.x;
                 }
 
                 if(data.y != null) {
-                    var cy = parseFloat(data.y);
+                    var dy = self.axis.getValue(data, "dy", 0),
+                        cy = parseFloat(data.y) + dy;
                     y = (cy * pathScale) - pxy.y;
                 }
             }
@@ -302,12 +350,7 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             pathScale = this.map.scale;
             pathX = this.map.viewX;
             pathY = this.map.viewY;
-
-            // pathURI가 다를 경우에만 pathGroup을 생성함
-            if(pathURI != this.map.path) {
-                pathGroup = makePathGroup();
-                pathURI = this.map.path;
-            }
+            pathGroup = makePathGroup();
 
             // pathGroup 루트에 추가
             root.append(pathGroup);

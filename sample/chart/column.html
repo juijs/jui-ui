@@ -129,7 +129,7 @@
                     orient : 'top',
                     //type : "block",  // default type is block
                     domain : [ "week1", "week2", "week3", "week4" ],
-                    line : true
+                    line : 'rect'
                 },
                 y : {
                     type : 'range',
@@ -140,10 +140,6 @@
                     line : true
                 }
             },
-            series : {
-                name : { text : "이름" },
-                value : { text : "값" }
-            },
             brush : [
             {
                 type : 'column',
@@ -151,6 +147,9 @@
                 active : 2,
                 activeEvent : "click"
             }],
+            widget : {
+                type: "tooltip"
+            },
             render : false,
             event : {
                 click : function(d, e) {

@@ -4,40 +4,21 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
-            width: 400,
+            width: 800,
             height : 400,
+            icon: {
+                type: "jennifer",
+                path: "../../img/icon-list.ttf"
+            },
             axis : [
                 {
                     data : [
@@ -51,32 +32,68 @@
                         { quarter : "08", sales : 36 },
                         { quarter : "09", sales : 56 },
                         { quarter : "10", sales : 30 },
-                        { quarter : "11", sales : 50000 },
+                        { quarter : "11", sales : 100 },
                         { quarter : "12", sales : 25 }
                     ],
                     y : {
                         type : "range",
-                        domain : [ 0, 70000 ],
+                        domain : [ 0, 100 ],
                         step : 10,
-                        line : true
+                        format : function(k, i) {
+                            return k;
+                        },
+                        image : function(k, i) {
+                            return {
+                                uri: "resource/facebook.png",
+                                width: 18,
+                                height: 18,
+                                dist: 30
+                            }
+                        },
+                        line : true,
+                        orient  : "right"
                     },
                     x : {
                         type : "block",
                         domain : "quarter",
-                        line : true
+                        format : function(k, i) {
+                            return k;
+                        },
+                        image : function(k, i) {
+                            return {
+                                uri: "resource/facebook.png",
+                                width: 24,
+                                height: 24,
+                                dist: 5
+                            }
+                        },
+                        line : true,
+                        orient : "top"
                     }
                 }
 
             ],
-            brush : {
+            brush : [{
                 type : "column",
+                size : 10,
                 target : "sales",
                 display : "max",
                 activeEvent : "mouseover",
                 active : 1,
                 minSize : 5,
-                animate : "top"
-            },
+                animate : "bottom",
+                colors : function(data, dataKey) {
+                    if(data.sales > 99) {
+                        return "red";
+                    }
+
+                    return "blue";
+                }
+            }, {
+                type: "focus",
+                start : 2,
+                end : 2
+            }],
             widget : {
                 type : "title",
                 text : "Bar Sample",
@@ -86,6 +103,17 @@
                 "axis.click" : function(e) {
                     console.log(e);
                 }
+            },
+            style : {
+                //gridYFontSize : 20,
+                //gridXFontSize : 20,
+                /*/
+                tooltipPointRadius : 0,
+                gridYAxisBorderWidth : 0,
+                gridXAxisBorderWidth : 1,
+                gridXAxisBorderColor : "#ebebeb",
+                gridTickBorderSize : 0
+                /**/
             }
         });
 	})

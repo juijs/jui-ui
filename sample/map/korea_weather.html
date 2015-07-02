@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    var d = [{
+        id: "서울",
+        temperature: 25,
+        weather: "cloudy",
+        dx: 10
+    }, {
+        id: "인천",
+        temperature: 28,
+        weather: "sunny",
+        dx: -50,
+        dy: 20
+    }, {
+        id: "강원",
+        temperature: 25,
+        weather: "rain"
+    }, {
+        id: "충북",
+        temperature: 26,
+        weather: "rain",
+        dx: 20
+    }, {
+        id: "충남",
+        temperature: 22,
+        weather: "sunny",
+        dx: 5
+    }, {
+        id: "전북",
+        temperature: 26,
+        weather: "murky"
+    }, {
+        id: "전남",
+        temperature: 25,
+        weather: "cloudy",
+        dx: -25
+    }, {
+        id: "경북",
+        temperature: 25,
+        weather: "sunny"
+    }, {
+        id: "경남",
+        temperature: 26,
+        weather: "cloudy"
+    }, {
+        id: "제주",
+        temperature: 24,
+        weather: "murky",
+        dx: -25,
+        dy: -30
+    }, {
+        id: "울릉",
+        temperature: 24,
+        weather: "murky",
+        dx: -40
+    }];
+
+    // 488, 185
+
+    jui.ready([ "chart.builder" ], function(chart) {
+        c = chart("#chart", {
+            width : 500,
+            height : 650,
+            padding : 0,
+            axis : [{
+                map : {
+                    path : "../../img/map/korea-500x650.svg",
+                    width : 500,
+                    height : 650
+                },
+                data : d
+            }],
+            brush : [{
+                type : "map.weather",
+                format : function(id) {
+                    if(id == "서울") {
+                        return "서울/경기";
+                    } else if(id == "인천") {
+                        return "서해5도";
+                    }
+                }
+            }],
+            style : {
+                mapPathBackgroundColor : "white",
+                mapPathBorderColor : "#a9a9a9"
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

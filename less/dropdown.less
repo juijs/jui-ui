@@ -33,7 +33,7 @@
       .border-radius(6px);
       .box-shadow(0 2px 6px rgba(0,0,0,.25));
       
-      > li {
+      > li:not(.divider):not(.title) {
         position: relative;
         display: block;
       	float: none;
@@ -63,14 +63,20 @@
     ul > li:not(.divider) {
       padding: 3px 20px !important;
       font-size: 12px !important;
-    }  
+    }
+    ul > li.title {
+      font-weight: bold !important;
+    }
   }
   .dropdown-normal {
      ul > li:not(.divider) {
       padding: 0px 10px;
       line-height: 20px;
       font-size: 12px;
-    }  
+    }
+    ul > li.title {
+      font-weight: bold;
+    }
   }
 
 
@@ -85,15 +91,14 @@
       > li {
         color: #333;
 	      
-	    &:hover:not(.divider), 
-	    &:focus:not(.divider),
+	    &:hover:not(.divider):not(.title),
+	    &:focus:not(.divider):not(.title),
 	    &.active {
 	    	#gradient > .vertical(#9a73f3, #693cc6);
 	        color: #fff;
 		}
       }
-      
-      
+
       > li.divider {
         .nav-divider(#e5e5e5, #fff);
       }
@@ -113,8 +118,8 @@
       > li {
         color: #fff;
         
-        &:hover:not(.divider), 
-	    &:focus:not(.divider),
+        &:hover:not(.divider):not(.title),
+	    &:focus:not(.divider):not(.title),
 	    &.active {
 	    	#gradient > .vertical(#9a73f3, #693cc6);
 	        color: #fff;

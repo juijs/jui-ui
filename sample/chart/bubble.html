@@ -4,33 +4,10 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
     jui.ready(["chart.builder"], function(chart) {
@@ -59,16 +36,19 @@
                     step : 10
                 }
             }],
-            series : {
-                name : { text : "test" },
-                value : { text : "test" }
-            },
             brush : {
                 type : 'bubble',
                 //colors : [ "red", "blue" ],
                 target : [ 'name', 'value'],
                 min : 1,
-                max : 50
+                max : 50,
+                colors : function(data) {
+                    if(data.value > 5 && data.name > 5) {
+                        return "red";
+                    }
+
+                    return "blue";
+                }
             },
             event: {
                 click: function(obj, e) {

@@ -1,4 +1,5 @@
 jui.define("chart.brush.topologynode.edge", [], function() {
+
     /**
      * @class chart.brush.topologynode.edge
      * 
@@ -137,7 +138,7 @@ jui.define("chart.brush.topologynode",
                 keys = key.split(":");
 
             self.eachData(function(i, data) {
-                var title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "";
+                var title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle.call(chart, data) : "";
 
                 if(data.key == keys[0]) {
                     names[0] = title || data.key;
@@ -154,17 +155,16 @@ jui.define("chart.brush.topologynode",
 
         function createNodes(index, data) {
             var xy = axis.c(index),
-                color =_.typeCheck("function", brush.nodeColor) ?
-                brush.nodeColor(data) : (brush.nodeColor || self.color(0)),
-                title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle(data) : "",
-                text =_.typeCheck("function", brush.nodeText) ? brush.nodeText(data) : "";
+                color = self.color(index, 0),
+                title = _.typeCheck("function", brush.nodeTitle) ? brush.nodeTitle.call(chart, data) : "",
+                text =_.typeCheck("function", brush.nodeText) ? brush.nodeText.call(chart, data) : "";
 
             var node = chart.svg.group({
                 index: index
             }, function() {
                 if(_.typeCheck("function", brush.nodeImage)) {
                     chart.svg.image({
-                        "xlink:href": brush.nodeImage(data),
+                        "xlink:href": brush.nodeImage.call(chart, data),
                         width: r * 2,
                         height: r * 2,
                         x: -r,
@@ -266,7 +266,7 @@ jui.define("chart.brush.topologynode",
                 edgeData = getEdgeData(edge.key());
 
             if(edgeData != null) {
-                var edgeText = _.typeCheck("function", brush.edgeText) ? brush.edgeText(edgeData, edgeAlign) : null;
+                var edgeText = _.typeCheck("function", brush.edgeText) ? brush.edgeText.call(chart, edgeData, edgeAlign) : null;
 
                 if (edgeText != null) {
                     if (edgeAlign == "end") {
@@ -340,7 +340,7 @@ jui.define("chart.brush.topologynode",
             node.on("dblclick", function(e) {
                 if(active != null) resetActiveChart();
 
-                var nc = brush.nodeChart(data, e),
+                var nc = brush.nodeChart.call(chart, data, e),
                     w = nc.padding("left") + nc.padding("right") + nc.area("width"),
                     h = nc.padding("top") + nc.padding("bottom") + nc.area("height"),
                     r = Math.sqrt((w * w) + (h * h)) / 2;
@@ -420,11 +420,11 @@ jui.define("chart.brush.topologynode",
                 title.setAttribute("x", padding);
                 title.setAttribute("y", y);
                 title.setAttribute("font-weight", "bold");
-                title.textContent = brush.tooltipTitle(getTooltipTitle(edge_data.key), align);
+                title.textContent = brush.tooltipTitle.call(chart, getTooltipTitle(edge_data.key), align);
 
                 contents.setAttribute("x", padding);
                 contents.setAttribute("y", y + textY + (padding / 2));
-                contents.textContent = brush.tooltipText(edge_data, align);
+                contents.textContent = brush.tooltipText.call(chart, edge_data, align);
 
                 // 엘리먼트 위치 설정
                 var scale = chart.scale(),
@@ -557,9 +557,7 @@ jui.define("chart.brush.topologynode",
             nodeText: null,
             /** @cfg {Function} [nodeImage=null] */
             nodeImage: null,
-            /** @cfg {Function/String} [nodeColor=null] */
-            nodeColor: null,
-
+            /** @cfg {Function} [nodeChart=null] */
             nodeChart: null,
 
             /** @cfg {Array} [edgeData=[]] */

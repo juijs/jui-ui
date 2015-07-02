@@ -5,33 +5,10 @@
     <link rel="stylesheet" href="../../jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
     var chart = jui.include("chart.builder");
@@ -44,28 +21,27 @@
             x : {
                 type : "dateblock",
                 domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
-                step : [time.hours, 6],
-                format : "dd HH:mm",
-                line : true,
-                full : false
+                interval : 6 * 1000 * 60 * 60,
+                format : "HH:mm",
+                line : 'gradient'
             },
             y : {
                 type : "range",
-                domain : function(d) { return [d.sales, d.profit ]; },
+                domain : function(d) { return [d.sales, d.profit, 0 ]; },
                 step : 10,
                 line : true,
                 orient : "right"
             },
             data : [
                 { quarter : "1Q", sales : 50, profit : 35 },
-                { quarter : "2Q", sales : -20, profit : -30 },
-                { quarter : "3Q", sales : 10, profit : -5 },
+                { quarter : "2Q", sales : 20, profit : 30 },
+                { quarter : "3Q", sales : 10, profit : 10 },
                 { quarter : "4Q", sales : 30, profit : 25 }
             ]
         },
         brush : {
             type : "column",
-            target : [ "sales", "profit" ]
+            target : [ "sales" ]
         },
         widget : [
             { type : "title", text : "Column Sample" },
@@ -73,8 +49,6 @@
             { type : "legend" }
         ]
     });
-
-    console.log('aaaa');
 
 </script>
 

@@ -56,8 +56,9 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             function draw() {
                 return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                     self.chart.text({
-                        "text-anchor" : "middle",
+                        "font-size" : self.chart.theme("tooltipPointFontSize"),
                         "font-weight" : self.chart.theme("tooltipPointFontWeight"),
+                        "text-anchor" : "middle",
                         opacity: opacity
                     });
 
@@ -307,20 +308,26 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                 };
             }
             
-            var axisData = this.axis.data;
-            var x = this.axis.x;
-            var y = this.axis.y;
-
-            var func = _.loop(i);
+            var axisData = this.axis.data,
+                isRangeY = (this.axis.y.type == "range"),
+                x = this.axis.x,
+                y = this.axis.y,
+                func = _.loop(i);
 
             func(function(i, group) {
                 var data = axisData[i],
-                    startX = x(i);
+                    startX = 0,
+                    startY = 0;
+
+                if(isRangeY) startX = x(i);
+                else startY = y(i);
 
                 for(var j = 0; j < targetLength ; j++) {
                     var key = target[j],
-                        value = data[key],
-                        startY = y(value);
+                        value = data[key];
+
+                    if(isRangeY) startY = y(value);
+                    else startX = x(value);
 
                     xy[j].x[i] = startX;
                     xy[j].y[i] = startY;
@@ -347,7 +354,8 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          * @return {Array}
          */
         this.getStackXY = function(isCheckMinMax) {
-            var xy = this.getXY(isCheckMinMax);
+            var xy = this.getXY(isCheckMinMax),
+                isRangeY = (this.axis.y.type == "range");
 
             this.eachData(function(i, data) {
                 var valueSum = 0;
@@ -360,7 +368,11 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
                         valueSum += data[this.brush.target[j - 1]];
                     }
 
-                    xy[j].y[i] = this.axis.y(value + valueSum);
+                    if(isRangeY) {
+                        xy[j].y[i] = this.axis.y(value + valueSum);
+                    } else {
+                        xy[j].x[i] = this.axis.x(value + valueSum);
+                    }
                 }
             });
 
@@ -442,15 +454,55 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
          *  
          * chart.color() 를 쉽게 사용할 수 있게 만든 유틸리티 함수 
          *  
-         * @param {String/Number} key  문자열일 경우 컬러 코드, Number 일 경우 브러쉬에서 사용될 컬러 Index 
+         * @param {Number} key1  브러쉬에서 사용될 컬러 Index
+         * @param {Number} key2  브러쉬에서 사용될 컬러 Index
          * @returns {*}
          */
-        this.color = function(key) {
-            if(_.typeCheck("string", key)) {
-                return this.chart.color(0, { colors : [ key ] });
+        this.color = function(key1, key2) {
+            var colors = this.brush.colors,
+                color = null,
+                colorIndex = 0,
+                rowIndex = 0;
+
+            if(!_.typeCheck("undefined", key2)) {
+                colorIndex = key2;
+                rowIndex = key1;
+            } else {
+                colorIndex = key1;
             }
 
-            return this.chart.color(key, this.brush);
+            if(_.typeCheck("function", colors)) {
+                var newColor = colors.call(this.chart, this.getData(rowIndex));
+
+                if(_.typeCheck([ "string", "integer" ], newColor)) {
+                    color = this.chart.color(newColor);
+                } else {
+                    color = this.chart.color(0);
+                }
+            } else {
+                color = this.chart.color(colorIndex, colors);
+            }
+
+            return color;
+        }
+
+        /**
+         * @method offset
+         *
+         * 그리드 타입에 따른 시작 좌표 가져오기 (블럭)
+         *
+         * @param {String} 그리드 종류
+         * @param {Number} 인덱스
+         * @returns {*}
+         */
+        this.offset = function(type, index) { // 그리드 타입에 따른 시작 좌표 가져오기
+            var res = this.axis[type](index);
+
+            if(this.axis[type].type != "block") {
+                res += this.axis[type].rangeBand() / 2;
+            }
+
+            return res;
         }
 	}
 
@@ -464,7 +516,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
             /** @cfg {Array} [target=null] Specifies the key value of data displayed on a brush.  */
             target: null,
-            /** @cfg {Array} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
+            /** @cfg {Array/Function} [colors=null] Able to specify color codes according to the target order (basically, refers to the color codes of a theme) */
             colors: null,
             /** @cfg {Integer} [axis=0] Specifies the index of a grid group which acts as the reference axis of a brush. */
             axis: 0,

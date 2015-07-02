@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+    <script src="resource/data/total.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+
+
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        var temp = data["전국 시도별 성폭력 발생 건수"];
+
+        for(var i = 0, len = temp.length; i < len; i++) {
+            temp[i]['인구수 대비 발생비율'] = (temp[i]['인구수'] / temp[i]['발생 건수'] );
+        }
+
+        c = chart("#chart", {
+            height : 800,
+            padding : { right : 100 },
+            axis : [
+                {
+                    x : {
+                        domain : "지역",
+                        format : function(value) {
+                            return value.replace(/특별시|광역시|특별자치도/g, '');
+                        }
+                    },
+                    y : {
+                        type : 'range',
+                        domain : function(data) {
+                            return [0, data["발생 건수"] + 1000];
+                        },
+                        unit : 1000
+                    },
+                    data : data["전국 시도별 성폭력 발생 건수"],
+                    area : { x : '50%', width : '50%', height: '50%'}
+                },
+                {
+                    x : {
+                        domain : "지역",
+                        hide : true
+                    },
+                    y : {
+                        type : 'range',
+                        domain : "인구수 대비 발생비율",
+                        orient : "right",
+                        unit : 200
+                    },
+                    data : data["전국 시도별 성폭력 발생 건수"],
+                    area : { x : '50%', width : '50%', height : '50%'}
+                },
+
+
+                // 한국 지도
+                {
+                    map : {
+                        path : "resource/SouthKorea.svg",
+                        width : 950
+                    },
+                    area : {
+                        width : '50%'
+                    }
+                }
+            ],
+            brush : [
+                { type : "column", target : "발생 건수", display : "max" },
+                { type : "line", target : "인구수 대비 발생비율", axis : 1, colors : ["red"], display : "min" }
+            ],
+            widget : [
+                { type : 'title', text : "전국 시도별 성폭력 발생건수"}
+            ],
+            format : function(d) {
+                if(typeof(d) == "number") {
+                    return Math.round(d);
+                }
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

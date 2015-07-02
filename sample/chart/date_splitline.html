@@ -4,33 +4,10 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.chart.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
     jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
@@ -43,7 +20,7 @@
             var data = [],
                     value = 240;
 
-            for(var i = 0; i < 60 * 23; i++) {
+            for(var i = 0; i < 60 *24; i++) {
                 if(value < 60 * 8) {
                     value += 1;
                 }
@@ -66,10 +43,10 @@
             height: 400,
             axis : {
                 x : {
-                    type : "date",
+                    type : "dateblock",
                     domain : "time",
-                    step : [ time.hours, 1 ],
-                    format : "HH",
+                    interval : 1000 * 60 * 60 * 4,
+                    format : "dd HH:mm:ss",
                     key: "time"
                 },
                 y : {
@@ -81,25 +58,6 @@
                 },
                 data : today.data,
                 buffer: today.data.length
-            },
-            brush : [{
-                type : "splitarea",
-                target : [ "value" ],
-                split : now
-            }, {
-                type : "splitline",
-                target : [ "value" ],
-                split : now
-            }/*, {
-                type : "pin",
-                split : now,
-                format : function(d) {
-                    return time.format(d, "hh:mm");
-                }
-            }*/],
-            widget : {
-                type : "title",
-                text : "Line Sample"
             }
         });
 	})

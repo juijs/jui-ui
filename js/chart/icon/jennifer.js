@@ -1,5 +1,6 @@
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"connection" : "\ue65b",
 		"add-dir" : "\ue600",
 		"add-dir2" : "\ue601",
 		"align-center" : "\ue602",

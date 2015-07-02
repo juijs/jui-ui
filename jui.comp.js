@@ -1,13 +1,13 @@
-(function($, window, nodeGlobal) {
-	var global = { jquery: $ }, globalFunc = {}, globalClass = {} ;
-    var navigator = window.navigator;
+(function ($, window, nodeGlobal) {
+	var global = {jquery: $}, globalFunc = {}, globalClass = {};
+	var navigator = window.navigator;
 
 	// JUI의 기본 설정 값 (향후 더 추가될 수 있음)
 	var globalOpts = {
 		template: {
-			evaluate : /<\!([\s\S]+?)\!>/g,
-			interpolate : /<\!=([\s\S]+?)\!>/g,
-			escape : /<\!-([\s\S]+?)\!>/g
+			evaluate: /<\!([\s\S]+?)\!>/g,
+			interpolate: /<\!=([\s\S]+?)\!>/g,
+			escape: /<\!-([\s\S]+?)\!>/g
 		},
 		logUrl: "tool/debug.html"
 	};
@@ -22,58 +22,58 @@
 	 * @constructor
 	 * @private
 	 */
-	var QuickSort = function(array, isClone) { //
-        var compareFunc = null,
-        	array = (isClone) ? array.slice(0) : array;
+	var QuickSort = function (array, isClone) { //
+		var compareFunc = null,
+			array = (isClone) ? array.slice(0) : array;
 
-        function swap(indexA, indexB) {
-            var temp = array[indexA];
-            
-            array[indexA] = array[indexB];
-            array[indexB] = temp;
-        }
+		function swap(indexA, indexB) {
+			var temp = array[indexA];
 
-        function partition(pivot, left, right) {
-            var storeIndex = left, pivotValue = array[pivot];
-            swap(pivot, right);
+			array[indexA] = array[indexB];
+			array[indexB] = temp;
+		}
 
-            for(var v = left; v < right; v++) {
-            	if(compareFunc(array[v], pivotValue) || !compareFunc(pivotValue, array[v]) && v%2 == 1) {
-                	swap(v, storeIndex);
-                    storeIndex++;
-                }
-            }
+		function partition(pivot, left, right) {
+			var storeIndex = left, pivotValue = array[pivot];
+			swap(pivot, right);
 
-            swap(right, storeIndex);
+			for (var v = left; v < right; v++) {
+				if (compareFunc(array[v], pivotValue) || !compareFunc(pivotValue, array[v]) && v % 2 == 1) {
+					swap(v, storeIndex);
+					storeIndex++;
+				}
+			}
 
-            return storeIndex;
-        }
+			swap(right, storeIndex);
 
-        this.setCompare = function(func) {
-        	compareFunc = func;
-        }
+			return storeIndex;
+		}
 
-        this.run = function(left, right) {
-            var pivot = null;
+		this.setCompare = function (func) {
+			compareFunc = func;
+		}
 
-            if (typeof left !== 'number') {
-                left = 0;
-            }
+		this.run = function (left, right) {
+			var pivot = null;
 
-            if (typeof right !== 'number') {
-                right = array.length - 1;
-            }
+			if (typeof left !== 'number') {
+				left = 0;
+			}
 
-            if (left < right) {
-                pivot = left + Math.ceil((right - left) * 0.5);
-                newPivot = partition(pivot, left, right);
+			if (typeof right !== 'number') {
+				right = array.length - 1;
+			}
 
-                this.run(left, newPivot - 1);
-                this.run(newPivot + 1, right);
-            }
-            
-            return array;
-        }
+			if (left < right) {
+				pivot = left + Math.ceil((right - left) * 0.5);
+				newPivot = partition(pivot, left, right);
+
+				this.run(left, newPivot - 1);
+				this.run(newPivot + 1, right);
+			}
+
+			return array;
+		}
 	}
 
 	/**
@@ -84,18 +84,18 @@
 	 * @private
 	 * @constructor
 	 */
-	var IndexParser = function() {
+	var IndexParser = function () {
 		/**
 		 * @method isIndexDepth
 		 *
 		 * @param {String} index
 		 * @return {Boolean}
 		 */
-		this.isIndexDepth = function(index) {
-			if(typeof(index) == "string" && index.indexOf(".") != -1) {
+		this.isIndexDepth = function (index) {
+			if (typeof(index) == "string" && index.indexOf(".") != -1) {
 				return true;
 			}
-			
+
 			return false;
 		}
 
@@ -105,19 +105,19 @@
 		 * @param {String} index
 		 * @return {Array}
 		 */
-		this.getIndexList = function(index) { // 트리 구조의 모든 키를 배열 형태로 반환
+		this.getIndexList = function (index) { // 트리 구조의 모든 키를 배열 형태로 반환
 			var resIndex = [], strIndex = "" + index;
-			
-			if(strIndex.length == 1) {
+
+			if (strIndex.length == 1) {
 				resIndex[0] = parseInt(index);
 			} else {
 				var keys = strIndex.split(".");
-				
-				for(var i = 0; i < keys.length; i++) {
+
+				for (var i = 0; i < keys.length; i++) {
 					resIndex[i] = parseInt(keys[i]);
 				}
 			}
-			
+
 			return resIndex;
 		}
 
@@ -131,12 +131,12 @@
 		 * @param {String} rootIndex
 		 * @return {String}
 		 */
-		this.changeIndex = function(index, targetIndex, rootIndex) {
+		this.changeIndex = function (index, targetIndex, rootIndex) {
 			var rootIndexLen = this.getIndexList(rootIndex).length,
 				indexList = this.getIndexList(index),
 				tIndexList = this.getIndexList(targetIndex);
-			
-			for(var i = 0; i < rootIndexLen; i++) {
+
+			for (var i = 0; i < rootIndexLen; i++) {
 				indexList.shift();
 			}
 
@@ -149,10 +149,10 @@
 		 * @param {String} index
 		 * @return {String}
 		 */
-		this.getNextIndex = function(index) { // 현재 인덱스에서 +1
+		this.getNextIndex = function (index) { // 현재 인덱스에서 +1
 			var indexList = this.getIndexList(index),
 				no = indexList.pop() + 1;
-				
+
 			indexList.push(no);
 			return indexList.join(".");
 		}
@@ -164,203 +164,203 @@
 		 * @param {String} index
 		 * @returns {*}
 		 */
-		this.getParentIndex = function(index) {
-			if(!this.isIndexDepth(index)) return null;
+		this.getParentIndex = function (index) {
+			if (!this.isIndexDepth(index)) return null;
 			var keys = this.getIndexList(index);
-			
-			if(keys.length == 2) {
+
+			if (keys.length == 2) {
 				return "" + keys[0];
-			} else if(keys.length > 2) {
+			} else if (keys.length > 2) {
 				keys.pop();
 				return keys.join(".");
 			}
 		}
 	}
-	
+
 	/**
 	 * Private Static Classes
-	 * 
+	 *
 	 */
 	var Base64 = {
-			 
-	    // private property
-	    _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-	 
-	    // public method for encoding
-	    encode : function (input) {
-	        var output = "";
-	        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-	        var i = 0;
-	 
-	        input = Base64._utf8_encode(input);
-	 
-	        while (i < input.length) {
-	 
-	            chr1 = input.charCodeAt(i++);
-	            chr2 = input.charCodeAt(i++);
-	            chr3 = input.charCodeAt(i++);
-	 
-	            enc1 = chr1 >> 2;
-	            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-	            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-	            enc4 = chr3 & 63;
-	 
-	            if (isNaN(chr2)) {
-	                enc3 = enc4 = 64;
-	            } else if (isNaN(chr3)) {
-	                enc4 = 64;
-	            }
-	 
-	            output = output +
-	            Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
-	            Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
-	 
-	        }
-	 
-	        return output;
-	    },
-	 
-	    // public method for decoding
-	    decode : function (input) {
-	        var output = "";
-	        var chr1, chr2, chr3;
-	        var enc1, enc2, enc3, enc4;
-	        var i = 0;
-	 
-	        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-	 
-	        while (i < input.length) {
-	 
-	            enc1 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc2 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc3 = Base64._keyStr.indexOf(input.charAt(i++));
-	            enc4 = Base64._keyStr.indexOf(input.charAt(i++));
-	 
-	            chr1 = (enc1 << 2) | (enc2 >> 4);
-	            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-	            chr3 = ((enc3 & 3) << 6) | enc4;
-	 
-	            output = output + String.fromCharCode(chr1);
-	 
-	            if (enc3 != 64) {
-	                output = output + String.fromCharCode(chr2);
-	            }
-	            if (enc4 != 64) {
-	                output = output + String.fromCharCode(chr3);
-	            }
-	 
-	        }
-	 
-	        output = Base64._utf8_decode(output);
-	 
-	        return output;
-	 
-	    },
-	 
-	    // private method for UTF-8 encoding
-	    _utf8_encode : function (string) {
-	        string = string.replace(/\r\n/g,"\n");
-	        
-	        // BOM 코드 적용 (UTF-8 관련)
-	        var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
 
-	        for (var n = 0; n < string.length; n++) {
+		// private property
+		_keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
-	            var c = string.charCodeAt(n);
-	 
-	            if (c < 128) {
-	                utftext += String.fromCharCode(c);
-	            }
-	            else if((c > 127) && (c < 2048)) {
-	                utftext += String.fromCharCode((c >> 6) | 192);
-	                utftext += String.fromCharCode((c & 63) | 128);
-	            }
-	            else {
-	                utftext += String.fromCharCode((c >> 12) | 224);
-	                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-	                utftext += String.fromCharCode((c & 63) | 128);
-	            }
+		// public method for encoding
+		encode: function (input) {
+			var output = "";
+			var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+			var i = 0;
 
-	        }
-	 
-	        return utftext;
-	    },
-	 
-	    // private method for UTF-8 decoding
-	    _utf8_decode : function (utftext) {
-	        var string = "";
-	        var i = 0;
-	        var c = c1 = c2 = 0;
-	 
-	        while ( i < utftext.length ) {
-	 
-	            c = utftext.charCodeAt(i);
-	 
-	            if (c < 128) {
-	                string += String.fromCharCode(c);
-	                i++;
-	            }
-	            else if((c > 191) && (c < 224)) {
-	                c2 = utftext.charCodeAt(i+1);
-	                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-	                i += 2;
-	            }
-	            else {
-	                c2 = utftext.charCodeAt(i+1);
-	                c3 = utftext.charCodeAt(i+2);
-	                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-	                i += 3;
-	            }
-	 
-	        }
-	 
-	        return string;
-	    }
+			input = Base64._utf8_encode(input);
+
+			while (i < input.length) {
+
+				chr1 = input.charCodeAt(i++);
+				chr2 = input.charCodeAt(i++);
+				chr3 = input.charCodeAt(i++);
+
+				enc1 = chr1 >> 2;
+				enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+				enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+				enc4 = chr3 & 63;
+
+				if (isNaN(chr2)) {
+					enc3 = enc4 = 64;
+				} else if (isNaN(chr3)) {
+					enc4 = 64;
+				}
+
+				output = output +
+					Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
+					Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
+
+			}
+
+			return output;
+		},
+
+		// public method for decoding
+		decode: function (input) {
+			var output = "";
+			var chr1, chr2, chr3;
+			var enc1, enc2, enc3, enc4;
+			var i = 0;
+
+			input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+			while (i < input.length) {
+
+				enc1 = Base64._keyStr.indexOf(input.charAt(i++));
+				enc2 = Base64._keyStr.indexOf(input.charAt(i++));
+				enc3 = Base64._keyStr.indexOf(input.charAt(i++));
+				enc4 = Base64._keyStr.indexOf(input.charAt(i++));
+
+				chr1 = (enc1 << 2) | (enc2 >> 4);
+				chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+				chr3 = ((enc3 & 3) << 6) | enc4;
+
+				output = output + String.fromCharCode(chr1);
+
+				if (enc3 != 64) {
+					output = output + String.fromCharCode(chr2);
+				}
+				if (enc4 != 64) {
+					output = output + String.fromCharCode(chr3);
+				}
+
+			}
+
+			output = Base64._utf8_decode(output);
+
+			return output;
+
+		},
+
+		// private method for UTF-8 encoding
+		_utf8_encode: function (string) {
+			string = string.replace(/\r\n/g, "\n");
+
+			// BOM 코드 적용 (UTF-8 관련)
+			var utftext = String.fromCharCode(239) + String.fromCharCode(187) + String.fromCharCode(191);
+
+			for (var n = 0; n < string.length; n++) {
+
+				var c = string.charCodeAt(n);
+
+				if (c < 128) {
+					utftext += String.fromCharCode(c);
+				}
+				else if ((c > 127) && (c < 2048)) {
+					utftext += String.fromCharCode((c >> 6) | 192);
+					utftext += String.fromCharCode((c & 63) | 128);
+				}
+				else {
+					utftext += String.fromCharCode((c >> 12) | 224);
+					utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+					utftext += String.fromCharCode((c & 63) | 128);
+				}
+
+			}
+
+			return utftext;
+		},
+
+		// private method for UTF-8 decoding
+		_utf8_decode: function (utftext) {
+			var string = "";
+			var i = 0;
+			var c = c1 = c2 = 0;
+
+			while (i < utftext.length) {
+
+				c = utftext.charCodeAt(i);
+
+				if (c < 128) {
+					string += String.fromCharCode(c);
+					i++;
+				}
+				else if ((c > 191) && (c < 224)) {
+					c2 = utftext.charCodeAt(i + 1);
+					string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+					i += 2;
+				}
+				else {
+					c2 = utftext.charCodeAt(i + 1);
+					c3 = utftext.charCodeAt(i + 2);
+					string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+					i += 3;
+				}
+
+			}
+
+			return string;
+		}
 	}
-	
+
 	/**
 	 * Private Functions
-	 * 
+	 *
 	 */
-	var template = function(text, data, settings) {
+	var template = function (text, data, settings) {
 		var _ = {},
 			breaker = {};
-	
+
 		var ArrayProto = Array.prototype,
 			slice = ArrayProto.slice,
 			nativeForEach = ArrayProto.forEach;
-		
+
 		var escapes = {
-			'\\' : '\\',
-			"'" : "'",
-			'r' : '\r',
-			'n' : '\n',
-			't' : '\t',
-			'u2028' : '\u2028',
-			'u2029' : '\u2029'
+			'\\': '\\',
+			"'": "'",
+			'r': '\r',
+			'n': '\n',
+			't': '\t',
+			'u2028': '\u2028',
+			'u2029': '\u2029'
 		};
-	
+
 		for (var p in escapes)
-		escapes[escapes[p]] = p;
-		
+			escapes[escapes[p]] = p;
+
 		var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g,
 			unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g,
 			noMatch = /.^/;
-		
-		var unescape = function(code) {
-			return code.replace(unescaper, function(match, escape) {
+
+		var unescape = function (code) {
+			return code.replace(unescaper, function (match, escape) {
 				return escapes[escape];
 			});
 		};
-	
-		var each = _.each = _.forEach = function(obj, iterator, context) {
+
+		var each = _.each = _.forEach = function (obj, iterator, context) {
 			if (obj == null)
 				return;
 			if (nativeForEach && obj.forEach === nativeForEach) {
 				obj.forEach(iterator, context);
 			} else if (obj.length === +obj.length) {
 				for (var i = 0, l = obj.length; i < l; i++) {
-					if ( i in obj && iterator.call(context, obj[i], i, obj) === breaker)
+					if (i in obj && iterator.call(context, obj[i], i, obj) === breaker)
 						return;
 				}
 			} else {
@@ -372,13 +372,13 @@
 				}
 			}
 		};
-	
-		_.has = function(obj, key) {
+
+		_.has = function (obj, key) {
 			return hasOwnProperty.call(obj, key);
 		};
-	
-		_.defaults = function(obj) {
-			each(slice.call(arguments, 1), function(source) {
+
+		_.defaults = function (obj) {
+			each(slice.call(arguments, 1), function (source) {
 				for (var prop in source) {
 					if (obj[prop] == null)
 						obj[prop] = source[prop];
@@ -386,52 +386,52 @@
 			});
 			return obj;
 		};
-	
-		_.template = function(text, data, settings) {
+
+		_.template = function (text, data, settings) {
 			settings = _.defaults(settings || {}, globalOpts.template);
-	
-			var source = "__p+='" + text.replace(escaper, function(match) {
-				return '\\' + escapes[match];
-			}).replace(settings.escape || noMatch, function(match, code) {
-				return "'+\n_.escape(" + unescape(code) + ")+\n'";
-			}).replace(settings.interpolate || noMatch, function(match, code) {
-				return "'+\n(" + unescape(code) + ")+\n'";
-			}).replace(settings.evaluate || noMatch, function(match, code) {
-				return "';\n" + unescape(code) + "\n;__p+='";
-			}) + "';\n";
-	
+
+			var source = "__p+='" + text.replace(escaper, function (match) {
+					return '\\' + escapes[match];
+				}).replace(settings.escape || noMatch, function (match, code) {
+					return "'+\n_.escape(" + unescape(code) + ")+\n'";
+				}).replace(settings.interpolate || noMatch, function (match, code) {
+					return "'+\n(" + unescape(code) + ")+\n'";
+				}).replace(settings.evaluate || noMatch, function (match, code) {
+					return "';\n" + unescape(code) + "\n;__p+='";
+				}) + "';\n";
+
 			if (!settings.variable)
 				source = 'with(obj||{}){\n' + source + '}\n';
-	
+
 			source = "var __p='';" + "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + source + "return __p;\n";
-	
+
 			var render = new Function(settings.variable || 'obj', '_', source);
 			if (data)
 				return render(data, _);
-			var template = function(data) {
+			var template = function (data) {
 				return render.call(this, data, _);
 			};
-	
+
 			template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
-	
+
 			return template;
 		};
-		
+
 		return _.template(text, data, settings);
 	}
-	
-	
+
+
 	/**
 	 * @class util.base
-     *
+	 *
 	 * jui 에서 공통적으로 사용하는 유틸리티 함수 모음
 	 *
-     * ```
+	 * ```
 	 * var _ = jui.include("util.base");
 	 *
 	 * console.log(_.browser.webkit);
 	 * ```
-     *  
+	 *
 	 * @singleton
 	 */
 	var utility = global["util.base"] = {
@@ -451,14 +451,14 @@
 		 * check touch device
 		 */
 		isTouch: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-				
+
 		//-- Functions
 		/**
 		 * @method scrollWidth
 		 * returns scroll width for body
 		 * @return {Number}
 		 */
-		scrollWidth: function() {
+		scrollWidth: function () {
 			var isJUI = ($(".jui").size() > 0 && this.browser.webkit) ? true : false;
 
 			var div = $('<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"><div style="height:100px;"></div></div>');
@@ -472,30 +472,30 @@
 		},
 		/**
 		 * @method inherit
-         *
-		 * 프로토타입 기반의 상속 제공 
-         *  
+		 *
+		 * 프로토타입 기반의 상속 제공
+		 *
 		 * @param {Function} ctor base Class
 		 * @param {Function} superCtor super Class
 		 */
-		inherit: function(ctor, superCtor) {
-			if(!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
+		inherit: function (ctor, superCtor) {
+			if (!this.typeCheck("function", ctor) || !this.typeCheck("function", superCtor)) return;
 
 			ctor.parent = superCtor;
 			ctor.prototype = new superCtor;
 			ctor.prototype.constructor = ctor;
-            ctor.prototype.parent = ctor.prototype;
+			ctor.prototype.parent = ctor.prototype;
 
-            /**
-             * @method super 
-             * call parent method
-             * @param {String} method  parent method name
-             * @param {Array} args
-             * @returns {Mixed}
-             */
-            ctor.prototype.super = function(method, args) {
-                return this.constructor.prototype[method].apply(this, args);
-            }
+			/**
+			 * @method super
+			 * call parent method
+			 * @param {String} method  parent method name
+			 * @param {Array} args
+			 * @returns {Mixed}
+			 */
+			ctor.prototype.super = function (method, args) {
+				return this.constructor.prototype[method].apply(this, args);
+			}
 		},
 		/**
 		 * @method extend
@@ -505,19 +505,19 @@
 		 * @param skip
 		 * @return {Object}
 		 */
-		extend: function(origin, add, skip) {
-			if(!this.typeCheck("object", origin)) origin = {};
-			if(!this.typeCheck("object", add)) return origin;
+		extend: function (origin, add, skip) {
+			if (!this.typeCheck("object", origin)) origin = {};
+			if (!this.typeCheck("object", add)) return origin;
 
-			for(var key in add) {
-				if(skip === true) {
-					if(isRecursive(origin[key])) {
+			for (var key in add) {
+				if (skip === true) {
+					if (isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
-					} else if(this.typeCheck("undefined", origin[key])) {
+					} else if (this.typeCheck("undefined", origin[key])) {
 						origin[key] = add[key];
 					}
 				} else {
-					if(isRecursive(origin[key])) {
+					if (isRecursive(origin[key])) {
 						this.extend(origin[key], add[key], skip);
 					} else {
 						origin[key] = add[key];
@@ -536,8 +536,8 @@
 		 * @param {String or Number} px
 		 * @return {Number}
 		 */
-		pxToInt: function(px) {
-			if(typeof(px) == "string" && px.indexOf("px") != -1) {
+		pxToInt: function (px) {
+			if (typeof(px) == "string" && px.indexOf("px") != -1) {
 				return parseInt(px.split("px").join(""));
 			}
 
@@ -550,17 +550,17 @@
 		 * @param {Array/Object} obj 복사할 객체
 		 * @return {Array}
 		 */
-		clone: function(obj) {
+		clone: function (obj) {
 			var clone = ($.isArray(obj)) ? [] : {};
 
-	        for(var i in obj) {
-	            if(this.typeCheck("object", obj[i]))
-	                clone[i] = this.clone(obj[i]);
-	            else
-	                clone[i] = obj[i];
-	        }
+			for (var i in obj) {
+				if (this.typeCheck("object", obj[i]))
+					clone[i] = this.clone(obj[i]);
+				else
+					clone[i] = obj[i];
+			}
 
-	        return clone;
+			return clone;
 		},
 		/**
 		 * @method deepClone
@@ -569,41 +569,41 @@
 		 * @param emit
 		 * @return {*}
 		 */
-        deepClone: function(obj, emit) {
-            var value = null;
-            emit = emit  || {};
+		deepClone: function (obj, emit) {
+			var value = null;
+			emit = emit || {};
 
-            if(this.typeCheck("array", obj )) {
-                value = new Array(obj.length);
+			if (this.typeCheck("array", obj)) {
+				value = new Array(obj.length);
 
-                for(var i = 0, len = obj.length; i < len; i++) {
-                    value[i] = this.deepClone(obj[i], emit);
-                }
-            } else if(this.typeCheck("date", obj)) {
-                value = obj;
-            } else if(this.typeCheck("object", obj)) {
-                value = {};
+				for (var i = 0, len = obj.length; i < len; i++) {
+					value[i] = this.deepClone(obj[i], emit);
+				}
+			} else if (this.typeCheck("date", obj)) {
+				value = obj;
+			} else if (this.typeCheck("object", obj)) {
+				value = {};
 
-                for(var key in obj) {
-                    if (emit[key]) {
-                        value[key] = obj[key];
-                    }  else {
-                        value[key] = this.deepClone(obj[key], emit);
-                    }
-                }
-            } else {
-                value = obj;
-            }
+				for (var key in obj) {
+					if (emit[key]) {
+						value[key] = obj[key];
+					} else {
+						value[key] = this.deepClone(obj[key], emit);
+					}
+				}
+			} else {
+				value = obj;
+			}
 
-            return value ;
-        },
+			return value;
+		},
 		/**
 		 * @method sort
 		 * use QuickSort
 		 * @param {Array} array
 		 * @return {QuickSort}
 		 */
-		sort: function(array) {
+		sort: function (array) {
 			return new QuickSort(array);
 		},
 		/**
@@ -614,7 +614,7 @@
 		 * @param {String} name
 		 * @param {Function} callback
 		 */
-		runtime: function(name, callback) {
+		runtime: function (name, callback) {
 			var nStart = new Date().getTime();
 			callback();
 			var nEnd = new Date().getTime();
@@ -627,27 +627,27 @@
 		 * @param html
 		 * @param obj
 		 */
-		template: function(html, obj) {
-			if(!obj) return template(html);
+		template: function (html, obj) {
+			if (!obj) return template(html);
 			else return template(html, obj);
 		},
 		/**
 		 * @method resize
 		 * add event in window resize event
 		 * @param {Function} callback
-		 * @param {Number} ms delay time 
+		 * @param {Number} ms delay time
 		 */
-		resize: function(callback, ms) {
-			var after_resize = (function(){
+		resize: function (callback, ms) {
+			var after_resize = (function () {
 				var timer = 0;
 
-				return function() {
-				    clearTimeout(timer);
-				    timer = setTimeout(callback, ms);
+				return function () {
+					clearTimeout(timer);
+					timer = setTimeout(callback, ms);
 				}
 			})();
 
-			$(window).resize(function() {
+			$(window).resize(function () {
 				after_resize();
 			});
 		},
@@ -658,26 +658,26 @@
 		 *
 		 * @return {IndexParser}
 		 */
-		index: function() {
+		index: function () {
 			return new IndexParser();
 		},
 		/**
-		 * @method chunk 
+		 * @method chunk
 		 * split array by length
 		 * @param {Array} arr
 		 * @param {Number} len
 		 * @return {Array}
 		 */
-		chunk: function(arr, len) {
-		  var chunks = [],
-		      i = 0,
-		      n = arr.length;
+		chunk: function (arr, len) {
+			var chunks = [],
+				i = 0,
+				n = arr.length;
 
-		  while (i < n) {
-		    chunks.push(arr.slice(i, i += len));
-		  }
+			while (i < n) {
+				chunks.push(arr.slice(i, i += len));
+			}
 
-		  return chunks;
+			return chunks;
 		},
 		/**
 		 * @method typeCheck
@@ -686,9 +686,9 @@
 		 * @param {Object} v value object
 		 * @return {Boolean}
 		 */
-		typeCheck: function(t, v) {
+		typeCheck: function (t, v) {
 			function check(type, value) {
-				if(typeof(type) != "string") return false;
+				if (typeof(type) != "string") return false;
 
 				if (type == "string") {
 					return (typeof(value) == "string");
@@ -723,48 +723,45 @@
 				else if (type == "object") {
 					// typeCheck에 정의된 타입일 경우에는 object 체크시 false를 반환 (date, array, null)
 					return (
-						typeof(value) == "object" &&
-						value !== null &&
-						!(value instanceof Array) &&
-						!(value instanceof Date) &&
-						!(value instanceof RegExp)
+					typeof(value) == "object" &&
+					value !== null && !(value instanceof Array) && !(value instanceof Date) && !(value instanceof RegExp)
 					);
 				}
 
 				return false;
 			}
-			
-			if(typeof(t) == "object" && t.length) {
+
+			if (typeof(t) == "object" && t.length) {
 				var typeList = t;
-				
-				for(var i = 0; i < typeList.length; i++) {
-					if(check(typeList[i], v)) return true;
+
+				for (var i = 0; i < typeList.length; i++) {
+					if (check(typeList[i], v)) return true;
 				}
-				
+
 				return false;
 			} else {
 				return check(t, v);
 			}
 		},
-		typeCheckObj: function(uiObj, list) {
-			if(typeof(uiObj) != "object") return;
+		typeCheckObj: function (uiObj, list) {
+			if (typeof(uiObj) != "object") return;
 			var self = this;
-			
-			for(var key in uiObj) {
+
+			for (var key in uiObj) {
 				var func = uiObj[key];
-				
-				if(typeof(func) == "function") {
-					(function(funcName, funcObj) {
-						uiObj[funcName] = function() {
+
+				if (typeof(func) == "function") {
+					(function (funcName, funcObj) {
+						uiObj[funcName] = function () {
 							var args = arguments,
 								params = list[funcName];
-							
-							for(var i = 0; i < args.length; i++) {
-								if(!self.typeCheck(params[i], args[i])) {
+
+							for (var i = 0; i < args.length; i++) {
+								if (!self.typeCheck(params[i], args[i])) {
 									throw new Error("JUI_CRITICAL_ERR: the " + i + "th parameter is not a " + params[i] + " (" + name + ")");
 								}
 							}
-							
+
 							return funcObj.apply(this, args);
 						}
 					})(key, func);
@@ -781,26 +778,26 @@
 		 * @param {Number} dataSize
 		 * @return {String}  변환된 csv 문자열
 		 */
-		dataToCsv: function(keys, dataList, dataSize) {
+		dataToCsv: function (keys, dataList, dataSize) {
 			var csv = "", len = (!dataSize) ? dataList.length : dataSize;
-			
-			for(var i = -1; i < len; i++) {
+
+			for (var i = -1; i < len; i++) {
 				var tmpArr = [];
-				
-				for(var j = 0; j < keys.length; j++) {
-					if(keys[j]) {
-						if(i == -1) {
+
+				for (var j = 0; j < keys.length; j++) {
+					if (keys[j]) {
+						if (i == -1) {
 							tmpArr.push('"' + keys[j] + '"');
 						} else {
-                            var value = dataList[i][keys[j]];
-                            tmpArr.push(isNaN(value) ? '"' + value + '"' : value);
+							var value = dataList[i][keys[j]];
+							tmpArr.push(isNaN(value) ? '"' + value + '"' : value);
 						}
 					}
 				}
-				
+
 				csv += tmpArr.join(",") + "\n";
 			}
-			
+
 			return csv;
 		},
 
@@ -810,7 +807,7 @@
 		 * @param {Object} options
 		 * @return {String}
 		 */
-		dataToCsv2: function(options) {
+		dataToCsv2: function (options) {
 			var csv = "";
 			var opts = $.extend({
 				fields: null, // required
@@ -818,28 +815,28 @@
 				names: null,
 				count: (this.typeCheck("integer", options.count)) ? options.count : options.rows.length
 			}, options);
-			
-			for(var i = -1; i < opts.count; i++) {
+
+			for (var i = -1; i < opts.count; i++) {
 				var tmpArr = [];
-				
-				for(var j = 0; j < opts.fields.length; j++) {
-					if(opts.fields[j]) {
-						if(i == -1) {
-							if(opts.names && opts.names[j]) {
+
+				for (var j = 0; j < opts.fields.length; j++) {
+					if (opts.fields[j]) {
+						if (i == -1) {
+							if (opts.names && opts.names[j]) {
 								tmpArr.push('"' + opts.names[j] + '"');
 							} else {
 								tmpArr.push('"' + opts.fields[j] + '"');
 							}
 						} else {
-                            var value = opts.rows[i][opts.fields[j]];
+							var value = opts.rows[i][opts.fields[j]];
 							tmpArr.push(isNaN(value) ? '"' + value + '"' : value);
 						}
 					}
 				}
-				
+
 				csv += tmpArr.join(",") + "\n";
 			}
-			
+
 			return csv;
 		},
 		/**
@@ -850,16 +847,16 @@
 		 * @param {File} file
 		 * @param {Function} callback
 		 */
-		fileToCsv: function(file, callback) {
+		fileToCsv: function (file, callback) {
 			var reader = new FileReader();
-			
-	        reader.onload = function(readerEvt) {
-	            if(typeof(callback) == "function") {
-	            	callback(readerEvt.target.result);
-	            }
-	        };
-	
-	        reader.readAsText(file);
+
+			reader.onload = function (readerEvt) {
+				if (typeof(callback) == "function") {
+					callback(readerEvt.target.result);
+				}
+			};
+
+			reader.readAsText(file);
 		},
 		/**
 		 * @method csvToBase64
@@ -869,7 +866,7 @@
 		 * @param {String} csv
 		 * @return {String}
 		 */
-		csvToBase64: function(csv) {
+		csvToBase64: function (csv) {
 			return "data:application/octet-stream;base64," + Base64.encode(csv);
 		},
 		/**
@@ -880,34 +877,34 @@
 		 * @param {Number} csvNumber
 		 * @return {Array}
 		 */
-		csvToData: function(keys, csv, csvNumber) {
+		csvToData: function (keys, csv, csvNumber) {
 			var dataList = [],
 				tmpRowArr = csv.split("\n")
 
-			for(var i = 1; i < tmpRowArr.length; i++) {
-				if(tmpRowArr[i] != "") {
+			for (var i = 1; i < tmpRowArr.length; i++) {
+				if (tmpRowArr[i] != "") {
 					var tmpArr = tmpRowArr[i].split(","), // TODO: 값 안에 콤마(,)가 있을 경우에 별도로 처리해야 함
 						data = {};
-					
-					for(var j = 0; j < keys.length; j++) {
-                        data[keys[j]] = tmpArr[j];
 
-                        // '"' 로 감싸져있는 문자열은 '"' 제거
-                        if(this.startsWith(tmpArr[j], '"') && this.endsWith(tmpArr[j], '"')) {
-                            data[keys[j]] = tmpArr[j].split('"').join('');
-                        } else {
-                            data[keys[j]] = tmpArr[j];
-                        }
+					for (var j = 0; j < keys.length; j++) {
+						data[keys[j]] = tmpArr[j];
 
-                        if($.inArray(keys[j], csvNumber) != -1) {
-                            data[keys[j]] = parseFloat(tmpArr[j]);
-                        }
+						// '"' 로 감싸져있는 문자열은 '"' 제거
+						if (this.startsWith(tmpArr[j], '"') && this.endsWith(tmpArr[j], '"')) {
+							data[keys[j]] = tmpArr[j].split('"').join('');
+						} else {
+							data[keys[j]] = tmpArr[j];
+						}
+
+						if ($.inArray(keys[j], csvNumber) != -1) {
+							data[keys[j]] = parseFloat(tmpArr[j]);
+						}
 					}
-					
+
 					dataList.push(data);
 				}
 			}
-			
+
 			return dataList;
 		},
 		/**
@@ -919,15 +916,15 @@
 		 * @param {Array} csvFields
 		 * @return {Array}
 		 */
-		getCsvFields: function(fields, csvFields) {
+		getCsvFields: function (fields, csvFields) {
 			var tmpFields = (this.typeCheck("array", csvFields)) ? csvFields : fields;
-			
-			for(var i = 0; i < tmpFields.length; i++) {
-				if(!isNaN(tmpFields[i])) {
+
+			for (var i = 0; i < tmpFields.length; i++) {
+				if (!isNaN(tmpFields[i])) {
 					tmpFields[i] = fields[tmpFields[i]];
 				}
 			}
-			
+
 			return tmpFields;
 		},
 
@@ -939,9 +936,9 @@
 		 * @param {String} xml
 		 * @return {String} 변환된 data uri 링크
 		 */
-        svgToBase64: function(xml) {
-            return "data:image/svg+xml;base64," + Base64.encode(xml);
-        },
+		svgToBase64: function (xml) {
+			return "data:image/svg+xml;base64," + Base64.encode(xml);
+		},
 
 		/**
 		 * @method dateFormat
@@ -957,88 +954,88 @@
 		 * @param utc
 		 * @return {string}
 		 */
-        dateFormat: function(date, format, utc) {
-            var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            var ddd = ["\x03", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+		dateFormat: function (date, format, utc) {
+			var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+			var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			var ddd = ["\x03", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-            function ii(i, len) {
-                var s = i + "";
-                len = len || 2;
-                while (s.length < len) s = "0" + s;
-                return s;
-            }
+			function ii(i, len) {
+				var s = i + "";
+				len = len || 2;
+				while (s.length < len) s = "0" + s;
+				return s;
+			}
 
-            var y = utc ? date.getUTCFullYear() : date.getFullYear();
-            format = format.replace(/(^|[^\\])yyyy+/g, "$1" + y);
-            format = format.replace(/(^|[^\\])yy/g, "$1" + y.toString().substr(2, 2));
-            format = format.replace(/(^|[^\\])y/g, "$1" + y);
+			var y = utc ? date.getUTCFullYear() : date.getFullYear();
+			format = format.replace(/(^|[^\\])yyyy+/g, "$1" + y);
+			format = format.replace(/(^|[^\\])yy/g, "$1" + y.toString().substr(2, 2));
+			format = format.replace(/(^|[^\\])y/g, "$1" + y);
 
-            var M = (utc ? date.getUTCMonth() : date.getMonth()) + 1;
-            format = format.replace(/(^|[^\\])MMMM+/g, "$1" + MMMM[0]);
-            format = format.replace(/(^|[^\\])MMM/g, "$1" + MMM[0]);
-            format = format.replace(/(^|[^\\])MM/g, "$1" + ii(M));
-            format = format.replace(/(^|[^\\])M/g, "$1" + M);
+			var M = (utc ? date.getUTCMonth() : date.getMonth()) + 1;
+			format = format.replace(/(^|[^\\])MMMM+/g, "$1" + MMMM[0]);
+			format = format.replace(/(^|[^\\])MMM/g, "$1" + MMM[0]);
+			format = format.replace(/(^|[^\\])MM/g, "$1" + ii(M));
+			format = format.replace(/(^|[^\\])M/g, "$1" + M);
 
-            var d = utc ? date.getUTCDate() : date.getDate();
-            format = format.replace(/(^|[^\\])dddd+/g, "$1" + dddd[0]);
-            format = format.replace(/(^|[^\\])ddd/g, "$1" + ddd[0]);
-            format = format.replace(/(^|[^\\])dd/g, "$1" + ii(d));
-            format = format.replace(/(^|[^\\])d/g, "$1" + d);
+			var d = utc ? date.getUTCDate() : date.getDate();
+			format = format.replace(/(^|[^\\])dddd+/g, "$1" + dddd[0]);
+			format = format.replace(/(^|[^\\])ddd/g, "$1" + ddd[0]);
+			format = format.replace(/(^|[^\\])dd/g, "$1" + ii(d));
+			format = format.replace(/(^|[^\\])d/g, "$1" + d);
 
-            var H = utc ? date.getUTCHours() : date.getHours();
-            format = format.replace(/(^|[^\\])HH+/g, "$1" + ii(H));
-            format = format.replace(/(^|[^\\])H/g, "$1" + H);
+			var H = utc ? date.getUTCHours() : date.getHours();
+			format = format.replace(/(^|[^\\])HH+/g, "$1" + ii(H));
+			format = format.replace(/(^|[^\\])H/g, "$1" + H);
 
-            var h = H > 12 ? H - 12 : H == 0 ? 12 : H;
-            format = format.replace(/(^|[^\\])hh+/g, "$1" + ii(h));
-            format = format.replace(/(^|[^\\])h/g, "$1" + h);
+			var h = H > 12 ? H - 12 : H == 0 ? 12 : H;
+			format = format.replace(/(^|[^\\])hh+/g, "$1" + ii(h));
+			format = format.replace(/(^|[^\\])h/g, "$1" + h);
 
-            var m = utc ? date.getUTCMinutes() : date.getMinutes();
-            format = format.replace(/(^|[^\\])mm+/g, "$1" + ii(m));
-            format = format.replace(/(^|[^\\])m/g, "$1" + m);
+			var m = utc ? date.getUTCMinutes() : date.getMinutes();
+			format = format.replace(/(^|[^\\])mm+/g, "$1" + ii(m));
+			format = format.replace(/(^|[^\\])m/g, "$1" + m);
 
-            var s = utc ? date.getUTCSeconds() : date.getSeconds();
-            format = format.replace(/(^|[^\\])ss+/g, "$1" + ii(s));
-            format = format.replace(/(^|[^\\])s/g, "$1" + s);
+			var s = utc ? date.getUTCSeconds() : date.getSeconds();
+			format = format.replace(/(^|[^\\])ss+/g, "$1" + ii(s));
+			format = format.replace(/(^|[^\\])s/g, "$1" + s);
 
-            var f = utc ? date.getUTCMilliseconds() : date.getMilliseconds();
-            format = format.replace(/(^|[^\\])fff+/g, "$1" + ii(f, 3));
-            f = Math.round(f / 10);
-            format = format.replace(/(^|[^\\])ff/g, "$1" + ii(f));
-            f = Math.round(f / 10);
-            format = format.replace(/(^|[^\\])f/g, "$1" + f);
+			var f = utc ? date.getUTCMilliseconds() : date.getMilliseconds();
+			format = format.replace(/(^|[^\\])fff+/g, "$1" + ii(f, 3));
+			f = Math.round(f / 10);
+			format = format.replace(/(^|[^\\])ff/g, "$1" + ii(f));
+			f = Math.round(f / 10);
+			format = format.replace(/(^|[^\\])f/g, "$1" + f);
 
-            var T = H < 12 ? "AM" : "PM";
-            format = format.replace(/(^|[^\\])TT+/g, "$1" + T);
-            format = format.replace(/(^|[^\\])T/g, "$1" + T.charAt(0));
+			var T = H < 12 ? "AM" : "PM";
+			format = format.replace(/(^|[^\\])TT+/g, "$1" + T);
+			format = format.replace(/(^|[^\\])T/g, "$1" + T.charAt(0));
 
-            var t = T.toLowerCase();
-            format = format.replace(/(^|[^\\])tt+/g, "$1" + t);
-            format = format.replace(/(^|[^\\])t/g, "$1" + t.charAt(0));
+			var t = T.toLowerCase();
+			format = format.replace(/(^|[^\\])tt+/g, "$1" + t);
+			format = format.replace(/(^|[^\\])t/g, "$1" + t.charAt(0));
 
-            var tz = -date.getTimezoneOffset();
-            var K = utc || !tz ? "Z" : tz > 0 ? "+" : "-";
-            if (!utc) {
-                tz = Math.abs(tz);
-                var tzHrs = Math.floor(tz / 60);
-                var tzMin = tz % 60;
-                K += ii(tzHrs) + ":" + ii(tzMin);
-            }
-            format = format.replace(/(^|[^\\])K/g, "$1" + K);
+			var tz = -date.getTimezoneOffset();
+			var K = utc || !tz ? "Z" : tz > 0 ? "+" : "-";
+			if (!utc) {
+				tz = Math.abs(tz);
+				var tzHrs = Math.floor(tz / 60);
+				var tzMin = tz % 60;
+				K += ii(tzHrs) + ":" + ii(tzMin);
+			}
+			format = format.replace(/(^|[^\\])K/g, "$1" + K);
 
-            var day = (utc ? date.getUTCDay() : date.getDay()) + 1;
-            format = format.replace(new RegExp(dddd[0], "g"), dddd[day]);
-            format = format.replace(new RegExp(ddd[0], "g"), ddd[day]);
+			var day = (utc ? date.getUTCDay() : date.getDay()) + 1;
+			format = format.replace(new RegExp(dddd[0], "g"), dddd[day]);
+			format = format.replace(new RegExp(ddd[0], "g"), ddd[day]);
 
-            format = format.replace(new RegExp(MMMM[0], "g"), MMMM[M]);
-            format = format.replace(new RegExp(MMM[0], "g"), MMM[M]);
+			format = format.replace(new RegExp(MMMM[0], "g"), MMMM[M]);
+			format = format.replace(new RegExp(MMM[0], "g"), MMM[M]);
 
-            format = format.replace(/\\(.)/g, "$1");
+			format = format.replace(/\\(.)/g, "$1");
 
-            return format;
-        },
+			return format;
+		},
 		/**
 		 * @method createId
 		 *
@@ -1047,8 +1044,8 @@
 		 * @param {String} key  prefix string
 		 * @return {String} 생성된 아이디 문자열
 		 */
-		createId: function(key) {
-			return [ key || "id", (+new Date), Math.round(Math.random() * 100) % 100 ].join("-");
+		createId: function (key) {
+			return [key || "id", (+new Date), Math.round(Math.random() * 100) % 100].join("-");
 		},
 		/**
 		 * @method btoa
@@ -1057,7 +1054,7 @@
 		 *
 		 * @return {String}
 		 */
-        btoa: Base64.encode,
+		btoa: Base64.encode,
 		/**
 		 * @method atob
 		 *
@@ -1065,95 +1062,149 @@
 		 *
 		 * @return {String}
 		 */
-        atob: Base64.decode,
+		atob: Base64.decode,
 
+		/**
+		 * implement async loop without blocking ui
+		 *
+		 * @param total
+		 * @param context
+		 * @returns {Function}
+		 */
+		timeLoop : function(total, context) {
+
+			return function(callback, lastCallback) {
+				function TimeLoopCallback (i) {
+
+					if (i < 1) return;
+
+					if (i == 1) {
+						callback.call(context, i)
+						lastCallback.call(context);
+					} else {
+						setTimeout(function() {
+							if (i > -1) callback.call(context, i--);
+							if (i > -1) TimeLoopCallback(i);
+						}, 1);
+					}
+				}
+
+				TimeLoopCallback(total);
+			};
+		},
 		/**
 		 * @method loop
 		 *
 		 * 최적화된 루프 생성 (5단계로 나눔)
 		 *
 		 * @param {Number} total
-         * @param {Object} [context=null]
-         * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
+		 * @param {Object} [context=null]
+		 * @return {Function} 최적화된 루프 콜백 (index, groupIndex 2가지 파라미터를 받는다.)
 		 */
-		loop : function(total, context) {
+		loop: function (total, context) {
 			var start = 0,
 				end = total,
-				unit = Math.ceil(total/5);
+				unit = Math.ceil(total / 5);
 
-			return function(callback) {
+			return function (callback) {
 				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
 					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
-				while(first < firstMax && first < end) {
-					callback.call(context, first, 1); first++;
+				while (first < firstMax && first < end) {
+					callback.call(context, first, 1);
+					first++;
 
-					if(second < secondMax && second < end) { callback.call(context, second, 2); second++; }
-					if(third < thirdMax && third < end) { callback.call(context, third, 3); third++; }
-					if(fourth < fourthMax && fourth < end) { callback.call(context, fourth, 4); fourth++; }
-					if(fifth < fifthMax && fifth < end) { callback.call(context, fifth, 5); fifth++; }
+					if (second < secondMax && second < end) {
+						callback.call(context, second, 2);
+						second++;
+					}
+					if (third < thirdMax && third < end) {
+						callback.call(context, third, 3);
+						third++;
+					}
+					if (fourth < fourthMax && fourth < end) {
+						callback.call(context, fourth, 4);
+						fourth++;
+					}
+					if (fifth < fifthMax && fifth < end) {
+						callback.call(context, fifth, 5);
+						fifth++;
+					}
 				}
 			};
 		},
-        
+
 		/**
 		 * @method loopArray
 		 *
 		 * 배열을 사용해서 최적화된 루프로 생성한다.
-         *  
+		 *
 		 *
 		 * @param {Array} data 루프로 생성될 배열
 		 * @param {Object} [context=null]
-         * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
+		 * @return {Function} 최적화된 루프 콜백 (data, index, groupIndex 3가지 파라미터를 받는다.)
 		 */
-		loopArray : function(data, context) {
-            var total = data.length,
+		loopArray: function (data, context) {
+			var total = data.length,
 				start = 0,
 				end = total,
-				unit = Math.ceil(total/5);
+				unit = Math.ceil(total / 5);
 
-			return function(callback) {
+			return function (callback) {
 				var first = start, second = unit * 1, third = unit * 2, fourth = unit * 3, fifth = unit * 4,
 					firstMax = second, secondMax = third, thirdMax = fourth, fourthMax = fifth, fifthMax = end;
 
-				while(first < firstMax && first < end) {
-					callback.call(context, data[first], first, 1); first++;
-					if (second < secondMax && second < end) { callback.call(context, data[second], second, 2); second++; }
-					if (third < thirdMax && third < end) { callback.call(context, data[third], third, 3); third++; }
-					if (fourth < fourthMax && fourth < end) { callback.call(context, data[fourth], fourth, 4); fourth++; }
-					if (fifth < fifthMax && fifth < end) { callback.call(context, data[fifth], fifth, 5); fifth++; }
+				while (first < firstMax && first < end) {
+					callback.call(context, data[first], first, 1);
+					first++;
+					if (second < secondMax && second < end) {
+						callback.call(context, data[second], second, 2);
+						second++;
+					}
+					if (third < thirdMax && third < end) {
+						callback.call(context, data[third], third, 3);
+						third++;
+					}
+					if (fourth < fourthMax && fourth < end) {
+						callback.call(context, data[fourth], fourth, 4);
+						fourth++;
+					}
+					if (fifth < fifthMax && fifth < end) {
+						callback.call(context, data[fifth], fifth, 5);
+						fifth++;
+					}
 				}
 			};
 
 		},
 
-        /**
-         * @method makeIndex 
-         * 
-         * 배열의 키 기반 인덱스를 생성한다.
-         * 
-         * 개별 값 별로 멀티 인덱스를 생성한다.
-         *  
-         * @param {Array} data
-         * @param {String} keyField
-         * @return {Object} 생성된 인덱스  
-         */
-        makeIndex : function(data, keyField) {
-            var list = {},
+		/**
+		 * @method makeIndex
+		 *
+		 * 배열의 키 기반 인덱스를 생성한다.
+		 *
+		 * 개별 값 별로 멀티 인덱스를 생성한다.
+		 *
+		 * @param {Array} data
+		 * @param {String} keyField
+		 * @return {Object} 생성된 인덱스
+		 */
+		makeIndex: function (data, keyField) {
+			var list = {},
 				func = this.loopArray(data);
-            
-            func(function(d, i) {
-                var value = d[keyField];
-                
-                if (typeof list[value] == 'undefined') {
-                    list[value] = [];
-                }
-                
-                list[value].push(i);
-            });
-            
-            return list; 
-        },
+
+			func(function (d, i) {
+				var value = d[keyField];
+
+				if (typeof list[value] == 'undefined') {
+					list[value] = [];
+				}
+
+				list[value].push(i);
+			});
+
+			return list;
+		},
 
 		/**
 		 * @method startsWith
@@ -1163,7 +1214,7 @@
 		 * @param {String} searchString
 		 * @return {Integer} position
 		 */
-		startsWith : function(string, searchString, position) {
+		startsWith: function (string, searchString, position) {
 			position = position || 0;
 
 			return string.lastIndexOf(searchString, position) === position;
@@ -1177,10 +1228,10 @@
 		 * @param {String} searchString
 		 * @return {Integer} position
 		 */
-		endsWith : function(string, searchString, position) {
+		endsWith: function (string, searchString, position) {
 			var subjectString = string;
 
-			if(position === undefined || position > subjectString.length) {
+			if (position === undefined || position > subjectString.length) {
 				position = subjectString.length;
 			}
 
@@ -1192,55 +1243,55 @@
 	}
 
 
-    /*
-     * Module related functions
-     *
-     */
-	var getDepends = function(depends) {
+	/*
+	 * Module related functions
+	 *
+	 */
+	var getDepends = function (depends) {
 		var args = [];
-		
-		for(var i = 0; i < depends.length; i++) {
-            var module = global[depends[i]];
-			
-			if(!utility.typeCheck([ "function", "object" ], module)) {
-                var modules = getModules(depends[i]);
 
-                if(modules == null) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
-                } else {
-                    args.push(modules);
-                }
+		for (var i = 0; i < depends.length; i++) {
+			var module = global[depends[i]];
+
+			if (!utility.typeCheck(["function", "object"], module)) {
+				var modules = getModules(depends[i]);
+
+				if (modules == null) {
+					throw new Error("JUI_CRITICAL_ERR: '" + depends[i] + "' is not loaded");
+				} else {
+					args.push(modules);
+				}
 
 			} else {
-                args.push(module);
-            }
+				args.push(module);
+			}
 		}
-		
+
 		return args;
 	}
 
-    var getModules = function(parent) {
-        var modules = null,
-            parent = parent + ".";
+	var getModules = function (parent) {
+		var modules = null,
+			parent = parent + ".";
 
-        for(var key in global) {
-            if(key.indexOf(parent) != -1) {
-                if(utility.typeCheck([ "function", "object" ], global[key])) {
-                    var child = key.split(parent).join("");
+		for (var key in global) {
+			if (key.indexOf(parent) != -1) {
+				if (utility.typeCheck(["function", "object"], global[key])) {
+					var child = key.split(parent).join("");
 
-                    if(child.indexOf(".") == -1) {
-                        if(modules == null) {
-                            modules = {};
-                        }
+					if (child.indexOf(".") == -1) {
+						if (modules == null) {
+							modules = {};
+						}
 
-                        modules[child] = global[key];
-                    }
-                }
-            }
-        }
+						modules[child] = global[key];
+					}
+				}
+			}
+		}
 
-        return modules;
-    }
+		return modules;
+	}
 
 	/**
 	 * @class jui
@@ -1258,124 +1309,125 @@
 		 *
 		 * @param {Function} callback
 		 */
-		ready: function() {
+		ready: function () {
 			var args = [],
 				callback = (arguments.length == 2) ? arguments[1] : arguments[0],
 				depends = (arguments.length == 2) ? arguments[0] : null;
 
-			if(!utility.typeCheck([ "array", "null" ], depends) ||
-					!utility.typeCheck("function", callback)) {
-			
+			if (!utility.typeCheck(["array", "null"], depends) || !utility.typeCheck("function", callback)) {
+
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
-			$(function() { 
-				if(depends) {
+			$(function () {
+				if (depends) {
 					args = getDepends(depends);
 				} else {
-					args = [ getModules("ui"), getModules("uix"), utility ];
+					args = [getModules("ui"), getModules("uix"), utility];
 				}
 
 				callback.apply(null, args);
 			});
 		},
 
-        /**
-         * @method defineUI
+		/**
+		 * @method defineUI
 		 *
 		 * 사용자가 실제로 사용할 수 있는 UI 클래스를 정의
-         *
-         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
-         */
-		defineUI: function(name, depends, callback, parent) {
-			if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-				!utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
+		 *
+		 * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+		 * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+		 * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+		 * @param {String} parent 'depends'와 달리 'define'으로 정의된 클래스만 상속받을 수 있다.
+		 */
+		defineUI: function (name, depends, callback, parent) {
+			if (!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || !utility.typeCheck("function", callback) || !utility.typeCheck(["string", "undefined"], parent)) {
 
 				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
 
-			if(utility.typeCheck("function", globalClass[name])) {
+			if (utility.typeCheck("function", globalClass[name])) {
 				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
 			}
 
-			if(utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
+			if (utility.typeCheck("undefined", parent)) { // 기본적으로 'core' 클래스를 상속함
 				parent = "core";
 			}
 
-			if(!utility.typeCheck("function", globalClass[parent])) {
+			if (!utility.typeCheck("function", globalClass[parent])) {
 				throw new Error("JUI_CRITICAL_ERR: Parents are the only function");
 			} else {
-				if(globalFunc[parent] !== true) {
+				if (globalFunc[parent] !== true) {
 					throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
 				}
 			}
-			
+
 			var args = getDepends(depends),
-                uiFunc = callback.apply(null, args);
+				uiFunc = callback.apply(null, args);
 
-            // 상속
-            utility.inherit(uiFunc, globalClass[parent]);
+			// 상속
+			utility.inherit(uiFunc, globalClass[parent]);
 
-            // UI 고유 설정
-            global[name] = globalClass["core"].init({
-                type: name,
-                "class": uiFunc
-            });
-          
-            globalClass[name] = uiFunc;
-            globalFunc[name] = true;
+			// UI 고유 설정
+			global[name] = globalClass["core"].init({
+				type: name,
+				"class": uiFunc
+			});
+
+			globalClass[name] = uiFunc;
+			globalFunc[name] = true;
 
 			// support AMD module
-			if(typeof define == "function" && define.amd) {
-				define(name, function() { return global[name] });
+			if (typeof define == "function" && define.amd) {
+				define(name, function () {
+					return global[name]
+				});
 			}
 		},
 
-        /**
-         * @method define
+		/**
+		 * @method define
 		 *
 		 * UI 클래스에서 사용될 클래스를 정의하고, 자유롭게 상속할 수 있는 클래스를 정의
-         *
-         * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
-         * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
-         * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
-         * @param {String} parent 상속받을 클래스
-         */
-        define: function(name, depends, callback, parent) {
-            if(!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) ||
-                !utility.typeCheck("function", callback) || !utility.typeCheck([ "string", "undefined" ], parent)) {
+		 *
+		 * @param {String} name 모듈 로드와 상속에 사용될 이름을 정한다.
+		 * @param {Array} depends 'define'이나 'defineUI'로 정의된 클래스나 객체를 인자로 받을 수 있다.
+		 * @param {Function} callback UI 클래스를 해당 콜백 함수 내에서 클래스 형태로 구현하고 리턴해야 한다.
+		 * @param {String} parent 상속받을 클래스
+		 */
+		define: function (name, depends, callback, parent) {
+			if (!utility.typeCheck("string", name) || !utility.typeCheck("array", depends) || !utility.typeCheck("function", callback) || !utility.typeCheck(["string", "undefined"], parent)) {
 
-                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
-            }
-
-            if(utility.typeCheck("function", globalClass[name])) {
-                throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
-            }
-
-            var args = getDepends(depends),
-                uiFunc = callback.apply(null, args);
-
-            if(utility.typeCheck("function", globalClass[parent])) {
-                if(globalFunc[parent] !== true) {
-                    throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
-                } else {
-                    utility.inherit(uiFunc, globalClass[parent]);
-                }
-            }
-
-            // 함수 고유 설정
-            global[name] = uiFunc;
-            globalClass[name] = uiFunc; // original function
-            globalFunc[name] = true;
-          
-			// support AMD module
-			if(typeof define == "function" && define.amd) {
-				define(name, function() { return global[name] });
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
 			}
-        },
+
+			if (utility.typeCheck("function", globalClass[name])) {
+				throw new Error("JUI_CRITICAL_ERR: '" + name + "' is already exist");
+			}
+
+			var args = getDepends(depends),
+				uiFunc = callback.apply(null, args);
+
+			if (utility.typeCheck("function", globalClass[parent])) {
+				if (globalFunc[parent] !== true) {
+					throw new Error("JUI_CRITICAL_ERR: UI function can not be inherited");
+				} else {
+					utility.inherit(uiFunc, globalClass[parent]);
+				}
+			}
+
+			// 함수 고유 설정
+			global[name] = uiFunc;
+			globalClass[name] = uiFunc; // original function
+			globalFunc[name] = true;
+
+			// support AMD module
+			if (typeof define == "function" && define.amd) {
+				define(name, function () {
+					return global[name]
+				});
+			}
+		},
 
 		/**
 		 * @method defineOptions
@@ -1387,16 +1439,16 @@
 		 * @param {Object} exceptOpts
 		 * @return {Object}
 		 */
-		defineOptions: function(Module, options, exceptOpts) {
+		defineOptions: function (Module, options, exceptOpts) {
 			var defOpts = getOptions(Module, {});
 			var defOptKeys = Object.keys(defOpts),
 				optKeys = Object.keys(options);
 
 			// 정의되지 않은 옵션 사용 유무 체크
-			for(var i = 0; i < optKeys.length; i++) {
+			for (var i = 0; i < optKeys.length; i++) {
 				var name = optKeys[i];
 
-				if($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
+				if ($.inArray(name, defOptKeys) == -1 && $.inArray(name, exceptOpts) == -1) {
 					throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not an option");
 				}
 			}
@@ -1406,12 +1458,12 @@
 
 			// 상위 모듈의 옵션까지 모두 얻어오는 함수
 			function getOptions(Module, options) {
-				if(utility.typeCheck("function", Module)) {
-					if(utility.typeCheck("function", Module.setup)) {
+				if (utility.typeCheck("function", Module)) {
+					if (utility.typeCheck("function", Module.setup)) {
 						var opts = Module.setup();
 
-						for(var key in opts) {
-							if(utility.typeCheck("undefined", options[key])) {
+						for (var key in opts) {
+							if (utility.typeCheck("undefined", options[key])) {
 								options[key] = opts[key];
 							}
 						}
@@ -1426,54 +1478,54 @@
 			return options;
 		},
 
-        /**
-         * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
-         *
-         * @param name 가져온 클래스 또는 객체의 이름
-         * @return {*}
-         */
-        include: function(name) {
-            if(!utility.typeCheck("string", name)) {
-                throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
-            }
+		/**
+		 * define과 defineUI로 정의된 클래스 또는 객체를 가져온다.
+		 *
+		 * @param name 가져온 클래스 또는 객체의 이름
+		 * @return {*}
+		 */
+		include: function (name) {
+			if (!utility.typeCheck("string", name)) {
+				throw new Error("JUI_CRITICAL_ERR: Invalid parameter type of the function");
+			}
 
-            var module = global[name];
+			var module = global[name];
 
-            if(utility.typeCheck([ "function", "object" ], module)) {
-                return module;
-            } else {
-                var modules = getModules(name);
+			if (utility.typeCheck(["function", "object"], module)) {
+				return module;
+			} else {
+				var modules = getModules(name);
 
-                if(modules == null) {
-                    throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
-                } else {
-                    return modules;
-                }
-            }
-        },
+				if (modules == null) {
+					throw new Error("JUI_CRITICAL_ERR: '" + name + "' is not loaded");
+				} else {
+					return modules;
+				}
+			}
+		},
 
-        /**
-         * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
-         *
-         * @return {Array}
-         */
-        includeAll: function() {
-            var result = [];
+		/**
+		 * define과 defineUI로 정의된 모든 클래스와 객체를 가져온다.
+		 *
+		 * @return {Array}
+		 */
+		includeAll: function () {
+			var result = [];
 
-            for(var key in global) {
-                result.push(global[key]);
-            }
+			for (var key in global) {
+				result.push(global[key]);
+			}
 
-            return result;
-        },
+			return result;
+		},
 
-        /**
-         * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
-         *
-         * @param logUrl
-         * @return {Window}
-         */
-		log: function(logUrl) {
+		/**
+		 * 설정된 jui 관리 화면을 윈도우 팝업으로 띄운다.
+		 *
+		 * @param logUrl
+		 * @return {Window}
+		 */
+		log: function (logUrl) {
 			var jui_mng = window.open(
 				logUrl || globalOpts.logUrl,
 				"JUIM",
@@ -1487,8 +1539,8 @@
 			return jui_mng;
 		},
 
-		setup: function(options) {
-			if(utility.typeCheck("object", options)) {
+		setup: function (options) {
+			if (utility.typeCheck("object", options)) {
 				globalOpts = utility.extend(globalOpts, options);
 			}
 
@@ -2477,14 +2529,14 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	var self = {
 
 		// unit
-		years : 0x01,
-		months : 0x02,
-		days : 0x03,
-		hours : 0x04,
-		minutes : 0x05,
-		seconds : 0x06,
-		milliseconds : 0x07,
-		weeks : 0x08,
+		years : "years",
+		months : "months",
+		days : "days",
+		hours : "hours",
+		minutes : "minutes",
+		seconds : "seconds",
+		milliseconds : "milliseconds",
+		weeks : "weeks",
 
 		/**
 		 * 시간 더하기 
@@ -2557,8 +2609,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	var self = {
 
 		/**
-		 * 원형 좌표에 대한 scale 
-		 * 
+		 * 원형 좌표에 대한 scale
+		 *
 		 */
 		circle : function() {// 원형 radar
 
@@ -2654,9 +2706,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 
-		 * 순서를 가지는 리스트에 대한 scale 
-		 * 
+		 *
+		 * 순서를 가지는 리스트에 대한 scale
+		 *
 		 */
 		ordinal : function() {// 순서
 			var that = this;
@@ -2664,14 +2716,14 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _domain = [];
 			var _range = [];
 			var _rangeBand = 0;
-            var _cache = {};
+			var _cache = {};
 
 			function func(t) {
 
-                var key = "" + t;
-                if (typeof _cache[key] != 'undefined') {
-                    return _cache[key];
-                }
+				var key = "" + t;
+				if (typeof _cache[key] != 'undefined') {
+					return _cache[key];
+				}
 
 				var index = -1;
 				for (var i = 0; i < _domain.length; i++) {
@@ -2682,12 +2734,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				if (index > -1) {
-                    _cache[key] = _range[index];
+					_cache[key] = _range[index];
 					return _range[index];
 				} else {
 					if ( typeof _range[t] != 'undefined') {
 						_domain[t] = t;
-                        _cache[key] = _range[t];
+						_cache[key] = _range[t];
 						return _range[t];
 					}
 
@@ -2781,8 +2833,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 시간에 대한 scale 
-		 * 
+		 * 시간에 대한 scale
+		 *
 		 */
 		time : function() {// 시간
 
@@ -2820,7 +2872,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return func(func.max() * (value / max));
 			}
 
-			func.ticks = function(type, step) {
+			func.ticks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
@@ -2828,29 +2880,27 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				while (start < end) {
 					times.push(new Date(+start));
 
-					start = _time.add(start, type, step);
+					start = _time.add(start, type, interval);
 
 				}
 
 				times.push(new Date(+start));
-				
-				var first = func(times[0]);
-				var second = func(times[1]);
-				
-				_rangeBand = second - first; 
-				
+
+				_rangeBand = interval;
+
 
 				return times;
 
 			}
 
-			func.realTicks = function(type, step) {
+			func.realTicks = function(type, interval) {
 				var start = _domain[0];
 				var end = _domain[1];
 
 				var times = [];
 				var date = new Date(+start)
 				var realStart = null;
+
 				if (type == _time.years) {
 					realStart = new Date(date.getFullYear(), 0, 1);
 				} else if (type == _time.months) {
@@ -2867,17 +2917,17 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					realStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
 
 				}
+				realStart = _time.add(realStart, type, interval);
 
-				realStart = _time.add(realStart, type, step);
 				while (+realStart < +end) {
 					times.push(new Date(+realStart));
-					realStart = _time.add(realStart, type, step);
+					realStart = _time.add(realStart, type, interval);
 				}
-				
+
 				var first = func(times[1]);
 				var second = func(times[2]);
-				
-				_rangeBand = second - first; 				
+
+				_rangeBand = second - first;
 
 				return times;
 			}
@@ -3027,8 +3077,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 		},
 
 		/**
-		 * 범위에 대한 scale 
-		 * 
+		 * 범위에 대한 scale
+		 *
 		 */
 		linear : function() {// 선형
 
@@ -3038,7 +3088,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			var _range = [0, 1];
 			var _isRound = false;
 			var _isClamp = false;
-            var _cache = {};
+			var _cache = {};
 
 			var roundFunction = null;
 			var numberFunction = null;
@@ -3051,8 +3101,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			var distDomain = null;
 			var distRange = null;
-            
-            var callFunction = null;
+
+			var callFunction = null;
 			var _rangeBand = null;
 
 			function func(x) {
@@ -3077,9 +3127,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 			}
 
-            func.cache = function() {
-                return _cache;
-            }
+			func.cache = function() {
+				return _cache;
+			}
 
 			func.min = function() {
 				return Math.min.apply(Math, _domain);
@@ -3100,9 +3150,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 			func.rate = function(value, max) {
 				return func(func.max() * (value / max));
 			}
-			
+
 			func.clamp = function(isClamp) {
-			  _isClamp = isClamp || false; 
+				_isClamp = isClamp || false;
 			}
 
 			func.domain = function(values) {
@@ -3140,15 +3190,15 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				rangeMax = func.rangeMax();
 
 				distRange = Math.abs(rangeMax - rangeMin);
-                
-                callFunction = _isRound ? roundFunction : numberFunction;
+
+				callFunction = _isRound ? roundFunction : numberFunction;
 
 				return this;
 			}
 
 			func.rangeRound = function(values) {
 				_isRound = true;
-                
+
 				return func.range(values);
 			}
 
@@ -4248,6 +4298,10 @@ jui.define("util.svg.base",
             return this.create(new Element(), "filter", attr, callback);
         }
 
+        this.foreignObject = function(attr, callback) {
+            return this.create(new TransElement(), "foreignObject", attr, callback);
+        }
+
         /**
          * 엘리먼트 관련 메소드 (그라데이션)
          *
@@ -4690,7 +4744,7 @@ jui.define("util.svg",
               var context = canvas.getContext('2d');
               context.drawImage(img, 0, 0);
               
-              var png = canvas.toDataURI(type);
+              var png = canvas.toDataURL(type);
               
               if(_.typeCheck("string", name)) {
                   name = name.split(".")[0];
@@ -4791,7 +4845,7 @@ jui.define("util.svg",
         }
 
         /**
-         * @method getTextRect
+         * @method getTextSize
          *
          * caculate real pixel size of text element
          *
@@ -4800,8 +4854,7 @@ jui.define("util.svg",
          * @return {Integer} return.width  text element's width (px)
          * @return {Integer} return.height text element's height(px)
          */
-        this.getTextRect = function(text) {
-
+        this.getTextSize = function(text) {
             if (text == "") {
                 return { width : 0, height : 0 };
             }
@@ -4811,10 +4864,8 @@ jui.define("util.svg",
             el.setAttributeNS(null, "y", -200);
             el.appendChild(document.createTextNode(text));
 
-
         	root.element.appendChild(el);
         	var rect = el.getBoundingClientRect();
-
             root.element.removeChild(el);
 
         	return { width : rect.width, height : rect.height }; 
@@ -6021,7 +6072,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				if($(this).hasClass("divider")) return;
+				if($(this).hasClass("divider") || $(this).hasClass("title")) return;
 				
 				var index = getTargetIndex(this),
 					text = $(this).text(),
@@ -8426,7 +8477,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
      * @alias TableRow
      * @requires jquery
      *
-     */    
+     */
     var Row = function(data, tplFunc, pRow) {
         var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
@@ -9186,22 +9237,22 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
 
 jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
-	
-	/**
-	 * Common Logic
-	 * 
-	 */
-	_.resize(function() {
-		var call_list = jui.get("table");
-		
-		for(var i = 0; i < call_list.length; i++) {
-			var ui_list = call_list[i].list;
-			
-			for(var j = 0; j < ui_list.length; j++) {
-				ui_list[j].resize();
-			}
-		}
-	}, 1000);
+
+    /**
+     * Common Logic
+     *
+     */
+    _.resize(function() {
+        var call_list = jui.get("table");
+
+        for(var i = 0; i < call_list.length; i++) {
+            var ui_list = call_list[i].list;
+
+            for(var j = 0; j < ui_list.length; j++) {
+                ui_list[j].resize();
+            }
+        }
+    }, 1000);
 
 
     /**
@@ -9215,287 +9266,283 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
      * @requires uix.table.base
      *
      */
-	var UI = function() {
-		var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
-		var rowIndex = null, checkedList = {};
+    var UI = function() {
+        var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
+        var rowIndex = null, checkedList = {};
         var is_resize = false, is_edit = false;
-		
-		
-		/**
-		 * Private Methods
-		 *
-		 */
-		function getExpandHtml(self) {
-			return "<tr class='expand' style='display: none;'><td id='EXPAND_" + self.timestamp + "'></td></tr>";
-		}
-		
-		function getColumnIndexes(self, colkeys) {
-			var indexList = [];
-			
-			for(var i = 0; i < colkeys.length; i++) {
-				if(typeof(colkeys[i]) == "string") {
-					var column = self.getColumn(colkeys[i]);
-					indexList.push(column.index);
-				} else {
-					indexList.push(colkeys[i]);
-				}
-			}
-			
-			return indexList;
-		}
-		
-		function setColumnStatus(self) {
-			var colkeys = self.options.colshow,
-				len = self.uit.getColumnCount();
-				
-			if(colkeys === true) {
-				self.options.colshow = colkeys = [];
-				
-				for(var i = 0; i < len; i++) {
-					colkeys.push(i);
-				}
-			} else {
-				colkeys = getColumnIndexes(self, colkeys);
-			}
-			
-			for(var i = 0; i < len; i++) {
-				if($.inArray(i, colkeys) == -1) 
-					self.uit.hideColumn(i);
-				else 
-					self.uit.showColumn(i);
-			}
-		}
-		
-		function setColumnMenu(self) {
-			var $ddObj = null;
-			var columns = self.listColumn(),
-				columnNames = [];
-				
-			for(var i = 0; i < columns.length; i++) {
-				columnNames.push($(columns[i].element).text());
-			}
-			
-			$ddObj = $(self.tpl.menu({ columns: columnNames }));
-			
-			$("body").append($ddObj);
-			ddUi = dropdown($ddObj, { close: false });
-			
-			$(ddUi.root).find("input[type=checkbox]").each(function(i) {
-				if(columns[i].type == "show") this.checked = true;
-				else this.checked = false;
-				
-				self.addEvent(this, "click", function(e) {
-					var ckCount = $(ddUi.root).find("input[type=checkbox]:checked").size();
-					
-					if(this.checked) {
-						self.showColumn(i, e);
-					} else {
-						if(ckCount > 0) {
-							self.hideColumn(i, e);
-						} else {
-							this.checked = true;
-						}
-					}
-					
-					self.hideExpand();
-					self.scroll();
-				});
-			});
-		}
-		
-		function setScrollResize(self) {
-			var tableWidth = $obj.table.outerWidth(),
-				thCount = self.uit.getColumnCount(),
-				isLastCheck = false;
-			
-			for(var i = thCount - 1; i >= 0; i--) {
-				var colInfo = self.getColumn(i),
-					thWidth = $(colInfo.element).outerWidth();
-				
-				// 마지막 TD는 스크롤 사이즈를 차감
-				if($(colInfo.element).css("display") == "none") {}
-				else {
-					if(!isLastCheck) {
-						thWidth = thWidth - _.scrollWidth();
-						isLastCheck = true;
-					}
-				}
-				
-				$(colInfo.list[0]).outerWidth(thWidth);
-			}
-			
-			$obj.tbody.outerWidth(tableWidth);
-		}
-		
-		function setScrollEvent(self) {
-			if(!$(self.root).hasClass("table-scroll")) { // 스크롤일 경우, 별도 처리
-				self.scroll();
-			}
-			
-			$obj.tbody.off("scroll").scroll(function(e) {
-			    if(($obj.tbody.scrollTop() + self.options.scrollHeight) == $obj.tbody.get(0).scrollHeight){
-			    	self.emit("scroll", e);
-			    	return false;
-			    }
-			});
-		}
-		
-		function setUpdateInit(self, isInit) {
-			if(self.uit.getRowCount() < 1) return;
-			
-			if(isInit) {
-				if(self.options.expand) {
-					$obj.tbody.prepend(getExpandHtml(self));
-				}
-				
-				self.scroll();
-			}
-			
-			if(self.options.scroll) { // 스크롤 이벤트 처리
-				setScrollEvent(self);
-			}
-			
-			self.setVo();
-		}
-		
-		function setEventRows(self, rows) {
-			var rows = (!rows) ? self.uit.getRow() : rows;
-			
-			for(var i = 0; i < rows.length; i++) {
-				(function(row) {
-					if(row.children.length > 0) {
-						setEventRow(self, row);
-						setEventRows(self, row.children);
-					} else {
-						setEventRow(self, row);
-					}
-				})(rows[i])
-			}
-		}
-		
-		function setEventRow(self, row) {
-			self.addEvent(row.element, "click", function(e) {
-				// 1. 공통 이벤트 발생
-				self.emit("select", [ row, e ]); // deprecated
-				self.emit("click", [ row, e ]);
 
-				// 2. 확장영역 자동 이벤트 처리
-				if(self.options.expand) {
-					if(self.options.expandEvent === false) return;
-					
-					if(rowIndex === row.index) {
-						self.hideExpand(e);
-					} else {
-						if(rowIndex != null) {
-							self.hideExpand(e);
-						}
-						
-						self.showExpand(row.index, undefined, e);
-					}
-				} 
-			});
-			
-			self.addEvent(row.element, "dblclick", function(e) {
-				self.emit("dblclick", [ row, e ]);
-			});
-			
-			self.addEvent(row.element, "contextmenu", function(e) {
-				self.emit("rowmenu", [ row, e ]);
-				return false;
-			});
-			
-			if(self.options.fields && self.options.editCell) {
-				if(self.options.editEvent === false) return;
-				
-				$(row.element).find("td").each(function(i) {
-					var cell = this;
-					
-					(function(colIndex) { 
-						self.addEvent(cell, "dblclick", function(e) {
+
+        function getExpandHtml(self) {
+            return "<tr class='expand' style='display: none;'><td id='EXPAND_" + self.timestamp + "'></td></tr>";
+        }
+
+        function getColumnIndexes(self, colkeys) {
+            var indexList = [];
+
+            for(var i = 0; i < colkeys.length; i++) {
+                if(typeof(colkeys[i]) == "string") {
+                    var column = self.getColumn(colkeys[i]);
+                    indexList.push(column.index);
+                } else {
+                    indexList.push(colkeys[i]);
+                }
+            }
+
+            return indexList;
+        }
+
+        function setColumnStatus(self) {
+            var colkeys = self.options.colshow,
+                len = self.uit.getColumnCount();
+
+            if(colkeys === true) {
+                self.options.colshow = colkeys = [];
+
+                for(var i = 0; i < len; i++) {
+                    colkeys.push(i);
+                }
+            } else {
+                colkeys = getColumnIndexes(self, colkeys);
+            }
+
+            for(var i = 0; i < len; i++) {
+                if($.inArray(i, colkeys) == -1)
+                    self.uit.hideColumn(i);
+                else
+                    self.uit.showColumn(i);
+            }
+        }
+
+        function setColumnMenu(self) {
+            var $ddObj = null;
+            var columns = self.listColumn(),
+                columnNames = [];
+
+            for(var i = 0; i < columns.length; i++) {
+                columnNames.push($(columns[i].element).text());
+            }
+
+            $ddObj = $(self.tpl.menu({ columns: columnNames }));
+
+            $("body").append($ddObj);
+            ddUi = dropdown($ddObj, { close: false });
+
+            $(ddUi.root).find("input[type=checkbox]").each(function(i) {
+                if(columns[i].type == "show") this.checked = true;
+                else this.checked = false;
+
+                self.addEvent(this, "click", function(e) {
+                    var ckCount = $(ddUi.root).find("input[type=checkbox]:checked").size();
+
+                    if(this.checked) {
+                        self.showColumn(i, e);
+                    } else {
+                        if(ckCount > 0) {
+                            self.hideColumn(i, e);
+                        } else {
+                            this.checked = true;
+                        }
+                    }
+
+                    self.hideExpand();
+                    self.scroll();
+                });
+            });
+        }
+
+        function setScrollResize(self) {
+            var tableWidth = $obj.table.outerWidth(),
+                thCount = self.uit.getColumnCount(),
+                isLastCheck = false;
+
+            for(var i = thCount - 1; i >= 0; i--) {
+                var colInfo = self.getColumn(i),
+                    thWidth = $(colInfo.element).outerWidth();
+
+                // 마지막 TD는 스크롤 사이즈를 차감
+                if($(colInfo.element).css("display") == "none") {}
+                else {
+                    if(!isLastCheck) {
+                        thWidth = thWidth - _.scrollWidth();
+                        isLastCheck = true;
+                    }
+                }
+
+                $(colInfo.list[0]).outerWidth(thWidth);
+            }
+
+            $obj.tbody.outerWidth(tableWidth);
+        }
+
+        function setScrollEvent(self) {
+            if(!$(self.root).hasClass("table-scroll")) { // 스크롤일 경우, 별도 처리
+                self.scroll();
+            }
+
+            $obj.tbody.off("scroll").scroll(function(e) {
+                if(($obj.tbody.scrollTop() + self.options.scrollHeight) == $obj.tbody.get(0).scrollHeight){
+                    self.emit("scroll", e);
+                    return false;
+                }
+            });
+        }
+
+        function setUpdateInit(self, isInit) {
+            if(self.uit.getRowCount() < 1) return;
+
+            if(isInit) {
+                if(self.options.expand) {
+                    $obj.tbody.prepend(getExpandHtml(self));
+                }
+
+                self.scroll();
+            }
+
+            if(self.options.scroll) { // 스크롤 이벤트 처리
+                setScrollEvent(self);
+            }
+
+            self.setVo();
+        }
+
+        function setEventRows(self, rows) {
+            var rows = (!rows) ? self.uit.getRow() : rows;
+
+            for(var i = 0; i < rows.length; i++) {
+                (function(row) {
+                    if(row.children.length > 0) {
+                        setEventRow(self, row);
+                        setEventRows(self, row.children);
+                    } else {
+                        setEventRow(self, row);
+                    }
+                })(rows[i])
+            }
+        }
+
+        function setEventRow(self, row) {
+            self.addEvent(row.element, "click", function(e) {
+                // 1. 공통 이벤트 발생
+                self.emit("select", [ row, e ]); // deprecated
+                self.emit("click", [ row, e ]);
+
+                // 2. 확장영역 자동 이벤트 처리
+                if(self.options.expand) {
+                    if(self.options.expandEvent === false) return;
+
+                    if(rowIndex === row.index) {
+                        self.hideExpand(e);
+                    } else {
+                        if(rowIndex != null) {
+                            self.hideExpand(e);
+                        }
+
+                        self.showExpand(row.index, undefined, e);
+                    }
+                }
+            });
+
+            self.addEvent(row.element, "dblclick", function(e) {
+                self.emit("dblclick", [ row, e ]);
+            });
+
+            self.addEvent(row.element, "contextmenu", function(e) {
+                self.emit("rowmenu", [ row, e ]);
+                return false;
+            });
+
+            if(self.options.fields && self.options.editCell) {
+                if(self.options.editEvent === false) return;
+
+                $(row.element).find("td").each(function(i) {
+                    var cell = this;
+
+                    (function(colIndex) {
+                        self.addEvent(cell, "dblclick", function(e) {
                             if(is_edit) return;
                             is_edit = true;
 
-							if(e.target.tagName == "TD") {
-								setEventEditCell(self, e.currentTarget, row, colIndex);
-							}
-							
-							self.emit("editstart", [ row, e ]);
-						});
-					})(i);
-				});
-			}
+                            if(e.target.tagName == "TD") {
+                                setEventEditCell(self, e.currentTarget, row, colIndex);
+                            }
 
-			if(self.options.fields && self.options.editRow) {
-				if(self.options.editEvent === false) return;
-				
-				self.addEvent(row.element, "dblclick", function(e) {
-					if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-						self.showEditRow(row.index, e);
-					}
-				});
-			}
-		}
-		
-		function setEventEditCell(self, elem, row, colIndex, event, callback) {
-			var column = self.getColumn(colIndex),
-				data = (column.name) ? column.data[row.index] : $(elem).html(),
-				colkeys = (!callback) ? self.options.editCell : self.options.editRow;
-			
-			var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
-			$(elem).html($input);
-			
-			if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
-				$input.attr("disabled", true);
-			}
-			
-			// 클릭 엘리먼트에 포커스 맞추기
-			if(event && event.target == elem) $input.focus();
+                            self.emit("editstart", [ row, e ]);
+                        });
+                    })(i);
+                });
+            }
 
-			// 엔터 키 이벤트 발생시 업데이트
-			self.addEvent($input, "keypress", function(e) {
-				if(e.which == 13) {
-					update(e);
-				}
-			});
-			
-			// 포커스가 바뀌었을 경우 업데이트
-			self.addEvent($obj.tbody.find("tr"), "click", function(e) {
-				if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-					update(e);
-				}
-			});
-			
-			function update(e) {
+            if(self.options.fields && self.options.editRow) {
+                if(self.options.editEvent === false) return;
+
+                self.addEvent(row.element, "dblclick", function(e) {
+                    if(e.target.tagName == "TD" || e.target.tagName == "TR") {
+                        self.showEditRow(row.index, e);
+                    }
+                });
+            }
+        }
+
+        function setEventEditCell(self, elem, row, colIndex, event, callback) {
+            var column = self.getColumn(colIndex),
+                data = (column.name) ? column.data[row.index] : $(elem).html(),
+                colkeys = (!callback) ? self.options.editCell : self.options.editRow;
+
+            var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
+            $(elem).html($input);
+
+            if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
+                $input.attr("disabled", true);
+            }
+
+            // 클릭 엘리먼트에 포커스 맞추기
+            if(event && event.target == elem) $input.focus();
+
+            // 엔터 키 이벤트 발생시 업데이트
+            self.addEvent($input, "keypress", function(e) {
+                if(e.which == 13) {
+                    update(e);
+                }
+            });
+
+            // 포커스가 바뀌었을 경우 업데이트
+            self.addEvent($obj.tbody.find("tr"), "click", function(e) {
+                if(e.target.tagName == "TD" || e.target.tagName == "TR") {
+                    update(e);
+                }
+            });
+
+            function update(e) {
                 if(!is_edit) return;
 
-				if(typeof(callback) == "function") { // editRow일 경우
-					callback();
+                if(typeof(callback) == "function") { // editRow일 경우
+                    callback();
                     is_edit = false;
-				} else {
-					var data = {};
-					data[column.name] = $input.val();
+                } else {
+                    var data = {};
+                    data[column.name] = $input.val();
 
-					var res = self.emit("editend", [ data ]);
-					
-					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
-					if(res !== false) {
-						self.update(row.index, data);
-						$input.remove();
+                    var res = self.emit("editend", [ data ]);
+
+                    // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+                    if(res !== false) {
+                        self.update(row.index, data);
+                        $input.remove();
                         is_edit = false;
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
-		function setEventColumn(self) {
+        function setEventColumn(self) {
             var opts = self.options,
                 len = self.uit.getColumnCount();
 
-			// 컬럼 컨텍스트 이벤트
+            // 컬럼 컨텍스트 이벤트
             for(var i = 0; i < len; i++) {
                 var col = self.getColumn(i);
 
-				(function(index, column) {
+                (function(index, column) {
                     if(!opts.fields || !opts.sort || opts.sortEvent !== true) {
                         self.addEvent(column.element, "click", function (e) {
                             self.emit("colclick", [ column, e ]);
@@ -9506,451 +9553,582 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         self.emit("coldblclick", [ column, e ]);
                     });
 
-					self.addEvent(column.element, "contextmenu", function(e) {
-						self.emit("colmenu", [ column, e ]);
-						return false;
-					});
-				})(i, col);
-			}
-		}
-		
-		function setEventSort(self) {
-			var sortIndexes = self.options.sort,
-				len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
-			
-			for(var i = 0; i < len; i++) {
-				var colKey = (sortIndexes === true) ? i : sortIndexes[i],
-					col = self.getColumn(colKey);
-				
-				if(col.element != null) {
-					(function(index, column) {
-						self.addEvent(column.element, "click", function(e) {
-							if($(e.target).hasClass("resize")) return;
+                    self.addEvent(column.element, "contextmenu", function(e) {
+                        self.emit("colmenu", [ column, e ]);
+                        return false;
+                    });
+                })(i, col);
+            }
+        }
 
-							self.sort(index, undefined, e);
+        function setEventSort(self) {
+            var sortIndexes = self.options.sort,
+                len = (sortIndexes === true) ? self.uit.getColumnCount() : sortIndexes.length;
+
+            for(var i = 0; i < len; i++) {
+                var colKey = (sortIndexes === true) ? i : sortIndexes[i],
+                    col = self.getColumn(colKey);
+
+                if(col.element != null) {
+                    (function(index, column) {
+                        self.addEvent(column.element, "click", function(e) {
+                            if($(e.target).hasClass("resize")) return;
+
+                            self.sort(index, undefined, e);
                             self.emit("colclick", [ column, e ]);
-						});
-					})(colKey, col);
-					
-					$(col.element).css("cursor", "pointer");
-				}
-			}
-		}
-		
-		function setColumnResize(self) {
-			var resizeX = 0,
+                        });
+                    })(colKey, col);
+
+                    $(col.element).css("cursor", "pointer");
+                }
+            }
+        }
+
+        function setColumnResize(self) {
+            var resizeX = 0,
                 tablePos = $obj.table.offset();
-			var col = null,
-				colNext = null,
-				colWidth = 0,
-				colNextWidth = 0,
-				colResize = null;
+            var col = null,
+                colNext = null,
+                colWidth = 0,
+                colNextWidth = 0,
+                colResize = null;
 
-			// 리사이즈 엘리먼트 삭제
-			$obj.thead.find(".resize").remove();
-			
-			for(var i = 0; i < self.uit.getColumnCount() - 1; i++) {
-				var $colElem = $(self.getColumn(i).element),
-					$resizeBar = $("<div class='resize'></div>");
-				var pos = $colElem.offset(); // ie8 버그로 인해 position에서 offset으로 변경함
+            // 리사이즈 엘리먼트 삭제
+            $obj.thead.find(".resize").remove();
 
-				$resizeBar.css({
-					position: "absolute",
-			        width: "8px",
-			        height: $colElem.outerHeight(),
-			        left: ($colElem.outerWidth() + (pos.left - tablePos.left) - 1) + "px",
-			        top: (pos.top - tablePos.top) + "px",
-			        cursor: "w-resize",
-			        "z-index": "1"
-				});
-				
-				$colElem.append($resizeBar);
-				
-				// Event Start
-				(function(index) {
-					self.addEvent($resizeBar, "mousedown", function(e) {
-						if(resizeX == 0) resizeX = e.pageX;
-						
-						// 컬럼 객체 가져오기
-						col = self.getColumn(index);
-						colNext = getNextColumn(index);
-						colWidth = $(col.element).outerWidth(),
-						colNextWidth = $(colNext.element).outerWidth();
-						colResize = this;
+            for(var i = 0; i < self.uit.getColumnCount() - 1; i++) {
+                var $colElem = $(self.getColumn(i).element),
+                    $resizeBar = $("<div class='resize'></div>");
+                var pos = $colElem.offset(); // ie8 버그로 인해 position에서 offset으로 변경함
+
+                $resizeBar.css({
+                    position: "absolute",
+                    width: "8px",
+                    height: $colElem.outerHeight(),
+                    left: ($colElem.outerWidth() + (pos.left - tablePos.left) - 1) + "px",
+                    top: (pos.top - tablePos.top) + "px",
+                    cursor: "w-resize",
+                    "z-index": "1"
+                });
+
+                $colElem.append($resizeBar);
+
+                // Event Start
+                (function(index) {
+                    self.addEvent($resizeBar, "mousedown", function(e) {
+                        if(resizeX == 0) resizeX = e.pageX;
+
+                        // 컬럼 객체 가져오기
+                        col = self.getColumn(index);
+                        colNext = getNextColumn(index);
+                        colWidth = $(col.element).outerWidth(),
+                            colNextWidth = $(colNext.element).outerWidth();
+                        colResize = this;
                         is_resize = true;
-						
-						return false;
-					});
-				})(i);
-			}
-			
-			self.addEvent("body", "mousemove", function(e) {
-				if(resizeX > 0) {
-					colResizeWidth(self, e.pageX - resizeX);
-				}
-			});
-			
-			self.addEvent("body", "mouseup", function(e) {
-				if(resizeX > 0) {
-					resizeX = 0;
+
+                        return false;
+                    });
+                })(i);
+            }
+
+            self.addEvent("body", "mousemove", function(e) {
+                if(resizeX > 0) {
+                    colResizeWidth(self, e.pageX - resizeX);
+                }
+            });
+
+            self.addEvent("body", "mouseup", function(e) {
+                if(resizeX > 0) {
+                    resizeX = 0;
                     is_resize = false;
-					
-					// 리사이징 바, 위치 이동
-					var left = $(col.element).offset().left - tablePos.left;
-					$(colResize).css("left", $(col.element).outerWidth() + left - 1);
+
+                    // 리사이징 바, 위치 이동
+                    var left = $(col.element).offset().left - tablePos.left;
+                    $(colResize).css("left", $(col.element).outerWidth() + left - 1);
 
                     self.emit("colresize", [ col, e ]);
-					
-					return false;
-				}
-			});
-			
-			function getNextColumn(index) {
-				for(var i = index + 1; i < self.uit.getColumnCount(); i++) {
-					var elem = self.getColumn(i).element;
-					
-					if(!$(elem).is(':hidden')) {
-						return self.getColumn(i);
-					}
-				}
-			}
-			
-			function colResizeWidth(self, disWidth) {
-				var colMinWidth = 30;
-				
-				// 최소 크기 체크
-				if(colWidth + disWidth < colMinWidth || colNextWidth - disWidth < colMinWidth)
-					return;
-				
-				$(col.element).outerWidth(colWidth + disWidth);
-				$(colNext.element).outerWidth(colNextWidth - disWidth);
-				
-				// 스크롤 옵션일 경우, 별도 처리
-				if(self.options.scroll) {
-					var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollWidth() : 0);
-					
-					$(col.list[0]).outerWidth($(col.element).outerWidth());
-					$(colNext.list[0]).outerWidth(colLastWidth);
-				}
-			}
-		}
-		
-		
-		/**
-		 * Public Methods
-		 *
-		 */
-		
-		this.init = function() {
-			var opts = this.options;
+
+                    return false;
+                }
+            });
+
+            function getNextColumn(index) {
+                for(var i = index + 1; i < self.uit.getColumnCount(); i++) {
+                    var elem = self.getColumn(i).element;
+
+                    if(!$(elem).is(':hidden')) {
+                        return self.getColumn(i);
+                    }
+                }
+            }
+
+            function colResizeWidth(self, disWidth) {
+                var colMinWidth = 30;
+
+                // 최소 크기 체크
+                if(colWidth + disWidth < colMinWidth || colNextWidth - disWidth < colMinWidth)
+                    return;
+
+                $(col.element).outerWidth(colWidth + disWidth);
+                $(colNext.element).outerWidth(colNextWidth - disWidth);
+
+                // 스크롤 옵션일 경우, 별도 처리
+                if(self.options.scroll) {
+                    var colLastWidth = $(colNext.element).outerWidth() - ((col.index == self.uit.getColumnCount() - 2) ? _.scrollWidth() : 0);
+
+                    $(col.list[0]).outerWidth($(col.element).outerWidth());
+                    $(colNext.list[0]).outerWidth(colLastWidth);
+                }
+            }
+        }
+
+
+        this.init = function() {
+            var opts = this.options;
 
             // @Deprecated, 'rows'는 의미상 맞지 않아 차후 삭제
             opts.data = (opts.rows != null) ? opts.rows : opts.data;
 
-			// UIHandler, 추후 코어에서 처리
-			$obj = {
-				table: $(this.root).css({ "position": "relative" }),
-				thead: $(this.root).find("thead"),
-				tbody: $(this.root).find("tbody")
-			};
+            // UIHandler, 추후 코어에서 처리
+            $obj = {
+                table: $(this.root).css({ "position": "relative" }),
+                thead: $(this.root).find("thead"),
+                tbody: $(this.root).find("tbody")
+            };
 
-			// UITable 객체 생성
-			this.uit = new Base({
-				$obj: $obj, $tpl: this.tpl 
-			}, opts.fields); // 신규 테이블 클래스 사용
-			
-			if(opts.fields && opts.colshow) { // 컬럼 보이기 초기값 설정
-				setColumnStatus(this);
-			}
-			
-			if(opts.fields && this.tpl.menu) { // 컬럼 보이기/숨기기 메뉴 설정
-				setColumnMenu(this);
-			}
-			
-			if(opts.resize) {
-				setColumnResize(this);
-			}
+            // UITable 객체 생성
+            this.uit = new Base({
+                $obj: $obj, $tpl: this.tpl
+            }, opts.fields); // 신규 테이블 클래스 사용
 
-			if(opts.fields && opts.sort && opts.sortEvent === true) {
+            if(opts.fields && opts.colshow) { // 컬럼 보이기 초기값 설정
+                setColumnStatus(this);
+            }
+
+            if(opts.fields && this.tpl.menu) { // 컬럼 보이기/숨기기 메뉴 설정
+                setColumnMenu(this);
+            }
+
+            if(opts.resize) {
+                setColumnResize(this);
+            }
+
+            if(opts.fields && opts.sort && opts.sortEvent === true) {
                 setEventSort(this);
-			}
-			
-			if(opts.data.length > 0) {
-				this.update(opts.data);
-			} else {
-				this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
-			}
-			
-			if(opts.width > 0) {
-				$obj.table.outerWidth(opts.width);
-			}
-			
-			if(!opts.fields) {
-				if(opts.sort || opts.colshow || opts.editCell || opts.editRow) {
-					throw new Error("JUI_CRITICAL_ERR: 'fields' option is required");
-				}
-			}
-			
-			setEventColumn(this);
-		}
-		
-		this.update = function() {
-			var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
-				index = (arguments.length == 2) ? arguments[0] : null;
-			
-			if(index != null) { // 1. 단일 로우 업데이트
-				var tmpRow = this.uit.updateRow(index, dataList);
-				setEventRow(this, tmpRow);
-				
-				// 첫번째 로우일 경우, 스크롤 다시 처리
-				if(parseInt(index) == 0) { 
-					this.scroll();
-				}
-			} else { // 2. 로우 목록 업데이트
-				this.uit.removeRows();
-				this.scroll();
-				this.append(dataList);
-				
-				// 정렬 인덱스가 옵션에 있을 경우, 해당 인덱스의 컬럼 정렬
-				if(this.options.sortIndex) {
-					this.sort(this.options.sortIndex, this.options.sortOrder, null);
-				}
-			}
-		}
-		
-		this.updateTree = function(rows) { // index & data 조합의 객체 배열 
-			var iParser = _.index();
-			
-			// 전체 로우 제거
-			this.uit.removeRows();
-			
-			// 트리 로우 추가
-			for(var i = 0; i < rows.length; i++) {
-				var pIndex = iParser.getParentIndex(rows[i].index);
-				
-				if(pIndex == null) {
-					this.uit.appendRow(rows[i].data);
-				} else {
-					this.uit.appendRow(pIndex, rows[i].data);
-				}
-			}
-			
-			setUpdateInit(this, true);
-			setEventRows(this);
-		}
-		
-		this.append = function() {
-			var isInit = (this.count() > 0) ? false : true;
-			var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
-				index = (arguments.length == 2) ? arguments[0] : null;
-			
-			dataList = (dataList.length == undefined) ? [ dataList ] : dataList;
-			
-			for(var i = 0; i < dataList.length; i++) {
-				var tmpRow = null;
-				
-				if(index != null) tmpRow = this.uit.appendRow(index, dataList[i]);
-				else tmpRow = this.uit.appendRow(dataList[i]);
-				
-				// 추가 로우 추가시 이벤트 걸기
-				if(!isInit) {
-					setEventRow(this, tmpRow);
-				}
-			}
-			
-			setUpdateInit(this, isInit);
-			if(isInit) setEventRows(this); // 최초에 데이터가 없을 경우에만 전체 이벤트 걸기
-		}
-		
-		this.insert = function(index, dataList) {
-			var isInit = (this.count() > 0) ? false : true;
-			var dataList = (dataList.length == undefined) ? [ dataList ] : dataList;
-			
-			for(var i = 0; i < dataList.length; i++) {
-				this.uit.insertRow(index, dataList[i]);
-			}
-			
-			setUpdateInit(this, isInit);
-			setEventRows(this);
-		}
-		
-		this.select = function(index) {
-			var row = this.get(index);
+            }
 
-			// 초기화
-			this.hideExpand();
-			this.hideEditRow();
-			this.uncheckAll();
+            if(opts.data.length > 0) {
+                this.update(opts.data);
+            } else {
+                this.setVo(); // 데이터가 있을 경우에는 VO 세팅을 별도로 함
+            }
 
-			$(row.element).parent().find(".selected").removeClass("selected");
-			$(row.element).addClass("selected");
-			
-			rowIndex = index;
-			return row;
-		}
-		
-		this.unselect = function() {
-			if(rowIndex == null) return;
-			var row = this.get(rowIndex);
-			
-			$(row.element).removeClass("selected");
-			rowIndex = null;
-			
-			return row;
-		}
-		
-		this.check = function(index) {
-			var row = this.get(index);
-			
-			// 초기화
-			this.hideExpand();
-			this.hideEditRow();
-			this.unselect();
-			
-			checkedList[index] = row;
-			$(row.element).addClass("checked");
-		}
-		
-		this.uncheck = function(index) {
-			var row = this.get(index);
-			
-			checkedList[index] = null;
-			$(row.element).removeClass("checked");
-		}
+            if(opts.width > 0) {
+                $obj.table.outerWidth(opts.width);
+            }
 
-		this.uncheckAll = function() {
-			checkedList = {};
-			$obj.tbody.find(".checked").removeClass("checked");
-		}
-		
-		this.remove = function(index) {
-			if(index == null) return null;
-			
-			this.uit.removeRow(index);
-			setEventRows(this);
-			this.scroll();
-		}
-		
-		this.reset = function() {
-			this.uit.removeRows();
-			this.scroll();
-		}
-		
-		this.move = function(index, targetIndex) {
-			this.uit.moveRow(index, targetIndex);
-			setEventRows(this);
-			
-			// 첫번째 로우일 경우, 스크롤 다시 처리
-			if(parseInt(index) == 0 || parseInt(targetIndex) == 0) {
-				this.scroll();
-			}
-		}
-		
-		this.sort = function(index, order, e) {  // index는 컬럼 key 또는 컬럼 name
-			if(!this.options.fields || !this.options.sort || is_resize) return;
-			var column = this.getColumn(index);
-			
-			if(typeof(column.name) == "string") {
-				column.order = (order) ? order : (column.order == "asc") ? "desc" : "asc";
-				
-				this.uit.setColumn(index, column);
-				this.uit.sortRows(column.name, (column.order == "desc") ? true : false);
-				this.emit("sort", [ column, e ]);
-				
-				setUpdateInit(this, true);
-				setEventRows(this);
-			}
-		}
-		
-		this.scroll = function(height) {
-			if(!this.options.scroll) return;
-			
-			var self = this,
-				h = (height && height > 0) ? height : this.options.scrollHeight,
-				h = (h > 0) ? h : 200;
-			
-			this.options.scrollHeight = h;
-			$obj.tbody.css("maxHeight", h + "px");
-			
-			setTimeout(function() {
-				if($obj.tbody.outerHeight() < h) {
-					$obj.table.css({
-						"table-layout": ""
-					});
-					
-					$obj.tbody.css({
-						"display": "",
-						"overflow": ""
-					});
-				} else {
-					$obj.table.css({
-						"table-layout": "fixed"
-					});
-					
-					$obj.tbody.css({
-						"display": "block",
-						"overflow": "auto"
-					});
-				}
-				
-				setScrollResize(self);
-			}, 10);
-		}
-		
-		this.open = function(index) { // 로트 제외, 하위 모든 노드 대상
-			if(index == null) return;
-			
-			this.uit.openRow(index);
-			this.emit("open", [ this.get(index) ]);
-		}
-		
-		this.fold = function(index) {
-			if(index == null) return;
+            if(!opts.fields) {
+                if(opts.sort || opts.colshow || opts.editCell || opts.editRow) {
+                    throw new Error("JUI_CRITICAL_ERR: 'fields' option is required");
+                }
+            }
 
-			this.uit.foldRow(index);
-			this.emit("fold", [ this.get(index) ]);
-		}
-		
-		this.openAll = function() { // 로트 포함, 하위 모든 노드 대상
-			this.uit.openRowAll();
-			this.emit("openall");
-		}
+            setEventColumn(this);
+        }
 
-		this.foldAll = function() {
-			this.uit.foldRowAll();
-			this.emit("foldall");
-		}
-		
-		this.resize = function() {
-			this.scroll();
-			
-			if(this.options.resize) {
-				setColumnResize(this);
-			}
-		}
-		
-		this.resizeColumns = function() {
-			var columns = this.listColumn();
-			
-			for(var i = 0; i < columns.length; i++) {
-				if(columns[i].width == null) {
-					$(columns[i].element).outerWidth("auto");
-				}
-			}
-		}
-		
-		this.size = function() { // 차후 수정 (컬럼 * 로우 개수 * 바이트)
-			return this.uit.getRowCount();
-		}
+        /**
+         * @method update
+         * Updates the list of rows or modifies the row at a specified index.
+         *
+         * @param {Array} rows
+         */
+        this.update = function() {
+            var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
+                index = (arguments.length == 2) ? arguments[0] : null;
 
-		this.count = function() {
-			return this.uit.getRowCount();
-		}
+            if(index != null) { // 1. 단일 로우 업데이트
+                var tmpRow = this.uit.updateRow(index, dataList);
+                setEventRow(this, tmpRow);
 
-		this.list = function() {
-			return this.uit.getRow();
-		}
+                // 첫번째 로우일 경우, 스크롤 다시 처리
+                if(parseInt(index) == 0) {
+                    this.scroll();
+                }
+            } else { // 2. 로우 목록 업데이트
+                this.uit.removeRows();
+                this.scroll();
+                this.append(dataList);
 
+                // 정렬 인덱스가 옵션에 있을 경우, 해당 인덱스의 컬럼 정렬
+                if(this.options.sortIndex) {
+                    this.sort(this.options.sortIndex, this.options.sortOrder, null);
+                }
+            }
+        }
+
+        /**
+         * @method updateTree
+         * It is possible to configure a tree table using an object array with the index and data properties.
+         *
+         * @param {Array} rows
+         */
+        this.updateTree = function(rows) { // index & data 조합의 객체 배열
+            var iParser = _.index();
+
+            // 전체 로우 제거
+            this.uit.removeRows();
+
+            // 트리 로우 추가
+            for(var i = 0; i < rows.length; i++) {
+                var pIndex = iParser.getParentIndex(rows[i].index);
+
+                if(pIndex == null) {
+                    this.uit.appendRow(rows[i].data);
+                } else {
+                    this.uit.appendRow(pIndex, rows[i].data);
+                }
+            }
+
+            setUpdateInit(this, true);
+            setEventRows(this);
+        }
+
+        /**
+         * @method append
+         * Add a row or a child row to at a specified index.
+         *
+         * @param {RowObject} row
+         */
+        this.append = function() {
+            var isInit = (this.count() > 0) ? false : true;
+            var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
+                index = (arguments.length == 2) ? arguments[0] : null;
+
+            dataList = (dataList.length == undefined) ? [ dataList ] : dataList;
+
+            for(var i = 0; i < dataList.length; i++) {
+                var tmpRow = null;
+
+                if(index != null) tmpRow = this.uit.appendRow(index, dataList[i]);
+                else tmpRow = this.uit.appendRow(dataList[i]);
+
+                // 추가 로우 추가시 이벤트 걸기
+                if(!isInit) {
+                    setEventRow(this, tmpRow);
+                }
+            }
+
+            setUpdateInit(this, isInit);
+            if(isInit) setEventRows(this); // 최초에 데이터가 없을 경우에만 전체 이벤트 걸기
+        }
+
+        /**
+         * @method insert
+         * Adds a row at a specified index.
+         *
+         * @param {Integer} index
+         * @param {RowObject} row
+         */
+        this.insert = function(index, dataList) {
+            var isInit = (this.count() > 0) ? false : true;
+            var dataList = (dataList.length == undefined) ? [ dataList ] : dataList;
+
+            for(var i = 0; i < dataList.length; i++) {
+                this.uit.insertRow(index, dataList[i]);
+            }
+
+            setUpdateInit(this, isInit);
+            setEventRows(this);
+        }
+
+        /**
+         * @method select
+         * Adds a selected class to a row at a specified index and gets an instance of the applicable row.
+         *
+         * @param {Integer} index
+         * @return {RowObject} row
+         */
+        this.select = function(index) {
+            var row = this.get(index);
+
+            // 초기화
+            this.hideExpand();
+            this.hideEditRow();
+            this.uncheckAll();
+
+            $(row.element).parent().find(".selected").removeClass("selected");
+            $(row.element).addClass("selected");
+
+            rowIndex = index;
+            return row;
+        }
+
+        /**
+         * @method unselect
+         * Removes a selected class from a selected row and gets an instance of the row in question.
+         *
+         * @return {RowObject} row
+         */
+        this.unselect = function() {
+            if(rowIndex == null) return;
+            var row = this.get(rowIndex);
+
+            $(row.element).removeClass("selected");
+            rowIndex = null;
+
+            return row;
+        }
+
+        /**
+         * @method check
+         * Add a checked class to a row at a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.check = function(index) {
+            var row = this.get(index);
+
+            // 초기화
+            this.hideExpand();
+            this.hideEditRow();
+            this.unselect();
+
+            checkedList[index] = row;
+            $(row.element).addClass("checked");
+        }
+
+        /**
+         * @method uncheck
+         * Removes a checked class from a row at a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.uncheck = function(index) {
+            var row = this.get(index);
+
+            checkedList[index] = null;
+            $(row.element).removeClass("checked");
+        }
+
+        /**
+         * @method uncheckAll
+         * Removes checked classes from all rows.
+         */
+        this.uncheckAll = function() {
+            checkedList = {};
+            $obj.tbody.find(".checked").removeClass("checked");
+        }
+
+        /**
+         * @method remove
+         * Remove a row at a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.remove = function(index) {
+            if(index == null) return null;
+
+            this.uit.removeRow(index);
+            setEventRows(this);
+            this.scroll();
+        }
+
+        /**
+         * @method reset
+         * Removes all rows.
+         */
+        this.reset = function() {
+            this.uit.removeRows();
+            this.scroll();
+        }
+
+        /**
+         * @method move
+         * Moves a row iat a specified index to the target index.
+         *
+         * @param {Integer} index
+         * @param {Integer} targetIndex
+         */
+        this.move = function(index, targetIndex) {
+            this.uit.moveRow(index, targetIndex);
+            setEventRows(this);
+
+            // 첫번째 로우일 경우, 스크롤 다시 처리
+            if(parseInt(index) == 0 || parseInt(targetIndex) == 0) {
+                this.scroll();
+            }
+        }
+
+        /**
+         * @method sort
+         * Moves a row iat a specified index to the target index.
+         *
+         * @param {Integer} index
+         * @param {String} order  "asc" or "desc"
+         */
+        this.sort = function(index, order, e) {  // index는 컬럼 key 또는 컬럼 name
+            if(!this.options.fields || !this.options.sort || is_resize) return;
+            var column = this.getColumn(index);
+
+            if(typeof(column.name) == "string") {
+                column.order = (order) ? order : (column.order == "asc") ? "desc" : "asc";
+
+                this.uit.setColumn(index, column);
+                this.uit.sortRows(column.name, (column.order == "desc") ? true : false);
+                this.emit("sort", [ column, e ]);
+
+                setUpdateInit(this, true);
+                setEventRows(this);
+            }
+        }
+
+        /**
+         * @method scroll
+         * Sets the scroll based on the height of a table.
+         *
+         * @param {Integer} height
+         */
+        this.scroll = function(height) {
+            if(!this.options.scroll) return;
+
+            var self = this,
+                h = (height && height > 0) ? height : this.options.scrollHeight,
+                h = (h > 0) ? h : 200;
+
+            this.options.scrollHeight = h;
+            $obj.tbody.css("maxHeight", h + "px");
+
+            setTimeout(function() {
+                if($obj.tbody.outerHeight() < h) {
+                    $obj.table.css({
+                        "table-layout": ""
+                    });
+
+                    $obj.tbody.css({
+                        "display": "",
+                        "overflow": ""
+                    });
+                } else {
+                    $obj.table.css({
+                        "table-layout": "fixed"
+                    });
+
+                    $obj.tbody.css({
+                        "display": "block",
+                        "overflow": "auto"
+                    });
+                }
+
+                setScrollResize(self);
+            }, 10);
+        }
+
+        /**
+         * @method open
+         * Shows a child row of a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.open = function(index) { // 로트 제외, 하위 모든 노드 대상
+            if(index == null) return;
+
+            this.uit.openRow(index);
+            this.emit("open", [ this.get(index) ]);
+        }
+
+        /**
+         * @method fold
+         * Hides a child row of a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.fold = function(index) {
+            if(index == null) return;
+
+            this.uit.foldRow(index);
+            this.emit("fold", [ this.get(index) ]);
+        }
+
+        /**
+         * @method openAll
+         * Shows all child rows of a specified index.
+         */
+        this.openAll = function() { // 로트 포함, 하위 모든 노드 대상
+            this.uit.openRowAll();
+            this.emit("openall");
+        }
+
+        /**
+         * @method foldAll
+         * Hides all child rows of a specified index.
+         */
+        this.foldAll = function() {
+            this.uit.foldRowAll();
+            this.emit("foldall");
+        }
+
+        /**
+         * @method resize
+         * Resets the inner scroll and columns of a table.
+         */
+        this.resize = function() {
+            this.scroll();
+
+            if(this.options.resize) {
+                setColumnResize(this);
+            }
+        }
+
+        /**
+         * @method resizeColumns
+         * Resets the sizes of all columns of a table.
+         */
+        this.resizeColumns = function() {
+            var columns = this.listColumn();
+
+            for(var i = 0; i < columns.length; i++) {
+                if(columns[i].width == null) {
+                    $(columns[i].element).outerWidth("auto");
+                }
+            }
+        }
+
+        /**
+         * @method size
+         * Gets the size of all the rows of a table.
+         *
+         * @return {Integer} size
+         */
+        this.size = function() { // 차후 수정 (컬럼 * 로우 개수 * 바이트)
+            return this.uit.getRowCount();
+        }
+
+        /**
+         * @method count
+         * Gets the number of trows of a table.
+         *
+         * @return {Integer} count
+         */
+        this.count = function() {
+            return this.uit.getRowCount();
+        }
+
+        /**
+         * @method list
+         * Gets all the rows of a table.
+         *
+         * @return {Array} rows
+         */
+        this.list = function() {
+            return this.uit.getRow();
+        }
+
+        /**
+         * @method listData
+         * Gets the data of all the rows of a table.
+         *
+         * @return {Array} datas
+         */
         this.listData = function() {
             var rows = this.list(),
                 data = [];
@@ -9962,91 +10140,154 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             return data;
         }
 
-		this.listAll = function() {
-			return this.uit.getRowAll();
-		}
-		
-		this.listChecked = function() {
-			var list = [];
-			
-			for(var row in checkedList) {
-				if(checkedList[row] != null) {
-					list.push(checkedList[row]);
-				}
-			}
-			
-			return list;
-		}
-		
-		this.listColumn = function() {
-			return this.uit.getColumn();
-		}
-		
-		this.get = function(index) {
-			if(index == null) return null;
-			return this.uit.getRow(index);
-		}
-		
-		this.getAll = function(index) {
-			if(index == null) return null;
-			return this.uit.getRowAll(index);
-		}
-		
-		this.getColumn = function(index) { // index or columnName
-			if(index == null) return null;
-			else {
-				if(typeof(index) == "string")
-					return this.uit.getColumn($.inArray(index, this.options.fields));
-				else 
-					return this.uit.getColumn(index);
-			}
-		}
-		
-		this.showColumn = function(index, e) { // index or columnName
-			if(!this.options.fields) return;
-			var column = this.getColumn(index);
-			
-			this.uit.showColumn(column.index);
-			this.scroll();
-			this.resizeColumns();
-			
-			if(this.options.resize) {
-				setColumnResize(this);
-			}
-			
-			// 커스텀 이벤트 발생
-			this.emit("colshow", [ column, e ]);
-		}
-		
-		this.hideColumn = function(index, e) { // index or columnName
-			if(!this.options.fields) return;
-			var column = this.getColumn(index);
-			
-			this.uit.hideColumn(column.index);
-			this.scroll();
-			this.resizeColumns();
-			
-			if(this.options.resize) {
-				setColumnResize(this);
-			}
+        /**
+         * @method listAll
+         * Gets all the rows of a table including child rows.
+         *
+         * @return {Array} rows
+         */
+        this.listAll = function() {
+            return this.uit.getRowAll();
+        }
 
-			// 커스텀 이벤트 발생
-			this.emit("colhide", [ column, e ]);
-		}
-		
-		this.initColumns = function(keys) {
-			if(typeof(keys) != "object") return;
-			this.options.colshow = keys;
-			
-			setColumnStatus(this);
-			this.scroll();
-			this.resizeColumns();
-			
-			if(this.options.resize) {
-				setColumnResize(this);
-			}
-		}
-		
+        /**
+         * @method listChecked
+         * Gets all rows in a check state.
+         *
+         * @return {Array} rows
+         */
+        this.listChecked = function() {
+            var list = [];
+
+            for(var row in checkedList) {
+                if(checkedList[row] != null) {
+                    list.push(checkedList[row]);
+                }
+            }
+
+            return list;
+        }
+
+        /**
+         * @method listColumn
+         * Gets all columns.
+         *
+         * @return {Array} columns
+         */
+        this.listColumn = function() {
+            return this.uit.getColumn();
+        }
+
+        /**
+         * @method get
+         * Gets the row at the specified index.
+         *
+         * @param {Integer} index
+         * @return {RowObject} row
+         */
+        this.get = function(index) {
+            if(index == null) return null;
+            return this.uit.getRow(index);
+        }
+
+        /**
+         * @method getAll
+         * Gets all rows of at the specified index including child rows.
+         *
+         * @param {Integer} index
+         * @return {Array} rows
+         */
+        this.getAll = function(index) {
+            if(index == null) return null;
+            return this.uit.getRowAll(index);
+        }
+
+        /**
+         * @method getColumn
+         * Gets the column at the specified index.
+         *
+         * @param {"Integer"/"String"} key index or column key
+         * @return {ColumnObject} column
+         */
+        this.getColumn = function(index) { // index or columnName
+            if(index == null) return null;
+            else {
+                if(typeof(index) == "string")
+                    return this.uit.getColumn($.inArray(index, this.options.fields));
+                else
+                    return this.uit.getColumn(index);
+            }
+        }
+
+        /**
+         * @method showColumn
+         * Shows the column index (or column name).
+         *
+         * @param {"Integer"/"String"} key index or column name
+         */
+        this.showColumn = function(index, e) { // index or columnName
+            if(!this.options.fields) return;
+            var column = this.getColumn(index);
+
+            this.uit.showColumn(column.index);
+            this.scroll();
+            this.resizeColumns();
+
+            if(this.options.resize) {
+                setColumnResize(this);
+            }
+
+            // 커스텀 이벤트 발생
+            this.emit("colshow", [ column, e ]);
+        }
+
+        /**
+         * @method hideColumn
+         * Hides the column index (or column name).
+         *
+         * @param {"Integer"/"String"} key index or column name
+         */
+        this.hideColumn = function(index, e) { // index or columnName
+            if(!this.options.fields) return;
+            var column = this.getColumn(index);
+
+            this.uit.hideColumn(column.index);
+            this.scroll();
+            this.resizeColumns();
+
+            if(this.options.resize) {
+                setColumnResize(this);
+            }
+
+            // 커스텀 이벤트 발생
+            this.emit("colhide", [ column, e ]);
+        }
+
+        /**
+         * @method initColumns
+         * It is possible to determine the index or name of the column to be shown in an array.
+         *
+         * @param {"Integer"/"String"} key index or column name
+         */
+        this.initColumns = function(keys) {
+            if(typeof(keys) != "object") return;
+            this.options.colshow = keys;
+
+            setColumnStatus(this);
+            this.scroll();
+            this.resizeColumns();
+
+            if(this.options.resize) {
+                setColumnResize(this);
+            }
+        }
+
+        /**
+         * @method showColumnMenu
+         * Shows the Show/Hide Column menu at specified coordinates.
+         *
+         * @param {Integer} x
+         */
         this.showColumnMenu = function(x) {
             if(!this.options.fields || !ddUi) return;
 
@@ -10067,201 +10308,272 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             ddUi.show();
         }
 
+        /**
+         * @method hideColumnMenu
+         * Hides the Show/Hide Column menu.
+         */
         this.hideColumnMenu = function() {
             if(!this.options.fields || !ddUi) return;
             ddUi.hide();
         }
 
+        /**
+         * @method toggleColumnMenu
+         * Shows or hides the Show/Hide Column menu.
+         *
+         * @param {Integer} x
+         */
         this.toggleColumnMenu = function(x) {
             if(!this.options.fields || !ddUi) return;
 
             if(ddUi.type == "show") this.hideColumnMenu();
             else this.showColumnMenu(x);
         }
-		
-		this.showExpand = function(index, obj, e) {
-			if(!this.options.expand) return;
-			
-			// 초기화
-			this.unselect();
-			this.hideEditRow();
-			
-			var expandSel = "#EXPAND_" + this.timestamp,
-				row = this.get(index),
-				obj = (typeof(obj) != "object") ? $.extend({ row: row }, row.data) : obj,
-				$expand = $(expandSel).parent().show();
-			
-			$obj.tbody.find("tr").removeClass("open");
-			$expand.insertAfter($(row.element).addClass("open"));
-			
-			$(expandSel)
-				.attr("colspan", $obj.thead.find("tr:last > th:visible").size())
-				.html(this.tpl["expand"](obj));
 
-			// 스크롤 및 VO 적용
-			this.scroll();
-			this.setVo();
-			
-			// 커스텀 이벤트 호출
-			rowIndex = index;
-			this.emit("expand", [ row, e ]);
-		}
-		
-		this.hideExpand = function(e) {
-			if(!this.options.expand) return;
-			if(rowIndex == null) return;
-			
-			var row = this.get(rowIndex);
-			
-			$('#EXPAND_' + this.timestamp).parent().hide();
-			$obj.tbody.find("tr").removeClass("open");
+        /**
+         * @method showExpand
+         * Shows the extended row area of a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.showExpand = function(index, obj, e) {
+            if(!this.options.expand) return;
 
-			// 스크롤 적용
-			this.scroll();
-			
-			// 커스텀 이벤트 호출
-			rowIndex = null;
-			this.emit("expandend", [ row, e ]);
-		}
-		
-		this.getExpand = function() {
-			if(!this.options.expand) return;
+            // 초기화
+            this.unselect();
+            this.hideEditRow();
 
-			if(rowIndex == null) return null;
-			return this.get(rowIndex);
-		}
-		
-		this.showEditRow = function(index, e) {
-			if(!this.options.editRow || is_edit) return;
-			
-			// 초기화
-			this.unselect();
-			this.hideExpand();
-			
-			var self = this,
-				row = this.get(index);
-			var $cells = $(row.element).find("td");
+            var expandSel = "#EXPAND_" + this.timestamp,
+                row = this.get(index),
+                obj = (typeof(obj) != "object") ? $.extend({ row: row }, row.data) : obj,
+                $expand = $(expandSel).parent().show();
+
+            $obj.tbody.find("tr").removeClass("open");
+            $expand.insertAfter($(row.element).addClass("open"));
+
+            $(expandSel)
+                .attr("colspan", $obj.thead.find("tr:last > th:visible").size())
+                .html(this.tpl["expand"](obj));
+
+            // 스크롤 및 VO 적용
+            this.scroll();
+            this.setVo();
+
+            // 커스텀 이벤트 호출
+            rowIndex = index;
+            this.emit("expand", [ row, e ]);
+        }
+
+        /**
+         * @method hideExpand
+         * Hides the extended row area of a specified index.
+         */
+        this.hideExpand = function(e) {
+            if(!this.options.expand) return;
+            if(rowIndex == null) return;
+
+            var row = this.get(rowIndex);
+
+            $('#EXPAND_' + this.timestamp).parent().hide();
+            $obj.tbody.find("tr").removeClass("open");
+
+            // 스크롤 적용
+            this.scroll();
+
+            // 커스텀 이벤트 호출
+            rowIndex = null;
+            this.emit("expandend", [ row, e ]);
+        }
+
+        /**
+         * @method getExpand
+         * Get a row in which the extended area is currently activated.
+         *
+         * @return {RowObject} row
+         */
+        this.getExpand = function() {
+            if(!this.options.expand) return;
+
+            if(rowIndex == null) return null;
+            return this.get(rowIndex);
+        }
+
+        /**
+         * @method showEditRow
+         * Shows the modified row area of a specified index.
+         *
+         * @param {Integer} index
+         */
+        this.showEditRow = function(index, e) {
+            if(!this.options.editRow || is_edit) return;
+
+            // 초기화
+            this.unselect();
+            this.hideExpand();
+
+            var self = this,
+                row = this.get(index);
+            var $cells = $(row.element).find("td");
 
             // 현재 테이블 수정 상태
             is_edit = true;
-			
-			$cells.each(function(i) {
-				setEventEditCell(self, this, row, i, e, function() {
-					var data = {},
+
+            $cells.each(function(i) {
+                setEventEditCell(self, this, row, i, e, function() {
+                    var data = {},
                         originData = row.data;
 
-					$cells.each(function(colIndex) {
-						var column = self.getColumn(colIndex);
-						
-						if(column.name != null) {
+                    $cells.each(function(colIndex) {
+                        var column = self.getColumn(colIndex);
+
+                        if(column.name != null) {
                             var value = $(this).find(".edit").val();
                             data[column.name] = (!isNaN(value) && value != null) ? parseFloat(value) : value;
-						}
-					});
+                        }
+                    });
 
                     // 변경된 값으로 데이터 갱신하기
                     row.data = data;
 
                     // 콜백 결과 가져오기
-					var res = self.emit("editend", [ row, e ]);
-					
-					// 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
-					if(res !== false) {
-						self.update(row.index, data);
-					} else {
+                    var res = self.emit("editend", [ row, e ]);
+
+                    // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
+                    if(res !== false) {
+                        self.update(row.index, data);
+                    } else {
                         row.data = originData;
                     }
-				});
-			});
+                });
+            });
 
-			rowIndex = index;
-			self.emit("editstart", [ row, e ]);
-		}
-		
-		this.hideEditRow = function() {
-			if(!this.options.editRow) return;
-			if(rowIndex == null) return;
-			
-			var row = this.get(rowIndex);
-			
-			// 커스텀 이벤트 호출
-			rowIndex = null;
-			
-			// 수정 상태 이전의 로우 데이터로 변경
-			this.emit("editend", [ row.data ]);
-			this.update(row.index, row.data);
-		}
-		
-		this.getEditRow = function() {
-			if(!this.options.editRow) return;
+            rowIndex = index;
+            self.emit("editstart", [ row, e ]);
+        }
 
-			if(rowIndex == null) return null;
-			return this.get(rowIndex);
-		}
-		
-		this.setCsv = function() {
+        /**
+         * @method hideEditRow
+         * Hides the modified row area of a specified index.
+         */
+        this.hideEditRow = function() {
+            if(!this.options.editRow) return;
+            if(rowIndex == null) return;
+
+            var row = this.get(rowIndex);
+
+            // 커스텀 이벤트 호출
+            rowIndex = null;
+
+            // 수정 상태 이전의 로우 데이터로 변경
+            this.emit("editend", [ row.data ]);
+            this.update(row.index, row.data);
+        }
+
+        /**
+         * @method getEditRow
+         * Get a row in which the modified area is currently activated.
+         *
+         * @return {RowObject} row
+         */
+        this.getEditRow = function() {
+            if(!this.options.editRow) return;
+
+            if(rowIndex == null) return null;
+            return this.get(rowIndex);
+        }
+
+        /**
+         * @method setCsv
+         * Updates a table using a CVS string.
+         */
+        this.setCsv = function() {
             var opts = this.options;
-			if(!opts.fields && !opts.csv) return;
-			
-			var csv = (arguments.length == 1) ? arguments[0] : arguments[1],
-				key = (arguments.length == 2) ? arguments[0] : null;
+            if(!opts.fields && !opts.csv) return;
+
+            var csv = (arguments.length == 1) ? arguments[0] : arguments[1],
+                key = (arguments.length == 2) ? arguments[0] : null;
 
             var fields = _.getCsvFields(opts.fields, opts.csv),
                 csvNumber = (opts.csvNumber) ? _.getCsvFields(opts.fields, opts.csvNumber) : null,
                 dataList = _.csvToData(fields, csv, csvNumber);
 
-			if(key == null) {
-				this.update(dataList);
-			} else {
-				this.reset();
-				
-				for(var i = 0; i < dataList.length; i++) {
-					var index = dataList[i][key];
-					
-					if(index) {
-						this.insert(index, dataList[i]);
-					}
-				}
-			}
-		}
-		
-		this.setCsvFile = function() {
-			if(!this.options.fields && !this.options.csv) return;
-			
-			var self = this,
-				file = (arguments.length == 1) ? arguments[0] : arguments[1],
-				key = (arguments.length == 2) ? arguments[0] : null;
-				
-			_.fileToCsv(file, function(csv) {
-				if(key == null) self.setCsv(csv);
-				else self.setCsv(key, csv);
-			});
-		}
-		
-		this.getCsv = function(isTree) {
-			if(!this.options.fields && !this.options.csv) return;
-			
-			var fields = _.getCsvFields(this.options.fields, this.options.csv);
-			var dataList = [],
-				rows = (isTree) ? this.listAll() : this.list();
-				
-			for(var i = 0; i < rows.length; i++) {
-				dataList.push(rows[i].data);
-			}
-			
-			return _.dataToCsv2({
-				fields: fields,
-				rows: dataList,
-				names: this.options.csvNames
-			});
-		}
-		
-		this.getCsvBase64 = function(isTree) {
-			if(!this.options.fields && !this.options.csv) return;
-			
-			return _.csvToBase64(this.getCsv(isTree));
-		}
+            if(key == null) {
+                this.update(dataList);
+            } else {
+                this.reset();
 
+                for(var i = 0; i < dataList.length; i++) {
+                    var index = dataList[i][key];
+
+                    if(index) {
+                        this.insert(index, dataList[i]);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @method setCsvFile
+         * Updates a table using a CVS file.
+         */
+        this.setCsvFile = function() {
+            if(!this.options.fields && !this.options.csv) return;
+
+            var self = this,
+                file = (arguments.length == 1) ? arguments[0] : arguments[1],
+                key = (arguments.length == 2) ? arguments[0] : null;
+
+            _.fileToCsv(file, function(csv) {
+                if(key == null) self.setCsv(csv);
+                else self.setCsv(key, csv);
+            });
+        }
+
+        /**
+         * @method getCsv
+         * Gets the data of a table as a CSV string.
+         *
+         * @param {Boolean} isTree
+         * @return {String} csv
+         */
+        this.getCsv = function(isTree) {
+            if(!this.options.fields && !this.options.csv) return;
+
+            var fields = _.getCsvFields(this.options.fields, this.options.csv);
+            var dataList = [],
+                rows = (isTree) ? this.listAll() : this.list();
+
+            for(var i = 0; i < rows.length; i++) {
+                dataList.push(rows[i].data);
+            }
+
+            return _.dataToCsv2({
+                fields: fields,
+                rows: dataList,
+                names: this.options.csvNames
+            });
+        }
+
+        /**
+         * @method getCsvBase64
+         * Gets the data of a table as a CSV string encoded as base64.
+         *
+         * @param {Boolean} isTree
+         * @return {String} base64
+         */
+        this.getCsvBase64 = function(isTree) {
+            if(!this.options.fields && !this.options.csv) return;
+
+            return _.csvToBase64(this.getCsv(isTree));
+        }
+
+        /**
+         * @method downloadCsv
+         * Downloads the data of a table as a CSV file.
+         *
+         * @param {String} name
+         * @param {Boolean} isTree
+         */
         this.downloadCsv = function(name, isTree) {
             if(_.typeCheck("string", name)) {
                 name = name.split(".")[0];
@@ -10276,38 +10588,285 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             a.parentNode.removeChild(a);
         }
 
-		this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
-			return rowIndex;
-		}
-	}
+        /**
+         * @method activeIndex
+         * Gets the index of a row that is activated in an extended/modified/selected state.
+         *
+         * @return {Integer} index
+         */
+        this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
+            return rowIndex;
+        }
+    }
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {Array} [fields=null]
+             * Sets the name of columns in the order of being displayed on the table screen.
+             */
             fields: null,
+
+            /**
+             * @cfg {Array} [csv=null]
+             * Sets the column key shown when converted to a CSV string.
+             */
             csv: null,
+
+            /**
+             * @cfg {Array} [csvNames=null]
+             * Sets the name of a column shown when converting to a CSV string, which must be defined in the same order as the CSV option.
+             */
             csvNames: null,
+
+            /**
+             * @cfg {Array} [csvNumber=null]
+             * Sets the column key to be changed to a number form when converted to a CSV string.
+             */
             csvNumber: null,
+
+            /**
+             * @cfg {Array} data
+             * Sets the initial row list of a table.
+             */
             data: [],
+
+            /**
+             * @cfg {Array} rows
+             * Sets the initial row list of a table (@Deprecated).
+             */
             rows: null, // @Deprecated
+
+            /**
+             * @cfg {Boolean|Array} [colshow=false]
+             * Sets a column index shown when the Show/Hide Column menu is enabled.
+             */
             colshow: false,
+
+            /**
+             * @cfg {Boolean} [scroll=false]
+             * Determines whether to use a table scroll.
+             */
             scroll: false,
+
+            /**
+             * @cfg {Integer} [scrollHeight=200]
+             * Sets the reference height of a body area when using a table scroll.
+             */
             scrollHeight: 200,
+
+            /**
+             * @cfg {Integer} [width=0]
+             * Sets the area of a table.
+             */
             width: 0,
+
+            /**
+             * @cfg {Boolean} [expand=false]
+             * Determines whether to use an extended row area.
+             */
             expand: false,
+
+            /**
+             * @cfg {Boolean} [expandEvent=true]
+             * Sets the Show/Hide state of an extended row area when clicking on a row.
+             */
             expandEvent: true,
+
+            /**
+             * @cfg {Boolean|Array} [editCell=false]
+             * Determines whether to use a modified cell area.
+             */
             editCell: false,
+
+            /**
+             * @cfg {Boolean|Array} [editRow=false]
+             * Determines whether to use a modified row area.
+             */
             editRow: false,
+
+            /**
+             * @cfg {Boolean} [editEvent=true]
+             * Sets the Show/Hide state of an extended row area when doubleclicking on a row/cell.
+             */
             editEvent: true,
+
+            /**
+             * @cfg {Boolean} [resize=false]
+             * Determines whether to use the column resizing function.
+             */
             resize: false,
+
+            /**
+             * @cfg {Boolean|Array} [sort=false]
+             * Determines whether to use the table sort function.
+             */
             sort: false,
+
+            /**
+             * @cfg {Integer} [sortIndex=null]
+             * Determines whether to use the table sort function.
+             */
             sortIndex: null,
+
+            /**
+             * @cfg {String} [sortOrder="asc"]
+             * Determines whether to use the table sort function.
+             */
             sortOrder: "asc",
+
+            /**
+             * @cfg {Boolean} [sortEvent=true]
+             * Determines whether to use the sort function when you click on a column.
+             */
             sortEvent: true,
-            animate: false // @Deprecated
+
+            /**
+             * @cfg {Boolean} [animate=false]
+             * @deprecated
+             */
+            animate: false
         }
     }
-	
-	return UI;
+
+    /**
+     * @event select
+     * Event that occurs when a row is selected (@Deprecated)
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event click
+     * Event that occurs when a row is clicked
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dblclick
+     * Event that occurs when a row is double clicked
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event sort
+     * Event that occurs when the table is sorted.
+     *
+     * @param {ColumnObject) column
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event scroll
+     * Event that occurs when the scroll of a table is located at the lowermost position.
+     *
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event rowmenu
+     * Event that occurs when a row is right clicked.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event colclick
+     * Event that occurs when a column is clicked.
+     *
+     * @param {ColumnObject) column
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event colshow
+     * Event that occurs when shown column is selected.
+     *
+     * @param {ColumnObject) column
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event colhide
+     * Event that occurs when hidden column is selected.
+     *
+     * @param {ColumnObject) column
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event colresize
+     * Event that occurs when the column resizing is activated.
+     *
+     * @param {ColumnObject) column
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event editstart
+     * Event that occurs when a row is in a modification state.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event editend
+     * Event that occurs when the modification of a row is completed.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event expand
+     * Event that occurs when the extended row area is enabled.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event expandend
+     * Event that occurs when the extended row area is disabled.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event open
+     * Event that occurs when a child row is shown.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event fold
+     * Event that occurs when a child row is hidden.
+     *
+     * @param {RowObject) row
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event openall
+     * Event that occurs when all child rows are shown.
+     */
+
+    /**
+     * @event foldall
+     * Event that occurs when all child rows are hidden.
+     */
+
+    return UI;
 });
 jui.define("uix.tree.node", [ "jquery" ], function($) {
     /**
@@ -11766,6 +12325,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			body.on("select", function(obj, e) {
 				self.emit("select", [ obj, e ]);
+			});
+
+			body.on("click", function(obj, e) {
+				self.emit("click", [ obj, e ]);
+			});
+
+			body.on("dblclick", function(obj, e) {
+				self.emit("dblclick", [ obj, e ]);
 			});
 			
 			body.on("rowmenu", function(obj, e) {

@@ -7,7 +7,7 @@ jui.define("chart.brush.focus", [], function() {
 	 * @extends chart.brush.core
 	 */
 	var FocusBrush = function(chart, axis, brush) {
-		var g;
+		var g, grid;
 
 		this.drawFocus = function(start, end) {
 			var borderColor = chart.theme("focusBorderColor"),
@@ -15,43 +15,53 @@ jui.define("chart.brush.focus", [], function() {
 				bgColor = chart.theme("focusBackgroundColor"),
 				bgOpacity = chart.theme("focusBackgroundOpacity");
 
-			var height = chart.area('height');
+			var width = axis.area("width"),
+				height = axis.area("height");
 
 			g = chart.svg.group({}, function() {
-				var startX = start,
-					endX = end;
+				if(brush.hide) return;
 
-				if (brush.hide) {
-					return ;
-				}
-
-				chart.svg.line({
+				var a = chart.svg.line({
 					stroke: borderColor,
 					"stroke-width": borderSize,
 					x1: 0,
 					y1: 0,
-					x2: 0,
-					y2: height
-				}).translate(startX, 0);
+					x2: (grid == "x") ? 0 : width,
+					y2: (grid == "x") ? height : 0
+				});
 
-				chart.svg.rect({
-					width: Math.abs(endX - startX),
-					height: height,
+				var b = chart.svg.rect({
+					width: (grid == "x") ? Math.abs(end - start) : width,
+					height: (grid == "x") ? height : Math.abs(end - start),
 					fill: bgColor,
 					opacity: bgOpacity
-				}).translate(startX, 0)
+				});
 
-				chart.svg.line({
+				var c = chart.svg.line({
 					stroke: borderColor,
 					"stroke-width": borderSize,
 					x1: 0,
 					y1: 0,
-					x2: 0,
-					y2: height
-				}).translate(endX, 0);
+					x2: (grid == "x") ? 0 : width,
+					y2: (grid == "x") ? height : 0
+				});
+
+				if(grid == "x") {
+					a.translate(start, 0);
+					b.translate(start, 0);
+					c.translate(end, 0);
+				} else {
+					a.translate(0, start);
+					b.translate(0, start);
+					c.translate(0, end);
+				}
 			});
 
 			return g;
+		}
+
+		this.drawBefore = function() {
+			grid = (axis.y.type == "range") ? "x" : "y";
 		}
 
 		this.draw = function() {
@@ -61,12 +71,14 @@ jui.define("chart.brush.focus", [], function() {
 				return this.chart.svg.g();
 			}
 
-			if(axis.x.type == "block") {
-				start = axis.x(brush.start) - axis.x.rangeBand() / 2;
-				end = axis.x(brush.end) + axis.x.rangeBand() / 2;
+			if(axis[grid].type == "block") {
+				var size = axis[grid].rangeBand();
+
+				start = axis[grid](brush.start) - size / 2;
+				end = axis[grid](brush.end) + size / 2;
 			} else  {
-				start = axis.x(brush.start);
-				end = axis.x(brush.end);
+				start = axis[grid](brush.start);
+				end = axis[grid](brush.end);
 			}
 
 			return this.drawFocus(start, end);

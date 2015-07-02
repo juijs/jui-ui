@@ -1036,6 +1036,11 @@
   line-height: 20px;
   font-size: 12px;
 }
+.jui .dropup ul > li.title,
+.jui .dropdown ul > li.title,
+.jui .combo ul > li.title {
+  font-weight: bold;
+}
 .jui .dropup ul,
 .jui .dropdown ul,
 .jui .combo ul {
@@ -1048,12 +1053,12 @@
 .jui .combo ul > li {
   color: #333;
 }
-.jui .dropup ul > li:hover:not(.divider),
-.jui .dropdown ul > li:hover:not(.divider),
-.jui .combo ul > li:hover:not(.divider),
-.jui .dropup ul > li:focus:not(.divider),
-.jui .dropdown ul > li:focus:not(.divider),
-.jui .combo ul > li:focus:not(.divider),
+.jui .dropup ul > li:hover:not(.divider):not(.title),
+.jui .dropdown ul > li:hover:not(.divider):not(.title),
+.jui .combo ul > li:hover:not(.divider):not(.title),
+.jui .dropup ul > li:focus:not(.divider):not(.title),
+.jui .dropdown ul > li:focus:not(.divider):not(.title),
+.jui .combo ul > li:focus:not(.divider):not(.title),
 .jui .dropup ul > li.active,
 .jui .dropdown ul > li.active,
 .jui .combo ul > li.active {
@@ -1147,9 +1152,9 @@
   -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
-.jui .dropup ul > li,
-.jui .dropdown ul > li,
-.jui .combo ul > li {
+.jui .dropup ul > li:not(.divider):not(.title),
+.jui .dropdown ul > li:not(.divider):not(.title),
+.jui .combo ul > li:not(.divider):not(.title) {
   position: relative;
   display: block;
   float: none;
@@ -1157,9 +1162,9 @@
   font-weight: normal;
   cursor: pointer;
 }
-.jui .dropup ul > li > *,
-.jui .dropdown ul > li > *,
-.jui .combo ul > li > * {
+.jui .dropup ul > li:not(.divider):not(.title) > *,
+.jui .dropdown ul > li:not(.divider):not(.title) > *,
+.jui .combo ul > li:not(.divider):not(.title) > * {
   display: inline-block;
   color: inherit;
   text-decoration: none;
@@ -1174,10 +1179,16 @@
   padding: 3px 20px !important;
   font-size: 12px !important;
 }
+.jui .dropdown-large ul > li.title {
+  font-weight: bold !important;
+}
 .jui .dropdown-normal ul > li:not(.divider) {
   padding: 0px 10px;
   line-height: 20px;
   font-size: 12px;
+}
+.jui .dropdown-normal ul > li.title {
+  font-weight: bold;
 }
 .jui .dropdown-white ul {
   background-color: #fff;
@@ -1187,8 +1198,8 @@
 .jui .dropdown-white ul > li {
   color: #333;
 }
-.jui .dropdown-white ul > li:hover:not(.divider),
-.jui .dropdown-white ul > li:focus:not(.divider),
+.jui .dropdown-white ul > li:hover:not(.divider):not(.title),
+.jui .dropdown-white ul > li:focus:not(.divider):not(.title),
 .jui .dropdown-white ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
@@ -1255,8 +1266,8 @@
 .jui .dropdown-black ul > li {
   color: #fff;
 }
-.jui .dropdown-black ul > li:hover:not(.divider),
-.jui .dropdown-black ul > li:focus:not(.divider),
+.jui .dropdown-black ul > li:hover:not(.divider):not(.title),
+.jui .dropdown-black ul > li:focus:not(.divider):not(.title),
 .jui .dropdown-black ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
@@ -1417,8 +1428,8 @@
 .jui .combo-black ul > li {
   color: #fff !important;
 }
-.jui .combo-black ul > li:hover:not(.divider),
-.jui .combo-black ul > li:focus:not(.divider),
+.jui .combo-black ul > li:hover:not(.divider):not(.title),
+.jui .combo-black ul > li:focus:not(.divider):not(.title),
 .jui .combo-black ul > li.active {
   background-color: #865de1 !important;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6) !important;
@@ -1502,6 +1513,9 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.jui .icon-connection:before {
+  content: "\e65b";
 }
 .jui .icon-add-dir:before {
   content: "\e600";
@@ -7047,8 +7061,10 @@
   line-height: 25px;
 }
 .jui .datepicker {
+  position: relative;
   width: 190px;
-  height: 168px;
+  height: 142px;
+  padding-top: 26px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -7056,36 +7072,57 @@
   background: #fff;
 }
 .jui .datepicker > .head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
   font-size: 14px;
-  font-weight: bold;
   height: 26px;
+  text-align: center;
+}
+.jui .datepicker > .head > * {
+  display: inline-block;
+}
+.jui .datepicker > .head > .title {
+  text-align: center;
+  padding-top: 5px;
 }
 .jui .datepicker > .head > .prev,
 .jui .datepicker > .head .next {
-  border-style: solid;
-  border-width: 6px;
-  margin-top: 7px;
-  width: 0;
-  height: 0;
+  position: absolute;
+  top: 10px;
+  font-size: 9px;
   cursor: pointer;
+  color: #b9b9b9;
+  font-family: 'jennifer';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .jui .datepicker > .head > .prev {
-  float: left;
-  margin-left: 3px;
+  left: 5px;
 }
-.jui .datepicker > .head > .title {
-  float: left;
-  text-align: center;
-  width: 160px;
-  padding-top: 5px;
-  height: 21px;
+.jui .datepicker > .head > .prev:before {
+  content: "\e619";
 }
 .jui .datepicker > .head > .next {
-  float: right;
-  margin-right: 3px;
+  right: 5px;
+}
+.jui .datepicker > .head > .next:before {
+  content: "\e61a";
 }
 .jui .datepicker > table.body {
+  width: 100%;
+  height: 100%;
   border-spacing: 0;
+  border-top-style: solid;
 }
 .jui .datepicker > table.body th,
 .jui .datepicker > table.body td {
@@ -7105,17 +7142,17 @@
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
 }
+.jui .datepicker > table.body td {
+  width: 14.28%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 .jui .datepicker > table.body td:last-child {
   border-right-width: 0px;
 }
 .jui .datepicker > table.body td:not(.none) {
   cursor: pointer;
-}
-.jui .datepicker > .head {
-  border-bottom: 1px solid #ebebeb;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
 }
 .jui .datepicker > .head > .prev {
   border-color: transparent #dcdcdc transparent transparent;
@@ -7126,25 +7163,20 @@
 .jui .datepicker > .head > .title {
   color: #333;
 }
-.jui .datepicker > table.body th,
-.jui .datepicker > table.body td {
+.jui .datepicker > table.body {
+  border-top-color: #ebebeb;
+}
+.jui .datepicker > table.body th {
   border-bottom: 1px solid #ebebeb;
 }
 .jui .datepicker > table.body th {
-  color: #868686;
-}
-.jui .datepicker > table.body th:first-child {
-  color: #ff7470;
-}
-.jui .datepicker > table.body th:last-child {
-  color: #3191f3;
+  color: #c1c1c1;
 }
 .jui .datepicker > table.body td {
   color: #333;
-  border-right: 1px solid #ebebeb;
 }
 .jui .datepicker > table.body td.none {
-  color: #c2c2c2;
+  color: transparent;
 }
 .jui .datepicker > table.body td.now {
   color: #6600cc;
@@ -7160,9 +7192,11 @@
 .jui .datepicker > table.body td:hover:not(.active):not(.none) {
   background-color: #f8f3ff;
 }
+.jui .datepicker > table.body {
+  border-top-width: 0px;
+}
 .jui .datepicker > table.body th {
   font-size: 9px;
-  padding-top: 3px;
   height: 17px;
 }
 .jui .datepicker > table.body td {
@@ -7171,9 +7205,11 @@
   height: 17px;
   line-height: 17px;
 }
+.jui .datepicker-normal > table.body {
+  border-top-width: 0px;
+}
 .jui .datepicker-normal > table.body th {
   font-size: 9px;
-  padding-top: 3px;
   height: 17px;
 }
 .jui .datepicker-normal > table.body td {
@@ -7181,6 +7217,9 @@
   width: 26px;
   height: 17px;
   line-height: 17px;
+}
+.jui .datepicker-large > table.body {
+  border-top-width: 1px;
 }
 .jui .datepicker-large > table.body td {
   width: 60.6px;
@@ -7193,12 +7232,6 @@
   border: 1px solid #cdcdcd;
   background: #fff;
 }
-.jui .datepicker-white > .head {
-  border-bottom: 1px solid #ebebeb;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
-}
 .jui .datepicker-white > .head > .prev {
   border-color: transparent #dcdcdc transparent transparent;
 }
@@ -7208,25 +7241,20 @@
 .jui .datepicker-white > .head > .title {
   color: #333;
 }
-.jui .datepicker-white > table.body th,
-.jui .datepicker-white > table.body td {
+.jui .datepicker-white > table.body {
+  border-top-color: #ebebeb;
+}
+.jui .datepicker-white > table.body th {
   border-bottom: 1px solid #ebebeb;
 }
 .jui .datepicker-white > table.body th {
-  color: #868686;
-}
-.jui .datepicker-white > table.body th:first-child {
-  color: #ff7470;
-}
-.jui .datepicker-white > table.body th:last-child {
-  color: #3191f3;
+  color: #c1c1c1;
 }
 .jui .datepicker-white > table.body td {
   color: #333;
-  border-right: 1px solid #ebebeb;
 }
 .jui .datepicker-white > table.body td.none {
-  color: #c2c2c2;
+  color: transparent;
 }
 .jui .datepicker-white > table.body td.now {
   color: #6600cc;
@@ -7242,10 +7270,179 @@
 .jui .datepicker-white > table.body td:hover:not(.active):not(.none) {
   background-color: #f8f3ff;
 }
-.jui .datepicker-layer {
+.jui .calendar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 80px;
+}
+.jui .calendar > .head {
   position: absolute;
-  z-index: 1000;
-  display: none;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.jui .calendar > .head > * {
+  display: inline-block;
+}
+.jui .calendar > .head > .title {
+  font-size: 20px;
+}
+.jui .calendar > .head > .prev,
+.jui .calendar > .head .next {
+  font-size: 14px;
+  cursor: pointer;
+  color: #b9b9b9;
+  font-family: 'jennifer';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.jui .calendar > .head > .prev:before {
+  content: "\e619";
+  margin-right: 12px;
+}
+.jui .calendar > .head > .next:before {
+  content: "\e61a";
+  margin-left: 12px;
+}
+.jui .calendar > table.body {
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+}
+.jui .calendar > table.body th,
+.jui .calendar > table.body td {
+  text-align: right;
+  border-width: 0px;
+  border-right-width: 0px;
+}
+.jui .calendar > table.body th {
+  border-bottom-width: 2px;
+  font-size: 11px;
+  padding-top: 3px;
+  height: 17px;
+}
+.jui .calendar > table.body td {
+  position: relative;
+  padding: 8px;
+  vertical-align: top;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-top-width: 0px;
+  font-size: 13px;
+  font-weight: bold;
+  width: 14.28%;
+}
+.jui .calendar > table.body td:last-child {
+  border-right-width: 1px;
+}
+.jui .calendar > table.body td > .task {
+  position: absolute;
+  left: 0px;
+  top: 30px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: normal;
+  width: 100%;
+}
+.jui .calendar > table.body td > .task > * {
+  display: block;
+  border-width: 1px;
+  border-style: solid;
+  padding: 0px 8px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jui .calendar > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .calendar > .head > .prev {
+  border-color: transparent #dcdcdc transparent transparent;
+}
+.jui .calendar > .head > .next {
+  border-color: transparent transparent transparent #dcdcdc;
+}
+.jui .calendar > .head > .title {
+  color: #333;
+}
+.jui .calendar > table.body th,
+.jui .calendar > table.body td {
+  border-color: #eeeeee;
+  border-style: solid;
+}
+.jui .calendar > table.body th {
+  color: #b6b6b6;
+}
+.jui .calendar > table.body td {
+  color: #333;
+}
+.jui .calendar > table.body td.none {
+  color: transparent;
+}
+.jui .calendar > table.body td.now {
+  color: #6600cc;
+}
+.jui .calendar > table.body td.active {
+  background-color: #f4f0f9;
+}
+.jui .calendar > table.body td > .task {
+  color: #fff;
+}
+.jui .calendar > table.body td > .task > * {
+  border-color: #fff;
+}
+.jui .calendar-white > .head {
+  border-bottom-color: #ebebeb;
+}
+.jui .calendar-white > .head > .prev {
+  border-color: transparent #dcdcdc transparent transparent;
+}
+.jui .calendar-white > .head > .next {
+  border-color: transparent transparent transparent #dcdcdc;
+}
+.jui .calendar-white > .head > .title {
+  color: #333;
+}
+.jui .calendar-white > table.body th,
+.jui .calendar-white > table.body td {
+  border-color: #eeeeee;
+  border-style: solid;
+}
+.jui .calendar-white > table.body th {
+  color: #b6b6b6;
+}
+.jui .calendar-white > table.body td {
+  color: #333;
+}
+.jui .calendar-white > table.body td.none {
+  color: transparent;
+}
+.jui .calendar-white > table.body td.now {
+  color: #6600cc;
+}
+.jui .calendar-white > table.body td.active {
+  background-color: #f4f0f9;
+}
+.jui .calendar-white > table.body td > .task {
+  color: #fff;
+}
+.jui .calendar-white > table.body td > .task > * {
+  border-color: #fff;
 }
 .jui .notify {
   position: relative;

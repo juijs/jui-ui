@@ -4,33 +4,10 @@
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../jui.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/javascript/javascript.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-
-    </style>
 </head>
 <body >
 
 <div id="chart"></div>
-<textarea id="codemirror"></textarea>
-
-<script>
-    $(function() {
-        $("#codemirror").val($("#script_code").html());
-
-        CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            lineNumbers: true,
-            mode: "javascript"
-        });
-    })
-
-</script>
 
 <script id="script_code">
     jui.ready([ "chart.builder" ], function(chart) {
@@ -44,21 +21,22 @@
             axis : [
                 {
                     data : [
-                        { name : 2, value : 15 },
-                        { name : -15, value : -35 },
-                        { name : 8, value : 10 },
-                        { name : 18, value : 5 }
+                        { name : 2, value : 15, etc: 10 },
+                        { name : -15, value : -35, etc: 10 },
+                        { name : 8, value : 10, etc: 10 },
+                        { name : 18, value : 5, etc: 10 }
                     ],
                     y : {
-                        orient : 'right',
                         domain : [ "week1", "week2", "week3", "week4" ],
-                        color : "#22bbcc",
-                        line : 'solid'
+                        color : 1,
+                        orient : 'right',
+                        line : true
                     },
                     x : {
-                        type : 'range',
-                        domain : [ -40, 20 ],
-                        step : 10
+                        type : "range",
+                        domain : [ -40, 60 ],
+                        step : 6,
+                        line : "rect" // dashed with gradient
                     }
                 }
 
@@ -80,11 +58,12 @@
             ],
             brush : {
                 type : 'bar',
-                target : ['name', 'value'],
-                innerPadding : 2,
+                size : 15,
+                target : ['name', 'value', 'etc' ],
+                innerPadding : 10,
                 display : "all",
                 activeEvent : "click",
-                colors : [ 5, 6 ]
+                colors : [ 5, 6, 7 ]
             },
             style : {
                 barBorderWidth : 1,

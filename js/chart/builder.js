@@ -45,7 +45,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      */
     var UI = function() {
         var _axis = [], _brush = [], _widget = [], _defs = null;
-        var _padding, _series, _area,  _theme, _hash = {};
+        var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
@@ -85,13 +85,12 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method drawBefore 
          * 
-         * option copy (series, brush, widget)
+         * option copy (brush, widget)
          *  
          * @param {chart.builder} self
          * @private  
          */
         function drawBefore(self) {
-            _series = _.deepClone(_options.series);
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
 
@@ -539,6 +538,20 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             })("@font-face {" + fontFace + "}");
         }
 
+        function parseIconInText(self, text) {
+            var regex = /{([^{}]+)}/g,
+                result = text.match(regex);
+
+            if(result != null) {
+                for(var i = 0; i < result.length; i++) {
+                    var key = result[i].substring(1, result[i].length - 1);
+                    text = text.replace(result[i], self.icon(key));
+                }
+            }
+
+            return text;
+        }
+
         this.init = function() {
             // 기본 옵션 설정
             setDefaultOptions(this);
@@ -567,9 +580,9 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * @method get  
          *
-         * Gets a named axis, brush, widget or series (type: axis, brush, widget, series, padding, area)
+         * Gets a named axis, brush, widget (type: axis, brush, widget, padding, area)
          *
-         * @param {"axis"/"brush"/"widget"/"series"/"padding"/"area"} type
+         * @param {"axis"/"brush"/"widget"/"padding"/"area"} type
          * @param {String} key  Property name
          * @return {Mixed/Object}
          */
@@ -578,7 +591,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                 axis: _axis,
                 brush: _brush,
                 widget: _widget,
-                series: _series,
                 padding: _padding,
                 area: _area
             };
@@ -623,39 +635,31 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         /**
          * Gets a color defined in the theme or the color set.
          *
-         * @param {Number} i
-         * @param {chart.brush.core} brush
+         * @param {Number/String} key
+         * @param {Array} colors
+         * @param {Array} target
          * @return {String} Selected color string
          */
-        this.color = function(i, brush) {
+        this.color = function(key, colors) {
             var color = null;
 
             // 직접 색상을 추가할 경우 (+그라데이션, +필터)
-            if(_.typeCheck("string", i)) {
-                color = i;
+            if(arguments.length == 1) {
+                if(_.typeCheck("string", key)) {
+                    color = key;
+                } else if(_.typeCheck("integer", key)) {
+                    color = nextColor(key);
+                }
             } else {
                 // 테마 & 브러쉬 옵션 컬러 설정
-                if(_.typeCheck("array", brush.colors)) {
-                    color = brush.colors[i];
+                if(_.typeCheck([ "array", "object" ], colors)) {
+                    color = colors[key];
 
                     if(_.typeCheck("integer", color)) {
                         color = nextColor(color);
                     }
                 } else {
                     color = nextColor();
-                }
-
-                // 시리즈 컬러 설정
-                if(_.typeCheck("array", brush.target)) {
-                    var series = _series[brush.target[i]];
-
-                    if(series && series.color) {
-                        color = series.color;
-
-                        if(_.typeCheck("integer", color)) {
-                            color = nextColor(color);
-                        }
-                    }
                 }
             }
 
@@ -665,7 +669,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             function nextColor(newIndex) {
                 var c = _theme["colors"],
-                    index = newIndex || i;
+                    index = newIndex || key;
 
                 return (index > c.length - 1) ? c[c.length - 1] : c[index];
             }
@@ -692,20 +696,38 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          */
         this.text = function(attr, textOrCallback) {
             if(_.typeCheck("string", textOrCallback)) {
-                var regex = /{([^{}]+)}/g,
-                    result = textOrCallback.match(regex);
-
-                if(result != null) {
-                    for(var i = 0; i < result.length; i++) {
-                        var key = result[i].substring(1, result[i].length - 1);
-                        textOrCallback = textOrCallback.replace(result[i], this.icon(key));
-                    }
-                }
+                textOrCallback = parseIconInText(this, textOrCallback);
             } else if(_.typeCheck("undefined", textOrCallback)) {
                 textOrCallback = "";
             }
 
             return this.svg.text(attr, textOrCallback);
+        }
+
+        /**
+         * Creates a text element to which a theme is applied.
+         *
+         * Also it support icon string
+         *
+         * @param {Object} attr
+         * @param {Array} texts
+         * @param {Number} lineBreakRate
+         */
+        this.texts = function(attr, texts, lineBreakRate) {
+            var g = this.svg.group();
+
+            for(var i = 0; i < texts.length; i++) {
+                if(_.typeCheck("string", texts[i])) {
+                    var size = (attr["font-size"] || 10) * (lineBreakRate || 1);
+
+                    g.append(this.svg.text(
+                        _.extend({ y: i * size }, attr, true),
+                        parseIconInText(this, texts[i])
+                    ));
+                }
+            }
+
+            return g;
         }
 
         /**
@@ -881,8 +903,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // SVG 기본 테마 설정
             this.svg.root.css({
                 "font-family": this.theme("fontFamily") + "," + _options.icon.type,
-                "font-size": this.theme("fontSize"),
-                fill: this.theme("fontColor"),
                 background: this.theme("backgroundColor")
             });
 
@@ -939,9 +959,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * Updates the brush of a specified index and performs rendering again.
          * @param {Number} index
          * @param {Object} brush
+         * @param {Boolean} isReset
          */
-        this.updateBrush = function(index, brush) {
-            _.extend(_options.brush[index], brush);
+        this.updateBrush = function(index, brush, isReset) {
+            if(isReset === true) {
+                _options.brush[index] = brush;
+            } else {
+                _.extend(_options.brush[index], brush);
+            }
+
             if(this.isRender()) this.render();
         }
 
@@ -971,9 +997,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * Updates the widget of a specified index and performs rendering again
          * @param {Number} index
          * @param {Object} widget
+         * @param {Boolean} isReset
          */
-        this.updateWidget = function(index, widget) {
-            _.extend(_options.widget[index], widget);
+        this.updateWidget = function(index, widget, isReset) {
+            if(isReset === true) {
+                _options.widget[index] = widget;
+            } else {
+                _.extend(_options.widget[index], widget);
+            }
+
             if(this.isRender()) this.render();
         }
 
@@ -1051,8 +1083,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             theme: "jennifer",
             /** @cfg  {Object} style chart custom theme  */
             style: {},
-            /** @cfg {Object} series Sets additional information for a specific data property. */
-            series: {},
             /** @cfg {Array} brush Determines a brush to be added to a chart. */
             brush: [],
             /** @cfg {Array} widget Determines a widget to be added to a chart. */

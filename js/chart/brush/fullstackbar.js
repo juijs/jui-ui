@@ -14,11 +14,13 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			g = chart.svg.group();
 			zeroX = axis.x(0);
 			height = axis.y.rangeBand();
-			bar_height = height - brush.outerPadding * 2;
+			bar_height = this.getTargetSize();
 		}
 
 		this.drawText = function(percent, x, y) {
 			var text = this.chart.text({
+				"font-size" : this.chart.theme("barFontSize"),
+				fill : this.chart.theme("barFontColor"),
 				x : x,
 				y : y,
 				"text-anchor" : "middle"
@@ -31,11 +33,11 @@ jui.define("chart.brush.fullstackbar", [], function() {
 			this.eachData(function(i, data) {
 				var group = chart.svg.group();
 
-				var startY = axis.y(i) - bar_height / 2,
+				var startY = this.offset("y", i) - bar_height / 2,
 					sum = 0,
 					list = [];
 
-				for (var j = 0; j < brush.target.length; j++) {
+				for(var j = 0; j < brush.target.length; j++) {
 					var width = data[brush.target[j]];
 
 					sum += width;
@@ -45,7 +47,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 				var startX = 0,
 					max = axis.x.max();
 
-				for (var j = list.length - 1; j >= 0; j--) {
+				for(var j = list.length - 1; j >= 0; j--) {
 					var width = axis.x.rate(list[j], sum),
 						r = this.getBarElement(i, j);
 

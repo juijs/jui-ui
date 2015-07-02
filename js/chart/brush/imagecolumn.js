@@ -1,4 +1,4 @@
-jui.define("chart.brush.imagecolumn", [], function() {
+jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagecolumn
@@ -7,60 +7,75 @@ jui.define("chart.brush.imagecolumn", [], function() {
      *
      * @extends chart.brush.column
      */
-	var ImageColumnBrush = function(chart, axis, brush) {
-		var g;
-		var zeroY, width, col_width, half_width;
+	var ImageColumnBrush = function() {
+		var self = this;
+		var g, targets, padding, zeroY, width, half_width, col_width, col_height;
 
 		this.drawBefore = function() {
-			g = chart.svg.group();
-			zeroY = axis.y(0);
-			width = axis.x.rangeBand();
-			half_width = (width - brush.outerPadding * 2);
-
-			col_width = (width - brush.outerPadding * 2 - (brush.target.length - 1) * brush.innerPadding) / brush.target.length;
-            col_width = (col_width < 0) ? 0 : col_width;
+			g = this.chart.svg.group();
+			targets = this.brush.target;
+			padding = this.brush.innerPadding;
+			zeroY = this.axis.y(0);
+			width = this.axis.x.rangeBand();
+			col_width = this.brush.width;
+			col_height = this.brush.height;
+			half_width = (col_width * targets.length) + ((targets.length - 1) * padding);
 		}
 
 		this.draw = function() {
 			this.eachData(function(i, data) {
-				var startX = axis.x(i) - (half_width / 2);
+				var startX = this.offset("x", i) - (half_width / 2);
 
-				for(var j = 0; j < brush.target.length; j++) {
-					var value = data[brush.target[j]],
-						tooltipY = axis.y(value),
-						position = (tooltipY <= zeroY) ? "top" : "bottom";
+				for (var j = 0; j < targets.length; j++) {
+					var value = data[targets[j]],
+						startY = this.axis.y(value);
 
-                    // 최소 크기 설정
-                    if(Math.abs(zeroY - tooltipY) < brush.minSize) {
-                        tooltipY = (position == "top") ? tooltipY - brush.minSize : tooltipY + brush.minSize;
-                    }
+					var	height = Math.abs(zeroY - startY),
+						bar = this.chart.svg.group({}, function() {
+							var img = self.chart.svg.image({
+								width: col_width,
+								height: col_height,
+								"xlink:href": self.getImageURI(targets[j], value)
+							});
 
-					var	height = Math.abs(zeroY - tooltipY),
-						r = this.chart.svg.image({
-							width : col_width,
-							height : col_width,
-							"xlink:href" : brush.uri
+							if(self.brush.fixed) {
+								var h = height - col_height,
+									style = self.getBarStyle();
+
+								// 컬럼 크기 음수 처리
+								if(h < 0) h = 0;
+
+								self.chart.svg.rect({
+									y: col_height,
+									width: col_width,
+									height: h,
+									fill: self.color(i, j),
+									stroke : style.borderColor,
+									"stroke-width" : style.borderWidth,
+									"stroke-opacity" : style.borderOpacity
+								});
+							} else {
+								if(height > 0 && col_height > 0) {
+									img.scale(1, (height > col_height) ? height / col_height : col_height / height);
+								}
+							}
 						});
 
 					if(value != 0) {
-						this.addEvent(r, i, j);
+						this.addEvent(bar, i, j);
 					}
 
-					if (tooltipY <= zeroY) {
-						r.translate(startX, tooltipY);
+					if (startY <= zeroY) {
+						bar.translate(startX, startY);
 					} else {
-						r.translate(startX, zeroY);
-					}
-
-					if(height > 0) {
-						r.scale(1, (height > col_width) ? height / col_width : col_width / height);
+						bar.translate(startX, zeroY);
 					}
 
 					// 그룹에 컬럼 엘리먼트 추가
-					g.append(r);
+					g.append(bar);
 
 					// 다음 컬럼 좌표 설정
-					startX += col_width + brush.innerPadding;
+					startX += col_width + padding;
 				}
 			});
 

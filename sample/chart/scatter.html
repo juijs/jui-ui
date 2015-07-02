@@ -41,16 +41,17 @@
                      { sales: 18, profit: 5, total: 20 }
                  ]
              },
-             series : {
-                 sales : { symbol : "rectangle" },
-                 profit : { symbol : "cross" },
-                 total : { symbol : "triangle" }
-             },
              brush : {
                  type: "scatter",
                  size : 10,
                  display : "min",
-                 activeEvent : "click"
+                 activeEvent : "click",
+                 symbol : function(key, value) {
+                     if(key == "sales") return "circle";
+                     else if(key == "profit") return "rect";
+
+                     return "resource/star.gif";
+                 }
              },
              /*/
             event: {

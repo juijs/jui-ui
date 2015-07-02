@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    function getDate() {
+        return Math.round(Math.random() * 1000 * 60 * 5);
+    }
+
+    function getNumber() {
+        return Math.round(Math.random() * 1000);
+    }
+
+    jui.ready([ "chart.builder", "util.time" ], function(chart, time) {
+        var end = new Date(),
+            start = time.add(end, time.minutes, -5),
+            data = [];
+
+        for(var i = 0; i < 5; i++) {
+            data.push({
+                name: getNumber(),
+                name2: getNumber(),
+                value: time.add(start, time.milliseconds, getDate())
+            });
+        }
+
+        c = chart("#chart", {
+            width: 640,
+            height : 480,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "date",  // default type is block
+                    domain : [ start, end ],
+                    interval : 1000 * 60,
+                    format : "hh:mm:ss",
+                    key: "value",
+                    line : true
+                },
+                y : {
+                    type : 'range',
+                    domain : [ 0, 1000 ],
+                    step : 5
+                },
+                data : data
+            },
+            brush : {
+                type : 'scatter',
+                size : 10,
+                target : [ "name", "name2" ],
+                colors : function(data) {
+                    if(data.name > 700) return "red";
+                    else if(data.name > 500) return "blue";
+                    return "black";
+                }
+            },
+            widget : {
+                type : 'dragselect'
+            },
+            event : {
+                "dragselect.end": function(data) {
+                    console.log(data);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

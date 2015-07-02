@@ -1,4 +1,4 @@
-jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
+jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, ColorUtil) {
     /**
      * @class chart.widget.tooltip
      * implements tooltip widget
@@ -37,8 +37,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
         function printTooltip(obj) {
             if(obj.dataKey && widget.all === false) {
-                var t = chart.get("series", obj.dataKey),
-                    k = obj.dataKey,
+                var k = obj.dataKey,
                     d = (obj.data != null) ? obj.data[k] : null;
 
                 // 위젯 포지션에 따른 별도 처리
@@ -47,7 +46,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 }
 
                 // 툴팁 값 설정
-                var message = getFormat((t.text) ? t.text : k, d, obj.data);
+                var message = getFormat(k, d, obj.data);
                 setMessage(0, message);
 
                 text.attr({ "text-anchor": "middle" });
@@ -56,7 +55,6 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
                 for(var i = 0; i < brush.target.length; i++) {
                     var key = brush.target[i],
-                        t = chart.get("series", key),
                         x = padding,
                         y = (textY * i) + (padding * 2),
                         d = (obj.data != null) ? obj.data[key] : null;
@@ -66,7 +64,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                         y = y + anchor;
                     }
 
-                    var message = getFormat((t.text) ? t.text : key, d, obj.data);
+                    var message = getFormat(key, d, obj.data);
                     setMessage(i, message);
 
                     tspan[i].setAttribute("x", x);
@@ -83,6 +81,18 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
             return ($.inArray(index, list) == -1) ? false : true;
         }
 
+        function getColorByKey(obj) {
+            var targets = obj.brush.target;
+
+            for(var i = 0; i < targets.length; i++) {
+                if(targets[i] == obj.dataKey) {
+                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors, targets));
+                }
+            }
+
+            return chart.theme("tooltipBorderColor");
+        }
+
         this.drawBefore = function() {
             g = chart.svg.group({
                 visibility: "hidden"
@@ -90,8 +100,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 rect = chart.svg.polygon({
                     fill: chart.theme("tooltipBackgroundColor"),
                     "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
-                    stroke: chart.theme("tooltipBorderColor"),
-                    "stroke-width": 1
+                    "stroke-width": chart.theme("tooltipBorderWidth")
                 });
 
                 text = chart.text({
@@ -103,8 +112,7 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
         }
 
         this.draw = function() {
-            var self = this,
-                isActive = false,
+            var isActive = false,
                 w, h;
 
             this.on("mouseover", function(obj, e) {
@@ -118,8 +126,12 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
                 w = size.width + (padding * 2);
                 h = size.height + padding;
 
+                rect.attr({
+                    points: self.balloonPoints(widget.orient, w, h, (widget.anchor) ? anchor : null),
+                    stroke: getColorByKey(obj)
+                });
+
                 text.attr({ x: w / 2 });
-                rect.attr({ points: self.balloonPoints(widget.orient, w, h, anchor) });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -159,8 +171,10 @@ jui.define("chart.widget.tooltip", [ "jquery" ], function($) {
 
     TooltipWidget.setup = function() {
         return {
-            /** @cfg {"bottom"/"top"/"left"/"right" } Determines the side on which the tool tip is displayed (top, bottom, left, right). */
+            /** @cfg {"bottom"/"top"/"left"/"right"} Determines the side on which the tool tip is displayed (top, bottom, left, right). */
             orient: "top",
+            /** @cfg {Boolean} [anchor=true] Remove tooltip's anchor */
+            anchor: true,
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */

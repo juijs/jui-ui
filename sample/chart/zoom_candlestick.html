@@ -75,7 +75,16 @@
             }, {
                 type : "title",
                 text : "Zoom Widget Test"
-            }]
+            }],
+            event : {
+                "zoom.start": function() {
+                    console.log("zoom.start");
+                },
+                "zoom.end": function() {
+                    console.log("zoom.end");
+                    console.log(arguments);
+                }
+            }
         });
     })
 </script>
