@@ -221,7 +221,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawTop = function(g, ticks, values, checkActive, moveX) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX,
+					x = values[i] - moveX,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -242,7 +242,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						x: moveX,
 						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
 						dy: this.chart.theme("gridXFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
@@ -260,7 +260,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX,
+					x = values[i] - moveX,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -281,7 +281,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						x: moveX,
 						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
 						dy: this.chart.theme("gridXFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
@@ -298,7 +298,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawLeft = function(g, ticks, values, checkActive, moveY) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY,
+					y = values[i] - moveY,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -320,7 +320,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						y: moveY,
 						dy: this.chart.theme("gridYFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "end",
@@ -334,10 +334,10 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-		this.drawRight = function(g, ticks, values, checkActive, moveY){
+		this.drawRight = function(g, ticks, values, checkActive, moveY) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY,
+					y = values[i] - moveY,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -359,7 +359,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						y: moveY,
 						dy: this.chart.theme("gridYFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",

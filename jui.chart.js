@@ -8926,7 +8926,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawTop = function(g, ticks, values, checkActive, moveX) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX,
+					x = values[i] - moveX,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -8947,7 +8947,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						x: moveX,
 						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
 						dy: this.chart.theme("gridXFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
@@ -8965,7 +8965,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX,
+					x = values[i] - moveX,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -8986,7 +8986,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						x: moveX,
 						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
 						dy: this.chart.theme("gridXFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
@@ -9003,7 +9003,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawLeft = function(g, ticks, values, checkActive, moveY) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY,
+					y = values[i] - moveY,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -9025,7 +9025,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						y: moveY,
 						dy: this.chart.theme("gridYFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "end",
@@ -9039,10 +9039,10 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			}
 		}
 
-		this.drawRight = function(g, ticks, values, checkActive, moveY){
+		this.drawRight = function(g, ticks, values, checkActive, moveY) {
 			for (var i = 0, len = ticks.length; i < len; i++) {
 				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY,
+					y = values[i] - moveY,
 					isLast = (i == len - 1) && this.grid.type != "block",
 					isActive = false;
 
@@ -9064,7 +9064,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				if (!this.grid.hideText) {
 					axis.append(this.getTextRotate(this.chart.text({
 						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
+						y: moveY,
 						dy: this.chart.theme("gridYFontSize") / 3,
 						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
 						"text-anchor": "start",
@@ -9340,7 +9340,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		 * @protected
 		 */
 		this.top = function(g) {
-			this.drawTop(g, this.domain, this.points, false, -this.half_band);
+			this.drawTop(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("top", g);
 			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
@@ -9351,7 +9351,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.bottom = function(g) {
-			this.drawBottom(g, this.domain, this.points, false, -this.half_band);
+			this.drawBottom(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("bottom", g);
 			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
@@ -9362,7 +9362,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.left = function(g) {
-			this.drawLeft(g, this.domain, this.points, -1, -this.half_band);
+			this.drawLeft(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("left", g);
 			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
@@ -9373,7 +9373,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
-			this.drawRight(g, this.domain, this.points, -1, -this.half_band);
+			this.drawRight(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("right", g);
 			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
@@ -9788,7 +9788,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          */
 
         this.top = function(g) {
-            this.drawTop(g, this.domain, this.points, null, -this.half_band);
+            this.drawTop(g, this.domain, this.points, null, 0);
             this.drawBaseLine("top", g);
         }
 
@@ -9798,7 +9798,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.bottom = function(g) {
-            this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+            this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
@@ -9808,7 +9808,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.left = function(g) {
-            this.drawLeft(g, this.domain, this.points, null, -this.half_band);
+            this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
@@ -9818,7 +9818,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.right = function(g) {
-            this.drawRight(g, this.domain, this.points, null, -this.half_band);
+            this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
