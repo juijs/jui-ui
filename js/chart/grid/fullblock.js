@@ -10,16 +10,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      */
     var FullBlockGrid = function() {
 
-
-        this.checkDrawRect = function(index, isLast) {
-
-            if (isLast) {
-                return false;
-            }
-
-            return true;
-        }
-
         /**
          * @method top
          *

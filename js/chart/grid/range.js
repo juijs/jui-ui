@@ -9,47 +9,43 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawTop(g, this.ticks, this.values, function(tick, index) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawTop(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
+			}, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawBottom(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
+			}, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
+			var min = this.scale.min(),
+				max = this.scale.max();
 
-			this.drawLeft(g, this.ticks, this.values, function(tick, index) {
+			this.drawLeft(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
-
+			}, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawRight(g, this.ticks, this.values, function(tick, index) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawRight(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
-
+			}, 0);
 			this.drawBaseLine("right", g);
-		}
-
-		this.checkDrawRect = function(index, isLast) {
-			if (isLast) return false;
-			return true;
 		}
 
         this.wrapper = function(scale, key) {

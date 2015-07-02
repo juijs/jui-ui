@@ -10,68 +10,15 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
      */
 	var BlockGrid = function() {
 
-		this.getLineForArea = function(orient, area) {
-			if (orient == "right" || orient == "left") {
-				var x  = this.axis.get("x");
-
-				x.orient = (x.orient == "top") ? "top" : "bottom";
-
-				if (x && (x.orient == "top")) {
-					area.y1 += this.scale.rangeBand();
-					area.y2 += this.scale.rangeBand();
-				}
-
-			} else if (orient == "top" || orient == "bottom") {
-				var y  = this.axis.get("y");
-
-				y.orient = y.orient == "right" ? "right" : "left";
-
-				if (y && (y.orient == "left")) {
-					area.x1 += this.scale.rangeBand();
-					area.x2 += this.scale.rangeBand();
-				}
-			}
-
-			return area;
-		}
-
-		this.checkDrawLineTop = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineBottom  = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineLeft = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineRight = function(index, isLast) {
-			return true;
-		}
-
-
 		/**
 		 * @method top
 		 *
 		 * @protected
 		 */
 		this.top = function(g) {
-			this.drawTop(g, this.domain, this.points, null, -this.half_band);
+			this.drawTop(g, this.domain, this.points, false, -this.half_band);
 			this.drawBaseLine("top", g);
-
-			var y = this.axis.get('y');
-			var axis = this.chart.svg.group({
-				"transform" : "translate(" + this.end + ", 0)"
-			});
-
-			axis.append(this.line({
-				y1 : (y && y.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
-				y2 : (y && y.hide) ? this.axis.area('height') : -this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
+			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
         /**
@@ -80,21 +27,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.bottom = function(g) {
-			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+			this.drawBottom(g, this.domain, this.points, false, -this.half_band);
 			this.drawBaseLine("bottom", g);
-
-			var y = this.axis.get('y');
-			var axis = this.chart.svg.group({
-				"transform" : "translate(" + this.end + ", 0)"
-			})
-
-			axis.append(this.line({
-				y1 : (y && y.hide) ? this.chart.theme("gridTickBorderSize") : 0,
-				y2 : (y && y.hide) ? -this.axis.area('height') : this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
-
+			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
         /**
@@ -103,22 +38,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.left = function(g) {
-			this.drawLeft(g, this.domain, this.points, null, -this.half_band);
+			this.drawLeft(g, this.domain, this.points, -1, -this.half_band);
 			this.drawBaseLine("left", g);
-
-			var x = this.axis.get('x');
-
-			var axis = this.chart.svg.group({
-				"transform" : "translate(0, " + this.end + ")"
-			})
-
-			axis.append(this.line({
-				x1 : (x && x.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
-				x2 : (x && x.hide) ? this.axis.area('width') : -this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
-
+			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
         
         /**
@@ -127,21 +49,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
-			this.drawRight(g, this.domain, this.points, null, -this.half_band);
+			this.drawRight(g, this.domain, this.points, -1, -this.half_band);
 			this.drawBaseLine("right", g);
-
-			var x = this.axis.get('x');
-
-			var axis = this.chart.svg.group({
-				"transform" : "translate(0, " + this.end + ")"
-			});
-
-			axis.append(this.line({
-				x1 : (x && x.hide) ? this.chart.theme("gridTickBorderSize") : 0,
-				x2 : (x && x.hide) ? -this.axis.area('width') : this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
+			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
 		/**

@@ -120,11 +120,5 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		}
 	}
 
-	DateBlockGrid.setup = function() {
-		return {
-
-		};
-	}
-
 	return DateBlockGrid;
 }, "chart.grid.date");

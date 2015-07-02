@@ -37,6 +37,7 @@ jui.define("chart.theme.pattern", [], function() {
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
