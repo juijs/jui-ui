@@ -8990,6 +8990,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		}
 
 		this.drawPattern = function(position, ticks, values, isMove) {
+			if (this.grid.hide) return;
 			if (!position) return;
 			if (!ticks) return;
 			if (!values) return;
