@@ -19,7 +19,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawPattern("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("top", g);
-			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
+			this.drawLastLine("top", g);
 		}
 
         /**
@@ -31,7 +31,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawPattern("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("bottom", g);
-			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
+			this.drawLastLine("bottom", g);
 		}
 
         /**
@@ -43,7 +43,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawPattern("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("left", g);
-			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
+			this.drawLastLine("left", g);
 		}
         
         /**
@@ -55,7 +55,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawPattern("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("right", g);
-			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
+			this.drawLastLine("right", g);
 		}
 
 		/**
@@ -64,7 +64,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		 * @private 
 		 */
 		this.initDomain = function() {
-
 			var domain = [];
 
 			if (_.typeCheck("string", this.grid.domain)) {
@@ -97,7 +96,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			}
 
 			return domain;
-
 		}
 
         /**
@@ -126,6 +124,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.half_band = this.band/2;
 			this.bar = 6;
 			this.reverse = this.grid.reverse;
+		}
+
+		this.drawLastLine = function(position, g) {
+			g.append(this.createGridX(position, this.domain.length, this.end, null, true));
 		}
 
         /**
