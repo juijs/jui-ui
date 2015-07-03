@@ -18528,6 +18528,10 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
 
+			if (this.grid.orient == 'left' || this.grid.orient == 'right') {
+				this.ticks.reverse();
+			}
+
 			this.bar = 6;
 
 			this.values = [];
