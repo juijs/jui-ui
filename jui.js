@@ -17184,9 +17184,9 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				"class" : "grid-rect grid-rect-" + this.grid.type
 			});
 
-			g.translate(this.axis.area('x') + this.chart.area('x'), this.axis.area('y') + this.chart.area('y'));
+			g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
 
-			var isY = (position == 'left' || position == 'right');
+			var isY = (position == "left" || position == "right");
 
 			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
 
@@ -17197,8 +17197,8 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 					var x = (isY) ? 0 : pos;
 					var y = (isY) ? pos : 0;
-					var width = (isY) ?  this.axis.area('width') : dist;
-					var height = (isY) ?  dist : this.axis.area('height');
+					var width = (isY) ?  this.axis.area("width") : dist;
+					var height = (isY) ?  dist : this.axis.area("height");
 
 					this.fillRectObject(g, line, position, x, y, width, height);
 
