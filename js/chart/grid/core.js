@@ -116,6 +116,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			if (position == "bottom") y = -height;
 			if (position == "right") x = -width;
 
+			/*
 			if (index % 2 != 0 && !isLast) {
 				if (line.type.indexOf("gradient") > -1) {
 					axis.append(this.chart.svg.rect({
@@ -137,7 +138,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 					}));
 				}
 			}
-
+			*/
 			// Draw grid's line
 			var area = {},
 				isDrawLine = false;
@@ -476,6 +477,64 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return this.axis.data || [];
 		}
 
+		this.drawRect = function(position, ticks, values, isMove) {
+
+			if (!position) return;
+			if (!ticks) return;
+			if (!values) return;
+
+			var line = this.getLineOption();
+
+			var g = this.chart.svg.group({
+				"class" : "grid-rect grid-rect-" + this.grid.type
+			});
+
+			g.translate(this.axis.area('x') + this.chart.area('x'), this.axis.area('y') + this.chart.area('y'));
+
+			var isY = (position == 'left' || position == 'right');
+
+			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
+
+				for(var i = 0; i < values.length-1; i += 2) {
+
+					var dist = Math.abs(values[i+1] - values[i]);
+					var pos = values[i] - (isMove ?  dist/2 : 0 );
+
+					var x = (isY) ? 0 : pos;
+					var y = (isY) ? pos : 0;
+					var width = (isY) ?  this.axis.area('width') : dist;
+					var height = (isY) ?  dist : this.axis.area('height');
+
+					this.fillRectObject(g, line, position, x, y, width, height);
+
+				}
+			}
+
+		}
+
+		this.fillRectObject = function(g, line, position, x, y , width, height) {
+
+			if (line.type.indexOf("gradient") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			} else if (line.type.indexOf("rect") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			}
+		}
+
 		/**
 		 * @method drawGrid
 		 * draw base grid structure
@@ -492,6 +551,8 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
+
+			this.drawRect();
 
 			// render axis
 			if(_.typeCheck("function", func)) {

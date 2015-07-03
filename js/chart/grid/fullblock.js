@@ -17,6 +17,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          */
 
         this.top = function(g) {
+            this.drawRect("top", this.domain, this.points);
             this.drawTop(g, this.domain, this.points, null, 0);
             this.drawBaseLine("top", g);
         }
@@ -27,6 +28,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.bottom = function(g) {
+            this.drawRect("bottom", this.domain, this.points);
             this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
@@ -37,6 +39,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.left = function(g) {
+            this.drawRect("left", this.domain, this.points);
             this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
@@ -47,6 +50,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.right = function(g) {
+            this.drawRect("right", this.domain, this.points);
             this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }

@@ -10,21 +10,25 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	var DateGrid = function() {
 
 		this.top = function(g) {
+			this.drawRect("top", this.ticks, this.values);
 			this.drawTop(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
+			this.drawRect("bottom", this.ticks, this.values);
 			this.drawBottom(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
+			this.drawRect("left", this.ticks, this.values);
 			this.drawLeft(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
+			this.drawRect("right", this.ticks, this.values);
 			this.drawRight(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("right", g);
 		}
@@ -111,15 +115,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
+			// 기본값 설정
+			this.ticks = [];
+
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
+			/* data 없을 때도 기본 설정만으로 보여야 하기 때문에. 지우겠음
 			if (this.axis.data.length == 0) {
-				this.ticks = [];
-			}
+				//this.ticks = [];
+			} */
 
 			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {

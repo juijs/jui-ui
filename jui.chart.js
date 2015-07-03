@@ -2886,8 +2886,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				_rangeBand = interval;
+				var first = func(times[1]);
+				var second = func(times[2]);
 
+				_rangeBand = second - first;
 
 				return times;
 
@@ -8821,6 +8823,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			if (position == "bottom") y = -height;
 			if (position == "right") x = -width;
 
+			/*
 			if (index % 2 != 0 && !isLast) {
 				if (line.type.indexOf("gradient") > -1) {
 					axis.append(this.chart.svg.rect({
@@ -8842,7 +8845,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 					}));
 				}
 			}
-
+			*/
 			// Draw grid's line
 			var area = {},
 				isDrawLine = false;
@@ -9181,6 +9184,64 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return this.axis.data || [];
 		}
 
+		this.drawRect = function(position, ticks, values, isMove) {
+
+			if (!position) return;
+			if (!ticks) return;
+			if (!values) return;
+
+			var line = this.getLineOption();
+
+			var g = this.chart.svg.group({
+				"class" : "grid-rect grid-rect-" + this.grid.type
+			});
+
+			g.translate(this.axis.area('x') + this.chart.area('x'), this.axis.area('y') + this.chart.area('y'));
+
+			var isY = (position == 'left' || position == 'right');
+
+			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
+
+				for(var i = 0; i < values.length-1; i += 2) {
+
+					var dist = Math.abs(values[i+1] - values[i]);
+					var pos = values[i] - (isMove ?  dist/2 : 0 );
+
+					var x = (isY) ? 0 : pos;
+					var y = (isY) ? pos : 0;
+					var width = (isY) ?  this.axis.area('width') : dist;
+					var height = (isY) ?  dist : this.axis.area('height');
+
+					this.fillRectObject(g, line, position, x, y, width, height);
+
+				}
+			}
+
+		}
+
+		this.fillRectObject = function(g, line, position, x, y , width, height) {
+
+			if (line.type.indexOf("gradient") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			} else if (line.type.indexOf("rect") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			}
+		}
+
 		/**
 		 * @method drawGrid
 		 * draw base grid structure
@@ -9197,6 +9258,8 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
+
+			this.drawRect();
 
 			// render axis
 			if(_.typeCheck("function", func)) {
@@ -9340,6 +9403,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		 * @protected
 		 */
 		this.top = function(g) {
+			this.drawRect("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("top", g);
 			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
@@ -9351,6 +9415,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.bottom = function(g) {
+			this.drawRect("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("bottom", g);
 			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
@@ -9362,6 +9427,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.left = function(g) {
+			this.drawRect("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("left", g);
 			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
@@ -9373,6 +9439,7 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
          * @protected
          */
 		this.right = function(g) {
+			this.drawRect("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("right", g);
 			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
@@ -9486,21 +9553,25 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	var DateGrid = function() {
 
 		this.top = function(g) {
+			this.drawRect("top", this.ticks, this.values);
 			this.drawTop(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
+			this.drawRect("bottom", this.ticks, this.values);
 			this.drawBottom(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
+			this.drawRect("left", this.ticks, this.values);
 			this.drawLeft(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
+			this.drawRect("right", this.ticks, this.values);
 			this.drawRight(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("right", g);
 		}
@@ -9587,15 +9658,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
+			// 기본값 설정
+			this.ticks = [];
+
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
+			/* data 없을 때도 기본 설정만으로 보여야 하기 때문에. 지우겠음
 			if (this.axis.data.length == 0) {
-				this.ticks = [];
-			}
+				//this.ticks = [];
+			} */
 
 			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
@@ -9733,7 +9808,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.ticks = time.ticks("milliseconds", domain.interval);
 			}
 
-			var len = this.axis.data.length  - 1;
+			var len = this.axis.data.length;
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(len);
 
 			if ( typeof this.grid.format == "string") {
@@ -9788,6 +9863,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          */
 
         this.top = function(g) {
+            this.drawRect("top", this.domain, this.points);
             this.drawTop(g, this.domain, this.points, null, 0);
             this.drawBaseLine("top", g);
         }
@@ -9798,6 +9874,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.bottom = function(g) {
+            this.drawRect("bottom", this.domain, this.points);
             this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
@@ -9808,6 +9885,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.left = function(g) {
+            this.drawRect("left", this.domain, this.points);
             this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
@@ -9818,6 +9896,7 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.right = function(g) {
+            this.drawRect("right", this.domain, this.points);
             this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
@@ -10228,6 +10307,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
+			this.drawRect("top", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -10238,6 +10318,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.bottom = function(g) {
+			this.drawRect("bottom", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -10248,6 +10329,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.left = function(g) {
+			this.drawRect("left", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -10258,6 +10340,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.right = function(g) {
+			this.drawRect("right", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
