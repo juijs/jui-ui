@@ -15,32 +15,33 @@
     var time = jui.include("util.time");
 
     chart("#chart", {
-        width: 400,
-        height: 500,
+        height : 800,
         axis : {
             x : {
                 type : "dateblock",
                 domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
                 interval : 6 * 1000 * 60 * 60,
                 format : "HH:mm",
-                line : 'gradient'
+                line : 'rect',
+                orient : 'top',
+                hide : true
             },
             y : {
                 type : "range",
-                domain : function(d) { return [d.sales, d.profit, 0 ]; },
-                step : 10,
-                line : true,
-                orient : "right"
+                domain : [ 0, 100 ],
+                orient : 'right',
+                line : 'rect'
             },
             data : [
-                { quarter : "1Q", sales : 50, profit : 35 },
-                { quarter : "2Q", sales : 20, profit : 30 },
-                { quarter : "3Q", sales : 10, profit : 10 },
-                { quarter : "4Q", sales : 30, profit : 25 }
+                { sales : 10 },
+                { sales : 20 },
+                { sales : 30 },
+                { sales : 40 },
+                { sales : 50 }
             ]
         },
         brush : {
-            type : "column",
+            type : "scatter",
             target : [ "sales" ]
         },
         widget : [

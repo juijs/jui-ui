@@ -28,7 +28,7 @@
 
 		var c = chart("#chart", {
 			width : 800,
-			height : 250,
+			height : 500,
 			padding : { left : 100 },
 			axis : [{
 				x : {
@@ -45,7 +45,8 @@
 					base : 10,
 					nice : true,
 					format : function(value) { return Math.round(value); },
-					line : true
+					line : 'rect'
+
 				},
 				data : data
 			}],

@@ -41,6 +41,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#464646",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",

@@ -87,7 +87,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.ticks = time.ticks("milliseconds", domain.interval);
 			}
 
-			var len = this.axis.data.length  - 1;
+			var len = this.axis.data.length - 1;
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(len);
 
 			if ( typeof this.grid.format == "string") {
@@ -118,12 +118,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		this.draw = function() {
 			return this.drawGrid("dateblock");
 		}
-	}
-
-	DateBlockGrid.setup = function() {
-		return {
-
-		};
 	}
 
 	return DateBlockGrid;
