@@ -2886,8 +2886,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				_rangeBand = interval;
+				var first = func(times[1]);
+				var second = func(times[2]);
 
+				_rangeBand = second - first;
 
 				return times;
 

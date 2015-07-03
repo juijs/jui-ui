@@ -2886,8 +2886,10 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				times.push(new Date(+start));
 
-				_rangeBand = interval;
+				var first = func(times[1]);
+				var second = func(times[2]);
 
+				_rangeBand = second - first;
 
 				return times;
 
@@ -7384,6 +7386,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
     	gridBorderWidth : 1,
         gridBorderDashArray : "none",
@@ -7592,6 +7595,7 @@ jui.define("chart.theme.gradient", [], function() {
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#efefef",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
@@ -7798,6 +7802,7 @@ jui.define("chart.theme.dark", [], function() {
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#464646",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
@@ -8002,6 +8007,7 @@ jui.define("chart.theme.pastel", [], function() {
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
 		gridPatternColor : "#ababab",
+		gridPatternOpacity : 0.1,
 		gridBorderColor : "#bfbfbf",
 		gridBorderWidth : 1,
 		gridBorderDashArray : "1, 3",
@@ -8205,6 +8211,7 @@ jui.define("chart.theme.pattern", [], function() {
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
         gridPatternColor : "#ababab",
+        gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
@@ -8698,7 +8705,7 @@ jui.define("chart.icon.jennifer", [], function() {
 		"ws" : "\ue65a"
 	}
 });
-jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($, _, math) {
+jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 	/**
 	 * @class chart.grid.core
 	 * Grid Core 객체
@@ -8706,429 +8713,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 	 * @abstract
 	 */
 	var CoreGrid = function() {
-
-		this.getLineOption = function() {
-			var line = this.grid.line;
-
-			if (typeof line === "string") {
-				line = { type : line || "solid"}
-			} else if (typeof line === "number") {
-				line = { type : "solid", "stroke-width" : line }
-			} else if (typeof line !== "object") {
-				line = !!line;
-
-				if (line) {
-					line = { type : "solid" }
-				}
-			}
-
-			if (line && !line.type == "string") {
-				line.type = line.type.split(/ /g);
-			}
-
-			return line;
-		}
-
-		this.drawBaseLine = function(position, g) {
-			var obj = this.getGridSize(),
-				pos = {};
-
-			if (position == "bottom" || position == "top") {
-				pos = { x1 : obj.start, x2 : obj.end };
-			} else if (position == "left" || position == "right") {
-				pos = { y1 : obj.start, y2 : obj.end };
-			} else {
-				// TODO: custom base line
-			}
-
-			g.append(this.axisLine(position, pos));
-		}
-
-		this.getLineForArea = function(orient, obj) {
-			return obj;
-		}
-
-		this.checkDrawLineTop = function(index, isLast) {
-
-			var y = this.axis.get("y");
-
-			var orient = y.orient;
-
-			if (y && y.hide) {
-
-			} else if (orient == "left") {
-				if (index == 0) return;
-			} else if (orient == "right") {
-				if (isLast) return;
-			}
-
-			return true;
-		}
-
-		this.checkDrawLineBottom  = function(index, isLast) {
-			var y = this.axis.get("y");
-
-			var orient = y.orient;
-
-			if (y && y.hide) {
-
-			} else if (orient == "left") {
-				if (index == 0 ) return;
-			} else if (orient == "right") {
-				if (isLast) return;
-			}
-
-			return true;
-		}
-
-		this.checkDrawLineLeft = function(index, isLast) {
-			var x = this.axis.get("x");
-
-			var orient = x.orient;
-
-			if (x && x.hide) {
-
-			} else if (orient == "top") {
-				if (index == 0) return;
-			} else if (orient == "bottom") {
-				if (isLast) return;
-			}
-
-			return true;
-		}
-
-		this.checkDrawLineRight = function(index, isLast) {
-			var x = this.axis.get("x");
-
-			var orient = x.orient;
-
-			if (x && x.hide) {
-
-			} else if (orient == "top") {
-				if (index == 0) return;
-			} else if (orient == "bottom") {
-				if (isLast) return;
-			}
-
-			return true;
-		}
-
-		this.checkDrawRect = function(index, isLast) {
-			return true;
-		}
-
-		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
-
-			var area = { };
-			if (position == "top") {
-
-				if (!this.checkDrawLineTop(index, isLast)) return;
-
-				area = this.getLineForArea('top', {x1: 0, x2: 0, y1: 0, y2: this.axis.area("height")});
-			} else if (position == "bottom" ) {
-
-				if (!this.checkDrawLineBottom(index, isLast)) return;
-
-				area = this.getLineForArea('bottom', {x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") });
-			} else if (position == "left") {
-
-				if (!this.checkDrawLineLeft(index, isLast)) return;
-
-				area = this.getLineForArea('left', {x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0});
-			} else if (position == "right" ) {
-
-				if (!this.checkDrawLineRight(index, isLast)) return;
-
-				area = this.getLineForArea('right', {x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0});
-			}
-
-			var lineObject = this.line($.extend({
-				stroke : this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
-				"stroke-width" : this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
-			}, area));
-
-
-			if (line.type.indexOf("dashed") > -1) {
-				lineObject.attr({ "stroke-dasharray" : "5,5" });
-			}
-
-			var x = 0;
-			var y = 0;
-			var width = (position == "left" || position == "right") ? this.axis.area("width") : this.scale.rangeBand();
-			var height = (position == "top" || position == "bottom") ? this.axis.area("height") : this.scale.rangeBand();
-
-
-			if (position == "bottom") y = -height;
-			if (position == "right") x = -width;
-
-			if (index % 2== 0) {
-
-				if (this.checkDrawRect(index, isLast)) {
-					if (line.type.indexOf("gradient") > -1) {
-						axis.append(this.chart.svg.rect({  x : x, y : y, height : height, width : width,
-							fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
-							"fill-opacity" : 0.1
-						}));
-					} else if (line.type.indexOf("rect") > -1) {
-						axis.append(this.chart.svg.rect({x : x, y : y, height : height, width : width,
-							fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
-							"fill-opacity" : 0.1
-						}));
-					}
-				}
-			}
-
-			// TODO: add customize?
-
-			axis.append(lineObject);
-		}
-
-		this.drawImage = function(orient, g, tick, index, x, y) {
-			if (!_.typeCheck("function", this.grid.image)) return;
-
-			var opts = this.grid.image.apply(this.chart, [ tick, index ]);
-
-			if(_.typeCheck("object", opts)) {
-				var image = this.chart.svg.image({
-					"xlink:href": opts.uri,
-					width: opts.width,
-					height: opts.height
-				});
-
-				if(orient == "top" || orient == "bottom") {
-					image.attr({
-						x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
-					});
-				} else if(orient == "left" || orient == "right") {
-					image.attr({
-						y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
-					})
-				}
-
-				if(orient == "bottom") {
-					image.attr({ y: opts.dist });
-				} else if(orient == "top") {
-					image.attr({ y: -(opts.dist + opts.height) });
-				} else if(orient == "left") {
-					image.attr({ x: -(opts.dist + opts.width) });
-				} else if(orient == "right") {
-					image.attr({ x: opts.dist });
-				}
-
-				image.translate(x, y)
-				g.append(image);
-			}
-		}
-
-		/**
-		 * @method top
-		 *
-		 * draw top
-		 *
-		 * @param {chart.util.svg} g
-		 * @param {Array} ticks
-		 * @param {Array} values
-		 * @param {Number} min
-		 * @param {Function} checkActive
-		 */
-		this.drawTop = function(g, ticks, values, checkActive, moveX) {
-			moveX = moveX || 0;
-			var line = this.getLineOption();
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX;
-
-				// 그리드 이미지 그리기
-				this.drawImage("top", g, ticks[i], i, x, 0);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isActive = false;
-				if (typeof checkActive == "function") {
-					isActive = checkActive(ticks[i], i);
-				}
-
-				var axis = this.chart.svg.group().translate(x, 0);
-
-				axis.append(this.line({
-					y2 : -this.chart.theme("gridTickBorderSize"),
-					stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
-					"stroke-width" : this.chart.theme("gridTickBorderWidth")
-				}));
-
-				if (line) this.drawValueLine( "top", axis, isActive, line, i, (i == len -1));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
-						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
-
-				g.append(axis);
-			}
-
-		}
-
-		this.drawBottom = function(g, ticks, values, checkActive, moveX){
-			moveX = moveX || 0;
-			var line = this.getLineOption();
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i),
-					x = values[i] + moveX;
-
-				// 그리드 이미지 그리기
-				this.drawImage("bottom", g, ticks[i], i, x, 0);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isActive = false;
-				if (typeof checkActive == "function") {
-					isActive = checkActive(ticks[i], i);
-				}
-
-				var axis = this.chart.svg.group().translate(x, 0);
-
-				axis.append(this.line({
-					y2 : this.chart.theme("gridTickBorderSize"),
-					stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
-					"stroke-width" : this.chart.theme("gridTickBorderWidth")
-				}));
-
-				if (line) this.drawValueLine( "bottom", axis, isActive, line, i, (i == len -1));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
-						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
-
-				g.append(axis);
-			}
-		}
-
-		this.drawLeft = function(g, ticks, values, checkActive, moveY){
-			moveY = moveY || 0;
-			var line = this.getLineOption();
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY;
-
-				// 그리드 이미지 그리기
-				this.drawImage("left", g, ticks[i], i, 0, y);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isActive = false;
-				if (typeof checkActive == "function") {
-					isActive = checkActive(ticks[i], i);
-				}
-
-				var axis = this.chart.svg.group().translate(0, y);
-
-				axis.append(this.line({
-					x2 : -this.chart.theme("gridTickBorderSize"),
-					stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
-					"stroke-width" : this.chart.theme("gridTickBorderWidth")
-				}));
-
-				if (line) this.drawValueLine( "left", axis, isActive, line, i, (i == len -1));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "end",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
-
-				g.append(axis);
-
-			}
-		}
-
-		this.drawRight = function(g, ticks, values, checkActive, moveY){
-			moveY = moveY || 0;
-			var line = this.getLineOption();
-
-			for (var i = 0, len = ticks.length; i < len; i++) {
-				var domain = this.format(ticks[i], i),
-					y = values[i] + moveY;
-
-				// 그리드 이미지 그리기
-				this.drawImage("right", g, ticks[i], i, 0, y);
-
-				if (!domain && domain !== 0) {
-					continue;
-				}
-
-				var isActive = false;
-				if (typeof checkActive == "function") {
-					isActive = checkActive(ticks[i], i);
-				}
-
-				var axis = this.chart.svg.group().translate(0, y);
-
-				axis.append(this.line({
-					x2 : this.chart.theme("gridTickBorderSize"),
-					stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
-					"stroke-width" : this.chart.theme("gridTickBorderWidth")
-				}));
-
-
-				if (line) this.drawValueLine( "right", axis, isActive, line, i, (i == len -1));
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
-						y: (this.grid.type == "block") ? this.scale.rangeBand() / 2 : 0,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "start",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
-
-				g.append(axis);
-			}
-		}
-
-		/**
-		 * @method drawAfter
-		 *
-		 *
-		 *
-		 * @param {Object} obj
-		 * @protected
-		 */
-		this.drawAfter = function(obj) {
-			obj.root.attr({ "class": "grid grid-" + this.grid.type});
-		}
 
 		/**
 		 * @method wrapper
@@ -9160,7 +8744,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 		this.axisLine = function(position, attr) {
 			var isTopOrBottom = (position == "top" || position == "bottom");
 
-			return this.chart.svg.line($.extend({
+			return this.chart.svg.line(_.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -9179,7 +8763,7 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 		 * @param {Object} attr
 		 */
 		this.line = function(attr) {
-			return this.chart.svg.line($.extend({
+			return this.chart.svg.line(_.extend({
 				x1 : 0,
 				y1 : 0,
 				x2 : 0,
@@ -9220,39 +8804,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			}
 
 			return this.axis.data || [];
-		}
-
-		/**
-		 * @method drawGrid
-		 * draw base grid structure
-		 * @protected
-		 * @param {chart.builder} chart
-		 * @param {String} orient
-		 * @param {String} cls
-		 * @param {Grid} grid
-		 */
-		this.drawGrid = function() {
-			// create group
-			var root = this.chart.svg.group(),
-				func = this[this.grid.orient];
-
-			// wrapped scale
-			this.scale = this.wrapper(this.scale, this.grid.key);
-
-			// render axis
-			if(_.typeCheck("function", func)) {
-				func.call(this, root);
-			}
-
-			// hide grid
-			if(this.grid.hide) {
-				root.attr({ display : "none" })
-			}
-
-			return {
-				root : root,
-				scale : this.scale
-			};
 		}
 
 		/**
@@ -9329,6 +8880,435 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 
 			return result;
 		}
+
+		this.getLineOption = function() {
+			var line = this.grid.line;
+
+			if (typeof line === "string") {
+				line = { type : line || "solid"}
+			} else if (typeof line === "number") {
+				line = { type : "solid", "stroke-width" : line }
+			} else if (typeof line !== "object") {
+				line = !!line;
+
+				if (line) {
+					line = { type : "solid" }
+				}
+			}
+
+			if (line && !line.type == "string") {
+				line.type = line.type.split(/ /g);
+			}
+
+			return line;
+		}
+
+		this.checkDrawLineY = function(index, isLast) {
+			var y = this.axis.get("y");
+
+			if(!y.hide) {
+				if (y.orient == "left" && index == 0) {
+					return false;
+				} else if (y.orient == "right" && isLast) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		this.checkDrawLineX = function(index, isLast) {
+			var x = this.axis.get("x");
+
+			if (!x.hide) {
+				if (x.orient == "top" && index == 0) {
+					return false;
+				} else if (x.orient == "bottom" && isLast) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		this.createGridX = function(position, index, x, isActive, isLast) {
+			var line = this.getLineOption(),
+				axis = this.chart.svg.group().translate(x, 0),
+				size = this.chart.theme("gridTickBorderSize");
+
+			axis.append(this.line({
+				y2 : (position == "bottom") ? size : -size,
+				stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
+				"stroke-width" : this.chart.theme("gridTickBorderWidth")
+			}));
+
+			if (line) {
+				this.drawValueLine(position, axis, isActive, line, index, isLast);
+			}
+
+			return axis;
+		}
+
+		this.createGridY = function(position, index, y, isActive, isLast) {
+			var line = this.getLineOption(),
+				axis = this.chart.svg.group().translate(0, y),
+				size = this.chart.theme("gridTickBorderSize");
+
+			axis.append(this.line({
+				x2 : (position == "left") ? -size : size,
+				stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
+				"stroke-width" : this.chart.theme("gridTickBorderWidth")
+			}));
+
+			if (line) {
+				this.drawValueLine(position, axis, isActive, line, index, isLast);
+			}
+
+			return axis;
+		}
+
+		this.fillRectObject = function(g, line, position, x, y , width, height) {
+			if (line.type.indexOf("gradient") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			} else if (line.type.indexOf("rect") > -1) {
+				g.append(this.chart.svg.rect({
+					x : x,
+					y : y,
+					height : height,
+					width : width,
+					fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
+					"fill-opacity" : this.chart.theme("gridPatternOpacity")
+				}));
+			}
+		}
+
+		this.drawPattern = function(position, ticks, values, isMove) {
+			if (this.grid.hide) return;
+			if (!position) return;
+			if (!ticks) return;
+			if (!values) return;
+
+			var line = this.getLineOption(),
+				isY = (position == "left" || position == "right");
+
+			var g = this.chart.svg.group({
+				"class" : "grid-pattern grid-pattern-" + this.grid.type
+			});
+
+			g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
+
+			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
+				for(var i = 0; i < values.length-1; i += 2) {
+					var dist = Math.abs(values[i+1] - values[i]),
+						pos = values[i] - (isMove ?  dist/2 : 0 ),
+						x = (isY) ? 0 : pos,
+						y = (isY) ? pos : 0,
+						width = (isY) ?  this.axis.area("width") : dist,
+						height = (isY) ?  dist : this.axis.area("height");
+
+					this.fillRectObject(g, line, position, x, y, width, height);
+				}
+			}
+		}
+
+		this.drawBaseLine = function(position, g) {
+			var obj = this.getGridSize(),
+				pos = {};
+
+			if (position == "bottom" || position == "top") {
+				pos = { x1 : obj.start, x2 : obj.end };
+			} else if (position == "left" || position == "right") {
+				pos = { y1 : obj.start, y2 : obj.end };
+			}
+
+			g.append(this.axisLine(position, pos));
+		}
+
+		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
+			var area = {},
+				isDrawLine = false;
+
+			if (position == "top") {
+				isDrawLine = this.checkDrawLineY(index, isLast);
+				area = { x1: 0, x2: 0, y1: 0, y2: this.axis.area("height") };
+			} else if (position == "bottom" ) {
+				isDrawLine = this.checkDrawLineY(index, isLast);
+				area = { x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
+			} else if (position == "left") {
+				isDrawLine = this.checkDrawLineX(index, isLast);
+				area = { x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0 };
+			} else if (position == "right" ) {
+				isDrawLine = this.checkDrawLineX(index, isLast);
+				area = { x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0 };
+			}
+
+			if(isDrawLine) {
+				var lineObject = this.line(_.extend({
+					stroke: this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+					"stroke-width": this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+				}, area));
+
+				if (line.type.indexOf("dashed") > -1) {
+					lineObject.attr({ "stroke-dasharray": "5,5" });
+				}
+
+				axis.append(lineObject);
+			}
+		}
+
+		this.drawImage = function(orient, g, tick, index, x, y) {
+			if (!_.typeCheck("function", this.grid.image)) return;
+
+			var opts = this.grid.image.apply(this.chart, [ tick, index ]);
+
+			if(_.typeCheck("object", opts)) {
+				var image = this.chart.svg.image({
+					"xlink:href": opts.uri,
+					width: opts.width,
+					height: opts.height
+				});
+
+				if(orient == "top" || orient == "bottom") {
+					image.attr({
+						x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
+					});
+				} else if(orient == "left" || orient == "right") {
+					image.attr({
+						y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
+					})
+				}
+
+				if(orient == "bottom") {
+					image.attr({ y: opts.dist });
+				} else if(orient == "top") {
+					image.attr({ y: -(opts.dist + opts.height) });
+				} else if(orient == "left") {
+					image.attr({ x: -(opts.dist + opts.width) });
+				} else if(orient == "right") {
+					image.attr({ x: opts.dist });
+				}
+
+				image.translate(x, y)
+				g.append(image);
+			}
+		}
+
+		/**
+		 * @method top
+		 *
+		 * draw top
+		 *
+		 * @param {chart.util.svg} g
+		 * @param {Array} ticks
+		 * @param {Array} values
+		 * @param {Number} min
+		 * @param {Function} checkActive
+		 */
+		this.drawTop = function(g, ticks, values, checkActive, moveX) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
+				var domain = this.format(ticks[i], i),
+					x = values[i] - moveX,
+					isLast = (i == len - 1) && this.grid.type != "block",
+					isActive = false;
+
+				// 그리드 이미지 그리기
+				this.drawImage("top", g, ticks[i], i, x, 0);
+
+				// 도메인이 없으면 그리지 않음
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				// 액티브 라인 체크
+				if (_.typeCheck("function", checkActive)) {
+					isActive = checkActive(ticks[i]);
+				}
+
+				var axis = this.createGridX("top", i, x, isActive, isLast);
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: moveX,
+						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
+						dy: this.chart.theme("gridXFontSize") / 3,
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+						"text-anchor": "middle",
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
+					}, domain)));
+				}
+
+				g.append(axis);
+			}
+
+		}
+
+		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
+				var domain = this.format(ticks[i], i),
+					x = values[i] - moveX,
+					isLast = (i == len - 1) && this.grid.type != "block",
+					isActive = false;
+
+				// 그리드 이미지 그리기
+				this.drawImage("bottom", g, ticks[i], i, x, 0);
+
+				// 도메인이 없으면 그리지 않음
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				// 액티브 라인 체크
+				if (_.typeCheck("function", checkActive)) {
+					isActive = checkActive(ticks[i]);
+				}
+
+				var axis = this.createGridX("bottom", i, x, isActive, isLast);
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: moveX,
+						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
+						dy: this.chart.theme("gridXFontSize") / 3,
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+						"text-anchor": "middle",
+						"font-size": this.chart.theme("gridXFontSize"),
+						"font-weight": this.chart.theme("gridXFontWeight")
+					}, domain)));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		this.drawLeft = function(g, ticks, values, checkActive, moveY) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
+				var domain = this.format(ticks[i], i),
+					y = values[i] - moveY,
+					isLast = (i == len - 1) && this.grid.type != "block",
+					isActive = false;
+
+				// 그리드 이미지 그리기
+				this.drawImage("left", g, ticks[i], i, 0, y);
+
+				// 도메인이 없으면 그리지 않음
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				// 액티브 라인 체크
+				if (_.typeCheck("function", checkActive)) {
+					isActive = checkActive(ticks[i]);
+				}
+
+				var axis = this.createGridY("left", i, y, isActive, isLast);
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
+						y: moveY,
+						dy: this.chart.theme("gridYFontSize") / 3,
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+						"text-anchor": "end",
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
+					}, domain)));
+				}
+
+				g.append(axis);
+
+			}
+		}
+
+		this.drawRight = function(g, ticks, values, checkActive, moveY) {
+			for (var i = 0, len = ticks.length; i < len; i++) {
+				var domain = this.format(ticks[i], i),
+					y = values[i] - moveY,
+					isLast = (i == len - 1) && this.grid.type != "block",
+					isActive = false;
+
+				// 그리드 이미지 그리기
+				this.drawImage("right", g, ticks[i], i, 0, y);
+
+				// 도메인이 없으면 그리지 않음
+				if (!domain && domain !== 0) {
+					continue;
+				}
+
+				// 액티브 라인 체크
+				if (_.typeCheck("function", checkActive)) {
+					isActive = checkActive(ticks[i]);
+				}
+
+				var axis = this.createGridY("right", i, y, isActive, isLast);
+
+				if (!this.grid.hideText) {
+					axis.append(this.getTextRotate(this.chart.text({
+						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
+						y: moveY,
+						dy: this.chart.theme("gridYFontSize") / 3,
+						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+						"text-anchor": "start",
+						"font-size": this.chart.theme("gridYFontSize"),
+						"font-weight": this.chart.theme("gridYFontWeight")
+					}, domain)));
+				}
+
+				g.append(axis);
+			}
+		}
+
+		/**
+		 * @method drawGrid
+		 * draw base grid structure
+		 * @protected
+		 * @param {chart.builder} chart
+		 * @param {String} orient
+		 * @param {String} cls
+		 * @param {Grid} grid
+		 */
+		this.drawGrid = function() {
+			// create group
+			var root = this.chart.svg.group(),
+				func = this[this.grid.orient];
+
+			// wrapped scale
+			this.scale = this.wrapper(this.scale, this.grid.key);
+
+			// render axis
+			if(_.typeCheck("function", func)) {
+				func.call(this, root);
+			}
+
+			// hide grid
+			if(this.grid.hide) {
+				root.attr({ display : "none" })
+			}
+
+			return {
+				root : root,
+				scale : this.scale
+			};
+		}
+
+		/**
+		 * @method drawAfter
+		 *
+		 *
+		 *
+		 * @param {Object} obj
+		 * @protected
+		 */
+		this.drawAfter = function(obj) {
+			obj.root.attr({ "class": "grid grid-" + this.grid.type});
+		}
 	}
 
 	CoreGrid.setup = function() {
@@ -9350,8 +9330,6 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 			title: null,
 			/** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
-			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
-			baseline : true,
 			/** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
 			/** @cfg {Function} [image=null]  Determines whether to image the value on an axis. */
@@ -9365,57 +9343,15 @@ jui.define("chart.grid.core", [ "jquery", "util.base", "util.math" ], function($
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
-    /**
-     * @class chart.grid.block
-     * Implements Block Grid
-     * 
-     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
-     * 
-     * @extends chart.grid.core
-     */
+	/**
+	 * @class chart.grid.block
+	 * Implements Block Grid
+	 *
+	 *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] }
+	 *
+	 * @extends chart.grid.core
+	 */
 	var BlockGrid = function() {
-
-		this.getLineForArea = function(orient, area) {
-			if (orient == "right" || orient == "left") {
-				var x  = this.axis.get("x");
-
-				x.orient = (x.orient == "top") ? "top" : "bottom";
-
-				if (x && (x.orient == "top")) {
-					area.y1 += this.scale.rangeBand();
-					area.y2 += this.scale.rangeBand();
-				}
-
-			} else if (orient == "top" || orient == "bottom") {
-				var y  = this.axis.get("y");
-
-				y.orient = y.orient == "right" ? "right" : "left";
-
-				if (y && (y.orient == "left")) {
-					area.x1 += this.scale.rangeBand();
-					area.x2 += this.scale.rangeBand();
-				}
-			}
-
-			return area;
-		}
-
-		this.checkDrawLineTop = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineBottom  = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineLeft = function(index, isLast) {
-			return true;
-		}
-
-		this.checkDrawLineRight = function(index, isLast) {
-			return true;
-		}
-
 
 		/**
 		 * @method top
@@ -9423,96 +9359,52 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 		 * @protected
 		 */
 		this.top = function(g) {
-			this.drawTop(g, this.domain, this.points, null, -this.half_band);
+			this.drawPattern("top", this.domain, this.points, true);
+			this.drawTop(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("top", g);
-
-			var y = this.axis.get('y');
-			var axis = this.chart.svg.group({
-				"transform" : "translate(" + this.end + ", 0)"
-			});
-
-			axis.append(this.line({
-				y1 : (y && y.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
-				y2 : (y && y.hide) ? this.axis.area('height') : -this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
+			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
-        /**
-         * @method bottom
-         *
-         * @protected
-         */
+		/**
+		 * @method bottom
+		 *
+		 * @protected
+		 */
 		this.bottom = function(g) {
-			this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+			this.drawPattern("bottom", this.domain, this.points, true);
+			this.drawBottom(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("bottom", g);
-
-			var y = this.axis.get('y');
-			var axis = this.chart.svg.group({
-				"transform" : "translate(" + this.end + ", 0)"
-			})
-
-			axis.append(this.line({
-				y1 : (y && y.hide) ? this.chart.theme("gridTickBorderSize") : 0,
-				y2 : (y && y.hide) ? -this.axis.area('height') : this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
-
+			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
-        /**
-         * @method left
-         *
-         * @protected
-         */
+		/**
+		 * @method left
+		 *
+		 * @protected
+		 */
 		this.left = function(g) {
-			this.drawLeft(g, this.domain, this.points, null, -this.half_band);
+			this.drawPattern("left", this.domain, this.points, true);
+			this.drawLeft(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("left", g);
-
-			var x = this.axis.get('x');
-
-			var axis = this.chart.svg.group({
-				"transform" : "translate(0, " + this.end + ")"
-			})
-
-			axis.append(this.line({
-				x1 : (x && x.hide) ? -this.chart.theme("gridTickBorderSize") : 0,
-				x2 : (x && x.hide) ? this.axis.area('width') : -this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
-
+			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
-        
-        /**
-         * @method right
-         *
-         * @protected
-         */
+
+		/**
+		 * @method right
+		 *
+		 * @protected
+		 */
 		this.right = function(g) {
-			this.drawRight(g, this.domain, this.points, null, -this.half_band);
+			this.drawPattern("right", this.domain, this.points, true);
+			this.drawRight(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("right", g);
-
-			var x = this.axis.get('x');
-
-			var axis = this.chart.svg.group({
-				"transform" : "translate(0, " + this.end + ")"
-			});
-
-			axis.append(this.line({
-				x1 : (x && x.hide) ? this.chart.theme("gridTickBorderSize") : 0,
-				x2 : (x && x.hide) ? -this.axis.area('width') : this.chart.theme("gridTickBorderSize")
-			}));
-
-			g.append(axis);
+			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
 		/**
 		 * @method initDomain
-         * block grid 에 대한 domain 설정
-		 * @private 
+		 * block grid 에 대한 domain 설정
+		 * @private
 		 */
 		this.initDomain = function() {
 
@@ -9551,20 +9443,18 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
-        /**
-         * @method drawBefore
-         *
-         * @protected
-         */
+		/**
+		 * @method drawBefore
+		 *
+		 * @protected
+		 */
 		this.drawBefore = function() {
-			var domain = this.initDomain();
-
-			var obj = this.getGridSize();
+			var domain = this.initDomain(),
+				obj = this.getGridSize(),
+				range = [ obj.start, obj.end ];
 
 			// scale 설정
 			this.scale = UtilScale.ordinal().domain(domain);
-			var range = [obj.start, obj.end];
-
 			this.scale.rangePoints(range);
 
 			this.start = obj.start;
@@ -9579,12 +9469,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = this.grid.reverse;
 		}
 
-        /**
-         * @method draw 
-         * 
-         * @protected 
-         * @return {Mixed}
-         */
+		/**
+		 * @method draw
+		 *
+		 * @protected
+		 * @return {Mixed}
+		 */
 		this.draw = function() {
 			return this.drawGrid("block");
 		}
@@ -9593,18 +9483,17 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
-            /** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-            /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
+			/** @cfg {Number} [max=10] Sets the maximum value of a grid. */
 			max: 10
 		};
 	}
 
 	return BlockGrid;
 }, "chart.grid.core");
-
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	/**
@@ -9617,28 +9506,27 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	var DateGrid = function() {
 
 		this.top = function(g) {
-			this.drawTop(g, this.ticks, this.values);
+			this.drawPattern("top", this.ticks, this.values);
+			this.drawTop(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
-			this.drawBottom(g, this.ticks, this.values);
+			this.drawPattern("bottom", this.ticks, this.values);
+			this.drawBottom(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
-			this.drawLeft(g, this.ticks, this.values);
+			this.drawPattern("left", this.ticks, this.values);
+			this.drawLeft(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
-			this.drawRight(g, this.ticks, this.values);
+			this.drawPattern("right", this.ticks, this.values);
+			this.drawRight(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("right", g);
-		}
-
-		this.checkDrawRect = function(index, isLast) {
-			//if (isLast) return false;
-			return true;
 		}
 
 		this.wrapper = function(scale, key) {
@@ -9723,15 +9611,19 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 			this.scale = UtilScale.time().domain(domain).range(range);
 
+			// 기본값 설정
+			this.ticks = [];
+
 			if (this.grid.realtime != null && UtilTime[this.grid.realtime] == this.grid.realtime) {
 				this.ticks = this.scale.realTicks(this.grid.realtime, domain.interval);
 			} else {
 				this.ticks = this.scale.ticks("milliseconds", domain.interval);
 			}
 
+			/* data 없을 때도 기본 설정만으로 보여야 하기 때문에. 지우겠음
 			if (this.axis.data.length == 0) {
-				this.ticks = [];
-			}
+				//this.ticks = [];
+			} */
 
 			if ( typeof this.grid.format == "string") {
 				(function(grid, str) {
@@ -9869,7 +9761,7 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 				this.ticks = time.ticks("milliseconds", domain.interval);
 			}
 
-			var len = this.axis.data.length  - 1;
+			var len = this.axis.data.length - 1;
 			var unit = this.grid.unit = Math.abs(range[0] - range[1])/(len);
 
 			if ( typeof this.grid.format == "string") {
@@ -9902,12 +9794,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 		}
 	}
 
-	DateBlockGrid.setup = function() {
-		return {
-
-		};
-	}
-
 	return DateBlockGrid;
 }, "chart.grid.date");
 
@@ -9923,16 +9809,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      */
     var FullBlockGrid = function() {
 
-
-        this.checkDrawRect = function(index, isLast) {
-
-            if (isLast) {
-                return false;
-            }
-
-            return true;
-        }
-
         /**
          * @method top
          *
@@ -9940,7 +9816,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          */
 
         this.top = function(g) {
-            this.drawTop(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("top", this.domain, this.points);
+            this.drawTop(g, this.domain, this.points, null, 0);
             this.drawBaseLine("top", g);
         }
 
@@ -9950,7 +9827,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.bottom = function(g) {
-            this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("bottom", this.domain, this.points);
+            this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
@@ -9960,7 +9838,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.left = function(g) {
-            this.drawLeft(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("left", this.domain, this.points);
+            this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
@@ -9970,7 +9849,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.right = function(g) {
-            this.drawRight(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("right", this.domain, this.points);
+            this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
@@ -10380,47 +10260,47 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawTop(g, this.ticks, this.values, function(tick, index) {
+			this.drawPattern("top", this.ticks, this.values);
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawTop(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
+			}, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawBottom(g, this.ticks, this.values, function(tick, index) {
+			this.drawPattern("bottom", this.ticks, this.values);
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawBottom(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
+			}, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
+			this.drawPattern("left", this.ticks, this.values);
+			var min = this.scale.min(),
+				max = this.scale.max();
 
-			this.drawLeft(g, this.ticks, this.values, function(tick, index) {
+			this.drawLeft(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
-
+			}, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
-			var min = this.scale.min();
-			var max = this.scale.max();
-			this.drawRight(g, this.ticks, this.values, function(tick, index) {
+			this.drawPattern("right", this.ticks, this.values);
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawRight(g, this.ticks, this.values, function(tick) {
 				return tick == 0 && tick != min && tick != max;
-			});
-
+			}, 0);
 			this.drawBaseLine("right", g);
-		}
-
-		this.checkDrawRect = function(index, isLast) {
-			if (isLast) return false;
-			return true;
 		}
 
         this.wrapper = function(scale, key) {
@@ -10652,6 +10532,10 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 			this.step = this.grid.step;
 			this.nice = this.grid.nice;
 			this.ticks = this.scale.ticks(this.step, this.nice);
+
+			if (this.grid.orient == 'left' || this.grid.orient == 'right') {
+				this.ticks.reverse();
+			}
 
 			this.bar = 6;
 

@@ -10,16 +10,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      */
     var FullBlockGrid = function() {
 
-
-        this.checkDrawRect = function(index, isLast) {
-
-            if (isLast) {
-                return false;
-            }
-
-            return true;
-        }
-
         /**
          * @method top
          *
@@ -27,7 +17,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          */
 
         this.top = function(g) {
-            this.drawTop(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("top", this.domain, this.points);
+            this.drawTop(g, this.domain, this.points, null, 0);
             this.drawBaseLine("top", g);
         }
 
@@ -37,7 +28,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.bottom = function(g) {
-            this.drawBottom(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("bottom", this.domain, this.points);
+            this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
@@ -47,7 +39,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.left = function(g) {
-            this.drawLeft(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("left", this.domain, this.points);
+            this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
@@ -57,7 +50,8 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
          * @protected
          */
         this.right = function(g) {
-            this.drawRight(g, this.domain, this.points, null, -this.half_band);
+            this.drawPattern("right", this.domain, this.points);
+            this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
