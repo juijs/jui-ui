@@ -10,25 +10,25 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	var DateGrid = function() {
 
 		this.top = function(g) {
-			this.drawRect("top", this.ticks, this.values);
+			this.drawPattern("top", this.ticks, this.values);
 			this.drawTop(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("top", g);
 		}
 
 		this.bottom = function(g) {
-			this.drawRect("bottom", this.ticks, this.values);
+			this.drawPattern("bottom", this.ticks, this.values);
 			this.drawBottom(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("bottom", g);
 		}
 
 		this.left = function(g) {
-			this.drawRect("left", this.ticks, this.values);
+			this.drawPattern("left", this.ticks, this.values);
 			this.drawLeft(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("left", g);
 		}
 
 		this.right = function(g) {
-			this.drawRect("right", this.ticks, this.values);
+			this.drawPattern("right", this.ticks, this.values);
 			this.drawRight(g, this.ticks, this.values, null, 0);
 			this.drawBaseLine("right", g);
 		}

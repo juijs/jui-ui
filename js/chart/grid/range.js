@@ -9,7 +9,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var RangeGrid = function() {
 		this.top = function(g) {
-			this.drawRect("top", this.ticks, this.values);
+			this.drawPattern("top", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -20,7 +20,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.bottom = function(g) {
-			this.drawRect("bottom", this.ticks, this.values);
+			this.drawPattern("bottom", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -31,7 +31,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.left = function(g) {
-			this.drawRect("left", this.ticks, this.values);
+			this.drawPattern("left", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 
@@ -42,7 +42,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 		}
 
 		this.right = function(g) {
-			this.drawRect("right", this.ticks, this.values);
+			this.drawPattern("right", this.ticks, this.values);
 			var min = this.scale.min(),
 				max = this.scale.max();
 

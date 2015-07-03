@@ -17,23 +17,30 @@
     chart("#chart", {
         height : 800,
         axis : {
-            y : {
-                type : "date",
-                domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
-                interval : 1 * 1000 * 60 * 60,
-                format : "HH:mm",
-                line : 'rect',
-                orient : 'right'
-            },
             x : {
-                type : "fullblock",
-                domain : ["a", "b","c","d","a", "b","c","d","a", "b","c","d","a", "b","c","d","a", "b","c","d","a", "b","c","d"],
+                type : "dateblock",
+                domain : [new Date(2015, 0, 1), new Date(2015, 0, 2)],
+                interval : 6 * 1000 * 60 * 60,
+                format : "HH:mm",
+                line : 'solid',
+                orient : 'top'
+            },
+            y : {
+                type : "range",
+                domain : [ 0, 100 ],
                 orient : 'right',
                 line : 'rect'
-            }
+            },
+            data : [
+                { sales : 10 },
+                { sales : 20 },
+                { sales : 30 },
+                { sales : 40 },
+                { sales : 50 }
+            ]
         },
         brush : {
-            type : "column",
+            type : "scatter",
             target : [ "sales" ]
         },
         widget : [
