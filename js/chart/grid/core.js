@@ -623,8 +623,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			title: null,
 			/** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
-			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
-			baseline : true,
 			/** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
 			/** @cfg {Function} [image=null]  Determines whether to image the value on an axis. */

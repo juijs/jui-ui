@@ -17318,8 +17318,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			title: null,
 			/** @cfg {Boolean} [hide=false] Determines whether to display a line on the axis background. */
 			line: false,
-			/** @cfg {Boolean} [hide=false] Determines whether to display the base line on the axis background. */
-			baseline : true,
 			/** @cfg {Function} [format=null]  Determines whether to format the value on an axis. */
 			format: null,
 			/** @cfg {Function} [image=null]  Determines whether to image the value on an axis. */
@@ -17333,14 +17331,14 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 }, "chart.draw"); 
 jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale, _) {
 
-    /**
-     * @class chart.grid.block
-     * Implements Block Grid
-     * 
-     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] } 
-     * 
-     * @extends chart.grid.core
-     */
+	/**
+	 * @class chart.grid.block
+	 * Implements Block Grid
+	 *
+	 *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] }
+	 *
+	 * @extends chart.grid.core
+	 */
 	var BlockGrid = function() {
 
 		/**
@@ -17352,51 +17350,52 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.drawPattern("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("top", g);
-			this.drawLastLine("top", g);
+			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
-        /**
-         * @method bottom
-         *
-         * @protected
-         */
+		/**
+		 * @method bottom
+		 *
+		 * @protected
+		 */
 		this.bottom = function(g) {
 			this.drawPattern("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("bottom", g);
-			this.drawLastLine("bottom", g);
+			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
-        /**
-         * @method left
-         *
-         * @protected
-         */
+		/**
+		 * @method left
+		 *
+		 * @protected
+		 */
 		this.left = function(g) {
 			this.drawPattern("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("left", g);
-			this.drawLastLine("left", g);
+			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
-        
-        /**
-         * @method right
-         *
-         * @protected
-         */
+
+		/**
+		 * @method right
+		 *
+		 * @protected
+		 */
 		this.right = function(g) {
 			this.drawPattern("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
 			this.drawBaseLine("right", g);
-			this.drawLastLine("right", g);
+			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
 		/**
 		 * @method initDomain
-         * block grid 에 대한 domain 설정
-		 * @private 
+		 * block grid 에 대한 domain 설정
+		 * @private
 		 */
 		this.initDomain = function() {
+
 			var domain = [];
 
 			if (_.typeCheck("string", this.grid.domain)) {
@@ -17429,22 +17428,21 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			}
 
 			return domain;
+
 		}
 
-        /**
-         * @method drawBefore
-         *
-         * @protected
-         */
+		/**
+		 * @method drawBefore
+		 *
+		 * @protected
+		 */
 		this.drawBefore = function() {
-			var domain = this.initDomain();
-
-			var obj = this.getGridSize();
+			var domain = this.initDomain(),
+				obj = this.getGridSize(),
+				range = [ obj.start, obj.end ];
 
 			// scale 설정
 			this.scale = UtilScale.ordinal().domain(domain);
-			var range = [obj.start, obj.end];
-
 			this.scale.rangePoints(range);
 
 			this.start = obj.start;
@@ -17459,16 +17457,12 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = this.grid.reverse;
 		}
 
-		this.drawLastLine = function(position, g) {
-			g.append(this.createGridX(position, this.domain.length, this.end, null, true));
-		}
-
-        /**
-         * @method draw 
-         * 
-         * @protected 
-         * @return {Mixed}
-         */
+		/**
+		 * @method draw
+		 *
+		 * @protected
+		 * @return {Mixed}
+		 */
 		this.draw = function() {
 			return this.drawGrid("block");
 		}
@@ -17477,18 +17471,17 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 	BlockGrid.setup = function() {
 		return {
-            /** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
+			/** @cfg {String/Array/Function} [domain=null] Sets the value displayed on an axis.*/
 			domain: null,
-            /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
+			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
-            /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
+			/** @cfg {Number} [max=10] Sets the maximum value of a grid. */
 			max: 10
 		};
 	}
 
 	return BlockGrid;
 }, "chart.grid.core");
-
 jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], function(UtilTime, UtilScale, _) {
 
 	/**
