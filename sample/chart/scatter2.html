@@ -42,16 +42,27 @@
                 hoverSync : true
                 //symbol: "rectangle"
             }],
-            widget : [
-                { type: "tooltip", all : true, orient: "right", anchor : false },
-                { type: "title", text : "Title", align : 'left' },
-                { type : 'legend' }
-            ],
+            widget : [{
+                type: "tooltip",
+                orient: "left",
+                all : true,
+                line : true
+            }, {
+                type: "title",
+                text : "Title",
+                align : 'left'
+            }, {
+                type : 'legend'
+            }],
             event : {
                 mouseover : function(obj, e) {
                     console.log("on");
                 }
-            }
+            },
+             style : {
+                 tooltipBorderColor : "#333",
+                 tooltipLineColor : "#333"
+             }
         });
 
         c.on("click", function(obj, e) {

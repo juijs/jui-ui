@@ -9,7 +9,7 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
      */
     var TooltipWidget = function(chart, axis, widget) {
         var self = this;
-        var g, text, rect;
+        var g, text, rect, line;
         var padding = 7, anchor = 7, textY = 14;
         var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
 
@@ -86,14 +86,22 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
             for(var i = 0; i < targets.length; i++) {
                 if(targets[i] == obj.dataKey) {
-                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors, targets));
+                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors));
                 }
             }
 
-            return chart.theme("tooltipBorderColor");
+            return null;
         }
 
-        this.drawBefore = function() {
+        this.draw = function() {
+            var group = chart.svg.group(),
+                isActive = false,
+                w, h;
+
+            line = chart.svg.line({
+                "stroke-width": chart.theme("tooltipLineWidth")
+            });
+
             g = chart.svg.group({
                 visibility: "hidden"
             }, function() {
@@ -109,11 +117,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                     y: textY
                 });
             });
-        }
-
-        this.draw = function() {
-            var isActive = false,
-                w, h;
 
             this.on("mouseover", function(obj, e) {
                 if(isActive || !existBrush(obj.brush.index)) return;
@@ -122,16 +125,20 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                 // 툴팁 텍스트 출력
                 printTooltip(obj);
 
-                var size = text.size();
+                var size = text.size(),
+                    borderColor = chart.theme("tooltipBorderColor") || getColorByKey(obj),
+                    lineColor = chart.theme("tooltipLineColor") || getColorByKey(obj);
+
                 w = size.width + (padding * 2);
                 h = size.height + padding;
 
                 rect.attr({
                     points: self.balloonPoints(widget.orient, w, h, (widget.anchor) ? anchor : null),
-                    stroke: getColorByKey(obj)
+                    stroke: borderColor
                 });
 
                 text.attr({ x: w / 2 });
+                line.attr({ visibility: "visible", stroke: lineColor });
                 g.attr({ visibility: "visible" });
 
                 isActive = true;
@@ -140,8 +147,10 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
             this.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var x = e.bgX - (w / 2),
-                    y = e.bgY - h - anchor - (padding / 2);
+                var axis = chart.axis(obj.brush.axis),
+                    x = e.bgX - (w / 2),
+                    y = e.bgY - h - anchor - (padding / 2),
+                    lineX = 2;
 
                 if(widget.orient == "left" || widget.orient == "right") {
                     y = e.bgY - (h / 2) - (padding / 2);
@@ -151,9 +160,17 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
                     x = e.bgX - w - anchor;
                 } else if(widget.orient == "right") {
                     x = e.bgX + anchor;
+                    lineX = -2;
                 } else if(widget.orient == "bottom") {
                     y = e.bgY + (anchor * 2);
                 }
+
+                line.attr({
+                    x1: e.bgX + lineX,
+                    y1: chart.padding("top") + axis.area("y"),
+                    x2: e.bgX + lineX,
+                    y2: chart.padding("top") + axis.area("y2")
+                });
 
                 g.translate(x, y);
             });
@@ -161,11 +178,16 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
             this.on("mouseout", function(obj, e) {
                 if(!isActive) return;
 
+                line.attr({ visibility: "hidden" });
                 g.attr({ visibility: "hidden" });
+
                 isActive = false;
             });
 
-            return g;
+            group.append(line);
+            group.append(g);
+
+            return group;
         }
     }
 
@@ -177,6 +199,8 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
             anchor: true,
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
+            /** @cfg {Boolean} [line=false] Visible Guidelines. */
+            line: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null,
             /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
