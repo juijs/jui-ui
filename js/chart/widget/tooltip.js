@@ -107,25 +107,69 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
             return null;
         }
 
+        function getTooltipXY(e, size, orient) {
+            var x = e.bgX - (size.width / 2),
+                y = e.bgY - size.height - ANCHOR - (PADDING / 2),
+                lineX = 2;
+
+            if(orient == "left" || orient == "right") {
+                y = e.bgY - (size.height / 2) - (PADDING / 2);
+            }
+
+            if(orient == "left") {
+                x = e.bgX - size.width - ANCHOR;
+            } else if(orient == "right") {
+                x = e.bgX + ANCHOR;
+                lineX = -2;
+            } else if(orient == "bottom") {
+                y = e.bgY + (ANCHOR * 2);
+            }
+
+            return {
+                x: x,
+                y: y,
+                c: lineX
+            }
+        }
+
         function setTooltipEvent() {
             var isActive = false,
                 size = null,
-                orient = null;
+                orient = null,
+                axis = null;
 
             self.on("mouseover", function(obj, e) {
                 if(isActive || !existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
-                var tooltip = tooltips[obj.brush.index],
-                    line = tooltip.get(0),
-                    rect = tooltip.get(1).get(0),
-                    text = tooltip.get(1).get(1).translate(0, (widget.orient != "bottom") ? lineHeight : lineHeight + ANCHOR),
-                    borderColor = chart.theme("tooltipBorderColor") || getColorByKey(obj),
-                    lineColor = chart.theme("tooltipLineColor") || getColorByKey(obj);
-
                 // 툴팁 크기 가져오기
                 size = printTooltip(obj);
                 orient = widget.orient;
+                axis = chart.axis(obj.brush.axis);
+
+                // 툴팁 좌표 가져오기
+                var xy = getTooltipXY(e, size, orient),
+                    x = xy.x - chart.padding("left"),
+                    y = xy.y - chart.padding("top");
+
+                // 엑시스 범위를 넘었을 경우 처리
+                if(orient == "left" && x < 0) {
+                    orient = "right";
+                } else if(orient == "right" && x + size.width > axis.area("width")) {
+                    orient = "left";
+                } else if(orient == "top" && y < 0) {
+                    orient = "bottom";
+                } else if(orient == "bottom" && y + size.height > axis.area("height")) {
+                    orient = "top";
+                }
+
+                // 툴팁 엘리먼트 가져오기
+                var tooltip = tooltips[obj.brush.index],
+                    line = tooltip.get(0),
+                    rect = tooltip.get(1).get(0),
+                    text = tooltip.get(1).get(1).translate(0, (orient != "bottom") ? lineHeight : lineHeight + ANCHOR),
+                    borderColor = chart.theme("tooltipBorderColor") || getColorByKey(obj),
+                    lineColor = chart.theme("tooltipLineColor") || getColorByKey(obj);
 
                 rect.attr({
                     points: self.balloonPoints(orient, size.width, size.height, (widget.anchor) ? ANCHOR : null),
@@ -145,34 +189,17 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
 
                 var tooltip = tooltips[obj.brush.index],
                     line = tooltip.get(0),
-                    target = tooltip.get(1);
-
-                var axis = chart.axis(obj.brush.axis),
-                    x = e.bgX - (size.width / 2),
-                    y = e.bgY - size.height - ANCHOR - (PADDING / 2),
-                    lineX = 2;
-
-                if(orient == "left" || orient == "right") {
-                    y = e.bgY - (size.height / 2) - (PADDING / 2);
-                }
-
-                if(orient == "left") {
-                    x = e.bgX - size.width - ANCHOR;
-                } else if(orient == "right") {
-                    x = e.bgX + ANCHOR;
-                    lineX = -2;
-                } else if(orient == "bottom") {
-                    y = e.bgY + (ANCHOR * 2);
-                }
+                    target = tooltip.get(1),
+                    xy = getTooltipXY(e, size, orient);
 
                 line.attr({
-                    x1: e.bgX + lineX,
+                    x1: e.bgX + xy.c,
                     y1: chart.padding("top") + axis.area("y"),
-                    x2: e.bgX + lineX,
+                    x2: e.bgX + xy.c,
                     y2: chart.padding("top") + axis.area("y2")
                 });
 
-                target.translate(x, y);
+                target.translate(xy.x, xy.y);
             });
 
             self.on("mouseout", function(obj, e) {
