@@ -39,14 +39,20 @@
             brush : [{
                 type : 'scatter',
                 size : 10,
-                hoverSync : true
+                hoverSync : true,
                 //symbol: "rectangle"
             }],
             widget : [{
                 type: "tooltip",
                 orient: "left",
-                all : true,
-                line : true
+                all : false,
+                line : true,
+                format : function(k, v) {
+                    return {
+                        key: k,
+                        value: v
+                    }
+                }
             }, {
                 type: "title",
                 text : "Title",
