@@ -1,5 +1,5 @@
 jui.define("chart.widget.legend", [ "util.base" ], function(_) {
-    var WIDTH = 17, HEIGHT = 13, PADDING = 10, RADIUS = 5.5, RATIO = 1.2;
+    var WIDTH = 17, HEIGHT = 13, PADDING = 10, RADIUS = 5.5, RATIO = 1.2, POINT = 2;
 
     /**
      * @class chart.widget.legend
@@ -101,31 +101,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 // 텍스트 길이 구하기
                 var rect = chart.svg.getTextSize(text);
 
-                if(widget.icon != null) {
-                    var icon = _.typeCheck("function", widget.icon) ? widget.icon.apply(chart, [ target ]) : widget.icon,
-                        size = chart.theme("legendFontSize");
-
-                    group.append(chart.text({
-                        x: 0,
-                        y: 0,
-                        "font-size": size,
-                        "fill": color
-                    }, icon));
-
-                    group.append(chart.text({
-                        x : size * RATIO,
-                        y : 0,
-                        "font-size" : size,
-                        "fill" : chart.theme("legendFontColor"),
-                        "text-anchor" : "start"
-                    }, text));
-
-                    arr.push({
-                        icon : group,
-                        width : size + rect.width + (PADDING * 2),
-                        height : HEIGHT + (PADDING / 2)
-                    });
-                } else {
+                if(widget.filter) {
                     group.append(chart.svg.line({
                         x1: 0,
                         x2: WIDTH,
@@ -156,9 +132,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         width : WIDTH + rect.width + (PADDING * 2),
                         height : HEIGHT + (PADDING / 2)
                     });
-                }
 
-                if(widget.filter) {
                     (function(key, element) {
                         element.attr({
                             cursor: "pointer"
@@ -166,30 +140,54 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
                         element.on("click", function(e) {
                             if(columns[brush.index][key]) {
-                                if(widget.icon != null) {
-                                    element.attr({ opacity: 0.7 });
-                                } else {
-                                    element.get(0).attr({ stroke: chart.theme("legendSwitchDisableColor") });
-                                    element.get(2).attr({ fill: chart.theme("legendSwitchDisableColor") });
-                                    element.get(1).attr({ cx: 0 });
-                                }
-
+                                element.get(0).attr({ stroke: chart.theme("legendSwitchDisableColor") });
+                                element.get(2).attr({ fill: chart.theme("legendSwitchDisableColor") });
+                                element.get(1).attr({ cx: 0 });
                                 columns[brush.index][key] = false;
                             } else {
-                                if(widget.icon != null) {
-                                    element.attr({ opacity: 1 });
-                                } else {
-                                    element.get(0).attr({ stroke: colorIndex[key] });
-                                    element.get(2).attr({ fill: chart.theme("legendFontColor") });
-                                    element.get(1).attr({ cx: WIDTH });
-                                }
-
+                                element.get(0).attr({ stroke: colorIndex[key] });
+                                element.get(2).attr({ fill: chart.theme("legendFontColor") });
+                                element.get(1).attr({ cx: WIDTH });
                                 columns[brush.index][key] = true;
                             }
 
                             changeTargetOption((widget.brushSync) ? getBrushAll() : [ brush ]);
                         });
                     })(target, group);
+                } else {
+                    var size = chart.theme("legendFontSize");
+
+                    if(widget.icon != null) {
+                        var icon = _.typeCheck("function", widget.icon) ? widget.icon.apply(chart, [ target ]) : widget.icon;
+
+                        group.append(chart.text({
+                            x: 0,
+                            y: POINT,
+                            "font-size": size,
+                            "fill": color
+                        }, icon));
+                    } else {
+                        group.append(chart.svg.circle({
+                            cx : size / 2,
+                            cy : -POINT,
+                            r : size / 2,
+                            fill : color
+                        }));
+                    }
+
+                    group.append(chart.text({
+                        x : size * RATIO,
+                        y : 0,
+                        "font-size" : size,
+                        "fill" : chart.theme("legendFontColor"),
+                        "text-anchor" : "start"
+                    }, text));
+
+                    arr.push({
+                        icon : group,
+                        width : size + rect.width + (PADDING * 2),
+                        height : HEIGHT + (PADDING / 2)
+                    });
                 }
 			}
 			
