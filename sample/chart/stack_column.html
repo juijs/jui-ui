@@ -14,8 +14,12 @@
 
          c = chart("#chart", {
             height : 400,
+             padding : 100,
             theme : "jennifer",
-
+            icon: {
+                type: "jennifer",
+                path: "../../img/icon-list.ttf"
+            },
             axis : {
                 x : {
                     domain : [ "week1", "week2", "week3", "week4" ],
@@ -48,7 +52,10 @@
                 type : "legend",
                 filter : true,
                 brush : [ 0, 1 ],
-                brushSync : true
+                brushSync : true,
+                orient : "bottom",
+                align: "end"
+                //icon : "{gear}"
             }],
             event : {
                 click : function(obj, e) {
