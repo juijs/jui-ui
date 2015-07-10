@@ -26814,7 +26814,8 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
 
                 tooltips[brush.index] = chart.svg.group({ visibility: "hidden" }, function() {
                     chart.svg.line({
-                        "stroke-width": chart.theme("tooltipLineWidth")
+                        "stroke-width": chart.theme("tooltipLineWidth"),
+                        visibility: (widget.line) ? "visible" : "hidden"
                     });
 
                     chart.svg.group({}, function () {
