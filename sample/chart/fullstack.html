@@ -13,9 +13,12 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
         chart("#chart", {
-            width: 400,
+            width: 800,
             height : 400,
             theme : "jennifer",
+            padding : {
+                right: 100
+            },
             axis : {
                 data : [
                     { name : 2, value : 15, test : 20 },
@@ -45,7 +48,8 @@
             },
             widget : [
                 { type : "title", text : "Column Sample" },
-                { type : "legend", filter : true }
+                { type : "legend", filter : true, orient : "bottom", align: "end" },
+                { type : "tooltip", all : true }
             ],
             event: {
                 click: function(obj, e) {

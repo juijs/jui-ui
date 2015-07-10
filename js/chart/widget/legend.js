@@ -129,7 +129,7 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
 
                     arr.push({
                         icon : group,
-                        width : WIDTH + rect.width + (PADDING * 2),
+                        width : WIDTH + rect.width + (PADDING * 2.5),
                         height : HEIGHT + (PADDING / 2)
                     });
 
@@ -240,9 +240,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             
             // legend 위치  선정
             if (widget.orient == "bottom" || widget.orient == "top") {
-                var y = (widget.orient == "bottom") ?
+                var y = ((widget.orient == "bottom") ?
                     chart.area("y2") + chart.padding("bottom") - max_height :
-                    chart.area("y") - chart.padding("top") + PADDING;
+                    chart.area("y") - chart.padding("top")) + PADDING;
                 
                 if (widget.align == "start") {
                     x = chart.area("x");
@@ -252,9 +252,9 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     x = chart.area("x2") - total_width;
                 }
             } else {
-                var x = (widget.orient == "left") ?
-                    chart.area("x") - chart.padding("left") + PADDING :
-                    chart.area("x2") + chart.padding("right") - max_width;
+                var x = ((widget.orient == "left") ?
+                    chart.area("x") - chart.padding("left") :
+                    chart.area("x2") + chart.padding("right") - max_width) + PADDING;
                 
                 if (widget.align == "start") {
                     y = chart.area("y");
