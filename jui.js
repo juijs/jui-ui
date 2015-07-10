@@ -26737,14 +26737,16 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
                     y = xy.y - chart.padding("top");
 
                 // 엑시스 범위를 넘었을 경우 처리
-                if(orient == "left" && x < 0) {
-                    orient = "right";
-                } else if(orient == "right" && x + size.width > axis.area("width")) {
-                    orient = "left";
-                } else if(orient == "top" && y < 0) {
-                    orient = "bottom";
-                } else if(orient == "bottom" && y + size.height > axis.area("height")) {
-                    orient = "top";
+                if(widget.flip) {
+                    if (orient == "left" && x < 0) {
+                        orient = "right";
+                    } else if (orient == "right" && x + size.width > axis.area("width")) {
+                        orient = "left";
+                    } else if (orient == "top" && y < 0) {
+                        orient = "bottom";
+                    } else if (orient == "bottom" && y + size.height > axis.area("height")) {
+                        orient = "top";
+                    }
                 }
 
                 // 툴팁 엘리먼트 가져오기
@@ -26859,6 +26861,8 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
             all: false,
             /** @cfg {Boolean} [line=false] Visible Guidelines. */
             line: false,
+            /** @cfg {Boolean} [flip=false] When I went out of the area, reversing the tooltip. */
+            flip: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null,
             /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */
