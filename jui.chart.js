@@ -13434,14 +13434,14 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
                         height = Math.abs(zeroXY.y - xy.y),
                         r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
 
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
                     r.translate(startX, startY - col_height);
                     group.append(r);
 
                     col_height += height;
-                }
-
-                if(value != 0) {
-                    this.addEvent(group, i, j);
                 }
 
                 g.append(group);
@@ -13810,6 +13810,10 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                         height = zeroXY.y - this.axis.y.rate(list[j], sum),
                         r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
 
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
                     r.translate(startX, startY - height + top);
                     group.append(r);
 
@@ -13826,7 +13830,6 @@ jui.define("chart.brush.fullstackcolumn3d", [], function() {
                     startY -= height;
                 }
 
-                this.addEvent(group, i, j);
                 g.append(group);
             });
 
