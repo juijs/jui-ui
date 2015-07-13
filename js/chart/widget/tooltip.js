@@ -14,27 +14,27 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
             tooltips = {},
             lineHeight = 0;
 
-        function getFormat(k, v) {
+        function getFormat(k, d) {
             var key = null,
                 value = null;
 
             if(_.typeCheck("function", widget.format)) {
-                var obj =  self.format(k, v);
+                var obj = self.format(d, k);
 
                 if(_.typeCheck("object", obj)) {
                     key = obj.key;
                     value = obj.value;
-                } else if(_.typeCheck("string", obj)) {
+                } else {
                     value = obj;
                 }
             } else {
-                if(k && !v) {
+                if(k && !d) {
                     value = k;
                 }
 
-                if(k && v) {
+                if(k && d) {
                     key = k;
-                    value = self.format(v);
+                    value = self.format(d[k]);
                 }
             }
 
@@ -60,8 +60,8 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
             function setTextInTooltip(targets) {
                 for(var i = 0; i < targets.length; i++) {
                     var key = targets[i],
-                        d = (obj.data != null) ? obj.data[key] : null,
-                        msg = getFormat(key, d);
+                        msg = getFormat(key, obj.data);
+                    console.log(msg);
 
                     texts.get(i).attr({ x: PADDING });
 
