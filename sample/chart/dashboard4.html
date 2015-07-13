@@ -148,8 +148,8 @@
             dy : 90
           }, {
             type : "tooltip",
-            format : function(k, v) {
-              return v;
+            format : function(d, k) {
+              return d[k];
             },
             brush : [ 0, 2, 3, 4 ]
           }],
