@@ -18634,9 +18634,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
                 }
             }
 
-
-            console.log(key + ", " + value);
-
             return {
                 key: key,
                 value: value
