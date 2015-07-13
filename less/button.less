@@ -71,12 +71,12 @@
   
   // 1. purple
   .btn-purple {
-    .btn-bgcolor-2(#f3ebff, #d4bff1);
-    border: 1px solid #c4a9f2;
-    color: #201834;
+    .btn-bgcolor-2(#9c75ec, #885ED5);
+    border: 1px solid #9663f4;
+    color: #fff;
 
     &:hover {
-      .btn-bgcolor-2(#f6f1ff, #e5d2ff);
+      .btn-bgcolor-2(#a57ff2, #8f64de);
     }
 
     &.active, &:active {
@@ -100,12 +100,12 @@
  
   // 2. gray
   .btn-gray {
-    .btn-bgcolor-2(#f5f5f5, #e4e4e4);
-    border: 1px solid #c8c8c8;
+    .btn-bgcolor-2(#ffffff, #ececec);
+    border: 1px solid #cdcdcd;
     color: #201834;
 
     &:hover {
-      .btn-bgcolor-2(#fff, #e9e9e9);
+      .btn-bgcolor-2(#fff, #f3f3f3);
     }
     
     &.active, &:active {
@@ -160,27 +160,21 @@
   // Button Keep
   // --------------------------------------------------
   
-  .btn-keep-base {
-    &:not([disabled]) {
-      .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
-    }
-  }
-  
   .btn-keep-purple {
     &:not([disabled]) {
-      color: #000;
-      border: 1px solid #a484da;
-      .box-shadow(~"rgba(62, 32, 99, 0.6) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0");
-      .btn-bgcolor-2(rgb(201, 168, 244), rgb(227, 210, 255));
+      color: #fff;
+      border: 1px solid #9663f4;
+      .box-shadow(~"rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0");
+      .btn-bgcolor-2(#a57ff2, #8f64de);
     }
   }
   
   .btn-keep-gray {
     &:not([disabled]) {
       color: #000;
-      border: 1px solid #aaaaaa;
+      border: 1px solid #cdcdcd;
       .box-shadow(~"rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0");
-      .btn-bgcolor-2(rgb(225, 225, 225), rgb(245, 245, 245));
+      .btn-bgcolor-2(#ffffff,#ececec);
     }
   }
   
