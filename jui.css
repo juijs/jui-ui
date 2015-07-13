@@ -218,6 +218,8 @@
   text-align: left;
   vertical-align: middle;
   cursor: pointer;
+  *border: 0;
+  text-decoration: none;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
