@@ -107,6 +107,7 @@ module.exports = function(grunt) {
         "js/chart/brush/fullstackcolumn3d.js",
         "js/chart/brush/fullstackcylinder3d.js",
         "js/chart/brush/bubble.js",
+        "js/chart/brush/bubble3d.js", // extends bubble
         "js/chart/brush/candlestick.js",
         "js/chart/brush/ohlc.js",
         "js/chart/brush/equalizer.js",
