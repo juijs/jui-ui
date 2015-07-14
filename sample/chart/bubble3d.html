@@ -15,13 +15,13 @@
         chart("#chart", {
             width: 400,
             height : 400,
-            theme : "jennifer",
+            theme : "dark",
             axis : [{
                 data : [
-                    { name : 1, value : 1 },
-                    { name : 1, value : 1 },
-                    { name : 1, value : 1 },
-                    { name : 1, value : 1 },
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
                 ],
                 x : {
                     type : "fullblock",  // default type is block
@@ -33,21 +33,16 @@
                     step : 10
                 },
                 c : {
-                    type : "grid3d",
-                    domain : [ "sales", "profit", "total" ]
+                    type : "grid3d"
                 },
-                depth : 100,
-                degree : 60
+                depth : 80,
+                degree : 70
             }],
             brush : {
                 type : 'bubble3d',
-                target : [ 'name', 'value'],
+                target : [ 'name', 'value', 'test' ],
                 min : 10,
-                max : 10,
-                colors : [
-                    "radial(50%,50%,50%,50%,50%) 0% #FFFFFF,50% #FF0000",
-                    "radial(50%,50%,50%,50%,50%) 0% #FFFFFF,50% #FFFF00"
-                ]
+                max : 10
             }
         });
 	})
