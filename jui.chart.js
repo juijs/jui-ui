@@ -13881,7 +13881,7 @@ jui.define("chart.brush.bubble", [], function() {
      *
      * @extends chart.brush.core
      */
-	var BubbleBrush = function(chart, axis, brush) {
+	var BubbleBrush = function() {
         var self = this;
 
         /**
@@ -13896,17 +13896,17 @@ jui.define("chart.brush.bubble", [], function() {
          * @param {Number} index
          * @return {GroupElement}
          */
-        function createBubble(chart, brush, pos, color) {
-            var radius = self.getScaleValue(pos.value, axis.y.min(), axis.y.max(), brush.min, brush.max),
-                circle = chart.svg.group();
+        this.createBubble = function(pos, color) {
+            var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
+                circle = this.chart.svg.group();
 
             circle.append(
-                chart.svg.circle({
+                this.chart.svg.circle({
                     r: radius,
                     "fill": color,
-                    "fill-opacity": chart.theme("bubbleBackgroundOpacity"),
+                    "fill-opacity": this.chart.theme("bubbleBackgroundOpacity"),
                     "stroke": color,
-                    "stroke-width": chart.theme("bubbleBorderWidth")
+                    "stroke-width": this.chart.theme("bubbleBorderWidth")
                 })
             ).translate(pos.x, pos.y);
 
@@ -13922,12 +13922,12 @@ jui.define("chart.brush.bubble", [], function() {
          * @param {Array} points
          * @return {GroupElement}
          */
-        this.drawBubble = function(chart, brush, points) {
-            var g = chart.svg.group();
+        this.drawBubble = function(points) {
+            var g = this.chart.svg.group();
             
             for(var i = 0; i < points.length; i++) {
                 for(var j = 0; j < points[i].x.length; j++) {
-                    var b = createBubble(chart, brush, {
+                    var b = this.createBubble({
                         x: points[i].x[j], y: points[i].y[j], value: points[i].value[j]
                     }, this.color(j, i));
 
@@ -13946,7 +13946,7 @@ jui.define("chart.brush.bubble", [], function() {
          * @return {GroupElement}
          */
         this.draw = function() {
-            return this.drawBubble(chart, brush, this.getXY());
+            return this.drawBubble(this.getXY());
         }
 
         /**
@@ -13958,7 +13958,7 @@ jui.define("chart.brush.bubble", [], function() {
             root.each(function(i, elem) {
                 var c = elem.children[0];
 
-                c.append(chart.svg.animateTransform({
+                c.append(self.chart.svg.animateTransform({
                     attributeType: "xml",
                     attributeName: "transform",
                     type: "scale",
@@ -13969,11 +13969,11 @@ jui.define("chart.brush.bubble", [], function() {
                     repeatCount: "1"
                 }));
 
-                c.append(chart.svg.animate({
+                c.append(self.chart.svg.animate({
                     attributeType: "xml",
                     attributeName: "fill-opacity",
                     from: "0",
-                    to: chart.theme("bubbleBackgroundOpacity"),
+                    to: self.chart.theme("bubbleBackgroundOpacity"),
                     dur: "1.4s",
                     repeatCount: "1",
                     fill: "freeze"
@@ -13993,6 +13993,42 @@ jui.define("chart.brush.bubble", [], function() {
 
 	return BubbleBrush;
 }, "chart.brush.core");
+jui.define("chart.brush.bubble3d", [], function() {
+
+    /**
+     * @class chart.brush.bubble3d
+     * @extends chart.brush.core
+     */
+	var Bubble3DBrush = function() {
+		this.draw = function() {
+            var g = this.chart.svg.group(),
+                count = this.brush.target.length;
+
+            this.eachData(function(i, data) {
+                for(var j = 0; j < count; j++) {
+                    var value = data[this.brush.target[j]],
+                        xy = this.axis.c(i, value, j, count),
+                        dx = Math.cos(this.axis.c.radian) * xy.depth,
+                        dy = Math.sin(this.axis.c.radian) * xy.depth,
+                        startX = xy.x + dx / 2,
+                        startY = xy.y - dy / 2;
+
+                    var b = this.createBubble({
+                        x: startX, y: startY, value: value
+                    }, this.color(i, j));
+
+                    this.addEvent(b, i, j);
+                    g.append(b);
+                }
+            });
+
+            return g;
+		}
+	}
+
+	return Bubble3DBrush;
+}, "chart.brush.bubble");
+
 jui.define("chart.brush.candlestick", [], function() {
 
     /**

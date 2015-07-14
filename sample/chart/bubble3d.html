@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    jui.ready(["chart.builder"], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "jennifer",
+            axis : [{
+                data : [
+                    { name : 1, value : 1 },
+                    { name : 1, value : 1 },
+                    { name : 1, value : 1 },
+                    { name : 1, value : 1 },
+                ],
+                x : {
+                    type : "fullblock",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ]
+                },
+                y : {
+                    type : 'range',
+                    domain : [ 0, 5 ],
+                    step : 10
+                },
+                c : {
+                    type : "grid3d",
+                    domain : [ "sales", "profit", "total" ]
+                },
+                depth : 100,
+                degree : 60
+            }],
+            brush : {
+                type : 'bubble3d',
+                target : [ 'name', 'value'],
+                min : 10,
+                max : 10,
+                colors : [
+                    "radial(50%,50%,50%,50%,50%) 0% #FFFFFF,50% #FF0000",
+                    "radial(50%,50%,50%,50%,50%) 0% #FFFFFF,50% #FFFF00"
+                ]
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>
