@@ -26704,7 +26704,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
                 for(var i = 0; i < targets.length; i++) {
                     var key = targets[i],
                         msg = getFormat(key, obj.data);
-                    console.log(msg);
 
                     texts.get(i).attr({ x: PADDING });
 
