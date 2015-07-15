@@ -14,7 +14,6 @@
     }
     
     .dropdown-normal;
-    .dropdown-white;
   }
   
   
@@ -53,6 +52,8 @@
         right: 0;
         left: auto;
       }
+
+      .dropdown-scroll;
     }
   }
   
@@ -79,64 +80,6 @@
     }
   }
 
-
-  // Dropdown Colors
-  // -----------
-  .dropdown-white {
-    ul {
-      background-color: #fff;
-      border: 1px solid #ccc; // Fallback for IE7-8
-      border: 1px solid rgba(0,0,0,.2);
-      
-      > li {
-        color: #333;
-	      
-	    &:hover:not(.divider):not(.title),
-	    &:focus:not(.divider):not(.title),
-	    &.active {
-	    	#gradient > .vertical(#9a73f3, #693cc6);
-	        color: #fff;
-		}
-      }
-
-      > li.divider {
-        .nav-divider(#e5e5e5, #fff);
-      }
-      
-      .dropdown-scroll-white;
-    }
-    
-    .anchor {
-      .anchor-top();
-    }
-  }
-  .dropdown-black {
-    ul {
-      background-color: #434343;
-      border: 1px solid #000000; // Fallback for IE7-8
-      
-      > li {
-        color: #fff;
-        
-        &:hover:not(.divider):not(.title),
-	    &:focus:not(.divider):not(.title),
-	    &.active {
-	    	#gradient > .vertical(#9a73f3, #693cc6);
-	        color: #fff;
-		}
-      }
-      
-      > li.divider {
-        .nav-divider(#434343, #626262);
-      }
-      
-      .dropdown-scroll-black;	
-    }
-    
-    .anchor {
-      .anchor-top(#434343, #434343);
-    }
-  }
 
   // Dropdown Angular
   // ----------------------
@@ -192,7 +135,8 @@
       }
     }
   }
-  
+
+
   // Dropups
   .dropup .submenu > ul {
     top: auto;
@@ -201,42 +145,16 @@
     margin-bottom: -2px;
     .border-radius(5px 5px 5px 0);
   }
-  
+
+
   // Large
   .dropdown-large .submenu > *:first-child:after {
     margin-right: -10px !important;
   }
-  
-  
-  // Scroll
-  // ------------
-  .dropdown-scroll-white {
-  	&::-webkit-scrollbar-thumb {
-	    background: #c8c8c8;
-	    border: 1px solid #b8b8b8;
-	    .border-radius(5px);
-	    
-	    &:hover {
-	      background: #8a8a8a;
-	      border: 1px solid #737373;
-	    }
-  	}
-  }
-  
-  .dropdown-scroll-black {
-  	&::-webkit-scrollbar-thumb {
-	    background: #7a7a7a;
-	    border: 1px solid #636363;
-	    .border-radius(5px);
-	    
-	    &:hover {
-	      background: #8a8a8a;
-	      border: 1px solid #737373;
-	    }
-  	}
-  }
 
-  .dropdown-scroll-white, .dropdown-scroll-black {
+
+  // Scroll
+  .dropdown-scroll {
     &::-webkit-scrollbar {
       // Webkit Scroll Size
       width: 10px;
@@ -255,9 +173,5 @@
       	width: 100%;
       }
     }
-  }
-
-  .combo-black {
-    .dropdown-black !important;
   }
 }

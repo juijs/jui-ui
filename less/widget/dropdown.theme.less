@@ -1,0 +1,51 @@
+.jui {
+  .dropup, .dropdown, .combo {
+    .dropdown-white;
+  }
+
+  // Dropdown Colors
+  // -----------
+  .dropdown-white {
+    ul {
+      background-color: @dropdownBackgroundColor;
+      border: 1px solid #ccc; // Fallback for IE7-8
+      border: 1px solid @dropdownBorderColor;
+      
+      > li {
+        color: @dropdownFontColor;
+	      
+	    &:hover:not(.divider):not(.title),
+	    &:focus:not(.divider):not(.title),
+	    &.active {
+	    	#gradient > .vertical(@dropdownActiveBackgroundColor1, @dropdownActiveBackgroundColor2);
+	        color: @dropdownActiveFontColor;
+		}
+      }
+
+      > li.divider {
+        .nav-divider(@dropdownDividerLineColor1, @dropdownDividerLineColor2);
+      }
+      
+      .dropdown-scroll-white;
+    }
+    
+    .anchor {
+      .anchor-top();
+    }
+  }
+  
+  // Scroll
+  // ------------
+  .dropdown-scroll-white {
+  	&::-webkit-scrollbar-thumb {
+	    background: @dropdownScrollBackgroundColor;
+	    border: 1px solid @dropdownScrollBorderColor;
+	    .border-radius(5px);
+	    
+	    &:hover {
+	      background: @dropdownScrollHoverBackgroundColor;
+	      border: 1px solid @dropdownScrollHoverBorderColor;
+	    }
+  	}
+  }
+}
