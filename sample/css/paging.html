@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <META charset="UTF-8">
+    <title>[JUI Library] - CSS/Accordion</title>
+
+    <link rel="stylesheet" href="../../dist/jui.css" />
+    <link rel="stylesheet" href="../../dist/jennifer.theme.css" />
+    <style>
+        .col {
+            padding: 50px;
+        }
+    </style>
+</head>
+<body class="jui">
+
+
+<section>
+    <h2>Default</h2>
+    <p>
+        페이징의 기본 가로 크기는 100%입니다.<br/>
+        그렇기 때문에 가로 크기를 제한하고 싶을 경우에는 아래와 같이 직접 가로 크기를 넣어주면 됩니다.
+
+<pre><code class="language-markup">&lt;div class="paging" style="width: 500px;"&gt;
+    &lt;a href="#" class="prev"&gt;Previous&lt;/a&gt;
+    &lt;div class="list"&gt;
+    &lt;a href="#"&gt;1&lt;/a&gt;
+    &lt;a href="#" class="active"&gt;2&lt;/a&gt;
+    &lt;a href="#"&gt;3&lt;/a&gt;
+    &lt;a href="#"&gt;4&lt;/a&gt;
+    &lt;a href="#"&gt;5&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;a href="#" class="next"&gt;Next&lt;/a&gt;
+    &lt;/div&gt;</code></pre>
+    </p>
+    <p class="br">
+    <div class="paging" style="width: 500px;">
+        <a href="#" class="prev">Previous</a>
+        <div class="list">
+            <a href="#">1</a>
+            <a href="#" class="active">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+        </div>
+        <a href="#" class="next">Next</a>
+    </div><br/>
+    </p>
+
+    <p>
+        페이징은 좀 더 큰 크기인 <strong>paging-large</strong> 옵션을 제공합니다.
+
+<pre><code class="language-markup">&lt;div class="paging paging-large"&gt;
+    ...
+    &lt;/div&gt;</code></pre>
+    </p>
+    <p class="br">
+    <div class="paging large">
+        <a href="#" class="prev">Previous</a>
+        <div class="list">
+            <a href="#">1</a>
+            <a href="#" class="active">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">7</a>
+            <a href="#">8</a>
+            <a href="#">9</a>
+            <a href="#">...</a>
+            <a href="#">100</a>
+        </div>
+        <a href="#" class="next">Next</a>
+    </div>
+    </p>
+</section>
+
+
+</body>
+</html>

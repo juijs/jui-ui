@@ -1,0 +1,21 @@
+.jui {
+  .paging {
+	* {
+	  background-color: @pagingBackgroundColor;
+	  border: 1px solid @pagingBorderColor;
+	  color: @pagingFontColor;
+	}
+
+	.list > * {
+	  &:hover {
+		background-color: @pagingListHoverBackgroundColor;
+	  }
+
+	  &.active {
+		background-color: @pagingListActiveBackgroundColor;
+		color: @pagingListActiveFontColor;
+		cursor: default;
+	  }
+	}
+  }
+}
