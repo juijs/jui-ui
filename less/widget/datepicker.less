@@ -99,15 +99,14 @@
       }
     }
 
-    .datepicker-white;
-    .datepicker-normal;
+    .datepicker.normal;
   }
 
 
   // Calendar Sizes
   // --------------------------------------------------
 
-  .datepicker-normal {
+  .datepicker.normal {
     > table.body {
       border-top-width: 0px;
 
@@ -125,7 +124,7 @@
     }
   }
 
-  .datepicker-large {
+  .datepicker.large {
     > table.body {
       border-top-width: 1px;
 
@@ -139,61 +138,5 @@
       }
     }
   }
-  
-  
-  // Calendar Colors
-  // --------------------------------------------------
 
-  .datepicker-white {
-    border: 1px solid #cdcdcd;
-    background: #fff;
-
-    > .head {
-      > .prev {
-        border-color: transparent #dcdcdc transparent transparent;
-      }
-      > .next {
-        border-color: transparent transparent transparent #dcdcdc;
-      }
-
-      > .title {
-        color: #333;
-      }
-    }
-
-    > table.body {
-      border-top-color: #ebebeb;
-
-      th {
-        border-bottom: 1px solid #ebebeb;
-      }
-
-      th {
-        color: #c1c1c1;
-      }
-
-      td {
-        color: #333;
-
-        &.none {
-          color: transparent;
-        }
-
-        &.now {
-          color: #6600cc;
-          font-weight: bold;
-        }
-
-        &.active {
-          color: #fff;
-          background-color: #9167ca;
-          .box-shadow(~"inset rgba(0, 0, 0, 0.1) 0 1px 2px");
-        }
-
-        &:hover:not(.active):not(.none) {
-          background-color: #f8f3ff;
-        }
-      }
-    }
-  }
 }
