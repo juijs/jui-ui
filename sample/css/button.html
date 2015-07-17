@@ -4,7 +4,9 @@
 <META charset="UTF-8">
 <title>[JUI Library] - CSS/Button</title>
 
-<link rel="stylesheet" href="../../jui.css" />
+	<link rel="stylesheet" href="../../dist/jui.css" />
+	<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
+
 </head>
 <body class="jui">
 
@@ -14,285 +16,26 @@
 
 
 <section>
-	<h2>Default</h2>
-	<p>
-		Button provides a total of 4 styles including the basic type. The user can designate the button style when the button is pressed.
-	</p>
-	<table class="table_s" cellpadding="0" cellspacing="0">
-		<tr>
-			<td width="150px">Button</td>
-			<td width="300px">Class</td>
-			<td width="350px">Description</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn">Default</a>
-			</td>
-			<td>
-				btn
-			</td>
-			<td>Basic button (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray">Gray</a>
-			</td>
-			<td>
-				btn btn-gray
-			</td>
-			<td>Gray button (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray-purple">Gray-Purple</a>
-			</td>
-			<td>
-				btn btn-gray-purple
-			</td>
-			<td>Gray button, changed to purple when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray-black">Gray-Black</a>
-			</td>
-			<td>
-				btn btn-gray-black
-			</td>
-			<td>Gray button, changed to black when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-gray disabled
-			</td>
-			<td>Gray button, disabled</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple">Purple</a>
-			</td>
-			<td>
-				btn btn-purple
-			</td>
-			<td>Purple button (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple-gray">Purple-Gray</a>
-			</td>
-			<td>
-				btn btn-purple-gray
-			</td>
-			<td>Purple button, changed to gray when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple-black">Purple-Black</a>
-			</td>
-			<td>
-				btn btn-purple-black
-			</td>
-			<td>Purple button, changed to black when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-purple disabled
-			</td>
-			<td>Purple button, disabled</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black">Black</a>
-			</td>
-			<td>
-				btn btn-black
-			</td>
-			<td>Black button (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black-purple">Black-Purple</a>
-			</td>
-			<td>
-				btn btn-black-purple
-			</td>
-			<td>Black button, changed to purple when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black-gray">Black-Gray</a>
-			</td>
-			<td>
-				btn btn-black-gray
-			</td>
-			<td>Black button, changed to gray when clicked (4 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-black disabled
-			</td>
-			<td>Black button, disabled</td>
-		</tr>
-
-		<tr>
-			<td>
-				<a class="btn btn-gray btn-flat btn-rect">Gray</a>
-			</td>
-			<td>
-				btn btn-gray btn-flat btn-rect
-			</td>
-			<td>Gray button, rectangular form</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray-purple btn-flat btn-rect">Gray-Purple</a>
-			</td>
-			<td>
-				btn btn-gray-purple btn-flat btn-rect
-			</td>
-			<td>Gray button, changed to purple when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray-black btn-flat btn-rect">Gray-Black</a>
-			</td>
-			<td>
-				btn btn-gray-black btn-flat btn-rect
-			</td>
-			<td>Gray button, changed to black when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-gray btn-flat btn-rect" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-gray btn-flat btn-rect disabled
-			</td>
-			<td>Gray button, disabled/rectangular form</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple btn-flat btn-rect">Purple</a>
-			</td>
-			<td>
-				btn btn-gray btn-flat btn-rect
-			</td>
-			<td>Purple button, rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple-gray btn-flat btn-rect">Purple-Gray</a>
-			</td>
-			<td>
-				btn btn-purple-gray btn-flat btn-rect
-			</td>
-			<td>Purple button, changed to gray when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple-black btn-flat btn-rect">Purple-Black</a>
-			</td>
-			<td>
-				btn btn-purple-black btn-flat btn-rect
-			</td>
-			<td>Purple button, changed to black when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-purple btn-flat btn-rect" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-purple btn-flat btn-rect disabled
-			</td>
-			<td>Purple button, disabled/rectangular form</td>
-		</tr>
-
-		<tr>
-			<td>
-				<a class="btn btn-black btn-flat btn-rect">Black</a>
-			</td>
-			<td>
-				btn btn-black btn-flat btn-rect
-			</td>
-			<td>Black button, rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black-purple btn-flat btn-rect">Black-Purple</a>
-			</td>
-			<td>
-				btn btn-black-purple btn-flat btn-rect
-			</td>
-			<td>Black button, changed to purple when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black-gray btn-flat btn-rect">Black-Gray</a>
-			</td>
-			<td>
-				btn btn-black-gray btn-flat btn-rect
-			</td>
-			<td>Black button, changed to gray when clicked/rectangular form (2 tones)</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-black btn-flat btn-rect" disabled>Disabled</a>
-			</td>
-			<td>
-				btn btn-black btn-flat btn-rect disabled
-			</td>
-			<td>Black button, disabled/rectangular form</td>
-		</tr>
-	</table>
-</section>
-
-<section>
 	<h2>Size</h2>
 	<p>
 		4 sizes of buttons are available.
 
 	<table class="table_s table-bordered table-striped"><tr><td>
 		<p>
-			<a class="btn btn-large btn-purple">Large button</a> <a class="btn btn-large btn-gray"> Large button</a>
+			<a class="btn large">Large button</a> <a class="btn large" disabled> Large button</a>
 		</p>
 		<p>
-			<a class="btn btn-normal btn-purple">Default button</a> <a class="btn btn-normal btn-gray"> Default button</a>
+			<a class="btn normal">Default button</a> <a class="btn normal"> Default button</a>
 		</p>
 		<p>
-			<a class="btn btn-small btn-purple">Small button</a> <a class="btn btn-small btn-gray"> Small button</a>
+			<a class="btn small focus">Small button</a> <a class="btn small" disabled> Small button</a>
 		</p>
 		<p>
-			<a class="btn btn-mini btn-purple">Mini button</a> <a class="btn btn-mini btn-gray"> Mini button</a>
+			<a class="btn mini focus">Mini button</a> <a class="btn mini"> Mini button</a>
 		</p>
 	</td></tr></table>
 	</p>
 
-	<p class="br">
-<pre><code class="language-markup">&lt;p&gt;
-	&lt;a class=&quot;btn btn-large btn-purple&quot;&gt;Large button&lt;/a&gt;
-	&lt;a class=&quot;btn btn-large btn-gray&quot;&gt;Large button&lt;/a&gt;
-	&lt;/p&gt;
-	&lt;p&gt;
-	&lt;a class=&quot;btn btn-normal btn-purple&quot;&gt;Default button&lt;/a&gt;
-	&lt;a class=&quot;btn btn-normal btn-gray&quot;&gt;Default button&lt;/a&gt;
-	&lt;/p&gt;
-	&lt;p&gt;
-	&lt;a class=&quot;btn btn-small btn-purple&quot;&gt;Small button&lt;/a&gt;
-	&lt;a class=&quot;btn btn-small btn-gray&quot;&gt;Small button&lt;/a&gt;
-	&lt;/p&gt;
-	&lt;p&gt;
-	&lt;a class=&quot;btn btn-mini btn-purple&quot;&gt;Mini button&lt;/a&gt;
-	&lt;a class=&quot;btn btn-mini btn-gray&quot;&gt;Mini button&lt;/a&gt;
-	&lt;/p&gt;</code></pre>
-	</p>
 </section>
 
 

@@ -1061,3 +1061,75 @@
   border: 1px solid #fce5bb;
   color: #666666;
 }
+.jui .outline,
+.jui .outline * {
+  outline: 1px solid #7fa5f6;
+}
+.jui .btn {
+  color: #201834;
+  border: 1px solid #cdcdcd;
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #ececec 100%);
+}
+.jui .btn:hover {
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
+}
+.jui .btn.active:not([disabled]),
+.jui .btn:active:not([disabled]) {
+  color: #000000;
+  border: 1px solid #cdcdcd;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #ececec 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #ececec 100%);
+}
+.jui .btn.focus {
+  color: #ffffff;
+  border: 1px solid #9663f4;
+  background-color: #9c75ec;
+  background-image: -moz-linear-gradient(top, #9c75ec 0%, #885ed5 100%);
+  background-image: linear-gradient(top, #9c75ec 0%, #885ed5 100%);
+  background-image: -webkit-linear-gradient(top, #9c75ec 0%, #885ed5 100%);
+  background-image: -o-linear-gradient(top, #9c75ec 0%, #885ed5 100%);
+  background-image: -ms-linear-gradient(top, #9c75ec 0%, #885ed5 100%);
+}
+.jui .btn.focus:hover {
+  background-color: #a57ff2;
+  background-image: -moz-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -webkit-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -o-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -ms-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+}
+.jui .btn.focus.active:not([disabled]),
+.jui .btn.focus:active:not([disabled]) {
+  color: #ffffff;
+  border: 1px solid #9663f4;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0;
+  background-color: #a57ff2;
+  background-image: -moz-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -webkit-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -o-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+  background-image: -ms-linear-gradient(top, #a57ff2 0%, #8f64de 100%);
+}
+.jui .btn[disabled],
+.jui .disabled {
+  opacity: 0.5;
+}
