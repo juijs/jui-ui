@@ -269,31 +269,26 @@
   -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
   box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
 }
-.jui .navbar ul.nav li,
-.jui .navbar ul.nav-right li {
+.jui .navbar ul.nav li {
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
 }
-.jui .navbar ul.nav li.active,
-.jui .navbar ul.nav-right li.active {
+.jui .navbar ul.nav li.active {
   color: #555555;
   background-color: #f2f2f2;
   -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
   -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
 }
-.jui .navbar ul.nav li a,
-.jui .navbar ul.nav-right li a {
+.jui .navbar ul.nav li a {
   color: #777777;
 }
 .jui .navbar ul.nav li a:focus,
-.jui .navbar ul.nav-right li a:focus,
-.jui .navbar ul.nav li a:hover,
-.jui .navbar ul.nav-right li a:hover {
+.jui .navbar ul.nav li a:hover {
   background-color: transparent;
   color: #333333;
 }
-.jui .navbar .inline-line {
+.jui .navbar .hr {
   background-color: #dcdcdc;
 }
 .jui .navbar.flat {
@@ -308,7 +303,7 @@
   -moz-box-shadow: 0 !important;
   box-shadow: 0 !important;
 }
-.jui .navbar.flat .inline-line {
+.jui .navbar.flat .hr {
   background-color: #dcdcdc;
 }
 .jui {

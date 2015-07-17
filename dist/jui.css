@@ -2434,31 +2434,27 @@
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .navbar ul.nav,
-.jui .navbar ul.nav-right {
+.jui .navbar ul.nav {
   display: inline-block;
   list-style: none;
   margin-left: -40px;
 }
-.jui .navbar ul.nav li,
-.jui .navbar ul.nav-right li {
+.jui .navbar ul.nav li {
   margin: -5px 0px -5px 0px;
   padding: 7.5px 12px 7.5px 12px;
   float: left;
 }
-.jui .navbar ul.nav li a,
-.jui .navbar ul.nav-right li a {
+.jui .navbar ul.nav li a {
   text-decoration: none;
 }
-.jui .navbar ul.nav-right {
+.jui .navbar ul.nav.right {
   float: right;
 }
 .jui .navbar > * {
   margin: 0;
   vertical-align: middle;
 }
-.jui .navbar.fixed-top,
-.jui .navbar.fixed-bottom {
+.jui .navbar.fixed {
   position: fixed;
   right: 0;
   left: 0;
@@ -2470,11 +2466,11 @@
   -moz-border-radius: 0;
   border-radius: 0;
 }
-.jui .navbar.fixed-top {
+.jui .navbar.fixed.top {
   top: 0;
   border-width: 0 0 1px;
 }
-.jui .navbar.fixed-bottom {
+.jui .navbar.fixed.bottom {
   bottom: 0;
   border-width: 1px 0 0;
 }
@@ -2485,19 +2481,19 @@
 .jui .navbar .inline > * {
   margin-right: 3px;
 }
-.jui .navbar .inline-right {
+.jui .navbar .inline.right {
   display: inline;
   float: right;
   margin-right: 0px;
 }
-.jui .navbar .inline-row {
+.jui .navbar .row {
   display: block;
   margin-bottom: 5px;
 }
-.jui .navbar .inline-row:last-child {
+.jui .navbar .row:last-child {
   margin-bottom: 0px !important;
 }
-.jui .navbar .inline-line {
+.jui .navbar .hr {
   display: block;
   height: 1px;
   margin-bottom: 5px;

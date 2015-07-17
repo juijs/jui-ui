@@ -7,7 +7,7 @@
   }
   
   .navbar {
-    ul.nav, ul.nav-right {
+    ul.nav {
       display: inline-block;
       list-style: none;
       margin-left: -40px;
@@ -23,7 +23,7 @@
       }
     }
     
-    ul.nav-right {
+    ul.nav.right {
       float: right;
     }
   }
@@ -38,8 +38,7 @@
   // -------------------------
   
   // Shared (top/bottom) styles
-  .navbar.fixed-top,
-  .navbar.fixed-bottom {
+  .navbar.fixed {
     position: fixed;
     right: 0;
     left: 0;
@@ -50,12 +49,12 @@
     .border-radius(0);
   }
   
-  .navbar.fixed-top {
+  .navbar.fixed.top {
     top: 0;
     border-width: 0 0 1px;
   }
   
-  .navbar.fixed-bottom {
+  .navbar.fixed.bottom {
     bottom: 0;
     border-width: 1px 0 0;
   }
@@ -74,22 +73,22 @@
         margin-right: 3px;
     }
 
-    .inline-right {
+    .inline.right {
         display: inline;
         float: right;
         margin-right: 0px;
     }
 
-    .inline-row {
+    .row {
         display: block;
         margin-bottom: 5px;
     }
 
-    .inline-row:last-child {
+    .row:last-child {
         margin-bottom: 0px !important;
     }
 
-    .inline-line {
+    .hr {
         display: block;
         height: 1px;
         margin-bottom: 5px;
