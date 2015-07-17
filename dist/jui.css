@@ -747,14 +747,9 @@
 .jui .dropup > .anchor,
 .jui .dropdown > .anchor,
 .jui .combo > .anchor {
-  left: 30px !important;
-  top: -9px !important;
-  z-index: 1001 !important;
-}
-.jui .dropup > .anchor-right,
-.jui .dropdown > .anchor-right,
-.jui .combo > .anchor-right {
-  left: 80% !important;
+  left: 30px;
+  top: -9px;
+  z-index: 1001;
 }
 .jui .dropup ul > li:not(.divider),
 .jui .dropdown ul > li:not(.divider),
@@ -800,9 +795,9 @@
   color: inherit;
   text-decoration: none;
 }
-.jui .dropup ul.pull-right,
-.jui .dropdown ul.pull-right,
-.jui .combo ul.pull-right {
+.jui .dropup ul.right,
+.jui .dropdown ul.right,
+.jui .combo ul.right {
   right: 0;
   left: auto;
 }
@@ -857,12 +852,12 @@
   margin-top: 5px;
   margin-right: 0px;
 }
-.jui .dropup .submenu.pull-left,
-.jui .dropdown .submenu.pull-left {
+.jui .dropup .submenu.left,
+.jui .dropdown .submenu.left {
   float: none;
 }
-.jui .dropup .submenu.pull-left > ul,
-.jui .dropdown .submenu.pull-left > ul {
+.jui .dropup .submenu.left > ul,
+.jui .dropdown .submenu.left > ul {
   left: -100%;
 }
 .jui .dropup .submenu > ul {
@@ -870,16 +865,9 @@
   bottom: 0;
   margin-top: 0;
   margin-bottom: -2px;
-  -webkit-border-radius: 5px 5px 5px 0;
-  -moz-border-radius: 5px 5px 5px 0;
-  border-radius: 5px 5px 5px 0;
 }
 .jui .dropdown.large .submenu > *:first-child:after {
   margin-right: -10px !important;
-}
-.jui .dropdown.scroll::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
 }
 .jui .combo ul {
   display: none;

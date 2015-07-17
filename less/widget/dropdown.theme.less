@@ -39,19 +39,23 @@
     }
   }
 
-  .dropup, .dropdown {
-    // Default dropdowns
+  .dropdown {
     .submenu > ul {
       .border-radius(0 @dropdownBorderRadius @dropdownBorderRadius @dropdownBorderRadius);
     }
 
-    // Left aligned submenus
-    .submenu.pull-left > ul {
+    .submenu.left > ul {
       .border-radius(@dropdownBorderRadius 0 @dropdownBorderRadius @dropdownBorderRadius);
     }
   }
 
-  .dropup .submenu > ul {
-    .border-radius(@dropdownBorderRadius @dropdownBorderRadius @dropdownBorderRadius 0);
+  .dropup {
+    .submenu > ul {
+      .border-radius(@dropdownBorderRadius @dropdownBorderRadius @dropdownBorderRadius 0);
+    }
+
+    .submenu.left > ul {
+      .border-radius(@dropdownBorderRadius @dropdownBorderRadius 0 @dropdownBorderRadius);
+    }
   }
 }

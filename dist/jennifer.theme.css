@@ -144,14 +144,12 @@
   border-left: 9px solid transparent;
   border-bottom: 9px solid #ffffff;
 }
-.jui .dropup .submenu > ul,
 .jui .dropdown .submenu > ul {
   -webkit-border-radius: 0 6px 6px 6px;
   -moz-border-radius: 0 6px 6px 6px;
   border-radius: 0 6px 6px 6px;
 }
-.jui .dropup .submenu.pull-left > ul,
-.jui .dropdown .submenu.pull-left > ul {
+.jui .dropdown .submenu.left > ul {
   -webkit-border-radius: 6px 0 6px 6px;
   -moz-border-radius: 6px 0 6px 6px;
   border-radius: 6px 0 6px 6px;
@@ -160,6 +158,11 @@
   -webkit-border-radius: 6px 6px 6px 0;
   -moz-border-radius: 6px 6px 6px 0;
   border-radius: 6px 6px 6px 0;
+}
+.jui .dropup .submenu.left > ul {
+  -webkit-border-radius: 6px 6px 0 6px;
+  -moz-border-radius: 6px 6px 0 6px;
+  border-radius: 6px 6px 0 6px;
 }
 .jui .datepicker {
   border: 1px solid #cdcdcd;
