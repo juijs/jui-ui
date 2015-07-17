@@ -7,6 +7,8 @@
 /* Not supported */
 /* Not supported */
 /* Not supported */
+/* Supported */
+/* Not supported */
 .clearfix {
   *zoom: 1;
 }
@@ -639,4 +641,62 @@
 .jui .panel > .body {
   background-color: #ffffff;
   border: 1px solid #dcdcdc;
+}
+.jui .tooltip {
+  opacity: 0.9;
+}
+.jui .tooltip > .message {
+  color: #000000;
+  background-color: #ededed;
+}
+.jui .tooltip > .anchor {
+  border-color: transparent;
+}
+.jui .tooltip.top > .anchor {
+  border-top-color: #ededed;
+}
+.jui .tooltip.bottom > .anchor {
+  border-bottom-color: #ededed;
+}
+.jui .tooltip.left > .anchor {
+  border-left-color: #ededed;
+}
+.jui .tooltip.right > .anchor {
+  border-right-color: #ededed;
+}
+.jui .h1,
+.jui .h2,
+.jui .h3,
+.jui .h4,
+.jui .h5,
+.jui .h6 {
+  color: #333333;
+}
+.jui .h1 > small,
+.jui .h2 > small,
+.jui .h3 > small,
+.jui .h4 > small,
+.jui .h5 > small,
+.jui .h6 > small,
+.jui .h1 .sub,
+.jui .h2 .sub,
+.jui .h3 .sub,
+.jui .h4 .sub,
+.jui .h5 .sub,
+.jui .h6 .sub {
+  color: #9a9a9a;
+}
+.jui .hr {
+  background: #f0f0f0;
+}
+.jui .blockquote {
+  color: #333333;
+  border-left: 1px solid #8c4fdf;
+  background-color: #f9f6fd;
+}
+.jui .blockquote > small {
+  color: #666666;
+}
+.jui .blockquote.reverse {
+  border-right: 1px solid #8c4fdf;
 }

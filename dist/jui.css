@@ -4646,26 +4646,6 @@
   font-size: 11px;
   line-height: 1.4;
   visibility: visible;
-  opacity: 0.9;
-}
-.jui .tooltip > .message {
-  color: #fff;
-  background-color: #000000;
-}
-.jui .tooltip > .anchor {
-  border-color: transparent;
-}
-.jui .tooltip.tooltip-top > .anchor {
-  border-top-color: #000000;
-}
-.jui .tooltip.tooltip-bottom > .anchor {
-  border-bottom-color: #000000;
-}
-.jui .tooltip.tooltip-left > .anchor {
-  border-left-color: #000000;
-}
-.jui .tooltip.tooltip-right > .anchor {
-  border-right-color: #000000;
 }
 .jui .tooltip > .message {
   padding: 3px 8px;
@@ -4681,89 +4661,45 @@
   height: 0;
   border-style: solid;
 }
-.jui .tooltip-top {
+.jui .tooltip.top {
   padding: 5px 0;
   margin-top: -3px;
 }
-.jui .tooltip-right {
+.jui .tooltip.right {
   padding: 0 5px;
   margin-left: 3px;
 }
-.jui .tooltip-bottom {
+.jui .tooltip.bottom {
   padding: 5px 0;
   margin-top: 3px;
 }
-.jui .tooltip-left {
+.jui .tooltip.left {
   padding: 0 5px;
   margin-left: -3px;
 }
-.jui .tooltip-top > .anchor {
+.jui .tooltip.top > .anchor {
   bottom: 0;
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
 }
-.jui .tooltip-right > .anchor {
+.jui .tooltip.right > .anchor {
   top: 50%;
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
 }
-.jui .tooltip-left > .anchor {
+.jui .tooltip.left > .anchor {
   top: 50%;
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
 }
-.jui .tooltip-bottom > .anchor {
+.jui .tooltip.bottom > .anchor {
   top: 0;
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-}
-.jui .tooltip-black {
-  opacity: 0.9;
-}
-.jui .tooltip-black > .message {
-  color: #fff;
-  background-color: #000000;
-}
-.jui .tooltip-black > .anchor {
-  border-color: transparent;
-}
-.jui .tooltip-black.tooltip-top > .anchor {
-  border-top-color: #000000;
-}
-.jui .tooltip-black.tooltip-bottom > .anchor {
-  border-bottom-color: #000000;
-}
-.jui .tooltip-black.tooltip-left > .anchor {
-  border-left-color: #000000;
-}
-.jui .tooltip-black.tooltip-right > .anchor {
-  border-right-color: #000000;
-}
-.jui .tooltip-gray {
-  opacity: 0.9;
-}
-.jui .tooltip-gray > .message {
-  color: #000;
-  background-color: #ededed;
-}
-.jui .tooltip-gray > .anchor {
-  border-color: transparent;
-}
-.jui .tooltip-gray.tooltip-top > .anchor {
-  border-top-color: #ededed;
-}
-.jui .tooltip-gray.tooltip-bottom > .anchor {
-  border-bottom-color: #ededed;
-}
-.jui .tooltip-gray.tooltip-left > .anchor {
-  border-left-color: #ededed;
-}
-.jui .tooltip-gray.tooltip-right > .anchor {
-  border-right-color: #ededed;
 }
 .jui .popover {
   position: absolute;
@@ -6131,7 +6067,6 @@
 .jui .h6 {
   display: block;
   font-weight: 500;
-  color: #333;
 }
 .jui .h1 > small,
 .jui .h2 > small,
@@ -6145,7 +6080,6 @@
 .jui .h4 .sub,
 .jui .h5 .sub,
 .jui .h6 .sub {
-  color: #9a9a9a;
   font-size: 75%;
 }
 .jui .h1 {
@@ -6181,7 +6115,6 @@
 .jui .hr {
   display: block;
   height: 1px;
-  background: #f0f0f0;
 }
 .jui .h1 + .hr,
 .jui .h2 + .hr,
@@ -6196,18 +6129,13 @@
 .jui .blockquote {
   display: block;
   font-size: 14px;
-  color: #333;
   padding: 10px 20px;
-  border-left: 1px solid #8c4fdf;
-  background-color: #f9f6fd;
 }
 .jui .blockquote > small {
   font-size: 12px;
-  color: #666;
 }
-.jui .blockquote-reverse {
+.jui .blockquote.reverse {
   text-align: right;
-  border-right: 1px solid #8c4fdf;
   border-left-width: 0;
 }
 .jui .accordion {

@@ -3,10 +3,8 @@
   .h1, .h2, .h3, .h4, .h5, .h6 {
     display: block;
     font-weight: 500;
-    color: #333;
-    
+
     > small, .sub {
-      color: #9a9a9a;
       font-size: 75%;
     }
   }
@@ -52,7 +50,6 @@
   .hr {
     display: block;
     height: 1px;
-    background: #f0f0f0;
   }
   
   .h1 + .hr, .h2 + .hr, .h3 + .hr {
@@ -68,20 +65,15 @@
   .blockquote {
     display: block;
     font-size: 14px;
-    color: #333;
     padding: 10px 20px;
-    border-left: 1px solid #8c4fdf;
-    background-color: #f9f6fd;
-    
+
     > small {
       font-size: 12px;
-      color: #666;
     }
   }
   
-  .blockquote-reverse {
+  .blockquote.reverse {
     text-align: right;
-    border-right: 1px solid #8c4fdf;
     border-left-width: 0;
   }
 }
