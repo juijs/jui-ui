@@ -4014,9 +4014,6 @@
   width: 10px;
   height: 10px;
 }
-.jui {
-  /* Icon color in Tab */
-}
 .jui .tab,
 .jui .pill {
   *zoom: 1;
@@ -4038,8 +4035,8 @@
 }
 .jui .tab li.active > a,
 .jui .pill li.active > a,
-.jui .tab li.menu-keep > a,
-.jui .pill li.menu-keep > a {
+.jui .tab li.checked > a,
+.jui .pill li.checked > a {
   font-weight: bold;
 }
 .jui .tab li.active > a,
@@ -4058,189 +4055,31 @@
   text-decoration: none;
 }
 .jui .tab li > a {
-  color: #6836c4;
-  border: 1px solid #e6e6e6;
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-}
-.jui .tab li > a:hover,
-.jui .tab li > a:focus {
-  border: 1px solid #c7c7c7;
-}
-.jui .tab li.active > a {
-  color: #000;
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-}
-.jui .tab li.menu-keep > a {
-  color: #fff;
-  background-color: #605977;
-  background-image: -moz-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -webkit-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -o-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -ms-linear-gradient(top, #605977 0%, #605977 100%);
-}
-.jui .tab.tab-top {
-  border-bottom: 1px solid #ddd;
-}
-.jui .tab.tab-top li.active > a {
-  border-color: #ddd #ddd transparent #ddd;
-}
-.jui .tab.tab-bottom {
-  border-top: 1px solid #ddd;
-}
-.jui .tab.tab-bottom li.active > a {
-  border-color: transparent #ddd #ddd #ddd;
-}
-.jui .tab li > a {
   padding: 10px 15px 7px 15px;
 }
-.jui .tab-top {
+.jui .tab.top {
   border-top-color: transparent;
 }
-.jui .tab-top li {
+.jui .tab.top li {
   margin-top: 0;
   margin-bottom: -1px;
 }
-.jui .tab-top li > a {
+.jui .tab.top li > a {
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
-.jui .tab-bottom {
+.jui .tab.bottom {
   border-bottom-color: transparent;
 }
-.jui .tab-bottom li {
+.jui .tab.bottom li {
   margin-top: -1px;
   margin-bottom: 0;
 }
-.jui .tab-bottom li > a {
+.jui .tab.bottom li > a {
   -webkit-border-radius: 0 0 4px 4px;
   -moz-border-radius: 0 0 4px 4px;
   border-radius: 0 0 4px 4px;
-}
-.jui .tab-white li > a {
-  color: #6836c4;
-  border: 1px solid #e6e6e6;
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
-}
-.jui .tab-white li > a:hover,
-.jui .tab-white li > a:focus {
-  border: 1px solid #c7c7c7;
-}
-.jui .tab-white li.active > a {
-  color: #000;
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%);
-}
-.jui .tab-white li.menu-keep > a {
-  color: #fff;
-  background-color: #605977;
-  background-image: -moz-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -webkit-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -o-linear-gradient(top, #605977 0%, #605977 100%);
-  background-image: -ms-linear-gradient(top, #605977 0%, #605977 100%);
-}
-.jui .tab-white.tab-top {
-  border-bottom: 1px solid #ddd;
-}
-.jui .tab-white.tab-top li.active > a {
-  border-color: #ddd #ddd transparent #ddd;
-}
-.jui .tab-white.tab-bottom {
-  border-top: 1px solid #ddd;
-}
-.jui .tab-white.tab-bottom li.active > a {
-  border-color: transparent #ddd #ddd #ddd;
-}
-.jui .pill li > a {
-  color: #666;
-}
-.jui .pill li > a:hover,
-.jui .pill li > a:focus {
-  background: #eee;
-}
-.jui .pill li.active > a {
-  color: #fff;
-  background: #605977;
-}
-.jui .pill li.menu-keep > a {
-  color: #fff;
-  background: #aaa;
-}
-.jui .pill.pill-top {
-  border-bottom: 1px solid #e2e2e2;
-}
-.jui .pill.pill-top li.active > .anchor {
-  position: absolute;
-  left: 50%;
-  margin-left: -10px;
-  width: 0;
-  height: 0;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-bottom: 10px solid #e2e2e2;
-}
-.jui .pill.pill-top li.active > .anchor:after {
-  position: absolute;
-  left: 50%;
-  margin-left: -9px;
-  width: 0;
-  height: 0;
-  content: "";
-}
-.jui .pill.pill-top li.active > .anchor:after {
-  top: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-bottom: 9px solid #ffffff;
-}
-.jui .pill.pill-bottom {
-  border-top: 1px solid #e2e2e2;
-}
-.jui .pill.pill-bottom li.active > .anchor {
-  position: absolute;
-  left: 50%;
-  margin-left: -10px;
-  width: 0;
-  height: 0;
-  top: -10px;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-top: 10px solid #e2e2e2;
-}
-.jui .pill.pill-bottom li.active > .anchor:after {
-  position: absolute;
-  left: 50%;
-  margin-left: -9px;
-  width: 0;
-  height: 0;
-  content: "";
-}
-.jui .pill.pill-bottom li.active > .anchor:after {
-  bottom: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-top: 9px solid #ffffff;
 }
 .jui .pill li > a {
   padding: 7px 10px 5px 10px;
@@ -4251,86 +4090,11 @@
 .jui .pill li.active {
   position: relative;
 }
-.jui .pill-top {
+.jui .pill.top {
   padding-bottom: 10px;
 }
-.jui .pill-bottom {
+.jui .pill.bottom {
   padding-top: 10px;
-}
-.jui .pill-white li > a {
-  color: #666;
-}
-.jui .pill-white li > a:hover,
-.jui .pill-white li > a:focus {
-  background: #eee;
-}
-.jui .pill-white li.active > a {
-  color: #fff;
-  background: #605977;
-}
-.jui .pill-white li.menu-keep > a {
-  color: #fff;
-  background: #aaa;
-}
-.jui .pill-white.pill-top {
-  border-bottom: 1px solid #e2e2e2;
-}
-.jui .pill-white.pill-top li.active > .anchor {
-  position: absolute;
-  left: 50%;
-  margin-left: -10px;
-  width: 0;
-  height: 0;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-bottom: 10px solid #e2e2e2;
-}
-.jui .pill-white.pill-top li.active > .anchor:after {
-  position: absolute;
-  left: 50%;
-  margin-left: -9px;
-  width: 0;
-  height: 0;
-  content: "";
-}
-.jui .pill-white.pill-top li.active > .anchor:after {
-  top: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-bottom: 9px solid #ffffff;
-}
-.jui .pill-white.pill-bottom {
-  border-top: 1px solid #e2e2e2;
-}
-.jui .pill-white.pill-bottom li.active > .anchor {
-  position: absolute;
-  left: 50%;
-  margin-left: -10px;
-  width: 0;
-  height: 0;
-  top: -10px;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-top: 10px solid #e2e2e2;
-}
-.jui .pill-white.pill-bottom li.active > .anchor:after {
-  position: absolute;
-  left: 50%;
-  margin-left: -9px;
-  width: 0;
-  height: 0;
-  content: "";
-}
-.jui .pill-white.pill-bottom li.active > .anchor:after {
-  bottom: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-top: 9px solid #ffffff;
-}
-.jui .pill li.active [class^="icon-"],
-.jui .pill li.menu-keep [class^="icon-"],
-.jui .tab li.menu-keep [class^="icon-"] {
-  color: #fff;
 }
 .jui .msgbox {
   position: absolute;
@@ -5209,7 +4973,6 @@
   padding: 0;
   margin: 0;
   font-size: 12px;
-  color: #333;
 }
 .jui ul.tree li > a,
 .jui ul.tree li > span,
@@ -5219,18 +4982,9 @@
   vertical-align: top;
   cursor: pointer;
 }
-.jui ul.tree li.active > a,
-.jui ul.tree li.active > span,
-.jui ul.tree li.active > div {
-  color: #6633cc;
-  font-weight: bold;
-}
 .jui ul.tree .drag {
   position: absolute;
   height: 2px;
-}
-.jui ul.tree .drag.on {
-  background: #dcdcdc;
 }
 .jui ul.tree ul,
 .jui ul.tree li {
@@ -5238,257 +4992,87 @@
   padding: 0;
   list-style-type: none;
 }
-.jui ul.tree-arrow-file {
-  margin-left: -13px;
-}
-.jui ul.tree-arrow-file li {
-  padding: 0 0 1px 13px;
-}
-.jui ul.tree-arrow-file li > a,
-.jui ul.tree-arrow-file li > span,
-.jui ul.tree-arrow-file li > div {
-  display: inline-block;
-  padding-top: 2px;
-}
-.jui ul.tree-arrow-file li.open > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: -13px -130px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow-file li.fold > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: 0px -130px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow-file li.leaf > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: 0 0;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line-file ul {
-  margin-left: -3px;
-}
-.jui ul.tree-line-file li {
-  background: url("../img/tree-line.gif") 0 0 no-repeat;
-  padding: 0 0 1px 17px;
-}
-.jui ul.tree-line-file li > a,
-.jui ul.tree-line-file li > span,
-.jui ul.tree-line-file li > div {
-  display: inline-block;
-  padding-top: 2px;
-}
-.jui ul.tree-line-file li.open.root,
-.jui ul.tree-line-file li.fold.root {
-  background-position: -100px 0px;
-}
-.jui ul.tree-line-file li.open > i,
-.jui ul.tree-line-file li.fold > i {
-  margin-left: -17px;
-  padding-left: 1px;
-}
-.jui ul.tree-line-file li.open > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: 0px -111px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line-file li.open.root > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -16px -89px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line-file li.fold > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -32px -67px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line-file li.fold.root > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -48px -45px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line-file li.last {
-  /* ㄴ 형태의 백그라운드 이미지 */
-  background-position: 0 -1766px;
-}
-.jui ul.tree-arrow {
-  margin-left: -13px;
-}
-.jui ul.tree-arrow li {
-  padding: 0 0 1px 13px;
-}
-.jui ul.tree-arrow li > a,
-.jui ul.tree-arrow li > span,
-.jui ul.tree-arrow li > div {
-  display: inline-block;
-  padding-top: 2px;
-}
-.jui ul.tree-arrow li.open > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: -13px -130px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow li.fold > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: 0px -130px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow li.leaf > i {
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  background-position: 0 0;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line ul {
-  margin-left: -3px;
-}
-.jui ul.tree-line li {
-  background: url("../img/tree-line.gif") 0 0 no-repeat;
-  padding: 0 0 1px 17px;
-}
-.jui ul.tree-line li > a,
-.jui ul.tree-line li > span,
-.jui ul.tree-line li > div {
-  display: inline-block;
-  padding-top: 2px;
-}
-.jui ul.tree-line li.open.root,
-.jui ul.tree-line li.fold.root {
-  background-position: -100px 0px;
-}
-.jui ul.tree-line li.open > i,
-.jui ul.tree-line li.fold > i {
-  margin-left: -17px;
-  padding-left: 1px;
-}
-.jui ul.tree-line li.open > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: 0px -111px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line li.open.root > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -16px -89px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line li.fold > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -32px -67px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line li.fold.root > i {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  background-position: -48px -45px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-line li.last {
-  /* ㄴ 형태의 백그라운드 이미지 */
-  background-position: 0 -1766px;
-}
-.jui ul.tree-arrow-file li.open > a > i,
-.jui ul.tree-line-file li.open > a > i,
-.jui ul.tree-arrow-file li.open > span > i,
-.jui ul.tree-line-file li.open > span > i,
-.jui ul.tree-arrow-file li.open > div > i,
-.jui ul.tree-line-file li.open > div > i {
-  width: 15px;
-  height: 14px;
-  line-height: 14px;
-  background-position: -17px -165px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow-file li.fold > a > i,
-.jui ul.tree-line-file li.fold > a > i,
-.jui ul.tree-arrow-file li.fold > span > i,
-.jui ul.tree-line-file li.fold > span > i,
-.jui ul.tree-arrow-file li.fold > div > i,
-.jui ul.tree-line-file li.fold > div > i {
-  width: 15px;
-  height: 14px;
-  line-height: 14px;
-  background-position: 0px -165px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow-file li.leaf > a > i,
-.jui ul.tree-line-file li.leaf > a > i,
-.jui ul.tree-arrow-file li.leaf > span > i,
-.jui ul.tree-line-file li.leaf > span > i,
-.jui ul.tree-arrow-file li.leaf > div > i,
-.jui ul.tree-line-file li.leaf > div > i {
-  width: 14px;
-  height: 14px;
-  line-height: 14px;
-  background-position: -36px -165px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
-}
-.jui ul.tree-arrow-file li a > *:not(i),
-.jui ul.tree-line-file li a > *:not(i),
-.jui ul.tree-arrow-file li span > *:not(i),
-.jui ul.tree-line-file li span > *:not(i),
-.jui ul.tree-arrow-file li div > *:not(i),
-.jui ul.tree-line-file li div > *:not(i) {
+.jui ul.tree.arrow-file li a > *:not(i),
+.jui ul.tree.line-file li a > *:not(i),
+.jui ul.tree.arrow-file li span > *:not(i),
+.jui ul.tree.line-file li span > *:not(i),
+.jui ul.tree.arrow-file li div > *:not(i),
+.jui ul.tree.line-file li div > *:not(i) {
   margin-top: -6px;
+}
+.jui ul.tree.arrow-file {
+  margin-left: -13px;
+}
+.jui ul.tree.arrow-file li {
+  padding: 0 0 1px 13px;
+}
+.jui ul.tree.arrow-file li > a,
+.jui ul.tree.arrow-file li > span,
+.jui ul.tree.arrow-file li > div {
+  display: inline-block;
+  padding-top: 2px;
+}
+.jui ul.tree.line-file ul {
+  margin-left: -3px;
+}
+.jui ul.tree.line-file li {
+  padding: 0 0 1px 17px;
+}
+.jui ul.tree.line-file li > a,
+.jui ul.tree.line-file li > span,
+.jui ul.tree.line-file li > div {
+  display: inline-block;
+  padding-top: 2px;
+}
+.jui ul.tree.line-file li.open.root,
+.jui ul.tree.line-file li.fold.root {
+  background-position: -100px 0px;
+}
+.jui ul.tree.line-file li.open > i,
+.jui ul.tree.line-file li.fold > i {
+  margin-left: -17px;
+  padding-left: 1px;
+}
+.jui ul.tree.line-file li.last {
+  /* ㄴ 형태의 백그라운드 이미지 */
+  background-position: 0 -1766px;
+}
+.jui ul.tree.arrow {
+  margin-left: -13px;
+}
+.jui ul.tree.arrow li {
+  padding: 0 0 1px 13px;
+}
+.jui ul.tree.arrow li > a,
+.jui ul.tree.arrow li > span,
+.jui ul.tree.arrow li > div {
+  display: inline-block;
+  padding-top: 2px;
+}
+.jui ul.tree.line ul {
+  margin-left: -3px;
+}
+.jui ul.tree.line li {
+  padding: 0 0 1px 17px;
+}
+.jui ul.tree.line li > a,
+.jui ul.tree.line li > span,
+.jui ul.tree.line li > div {
+  display: inline-block;
+  padding-top: 2px;
+}
+.jui ul.tree.line li.open.root,
+.jui ul.tree.line li.fold.root {
+  background-position: -100px 0px;
+}
+.jui ul.tree.line li.open > i,
+.jui ul.tree.line li.fold > i {
+  margin-left: -17px;
+  padding-left: 1px;
+}
+.jui ul.tree.line li.last {
+  /* ㄴ 형태의 백그라운드 이미지 */
+  background-position: 0 -1766px;
 }
 .jui .vgroup,
 .jui .vmenu,
@@ -5889,7 +5473,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   font-size: 12px;
-  color: #333;
 }
 .jui .panel > * {
   width: auto;
@@ -5915,20 +5498,6 @@
 .jui .panel > .body.fit {
   padding: 0px !important;
 }
-.jui .panel > .head,
-.jui .panel > .foot {
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -o-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  border: 1px solid #dcdcdc;
-}
-.jui .panel > .body {
-  background-color: #fff;
-  border: 1px solid #dcdcdc;
-}
 .jui .pgroup {
   width: 100%;
 }
@@ -5953,8 +5522,8 @@
   -moz-border-radius-bottomleft: 0px;
   border-bottom-left-radius: 0px;
 }
-.jui .panel > .table-classic,
-.jui .panel > .xtable > .table-classic {
+.jui .panel > .table.classic,
+.jui .panel > .xtable > .table.classic {
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
@@ -5962,38 +5531,38 @@
   -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
 }
-.jui .panel > .table-classic > thead th:first-child,
-.jui .panel > .xtable > .table-classic > thead th:first-child {
+.jui .panel > .table.classic > thead th:first-child,
+.jui .panel > .xtable > .table.classic > thead th:first-child {
   -webkit-border-top-left-radius: 0px;
   -moz-border-radius-topleft: 0px;
   border-top-left-radius: 0px;
 }
-.jui .panel > .table-classic > thead th:last-child,
-.jui .panel > .xtable > .table-classic > thead th:last-child {
+.jui .panel > .table.classic > thead th:last-child,
+.jui .panel > .xtable > .table.classic > thead th:last-child {
   -webkit-border-top-right-radius: 0px;
   -moz-border-radius-topright: 0px;
   border-top-right-radius: 0px;
 }
 .jui .panel > .body.fit .table-classic tr > th:first-child,
-.jui .panel > .body.fit .xtable > .table-classic tr > th:first-child {
+.jui .panel > .body.fit .xtable > .table.classic tr > th:first-child {
   -webkit-border-top-left-radius: 0px;
   -moz-border-radius-topleft: 0px;
   border-top-left-radius: 0px;
   border-left-width: 0px;
 }
 .jui .panel > .body.fit .table-classic tr > th:last-child,
-.jui .panel > .body.fit .xtable > .table-classic tr > th:last-child {
+.jui .panel > .body.fit .xtable > .table.classic tr > th:last-child {
   -webkit-border-top-right-radius: 0px;
   -moz-border-radius-topright: 0px;
   border-top-right-radius: 0px;
   border-right-width: 0px;
 }
 .jui .panel > .body.fit .table-classic tr > td:first-child,
-.jui .panel > .body.fit .xtable > .table-classic tr > td:first-child {
+.jui .panel > .body.fit .xtable > .table.classic tr > td:first-child {
   border-left-width: 0px;
 }
 .jui .panel > .body.fit .table-classic tr > td:last-child,
-.jui .panel > .body.fit .xtable > .table-classic tr > td:last-child {
+.jui .panel > .body.fit .xtable > .table.classic tr > td:last-child {
   border-right-width: 0px;
 }
 .jui .panel > .head > .tab,
@@ -6010,7 +5579,7 @@
 .jui .panel > .foot > .tab {
   margin-top: -3px;
 }
-.jui .panel-close > .head {
+.jui .panel.close > .head {
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
@@ -6018,40 +5587,23 @@
   -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
 }
-.jui .panel-close > *:not(.head) {
+.jui .panel.close > *:not(.head) {
   display: none;
 }
-.jui .panel-normal {
+.jui .panel.normal {
   font-size: 12px;
 }
-.jui .panel-normal > .head,
-.jui .panel-normal > .foot {
+.jui .panel.normal > .head,
+.jui .panel.normal > .foot {
   height: 31px;
   line-height: 30px;
   padding: 2px 15px;
 }
-.jui .panel-normal > .body {
+.jui .panel.normal > .body {
   padding: 15px;
 }
-.jui .panel-normal > .body.fit {
+.jui .panel.normal > .body.fit {
   padding: 0px !important;
-}
-.jui .panel-white {
-  color: #333;
-}
-.jui .panel-white > .head,
-.jui .panel-white > .foot {
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -o-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
-  border: 1px solid #dcdcdc;
-}
-.jui .panel-white > .body {
-  background-color: #fff;
-  border: 1px solid #dcdcdc;
 }
 .jui .bargraph > * .line {
   border: 1px solid #ebebeb;

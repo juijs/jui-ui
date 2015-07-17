@@ -1,0 +1,15 @@
+.jui {
+  .panel {
+	color: @panelFontColor;
+
+	> .head, > .foot {
+		.btn-bgcolor-2(@panelHeadBackgroundColor1, @panelHeadBackgroundColor2);
+		border: 1px solid @panelHeadBorderColor;
+	}
+
+	> .body {
+		background-color: @panelBodyBackgroundColor;
+		border: 1px solid @panelBodyBorderColor;
+	}
+  }
+}

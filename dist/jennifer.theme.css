@@ -308,3 +308,328 @@
 .jui .navbar.flat .inline-line {
   background-color: #dcdcdc;
 }
+.jui {
+  /* Icon color in Tab */
+}
+.jui .tab li > a {
+  color: #6836c4;
+  border: 1px solid #e6e6e6;
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
+}
+.jui .tab li > a:hover,
+.jui .tab li > a:focus {
+  border: 1px solid #c7c7c7;
+}
+.jui .tab li.active > a {
+  color: #000000;
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+}
+.jui .tab li.checked > a {
+  color: #ffffff;
+  background-color: #605977;
+  background-image: -moz-linear-gradient(top, #605977 0%, #605977 100%);
+  background-image: linear-gradient(top, #605977 0%, #605977 100%);
+  background-image: -webkit-linear-gradient(top, #605977 0%, #605977 100%);
+  background-image: -o-linear-gradient(top, #605977 0%, #605977 100%);
+  background-image: -ms-linear-gradient(top, #605977 0%, #605977 100%);
+}
+.jui .tab.tab.top {
+  border-bottom: 1px solid #dddddd;
+}
+.jui .tab.tab.top li.active > a {
+  border-color: #dddddd #dddddd transparent #dddddd;
+}
+.jui .tab.tab.bottom {
+  border-top: 1px solid #dddddd;
+}
+.jui .tab.tab.bottom li.active > a {
+  border-color: transparent #dddddd #dddddd #dddddd;
+}
+.jui .pill li > a {
+  color: #666666;
+}
+.jui .pill li > a:hover,
+.jui .pill li > a:focus {
+  background: #eeeeee;
+}
+.jui .pill li.active > a {
+  color: #ffffff;
+  background: #605977;
+}
+.jui .pill li.checked > a {
+  color: #ffffff;
+  background: #aaaaaa;
+}
+.jui .pill.pill.top {
+  border-bottom: 1px solid #e2e2e2;
+}
+.jui .pill.pill.top li.active > .anchor {
+  position: absolute;
+  left: 50%;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-bottom: 10px solid #e2e2e2;
+}
+.jui .pill.pill.top li.active > .anchor:after {
+  position: absolute;
+  left: 50%;
+  margin-left: -9px;
+  width: 0;
+  height: 0;
+  content: "";
+}
+.jui .pill.pill.top li.active > .anchor:after {
+  top: 2px;
+  border-right: 9px solid transparent;
+  border-left: 9px solid transparent;
+  border-bottom: 9px solid #ffffff;
+}
+.jui .pill.pill.bottom {
+  border-top: 1px solid #e2e2e2;
+}
+.jui .pill.pill.bottom li.active > .anchor {
+  position: absolute;
+  left: 50%;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  top: -10px;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-top: 10px solid #e2e2e2;
+}
+.jui .pill.pill.bottom li.active > .anchor:after {
+  position: absolute;
+  left: 50%;
+  margin-left: -9px;
+  width: 0;
+  height: 0;
+  content: "";
+}
+.jui .pill.pill.bottom li.active > .anchor:after {
+  bottom: 2px;
+  border-right: 9px solid transparent;
+  border-left: 9px solid transparent;
+  border-top: 9px solid #ffffff;
+}
+.jui .pill li.active [class^="icon-"],
+.jui .pill li.checked [class^="icon-"],
+.jui .tab li.checked [class^="icon-"] {
+  color: #fff;
+}
+.jui ul.tree {
+  color: #333333;
+}
+.jui ul.tree li.active > a,
+.jui ul.tree li.active > span,
+.jui ul.tree li.active > div {
+  color: #6633cc;
+  font-weight: bold;
+}
+.jui ul.tree .drag.on {
+  background: #dcdcdc;
+}
+.jui ul.tree.arrow-file li.open > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: -13px -130px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow-file li.fold > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: 0px -130px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow-file li.leaf > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: 0 0;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line-file li {
+  background: url("../img/tree-line.gif") 0 0 no-repeat;
+}
+.jui ul.tree.line-file li.open > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: 0px -111px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line-file li.open.root > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -16px -89px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line-file li.fold > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -32px -67px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line-file li.fold.root > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -48px -45px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow li.open > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: -13px -130px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow li.fold > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: 0px -130px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow li.leaf > i {
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  background-position: 0 0;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line li {
+  background: url("../img/tree-line.gif") 0 0 no-repeat;
+}
+.jui ul.tree.line li.open > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: 0px -111px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line li.open.root > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -16px -89px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line li.fold > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -32px -67px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.line li.fold.root > i {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-position: -48px -45px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow-file li.open > a > i,
+.jui ul.tree.line-file li.open > a > i,
+.jui ul.tree.arrow-file li.open > span > i,
+.jui ul.tree.line-file li.open > span > i,
+.jui ul.tree.arrow-file li.open > div > i,
+.jui ul.tree.line-file li.open > div > i {
+  width: 15px;
+  height: 14px;
+  line-height: 14px;
+  background-position: -17px -165px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow-file li.fold > a > i,
+.jui ul.tree.line-file li.fold > a > i,
+.jui ul.tree.arrow-file li.fold > span > i,
+.jui ul.tree.line-file li.fold > span > i,
+.jui ul.tree.arrow-file li.fold > div > i,
+.jui ul.tree.line-file li.fold > div > i {
+  width: 15px;
+  height: 14px;
+  line-height: 14px;
+  background-position: 0px -165px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui ul.tree.arrow-file li.leaf > a > i,
+.jui ul.tree.line-file li.leaf > a > i,
+.jui ul.tree.arrow-file li.leaf > span > i,
+.jui ul.tree.line-file li.leaf > span > i,
+.jui ul.tree.arrow-file li.leaf > div > i,
+.jui ul.tree.line-file li.leaf > div > i {
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  background-position: -36px -165px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url("../img/tree-list.png");
+}
+.jui .panel {
+  color: #333333;
+}
+.jui .panel > .head,
+.jui .panel > .foot {
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
+  background-image: linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
+  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
+  background-image: -o-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
+  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #f1f1f1 100%);
+  border: 1px solid #dcdcdc;
+}
+.jui .panel > .body {
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+}
