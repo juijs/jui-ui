@@ -13,6 +13,9 @@
 /* Not supported */
 /* Supported */
 /* Half supported */
+/* Supported */
+/* Supported */
+/* Half supported */
 .clearfix {
   *zoom: 1;
 }
@@ -958,4 +961,121 @@
 .jui .msgbox.detail > .body {
   background-color: inherit;
   color: inherit;
+}
+.jui .window {
+  color: #ffffff;
+  background-color: #545454;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.jui .window > .head {
+  color: #ffffff;
+  background-color: #424242;
+  background-image: -moz-linear-gradient(top, #424242 0%, #141414 100%);
+  background-image: linear-gradient(top, #424242 0%, #141414 100%);
+  background-image: -webkit-linear-gradient(top, #424242 0%, #141414 100%);
+  background-image: -o-linear-gradient(top, #424242 0%, #141414 100%);
+  background-image: -ms-linear-gradient(top, #424242 0%, #141414 100%);
+}
+.jui .window > .body {
+  background-color: #545454;
+  border-top: 1px solid transparent;
+}
+.jui .window > .body::-webkit-scrollbar-track {
+  background-color: #636363;
+  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
+  border: 1px solid #7a7a7a;
+}
+.jui .window > .body::-webkit-scrollbar-thumb {
+  background: #7a7a7a;
+  border: 1px solid #636363;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .window > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
+.jui .window > .foot {
+  background-color: #424242;
+  background-image: -moz-linear-gradient(top, #424242 0%, #252525 100%);
+  background-image: linear-gradient(top, #424242 0%, #252525 100%);
+  background-image: -webkit-linear-gradient(top, #424242 0%, #252525 100%);
+  background-image: -o-linear-gradient(top, #424242 0%, #252525 100%);
+  background-image: -ms-linear-gradient(top, #424242 0%, #252525 100%);
+  border-top: 1px solid #5c5c5c;
+}
+.jui .input {
+  color: #ffffff;
+  background-color: #444444;
+  border: 1px solid #000000;
+  text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: "0 1px 6px #121212 inset";
+  -moz-box-shadow: "0 1px 6px #121212 inset";
+  box-shadow: "0 1px 6px #121212 inset";
+}
+.jui .input:focus {
+  color: #333333;
+  border-color: none;
+  background-color: #ffffff;
+  outline: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+.jui .input[disabled],
+.jui .input[readonly] {
+  cursor: not-allowed;
+  background-color: #656565;
+}
+.jui .input:focus:invalid {
+  color: none;
+  border-color: none;
+}
+.jui .input:focus:invalid:focus {
+  border-color: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.jui .label {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #212121;
+  border: 1px solid #000000;
+  color: #ffffff;
+}
+.jui .label.info {
+  background-color: #428bca;
+  border: 1px solid #428bca;
+  color: #ffffff;
+}
+.jui .label.danger {
+  background-color: #d9534f;
+  border: 1px solid #d9534f;
+  color: #ffffff;
+}
+.jui .label.success {
+  background-color: #5cb85c;
+  border: 1px solid #5cb85c;
+  color: #ffffff;
+}
+.jui .label.warning {
+  background-color: #fffaee;
+  border: 1px solid #fce5bb;
+  color: #666666;
 }

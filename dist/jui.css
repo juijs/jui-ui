@@ -25,79 +25,33 @@
   display: inline-block;
   text-align: left;
   vertical-align: middle;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #eee;
-  border: 1px solid #c8c8c8;
-  color: #333;
   font-size: 14px;
   padding: 0 12px;
   height: 28px;
   line-height: 28px;
 }
-.jui .label-gray {
-  background-color: #eee;
-  border: 1px solid #c8c8c8;
-  color: #333;
-}
-.jui .label-black {
-  background-color: #212121;
-  border: 1px solid #000;
-  color: #fff;
-}
-.jui .label-blue {
-  background-color: #428bca;
-  border: 1px solid #428bca;
-  color: #fff;
-}
-.jui .label-red {
-  background-color: #d9534f;
-  border: 1px solid #d9534f;
-  color: #fff;
-}
-.jui .label-green {
-  background-color: #5cb85c;
-  border: 1px solid #5cb85c;
-  color: #fff;
-}
-.jui .label-purple {
-  background-color: #6836c4;
-  border: 1px solid #6836c4;
-  color: #fff;
-}
-.jui .label-orange {
-  background-color: #fffaee;
-  border: 1px solid #fce5bb;
-  color: #666;
-}
-.jui .label-rect {
-  -webkit-border-radius: 0 !important;
-  -moz-border-radius: 0 !important;
-  border-radius: 0 !important;
-}
-.jui .label-large {
+.jui .label.large {
   font-size: 16px;
   padding: 0 15px;
   height: 38px;
   line-height: 38px;
 }
-.jui .label-normal {
+.jui .label.normal {
   font-size: 14px;
   padding: 0 12px;
   height: 28px;
   line-height: 28px;
 }
-.jui .label-small {
+.jui .label.small {
   font-size: 12px;
   padding: 0 10px;
   height: 24px;
   line-height: 24px;
 }
-.jui .label-mini {
+.jui .label.mini {
   font-size: 12px;
   padding: 0 8px;
   height: 22px;
@@ -107,110 +61,34 @@
   display: inline-block;
   text-align: left;
   vertical-align: middle;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #fff;
-  border: 1px solid #c8c8c8;
-  -webkit-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  -moz-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  color: #333333;
   font-size: 14px;
   padding: 4px 8px;
   height: 28px;
-}
-.jui .input:focus {
-  border-color: #b08bfc;
-  outline: 0;
-  -webkit-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  -moz-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  -webkit-transition: border linear .2s, box-shadow linear .2s;
-  -moz-transition: border linear .2s, box-shadow linear .2s;
-  -o-transition: border linear .2s, box-shadow linear .2s;
-  transition: border linear .2s, box-shadow linear .2s;
 }
 .jui textarea.input {
   padding: 5px;
   height: auto;
 }
-.jui .input-gray {
-  background-color: #fff;
-  border: 1px solid #c8c8c8;
-  -webkit-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  -moz-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
-  color: #333333;
-}
-.jui .input-gray:focus {
-  border-color: #b08bfc;
-  outline: 0;
-  -webkit-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  -moz-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
-  -webkit-transition: border linear .2s, box-shadow linear .2s;
-  -moz-transition: border linear .2s, box-shadow linear .2s;
-  -o-transition: border linear .2s, box-shadow linear .2s;
-  transition: border linear .2s, box-shadow linear .2s;
-}
-.jui .input-black {
-  background-color: #444444 !important;
-  border: 1px solid black !important;
-  -webkit-box-shadow: "0 1px 6px #121212 inset" !important;
-  -moz-box-shadow: "0 1px 6px #121212 inset" !important;
-  box-shadow: "0 1px 6px #121212 inset" !important;
-  color: #FFFFFF !important;
-  text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.5) !important;
-}
-.jui .input-black:focus {
-  background-color: #ffffff !important;
-  color: #333333 !important;
-}
-.jui .input-black:disabled {
-  background-color: #656565 !important;
-  color: #b2b2b2 !important;
-}
-.jui .input[disabled],
-.jui .input[readonly] {
-  cursor: not-allowed;
-  background-color: #eee;
-}
-.jui .input:focus:invalid {
-  color: #b94a48;
-  border-color: #ee5f5b;
-}
-.jui .input:focus:invalid:focus {
-  border-color: #e9322d;
-  -webkit-box-shadow: 0 0 6px #f8b9b7;
-  -moz-box-shadow: 0 0 6px #f8b9b7;
-  box-shadow: 0 0 6px #f8b9b7;
-}
-.jui .input-normal {
+.jui .input.normal {
   font-size: 14px;
   padding: 4px 8px;
   height: 28px;
 }
-.jui .input-large {
+.jui .input.large {
   font-size: 16px !important;
   padding: 9px 10px !important;
   height: 38px !important;
 }
-.jui .input-small {
+.jui .input.small {
   font-size: 12px !important;
   height: 24px !important;
 }
-.jui .input-mini {
+.jui .input.mini {
   font-size: 12px !important;
   height: 22px !important;
-}
-.jui .input-rect {
-  -webkit-border-radius: 0 !important;
-  -moz-border-radius: 0 !important;
-  border-radius: 0 !important;
 }
 .jui .btn {
   position: relative;
@@ -2495,11 +2373,6 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  color: #333;
-  background-color: #fff;
 }
 .jui .window > .head {
   position: relative;
@@ -2538,6 +2411,10 @@
   padding: 15px;
   word-break: break-all;
 }
+.jui .window > .body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 .jui .window > .foot {
   position: absolute;
   left: 0px;
@@ -2557,243 +2434,6 @@
   right: 0px;
   bottom: 0px;
   cursor: nw-resize;
-}
-.jui .window > .head {
-  color: #fff;
-  background-color: #3b3b3b;
-  background-image: -moz-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -webkit-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -o-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -ms-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-}
-.jui .window > .body {
-  background-color: #fff;
-}
-.jui .window > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
-}
-.jui .window > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.jui .window > .foot {
-  background-color: #f7f7f7;
-  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -o-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  border-top: 1px solid #e5e5e5;
-}
-.jui .window-default {
-  color: #333;
-  background-color: #fff;
-}
-.jui .window-default > .head {
-  color: #fff;
-  background-color: #3b3b3b;
-  background-image: -moz-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -webkit-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -o-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-  background-image: -ms-linear-gradient(top, #3b3b3b 0%, #121212 100%);
-}
-.jui .window-default > .body {
-  background-color: #fff;
-}
-.jui .window-default > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
-}
-.jui .window-default > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window-default > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window-default > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.jui .window-default > .foot {
-  background-color: #f7f7f7;
-  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -o-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  border-top: 1px solid #e5e5e5;
-}
-.jui .window-black {
-  color: #fff;
-  background-color: #545454;
-}
-.jui .window-black > .head {
-  background-color: #424242;
-  background-image: -moz-linear-gradient(top, #424242 0%, #141414 100%);
-  background-image: linear-gradient(top, #424242 0%, #141414 100%);
-  background-image: -webkit-linear-gradient(top, #424242 0%, #141414 100%);
-  background-image: -o-linear-gradient(top, #424242 0%, #141414 100%);
-  background-image: -ms-linear-gradient(top, #424242 0%, #141414 100%);
-}
-.jui .window-black > .body {
-  background-color: #545454;
-}
-.jui .window-black > .body::-webkit-scrollbar-track {
-  background-color: #636363;
-  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  border: 1px solid #7a7a7a;
-}
-.jui .window-black > .body::-webkit-scrollbar-thumb {
-  background: #7a7a7a;
-  border: 1px solid #636363;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window-black > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window-black > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.jui .window-black > .foot {
-  background-color: #424242;
-  background-image: -moz-linear-gradient(top, #424242 0%, #252525 100%);
-  background-image: linear-gradient(top, #424242 0%, #252525 100%);
-  background-image: -webkit-linear-gradient(top, #424242 0%, #252525 100%);
-  background-image: -o-linear-gradient(top, #424242 0%, #252525 100%);
-  background-image: -ms-linear-gradient(top, #424242 0%, #252525 100%);
-  border-top: 1px solid #5c5c5c;
-}
-.jui .window-white {
-  color: #333;
-  background-color: #fff;
-}
-.jui .window-white > .head {
-  color: #333;
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
-}
-.jui .window-white > .body {
-  background-color: #fff;
-  border-top: 1px solid #ebebeb;
-}
-.jui .window-white > .body::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
-}
-.jui .window-white > .body::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window-white > .body::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window-white > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.jui .window-white > .foot {
-  background-color: #f7f7f7;
-  background-image: -moz-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -o-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  background-image: -ms-linear-gradient(top, #f7f7f7 0%, #ececec 100%);
-  border-top: 1px solid #e5e5e5;
-}
-.jui .window-scroll-white::-webkit-scrollbar-track {
-  background-color: #f2f2f2;
-  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
-  border: 1px solid #e6e6e6;
-}
-.jui .window-scroll-white::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border: 1px solid #b8b8b8;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window-scroll-white::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window-scroll-black::-webkit-scrollbar-track {
-  background-color: #636363;
-  background-image: -moz-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -webkit-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -o-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  background-image: -ms-linear-gradient(left, #636363 0%, #7a7a7a 100%);
-  border: 1px solid #7a7a7a;
-}
-.jui .window-scroll-black::-webkit-scrollbar-thumb {
-  background: #7a7a7a;
-  border: 1px solid #636363;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jui .window-scroll-black::-webkit-scrollbar-thumb:hover {
-  background: #8a8a8a;
-  border: 1px solid #737373;
-}
-.jui .window-scroll-white::-webkit-scrollbar,
-.jui .window-scroll-black::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
 }
 .jui table.table {
   position: relative;
