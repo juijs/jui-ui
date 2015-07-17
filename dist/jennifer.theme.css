@@ -761,3 +761,186 @@
   background-color: #fff3f3 !important;
   border: 1px solid #ff7f7f !important;
 }
+.jui .vmenu > * {
+  border: 1px solid #e5e5e5;
+  color: #333333;
+  font-weight: bold;
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+}
+.jui .vmenu > *.active {
+  background-color: #ad81e4;
+  background-image: -moz-linear-gradient(top, #ad81e4 0%, #7d51b6 100%);
+  background-image: linear-gradient(top, #ad81e4 0%, #7d51b6 100%);
+  background-image: -webkit-linear-gradient(top, #ad81e4 0%, #7d51b6 100%);
+  background-image: -o-linear-gradient(top, #ad81e4 0%, #7d51b6 100%);
+  background-image: -ms-linear-gradient(top, #ad81e4 0%, #7d51b6 100%);
+  color: #ffffff;
+  border: 1px solid #a281cc;
+  cursor: default;
+}
+.jui .vmenu > *:hover:not(.active):not(.submenu) {
+  background-color: #f8f8f8;
+  background-image: -moz-linear-gradient(top, #f8f8f8 0%, #f1f1f1 100%);
+  background-image: linear-gradient(top, #f8f8f8 0%, #f1f1f1 100%);
+  background-image: -webkit-linear-gradient(top, #f8f8f8 0%, #f1f1f1 100%);
+  background-image: -o-linear-gradient(top, #f8f8f8 0%, #f1f1f1 100%);
+  background-image: -ms-linear-gradient(top, #f8f8f8 0%, #f1f1f1 100%);
+}
+.jui .vmenu > *.submenu {
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%);
+}
+.jui .vmenu > *.submenu > li:hover:not(.active) {
+  background: #eeeeee;
+}
+.jui .vmenu > *.submenu > li > * {
+  color: inherit;
+}
+.jui .vmenu > *.submenu > li.active {
+  color: #6836c4;
+}
+.jui .vmenu > *.submenu > li.active > * {
+  color: inherit;
+}
+.jui .vmenu.flat > * {
+  border: 1px solid #e5e5e5 !important;
+  color: #333333 !important;
+  background-color: #ffffff !important;
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
+  background-image: linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
+  background-image: -o-linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
+}
+.jui .vmenu.flat > *.active {
+  color: #6836c4 !important;
+}
+.jui .vmenu.flat > *:hover:not(.active):not(.submenu) {
+  background-color: #eeeeee !important;
+  background-image: -moz-linear-gradient(top, #eeeeee 0%, #eeeeee 100%) !important;
+  background-image: linear-gradient(top, #eeeeee 0%, #eeeeee 100%) !important;
+  background-image: -webkit-linear-gradient(top, #eeeeee 0%, #eeeeee 100%) !important;
+  background-image: -o-linear-gradient(top, #eeeeee 0%, #eeeeee 100%) !important;
+  background-image: -ms-linear-gradient(top, #eeeeee 0%, #eeeeee 100%) !important;
+}
+.jui .vmenu.flat > *.submenu {
+  background-color: #f5f5f5 !important;
+  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #f5f5f5 100%) !important;
+  background-image: linear-gradient(top, #f5f5f5 0%, #f5f5f5 100%) !important;
+  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #f5f5f5 100%) !important;
+  background-image: -o-linear-gradient(top, #f5f5f5 0%, #f5f5f5 100%) !important;
+  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #f5f5f5 100%) !important;
+}
+.jui .vmenu.flat > *.submenu > li:hover:not(.active) {
+  background: #eeeeee;
+}
+.jui .vmenu.flat > *.submenu > li > * {
+  color: inherit;
+}
+.jui .vmenu.flat > *.submenu > li.active {
+  color: #6836c4;
+}
+.jui .vmenu.flat > *.submenu > li.active > * {
+  color: inherit;
+}
+.jui .msgbox {
+  color: #333333;
+  border: 1px solid transparent;
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
+}
+.jui .msgbox > .head {
+  color: #333333;
+  border-bottom: 1px solid #ebebeb;
+  background-color: #f7f7f7;
+}
+.jui .msgbox > .body {
+  background-color: inherit;
+}
+.jui .msgbox > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .msgbox > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .msgbox > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
+}
+.jui .msgbox.warning {
+  color: #ffffff;
+  border: 1px solid #f9c664;
+  background-color: #fff3d1;
+}
+.jui .msgbox.warning > .head {
+  border-bottom: 1px solid #fff9ea;
+  background-color: #ff9704;
+}
+.jui .msgbox.warning > .body {
+  background-color: inherit;
+  color: #a56500;
+}
+.jui .msgbox.danger {
+  color: #ffffff;
+  border: 1px solid #efb5b5;
+  background-color: #f4dede;
+}
+.jui .msgbox.danger > .head {
+  border-bottom: 1px solid #ffeaea;
+  background-color: #ef180b;
+}
+.jui .msgbox.danger > .body {
+  background-color: inherit;
+  color: #ba0000;
+}
+.jui .msgbox.success {
+  color: #ffffff;
+  border: 1px solid #a2d27f;
+  background-color: #e8f5d3;
+}
+.jui .msgbox.success > .head {
+  border-bottom: 1px solid #f4fae9;
+  background-color: #2aa11a;
+}
+.jui .msgbox.success > .body {
+  background-color: inherit;
+  color: #496f0a;
+}
+.jui .msgbox.detail {
+  color: #666666;
+  background-color: #ffffff;
+}
+.jui .msgbox.detail > .head {
+  border-bottom: 1px solid #eaeaea;
+  background-color: inherit;
+  color: #333333;
+}
+.jui .msgbox.detail > .head > .subtext {
+  color: #666666;
+  font-weight: normal;
+}
+.jui .msgbox.detail > .body {
+  background-color: inherit;
+  color: inherit;
+}
