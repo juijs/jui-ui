@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Popover</title>
+
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
+</head>
+<body class="jui">
+
+<div class="page-header">
+	<h1>Notify</h1>
+</div>
+
+<section>
+	<h2>Default</h2>
+
+	<p>
+		알림은 타이틀과 메시지로 구성되며, 아이콘이나 닫기 버튼 등을 선택적으로 추가할 수 있습니다.
+
+	<div class="notify">
+		<div class="title">Caution message Send!!!</div>
+		<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+	</div>
+	</p>
+	<p class="br">
+<pre><code class="language-markup">&lt;div class="notify"&gt;
+	&lt;div class="title"&gt;Caution message Send!!!&lt;/div&gt;
+	&lt;div class="message"&gt;Feb 15, 2013-12-24 02:24:19&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
+	</p>
+</section>
+
+<section>
+	<h2>Colors</h2>
+
+	<p>
+		알림은 총 4가지의 색상을 제공합니다.
+
+	<div class="row">
+		<div class="col col-6">
+			<div class="notify success">
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+			</div>
+		</div>
+		<div class="col col-6">
+			<div class="notify info">
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col col-6">
+			<div class="notify warning">
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+			</div>
+		</div>
+		<div class="col col-6">
+			<div class="notify danger">
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+			</div>
+		</div>
+	</div>
+	</p>
+	<p class="br">
+<pre><code class="language-markup">&lt;div class="notify notify-green"&gt;...&lt;/div&gt;
+	&lt;div class="notify notify-blue"&gt;...&lt;/div&gt;
+	&lt;div class="notify notify-orange"&gt;...&lt;/div&gt;
+	&lt;div class="notify notify-red"&gt;...&lt;/div&gt;</code></pre>
+	</p>
+</section>
+
+<section>
+	<h2>Close & Icon</h2>
+
+	<p>
+		알림은 닫기 버튼과 아이콘을 배치할 수 있는 영역을 선택적으로 사용할 수 있습니다.
+
+	<div class="row">
+		<div class="col col-6">
+			<div class="notify success">
+				<div class="title">Caution message Send!!!</div>
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+				<a href="#" class="close"><i class="icon-exit"></i></a>
+			</div>
+		</div>
+		<div class="col col-6">
+			<div class="notify info">
+				<div class="image"><i class="icon-caution" style="font-size: 18px;"></i></div>
+				<div class="title">Caution message Send!!!</div>
+				<div class="message">Feb 15, 2013-12-24 02:24:19</div>
+				<a href="#" class="close"><i class="icon-exit"></i></a>
+			</div>
+		</div>
+	</div>
+	</p>
+	<p class="br">
+<pre><code class="language-markup">&lt;div class="notify notify-green"&gt;
+	&lt;div class="title"&gt;Caution message Send!!!&lt;/div&gt;
+	&lt;div class="message"&gt;Feb 15, 2013-12-24 02:24:19&lt;/div&gt;
+	&lt;a href="#" class="close"&gt;&lt;i class="icon-exit"&gt;&lt;/i&gt;&lt;/a&gt;
+	&lt;/div&gt;
+
+	&lt;div class="notify notify-blue"&gt;
+	&lt;div class="image"&gt;&lt;i class="icon-caution" style="font-size: 18px;"&gt;&lt;/i&gt;&lt;/div&gt;
+	&lt;div class="title"&gt;Caution message Send!!!&lt;/div&gt;
+	&lt;div class="message"&gt;Feb 15, 2013-12-24 02:24:19&lt;/div&gt;
+	&lt;a href="#" class="close"&gt;&lt;i class="icon-exit"&gt;&lt;/i&gt;&lt;/a&gt;
+	&lt;/div&gt;</code></pre>
+	</p>
+</section>
+
+</body>
+</html>

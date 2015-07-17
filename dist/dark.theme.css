@@ -9,6 +9,8 @@
 /* Not supported */
 /* Supported */
 /* Not supported */
+/* Supported */
+/* Not supported */
 .clearfix {
   *zoom: 1;
 }
@@ -699,4 +701,76 @@
 }
 .jui .blockquote.reverse {
   border-right: 1px solid #8c4fdf;
+}
+.jui .popover {
+  color: #ffffff;
+  background-color: #1d1d1d;
+  opacity: 0.95;
+  border-color: #1d1d1d;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  box-shadow: 0 2px 6px rgba(0,0,0,.075);
+}
+.jui .popover.popover > .head {
+  border-bottom-color: #5a5a5a;
+}
+.jui .popover.popover.top:after {
+  border-top-color: #1d1d1d;
+}
+.jui .popover.popover.top:before {
+  border-top-color: #1d1d1d;
+}
+.jui .popover.popover.bottom:after {
+  border-bottom-color: #1d1d1d;
+}
+.jui .popover.popover.bottom:before {
+  border-bottom-color: #1d1d1d;
+}
+.jui .popover.popover.left:after {
+  border-left-color: #1d1d1d;
+}
+.jui .popover.popover.left:before {
+  border-left-color: #1d1d1d;
+}
+.jui .popover.popover.right:after {
+  border-right-color: #1d1d1d;
+}
+.jui .popover.popover.right:before {
+  border-right-color: #1d1d1d;
+}
+.jui .notify {
+  opacity: 0.9;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: 1px solid #c5c5c5;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
+.jui .notify > .title {
+  color: #4d4d4d;
+}
+.jui .notify > .message {
+  color: #666666;
+}
+.jui .notify.info {
+  background-color: #e0f2ff !important;
+  border: 1px solid #53aff2 !important;
+}
+.jui .notify.warning {
+  background-color: #fffaed !important;
+  border: 1px solid #ffbd3f !important;
+}
+.jui .notify.success {
+  background-color: #f4ffeb !important;
+  border: 1px solid #6fc853 !important;
+}
+.jui .notify.danger {
+  background-color: #fff3f3 !important;
+  border: 1px solid #ff7f7f !important;
 }
