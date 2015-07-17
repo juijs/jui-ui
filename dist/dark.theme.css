@@ -276,6 +276,12 @@
   color: #6600cc;
   cursor: default;
 }
+.jui .paging > .prev {
+  background-image: url("../img/paging-list.png");
+}
+.jui .paging > .next {
+  background-image: url("../img/paging-list.png");
+}
 .jui .navbar {
   border: 1px solid #292929;
   background-color: #3c3c3c;

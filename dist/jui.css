@@ -3757,14 +3757,12 @@
   text-align: right;
   padding-right: 13px !important;
   background-repeat: no-repeat;
-  background-image: url("../img/paging-list.png");
 }
 .jui .paging > .next {
   text-align: left;
   padding-left: 12px !important;
   right: 0;
   background-repeat: no-repeat;
-  background-image: url("../img/paging-list.png");
 }
 .jui .paging * {
   height: 28px;
