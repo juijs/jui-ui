@@ -1,4 +1,5 @@
 /* Not supported */
+/* Not supported */
 /* Supported */
 /* Not supported */
 /* Not supported */
@@ -36,6 +37,12 @@
   text-shadow: none;
   background-color: transparent;
   border: 0;
+}
+.jui select[disabled],
+.jui textarea[disabled],
+.jui select[readonly],
+.jui textarea[readonly] {
+  background-color: #eeeeee;
 }
 .jui .accordion {
   color: #333333;

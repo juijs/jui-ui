@@ -4501,5 +4501,4 @@
 .jui select[readonly],
 .jui textarea[readonly] {
   cursor: not-allowed;
-  background-color: #eee;
 }
