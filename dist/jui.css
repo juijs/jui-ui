@@ -1884,7 +1884,7 @@
 .jui .navbar .row:last-child {
   margin-bottom: 0px !important;
 }
-.jui .navbar .hr {
+.jui .navbar .line {
   display: block;
   height: 1px;
   margin-bottom: 5px;
@@ -3952,96 +3952,6 @@
 .jui .panel.normal > .body.fit {
   padding: 0px !important;
 }
-.jui .bargraph > * .line {
-  border: 1px solid #ebebeb;
-}
-.jui .bargraph > * .data {
-  color: #969696;
-}
-.jui .bargraph > *.active .line {
-  border-color: #d0d0d0;
-}
-.jui .bargraph > *.active .data {
-  color: #333;
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow) {
-  border: 1px solid #bebebe;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  -moz-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow):hover {
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow).active {
-  background-color: #ede2ff;
-  background-image: -moz-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -webkit-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -o-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -ms-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow).active .title {
-  color: #333;
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow) .title {
-  color: #969696;
-}
-.jui .bargraph > *:not(.purple):not(.blue):not(.yellow) .data {
-  background: white;
-}
-.jui .bargraph > .purple,
-.jui .bargraph > .blue,
-.jui .bargraph > .yellow {
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  -moz-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-}
-.jui .bargraph > .purple .title,
-.jui .bargraph > .blue .title,
-.jui .bargraph > .yellow .title {
-  color: #fff;
-}
-.jui .bargraph > .purple .data,
-.jui .bargraph > .blue .data,
-.jui .bargraph > .yellow .data {
-  background: white;
-}
-.jui .bargraph > .purple {
-  border: 1px solid #cdbadf;
-  background-color: #cdbadf;
-}
-.jui .bargraph > .purple.active {
-  border-color: #8959b6;
-  background-color: #8959b6;
-}
-.jui .bargraph > .blue {
-  border: 1px solid #b5d4ee;
-  background-color: #c0dcf3;
-}
-.jui .bargraph > .blue.active {
-  border-color: #4e9bdb;
-  background-color: #69aee8;
-}
-.jui .bargraph > .yellow {
-  border: 1px solid #f4d897;
-  background-color: #f8de96;
-}
-.jui .bargraph > .yellow.active {
-  border-color: #eca402;
-  background-color: #f5b400;
-}
 .jui .bargraph > * .title {
   height: 32px;
   line-height: 32px;
@@ -4062,19 +3972,19 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.jui .bargraph > * .info {
+.jui .bargraph > * .detail {
   position: absolute;
   left: 0;
   right: 0;
   top: -10px;
 }
-.jui .bargraph > * .info > .line {
+.jui .bargraph > * .detail > .line {
   border-bottom-width: 0;
   height: 8px;
 }
-.jui .bargraph > * .info > .data {
+.jui .bargraph > * .detail > .data {
   width: 30px;
-  margin-top: -15px;
+  margin-top: -18px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -4084,105 +3994,15 @@
 .jui .bargraph > *.active:not(:first-child) .line {
   border-left-width: 1px;
 }
-.jui .bargraph-color > * .line {
-  border: 1px solid #ebebeb;
-}
-.jui .bargraph-color > * .data {
-  color: #969696;
-}
-.jui .bargraph-color > *.active .line {
-  border-color: #d0d0d0;
-}
-.jui .bargraph-color > *.active .data {
-  color: #333;
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow) {
-  border: 1px solid #bebebe;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  -moz-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #e9e9e9 100%);
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow):hover {
-  background-color: #ffffff;
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow).active {
-  background-color: #ede2ff;
-  background-image: -moz-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -webkit-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -o-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-  background-image: -ms-linear-gradient(top, #ede2ff 0%, #d4bff1 100%);
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow).active .title {
-  color: #333;
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow) .title {
-  color: #969696;
-}
-.jui .bargraph-color > *:not(.purple):not(.blue):not(.yellow) .data {
-  background: white;
-}
-.jui .bargraph-color > .purple,
-.jui .bargraph-color > .blue,
-.jui .bargraph-color > .yellow {
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  -moz-box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-}
-.jui .bargraph-color > .purple .title,
-.jui .bargraph-color > .blue .title,
-.jui .bargraph-color > .yellow .title {
-  color: #fff;
-}
-.jui .bargraph-color > .purple .data,
-.jui .bargraph-color > .blue .data,
-.jui .bargraph-color > .yellow .data {
-  background: white;
-}
-.jui .bargraph-color > .purple {
-  border: 1px solid #cdbadf;
-  background-color: #cdbadf;
-}
-.jui .bargraph-color > .purple.active {
-  border-color: #8959b6;
-  background-color: #8959b6;
-}
-.jui .bargraph-color > .blue {
-  border: 1px solid #b5d4ee;
-  background-color: #c0dcf3;
-}
-.jui .bargraph-color > .blue.active {
-  border-color: #4e9bdb;
-  background-color: #69aee8;
-}
-.jui .bargraph-color > .yellow {
-  border: 1px solid #f4d897;
-  background-color: #f8de96;
-}
-.jui .bargraph-color > .yellow.active {
-  border-color: #eca402;
-  background-color: #f5b400;
-}
-.jui .bargraph-normal > * .title {
+.jui .bargraph.normal > * .title {
   height: 32px;
   line-height: 32px;
   font-size: 0.75em;
 }
-.jui .bargraph-normal > * .data {
+.jui .bargraph.normal > * .data {
   font-size: 0.8em;
 }
-.jui .bargraph-small > * .title {
+.jui .bargraph.small > * .title {
   height: 25px;
   line-height: 25px;
 }
