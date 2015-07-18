@@ -2157,10 +2157,26 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.jui .xtable > .body {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+.jui .xtable > .body > .table.classic,
+.jui .xtable > .body .table.expand {
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .xtable > .body > .table.classic > tbody > tr:last-child > td:first-child,
+.jui .xtable > .body .table.expand > tbody > tr:last-child > td:first-child {
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .xtable > .body > .table.classic > tbody > tr:last-child > td:last-child,
+.jui .xtable > .body .table.expand > tbody > tr:last-child > td:last-child {
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-bottom-right-radius: 0px;
 }
 .jui .xtable > .loading {
   display: none;

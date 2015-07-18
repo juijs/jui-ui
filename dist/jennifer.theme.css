@@ -1574,9 +1574,6 @@
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
 }
-.jui .xtable > .loading {
-  background-image: url("../img/xtable-loading.gif");
-}
 .jui .xtable > .body {
   border-bottom: 1px solid #dfdce3 !important;
 }
@@ -1603,4 +1600,7 @@
 .jui .xtable > .body::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
+}
+.jui .xtable > .loading {
+  background-image: url("../img/xtable-loading.gif");
 }
