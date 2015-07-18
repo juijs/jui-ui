@@ -13,22 +13,7 @@
 	  background-color: @windowBodyBackgroundColor;
 	  border-top: 1px solid @windowBodyBorderColor;
 
-	  // Scroll
-	  &::-webkit-scrollbar-track {
-		.btn-bgcolor-2(@windowScrollBackgroundColor1, @windowScrollBackgroundColor2, left);
-		border: 1px solid @windowScrollBorderColor;
-	  }
-
-	  &::-webkit-scrollbar-thumb {
-		background: @windowScrollHandleBackgroundColor;
-		border: 1px solid @windowScrollHandleBorderColor;
-		.border-radius(@windowScrollHandleBorderRadius);
-
-		&:hover {
-		  background: @windowScrollHandleHoverBackgroundColor;
-		  border: 1px solid @windowScrollHandleHoverBorderColor;
-		}
-	  }
+	  .webkit-scrollbar();
 	}
 
 	> .foot {

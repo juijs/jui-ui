@@ -1,4 +1,3 @@
-/* Mixins */
 .clearfix {
   *zoom: 1;
 }
@@ -18,7 +17,47 @@
   background-color: transparent;
   border: 0;
 }
-/* Widgets */
+.jui label,
+.jui input,
+.jui button,
+.jui select,
+.jui textarea {
+  font-weight: normal;
+}
+.jui select,
+.jui button,
+.jui input[type="button"],
+.jui input[type="reset"],
+.jui input[type="submit"],
+.jui input[type="radio"],
+.jui input[type="checkbox"] {
+  cursor: pointer;
+}
+.jui button,
+.jui html input[type="button"],
+.jui input[type="reset"],
+.jui input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+.jui button,
+.jui input {
+  line-height: normal;
+}
+.jui button,
+.jui input,
+.jui select,
+.jui textarea {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+.jui select[disabled],
+.jui textarea[disabled],
+.jui select[readonly],
+.jui textarea[readonly] {
+  cursor: not-allowed;
+}
 .jui .label {
   position: relative;
   display: inline-block;
@@ -1936,10 +1975,6 @@
   padding: 15px;
   word-break: break-all;
 }
-.jui .window > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
 .jui .window > .foot {
   position: absolute;
   left: 0px;
@@ -2006,10 +2041,6 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-}
-.jui table.table > tbody::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
 }
 .jui table.table > thead > tr > th {
   padding: 6px;
@@ -2130,10 +2161,6 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-}
-.jui .xtable > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
 }
 .jui .xtable > .loading {
   display: none;
@@ -2267,10 +2294,6 @@
   overflow: auto;
   padding: 15px 15px 18px 15px;
   word-break: break-all;
-}
-.jui .msgbox > .body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
 }
 .jui .msgbox > .resize {
   position: absolute;
@@ -3455,45 +3478,4 @@
 }
 .jui .accordion.large > .title > [class^="icon-"] {
   margin-top: 12px;
-}
-.jui label,
-.jui input,
-.jui button,
-.jui select,
-.jui textarea {
-  font-weight: normal;
-}
-.jui select,
-.jui button,
-.jui input[type="button"],
-.jui input[type="reset"],
-.jui input[type="submit"],
-.jui input[type="radio"],
-.jui input[type="checkbox"] {
-  cursor: pointer;
-}
-.jui button,
-.jui html input[type="button"],
-.jui input[type="reset"],
-.jui input[type="submit"] {
-  cursor: pointer;
-  -webkit-appearance: button;
-}
-.jui button,
-.jui input {
-  line-height: normal;
-}
-.jui button,
-.jui input,
-.jui select,
-.jui textarea {
-  margin: 0;
-  font-size: 100%;
-  vertical-align: middle;
-}
-.jui select[disabled],
-.jui textarea[disabled],
-.jui select[readonly],
-.jui textarea[readonly] {
-  cursor: not-allowed;
 }

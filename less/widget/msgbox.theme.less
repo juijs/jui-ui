@@ -13,23 +13,7 @@
 
     > .body {
       background-color: inherit;
-
-      // Scroll
-      &::-webkit-scrollbar-track {
-        .btn-bgcolor-2(@msgboxScrollBackgroundColor1, @msgboxScrollBackgroundColor2, left);
-        border: 1px solid @msgboxScrollBorderColor;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: @msgboxScrollHandleBackgroundColor;
-        border: 1px solid @msgboxScrollHandleBorderColor;
-        .border-radius(@msgboxScrollHandleBorderRadius);
-
-        &:hover {
-          background: @msgboxScrollHandleHoverBackgroundColor;
-          border: 1px solid @msgboxScrollHandleHoverBorderColor;
-        }
-      }
+      .webkit-scrollbar();
     }
   }
 

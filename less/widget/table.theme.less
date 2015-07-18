@@ -2,21 +2,7 @@
 
   table.table {
     > tbody {
-      &::-webkit-scrollbar-track {
-        .btn-bgcolor-2(@tableScrollBackgroundColor1, @tableScrollBackgroundColor2, left);
-        border: 1px solid @tableScrollBorderColor;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: @tableScrollHandleBackgroundColor;
-        border: 1px solid @tableScrollHandleBorderColor;
-        .border-radius(@tableScrollHandleBorderRadius);
-
-        &:hover {
-          background: @tableScrollHandleHoverBackgroundColor;
-          border: 1px solid @tableScrollHandleHoverBorderColor;
-        }
-      }
+      .webkit-scrollbar();
     }
   }
 

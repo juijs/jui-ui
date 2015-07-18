@@ -880,6 +880,10 @@
 .jui .msgbox > .body {
   background-color: inherit;
 }
+.jui .msgbox > .body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 .jui .msgbox > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -975,6 +979,10 @@
 .jui .window > .body {
   background-color: #ffffff;
   border-top: 1px solid #ebebeb;
+}
+.jui .window > .body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 .jui .window > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
@@ -1228,6 +1236,10 @@
 .jui .bargraph.flat > .warning.active {
   border-color: #eca402;
   background-color: #f5b400;
+}
+.jui table.table > tbody::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 .jui table.table > tbody::-webkit-scrollbar-track {
   background-color: #f2f2f2;
@@ -1567,6 +1579,10 @@
 }
 .jui .xtable > .body {
   border-bottom: 1px solid #dfdce3 !important;
+}
+.jui .xtable > .body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 .jui .xtable > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
