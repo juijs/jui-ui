@@ -20,6 +20,7 @@
 /* Half supported */
 /* Not supported */
 /* Not supported */
+/* Not supported */
 .clearfix {
   *zoom: 1;
 }
@@ -1583,4 +1584,30 @@
   -moz-transition: border linear .2s, box-shadow linear .2s;
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
+}
+.jui .xtable > .loading {
+  background-image: url("../img/xtable-loading.gif");
+}
+.jui .xtable > .body {
+  border-bottom: 1px solid #dfdce3 !important;
+}
+.jui .xtable > .body::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -webkit-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
+  border: 1px solid #e6e6e6;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .xtable > .body::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }

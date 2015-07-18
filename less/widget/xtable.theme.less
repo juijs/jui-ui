@@ -1,0 +1,29 @@
+.jui {
+  .xtable {
+    > .loading {
+      background-image: url(@xtableLoadingImageUrl);
+    }
+
+    > .body {
+      border-bottom: 1px solid @xtableBodyBorderColor !important;
+
+      // Scroll
+      &::-webkit-scrollbar-track {
+        .btn-bgcolor-2(@xtableScrollBackgroundColor1, @xtableScrollBackgroundColor2, left);
+        border: 1px solid @xtableScrollBorderColor;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: @xtableScrollHandleBackgroundColor;
+        border: 1px solid @xtableScrollHandleBorderColor;
+        .border-radius(@xtableScrollHandleBorderRadius);
+
+        &:hover {
+          background: @xtableScrollHandleHoverBackgroundColor;
+          border: 1px solid @xtableScrollHandleHoverBorderColor;
+        }
+      }
+    }
+  }
+
+}
