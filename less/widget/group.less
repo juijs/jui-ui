@@ -9,9 +9,19 @@
 	  }
 	}
 
-	> *:not(ul) {
+	> *:not(:first-child):not(:last-child) {
 	  position: relative;
 	  .border-radius(0px) !important;
+	}
+
+	> *:first-child {
+	  .border-top-right-radius(0px) !important;
+	  .border-bottom-right-radius(0px) !important;
+	}
+
+	> *:last-child {
+	  .border-top-left-radius(0px) !important;
+	  .border-bottom-left-radius(0px) !important;
 	}
   }
 

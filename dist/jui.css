@@ -1821,14 +1821,36 @@
 .jui .bargraph > * + *:not(ul) {
   margin-left: -7px;
 }
-.jui .group > *:not(ul),
-.jui .combo > *:not(ul),
-.jui .paging > *:not(ul),
-.jui .bargraph > *:not(ul) {
+.jui .group > *:not(:first-child):not(:last-child),
+.jui .combo > *:not(:first-child):not(:last-child),
+.jui .paging > *:not(:first-child):not(:last-child),
+.jui .bargraph > *:not(:first-child):not(:last-child) {
   position: relative;
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
   border-radius: 0px !important;
+}
+.jui .group > *:first-child,
+.jui .combo > *:first-child,
+.jui .paging > *:first-child,
+.jui .bargraph > *:first-child {
+  -webkit-border-top-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.jui .group > *:last-child,
+.jui .combo > *:last-child,
+.jui .paging > *:last-child,
+.jui .bargraph > *:last-child {
+  -webkit-border-top-left-radius: 0px !important;
+  -moz-border-radius-topleft: 0px !important;
+  border-top-left-radius: 0px !important;
+  -webkit-border-bottom-left-radius: 0px !important;
+  -moz-border-radius-bottomleft: 0px !important;
+  border-bottom-left-radius: 0px !important;
 }
 .jui .group + .group,
 .jui .combo + .combo,
