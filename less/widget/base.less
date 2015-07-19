@@ -26,3 +26,29 @@
     cursor: not-allowed;
   }
 }
+
+// 자식 엘리먼트 합치기
+.children-group(@margin: -7px) {
+  position: relative;
+  display: inline-block;
+
+  > * + * {
+    &:not(ul) {
+      margin-left: @margin;
+    }
+  }
+
+  > *:not(:first-child):not(:last-child) {
+    .border-radius(0px) !important;
+  }
+
+  > *:first-child {
+    .border-top-right-radius(0px) !important;
+    .border-bottom-right-radius(0px) !important;
+  }
+
+  > *:last-child {
+    .border-top-left-radius(0px) !important;
+    .border-bottom-left-radius(0px) !important;
+  }
+}

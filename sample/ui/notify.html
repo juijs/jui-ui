@@ -6,7 +6,8 @@
 <title>[JUI Library] - JavaScript/Notify</title>
 
 <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -122,7 +123,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(1, '');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(1, '');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "top-right" }
@@ -130,7 +131,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(2, 'red');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(2, 'danger');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "top-left", timeout: 0 }
@@ -138,7 +139,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(3, 'orange');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(3, 'warning');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "top", timeout: 2000, padding: { top: 100 } }
@@ -146,7 +147,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(4, 'green');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(4, 'success');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "bottom", timeout: 0, distance: 50 }
@@ -154,7 +155,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(5, 'blue');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(5, 'info');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "bottom-left", showDuration: 1000, hideDuration: 1000 }
@@ -162,7 +163,7 @@
 			</tr>
 			<tr>
 				<td>
-					<button class="btn btn-gray" onclick="notifyTest(6, '');"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="notifyTest(6, '');"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					{ position: "bottom-right", showEasing: "linear" }
@@ -171,66 +172,14 @@
 		</table>
 		
 		<script id="tpl_alarm" type="text/template">
-		    <div class="notify notify-<!= color !>">
+		    <div class="notify <!= color !>">
 		        <div class="title"><!= title !></div>
 		        <div class="message"><!= message !></div>
 		    </div>
 		</script>
 	</p>
-	
-	<p class="br">
-		아래는 알림을 구성하는 기본 템플릿입니다.
-		
-<pre><code class="language-markup">&lt;script id="tpl_alarm" type="text/template"&gt;
-    &lt;div class="notify notify-&lt;!= color !&gt;"&gt;
-        &lt;div class="title"&gt;&lt;!= title !&gt;&lt;/div&gt;
-        &lt;div class="message"&gt;&lt;!= message !&gt;&lt;/div&gt;
-    &lt;/div&gt;
-&lt;/script&gt;</code></pre>
-	</p>
 
-	<p class="br">
-		객체 생성시에 설정한 셀렉터에 알림 메시지를 추가할 수 있습니다.
-		
-<pre><code class="language-javascript">jui.ready([ "ui.notify" ], function(notify) {
-	notify1 = notify("body", {
-        position: "top-right",
-        event: {
-        	show: function(data) {
-        		console.log("show : " + JSON.stringify(data));
-        	}, 
-        	hide: function(data) {
-        		console.log("hide : " + JSON.stringify(data));
-        	},
-        	click: function(data) {
-        		console.log("click : " + JSON.stringify(data));
-        	}
-        },
-        tpl: {
-            item: $("#tpl_alarm").html()
-        }
-    });
-});</code></pre>
-	</p>
 
-	<p class="br">
-		아래 함수는 위의 테이블에서 실행한 테스트 코드입니다.
-		
-<pre><code class="language-javascript">function notifyTest(type, color) {
-	var data = { 
-		title: "Caution message Send!!!", 
-		message: "Feb 15, 2013-12-24 02:24:19", 
-		color: color 
-	};
-	
-	if(type == 1) notify1.add(data);
-	if(type == 2) notify2.add(data);
-	if(type == 3) notify3.add(data);
-	if(type == 4) notify4.add(data);
-	if(type == 5) notify5.add(data);
-	if(type == 6) notify6.add(data);
-}</code></pre>
-	</p>
 </section>
 
 </body>

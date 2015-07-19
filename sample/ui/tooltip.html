@@ -6,7 +6,8 @@
 <title>[JUI Library] - JavaScript/Tooltip</title>
 
 <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -77,19 +78,11 @@ jui.ready(function(ui, uix, _) {
 <body class="jui">
 
 <script id="tpl_message" type="text/template">
-    <div class="tooltip tooltip-top">
+    <div class="tooltip top">
         <div class="message" style="font-size: 15px;"><!= message !></div>
     </div>
 </script>
 
-<div class="page-header">
-	<h1>Tooltip</h1>
-	<p class="br">
-		툴팁은 상/하/좌/우 총 4가지 위치로 설정할 수 있으며 관련 메시지는 <strong>title</strong> 속성에 입력하면 됩니다.
-
-<pre><code class="language-markup">&lt;span class="tooltip" title="Tooltip Message"&gt;Demo&lt;/span&gt;</code></pre>
-	</p>
-</div>
 
 <section>
 	<h2>Top</h2>
@@ -137,7 +130,7 @@ jui.ready(function(ui, uix, _) {
 		그리고 툴팁은 가운데 정렬됩니다. (<span class="tooltip_4" title="Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right">Over</span>)
 		
 		<script id="tpl_popover" type="text/template">
-			<div class="popover popover-<!= position !> popover-<!= color !>">
+			<div class="popover <!= position !> <!= color !>">
 				<div class="head">Subject</div>
 				<div class="body">
 					<div class="image"><i class="icon-caution"></i></div>

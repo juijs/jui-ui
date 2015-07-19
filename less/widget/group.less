@@ -1,32 +1,16 @@
 .jui {
-  .group, .combo, .paging, .bargraph {
-	position: relative;
-	display: inline-block;
+  .group, .combo {
+	.children-group();
+  }
 
-	> * + * {
-	  &:not(ul) {
-		margin-left: -7px;
-	  }
-	}
-
-	> *:not(:first-child):not(:last-child) {
-	  position: relative;
-	  .border-radius(0px) !important;
-	}
-
-	> *:first-child {
-	  .border-top-right-radius(0px) !important;
-	  .border-bottom-right-radius(0px) !important;
-	}
-
-	> *:last-child {
-	  .border-top-left-radius(0px) !important;
-	  .border-bottom-left-radius(0px) !important;
+  .combo { // 콤보박스의 토글 버튼
+	.toggle {
+	  padding-left: 4px;
+	  padding-right: 4px;
 	}
   }
 
-  .group + .group, .combo + .combo,
-  .paging + .paging, .bargraph + .bargraph {
+  .group + .group, .combo + .combo {
 	margin-left: 5px;
   }
 }

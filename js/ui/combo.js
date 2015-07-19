@@ -164,8 +164,8 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			var self = this, opts = this.options;
 			
 			var $combo_root 	= $(this.root),
-				$combo_text 	= $combo_root.children(".btn").not(".btn-toggle"),
-				$combo_toggle 	= $combo_root.children(".btn-toggle"),
+				$combo_text 	= $combo_root.children(".btn").not(".toggle"),
+				$combo_toggle 	= $combo_root.children(".toggle"),
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
 			

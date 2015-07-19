@@ -1,7 +1,5 @@
 .jui {
   .bargraph {
-	.bargraph.normal;
-
 	> * {
 	  position: relative;
       display: inline-block;
@@ -45,6 +43,9 @@
 	  	border-left-width: 1px;
 	  }
 	}
+
+	.bargraph.normal;
+	.children-group();
   }
 
   // BarGraph Sizes
@@ -70,5 +71,11 @@
 		line-height: 25px;
 	  }
 	}
+  }
+
+
+  // BargGraph Etc
+  .bargraph + .bargraph {
+	margin-left: 5px;
   }
 }

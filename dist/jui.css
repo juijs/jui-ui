@@ -188,10 +188,6 @@
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
-.jui .btn.toggle {
-  padding-left: 4px;
-  padding-right: 4px;
-}
 .jui .btn[disabled],
 .jui .disabled {
   cursor: not-allowed;
@@ -1809,31 +1805,22 @@
   }
 }
 .jui .group,
-.jui .combo,
-.jui .paging,
-.jui .bargraph {
+.jui .combo {
   position: relative;
   display: inline-block;
 }
 .jui .group > * + *:not(ul),
-.jui .combo > * + *:not(ul),
-.jui .paging > * + *:not(ul),
-.jui .bargraph > * + *:not(ul) {
+.jui .combo > * + *:not(ul) {
   margin-left: -7px;
 }
 .jui .group > *:not(:first-child):not(:last-child),
-.jui .combo > *:not(:first-child):not(:last-child),
-.jui .paging > *:not(:first-child):not(:last-child),
-.jui .bargraph > *:not(:first-child):not(:last-child) {
-  position: relative;
+.jui .combo > *:not(:first-child):not(:last-child) {
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
   border-radius: 0px !important;
 }
 .jui .group > *:first-child,
-.jui .combo > *:first-child,
-.jui .paging > *:first-child,
-.jui .bargraph > *:first-child {
+.jui .combo > *:first-child {
   -webkit-border-top-right-radius: 0px !important;
   -moz-border-radius-topright: 0px !important;
   border-top-right-radius: 0px !important;
@@ -1842,9 +1829,7 @@
   border-bottom-right-radius: 0px !important;
 }
 .jui .group > *:last-child,
-.jui .combo > *:last-child,
-.jui .paging > *:last-child,
-.jui .bargraph > *:last-child {
+.jui .combo > *:last-child {
   -webkit-border-top-left-radius: 0px !important;
   -moz-border-radius-topleft: 0px !important;
   border-top-left-radius: 0px !important;
@@ -1852,10 +1837,12 @@
   -moz-border-radius-bottomleft: 0px !important;
   border-bottom-left-radius: 0px !important;
 }
+.jui .combo .toggle {
+  padding-left: 4px;
+  padding-right: 4px;
+}
 .jui .group + .group,
-.jui .combo + .combo,
-.jui .paging + .paging,
-.jui .bargraph + .bargraph {
+.jui .combo + .combo {
   margin-left: 5px;
 }
 .jui .navbar {
@@ -2761,6 +2748,8 @@
   display: block;
   width: 100%;
   height: 28px;
+  position: relative;
+  display: inline-block;
 }
 .jui .paging * {
   position: absolute !important;
@@ -2815,6 +2804,30 @@
 .jui .paging > .next {
   background-position: 0 0;
 }
+.jui .paging > * + *:not(ul) {
+  margin-left: -7px;
+}
+.jui .paging > *:not(:first-child):not(:last-child) {
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  border-radius: 0px !important;
+}
+.jui .paging > *:first-child {
+  -webkit-border-top-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.jui .paging > *:last-child {
+  -webkit-border-top-left-radius: 0px !important;
+  -moz-border-radius-topleft: 0px !important;
+  border-top-left-radius: 0px !important;
+  -webkit-border-bottom-left-radius: 0px !important;
+  -moz-border-radius-bottomleft: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
 .jui .paging.normal {
   height: 28px;
 }
@@ -2848,6 +2861,9 @@
 }
 .jui .paging.large > .next {
   background-position: 0 5px;
+}
+.jui .paging + .paging {
+  margin-left: 5px;
 }
 .jui .panel {
   position: relative;
@@ -2989,13 +3005,9 @@
 .jui .panel.normal > .body.fit {
   padding: 0px !important;
 }
-.jui .bargraph > * .title {
-  height: 32px;
-  line-height: 32px;
-  font-size: 0.75em;
-}
-.jui .bargraph > * .data {
-  font-size: 0.8em;
+.jui .bargraph {
+  position: relative;
+  display: inline-block;
 }
 .jui .bargraph > * {
   position: relative;
@@ -3031,6 +3043,38 @@
 .jui .bargraph > *.active:not(:first-child) .line {
   border-left-width: 1px;
 }
+.jui .bargraph > * .title {
+  height: 32px;
+  line-height: 32px;
+  font-size: 0.75em;
+}
+.jui .bargraph > * .data {
+  font-size: 0.8em;
+}
+.jui .bargraph > * + *:not(ul) {
+  margin-left: -7px;
+}
+.jui .bargraph > *:not(:first-child):not(:last-child) {
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  border-radius: 0px !important;
+}
+.jui .bargraph > *:first-child {
+  -webkit-border-top-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.jui .bargraph > *:last-child {
+  -webkit-border-top-left-radius: 0px !important;
+  -moz-border-radius-topleft: 0px !important;
+  border-top-left-radius: 0px !important;
+  -webkit-border-bottom-left-radius: 0px !important;
+  -moz-border-radius-bottomleft: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
 .jui .bargraph.normal > * .title {
   height: 32px;
   line-height: 32px;
@@ -3042,6 +3086,9 @@
 .jui .bargraph.small > * .title {
   height: 25px;
   line-height: 25px;
+}
+.jui .bargraph + .bargraph {
+  margin-left: 5px;
 }
 .jui .datepicker {
   position: relative;

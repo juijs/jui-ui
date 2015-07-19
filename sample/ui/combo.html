@@ -6,7 +6,8 @@
 <title>[JUI Library] - JavaScript/Combo</title>
 
 <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -62,8 +63,8 @@ jui.ready(function(ui, uix, _) {
 			<tr>
 				<td>
 					<div id="combo_1" class="combo">
-						<a class="btn btn-gray" style="width: 175px;">Select...</a>
-						<a class="btn btn-gray btn-toggle"><i class="icon-arrow2"></i></a>
+						<a class="btn" style="width: 175px;">Select...</a>
+						<a class="btn toggle"><i class="icon-arrow2"></i></a>
 						<ul>
 							<li value="1">New</li>
 							<li value="2">Open</li>
@@ -78,7 +79,7 @@ jui.ready(function(ui, uix, _) {
 					</div>
 				</td>
 				<td>
-					<button class="btn btn-gray" onclick="alert(combo_1.getText())"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="alert(combo_1.getText())"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					alert(combo_1.getText());
@@ -89,8 +90,8 @@ jui.ready(function(ui, uix, _) {
 			</tr>
 			<tr>
 				<td>
-					<div id="combo_2" class="combo combo-black">
-						<a class="btn btn-black btn-small">Select...</a>
+					<div id="combo_2" class="combo">
+						<a class="btn small">Select...</a>
 						<ul>
 							<li><a href="#" value="menu1">New</a></li>
 							<li><a href="#" value="menu2">Open</a></li>
@@ -102,11 +103,11 @@ jui.ready(function(ui, uix, _) {
 							<li class="divider"></li>
 							<li><a href="#" value="menu7">Exit</a></li>
 						</ul>
-						<a class="btn btn-black btn-small btn-toggle"><i class="icon-arrow2 icon-white"></i></a>
+						<a class="btn small toggle"><i class="icon-arrow2"></i></a>
 					</div>
 				</td>
 				<td>
-					<button class="btn btn-gray" onclick="combo_2.setIndex(1)"><i class="icon-play"></i> Run</button>
+					<button class="btn" onclick="combo_2.setIndex(1)"><i class="icon-play"></i> Run</button>
 				</td>
 				<td>
 					combo_2.setIndex(1)
@@ -116,49 +117,6 @@ jui.ready(function(ui, uix, _) {
 				</td>
 			</tr>
 		</table>
-	</p>
-	
-	<p class="br">
-		아래는 콤보 박스를 생성하는 코드입니다.
-		
-<pre><code class="language-markup">&lt;div id="combo_1" class="combo"&gt;
-	&lt;a class="btn btn-gray"&gt;Select...&lt;/a&gt;
-	&lt;a class="btn btn-gray btn-toggle"&gt;&lt;i class="icon-arrow2"&gt;&lt;/i&gt;&lt;/a&gt;
-	&lt;ul&gt;
-		&lt;li value="1">New&lt;/li>
-		&lt;li value="2">Open&lt;/li>
-		&lt;li value="3">Save&lt;/li>
-		&lt;li value="4">Close&lt;/li>
-		&lt;li value="5">Restart&lt;/li>
-		&lt;li class="divider">&lt;/li>
-		&lt;li value="6">Print</a>&lt;/li>
-		&lt;li class="divider">&lt;/li>
-		&lt;li value="7">Exit&lt;/li>
-	&lt;/ul&gt;
-&lt;/div&gt;</code></pre>
-
-<pre><code class="language-javascript">jui.ready(function(ui, uix, _) {
-	combo_1 = ui.combo("#combo_1", {
-		index: 2,
-		position: "top",
-		event: {
-			change: function(data) {
-				alert("text(" + data.text + "), value(" + data.value + ")");
-			}
-		}
-	});
-	
-	combo_2 = ui.combo("#combo_2", {
-		index: 3,
-		width: 200,
-		keydown: true,
-		event: {
-			change: function(data) {
-				alert("text(" + data.text + "), value(" + data.value + ")");
-			}
-		}
-	});
-});</code></pre>
 	</p>
 </section>
 

@@ -5,8 +5,9 @@
 <META charset="UTF-8">
 <title>[JUI Library] - JavaScript/Dropdown</title>
 
-    <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../../custom/menual.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -76,11 +77,11 @@ function dd_4_update() {
 		
 		<div style="display: inline-block; position: relative;">
 			<div class="group">
-				<button class="btn btn-black" onclick="dd_1.show();">Show</button>
-				<button class="btn btn-black" onclick="dd_1.hide();">Hide</button>
+				<button class="btn" onclick="dd_1.show();">Show</button>
+				<button class="btn" onclick="dd_1.hide();">Hide</button>
 			</div>
 			
-			<div id="dd_1" class="dropdown dropdown-large">
+			<div id="dd_1" class="dropdown large">
 				<ul style="width: 150px;">
 					<li value="1">Dropdown 1</li>
 					<li class="divider"></li>
@@ -91,36 +92,7 @@ function dd_4_update() {
 			</div>
 		</div>
 	</p>
-	
-	<p class="br">
-<pre><code class="language-javascript">jui.ready(function(ui, uix, _) {
-	dd_1 = ui.dropdown("#dd_1", {
-		event: {
-			change: function(data) {
-				alert(data.value + ", " + data.text);
-			}
-		}
-	});
-});</code></pre>
-		
-<pre><code class="language-markup">&lt;div style="display: inline-block; position: relative;"&gt;
-	&lt;div class="group"&gt;
-		&lt;button class="btn btn-black" onclick="dd_1.show();"&gt;Show&lt;/button&gt;
-		&lt;button class="btn btn-black" onclick="dd_1.hide();"&gt;Hide&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div id="dd_1" class="dropdown dropdown-large"&gt;
-		&lt;ul style="width: 150px;"&gt;
-			&lt;li value="1"&gt;Dropdown 1&lt;/li&gt;
-			&lt;li class="divider"&gt;&lt;/li&gt;
-			&lt;li value="2"&gt;Dropdown 2&lt;/li&gt;
-			&lt;li value="3"&gt;Dropdown 3&lt;/li&gt;
-			&lt;li value="4"&gt;Dropdown 4&lt;/li&gt;
-		&lt;/ul&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
 
-	</p>
 </section>
 
 <section>
@@ -131,11 +103,11 @@ function dd_4_update() {
 		
 		<div style="display: inline-block; position: relative;">
 			<div class="group">
-				<button class="btn btn-gray" onclick="dd_2.show();">Show</button>
-				<button class="btn btn-gray" onclick="dd_2.hide();">Hide</button>
+				<button class="btn" onclick="dd_2.show();">Show</button>
+				<button class="btn" onclick="dd_2.hide();">Hide</button>
 			</div>
 			
-			<div id="dd_2" class="dropdown dropdown-large">
+			<div id="dd_2" class="dropdown large">
 				<div class="anchor"></div>
 				
 				<ul style="width: 150px;">
@@ -148,28 +120,7 @@ function dd_4_update() {
 			</div>
 		</div>
 	</p>
-	
-	<p class="br">
-<pre><code class="language-markup">&lt;div style="display: inline-block; position: relative;"&gt;
-	&lt;!-- 생략 --&gt;
-	
-	&lt;div id="dd_2" class="dropdown dropdown-large"&gt;
-		&lt;div class="anchor"&gt;&lt;/div&gt;
-		
-		&lt;ul style="width: 150px;"&gt;
-			&lt;!-- 생략 --&gt;
-		&lt;/ul&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
-		
-		<p>
-			그리고 <strong>close</strong> 옵션의 값을 false로 주면 리스트 클릭시 드롭다운이 닫히지 않습니다.
 
-<pre><code class="language-javascript">dd_2 = ui.dropdown("#dd_2", {
-	close: false
-});</code></pre>
-		</p>
-	</p>
 </section>
 
 <section>
@@ -178,12 +129,12 @@ function dd_4_update() {
 		만약에 드롭다운을 화면 우측에서 보여주게 되면 메뉴의 일부가 가려지는 문제가 발생할 수 있습니다.<br/>
 		이럴 경우에는 <strong>margin-left</strong> 스타일 값을 음수로 주면 해결 할 수 있습니다.
 		
-		<div class="navbar navbar-black" style="overflow: hidden;">
-			<div class="inline-right">
-				<a class="btn btn-black btn-small" onclick="dd_3.show();">Menu List <i class="icon-arrow1 icon-white"></i></a> 
+		<div class="navbar" style="overflow: hidden;">
+			<div class="inline right">
+				<a class="btn small" onclick="dd_3.show();">Menu List <i class="icon-arrow1 icon-white"></i></a>
 				
-				<div id="dd_3" class="dropdown dropdown-black" style="margin-left: -15px;">
-					<div class="anchor anchor-right"></div>
+				<div id="dd_3" class="dropdown" style="margin-left: -15px;">
+					<div class="anchor"></div>
 					
 					<ul style="width: 120px;">
 						<li value="1">Dropdown 1</li>
@@ -219,13 +170,13 @@ function dd_4_update() {
 	<p>
 		드롭다운은 마크업 뿐만이 아니라 순수 데이터로도 리스트를 구성할 수 있습니다.
 		
-		<div class="navbar navbar-black" style="overflow: hidden;">
-			<div class="inline-right">
-				<a class="btn btn-black btn-small" onclick="dd_4_update();">Update</a> 
-				<a class="btn btn-black btn-small" onclick="dd_4.show();">Menu List <i class="icon-arrow1 icon-white"></i></a> 
+		<div class="navbar" style="overflow: hidden;">
+			<div class="inline right">
+				<a class="btn small" onclick="dd_4_update();">Update</a>
+				<a class="btn small" onclick="dd_4.show();">Menu List <i class="icon-arrow1 icon-white"></i></a>
 				
-				<div id="dd_4" class="dropdown dropdown-black">
-					<div class="anchor anchor-right"></div>
+				<div id="dd_4" class="dropdown">
+					<div class="anchor"></div>
 					
 					<ul style="width: 120px;">
 					</ul>
@@ -236,14 +187,7 @@ function dd_4_update() {
 			<li value="<!= value !>"><!= text !></li>
 		</script>
 	</p>
-	
-	<p class="br">
-		<strong>data-jui</strong> 속성 값에 해당 드롭다운의 셀렉터를 지정하며, <strong>data-tpl</strong> 속성 값은 <strong>node</strong>로 지정합니다.
 
-<pre><code class="language-markup">&lt;script data-jui="#dd_4" data-tpl="node" type="text/template"&gt;
-	&lt;li value="&lt;!= value !&gt;"&gt;&lt;!= text !&gt;&lt;/li&gt;
-&lt;/script&gt;</code></pre>
-	</p>
 	<p>
 		<strong>node</strong> 템플릿이 설정되어 있다면 아래와 같이 옵션으로 데이터를 설정할 수 있습니다.
 		
