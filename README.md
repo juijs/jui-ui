@@ -5,6 +5,7 @@ JUI library only requires the user to load a single package file.
 Access to the jui class must then be configured in the markup.
 ```html
 <link rel="stylesheet" href="jui.min.css" />
+<link rel="stylesheet" href="jennifer.theme.min.css" />
 <body class="jui">...</body>
 ```
 
@@ -34,16 +35,18 @@ grunt test  // Unit Tests
 ```
 After the build output is shown below.
 ```
-jui.js
-jui.min.js
-jui.comp.js
-jui.comp.min.js
-jui.table.js
-jui.table.min.js
-jui.chart.js
-jui.chart.min.js
-jui.css
-jui.min.css 
+dist/jui.js
+dist/jui.min.js
+dist/jui.table.js
+dist/jui.table.min.js
+dist/jui.chart.js
+dist/jui.chart.min.js
+dist/jui.css
+dist/jui.min.css
+dist/jennifer.theme.css
+dist/jennifer.theme.min.css
+dist/dark.theme.css
+dist/dark.theme.min.css
 ```
 
 ## Using in NodeJS
