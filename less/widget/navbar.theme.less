@@ -1,44 +1,41 @@
-.jui {
-  .navbar {
-    border: 1px solid @navbarBorderColor;
-    .btn-bgcolor-2(@navbarBackgroundColor1, @navbarBackgroundColor2);
-    .box-shadow(@navbarBoxShadow);
-    
-    ul.nav {
-      li {
-        color: @navbarListFontColor;
-        text-shadow: @navbarListTextShadow;
-      
-        &.active {
-          color: @navbarListActiveFontColor;
-          background-color: @navbarListActiveBackgroundColor;
-          .box-shadow(@navbarListActiveBoxShadow);
-        }
-        
-        a {
-          color: @navbarListLinkFontColor;
+.navbar {
+  border: 1px solid @navbarBorderColor;
+  .btn-bgcolor-2(@navbarBackgroundColor1, @navbarBackgroundColor2);
+  .box-shadow(@navbarBoxShadow);
 
-          &:focus, &:hover {
-            background-color: @navbarListLinkFocusBackgroundColor;
-            color: @navbarListLinkFocusFontColor;
-          }
+  ul.nav {
+    li {
+      color: @navbarListFontColor;
+      text-shadow: @navbarListTextShadow;
+
+      &.active {
+        color: @navbarListActiveFontColor;
+        background-color: @navbarListActiveBackgroundColor;
+        .box-shadow(@navbarListActiveBoxShadow);
+      }
+
+      a {
+        color: @navbarListLinkFontColor;
+
+        &:focus, &:hover {
+          background-color: @navbarListLinkFocusBackgroundColor;
+          color: @navbarListLinkFocusFontColor;
         }
       }
     }
-    
-    .line {
-      background-color: @navbarInlineLineColor;
-    }
   }
 
-  .navbar.flat {
-    border: 1px solid @navbarFlatBorderColor !important;
-    .btn-bgcolor-2(@navbarFlatBackgroundColor, @navbarFlatBackgroundColor) !important;
-    .box-shadow(0) !important;
-    
-    .line {
-      background-color: @navbarInlineLineColor;
-    }
+  .line {
+    background-color: @navbarInlineLineColor;
   }
+}
 
+.navbar.flat {
+  border: 1px solid @navbarFlatBorderColor !important;
+  .btn-bgcolor-2(@navbarFlatBackgroundColor, @navbarFlatBackgroundColor) !important;
+  .box-shadow(0) !important;
+
+  .line {
+    background-color: @navbarInlineLineColor;
+  }
 }

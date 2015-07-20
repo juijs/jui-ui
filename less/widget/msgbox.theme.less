@@ -1,89 +1,86 @@
-.jui {
-  .msgbox {
-    color: @msgboxFontColor;
-    border: 1px solid @msgboxBorderColor;
-    background-color: @msgboxBackgroundColor;
-    .box-shadow(@msgboxBoxShadow);
+.msgbox {
+  color: @msgboxFontColor;
+  border: 1px solid @msgboxBorderColor;
+  background-color: @msgboxBackgroundColor;
+  .box-shadow(@msgboxBoxShadow);
 
-    > .head {
-      color: @msgboxHeadFontColor;
-      border-bottom: 1px solid @msgboxHeadBorderColor;
-      background-color: @msgboxHeadBackgroundColor;
-    }
+  > .head {
+    color: @msgboxHeadFontColor;
+    border-bottom: 1px solid @msgboxHeadBorderColor;
+    background-color: @msgboxHeadBackgroundColor;
+  }
 
-    > .body {
-      background-color: inherit;
-      .webkit-scrollbar();
+  > .body {
+    background-color: inherit;
+    .webkit-scrollbar();
+  }
+}
+
+.msgbox.warning {
+  color: @msgboxWarningFontColor;
+  border: 1px solid @msgboxWarningBorderColor;
+  background-color: @msgboxWarningBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxWarningHeadBorderColor;
+    background-color: @msgboxWarningHeadBackgroundColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxWarningBodyFontColor;
+  }
+}
+
+.msgbox.danger {
+  color: @msgboxDangerFontColor;
+  border: 1px solid @msgboxDangerBorderColor;
+  background-color: @msgboxDangerBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxDangerHeadBorderColor;
+    background-color: @msgboxDangerHeadBackgroundColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxDangerBodyFontColor;
+  }
+}
+
+.msgbox.success {
+  color: @msgboxSuccessFontColor;
+  border: 1px solid @msgboxSuccessBorderColor;
+  background-color: @msgboxSuccessBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxSuccessHeadBorderColor;
+    background-color: @msgboxSuccessHeadBackgroundColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxSuccessBodyFontColor;
+  }
+}
+
+.msgbox.detail {
+  color: @msgboxDetailFontColor;
+  background-color: @msgboxDetailBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxDetailHeadBorderColor;
+    background-color: inherit;
+    color: @msgboxDetailHeadFontColor;
+
+    > .subtext {
+      color: @msgboxDetailHeadSubtextFontColor;
+      font-weight: normal;
     }
   }
 
-  .msgbox.warning {
-    color: @msgboxWarningFontColor;
-    border: 1px solid @msgboxWarningBorderColor;
-    background-color: @msgboxWarningBackgroundColor;
-
-    > .head {
-      border-bottom: 1px solid @msgboxWarningHeadBorderColor;
-      background-color: @msgboxWarningHeadBackgroundColor;
-    }
-
-    > .body {
-      background-color: inherit;
-      color: @msgboxWarningBodyFontColor;
-    }
+  > .body {
+    background-color: inherit;
+    color: inherit;
   }
-
-  .msgbox.danger {
-    color: @msgboxDangerFontColor;
-    border: 1px solid @msgboxDangerBorderColor;
-    background-color: @msgboxDangerBackgroundColor;
-
-    > .head {
-      border-bottom: 1px solid @msgboxDangerHeadBorderColor;
-      background-color: @msgboxDangerHeadBackgroundColor;
-    }
-
-    > .body {
-      background-color: inherit;
-      color: @msgboxDangerBodyFontColor;
-    }
-  }
-
-  .msgbox.success {
-    color: @msgboxSuccessFontColor;
-    border: 1px solid @msgboxSuccessBorderColor;
-    background-color: @msgboxSuccessBackgroundColor;
-
-    > .head {
-      border-bottom: 1px solid @msgboxSuccessHeadBorderColor;
-      background-color: @msgboxSuccessHeadBackgroundColor;
-    }
-
-    > .body {
-      background-color: inherit;
-      color: @msgboxSuccessBodyFontColor;
-    }
-  }
-
-  .msgbox.detail {
-    color: @msgboxDetailFontColor;
-    background-color: @msgboxDetailBackgroundColor;
-
-    > .head {
-      border-bottom: 1px solid @msgboxDetailHeadBorderColor;
-      background-color: inherit;
-      color: @msgboxDetailHeadFontColor;
-
-      > .subtext {
-        color: @msgboxDetailHeadSubtextFontColor;
-        font-weight: normal;
-      }
-    }
-
-    > .body {
-      background-color: inherit;
-      color: inherit;
-    }
-  }
-
 }

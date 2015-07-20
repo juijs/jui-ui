@@ -1,16 +1,22 @@
-.clearfix {
+.jui {
+  /* Icon Animations */
+  /* Icon position in Tab */
+  /* vgroup margin */
+  /* vgroup margin */
+}
+.jui .clearfix {
   *zoom: 1;
 }
-.clearfix:before,
-.clearfix:after {
+.jui .clearfix:before,
+.jui .clearfix:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.clearfix:after {
+.jui .clearfix:after {
   clear: both;
 }
-.hide-text {
+.jui .hide-text {
   font: 0/0 a;
   color: transparent;
   text-shadow: none;
@@ -344,9 +350,6 @@
 }
 .jui .dropdown.large .submenu > *:first-child:after {
   margin-right: -10px !important;
-}
-.jui {
-  /* Icon Animations */
 }
 @font-face {
   font-family: 'jennifer';
@@ -2620,10 +2623,6 @@
   /* ㄴ 형태의 백그라운드 이미지 */
   background-position: 0 -1766px;
 }
-.jui {
-  /* Icon position in Tab */
-  /* vgroup margin */
-}
 .jui .vmenu {
   position: relative;
   display: inline-block;
@@ -2821,9 +2820,6 @@
 }
 .jui .paging + .paging {
   margin-left: 5px;
-}
-.jui {
-  /* vgroup margin */
 }
 .jui .panel {
   text-align: left;

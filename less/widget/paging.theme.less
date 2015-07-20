@@ -1,29 +1,27 @@
-.jui {
-  .paging {
-	* {
-	  background-color: @pagingBackgroundColor;
-	  border: 1px solid @pagingBorderColor;
-	  color: @pagingFontColor;
+.paging {
+  * {
+	background-color: @pagingBackgroundColor;
+	border: 1px solid @pagingBorderColor;
+	color: @pagingFontColor;
+  }
+
+  .list > * {
+	&:hover {
+	  background-color: @pagingListHoverBackgroundColor;
 	}
 
-	.list > * {
-	  &:hover {
-		background-color: @pagingListHoverBackgroundColor;
-	  }
-
-	  &.active {
-		background-color: @pagingListActiveBackgroundColor;
-		color: @pagingListActiveFontColor;
-		cursor: default;
-	  }
+	&.active {
+	  background-color: @pagingListActiveBackgroundColor;
+	  color: @pagingListActiveFontColor;
+	  cursor: default;
 	}
+  }
 
-	> .prev {
-	  background-image: url(@pagingListImageUrl);
-	}
+  > .prev {
+	background-image: url(@pagingListImageUrl);
+  }
 
-	> .next {
-	  background-image: url(@pagingListImageUrl);
-	}
+  > .next {
+	background-image: url(@pagingListImageUrl);
   }
 }

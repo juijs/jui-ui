@@ -22,19 +22,22 @@
 /* Not supported */
 /* Not supported */
 /* Not supported */
-.clearfix {
+.jui {
+  /* Icon color in Tab */
+}
+.jui .clearfix {
   *zoom: 1;
 }
-.clearfix:before,
-.clearfix:after {
+.jui .clearfix:before,
+.jui .clearfix:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.clearfix:after {
+.jui .clearfix:after {
   clear: both;
 }
-.hide-text {
+.jui .hide-text {
   font: 0/0 a;
   color: transparent;
   text-shadow: none;
@@ -335,9 +338,6 @@
 }
 .jui .navbar.flat .line {
   background-color: #darkgray;
-}
-.jui {
-  /* Icon color in Tab */
 }
 .jui .tab li > a {
   color: #6836c4;

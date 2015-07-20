@@ -1,54 +1,51 @@
-.jui {
-  .calendar {
-    > .head {
-      border-bottom-color: @calendarHeadBorderColor;
+.calendar {
+  > .head {
+    border-bottom-color: @calendarHeadBorderColor;
 
-      > .prev {
-        border-color: transparent @calendarButtonBackgroundColor transparent transparent;
-      }
-      > .next {
-        border-color: transparent transparent transparent @calendarButtonBackgroundColor;
-      }
-
-      > .title {
-        color: @calendarTitleFontColor;
-      }
+    > .prev {
+      border-color: transparent @calendarButtonBackgroundColor transparent transparent;
+    }
+    > .next {
+      border-color: transparent transparent transparent @calendarButtonBackgroundColor;
     }
 
-    > table.body {
-      th, td {
-        border-color: @calendarDateBorderColor;
-        border-style: solid;
+    > .title {
+      color: @calendarTitleFontColor;
+    }
+  }
+
+  > table.body {
+    th, td {
+      border-color: @calendarDateBorderColor;
+      border-style: solid;
+    }
+
+    th {
+      color: @calendarVIPFontColor;
+    }
+
+    td {
+      color: @calendarDateFontColor;
+
+      &.none {
+        color: @calendarNoneFontColor;
       }
 
-      th {
-        color: @calendarVIPFontColor;
+      &.now {
+        color: @calendarNowFontColor;
       }
 
-      td {
-        color: @calendarDateFontColor;
+      &.active {
+        background-color: @calendarActiveBackgroundColor;
+      }
 
-        &.none {
-          color: @calendarNoneFontColor;
-        }
+      > .task {
+        color: @calendarTaskFontColor;
 
-        &.now {
-          color: @calendarNowFontColor;
-        }
-
-        &.active {
-          background-color: @calendarActiveBackgroundColor;
-        }
-
-        > .task {
-          color: @calendarTaskFontColor;
-
-          > * {
-            border-color: @calendarTaskListBorderColor;
-          }
+        > * {
+          border-color: @calendarTaskListBorderColor;
         }
       }
     }
   }
-
 }
