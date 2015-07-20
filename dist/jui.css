@@ -2149,7 +2149,7 @@
   height: 25px;
   background-repeat: no-repeat;
 }
-.jui .xtable-nowrap > .body > table > tbody td {
+.jui .xtable.nowrap > .body > table > tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
