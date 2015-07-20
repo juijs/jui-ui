@@ -240,8 +240,8 @@
   position: absolute;
   display: none;
 }
-.jui .dropup > ul,
-.jui .dropdown > ul {
+.jui .dropup ul,
+.jui .dropdown ul {
   position: absolute !important;
   z-index: 1000;
   float: left;
@@ -254,8 +254,8 @@
   -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
-.jui .dropup > ul > li,
-.jui .dropdown > ul > li {
+.jui .dropup ul > li,
+.jui .dropdown ul > li {
   position: relative;
   display: block;
   float: none;
@@ -263,14 +263,14 @@
   font-weight: normal;
   cursor: pointer;
 }
-.jui .dropup > ul > li > *,
-.jui .dropdown > ul > li > * {
+.jui .dropup ul > li > *,
+.jui .dropdown ul > li > * {
   display: inline-block;
   color: inherit;
   text-decoration: none;
 }
-.jui .dropup > ul.right,
-.jui .dropdown > ul.right {
+.jui .dropup ul.right,
+.jui .dropdown ul.right {
   right: 0;
   left: auto;
 }
@@ -279,29 +279,29 @@
   top: -9px;
   z-index: 1001;
 }
-.jui .dropup > ul > li:not(.divider),
-.jui .dropdown > ul > li:not(.divider) {
+.jui .dropup ul > li:not(.divider),
+.jui .dropdown ul > li:not(.divider) {
   padding: 0px 10px;
   line-height: 20px;
   font-size: 12px;
 }
-.jui .dropup > ul > li.title,
-.jui .dropdown > ul > li.title {
+.jui .dropup ul > li.title,
+.jui .dropdown ul > li.title {
   font-weight: bold;
 }
-.jui .dropdown.large > ul > li:not(.divider) {
+.jui .dropdown.large ul > li:not(.divider) {
   padding: 3px 20px !important;
   font-size: 12px !important;
 }
-.jui .dropdown.large > ul > li.title {
+.jui .dropdown.large ul > li.title {
   font-weight: bold !important;
 }
-.jui .dropdown.normal > ul > li:not(.divider) {
+.jui .dropdown.normal ul > li:not(.divider) {
   padding: 0px 10px;
   line-height: 20px;
   font-size: 12px;
 }
-.jui .dropdown.normal > ul > li.title {
+.jui .dropdown.normal ul > li.title {
   font-weight: bold;
 }
 .jui .dropup .submenu,

@@ -2,7 +2,7 @@
   position: absolute;
   display: none;
 
-  > ul {
+  ul {
     position: absolute !important;
     z-index: 1000;
     float: left;
@@ -47,21 +47,24 @@
 // Dropdown Sizes
 // -----------
 .dropdown.large {
-  > ul > li:not(.divider) {
+  ul > li:not(.divider) {
     padding: 3px 20px !important;
     font-size: 12px !important;
   }
-  > ul > li.title {
+
+  ul > li.title {
     font-weight: bold !important;
   }
 }
+
 .dropdown.normal {
-  > ul > li:not(.divider) {
+  ul > li:not(.divider) {
     padding: 0px 10px;
     line-height: 20px;
     font-size: 12px;
   }
-  > ul > li.title {
+
+  ul > li.title {
     font-weight: bold;
   }
 }

@@ -87,8 +87,8 @@
   -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
   box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
 }
-.jui .dropup > ul,
-.jui .dropdown > ul {
+.jui .dropup ul,
+.jui .dropdown ul {
   background-color: #434343;
   border: 1px solid #ccc;
   border: 1px solid #000000;
@@ -96,16 +96,16 @@
   -moz-border-radius: 6px;
   border-radius: 6px;
 }
-.jui .dropup > ul > li,
-.jui .dropdown > ul > li {
+.jui .dropup ul > li,
+.jui .dropdown ul > li {
   color: #ffffff;
 }
-.jui .dropup > ul > li:hover:not(.divider):not(.title),
-.jui .dropdown > ul > li:hover:not(.divider):not(.title),
-.jui .dropup > ul > li:focus:not(.divider):not(.title),
-.jui .dropdown > ul > li:focus:not(.divider):not(.title),
-.jui .dropup > ul > li.active,
-.jui .dropdown > ul > li.active {
+.jui .dropup ul > li:hover:not(.divider):not(.title),
+.jui .dropdown ul > li:hover:not(.divider):not(.title),
+.jui .dropup ul > li:focus:not(.divider):not(.title),
+.jui .dropdown ul > li:focus:not(.divider):not(.title),
+.jui .dropup ul > li.active,
+.jui .dropdown ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -116,8 +116,8 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9a73f3', endColorstr='#ff693cc6', GradientType=0);
   color: #ffffff;
 }
-.jui .dropup > ul > li.divider,
-.jui .dropdown > ul > li.divider {
+.jui .dropup ul > li.divider,
+.jui .dropdown ul > li.divider {
   *width: 100%;
   height: 1px;
   margin: 4px 1px 3px 1px;
@@ -126,21 +126,21 @@
   background-color: #434343;
   border-bottom: 1px solid #626262;
 }
-.jui .dropup > ul::-webkit-scrollbar,
-.jui .dropdown > ul::-webkit-scrollbar {
+.jui .dropup ul::-webkit-scrollbar,
+.jui .dropdown ul::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-.jui .dropup > ul::-webkit-scrollbar-thumb,
-.jui .dropdown > ul::-webkit-scrollbar-thumb {
+.jui .dropup ul::-webkit-scrollbar-thumb,
+.jui .dropdown ul::-webkit-scrollbar-thumb {
   background: #7a7a7a;
   border: 1px solid #636363;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .dropup > ul::-webkit-scrollbar-thumb:hover,
-.jui .dropdown > ul::-webkit-scrollbar-thumb:hover {
+.jui .dropup ul::-webkit-scrollbar-thumb:hover,
+.jui .dropdown ul::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
 }
