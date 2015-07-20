@@ -1146,6 +1146,7 @@
   background-image: -ms-linear-gradient(top, #505050 0%, #303030 100%);
 }
 .jui .btn:hover {
+  color: #ffffff;
   background-color: #5d5d5d;
   background-image: -moz-linear-gradient(top, #5d5d5d 0%, #3b3b3b 100%);
   background-image: linear-gradient(top, #5d5d5d 0%, #3b3b3b 100%);
@@ -1208,6 +1209,22 @@
 }
 .jui .bargraph > * .data {
   color: #969696;
+}
+.jui .bargraph > *:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.jui .bargraph > *:last-child {
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
 }
 .jui .bargraph > *.active .line {
   border-color: #d0d0d0;

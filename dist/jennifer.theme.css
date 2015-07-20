@@ -1122,6 +1122,7 @@
   background-image: -ms-linear-gradient(top, #ffffff 0%, #ececec 100%);
 }
 .jui .btn:hover {
+  color: #201834;
   background-color: #ffffff;
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
   background-image: linear-gradient(top, #ffffff 0%, #f3f3f3 100%);
@@ -1184,6 +1185,22 @@
 }
 .jui .bargraph > * .data {
   color: #969696;
+}
+.jui .bargraph > *:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.jui .bargraph > *:last-child {
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
 }
 .jui .bargraph > *.active .line {
   border-color: #d0d0d0;

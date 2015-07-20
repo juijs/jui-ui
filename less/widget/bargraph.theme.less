@@ -7,6 +7,16 @@
 	.data {
 	  color: @bargraphDataFontColor;
 	}
+
+	&:first-child {
+	  .border-top-left-radius(@bargraphBorderRadius);
+	  .border-bottom-left-radius(@bargraphBorderRadius);
+	}
+
+	&:last-child {
+	  .border-top-right-radius(@bargraphBorderRadius);
+	  .border-bottom-right-radius(@bargraphBorderRadius);
+	}
   }
 
   > *.active {
