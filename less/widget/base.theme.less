@@ -27,3 +27,21 @@
     }
   }
 }
+
+.webkit-scrollbar-simple() {
+  &::-webkit-scrollbar {
+    width: @baseSimpleScrollHandleSize;
+    height: @baseSimpleScrollHandleSize;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: @baseSimpleScrollBackgroundColor;
+    border: 1px solid @baseSimpleScrollBorderColor;
+    .border-radius(5px);
+
+    &:hover {
+      background: @baseSimpleScrollHoverBackgroundColor;
+      border: 1px solid @baseSimpleScrollHoverBorderColor;
+    }
+  }
+}

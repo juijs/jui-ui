@@ -6,9 +6,9 @@
 // FAVORITES MIXINS
 // --------------------------------------------------
 
-.anchor-base(@size: 10px) {
+.anchor-base(@size: 10px, @left: 50%) {
   position: absolute;
-  left: 50%;
+  left: @left;
   margin-left: -@size;
   width: 0; 
   height: 0;
@@ -23,8 +23,8 @@
   }
 }
   
-.anchor-top(@color: #e2e2e2, @bgcolor: #fff, @size: 10px) {
-  .anchor-base(@size);
+.anchor-top(@color: #e2e2e2, @bgcolor: #fff, @size: 10px, @left: 50%) {
+  .anchor-base(@size, @left);
   
   border-right: @size solid transparent;
   border-left: @size solid transparent;
@@ -38,8 +38,8 @@
   }
 }
   
-.anchor-bottom(@color: #e2e2e2, @bgcolor: #fff, @size: 10px) {
-  .anchor-base(@size);
+.anchor-bottom(@color: #e2e2e2, @bgcolor: #fff, @size: 10px, @left: 50%) {
+  .anchor-base(@size, @left);
   
   top: -@size;
   border-right: @size solid transparent;

@@ -4,6 +4,7 @@
     text-align: left;
     text-decoration: none;
     .box-sizing(border-box);
+    .children-vgroup();
 
 	> * {
 	  width: auto;
@@ -17,7 +18,6 @@
 	  .text-default();
 	}
 
-	// Default
 	.panel.normal;
   }
 	
@@ -144,5 +144,11 @@
 	> .body.fit {
 	  padding: 0px !important;
 	}
+  }
+
+
+  /* vgroup margin */
+  .panel + .panel {
+    margin-top: 5px;
   }
 }

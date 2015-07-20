@@ -1,18 +1,22 @@
 .jui {
-  .vmenu > * {
-  	position: relative;
-    display: inline-block;
-    text-align: left;
-    text-decoration: none;
-    vertical-align: middle;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 8px 14px;
-    .box-sizing(border-box);
-    
-    &:focus {
-      .tab-focus();
+  .vmenu {
+    > * {
+      position: relative;
+      display: inline-block;
+      text-align: left;
+      text-decoration: none;
+      vertical-align: middle;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 8px 14px;
+      .box-sizing(border-box);
+
+      &:focus {
+        .tab-focus();
+      }
     }
+
+    .children-vgroup();
   }
 
   // Size, Large
@@ -49,5 +53,10 @@
   /* Icon position in Tab */
   .vmenu > * > [class^="icon-"] {
     float: right;
+  }
+
+  /* vgroup margin */
+  .vmenu + .vmenu {
+    margin-top: 5px;
   }
 }

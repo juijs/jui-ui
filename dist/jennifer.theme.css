@@ -60,9 +60,8 @@
   -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
   box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
 }
-.jui .dropup ul,
-.jui .dropdown ul,
-.jui .combo ul {
+.jui .dropup > ul,
+.jui .dropdown > ul {
   background-color: #ffffff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -70,20 +69,16 @@
   -moz-border-radius: 6px;
   border-radius: 6px;
 }
-.jui .dropup ul > li,
-.jui .dropdown ul > li,
-.jui .combo ul > li {
+.jui .dropup > ul > li,
+.jui .dropdown > ul > li {
   color: #333333;
 }
-.jui .dropup ul > li:hover:not(.divider):not(.title),
-.jui .dropdown ul > li:hover:not(.divider):not(.title),
-.jui .combo ul > li:hover:not(.divider):not(.title),
-.jui .dropup ul > li:focus:not(.divider):not(.title),
-.jui .dropdown ul > li:focus:not(.divider):not(.title),
-.jui .combo ul > li:focus:not(.divider):not(.title),
-.jui .dropup ul > li.active,
-.jui .dropdown ul > li.active,
-.jui .combo ul > li.active {
+.jui .dropup > ul > li:hover:not(.divider):not(.title),
+.jui .dropdown > ul > li:hover:not(.divider):not(.title),
+.jui .dropup > ul > li:focus:not(.divider):not(.title),
+.jui .dropdown > ul > li:focus:not(.divider):not(.title),
+.jui .dropup > ul > li.active,
+.jui .dropdown > ul > li.active {
   background-color: #865de1;
   background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
@@ -94,9 +89,8 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9a73f3', endColorstr='#ff693cc6', GradientType=0);
   color: #ffffff;
 }
-.jui .dropup ul > li.divider,
-.jui .dropdown ul > li.divider,
-.jui .combo ul > li.divider {
+.jui .dropup > ul > li.divider,
+.jui .dropdown > ul > li.divider {
   *width: 100%;
   height: 1px;
   margin: 4px 1px 3px 1px;
@@ -105,26 +99,28 @@
   background-color: #e5e5e5;
   border-bottom: 1px solid #ffffff;
 }
-.jui .dropup ul::-webkit-scrollbar-thumb,
-.jui .dropdown ul::-webkit-scrollbar-thumb,
-.jui .combo ul::-webkit-scrollbar-thumb {
+.jui .dropup > ul::-webkit-scrollbar,
+.jui .dropdown > ul::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.jui .dropup > ul::-webkit-scrollbar-thumb,
+.jui .dropdown > ul::-webkit-scrollbar-thumb {
   background: #c8c8c8;
   border: 1px solid #b8b8b8;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .dropup ul::-webkit-scrollbar-thumb:hover,
-.jui .dropdown ul::-webkit-scrollbar-thumb:hover,
-.jui .combo ul::-webkit-scrollbar-thumb:hover {
+.jui .dropup > ul::-webkit-scrollbar-thumb:hover,
+.jui .dropdown > ul::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
 }
 .jui .dropup .anchor,
-.jui .dropdown .anchor,
-.jui .combo .anchor {
+.jui .dropdown .anchor {
   position: absolute;
-  left: 50%;
+  left: 30px;
   margin-left: -10px;
   width: 0;
   height: 0;
@@ -133,8 +129,7 @@
   border-bottom: 10px solid #e2e2e2;
 }
 .jui .dropup .anchor:after,
-.jui .dropdown .anchor:after,
-.jui .combo .anchor:after {
+.jui .dropdown .anchor:after {
   position: absolute;
   left: 50%;
   margin-left: -9px;
@@ -143,8 +138,7 @@
   content: "";
 }
 .jui .dropup .anchor:after,
-.jui .dropdown .anchor:after,
-.jui .combo .anchor:after {
+.jui .dropdown .anchor:after {
   top: 2px;
   border-right: 9px solid transparent;
   border-left: 9px solid transparent;
@@ -629,6 +623,22 @@
 .jui .panel {
   color: #333333;
 }
+.jui .panel > *:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+}
+.jui .panel > *:last-child {
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
+}
 .jui .panel > .head,
 .jui .panel > .foot {
   background-color: #f5f5f5;
@@ -822,6 +832,22 @@
 }
 .jui .vmenu > *.submenu > li.active > * {
   color: inherit;
+}
+.jui .vmenu > *:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+}
+.jui .vmenu > *:last-child {
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
 }
 .jui .vmenu.flat > * {
   border: 1px solid #e5e5e5 !important;
@@ -1603,4 +1629,52 @@
 }
 .jui .xtable > .loading {
   background-image: url("../img/xtable-loading.gif");
+}
+.jui .combo > ul {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+.jui .combo > ul > li {
+  color: #333333;
+}
+.jui .combo > ul > li:hover:not(.divider):not(.title),
+.jui .combo > ul > li:focus:not(.divider):not(.title),
+.jui .combo > ul > li.active {
+  background-color: #865de1;
+  background-image: -moz-linear-gradient(top, #9a73f3, #693cc6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9a73f3), to(#693cc6));
+  background-image: -webkit-linear-gradient(top, #9a73f3, #693cc6);
+  background-image: -o-linear-gradient(top, #9a73f3, #693cc6);
+  background-image: linear-gradient(to bottom, #9a73f3, #693cc6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9a73f3', endColorstr='#ff693cc6', GradientType=0);
+  color: #ffffff;
+}
+.jui .combo > ul > li.divider {
+  *width: 100%;
+  height: 1px;
+  margin: 4px 1px 3px 1px;
+  *margin: -5px 0 5px;
+  overflow: hidden;
+  background-color: #e5e5e5;
+  border-bottom: 1px solid #ffffff;
+}
+.jui .combo > ul::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.jui .combo > ul::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border: 1px solid #b8b8b8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .combo > ul::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+  border: 1px solid #737373;
 }

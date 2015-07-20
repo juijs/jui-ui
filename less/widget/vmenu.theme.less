@@ -20,6 +20,16 @@
       .btn-bgcolor-2(@vmenuSubmenuBackgroundColor, @vmenuSubmenuBackgroundColor);
       .submenu-color();
     }
+
+    &:first-child {
+      .border-top-left-radius(@vmenuBorderRadius);
+      .border-top-right-radius(@vmenuBorderRadius);
+    }
+
+    &:last-child {
+      .border-bottom-left-radius(@vmenuBorderRadius);
+      .border-bottom-right-radius(@vmenuBorderRadius);
+    }
   }
   
   // Color, White-Flat

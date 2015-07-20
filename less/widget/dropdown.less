@@ -1,22 +1,9 @@
 .jui {
-  .dropup, .dropdown, .combo {
+  .dropup, .dropdown {
     position: absolute;
     display: none;
     
-    > .anchor {
-      left: 30px;
-      top: -9px;
-      z-index: 1001;
-    }
-    
-    .dropdown.normal;
-  }
-  
-  
-  // The dropdown menu (ul)
-  // ----------------------
-  .dropup, .dropdown, .combo {
-    ul {
+    > ul {
       position: absolute !important;
       z-index: 1000;
       float: left;
@@ -26,55 +13,56 @@
       *border-right-width: 2px;
       *border-bottom-width: 2px;
       .box-shadow(0 2px 6px rgba(0,0,0,.25));
-      
+
       > li {
         position: relative;
         display: block;
-      	float: none;
+        float: none;
         clear: both;
         font-weight: normal;
         cursor: pointer;
-        
+
         > * {
-        	display: inline-block;
-        	color: inherit;
-        	text-decoration: none;
+          display: inline-block;
+          color: inherit;
+          text-decoration: none;
         }
       }
-      
+
       // Aligns the dropdown menu to right
       &.right {
         right: 0;
         left: auto;
       }
-
-      // Scroll
-      &::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-      }
     }
+
+    > .anchor {
+      top: -9px;
+      z-index: 1001;
+    }
+
+    .dropdown.normal;
   }
-  
+
   
   // Dropdown Sizes
   // -----------
   .dropdown.large {
-    ul > li:not(.divider) {
+    > ul > li:not(.divider) {
       padding: 3px 20px !important;
       font-size: 12px !important;
     }
-    ul > li.title {
+    > ul > li.title {
       font-weight: bold !important;
     }
   }
   .dropdown.normal {
-     ul > li:not(.divider) {
+    > ul > li:not(.divider) {
       padding: 0px 10px;
       line-height: 20px;
       font-size: 12px;
     }
-    ul > li.title {
+    > ul > li.title {
       font-weight: bold;
     }
   }
@@ -139,18 +127,5 @@
   // Large
   .dropdown.large .submenu > *:first-child:after {
     margin-right: -10px !important;
-  }
-
-
-  // Combo
-  // -----------
-  .combo {
-    ul {
-      display: none;
-      
-      > li > * {
-      	width: 100%;
-      }
-    }
   }
 }

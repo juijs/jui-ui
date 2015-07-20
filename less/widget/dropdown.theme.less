@@ -1,6 +1,6 @@
 .jui {
-  .dropup, .dropdown, .combo {
-    ul {
+  .dropup, .dropdown {
+    > ul {
       background-color: @dropdownBackgroundColor;
       border: 1px solid #ccc; // Fallback for IE7-8
       border: 1px solid @dropdownBorderColor;
@@ -21,21 +21,11 @@
         .nav-divider(@dropdownDividerLineColor1, @dropdownDividerLineColor2);
       }
 
-      // Scroll
-      &::-webkit-scrollbar-thumb {
-        background: @dropdownScrollBackgroundColor;
-        border: 1px solid @dropdownScrollBorderColor;
-        .border-radius(5px);
-
-        &:hover {
-          background: @dropdownScrollHoverBackgroundColor;
-          border: 1px solid @dropdownScrollHoverBorderColor;
-        }
-      }
+      .webkit-scrollbar-simple();
     }
 
     .anchor {
-      .anchor-top();
+      .anchor-top(@dropdownAnchorBorderColor1, @dropdownAnchorBorderColor2, 10px, 30px);
     }
   }
 
