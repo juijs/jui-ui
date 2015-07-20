@@ -192,19 +192,23 @@
 .jui .disabled {
   cursor: not-allowed;
 }
-.jui .btngroup {
+.jui .btngroup,
+.jui .group {
   position: relative;
   display: inline-block;
 }
-.jui .btngroup > * + *:not(ul) {
+.jui .btngroup > * + *:not(ul),
+.jui .group > * + *:not(ul) {
   margin-left: -7px;
 }
-.jui .btngroup > *:not(:first-child):not(:last-child) {
+.jui .btngroup > *:not(:first-child):not(:last-child),
+.jui .group > *:not(:first-child):not(:last-child) {
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
   border-radius: 0px !important;
 }
-.jui .btngroup > *:first-child {
+.jui .btngroup > *:first-child,
+.jui .group > *:first-child {
   -webkit-border-top-right-radius: 0px !important;
   -moz-border-radius-topright: 0px !important;
   border-top-right-radius: 0px !important;
@@ -212,7 +216,8 @@
   -moz-border-radius-bottomright: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
-.jui .btngroup > *:last-child {
+.jui .btngroup > *:last-child,
+.jui .group > *:last-child {
   -webkit-border-top-left-radius: 0px !important;
   -moz-border-radius-topleft: 0px !important;
   border-top-left-radius: 0px !important;
@@ -220,7 +225,8 @@
   -moz-border-radius-bottomleft: 0px !important;
   border-bottom-left-radius: 0px !important;
 }
-.jui .btngroup + .btngroup {
+.jui .btngroup + .btngroup,
+.jui .group + .group {
   margin-left: 5px;
 }
 .jui .dropup,
