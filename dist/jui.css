@@ -372,6 +372,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.jui .icon-facebook:before {
+  content: "\e65c";
+}
+.jui .icon-googleplus:before {
+  content: "\e65d";
+}
+.jui .icon-share:before {
+  content: "\e65e";
+}
+.jui .icon-twitter:before {
+  content: "\e65f";
+}
+.jui .icon-realtime:before {
+  content: "\e640";
+}
 .jui .icon-connection:before {
   content: "\e65b";
 }
@@ -566,9 +581,6 @@
 }
 .jui .icon-profile:before {
   content: "\e63f";
-}
-.jui .icon-realtime:before {
-  content: "\e640";
 }
 .jui .icon-refresh:before {
   content: "\e641";

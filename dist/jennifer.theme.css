@@ -1378,6 +1378,9 @@
 .jui .table.classic > tbody tr.open > td {
   font-weight: bold;
 }
+.jui .table.classic > tbody tr.expand > td {
+  background: #ffffff;
+}
 .jui .table.classic > tbody tr.expand > td:hover {
   background: #ffffff;
 }
@@ -1466,6 +1469,9 @@
 }
 .jui .table.expand > tbody tr.open > td {
   font-weight: bold;
+}
+.jui .table.expand > tbody tr.expand > td {
+  background: #ffffff;
 }
 .jui .table.expand > tbody tr.expand > td:hover {
   background: #ffffff;
@@ -1579,6 +1585,9 @@
 }
 .jui .table.simple > tbody tr.open > td {
   font-weight: bold;
+}
+.jui .table.simple > tbody tr.expand > td {
+  background: #ffffff;
 }
 .jui .table.simple > tbody tr.expand > td:hover {
   background: #ffffff;
