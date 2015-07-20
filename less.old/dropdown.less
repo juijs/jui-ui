@@ -1,0 +1,263 @@
+.jui {
+  .dropup, .dropdown, .combo {
+    position: absolute;
+    display: none;
+    
+    > .anchor {
+      left: 30px !important;
+      top: -9px !important;
+      z-index: 1001 !important;
+    }
+  
+    > .anchor-right {
+      left: 80% !important;
+    }
+    
+    .dropdown-normal;
+    .dropdown-white;
+  }
+  
+  
+  // The dropdown menu (ul)
+  // ----------------------
+  .dropup, .dropdown, .combo {
+    ul {
+      position: absolute !important;
+      z-index: 1000;
+      float: left;
+      padding: 5px 0;
+      margin: 0px !important; // override default ul
+      list-style: none;
+      *border-right-width: 2px;
+      *border-bottom-width: 2px;
+      .border-radius(6px);
+      .box-shadow(0 2px 6px rgba(0,0,0,.25));
+      
+      > li {
+        position: relative;
+        display: block;
+      	float: none;
+        clear: both;
+        font-weight: normal;
+        cursor: pointer;
+        
+        > * {
+        	display: inline-block;
+        	color: inherit;
+        	text-decoration: none;
+        }
+      }
+      
+      // Aligns the dropdown menu to right
+      &.pull-right {
+        right: 0;
+        left: auto;
+      }
+    }
+  }
+  
+  
+  // Dropdown Sizes
+  // -----------
+  .dropdown-large {
+    ul > li:not(.divider) {
+      padding: 3px 20px !important;
+      font-size: 12px !important;
+    }
+    ul > li.title {
+      font-weight: bold !important;
+    }
+  }
+  .dropdown-normal {
+     ul > li:not(.divider) {
+      padding: 0px 10px;
+      line-height: 20px;
+      font-size: 12px;
+    }
+    ul > li.title {
+      font-weight: bold;
+    }
+  }
+
+
+  // Dropdown Colors
+  // -----------
+  .dropdown-white {
+    ul {
+      background-color: #fff;
+      border: 1px solid #ccc; // Fallback for IE7-8
+      border: 1px solid rgba(0,0,0,.2);
+      
+      > li {
+        color: #333;
+	      
+	    &:hover:not(.divider):not(.title),
+	    &:focus:not(.divider):not(.title),
+	    &.active {
+	    	#gradient > .vertical(#9a73f3, #693cc6);
+	        color: #fff;
+		}
+      }
+
+      > li.divider {
+        .nav-divider(#e5e5e5, #fff);
+      }
+      
+      .dropdown-scroll-white;
+    }
+    
+    .anchor {
+      .anchor-top();
+    }
+  }
+  .dropdown-black {
+    ul {
+      background-color: #434343;
+      border: 1px solid #000000; // Fallback for IE7-8
+      
+      > li {
+        color: #fff;
+        
+        &:hover:not(.divider):not(.title),
+	    &:focus:not(.divider):not(.title),
+	    &.active {
+	    	#gradient > .vertical(#9a73f3, #693cc6);
+	        color: #fff;
+		}
+      }
+      
+      > li.divider {
+        .nav-divider(#434343, #626262);
+      }
+      
+      .dropdown-scroll-black;	
+    }
+    
+    .anchor {
+      .anchor-top(#434343, #434343);
+    }
+  }
+
+  // Dropdown Angular
+  // ----------------------
+  .dropdown-rect ul {
+    .border-radius(0) !important;
+  }
+  
+
+  // Sub menus
+  // ---------------------------
+  .dropup, .dropdown {
+    .submenu {
+      position: relative;
+    }
+    // Default dropdowns
+    .submenu > ul {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      display: none;
+      .border-radius(0 6px 6px 6px);
+    }
+    .submenu:hover > ul {
+      display: block;
+    }
+    
+    // Caret to indicate there is a submenu
+    .submenu:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: darken(#fff, 20%);
+      margin-top: 5px;
+      margin-right: -0px;
+    }
+    
+    // Left aligned submenus
+    .submenu.pull-left {
+      // Undo the float
+      // Yes, this is awkward since .pull-left adds a float, but it sticks to our conventions elsewhere.
+      float: none;
+    
+      // Positioning the submenu
+      > ul {
+        left: -100%;
+        .border-radius(6px 0 6px 6px);
+      }
+    }
+  }
+  
+  // Dropups
+  .dropup .submenu > ul {
+    top: auto;
+    bottom: 0;
+    margin-top: 0;
+    margin-bottom: -2px;
+    .border-radius(5px 5px 5px 0);
+  }
+  
+  // Large
+  .dropdown-large .submenu > *:first-child:after {
+    margin-right: -10px !important;
+  }
+  
+  
+  // Scroll
+  // ------------
+  .dropdown-scroll-white {
+  	&::-webkit-scrollbar-thumb {
+	    background: #c8c8c8;
+	    border: 1px solid #b8b8b8;
+	    .border-radius(5px);
+	    
+	    &:hover {
+	      background: #8a8a8a;
+	      border: 1px solid #737373;
+	    }
+  	}
+  }
+  
+  .dropdown-scroll-black {
+  	&::-webkit-scrollbar-thumb {
+	    background: #7a7a7a;
+	    border: 1px solid #636363;
+	    .border-radius(5px);
+	    
+	    &:hover {
+	      background: #8a8a8a;
+	      border: 1px solid #737373;
+	    }
+  	}
+  }
+
+  .dropdown-scroll-white, .dropdown-scroll-black {
+    &::-webkit-scrollbar {
+      // Webkit Scroll Size
+      width: 10px;
+      height: 10px;
+    }
+  }
+  
+  
+  // Combo
+  // -----------
+  .combo {
+    ul {
+      display: none;
+      
+      > li > * {
+      	width: 100%;
+      }
+    }
+  }
+
+  .combo-black {
+    .dropdown-black !important;
+  }
+}

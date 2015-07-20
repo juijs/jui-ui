@@ -1,0 +1,140 @@
+.jui {
+	.tooltip {
+	  position: absolute;
+	  z-index: 6000;
+	  display: block;
+	  font-size: 11px;
+	  line-height: 1.4;
+	  visibility: visible;
+	  
+	  .tooltip-black;
+	}
+	
+	.tooltip > .message {
+	  padding: 3px 8px;
+	  text-decoration: none;
+	  word-break: break-all;
+	  .border-radius(2px);
+	}
+	
+	.tooltip > .anchor {
+	  position: absolute;
+	  width: 0;
+	  height: 0;
+	  border-style: solid;
+	}
+	
+	// Tooltip Positions
+	// --------------------------------------------------
+	
+	.tooltip-top {
+	  padding: 5px 0;
+	  margin-top: -3px;
+	}
+	
+	.tooltip-right {
+	  padding: 0 5px;
+	  margin-left: 3px;
+	}
+	
+	.tooltip-bottom {
+	  padding: 5px 0;
+	  margin-top: 3px;
+	}
+	
+	.tooltip-left {
+	  padding: 0 5px;
+	  margin-left: -3px;
+	}
+	
+	.tooltip-top > .anchor {
+	  bottom: 0;
+	  left: 50%;
+	  margin-left: -5px;
+	  border-width: 5px 5px 0;
+	}
+	
+	.tooltip-right > .anchor {
+	  top: 50%;
+	  left: 0;
+	  margin-top: -5px;
+	  border-width: 5px 5px 5px 0;
+	}
+	
+	.tooltip-left > .anchor {
+	  top: 50%;
+	  right: 0;
+	  margin-top: -5px;
+	  border-width: 5px 0 5px 5px;
+	}
+	
+	.tooltip-bottom > .anchor {
+	  top: 0;
+	  left: 50%;
+	  margin-left: -5px;
+	  border-width: 0 5px 5px;
+	}
+	
+	// Tooltip Colors
+	// --------------------------------------------------
+	
+	.tooltip-black {
+		@tooltip-bgcolor: #000;
+		opacity: 0.9;
+		
+		> .message {
+			color: #fff;
+	  		background-color: @tooltip-bgcolor;
+		}
+		
+		> .anchor {
+			 border-color: transparent;
+		}
+		
+		&.tooltip-top > .anchor {
+			border-top-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-bottom > .anchor {
+			border-bottom-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-left > .anchor {
+			border-left-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-right > .anchor {
+		 	border-right-color: @tooltip-bgcolor;
+		}
+	}
+	
+	.tooltip-gray {
+		@tooltip-bgcolor: #ededed;
+		opacity: 0.9;
+		
+		> .message {
+			color: #000;
+	  		background-color: @tooltip-bgcolor;
+		}
+		
+		> .anchor {
+			 border-color: transparent;
+		}
+		
+		&.tooltip-top > .anchor {
+			border-top-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-bottom > .anchor {
+			border-bottom-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-left > .anchor {
+			border-left-color: @tooltip-bgcolor;
+		}
+		
+		&.tooltip-right > .anchor {
+		 	border-right-color: @tooltip-bgcolor;
+		}
+	}
+}

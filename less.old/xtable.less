@@ -1,0 +1,81 @@
+.jui {
+  .xtable {
+    > .body {
+      .border-radius(5px);
+    }
+    
+    > .loading {
+      display: none;
+      width: 32px;
+      height: 25px;
+      background-repeat: no-repeat;
+      background-image: url("@{xtable-loading}");
+    }
+    
+    .xtable-white;
+  }
+
+  
+  // xTable NoWrap
+  // --------------------------------------------------
+  .xtable-nowrap {
+    > .body > table > tbody td {
+      .text-overflow();
+    }
+  }
+  
+  
+  // xTable Rect
+  // --------------------------------------------------
+  .xtable-rect {
+    > .body {
+      .border-radius(0px) !important;
+    }
+  }
+
+  
+  // xTable Colors
+  // --------------------------------------------------
+  .xtable-white { 
+    > .body {
+      border-bottom: 1px solid #dfdce3 !important;
+      .xtable-scroll-white;
+    }
+    
+    .xtable-scroll-white;
+  }
+  
+  
+  // xTable Scroller
+  // --------------------------------------------------
+  .xtable-scroll-white {
+    &::-webkit-scrollbar-track {
+      .btn-bgcolor-2(#f2f2f2, #fff, left);
+      .border-radius(3px);
+      border: 1px solid #e6e6e6;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c8c8c8;
+      border: 1px solid #b8b8b8;
+      .border-radius(5px);
+      
+      &:hover {
+        background: #8a8a8a;
+        border: 1px solid #737373;
+      }
+    }
+  }
+
+  .xtable-scroll-black {
+    // 차후 구현
+  }
+
+  .xtable-scroll-white, .xtable-scroll-black {
+    &::-webkit-scrollbar {
+      // Webkit Scroll Size
+      width: 10px;
+      height: 10px;
+    }
+  }
+}

@@ -1,0 +1,179 @@
+.jui {
+  .vmenu > * {
+  	position: relative;
+    display: inline-block;
+    text-align: left;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 12px;
+    .box-sizing(border-box);
+    
+    &:focus {
+      .tab-focus();
+    }
+    
+    // Default Size & Color (Normal & White)
+    padding: 8px 14px;
+    border: 1px solid #e5e5e5;
+  	color: #333;
+  	font-weight: bold;
+  	.btn-bgcolor-2(#fff, #f7f7f7);
+  	
+    &.active {
+	  	.btn-bgcolor-2(#ad81e4, #7d51b6);
+	  	color: #fff;
+	  	border: 1px solid #a281cc;
+	  	cursor: default;
+    }
+    
+    &:hover:not(.active):not(.submenu) {
+	  	.btn-bgcolor-2(#f8f8f8, #f1f1f1);
+    }
+
+    &.submenu {
+      .btn-bgcolor-2(#fff, #fff);
+	  	.submenu-white();
+    }
+  }
+  
+  // Color, White-Flat
+  .vmenu.vmenu-flat > * {
+    border: 1px solid #e5e5e5 !important;
+    color: #333 !important;
+    .btn-bgcolor-2(#fff, #fff) !important;
+    
+    &.active {
+      color: #6836c4 !important;
+    }
+    
+    &:hover:not(.active):not(.submenu) {
+      .btn-bgcolor-2(#eee, #eee) !important;
+    }
+    
+    &.submenu {
+      .btn-bgcolor-2(#f5f5f5, #f5f5f5) !important;
+      .submenu-white();
+    }
+  }
+  
+  // Color, Black
+  .vmenu-black > * {
+  	border: 1px solid #373737 !important;
+  	color: #fff !important;
+  	.btn-bgcolor-2(#2e2e2e, #1a1a1a) !important;
+  	
+  	&.active {
+      .btn-bgcolor-2(#ad81e4, #7d51b6) !important;
+      color: #fff !important;
+      border: 1px solid #9165c9 !important;
+    }
+  	
+  	&:hover:not(.active):not(.submenu) {
+	  	.btn-bgcolor-2(#464646, #333) !important;
+    }
+    
+    &.submenu {
+      .submenu-black();
+    }
+  }
+
+  // Color, Black-Flat
+  .vmenu-black.vmenu-flat > * {
+  	border: 1px solid #373737 !important;
+  	color: #fff !important;
+  	.btn-bgcolor-2(#1a1a1a, #1a1a1a) !important;
+  	
+  	&.active {
+      color: #ac7eff !important;
+    }
+  	
+  	&:hover:not(.active):not(.submenu) {
+	  	.btn-bgcolor-2(#272727, #272727) !important;
+    }
+
+    &.submenu {
+      .submenu-black();
+    }
+  }
+  
+  // Color, White-Submenu
+  .submenu-white() {
+    > li {
+      &:hover:not(.active) {
+        background: #eee;
+      }
+      
+      > * {
+        color: inherit;
+      }
+    }
+    
+    > li.active {
+      color: #6836c4;
+      
+      > * {
+        color: inherit;
+      }
+    }
+  }
+  
+  // Color, Black-Submenu
+  .submenu-black() {
+    .btn-bgcolor-2(#333, #333) !important;
+      
+    > li {
+      &:hover:not(.active) {
+        background: #424242 !important;
+      }
+      
+      > * {
+        color: inherit !important;
+      }
+    }
+    
+    > li.active {
+      color: #ac7eff;
+      
+      > * {
+        color: inherit;
+      }
+    }
+  }
+  
+  // Size, Large
+  .vmenu-large {
+    > * {
+      padding:  11px 14px !important;
+    }
+  }
+  
+  // Submenu Common
+  .vmenu > .submenu {
+    list-style: none;
+    padding: 10px 0px !important;
+      
+    > li {
+      padding: 6px 20px;
+      font-weight: normal;
+      
+      > * {
+        text-decoration: inherit;
+      }
+    }
+    
+    > li.active {
+      font-weight: bold;
+      cursor: default;
+      
+      > * {
+        font-weight: inherit;
+      }
+    }
+  }
+
+  /* Icon position in Tab */
+  .vmenu > * > [class^="icon-"] {
+    float: right;
+  }
+}

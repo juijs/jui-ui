@@ -1,0 +1,199 @@
+.jui {
+  .datepicker {
+    position: relative;
+    width: 190px;
+    height: 142px;
+    padding-top: 26px;
+    .border-radius(5px);
+
+    > .head {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      font-size: 14px;
+      height: 26px;
+      text-align: center;
+
+      > * {
+        display: inline-block;
+      }
+
+      > .title {
+        text-align: center;
+        padding-top: 5px;
+      }
+
+      > .prev, .next {
+        position: absolute;
+        top: 10px;
+        font-size: 9px;
+        cursor: pointer;
+        color: #b9b9b9;
+
+        font-family: 'jennifer';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        display: inline-block;
+
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      > .prev {
+        left: 5px;
+
+        &:before {
+          content: "\e619";
+        }
+      }
+
+      > .next {
+        right: 5px;
+
+        &:before {
+          content: "\e61a";
+        }
+      }
+    }
+
+    > table.body {
+      width: 100%;
+      height: 100%;
+      border-spacing: 0;
+      border-top-style: solid;
+
+      th, td {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      tr:last-child td {
+        border-bottom-width: 0px;
+        
+        &:first-child {
+          .border-bottom-left-radius(5px);
+        }
+
+        &:last-child {
+          .border-bottom-right-radius(5px);
+        }
+      }
+      
+      td {
+        width: 14.28%;
+        .border-radius(5px);
+
+        &:last-child {
+          border-right-width: 0px;
+        }
+
+        &:not(.none) {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .datepicker-white;
+    .datepicker-normal;
+  }
+
+
+  // Calendar Sizes
+  // --------------------------------------------------
+
+  .datepicker-normal {
+    > table.body {
+      border-top-width: 0px;
+
+      th {
+        font-size: 9px;
+        height: 17px;
+      }
+
+      td {
+        font-size: 12px;
+        width: 26px;
+        height: 17px;
+        line-height: 17px;
+      }
+    }
+  }
+
+  .datepicker-large {
+    > table.body {
+      border-top-width: 1px;
+
+      td {
+        width: 60.6px;
+        height: 32px;
+      }
+      
+      tr:first-child td {
+        height: 33px;
+      }
+    }
+  }
+  
+  
+  // Calendar Colors
+  // --------------------------------------------------
+
+  .datepicker-white {
+    border: 1px solid #cdcdcd;
+    background: #fff;
+
+    > .head {
+      > .prev {
+        border-color: transparent #dcdcdc transparent transparent;
+      }
+      > .next {
+        border-color: transparent transparent transparent #dcdcdc;
+      }
+
+      > .title {
+        color: #333;
+      }
+    }
+
+    > table.body {
+      border-top-color: #ebebeb;
+
+      th {
+        border-bottom: 1px solid #ebebeb;
+      }
+
+      th {
+        color: #c1c1c1;
+      }
+
+      td {
+        color: #333;
+
+        &.none {
+          color: transparent;
+        }
+
+        &.now {
+          color: #6600cc;
+          font-weight: bold;
+        }
+
+        &.active {
+          color: #fff;
+          background-color: #9167ca;
+          .box-shadow(~"inset rgba(0, 0, 0, 0.1) 0 1px 2px");
+        }
+
+        &:hover:not(.active):not(.none) {
+          background-color: #f8f3ff;
+        }
+      }
+    }
+  }
+}

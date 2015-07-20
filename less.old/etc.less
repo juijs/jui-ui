@@ -1,0 +1,29 @@
+.jui {
+  label, input, button, select, textarea {
+    font-weight: normal;
+  }
+  
+  select, button, input[type="button"], input[type="reset"], input[type="submit"], input[type="radio"], input[type="checkbox"] {
+    cursor: pointer;
+  }
+  
+  button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    cursor: pointer;
+    -webkit-appearance: button;
+  }
+  
+  button, input {
+    line-height: normal;
+  }
+  
+  button, input, select, textarea {
+    margin: 0;
+    font-size: 100%;
+    vertical-align: middle;
+  }
+  
+  select[disabled], textarea[disabled], select[readonly], textarea[readonly] {  // Disabled and read-only inputs
+    cursor: not-allowed;
+    background-color: #eee;
+  }
+}

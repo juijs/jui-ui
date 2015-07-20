@@ -1,0 +1,167 @@
+.jui {
+  .panel {
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    .box-sizing(border-box);
+
+		> * {
+			width: auto;
+		}
+
+		> .head, > .foot {
+		  overflow: visible;
+		}
+
+		> .body {
+			.text-default();
+		}
+
+		// Default
+		.panel-normal;
+		.panel-white;
+	}
+	
+	
+	// Panel Group
+	// --------------------------------------------------
+  .pgroup {
+    width: 100%;
+    
+    > .panel {
+      width: auto;
+      
+      &.group {
+        width: 100%;
+      }
+        
+      &:not(:first-child) {
+        margin-top: 0px;
+        margin-left: -10px;
+        
+        > .head {
+          .border-top-left-radius(0px);
+        }
+    
+        > .body, > .foot {
+          .border-bottom-left-radius(0px);
+        }
+      }
+    }
+  }
+	
+	
+  // Panel Customizing (Table)
+  // --------------------------------------------------
+  .panel {
+    > .table-classic,
+    > .xtable > .table-classic {
+      > thead {
+        th:first-child {
+          .border-top-left-radius(0px);
+        }
+        th:last-child {
+          .border-top-right-radius(0px);
+        }
+      }
+
+      .border-bottom-radius(5px);
+    }
+  }
+
+  .panel {
+	> .body.fit .table-classic,
+	> .body.fit .xtable > .table-classic {
+	  tr {
+		> th:first-child {
+		  .border-top-left-radius(0px);
+		  border-left-width: 0px;
+		}
+		> th:last-child {
+		  .border-top-right-radius(0px);
+		  border-right-width: 0px;
+		}
+
+		> td:first-child {
+		  border-left-width: 0px;
+		}
+		> td:last-child {
+		  border-right-width: 0px;
+		}
+	  }
+	}
+  }
+
+
+  // Panel Customizing (Tab)
+  // --------------------------------------------------
+  .panel > .head > .tab,
+  .panel > .foot > .tab {
+	display: inline-block;
+	margin: 0px 0px 0px -10px;
+	padding-left: 0px;
+	line-height: normal;
+
+    > li a {
+      height: 14px;
+    }
+  }
+
+  .panel > .foot > .tab {
+	margin-top: -3px;
+  }
+
+	
+  // Panel Close
+  // --------------------------------------------------
+
+  .panel-close {
+	> .head {
+	  .border-bottom-radius(5px);
+	}
+
+	> *:not(.head) {
+	  display: none;
+	}
+  }
+	
+	
+	// Panel Sizes
+	// --------------------------------------------------
+  
+	.panel-normal {
+		font-size: 12px;
+		
+		> .head, > .foot {
+		  height: 31px;
+		  line-height: 30px;
+		  padding: 2px 15px;
+		}
+		
+		> .body {
+			padding: 15px;
+		}
+		
+		> .body.fit {
+		  padding: 0px !important;
+		}
+	}
+
+	
+	// Panel Colors
+	// --------------------------------------------------
+  	
+	.panel-white {
+		color: #333;
+		
+		> .head, > .foot {
+			.btn-bgcolor-2(#f5f5f5, #f1f1f1);
+			border: 1px solid #dcdcdc;
+		}
+		
+		> .body {
+			background-color: #fff;
+			border: 1px solid #dcdcdc;
+		}
+	}
+}

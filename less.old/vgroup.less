@@ -1,0 +1,60 @@
+.jui {
+  .vgroup, .vmenu, .panel {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    
+    > * + * {
+    	margin: -2px 0 0 0;
+    }
+	  
+  	> * {
+  	  	.border-radius(0px);
+  	  	width: 100%;
+  	}
+  	
+  	> *:first-child {
+  	    .border-top-left-radius(5px);
+  	    .border-top-right-radius(5px);
+  	}
+  	
+  	> *:last-child {
+  	    .border-bottom-left-radius(5px);
+  	    .border-bottom-right-radius(5px);
+  	}
+  }
+  
+  .vgroup.vgroup-rect, 
+  .vmenu.vmenu-rect,
+  .panel.panel-rect {
+  	> *:first-child {
+	    .border-top-left-radius(0);
+	    .border-top-right-radius(0);
+	 }
+  	> *:last-child {
+	    .border-bottom-left-radius(0);
+	    .border-bottom-right-radius(0);
+  	}
+  }
+  
+  .vgroup + .vgroup, 
+  .vmenu + .vmenu, 
+  .panel + .panel {
+    margin-top: 5px;
+  }
+  
+  // Childrens Align
+  // --------
+  
+  .vgroup-left > * {
+  	text-align: left;
+  }
+
+  .vgroup-right > * {
+  	text-align: right;
+  }
+  
+  .vgroup-center > * {
+  	text-align: center;
+  }
+}

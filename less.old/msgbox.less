@@ -1,0 +1,269 @@
+.jui {
+	.msgbox {
+      position: absolute;
+      margin: 0 auto;
+      z-index: 2000;
+      min-width: 250px;
+      min-height: 150px;
+      font-size: 12px;
+      .border-radius(3px);
+      .box-shadow(0 0 5px 1px rgba(0, 0, 0, 0.25));
+    
+	  > .head {
+        position: relative;
+        padding: 7px 12px 7px 15px;
+          font-weight: bold;
+        .border-radius(3px 3px 0 0);
+
+        > .title {
+          display: inline-block;
+        }
+
+        > .detail {
+          display: block;
+        }
+
+        > .close {
+           position: absolute;
+           cursor: pointer;
+           right: 12px;
+        }
+
+        > a {
+          text-decoration: none;
+          color: inherit;
+        }
+	  }
+	  
+	  > .body {
+	    position: relative;
+        overflow: auto;
+	    padding: 15px 15px 18px 15px;
+	    word-break: break-all;
+	  }
+	  
+	  > .resize {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        cursor: nw-resize;
+      }
+	  
+	  .msgbox-default;
+	}
+	
+	
+	// Colors
+  // ---------------------------
+	.msgbox-default { // Black & White
+    color: #333;
+    background-color: #fff;
+    
+    > .head {
+      color: #fff;
+      border-bottom: 1px solid #f2f2f2;
+      background-color: #464646;
+    }
+    
+    > .body {
+      background-color: inherit;
+      .msgbox-scroll-white;
+    }
+	}
+	
+	.msgbox-black {
+    color: #fff;
+    border: 1px solid #5a5a5a;
+    background-color: #545454;
+    
+    > .head {
+      border-bottom: 1px solid #5a5a5a;
+      background-color: #464646;
+    }
+    
+    > .body {
+      background-color: inherit;
+      .msgbox-scroll-black;
+    }
+	}
+	
+	.msgbox-white {
+    color: #333;
+    background-color: #fff;
+    
+    > .head {
+      color: #333;
+      border-bottom: 1px solid #ebebeb;
+      background-color: #f7f7f7;
+    }
+    
+    > .body {
+      background-color: inherit;
+      .msgbox-scroll-white;
+    }
+	}
+
+	.msgbox-yellow {
+    color: #fff;
+    border: 1px solid #f9c664;
+    background-color: #fff3d1;
+    
+    > .head {
+      border-bottom: 1px solid #fff9ea;
+      background-color: #ff9704;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #a56500;
+      .msgbox-scroll-white;
+    }
+	}
+
+	.msgbox-red {
+    color: #fff;
+    border: 1px solid #efb5b5;
+    background-color: #f4dede;
+    
+    > .head {
+      border-bottom: 1px solid #ffeaea;
+      background-color: #ef180b;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #ba0000;
+      .msgbox-scroll-white;
+    }
+	}
+
+	.msgbox-green {
+    color: #fff;
+    border: 1px solid #a2d27f;
+    background-color: #e8f5d3;
+    
+    > .head {
+      border-bottom: 1px solid #f4fae9;
+      background-color: #2aa11a;
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: #496f0a;
+      .msgbox-scroll-white;
+    }
+	}
+	
+	
+	// Detail Styles
+  // ---------------------------
+  .msgbox-detail {
+    > .head {
+      margin: 0 20px;
+      padding: 15px 0;
+      
+      > .detail {
+        margin-top: 4px;
+      }
+      
+      > .close {
+        top: 15px;
+        right: 0px;
+      }
+    }  
+    
+    > .body {
+      padding: 15px 20px 20px 20px;
+    }
+    
+    .msgbox-detail.msgbox-white;
+  }
+  
+  .msgbox-detail.msgbox-white {
+    color: #666;
+    background-color: #fff;
+    
+    > .head {
+      border-bottom: 1px solid #eaeaea;
+      background-color: inherit;
+      color: #333;
+      
+      > .detail {
+        color: #666;
+        font-weight: normal;
+      }
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: inherit;
+      .msgbox-scroll-white;
+    }
+  }
+
+  .msgbox-detail.msgbox-black {
+    color: #b0b0b0;
+    background-color: #3f3f3f;
+    
+    > .head {
+      border-bottom: 1px solid #505050;
+      background-color: inherit;
+      color: #fff;
+      
+      > .detail {
+        color: #b0b0b0;
+        font-weight: normal;
+      }
+    }
+    
+    > .body {
+      background-color: inherit;
+      color: inherit;
+      .msgbox-scroll-black;
+    }
+  }
+  
+  .msgbox-scroll-white {
+     &::-webkit-scrollbar-track {
+        .btn-bgcolor-2(#f2f2f2, #fff, left);
+        border: 1px solid #e6e6e6;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c8c8c8;
+        border: 1px solid #b8b8b8;
+        .border-radius(5px);
+        
+        &:hover {
+          background: #8a8a8a;
+          border: 1px solid #737373;
+        }
+      }
+  }
+
+  .msgbox-scroll-black {
+     &::-webkit-scrollbar-track {
+        .btn-bgcolor-2(#636363, #7a7a7a, left);
+        border: 1px solid #7a7a7a;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #7a7a7a;
+        border: 1px solid #636363;
+        .border-radius(5px);
+        
+        &:hover {
+          background: #8a8a8a;
+          border: 1px solid #737373;
+        }
+      }
+  }
+
+  .msgbox-scroll-white, .msgbox-scroll-black {
+    &::-webkit-scrollbar {
+      // Webkit Scroll Size
+      width: 10px;
+      height: 10px;
+    }
+  }
+}

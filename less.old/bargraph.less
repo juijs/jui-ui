@@ -1,0 +1,174 @@
+.jui {
+	.bargraph {
+		.bargraph-color;
+    .bargraph-normal;
+    
+		> * {
+			position: relative;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+			font-weight: bold;
+      margin-top: 15px;
+      .box-sizing(border-box);
+		}
+		
+		> * {
+		    .info {
+		      position: absolute;
+		      left: 0;
+          right: 0;
+          top: -10px;
+  		    
+  		    > .line {
+            border-bottom-width: 0;
+            height: 8px;
+          }
+          
+          > .data {
+            width: 30px;
+            margin-top: -15px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+		    }
+		    
+		}
+		
+		> *:not(:first-child) {
+			.line {
+	        border-left-width: 0;
+			}
+		}
+
+		> *.active:not(:first-child) {
+			.line {
+	        border-left-width: 1px;
+			}
+		}
+	}
+	
+	// BarGraph Colors
+	// --------------------------------------------------
+	
+	.bargraph-color {
+	  
+	  //-- Common
+    > * {
+      .line {
+        border: 1px solid #ebebeb;
+      }
+      
+      .data {
+        color: #969696;
+      }
+    }
+
+    > *.active {
+      .line {
+        border-color: #d0d0d0; 
+      }
+
+      .data {
+        color: #333;
+      }
+    }
+	  
+	  //-- Default Bar
+		> *:not(.purple):not(.blue):not(.yellow) {
+        border: 1px solid #bebebe;
+		    .box-shadow(~"inset 0 0 0 1px rgba(255,255,255,.3)");
+		    .btn-bgcolor-2(#fff, #e9e9e9);
+		    
+		    &:hover {
+			    .btn-bgcolor-2(#fff, #f0f0f0);
+		    }
+
+		    &.active {
+			    .btn-bgcolor-2(#ede2ff, #d4bff1);
+			    
+			    .title {
+			      color: #333;
+			    }
+		    }
+		    
+		    .title {
+		      color: #969696;
+		    }
+		    
+		    .data {
+		    	background: white;
+		    }
+	    }
+	    
+	    //-- Bar
+	    > .purple, > .blue, > .yellow {
+		    .box-shadow(~"inset 0 0 0 1px rgba(255,255,255,.3)");
+	    	
+	    	.title {
+		    	color: #fff;
+		    }
+		    
+		    .data {
+		    	background: white;
+		    }
+	    }
+	    
+	    > .purple {
+        border: 1px solid #cdbadf;
+		    background-color: #cdbadf;
+		    
+		    &.active {
+          border-color: #8959b6;
+  		    background-color: #8959b6;
+		    }
+	    }
+
+	    > .blue {
+        border: 1px solid #b5d4ee;
+		    background-color: #c0dcf3;
+		    
+		    &.active {
+          border-color: #4e9bdb;
+  		    background-color: #69aee8;
+		    }
+	    }
+
+	    > .yellow {
+        border: 1px solid #f4d897;
+		    background-color: #f8de96;
+		    
+		    &.active {
+          border-color: #eca402;
+  		    background-color: #f5b400;
+		    }
+	    }
+	}
+
+
+	// BarGraph Sizes
+	// --------------------------------------------------
+	.bargraph-normal {
+		> * { 
+			.title {
+		    height: 32px;
+	    	line-height: 32px;
+    		font-size: 0.75em;
+    	}
+	    	
+	    .data {
+	    		font-size: 0.8em;
+	    }
+	  }
+  }
+
+	.bargraph-small {
+		> * {
+			.title {
+		    	height: 25px;
+		    	line-height: 25px;
+	    	}
+	    }
+    }
+}

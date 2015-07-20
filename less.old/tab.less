@@ -1,0 +1,177 @@
+.jui {
+  // tab AND pill
+  // -------------
+  
+  // Common styles
+  .tab, .pill {
+    .clearfix();
+    
+    padding-left: 15px;
+    list-style: none;
+    font-size: 12px;
+    
+    li.active > a, li.menu-keep > a {
+      font-weight: bold;
+    }
+    li.active > a { 
+      cursor: default;
+    }
+  }
+  
+  .tab > li, .pill > li {
+    float: left;
+    
+    a {
+      margin-right: 2px;
+      height: 16px;
+      display: block;
+      text-decoration: none;
+    }
+  }
+  
+  // tab
+  // ----
+  
+  // Give the tab something to sit on
+  .tab {
+    .tab-white;
+    
+    li > a {
+      padding: 10px 15px 7px 15px;
+    }
+  }
+  
+  .tab-top {
+    border-top-color: transparent;
+    
+    li {
+      margin-top: 0;
+      margin-bottom: -1px;
+    }
+    
+    li > a {
+      .border-radius(4px 4px 0 0);
+    }
+  }
+  
+  .tab-bottom {
+    border-bottom-color: transparent;
+    
+    li {
+      margin-top: -1px;
+      margin-bottom: 0;
+    }
+    
+    li > a {
+      .border-radius(0 0 4px 4px);
+    }
+  }
+  
+  // Colors
+  // ----
+  
+  .tab-white {
+    li > a {
+      color: #6836c4;
+      border: 1px solid #e6e6e6;
+      .btn-bgcolor-2(#fff, #f4f4f4);
+      
+      &:hover, &:focus {
+        border: 1px solid #c7c7c7;
+      }
+    }
+    
+    li.active > a {
+      color: #000;
+      .btn-bgcolor-2(#fff, #fff);
+    }
+    
+    li.menu-keep > a {
+      color: #fff;
+      .btn-bgcolor-2(#605977, #605977);
+    }
+    
+    &.tab-top {
+      border-bottom: 1px solid #ddd;
+      
+      li.active > a {
+        border-color: #ddd #ddd transparent #ddd;
+      }
+    }
+    
+    &.tab-bottom {
+      border-top: 1px solid #ddd;
+      
+      li.active > a {
+        border-color: transparent #ddd #ddd #ddd;
+      }
+    }
+  }
+  
+  // pill
+  // ----
+  .pill {
+    .pill-white;
+    
+    li > a {
+      padding: 7px 10px 5px 10px;
+      .border-radius(5px);
+    }
+    
+    li.active {
+      position: relative;
+    }
+  }
+  
+  .pill-top {
+    padding-bottom: 10px;
+  }
+  
+  .pill-bottom {
+    padding-top: 10px;
+  }
+  
+  // Colors
+  .pill-white {
+    li > a {
+      color: #666;
+      
+      &:hover, &:focus {
+        background: #eee;
+      }
+    }
+    
+    li.active > a { 
+        color: #fff;
+        background: #605977;
+    }
+    
+    li.menu-keep > a {
+      color: #fff;
+      background: #aaa;
+    }
+    
+    &.pill-top {
+      border-bottom: 1px solid #e2e2e2;
+      
+      li.active > .anchor {
+        .anchor-top();
+      }
+    }
+    
+    &.pill-bottom {
+      border-top: 1px solid #e2e2e2;    
+      
+      li.active > .anchor {
+        .anchor-bottom();
+      }
+    }
+  }
+
+
+  /* Icon color in Tab */
+  .pill li.active [class^="icon-"],
+  .pill li.menu-keep [class^="icon-"], .tab li.menu-keep [class^="icon-"] {
+    color: #fff;
+  }
+}
