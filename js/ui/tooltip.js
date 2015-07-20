@@ -143,10 +143,10 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
     UI.setup = function() {
         return {
             /**
-             * @cfg {"black"/"gray"} [color="black"]
+             * @cfg {String} [color="black"]
              * Determines the color of a tooltip
              */
-            color: "black",
+            color: "null",
 
             /**
              * @cfg {"top"/"bottom"/"left"/"right"} [position="top"]
@@ -191,7 +191,7 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
             title: "",
 
             tpl: {
-                item: "<div class='tooltip tooltip-<!= position !> tooltip-<!= color !>'>" +
+                item: "<div class='tooltip <!= position !>' <! if(color != null) { !>style='background-color: <!= color !>'<! } !>>" +
                 "<div class='anchor'></div><div class='message'><!= message !></div>" +
                 "</div>"
             }
