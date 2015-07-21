@@ -261,10 +261,10 @@
   cursor: default;
 }
 .jui .paging > .prev {
-  background-image: url("../img/paging-list.png");
+  background-image: url("img/paging-list.png");
 }
 .jui .paging > .next {
-  background-image: url("../img/paging-list.png");
+  background-image: url("img/paging-list.png");
 }
 .jui .navbar {
   border: 1px solid #c9c9c9;
@@ -453,7 +453,7 @@
   background-position: -13px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow-file li.fold > i {
   width: 15px;
@@ -462,7 +462,7 @@
   background-position: 0px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow-file li.leaf > i {
   width: 15px;
@@ -471,10 +471,10 @@
   background-position: 0 0;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line-file li {
-  background: url("../img/tree-line.gif") 0 0 no-repeat;
+  background: url("img/tree-line.gif") 0 0 no-repeat;
 }
 .jui ul.tree.line-file li.open > i {
   width: 16px;
@@ -483,7 +483,7 @@
   background-position: 0px -111px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line-file li.open.root > i {
   width: 16px;
@@ -492,7 +492,7 @@
   background-position: -16px -89px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line-file li.fold > i {
   width: 16px;
@@ -501,7 +501,7 @@
   background-position: -32px -67px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line-file li.fold.root > i {
   width: 16px;
@@ -510,7 +510,7 @@
   background-position: -48px -45px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow li.open > i {
   width: 15px;
@@ -519,7 +519,7 @@
   background-position: -13px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow li.fold > i {
   width: 15px;
@@ -528,7 +528,7 @@
   background-position: 0px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow li.leaf > i {
   width: 15px;
@@ -537,10 +537,10 @@
   background-position: 0 0;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line li {
-  background: url("../img/tree-line.gif") 0 0 no-repeat;
+  background: url("img/tree-line.gif") 0 0 no-repeat;
 }
 .jui ul.tree.line li.open > i {
   width: 16px;
@@ -549,7 +549,7 @@
   background-position: 0px -111px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line li.open.root > i {
   width: 16px;
@@ -558,7 +558,7 @@
   background-position: -16px -89px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line li.fold > i {
   width: 16px;
@@ -567,7 +567,7 @@
   background-position: -32px -67px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.line li.fold.root > i {
   width: 16px;
@@ -576,7 +576,7 @@
   background-position: -48px -45px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow-file li.open > a > i,
 .jui ul.tree.line-file li.open > a > i,
@@ -590,7 +590,7 @@
   background-position: -17px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow-file li.fold > a > i,
 .jui ul.tree.line-file li.fold > a > i,
@@ -604,7 +604,7 @@
   background-position: 0px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui ul.tree.arrow-file li.leaf > a > i,
 .jui ul.tree.line-file li.leaf > a > i,
@@ -618,7 +618,7 @@
   background-position: -36px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("../img/tree-list.png");
+  background-image: url("img/tree-list.png");
 }
 .jui .panel {
   color: #333333;
@@ -1653,7 +1653,7 @@
   border: 1px solid #737373;
 }
 .jui .xtable > .loading {
-  background-image: url("../img/xtable-loading.gif");
+  background-image: url("img/xtable-loading.gif");
 }
 .jui .combo > ul {
   background-color: #ffffff;
@@ -1702,4 +1702,10 @@
 .jui .combo > ul::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
+}
+@font-face {
+  font-family: "jennifer";
+  src: url("img/icon-list.eot") format("embedded-opentype"), url("img/icon-list.woff") format("woff"), url("img/icon-list.ttf") format("truetype"), url("img/icon-list.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
 }

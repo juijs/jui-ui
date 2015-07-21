@@ -1,16 +1,6 @@
-@font-face {
-  font-family: 'jennifer';
-  src: url('../img/icon-list.eot?2jwwu9');
-  src: url('../img/icon-list.eot?#iefix2jwwu9') format('embedded-opentype'),
-  url('../img/icon-list.woff?2jwwu9') format('woff'),
-  url('../img/icon-list.ttf?2jwwu9') format('truetype'),
-  url('../img/icon-list.svg?2jwwu9#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
+/* Icon Base */
 [class^="icon-"], [class*=" icon-"] {
-  font-family: 'jennifer';
+  font-family: "jennifer";
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -24,6 +14,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Icon Animations */
+[class^="icon-"].spin, [class*=" icon-"].spin {
+  .animation(spin 2s infinite linear);
+}
+[class^="icon-"].flash, [class*=" icon-"].flash {
+  .animation(flash 2s infinite ease);
+}
+[class^="icon-"].bounce, [class*=" icon-"].bounce {
+  .animation(bounce 2s infinite ease);
+}
+[class^="icon-"].float, [class*=" icon-"].float {
+  .animation(float 2s infinite linear);
+}
+[class^="icon-"].pulse, [class*=" icon-"].pulse {
+  .animation(pulse 2s infinite linear);
+}
+
+/* Icon List */
 .icon-facebook:before {
   content: "\e65c";
 }
@@ -311,21 +319,4 @@
 }
 .icon-ws:before {
   content: "\e65a";
-}
-
-/* Icon Animations */
-.icon-spin {
-  .animation(spin 2s infinite linear);
-}
-.icon-flash {
-  .animation(flash 2s infinite ease);
-}
-.icon-bounce {
-  .animation(bounce 2s infinite ease);
-}
-.icon-float {
-  .animation(float 2s infinite linear);
-}
-.icon-pulse {
-  .animation(pulse 2s infinite linear);
 }
