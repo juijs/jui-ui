@@ -891,7 +891,6 @@
   color: inherit;
 }
 .jui .msgbox {
-  color: #333333;
   border: 1px solid transparent;
   background-color: #ffffff;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
@@ -899,12 +898,13 @@
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
 }
 .jui .msgbox > .head {
-  color: #333333;
   border-bottom: 1px solid #ebebeb;
   background-color: #f7f7f7;
+  color: #333333;
 }
 .jui .msgbox > .body {
   background-color: inherit;
+  color: #333333;
 }
 .jui .msgbox > .body::-webkit-scrollbar {
   width: 10px;
@@ -931,46 +931,45 @@
   border: 1px solid #737373;
 }
 .jui .msgbox.warning {
-  color: #ffffff;
   border: 1px solid #f9c664;
   background-color: #fff3d1;
 }
 .jui .msgbox.warning > .head {
   border-bottom: 1px solid #fff9ea;
   background-color: #ff9704;
+  color: #ffffff;
 }
 .jui .msgbox.warning > .body {
   background-color: inherit;
   color: #a56500;
 }
 .jui .msgbox.danger {
-  color: #ffffff;
   border: 1px solid #efb5b5;
   background-color: #f4dede;
 }
 .jui .msgbox.danger > .head {
   border-bottom: 1px solid #ffeaea;
   background-color: #ef180b;
+  color: #ffffff;
 }
 .jui .msgbox.danger > .body {
   background-color: inherit;
   color: #ba0000;
 }
 .jui .msgbox.success {
-  color: #ffffff;
   border: 1px solid #a2d27f;
   background-color: #e8f5d3;
 }
 .jui .msgbox.success > .head {
   border-bottom: 1px solid #f4fae9;
   background-color: #2aa11a;
+  color: #ffffff;
 }
 .jui .msgbox.success > .body {
   background-color: inherit;
   color: #496f0a;
 }
 .jui .msgbox.detail {
-  color: #666666;
   background-color: #ffffff;
 }
 .jui .msgbox.detail > .head {
@@ -984,7 +983,7 @@
 }
 .jui .msgbox.detail > .body {
   background-color: inherit;
-  color: inherit;
+  color: #666666;
 }
 .jui .window {
   color: #333333;
