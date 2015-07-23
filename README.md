@@ -4,15 +4,15 @@
 JUI library only requires the user to load a single package file.
 Access to the jui class must then be configured in the markup.
 ```html
-<link rel="stylesheet" href="jui.min.css" />
-<link rel="stylesheet" href="jennifer.theme.min.css" />
+<link rel="stylesheet" href="dist/jui.min.css" />
+<link rel="stylesheet" href="dist/jennifer.theme.min.css" />
 <body class="jui">...</body>
 ```
 
 As the script works only with jQuery 1.8 or higher, it is necessary to load the jQuery library first.
 ```html
-<script src="jquery.min.js"></script>
-<script src="jui.min.js"></script>
+<script src="lib/jquery.min.js"></script>
+<script src="dist/jui.min.js"></script>
 ```
 
 #### Install with Bower

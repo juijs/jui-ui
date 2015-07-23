@@ -1,5 +1,10 @@
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"facebook" : "\ue65c",
+		"googleplus" : "\ue65d",
+		"share" : "\ue65e",
+		"twitter" : "\ue65f",
+		"realtime" : "\ue640",
 		"connection" : "\ue65b",
 		"add-dir" : "\ue600",
 		"add-dir2" : "\ue601",
@@ -65,7 +70,6 @@ jui.define("chart.icon.jennifer", [], function() {
 		"preview" : "\ue63d",
 		"printer" : "\ue63e",
 		"profile" : "\ue63f",
-		"realtime" : "\ue640",
 		"refresh" : "\ue641",
 		"refresh2" : "\ue642",
 		"report-build" : "\ue643",

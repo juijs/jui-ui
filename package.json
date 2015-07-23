@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": "jui.node.js",
+  "main": "node.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/seogi1004/jui.git"
