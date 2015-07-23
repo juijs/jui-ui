@@ -1,0 +1,95 @@
+.navbar {
+  padding: 5px 15px 5px 15px;
+  overflow: visible;
+  font-size: 12px;
+  .border-radius(5px);
+}
+
+.navbar {
+  ul.nav {
+    display: inline-block;
+    list-style: none;
+    margin-left: -40px;
+
+    li {
+      margin: -5px 0px -5px 0px;
+      padding: 7.5px 12px 7.5px 12px;
+      float: left;
+
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  ul.nav.right {
+    float: right;
+  }
+}
+
+.navbar > * {
+  margin: 0;
+  vertical-align: middle;
+}
+
+
+// Fixed navbar
+// -------------------------
+
+// Shared (top/bottom) styles
+.navbar.fixed {
+  position: fixed;
+  right: 0;
+  left: 0;
+  margin-bottom: 0; // remove 18px margin for default navbar
+  padding-left:  0;
+  padding-right: 0;
+  z-index: 1005;
+  .border-radius(0);
+}
+
+.navbar.fixed.top {
+  top: 0;
+  border-width: 0 0 1px;
+}
+
+.navbar.fixed.bottom {
+  bottom: 0;
+  border-width: 1px 0 0;
+}
+
+
+// Inline
+// -------------------------
+
+.navbar {
+  .inline {
+      display: inline;
+      margin-right: 20px;
+  }
+
+  .inline > * {
+      margin-right: 3px;
+  }
+
+  .inline.right {
+      display: inline;
+      float: right;
+      margin-right: 0px;
+  }
+
+  .row {
+      display: block;
+      margin-bottom: 5px;
+  }
+
+  .row:last-child {
+      margin-bottom: 0px !important;
+  }
+
+  .line {
+      display: block;
+      height: 1px;
+      margin-bottom: 5px;
+  }
+}

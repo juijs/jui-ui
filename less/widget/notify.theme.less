@@ -1,0 +1,36 @@
+.notify {
+  opacity: @notifyBackgroundOpacity;
+  .border-radius(@notifyBorderRadius);
+
+  background-color: @notifyBackgroundColor;
+  border: 1px solid @notifyBorderColor;
+  .box-shadow(@notifyBoxShadow);
+
+  > .title {
+    color: @notifyTitleFontColor;
+  }
+
+  > .message {
+    color: @notifyMessageFontColor;
+  }
+}
+
+.notify.info {
+  background-color: @notifyInfoBackgroundColor !important;
+  border: 1px solid @notifyInfoBorderColor !important;
+}
+
+.notify.warning {
+  background-color: @notifyWarningBackgroundColor !important;
+  border: 1px solid @notifyWarningBorderColor !important;
+}
+
+.notify.success {
+  background-color: @notifySuccessBackgroundColor !important;
+  border: 1px solid @notifySuccessBorderColor !important;
+}
+
+.notify.danger {
+  background-color: @notifyDangerBackgroundColor !important;
+  border: 1px solid @notifyDangerBorderColor !important;
+}

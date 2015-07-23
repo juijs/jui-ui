@@ -1,4 +1,6 @@
-jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, ColorUtil) {
+jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], function($, _, ColorUtil) {
+    var PADDING = 7, ANCHOR = 7, RATIO = 1.2;
+
     /**
      * @class chart.widget.tooltip
      * implements tooltip widget
@@ -8,71 +10,82 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
      *
      */
     var TooltipWidget = function(chart, axis, widget) {
-        var self = this;
-        var g, text, rect;
-        var padding = 7, anchor = 7, textY = 14;
-        var tspan = []; // 멀티라인일 경우, 하위 노드 캐시
+        var self = this,
+            tooltips = {},
+            lineHeight = 0;
 
-        function setMessage(index, message) {
-            if(!tspan[index]) {
-                var elem = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-                text.element.appendChild(elem);
-                tspan[index] = elem;
-            }
+        function getFormat(k, d) {
+            var key = null,
+                value = null;
 
-            tspan[index].textContent = message;
-        }
+            if(_.typeCheck("function", widget.format)) {
+                var obj = self.format(d, k);
 
-        function getFormat(key, value, data) {
-            if(typeof(widget.format) == "function") {
-                return self.format(key, value, data);
+                if(_.typeCheck("object", obj)) {
+                    key = obj.key;
+                    value = obj.value;
+                } else {
+                    value = obj;
+                }
             } else {
-                if (!value) {
-                    return key;
+                if(k && !d) {
+                    value = k;
                 }
 
-                return key + ": " + self.format(value);
+                if(k && d) {
+                    key = k;
+                    value = self.format(d[k]);
+                }
+            }
+
+            return {
+                key: key,
+                value: value
             }
         }
 
         function printTooltip(obj) {
+            var tooltip = tooltips[obj.brush.index],
+                texts = tooltip.get(1).get(1),
+                width = 0,
+                height = 0,
+                onlyValue = false;
+
             if(obj.dataKey && widget.all === false) {
-                var k = obj.dataKey,
-                    d = (obj.data != null) ? obj.data[k] : null;
-
-                // 위젯 포지션에 따른 별도 처리
-                if(widget.orient == "bottom") {
-                    text.attr({ y: textY + anchor });
-                }
-
-                // 툴팁 값 설정
-                var message = getFormat(k, d, obj.data);
-                setMessage(0, message);
-
-                text.attr({ "text-anchor": "middle" });
+                setTextInTooltip([ obj.dataKey ]);
             } else {
-                var brush = obj.brush;
+                setTextInTooltip(obj.brush.target);
+            }
 
-                for(var i = 0; i < brush.target.length; i++) {
-                    var key = brush.target[i],
-                        x = padding,
-                        y = (textY * i) + (padding * 2),
-                        d = (obj.data != null) ? obj.data[key] : null;
+            function setTextInTooltip(targets) {
+                for(var i = 0; i < targets.length; i++) {
+                    var key = targets[i],
+                        msg = getFormat(key, obj.data);
 
-                    // 위젯 포지션에 따른 별도 처리
-                    if(widget.orient == "bottom") {
-                        y = y + anchor;
+                    texts.get(i).attr({ x: PADDING });
+
+                    if(msg.key) {
+                        texts.get(i).get(0).text(msg.key);
+                    } else {
+                        texts.get(i).get(1).attr({ "text-anchor": "middle" });
+                        onlyValue = true;
                     }
 
-                    var message = getFormat(key, d, obj.data);
-                    setMessage(i, message);
+                    if(msg.value) {
+                        texts.get(i).get(1).attr({ x: 0 }).text(msg.value);
+                    }
 
-                    tspan[i].setAttribute("x", x);
-                    tspan[i].setAttribute("y", y);
+                    width = Math.max(width, texts.get(i).size().width);
                 }
 
-                text.attr({ "text-anchor": "inherit" });
+                height = targets.length * lineHeight;
             }
+
+            return {
+                width: width + PADDING * 3,
+                height: height + PADDING,
+                onlyValue: onlyValue
+            };
         }
 
         function existBrush(index) {
@@ -86,86 +99,170 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
 
             for(var i = 0; i < targets.length; i++) {
                 if(targets[i] == obj.dataKey) {
-                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors, targets));
+                    return ColorUtil.lighten(self.chart.color(i, obj.brush.colors));
                 }
             }
 
-            return chart.theme("tooltipBorderColor");
+            return null;
         }
 
-        this.drawBefore = function() {
-            g = chart.svg.group({
-                visibility: "hidden"
-            }, function() {
-                rect = chart.svg.polygon({
-                    fill: chart.theme("tooltipBackgroundColor"),
-                    "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
-                    "stroke-width": chart.theme("tooltipBorderWidth")
-                });
+        function getTooltipXY(e, size, orient) {
+            var x = e.bgX - (size.width / 2),
+                y = e.bgY - size.height - ANCHOR - (PADDING / 2),
+                lineX = 2;
 
-                text = chart.text({
-                    "font-size": chart.theme("tooltipFontSize"),
-                    "fill": chart.theme("tooltipFontColor"),
-                    y: textY
-                });
-            });
+            if(orient == "left" || orient == "right") {
+                y = e.bgY - (size.height / 2) - (PADDING / 2);
+            }
+
+            if(orient == "left") {
+                x = e.bgX - size.width - ANCHOR;
+            } else if(orient == "right") {
+                x = e.bgX + ANCHOR;
+                lineX = -2;
+            } else if(orient == "bottom") {
+                y = e.bgY + (ANCHOR * 2);
+            }
+
+            return {
+                x: x,
+                y: y,
+                c: lineX
+            }
         }
 
-        this.draw = function() {
+        function setTooltipEvent() {
             var isActive = false,
-                w, h;
+                size = null,
+                orient = null,
+                axis = null;
 
-            this.on("mouseover", function(obj, e) {
+            self.on("mouseover", function(obj, e) {
                 if(isActive || !existBrush(obj.brush.index)) return;
                 if(!obj.dataKey && !obj.data) return;
 
-                // 툴팁 텍스트 출력
-                printTooltip(obj);
+                // 툴팁 크기 가져오기
+                size = printTooltip(obj);
+                orient = widget.orient;
+                axis = chart.axis(obj.brush.axis);
 
-                var size = text.size();
-                w = size.width + (padding * 2);
-                h = size.height + padding;
+                // 툴팁 좌표 가져오기
+                var xy = getTooltipXY(e, size, orient),
+                    x = xy.x - chart.padding("left"),
+                    y = xy.y - chart.padding("top");
+
+                // 엑시스 범위를 넘었을 경우 처리
+                if(widget.flip) {
+                    if (orient == "left" && x < 0) {
+                        orient = "right";
+                    } else if (orient == "right" && x + size.width > axis.area("width")) {
+                        orient = "left";
+                    } else if (orient == "top" && y < 0) {
+                        orient = "bottom";
+                    } else if (orient == "bottom" && y + size.height > axis.area("height")) {
+                        orient = "top";
+                    }
+                }
+
+                // 툴팁 엘리먼트 가져오기
+                var tooltip = tooltips[obj.brush.index],
+                    line = tooltip.get(0),
+                    rect = tooltip.get(1).get(0),
+                    text = tooltip.get(1).get(1).translate(0, (orient != "bottom") ? lineHeight : lineHeight + ANCHOR),
+                    borderColor = chart.theme("tooltipBorderColor") || getColorByKey(obj),
+                    lineColor = chart.theme("tooltipLineColor") || getColorByKey(obj);
 
                 rect.attr({
-                    points: self.balloonPoints(widget.orient, w, h, (widget.anchor) ? anchor : null),
-                    stroke: getColorByKey(obj)
+                    points: self.balloonPoints(orient, size.width, size.height, (widget.anchor) ? ANCHOR : null),
+                    stroke: borderColor
                 });
-
-                text.attr({ x: w / 2 });
-                g.attr({ visibility: "visible" });
+                line.attr({ stroke: lineColor });
+                text.each(function(i, elem) {
+                    elem.get(1).attr({ x: (size.onlyValue) ? size.width / 2 : size.width - PADDING });
+                });
+                tooltip.attr({ visibility: "visible" });
 
                 isActive = true;
             });
 
-            this.on("mousemove", function(obj, e) {
+            self.on("mousemove", function(obj, e) {
                 if(!isActive) return;
 
-                var x = e.bgX - (w / 2),
-                    y = e.bgY - h - anchor - (padding / 2);
+                var tooltip = tooltips[obj.brush.index],
+                    line = tooltip.get(0),
+                    target = tooltip.get(1),
+                    xy = getTooltipXY(e, size, orient);
 
-                if(widget.orient == "left" || widget.orient == "right") {
-                    y = e.bgY - (h / 2) - (padding / 2);
-                }
+                line.attr({
+                    x1: e.bgX + xy.c,
+                    y1: chart.padding("top") + axis.area("y"),
+                    x2: e.bgX + xy.c,
+                    y2: chart.padding("top") + axis.area("y2")
+                });
 
-                if(widget.orient == "left") {
-                    x = e.bgX - w - anchor;
-                } else if(widget.orient == "right") {
-                    x = e.bgX + anchor;
-                } else if(widget.orient == "bottom") {
-                    y = e.bgY + (anchor * 2);
-                }
-
-                g.translate(x, y);
+                target.translate(xy.x, xy.y);
             });
 
-            this.on("mouseout", function(obj, e) {
+            self.on("mouseout", function(obj, e) {
                 if(!isActive) return;
 
-                g.attr({ visibility: "hidden" });
+                var tooltip = tooltips[obj.brush.index];
+                tooltip.attr({ visibility: "hidden" });
+
                 isActive = false;
             });
+        }
 
-            return g;
+        this.drawBefore = function() {
+            lineHeight = chart.theme("tooltipFontSize") * RATIO;
+        }
+
+        this.draw = function() {
+            var group = chart.svg.group(),
+                list = this.getIndexArray(this.widget.brush);
+
+            for(var i = 0; i < list.length; i++) {
+                var brush = chart.get("brush", list[i]),
+                    words = [ "" ];
+
+                // 모든 타겟을 툴팁에 보여주는 옵션일 경우
+                if(widget.all && brush.target.length > 1) {
+                    for (var j = 1; j < brush.target.length; j++) {
+                        words.push("");
+                    }
+                }
+
+                tooltips[brush.index] = chart.svg.group({ visibility: "hidden" }, function() {
+                    chart.svg.line({
+                        "stroke-width": chart.theme("tooltipLineWidth"),
+                        visibility: (widget.line) ? "visible" : "hidden"
+                    });
+
+                    chart.svg.group({}, function () {
+                        chart.svg.polygon({
+                            fill: chart.theme("tooltipBackgroundColor"),
+                            "fill-opacity": chart.theme("tooltipBackgroundOpacity"),
+                            "stroke-width": chart.theme("tooltipBorderWidth")
+                        });
+
+                        var text = chart.texts({
+                            "font-size": chart.theme("tooltipFontSize"),
+                            "fill": chart.theme("tooltipFontColor")
+                        }, words, RATIO);
+
+                        for(var i = 0; i < words.length; i++) {
+                            text.get(i).append(chart.svg.tspan({ "text-anchor": "start", "font-weight": "bold", "x": PADDING }));
+                            text.get(i).append(chart.svg.tspan({ "text-anchor": "end" }));
+                        }
+                    });
+                });
+
+                group.append(tooltips[brush.index]);
+            }
+
+            setTooltipEvent();
+
+            return group;
         }
     }
 
@@ -177,6 +274,10 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.color" ], function($, Color
             anchor: true,
             /** @cfg {Boolean} [all=false] Determines whether to show all values of row data.*/
             all: false,
+            /** @cfg {Boolean} [line=false] Visible Guidelines. */
+            line: false,
+            /** @cfg {Boolean} [flip=false] When I went out of the area, reversing the tooltip. */
+            flip: false,
             /** @cfg {Function} [format=null] Sets the format of the value that is displayed on the tool tip. */
             format: null,
             /** @cfg {Number} [brush=0] Specifies a brush index for which a widget is used. */

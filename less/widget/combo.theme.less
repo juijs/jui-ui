@@ -1,0 +1,25 @@
+.combo {
+  > ul {
+    background-color: @comboBackgroundColor;
+    border: 1px solid #ccc; // Fallback for IE7-8
+    border: 1px solid @comboBorderColor;
+    .border-radius(@comboBorderRadius);
+
+    > li {
+      color: @comboFontColor;
+
+      &:hover:not(.divider):not(.title),
+      &:focus:not(.divider):not(.title),
+      &.active {
+        #gradient > .vertical(@comboActiveBackgroundColor1, @comboActiveBackgroundColor2);
+        color: @comboActiveFontColor;
+      }
+    }
+
+    > li.divider {
+      .nav-divider(@comboDividerLineColor1, @comboDividerLineColor2);
+    }
+
+    .webkit-scrollbar-simple();
+  }
+}

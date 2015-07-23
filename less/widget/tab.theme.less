@@ -1,0 +1,80 @@
+.tab {
+  li > a {
+    color: @tabListFontColor;
+    border: 1px solid @tabListBorderColor;
+    .btn-bgcolor-2(@tabListBackgroundColor1, @tabListBackgroundColor2);
+
+    &:hover, &:focus {
+      border: 1px solid @tabListHoverBorderColor;
+    }
+  }
+
+  li.active > a {
+    color: @tabListActiveFontColor;
+    .btn-bgcolor-2(@tabListActiveBackgroundColor, @tabListActiveBackgroundColor);
+  }
+
+  li.checked > a {
+    color: @tabListMenuKeepFontColor;
+    .btn-bgcolor-2(@tabListMenuKeepBackgroundColor, @tabListMenuKeepBackgroundColor);
+  }
+
+  &.tab.top {
+    border-bottom: 1px solid @tabBorderColor;
+
+    li.active > a {
+      border-color: @tabBorderColor @tabBorderColor transparent @tabBorderColor;
+    }
+  }
+
+  &.tab.bottom {
+    border-top: 1px solid @tabBorderColor;
+
+    li.active > a {
+      border-color: transparent @tabBorderColor @tabBorderColor @tabBorderColor;
+    }
+  }
+}
+
+.pill {
+  li > a {
+    color: @pillListFontColor;
+
+    &:hover, &:focus {
+      background: @pillListHoverBorderColor;
+    }
+  }
+
+  li.active > a {
+      color: @pillListActiveFontColor;
+      background: @pillListActiveBackgroundColor;
+  }
+
+  li.checked > a {
+    color: @pillListMenuKeepFontColor;
+    background: @pillListMenuKeepBackgroundColor;
+  }
+
+  &.pill.top {
+    border-bottom: 1px solid @pillBorderColor;
+
+    li.active > .anchor {
+      .anchor-top(@pillAnchorBorderColor1, @pillAnchorBorderColor2, 10px, 50%);
+    }
+  }
+
+  &.pill.bottom {
+    border-top: 1px solid @pillBorderColor;
+
+    li.active > .anchor {
+      .anchor-bottom();
+    }
+  }
+}
+
+
+/* Icon color in Tab */
+.pill li.active [class^="icon-"],
+.pill li.checked [class^="icon-"], .tab li.checked [class^="icon-"] {
+  color: #fff;
+}

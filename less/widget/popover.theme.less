@@ -1,0 +1,41 @@
+.popover {
+  color: @popoverFontColor;
+  background-color: @popoverBackgroundColor;
+  opacity: @popoverBackgroundOpacity;
+  border-color: @popoverBorderColor;
+  .border-radius(@popoverBorderRadius);
+  .box-shadow(@popoverBoxShadow);
+
+
+  &.popover > .head {
+	border-bottom-color: @popoverHeadBorderColor;
+  }
+
+  &.popover.top:after {
+	border-top-color: @popoverBackgroundColor;
+  }
+  &.popover.top:before {
+	border-top-color: @popoverBorderColor;
+  }
+
+  &.popover.bottom:after {
+	border-bottom-color: @popoverBackgroundColor;
+  }
+  &.popover.bottom:before {
+	border-bottom-color: @popoverBorderColor;
+  }
+
+  &.popover.left:after {
+	border-left-color: @popoverBackgroundColor;
+  }
+  &.popover.left:before {
+	border-left-color: @popoverBorderColor;
+  }
+
+  &.popover.right:after {
+	border-right-color: @popoverBackgroundColor;
+  }
+  &.popover.right:before {
+	border-right-color: @popoverBorderColor;
+  }
+}

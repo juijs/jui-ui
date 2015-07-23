@@ -1,0 +1,22 @@
+.window {
+  color: @windowFontColor;
+  background-color: @windowBackgroundColor;
+  .box-shadow(@windowBoxShadow);
+
+  > .head {
+	color: @windowHeadFontColor;
+	.btn-bgcolor-2(@windowHeadBackgroundColor1, @windowHeadBackgroundColor2);
+  }
+
+  > .body {
+	background-color: @windowBodyBackgroundColor;
+	border-top: 1px solid @windowBodyBorderColor;
+
+	.webkit-scrollbar();
+  }
+
+  > .foot {
+	.btn-bgcolor-2(@windowFootBackgroundColor1, @windowFootBackgroundColor2);
+	border-top: 1px solid @windowFootBorderColor;
+  }
+}

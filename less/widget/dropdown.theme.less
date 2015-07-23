@@ -1,0 +1,49 @@
+.dropup, .dropdown {
+  ul {
+    background-color: @dropdownBackgroundColor;
+    border: 1px solid #ccc; // Fallback for IE7-8
+    border: 1px solid @dropdownBorderColor;
+    .border-radius(@dropdownBorderRadius);
+
+    > li {
+      color: @dropdownFontColor;
+
+      &:hover:not(.divider):not(.title),
+      &:focus:not(.divider):not(.title),
+      &.active {
+        #gradient > .vertical(@dropdownActiveBackgroundColor1, @dropdownActiveBackgroundColor2);
+        color: @dropdownActiveFontColor;
+      }
+    }
+
+    > li.divider {
+      .nav-divider(@dropdownDividerLineColor1, @dropdownDividerLineColor2);
+    }
+
+    .webkit-scrollbar-simple();
+  }
+
+  .anchor {
+    .anchor-top(@dropdownAnchorBorderColor1, @dropdownAnchorBorderColor2, 10px, 30px);
+  }
+}
+
+.dropdown {
+  .submenu > ul {
+    .border-radius(0 @dropdownBorderRadius @dropdownBorderRadius @dropdownBorderRadius);
+  }
+
+  .submenu.left > ul {
+    .border-radius(@dropdownBorderRadius 0 @dropdownBorderRadius @dropdownBorderRadius);
+  }
+}
+
+.dropup {
+  .submenu > ul {
+    .border-radius(@dropdownBorderRadius @dropdownBorderRadius @dropdownBorderRadius 0);
+  }
+
+  .submenu.left > ul {
+    .border-radius(@dropdownBorderRadius @dropdownBorderRadius 0 @dropdownBorderRadius);
+  }
+}

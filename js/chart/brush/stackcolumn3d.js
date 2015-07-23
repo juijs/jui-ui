@@ -35,14 +35,14 @@ jui.define("chart.brush.stackcolumn3d", [], function() {
                         height = Math.abs(zeroXY.y - xy.y),
                         r = this.drawMain(j, bar_width, height, this.axis.c.degree, xy.depth);
 
+                    if(value != 0) {
+                        this.addEvent(r, i, j);
+                    }
+
                     r.translate(startX, startY - col_height);
                     group.append(r);
 
                     col_height += height;
-                }
-
-                if(value != 0) {
-                    this.addEvent(group, i, j);
                 }
 
                 g.append(group);

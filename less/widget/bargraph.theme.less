@@ -1,0 +1,103 @@
+.bargraph {
+  > * {
+	.line {
+	  border: 1px solid @bargraphLineColor;
+	}
+
+	.data {
+	  color: @bargraphDataFontColor;
+	}
+
+	&:first-child {
+	  .border-top-left-radius(@bargraphBorderRadius);
+	  .border-bottom-left-radius(@bargraphBorderRadius);
+	}
+
+	&:last-child {
+	  .border-top-right-radius(@bargraphBorderRadius);
+	  .border-bottom-right-radius(@bargraphBorderRadius);
+	}
+  }
+
+  > *.active {
+	.line {
+	  border-color: @bargraphActiveLineColor;
+	}
+
+	.data {
+	  color: @bargraphActiveDataFontColor;
+	}
+  }
+}
+
+.bargraph:not(.flat) {
+  > * {
+	border: 1px solid @bargraphSquareBorderColor;
+	.box-shadow(@bargraphSquareBoxShadow);
+	.btn-bgcolor-2(@bargraphSquareBackgroundColor1, @bargraphSquareBackgroundColor2);
+
+	&:hover {
+	  .btn-bgcolor-2(@bargraphSquareHoverBackgroundColor1, @bargraphSquareHoverBackgroundColor2);
+	}
+
+	&.active {
+	  .btn-bgcolor-2(@bargraphSquareActiveBackgroundColor1, @bargraphSquareActiveBackgroundColor2);
+
+	  .title {
+		color: @bargraphSquareActiveTitleFontColor;
+	  }
+	}
+
+	.title {
+	  color: @bargraphSquareTitleFontColor;
+	}
+
+	.data {
+	  background: @bargraphSquareDataBackgroundColor;
+	}
+  }
+}
+
+.bargraph.flat {
+  > * {
+	.box-shadow(@bargraphFlatBoxShadow);
+
+	.title {
+	  color: @bargraphFlatTitleFontColor;
+	}
+
+	.data {
+	  background: @bargraphFlatDataBackgroundColor;
+	}
+  }
+
+  > .success {
+	border: 1px solid @bargraphFlatSuccessBorderColor;
+	background-color: @bargraphFlatSuccessBackgroundColor;
+
+	&.active {
+	  border-color: @bargraphFlatSuccessActiveBorderColor;
+	  background-color: @bargraphFlatSuccessActiveBackgroundColor;
+	}
+  }
+
+  > .info {
+	border: 1px solid @bargraphFlatInfoBorderColor;
+	background-color: @bargraphFlatInfoBackgroundColor;
+
+	&.active {
+	  border-color: @bargraphFlatInfoActiveBorderColor;
+	  background-color: @bargraphFlatInfoActiveBackgroundColor;
+	}
+  }
+
+  > .warning {
+	border: 1px solid @bargraphFlatWarningBorderColor;
+	background-color: @bargraphFlatWarningBackgroundColor;
+
+	&.active {
+	  border-color: @bargraphFlatWarningActiveBorderColor;
+	  background-color: @bargraphFlatWarningActiveBackgroundColor;
+	}
+  }
+}

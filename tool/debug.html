@@ -3,11 +3,12 @@
 <html>
 <head>
 <META charset="UTF-8">
-<link rel="stylesheet" href="../jui.min.css" />
+<link rel="stylesheet" href="../dist/jui.min.css" />
+<link rel="stylesheet" href="../dist/jennifer.theme.min.css" />
 
 <script src="../lib/jquery-1.8.0.min.js"></script>
 <script src="../lib/jquery.binder.js"></script>
-<script src="../jui.min.js"></script>
+<script src="../dist/jui.min.js"></script>
 
 <script>
 
@@ -147,7 +148,7 @@ h3 {
 </style>
 </head>
 <body class="jui">
-	<ul id="mng_tab" class="tab tab-top">
+	<ul id="mng_tab" class="tab top">
 		<li>
 			<a href="#summary">Summary</a>
 		</li>
@@ -162,7 +163,7 @@ h3 {
 					Total Count
 				</div>
 				<div class="col col-11">
-					<table class="table table-classic">
+					<table class="table classic">
 						<thead>
 							<tr>
 								<th>UI Caller</th>
@@ -192,7 +193,7 @@ h3 {
 			</div>
 		</div>
 		<div id="info" style="margin: 15px;">
-			<table id="mng_info_table" class="table table-classic table-stripeless">
+			<table id="mng_info_table" class="table classic stripeless">
 				<thead>
 					<tr>
 						<th style="width: 40px;">Index</th>
@@ -225,13 +226,13 @@ h3 {
 			</script>
 		</div>
 		<div id="log" style="margin: 15px;">
-			<div class="navbar navbar-flat-white" style="overflow: hidden; margin-bottom: 5px;">
-				<div class="inline-right">
-					<a href="javascript:ui_table_log.reset()" class="btn btn-gray btn-small"><i class="icon-trashcan"></i></a>
+			<div class="navbar flat" style="overflow: hidden; margin-bottom: 5px;">
+				<div class="inline right">
+					<a href="javascript:ui_table_log.reset()" class="btn small"><i class="icon-trashcan"></i></a>
 				</div>
 			</div>
 
-			<table id="mng_log_table" class="table table-classic table-stripeless">
+			<table id="mng_log_table" class="table classic stripeless">
 				<thead>
 					<tr>
 						<th style="width: 30px;">No</th>
@@ -264,7 +265,7 @@ h3 {
 	<script id="tpl_expand" type="text/template">
 		<h3>Arguments (<!= args.length !>)</h3>
 
-		<table class="table table-simple table-small">
+		<table class="table simple small">
 			<thead>
 				<tr>
 					<! for(var i = 0; i < args.length; i++) { !>
@@ -291,7 +292,7 @@ h3 {
 	</script>
 
 	<script id="tpl_sum_type" type="text/template">
-		<table class="table table-classic">
+		<table class="table classic">
 			<thead>
 				<tr>
 					<! for(var key in counts) { !>

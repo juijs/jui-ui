@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Window</title>
+
+	<link rel="stylesheet" href="../../dist/jui.css" />
+	<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
+
+</head>
+<body class="jui">
+
+<div class="page-header">
+	<h1>Message Box</h1>
+</div>
+
+<section>
+	<h2>Default</h2>
+	<p>
+		메시지박스는 총 6가지의 기본 스타일을 제공합니다.
+	</p>
+
+
+	<p class="br">
+	<div style="position: relative; height: 350px;">
+		<div class="msgbox">
+			<div class="head">
+				Title
+			</div>
+			<div class="body">
+				Contents...<br/>
+
+				<div style="text-align: center; margin-top: 45px;">
+					<a href="#" class="btn btn-purple btn-small">Save</a>
+					<a href="#" class="btn btn-gray btn-small">Close</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="msgbox warning" style="top: 200px;">
+			<div class="head">
+				Title
+
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+			</div>
+			<div class="body">
+				Contents...<br/>
+			</div>
+		</div>
+
+		<div class="msgbox danger" style="top: 200px; left: 247.5px;">
+			<div class="head">
+				Title
+
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+			</div>
+			<div class="body">
+				Contents...<br/>
+			</div>
+		</div>
+
+		<div class="msgbox success" style="top: 200px; right: 0px;">
+			<div class="head">
+				Title
+
+				<a href="#" class='close'><i class='icon-exit icon-white'></i></a>
+			</div>
+			<div class="body">
+				Contents...<br/>
+			</div>
+		</div>
+	</div>
+	</p>
+</section>
+<section>
+	<h2>Detail</h2>
+	<p>
+		메시지박스는 헤더에 상세 메시지를 보여줄 수 있는 <strong>msgbox-detail</strong> 옵션을 제공하며, 지원되는 색상은 <strong>white</strong>와 <strong>black</strong>입니다.
+	</p>
+
+	<p class="br">
+	<div style="position: relative; height: 150px;">
+		<div class="msgbox detail" style="width: 350px; height: 150px;">
+			<div class="head">
+				[Title] Detail Message
+
+				<div class="subtext">2014.02.25 17:18:38</div>
+				<a href="#" class='close'><i class='icon-exit icon-gray'></i></a>
+			</div>
+			<div class="body">
+				Contents...<br/>
+			</div>
+		</div>
+
+	</div>
+	</p>
+</section>
+
+
+</body>
+</html>

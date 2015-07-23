@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    var chart = jui.include("chart.builder"),
+            time = jui.include("util.time");
+
+    var aday = 24 * 60 * 60 * 1000;
+
+    var data1 = [
+        { time : (+new Date()) - 10 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 9 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 8 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 7 * aday, value : Math.floor(Math.random() * 600) }
+    ];
+    var last = data1[data1.length-1];
+    var data2 = [
+        { time : last.time, value : last.value },
+        { time : (+new Date()) - 6 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 5 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 4 * aday, value : Math.floor(Math.random() * 600) }
+    ];
+    last = data2[data2.length-1];
+    var data3 = [
+        { time : last.time, value : last.value },
+        { time : (+new Date()) - 3 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 2 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 1 * aday, value : Math.floor(Math.random() * 600) },
+        { time : (+new Date()) - 0 * aday, value : Math.floor(Math.random() * 600) },
+    ];
+
+    chart("#chart", {
+        height : 300,
+        axis : [{
+            x : {
+                type : "date",
+                domain : [ data1[0].time , data3[data3.length-1].time ],
+                interval : 1000 * 60 * 60 * 24, // 1hours
+                format : "dd",
+                key: "time"
+            },
+            y : {
+                type : "range",
+                step : 10,
+                domain : function(d) {
+                    return [0, 600];
+                },
+                format : function(value) {
+                    return value;
+                },
+                line : true
+            },
+            data : data1
+        }, {
+            x : {
+                domain : [ data1[0].time , data1[data1.length-1].time  ],
+                hide : true
+            },
+            y : {
+              hide : true
+            },
+            data : data1,
+            extend : 0,
+            area : {
+                width : "30%"
+            }
+        }, {
+            x : {
+                domain : [ data2[0].time , data2[data2.length-1].time  ],
+                hide : true
+            },
+            y : {
+                hide : true
+            },
+            data : data2,
+            extend : 0,
+            area : {
+                x : '30%',
+                width : "30%"
+            }
+        }, {
+            x : {
+                domain : [ data3[0].time , data3[data3.length-1].time  ],
+                hide : true
+            },
+            y : {
+                hide : true
+            },
+            data : data3,
+            extend : 0,
+            area : {
+                x : '60%',
+                width : "40%"
+            }
+        }],
+        brush : [{
+            type : "line",
+            target : "value",
+            axis : 1,
+            colors : function() { return '#ff0000'; }
+        },{
+            type : "line",
+            target : "value",
+            axis : 2,
+            colors : function() { return '#00ff00'; }
+        },{
+            type : "line",
+            target : "value",
+            axis : 3,
+            colors : function() { return '#0000ff'; }
+        }]
+    });
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+table.table {
+  position: relative;
+  table-layout: fixed;
+  border-spacing: 0;
+  margin: 0;
+  border: 0;
+  width: 100%;
+
+  > thead th {
+    font-weight: bold;
+    text-align: left;
+    .text-overflow();
+  }
+
+  > tbody {
+    tr.expand {
+      cursor: default !important;
+
+      > td {
+          white-space: normal !important;
+      }
+    }
+
+    td.none {
+      vertical-align: middle;
+      height: 100px;
+
+      > .msg {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+
+    td {
+      > .edit {
+        display: inline-block;
+        padding: 3px 4px;
+        vertical-align: middle;
+        font-size: 11px;
+        .border-radius(3px);
+        .box-sizing(border-box);
+      }
+
+      word-break: break-all;
+    }
+  }
+
+  .table.normal;
+  .table.border;
+}
+
+
+// Table Style
+// --------------------------------------------------
+
+.table.classic {
+  .border-bottom-radius(5px);
+
+  > thead {
+    th:first-child {
+      .border-top-left-radius(5px);
+    }
+    th:last-child {
+      .border-top-right-radius(5px);
+    }
+  }
+
+  > tbody {
+    > tr:last-child > td {
+      &:first-child {
+        .border-bottom-left-radius(5px);
+      }
+
+      &:last-child {
+        .border-bottom-right-radius(5px);
+      }
+    }
+  }
+}
+
+.table.expand {
+  .table.classic;
+  .table.borderless;
+  .table.large;
+}
+
+
+// Table Size
+// --------------------------------------------------
+.table.normal {
+  font-size: 12px;
+
+  > thead > tr > th {
+    padding: 6px;
+  }
+
+  > tbody > tr > td {
+    padding: 4px 5px;
+    height: 16px;
+  }
+}
+
+.table.small {
+  font-size: 11px !important;
+
+  > thead > tr > th {
+    padding: 4px !important;
+  }
+
+  > tbody > tr > td {
+    padding: 2px 3px !important;
+  }
+}
+
+.table.large {
+  font-size: 12px !important;
+
+  > thead > tr > th {
+    padding: 6px !important;
+  }
+
+  > tbody > tr > td {
+    padding: 8px 9px !important;
+  }
+}
+
+
+// Table Border
+// --------------------------------------------------
+.table.border {
+  > tbody > tr > td {
+    border-left-width: 1px;
+  }
+}
+
+.table.borderless {
+  > tbody > tr > td:not(:first-child) {
+    border-left-width: 0;
+  }
+}
+
+
+// Table NoWrap
+// --------------------------------------------------
+.table.nowrap {
+  > tbody td {
+    .text-overflow();
+  }
+}

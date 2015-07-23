@@ -1,0 +1,25 @@
+.panel {
+  color: @panelFontColor;
+
+  > * {
+	&:first-child {
+	  .border-top-left-radius(@panelBorderRadius);
+	  .border-top-right-radius(@panelBorderRadius);
+	}
+
+	&:last-child {
+	  .border-bottom-left-radius(@panelBorderRadius);
+	  .border-bottom-right-radius(@panelBorderRadius);
+	}
+  }
+
+  > .head, > .foot {
+	  .btn-bgcolor-2(@panelHeadBackgroundColor1, @panelHeadBackgroundColor2);
+	  border: 1px solid @panelHeadBorderColor;
+  }
+
+  > .body {
+	  background-color: @panelBodyBackgroundColor;
+	  border: 1px solid @panelBodyBorderColor;
+  }
+}

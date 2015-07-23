@@ -1,0 +1,85 @@
+.msgbox {
+  border: 1px solid @msgboxBorderColor;
+  background-color: @msgboxBackgroundColor;
+  .box-shadow(@msgboxBoxShadow);
+
+  > .head {
+    border-bottom: 1px solid @msgboxHeadBorderColor;
+    background-color: @msgboxHeadBackgroundColor;
+    color: @msgboxHeadFontColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxBodyFontColor;
+    .webkit-scrollbar();
+  }
+}
+
+.msgbox.warning {
+  border: 1px solid @msgboxWarningBorderColor;
+  background-color: @msgboxWarningBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxWarningHeadBorderColor;
+    background-color: @msgboxWarningHeadBackgroundColor;
+    color: @msgboxWarningHeadFontColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxWarningBodyFontColor;
+  }
+}
+
+.msgbox.danger {
+  border: 1px solid @msgboxDangerBorderColor;
+  background-color: @msgboxDangerBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxDangerHeadBorderColor;
+    background-color: @msgboxDangerHeadBackgroundColor;
+    color: @msgboxDangerHeadFontColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxDangerBodyFontColor;
+  }
+}
+
+.msgbox.success {
+  border: 1px solid @msgboxSuccessBorderColor;
+  background-color: @msgboxSuccessBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxSuccessHeadBorderColor;
+    background-color: @msgboxSuccessHeadBackgroundColor;
+    color: @msgboxSuccessHeadFontColor;
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxSuccessBodyFontColor;
+  }
+}
+
+.msgbox.detail {
+  background-color: @msgboxDetailBackgroundColor;
+
+  > .head {
+    border-bottom: 1px solid @msgboxDetailHeadBorderColor;
+    background-color: inherit;
+    color: @msgboxDetailHeadFontColor;
+
+    > .subtext {
+      color: @msgboxDetailHeadSubtextFontColor;
+      font-weight: normal;
+    }
+  }
+
+  > .body {
+    background-color: inherit;
+    color: @msgboxDetailBodyFontColor;
+  }
+}

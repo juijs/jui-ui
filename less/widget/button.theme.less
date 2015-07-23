@@ -1,0 +1,42 @@
+.btn {
+  color: @buttonFontColor;
+  border: 1px solid @buttonBorderColor;
+  .btn-bgcolor-2(@buttonBackgroundColor1, @buttonBackgroundColor2);
+
+  &:hover {
+    color: @buttonHoverFontColor;
+    .btn-bgcolor-2(@buttonHoverBackgroundColor1, @buttonHoverBackgroundColor2);
+  }
+
+  &.active, &:active {
+    &:not([disabled]) {
+      color: @buttonActiveFontColor;
+      border: 1px solid @buttonActiveBorderColor;
+      .box-shadow(@buttonActiveBoxShadow);
+      .btn-bgcolor-2(@buttonActiveBackgroundColor1,@buttonActiveBackgroundColor2);
+    }
+  }
+}
+
+.btn.focus {
+  color: @buttonFocusFontColor;
+  border: 1px solid @buttonFocusBorderColor;
+  .btn-bgcolor-2(@buttonFocusBackgroundColor1, @buttonFocusBackgroundColor2);
+
+  &:hover {
+    .btn-bgcolor-2(@buttonFocusHoverBackgroundColor1, @buttonFocusHoverBackgroundColor2);
+  }
+
+  &.active, &:active {
+    &:not([disabled]) {
+      color: @buttonFocusActiveFontColor;
+      border: 1px solid @buttonFocusActiveBorderColor;
+      .box-shadow(@buttonFocusActiveBoxShadow);
+      .btn-bgcolor-2(@buttonFocusActiveBackgroundColor1, @buttonFocusActiveBackgroundColor2);
+    }
+  }
+}
+
+.btn[disabled], .disabled {
+  opacity: @buttonDisabledBackgroundOpacity;
+}

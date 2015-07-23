@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    jui.ready(["chart.builder"], function(chart) {
+
+        chart("#chart", {
+            width: 400,
+            height : 400,
+            theme : "dark",
+            axis : [{
+                data : [
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
+                    { name : 1, value : 1, test : 1 },
+                ],
+                x : {
+                    type : "fullblock",  // default type is block
+                    domain : [ "week1", "week2", "week3", "week4" ]
+                },
+                y : {
+                    type : 'range',
+                    domain : [ 0, 5 ],
+                    step : 10
+                },
+                c : {
+                    type : "grid3d"
+                },
+                depth : 80,
+                degree : 70
+            }],
+            brush : {
+                type : 'bubble3d',
+                target : [ 'name', 'value', 'test' ],
+                min : 10,
+                max : 10
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

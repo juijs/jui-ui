@@ -1,0 +1,59 @@
+.combo {
+  position: absolute;
+  display: none;
+
+  > ul {
+    display: none;
+    position: absolute !important;
+    z-index: 1000;
+    float: left;
+    padding: 5px 0;
+    margin: 0px !important; // override default ul
+    list-style: none;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    .box-shadow(0 2px 6px rgba(0,0,0,.25));
+
+    > li {
+      position: relative;
+      display: block;
+      float: none;
+      clear: both;
+      font-weight: normal;
+      cursor: pointer;
+
+      > * {
+        display: inline-block;
+        color: inherit;
+        text-decoration: none;
+        width: 100%;
+      }
+    }
+
+    > li:not(.divider) {
+      padding: 0px 10px;
+      line-height: 20px;
+      font-size: 12px;
+    }
+
+    > li.title {
+      font-weight: bold;
+    }
+
+    &.right {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  > .toggle {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .children-group();
+}
+
+.combo + .combo {
+  margin-left: 5px;
+}

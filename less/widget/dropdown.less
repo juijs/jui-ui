@@ -1,0 +1,132 @@
+.dropup, .dropdown {
+  position: absolute;
+  display: none;
+
+  ul {
+    position: absolute !important;
+    z-index: 1000;
+    float: left;
+    padding: 5px 0;
+    margin: 0px !important; // override default ul
+    list-style: none;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    .box-shadow(0 2px 6px rgba(0,0,0,.25));
+
+    > li {
+      position: relative;
+      display: block;
+      float: none;
+      clear: both;
+      font-weight: normal;
+      cursor: pointer;
+
+      > * {
+        display: inline-block;
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    // Aligns the dropdown menu to right
+    &.right {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  > .anchor {
+    top: -9px;
+    z-index: 1001;
+  }
+
+  .dropdown.normal;
+}
+
+
+// Dropdown Sizes
+// -----------
+.dropdown.large {
+  ul > li:not(.divider) {
+    padding: 3px 20px !important;
+    font-size: 12px !important;
+  }
+
+  ul > li.title {
+    font-weight: bold !important;
+  }
+}
+
+.dropdown.normal {
+  ul > li:not(.divider) {
+    padding: 0px 10px;
+    line-height: 20px;
+    font-size: 12px;
+  }
+
+  ul > li.title {
+    font-weight: bold;
+  }
+}
+
+
+// Sub menus
+// ---------------------------
+.dropup, .dropdown {
+  .submenu {
+    position: relative;
+  }
+  // Default dropdowns
+  .submenu > ul {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    display: none;
+  }
+  .submenu:hover > ul {
+    display: block;
+  }
+
+  // Caret to indicate there is a submenu
+  .submenu:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: darken(#fff, 20%);
+    margin-top: 5px;
+    margin-right: -0px;
+  }
+
+  // Left aligned submenus
+  .submenu.left {
+    // Undo the float
+    // Yes, this is awkward since .pull-left adds a float, but it sticks to our conventions elsewhere.
+    float: none;
+
+    // Positioning the submenu
+    > ul {
+      left: -100%;
+    }
+  }
+}
+
+
+// Dropups
+.dropup .submenu > ul {
+  top: auto;
+  bottom: 0;
+  margin-top: 0;
+  margin-bottom: -2px;
+}
+
+
+// Large
+.dropdown.large .submenu > *:first-child:after {
+  margin-right: -10px !important;
+}

@@ -1,0 +1,52 @@
+.datepicker {
+  border: 1px solid @datepickerBorderColor;
+  background: @datepickerBackgroundColor;
+
+  > .head {
+    > .prev {
+      border-color: transparent @datepickerButtonBackgroundColor transparent transparent;
+    }
+    > .next {
+      border-color: transparent transparent transparent @datepickerButtonBackgroundColor;
+    }
+
+    > .title {
+      color: @datepickerTitleFontColor;
+    }
+  }
+
+  > table.body {
+    border-top-color: @datepickerVIPBorderColor;
+
+    th {
+      border-bottom: 1px solid @datepickerVIPBorderColor;
+    }
+
+    th {
+      color: @datepickerVIPFontColor;
+    }
+
+    td {
+      color: @datepickerDateFontColor;
+
+      &.none {
+        color: @datepickerNoneFontColor;
+      }
+
+      &.now {
+        color: @datepickerNowFontColor;
+        font-weight: bold;
+      }
+
+      &.active {
+        color: @datepickerActiveFontColor;
+        background-color: @datepickerActiveBackgroundColor;
+        .box-shadow(@datepickerActiveBoxShadow);
+      }
+
+      &:hover:not(.active):not(.none) {
+        background-color: @datepickerHoverBackgroundColor;
+      }
+    }
+  }
+}

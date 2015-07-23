@@ -1,0 +1,100 @@
+.row {
+  &:before, &:after {
+	  display: table;
+	  content: " ";
+	  clear:both;
+  }
+
+  &.gutter-4 {
+	.col {
+	  padding-left: 4px;
+	  padding-right: 4px;
+	}
+  }
+
+  &.gutter-8 {
+	.col {
+	  padding-left: 8px;
+	  padding-right: 8px;
+	}
+  }
+
+  &.gutter-12 {
+	.col {
+	  padding-left: 12px;
+	  padding-right: 12px;
+	}
+  }
+
+  &.gutter-20 {
+	.col {
+	  padding-left: 20px;
+	  padding-right: 20px;
+	}
+  }
+
+  &.gutter-24 {
+	.col {
+	  padding-left: 24px;
+	  padding-right: 24px;
+	}
+  }
+}
+
+.col {
+  position: relative;
+  float:left;
+  min-height: 1px;
+  width:8.333333333333332%;
+  //padding-left: 10px;
+  //padding-right: 10px;
+  .box-sizing(border-box);
+}
+
+.col-12 {
+  width: 100%;
+}
+
+.col-11 {
+  width: 91.66666666666666%;
+}
+
+.col-10 {
+  width: 83.33333333333334%;
+}
+
+.col-9 {
+  width: 75%;
+}
+
+.col-8 {
+  width: 66.66666666666666%;
+}
+
+.col-7 {
+  width: 58.333333333333336%;
+}
+
+.col-6 {
+  width: 50%;
+}
+
+.col-5 {
+  width: 41.66666666666667%;
+}
+
+.col-4 {
+  width: 33.33333333333333%;
+}
+
+.col-3 {
+  width: 25%;
+}
+
+.col-2 {
+  width: 16.666666666666664%;
+}
+
+.col-1 {
+  width: 8.333333333333332%;
+}

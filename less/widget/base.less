@@ -1,0 +1,80 @@
+label, input, button, select, textarea {
+  font-weight: normal;
+}
+
+select, button, input[type="button"], input[type="reset"], input[type="submit"], input[type="radio"], input[type="checkbox"] {
+  cursor: pointer;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+
+button, input {
+  line-height: normal;
+}
+
+button, input, select, textarea {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+
+select[disabled], textarea[disabled], select[readonly], textarea[readonly] {  // Disabled and read-only inputs
+  cursor: not-allowed;
+}
+
+// 자식 엘리먼트 합치기
+.children-group(@margin: -7px) {
+  position: relative;
+  display: inline-block;
+
+  > * + * {
+    &:not(ul) {
+      margin-left: @margin;
+    }
+  }
+
+  > *:not(:first-child):not(:last-child):not(ul) {
+    .border-radius(0px) !important;
+  }
+
+  > *:first-child {
+    .border-top-right-radius(0px) !important;
+    .border-bottom-right-radius(0px) !important;
+  }
+
+  > *:last-child {
+    .border-top-left-radius(0px) !important;
+    .border-bottom-left-radius(0px) !important;
+  }
+}
+
+.children-vgroup(@margin: -2px 0 0 0) {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  > * {
+    width: 100%;
+  }
+
+  > * + * {
+    margin: @margin;
+  }
+
+  > *:not(:first-child):not(:last-child) {
+    .border-radius(0px) !important;
+  }
+
+  > *:first-child {
+    .border-bottom-left-radius(0px) !important;
+    .border-bottom-right-radius(0px) !important;
+  }
+
+  > *:last-child {
+    .border-top-left-radius(0px) !important;
+    .border-top-right-radius(0px) !important;
+  }
+}

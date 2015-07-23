@@ -6,7 +6,8 @@
 <title>[JUI Library] - JavaScript/AutoComplete</title>
 
 <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -76,46 +77,14 @@ jui.ready(function(ui, uix, _) {
 	<p>
 		아래 키워드 중에 입력한 문자가 포함되어 있으면, 드롭다운 메뉴에 키워드 목록이 나타납니다.&nbsp;
 		<span class="ac group">
-			<label class="label label-small"><i class="icon-search"></i></label>
-			<input type="text" class="input input-small" style="width: 100px" />
+			<label class="label small"><i class="icon-search"></i></label>
+			<input type="text" class="input small" style="width: 100px" />
 		</span>
-		
-<pre><code class="language-javascript">var ac_words = [
-  "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
-  "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran", "Groovy",
-  "Haskell", "Java", "JavaScript", "Lisp", "Perl", "PHP",
-  "Python", "Ruby", "Scala", "Scheme"
-];
 
-jui.ready(function(ui, uix, _) {
-	ac_1 = uix.autocomplete(".ac", {
-		target: "input[type=text]",
-		words: ac_words,
-		event: {
-			change: function(text) {
-				alert(text);
-			}
-		}
-	});
-});</code></pre>
 	</p>
 	<p class="br">
 		아래는 자동완성 컴포넌트의 마크업과 템플릿입니다. 셀렉터는 그룹 태그이며 텍스트박스는 <strong>target</strong> 옵션을 통해 정할 수 있습니다.<br/>
 
-<pre><code class="language-markup">&lt;span class="ac group"&gt;
-	&lt;label class="label label-small"&gt;&lt;i class="icon-search"&gt;&lt;/i&gt;&lt;/label&gt;
-	&lt;input type="text" class="input input-small" style="width: 100px" /&gt;
-&lt;/span&gt;
-
-&lt;script data-jui=".ac" data-tpl="words" type="text/template"&gt;
-	&lt;div class="dropdown"&gt;
-		&lt;ul&gt;
-		&lt;! for(var i = 0; i &lt; words.length; i++) { !>
-			&lt;li>&lt;!= words[i] !>&lt;/li>
-		&lt;! } !>
-		&lt;/ul&gt;
-	&lt;/div&gt;
-&lt;/script&gt;</code></pre>
 	</p>
 </section>
 
@@ -126,17 +95,10 @@ jui.ready(function(ui, uix, _) {
 		좌측 버튼을 클릭하면 아래와 같은 단어 목록으로 변경합니다.&nbsp;
 		
 		<span class="ac group">
-			<label class="label label-small label-black"><i class="icon-search icon-white"></i></label>
-			<input type="text" class="input input-small input-black" style="width: 100px" />
+			<label class="label small"><i class="icon-search"></i></label>
+			<input type="text" class="input small" style="width: 100px" />
 		</span>
-		
-<pre><code class="language-javascript">var ac_words_hangul = [
-	"자바의 정석",
-	"열혈강의 C++",
-	"유쾌한 심리학"
-];
 
-ac_1[1].update(ac_words_hangul);</code></pre>
 	</p>
 	
 	<script data-jui=".ac" data-tpl="words" type="text/template">

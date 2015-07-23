@@ -6,7 +6,8 @@
 <title>[JUI Library] - JavaScript/Tooltip</title>
 
 <link rel="stylesheet" href="../../../custom/menual.css" />
-<link rel="stylesheet" href="../../jui.css" />
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
 <script src="../../lib/jquery-1.8.0.min.js"></script>
 <script src="../../lib/jquery.binder.js"></script>
 <script src="../../js/base.js"></script>
@@ -51,6 +52,8 @@ jui.ready(function(ui, uix, _) {
         }
     });
 
+    xtable.update(table_data);
+
     $("#xtable_btn").change(function(e) {
         xtable.setCsvFile(e.target.files[0]);
     });
@@ -61,8 +64,8 @@ jui.ready(function(ui, uix, _) {
 <body class="jui">
 
 <input type="file" id="xtable_btn" /><br/><br/>
-<div id="xtable" class="xtable xtable-rect">
-    <table class="table table-classic">
+<div id="xtable" class="xtable">
+    <table class="table simple">
         <thead>
         <tr>
             <th>Min</th>
@@ -108,6 +111,12 @@ jui.ready(function(ui, uix, _) {
 
 <script data-jui="#xtable" data-tpl="loading" type="text/template">
     <div class="loading"></div>
+</script>
+
+<script data-jui="#xtable" data-tpl="none" type="text/template">
+    <tr>
+        <td colspan="8" class="none" align="center">Data does not exist.</td>
+    </tr>
 </script>
 
 </body>

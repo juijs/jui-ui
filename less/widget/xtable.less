@@ -1,0 +1,38 @@
+.xtable {
+  > .body {
+    //.border-radius(5px);
+
+    // 클래식 테이블일 경우, RADIUS 처리
+    > .table.classic, .table.expand {
+      .border-bottom-radius(0px);
+
+      > tbody {
+        > tr:last-child > td {
+          &:first-child {
+            .border-bottom-left-radius(0px);
+          }
+
+          &:last-child {
+            .border-bottom-right-radius(0px);
+          }
+        }
+      }
+    }
+  }
+
+  > .loading {
+    display: none;
+    width: 32px;
+    height: 25px;
+    background-repeat: no-repeat;
+  }
+}
+
+
+// xTable NoWrap
+// --------------------------------------------------
+.xtable.nowrap {
+  > .body > table > tbody td {
+    .text-overflow();
+  }
+}

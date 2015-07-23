@@ -1,0 +1,95 @@
+.paging {
+  display: block;
+  width: 100%;
+
+  * {
+	position: absolute !important;
+	display: inline-block;
+	font-size: 12px;
+	text-align: center;
+	padding: 0px !important;
+	text-decoration: none;
+	.box-sizing(border-box);
+  }
+
+  > .list {
+	left: 94px;
+	right: 92px;
+
+	> * {
+	  position: relative !important;
+	  border-top-width: 0;
+	  border-bottom-width: 0;
+	  margin: -3px 0 0 -5px;
+	  .border-radius(0px);
+	}
+  }
+
+  > .prev, > .next {
+	width: 94px;
+  }
+
+  > .prev {
+	text-align: right;
+	padding-right: 13px !important;
+	background-repeat: no-repeat;
+  }
+
+  > .next {
+	text-align: left;
+	padding-left: 12px !important;
+	right: 0;
+	background-repeat: no-repeat;
+  }
+
+  .paging.normal;
+  .children-group();
+}
+
+
+// PAGING SIZES
+// -----------
+
+.paging-size(@size) {
+  height: @size;
+
+  * {
+	height: @size;
+	line-height: @size;
+  }
+
+  .list > * {
+	width: @size;
+	height: @size - 2;
+  }
+}
+
+.paging.normal {
+  .paging-size(28px);
+
+  > .prev {
+	background-position: 0 -28px;
+  }
+
+  > .next {
+	background-position: 0 0;
+  }
+}
+
+.paging.large {
+  .paging-size(38px);
+
+  > .prev {
+	background-position: 0 -23px;
+  }
+
+  > .next {
+	background-position: 0 5px;
+  }
+}
+
+
+// BargGraph Etc
+.paging + .paging {
+  margin-left: 5px;
+}

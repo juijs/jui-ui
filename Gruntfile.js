@@ -41,6 +41,7 @@ module.exports = function(grunt) {
 
     var table_src = [
         "js/ui/dropdown.js",
+        "js/ui/modal.js",
         "js/uix/table.js",
         "js/uix/tree.js",
         "js/uix/xtable.js"
@@ -107,6 +108,7 @@ module.exports = function(grunt) {
         "js/chart/brush/fullstackcolumn3d.js",
         "js/chart/brush/fullstackcylinder3d.js",
         "js/chart/brush/bubble.js",
+        "js/chart/brush/bubble3d.js", // extends bubble
         "js/chart/brush/candlestick.js",
         "js/chart/brush/ohlc.js",
         "js/chart/brush/equalizer.js",
@@ -196,65 +198,70 @@ module.exports = function(grunt) {
             // jui all 
             dist : {
                 src : base_src.concat(ui_src, chart_src),
-                dest : "jui.js"
-            },
-            // jui component
-            comp : {
-                src : base_src.concat(ui_src),
-                dest : "jui.comp.js"
+                dest : "dist/jui.js"
             },
             // jui table, tree, xtable
             table : {
                 src : base_src.concat(table_src),
-                dest : "jui.table.js"
+                dest : "dist/jui.table.js"
             },
             // jui chart
             chart : {
                 src : base_src.concat(chart_src),
-                dest : "jui.chart.js"
+                dest : "dist/jui.chart.js"
             }            
         },
         uglify: {
             dist : {
                 files : {
-                    "jui.min.js" : [ "jui.js" ]
-                }
-            },
-            comp : {
-                files : {
-                    "jui.comp.min.js" : [ "jui.comp.js" ]
+                    "dist/jui.min.js" : [ "dist/jui.js" ]
                 }
             },
             table : {
                 files : {
-                    "jui.table.min.js" : [ "jui.table.js" ]
+                    "dist/jui.table.min.js" : [ "dist/jui.table.js" ]
                 }
             },
             chart : {
                 files : {
-                    "jui.chart.min.js" : [ "jui.chart.js" ]
+                    "dist/jui.chart.min.js" : [ "dist/jui.chart.js" ]
                 }
             }
         },
         cssmin: {
             dist: {
                 files: {
-                    "jui.min.css": "jui.css"
+                    "dist/jui.min.css": "dist/jui.css",
+                    "dist/jennifer.theme.min.css": "dist/jennifer.theme.css",
+                    "dist/dark.theme.min.css": "dist/dark.theme.css",
+
+                    // Old version (@Deprecated)
+                    "dist/jui.old.min.css": "dist/jui.old.css"
                 }
             }
         },
-
         less: {
             dist: {
                 files: {
-                    "jui.css" : [
-                        "less/_main.less"
+                    "dist/jui.css" : [
+                        "less/main.less"
+                    ],
+                    "dist/jennifer.theme.css" : [
+                        "less/theme/jennifer.less"
+                    ],
+                    "dist/dark.theme.css" : [
+                        "less/theme/dark.less"
+                    ],
+
+                    // Old version (@Deprecated)
+                    "dist/jui.old.css" : [
+                        "less.old/_main.less"
                     ]
                 }
             }
         },
         icon : {
-            css : "jui.css",
+            css : "dist/jui.css",
             dist : "js/chart/icon/jennifer.js"
         },
         pattern : {

@@ -1,0 +1,73 @@
+.vmenu > * {
+  border: 1px solid @vmenuBorderColor;
+  color: @vmenuFontColor;
+  font-weight: bold;
+  .btn-bgcolor-2(@vmenuBackgroundColor1, @vmenuBackgroundColor2);
+
+  &.active {
+    .btn-bgcolor-2(@vmenuActiveBackgroundColor1, @vmenuActiveBackgroundColor2);
+    color: @vmenuActiveFontColor;
+    border: 1px solid @vmenuActiveBorderColor;
+    cursor: default;
+  }
+
+  &:hover:not(.active):not(.submenu) {
+    .btn-bgcolor-2(@vmenuHoverBackgroundColor1, @vmenuHoverBackgroundColor2);
+  }
+
+  &.submenu {
+    .btn-bgcolor-2(@vmenuSubmenuBackgroundColor, @vmenuSubmenuBackgroundColor);
+    .submenu-color();
+  }
+
+  &:first-child {
+    .border-top-left-radius(@vmenuBorderRadius);
+    .border-top-right-radius(@vmenuBorderRadius);
+  }
+
+  &:last-child {
+    .border-bottom-left-radius(@vmenuBorderRadius);
+    .border-bottom-right-radius(@vmenuBorderRadius);
+  }
+}
+
+// Color, White-Flat
+.vmenu.flat > * {
+  border: 1px solid @vmenuFlatBorderColor !important;
+  color: @vmenuFlatFontColor !important;
+  .btn-bgcolor-2(@vmenuFlatBackgroundColor, @vmenuFlatBackgroundColor) !important;
+
+  &.active {
+    color: @vmenuFlatActiveFontColor !important;
+  }
+
+  &:hover:not(.active):not(.submenu) {
+    .btn-bgcolor-2(@vmenuFlatHoverBackgroundColor, @vmenuFlatHoverBackgroundColor) !important;
+  }
+
+  &.submenu {
+    .btn-bgcolor-2(@vmenuFlatSubmenuBackgroundColor, @vmenuFlatSubmenuBackgroundColor) !important;
+    .submenu-color();
+  }
+}
+
+// Color, White-Submenu
+.submenu-color() {
+  > li {
+    &:hover:not(.active) {
+      background: @vmenuSubmenuHoverBackgroundColor;
+    }
+
+    > * {
+      color: inherit;
+    }
+  }
+
+  > li.active {
+    color: @vmenuSubmenuActiveFontColor;
+
+    > * {
+      color: inherit;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+.window {
+  position: absolute;
+  margin: 0 auto;
+  z-index: 2000;
+  min-width: 200px;
+  min-height: 100px;
+  font-size: 13px;
+  .border-radius(5px);
+
+  > .head {
+	position: relative;
+	height: 32px;
+	.border-radius(5px 5px 0 0);
+
+	> .left {
+	  left: 10px;
+	  right: 40px;
+	  font-weight: bold;
+
+	  > .title {
+		display: inline-block;
+	  }
+	}
+
+	> .right {
+	  min-width: 20px;
+	  right: 5px;
+
+	  > .close {
+		cursor: pointer;
+		right: 0px;
+	  }
+	}
+  }
+
+  > .head > * {
+	position: absolute;
+	padding: 8px 8px 6px 8px;
+
+	> a {
+	  text-decoration: none;
+	  color: inherit;
+	}
+  }
+
+  > .body {
+	position: relative;
+	overflow: auto;
+	padding: 15px;
+	word-break: break-all;
+  }
+
+  > .foot {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: 47px;
+	text-align: center;
+	.border-radius(0 0 5px 5px);
+
+	> .btn {
+		margin-top: 9px;
+	}
+  }
+
+  > .resize {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	cursor: nw-resize;
+  }
+}

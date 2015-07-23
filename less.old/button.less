@@ -1,0 +1,213 @@
+.jui {
+  .btn {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    cursor: pointer;
+    *border: 0; // Remove the border to prevent IE7's black border on input:focus
+    text-decoration: none;
+    .box-sizing(border-box);
+
+    &:focus {
+      .tab-focus();
+    }
+    
+    // Color & Size
+    .btn-gray;
+    .btn-normal;
+  }
+  
+  
+  // Button Sizes
+  // --------------------------------------------------
+
+  .btn-large {
+    padding: 0 15px;
+    font-size: 16px;
+    height: 38px;
+    line-height: 38px;
+    .border-radius(6px);
+  }
+  
+  .btn-normal {
+    padding: 0 12px;
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+    .border-radius(4px);
+  }
+  
+  .btn-small {
+    padding: 0 10px;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    .border-radius(3px);
+  }
+
+  .btn-mini {
+    padding: 0 8px;
+    font-size: 11px;
+    height: 22px;
+    line-height: 22px;
+    .border-radius(3px);
+  }
+
+  // Toggle
+  .btn-toggle {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  
+  // Border Angular (직각)
+  // --------------------------------------------------
+  .btn-rect {
+    .border-radius(0) !important;
+  }
+
+
+  // Button Colors
+  // --------------------------------------------------
+  
+  // 1. purple
+  .btn-purple {
+    .btn-bgcolor-2(#9c75ec, #885ED5);
+    border: 1px solid #9663f4;
+    color: #fff;
+
+    &:hover {
+      .btn-bgcolor-2(#a57ff2, #8f64de);
+    }
+
+    &.active, &:active {
+      .btn-keep-purple;
+    }
+  }
+  .btn-purple-gray {
+    .btn-purple;
+    
+    &.active, &:active {
+      .btn-keep-gray;
+    }
+  }
+  .btn-purple-black {
+    .btn-purple;
+    
+    &.active, &:active {
+      .btn-keep-black;
+    }
+  }
+ 
+  // 2. gray
+  .btn-gray {
+    .btn-bgcolor-2(#ffffff, #ececec);
+    border: 1px solid #cdcdcd;
+    color: #201834;
+
+    &:hover {
+      .btn-bgcolor-2(#fff, #f3f3f3);
+    }
+    
+    &.active, &:active {
+      .btn-keep-gray;
+    }
+  }
+  .btn-gray-purple {
+    .btn-gray;
+    
+    &.active, &:active {
+      .btn-keep-purple;
+    }
+  }
+  .btn-gray-black {
+    .btn-gray;
+    
+    &.active, &:active {
+      .btn-keep-black;
+    }
+  }
+
+  // 3. black
+  .btn-black {
+    .btn-bgcolor-2(#505050, #303030);
+    border: 1px solid #393939;
+    color: #ffffff;
+
+    &:hover {
+      .btn-bgcolor-2(#5d5d5d, #3b3b3b);
+    }
+    
+    &.active, &:active {
+      .btn-keep-black;
+    }
+  }
+  .btn-black-purple {
+    .btn-black;
+    
+    &.active, &:active {
+      .btn-keep-purple;
+    }
+  }
+  .btn-black-gray {
+    .btn-black;
+    
+    &.active, &:active {
+      .btn-keep-gray;
+    }
+  }
+
+  
+  // Button Keep
+  // --------------------------------------------------
+  
+  .btn-keep-purple {
+    &:not([disabled]) {
+      color: #fff;
+      border: 1px solid #9663f4;
+      .box-shadow(~"rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0");
+      .btn-bgcolor-2(#a57ff2, #8f64de);
+    }
+  }
+  
+  .btn-keep-gray {
+    &:not([disabled]) {
+      color: #000;
+      border: 1px solid #cdcdcd;
+      .box-shadow(~"rgba(0, 0, 0, 0.3) 0 1px 5px inset, rgba(255, 255, 255, 0.2) 0 1px 0");
+      .btn-bgcolor-2(#ffffff,#ececec);
+    }
+  }
+  
+  .btn-keep-black {
+    &:not([disabled]) {
+      color: #fff;
+       border: 1px solid #000000;
+      .box-shadow(~"rgba(0, 0, 0, 0.6) 0 2px 1px inset");
+      .btn-bgcolor-2(rgb(41, 41, 41), rgb(68, 68, 68));
+    }
+  }
+  
+  // Button Disabled
+  // --------------------------------------------------
+
+  .btn[disabled], .disabled {
+    .opacity(50);
+    cursor: not-allowed;
+  }
+
+  // Icon color in Button
+  // --------------------------------------------------
+
+  .btn-black-gray.active > [class^="icon-"],
+  .btn-black-gray:active > [class^="icon-"] {
+    color: #343434;
+  }
+  .btn-gray-black.active > [class^="icon-"],
+  .btn-gray-black:active > [class^="icon-"],
+  .btn-purple-black.active > [class^="icon-"],
+  .btn-purple-black:active > [class^="icon-"] {
+    color: #fff;
+  }
+}

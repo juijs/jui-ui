@@ -1,0 +1,100 @@
+ul.tree {
+  color: @treeFontColor;
+
+  li.active {
+    > a, > span, > div {
+      color: @treeActiveFontColor;
+      font-weight: bold;
+    }
+  }
+
+  .drag.on {
+    background: @treeDragOnBackgroundColor;
+  }
+}
+
+ul.tree.arrow-file {
+  .tree-arrow();
+}
+
+ul.tree.line-file {
+  .tree-line();
+}
+
+ul.tree.arrow {
+  .tree-arrow();
+}
+
+ul.tree.line {
+  .tree-line();
+}
+
+ul.tree.arrow-file, ul.tree.line-file {
+  li.open {
+    > a > i, > span > i, > div > i {
+      .settingTreeIconSize(15px, 14px, -17px, -165px);
+    }
+  }
+
+  li.fold {
+    > a > i, > span > i, > div > i {
+      .settingTreeIconSize(15px, 14px, -0px, -165px);
+    }
+  }
+
+  li.leaf {
+    > a > i, > span > i, > div > i {
+      .settingTreeIconSize(14px, 14px, -36px, -165px);
+    }
+  }
+}
+
+// FUNCTIONS - Style
+.tree-arrow() {
+  li.open > i {
+    .settingTreeIconSize(15px, 15px, -13px, -130px);
+  }
+
+  li.fold > i {
+    .settingTreeIconSize(15px, 15px, -0px, -130px);
+  }
+
+  li.leaf > i {
+    .settingTreeIconSize(15px, 15px, 0, 0);
+  }
+}
+
+// FUNCTIONS - Style
+.tree-line() {
+  li {
+    background: url(@treeLineImageUrl) 0 0 no-repeat;
+  }
+
+  li.open > i {
+    .settingTreeIconSize(16px, 16px, -0px, -111px);
+  }
+
+  li.open.root > i {
+    .settingTreeIconSize(16px, 16px, -16px, -89px);
+  }
+
+  li.fold > i {
+    .settingTreeIconSize(16px, 16px, -32px, -67px);
+  }
+
+  li.fold.root > i {
+    .settingTreeIconSize(16px, 16px, -48px, -45px);
+  }
+}
+
+// FUNCTIONS
+.settingTreeIconSize(@w, @h, @x, @y) {
+  width: @w;
+  height: @h;
+  line-height: @h;
+  background-position: @x @y;
+
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url(@treeListImageUrl);
+}

@@ -1,0 +1,61 @@
+.vmenu {
+  > * {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 8px 14px;
+    .box-sizing(border-box);
+
+    &:focus {
+      .tab-focus();
+    }
+  }
+
+  .children-vgroup();
+}
+
+// Size, Large
+.vmenu.large {
+  > * {
+    padding:  11px 14px !important;
+  }
+}
+
+// Submenu Common
+.vmenu > .submenu {
+  list-style: none;
+  padding: 10px 0px !important;
+
+  > li {
+    padding: 6px 20px;
+    font-weight: normal;
+
+    > * {
+      text-decoration: inherit;
+    }
+  }
+
+  > li.active {
+    font-weight: bold;
+    cursor: default;
+
+    > * {
+      font-weight: inherit;
+    }
+  }
+}
+
+/* Icon position in Tab */
+.vmenu > * > [class^="icon-"] {
+  float: right;
+}
+
+/* vgroup margin */
+.vmenu + .vmenu {
+  margin-top: 5px;
+}
+

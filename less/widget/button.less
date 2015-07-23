@@ -1,0 +1,70 @@
+.btn {
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  cursor: pointer;
+  *border: 0; // Remove the border to prevent IE7's black border on input:focus
+  text-decoration: none;
+  .box-sizing(border-box);
+
+  &:focus {
+    .tab-focus();
+  }
+
+  .btn.normal;
+}
+
+
+// Button Sizes
+// --------------------------------------------------
+
+.btn.large {
+  padding: 0 15px;
+  font-size: 16px;
+  height: 38px;
+  line-height: 38px;
+  .border-radius(6px);
+}
+
+.btn.normal {
+  padding: 0 12px;
+  font-size: 12px;
+  height: 28px;
+  line-height: 28px;
+  .border-radius(4px);
+}
+
+.btn.small {
+  padding: 0 10px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+  .border-radius(3px);
+}
+
+.btn.mini {
+  padding: 0 8px;
+  font-size: 11px;
+  height: 22px;
+  line-height: 22px;
+  .border-radius(3px);
+}
+
+
+// Button Disabled
+// --------------------------------------------------
+
+.btn[disabled], .disabled {
+  cursor: not-allowed;
+}
+
+
+// Button Group
+.btngroup, .group {
+  .children-group();
+}
+
+.btngroup + .btngroup, .group + .group {
+  margin-left: 5px;
+}

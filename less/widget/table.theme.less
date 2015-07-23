@@ -1,0 +1,267 @@
+table.table {
+  > tbody {
+    .webkit-scrollbar();
+  }
+}
+
+
+// Table Style - Colors
+// --------------------------------------------------
+
+.table.classic {
+  border-bottom: 1px solid @tableClassicBorderColor !important;
+
+  > thead {
+    th {
+      color: @tableClassicColumnFontColor;
+      border-left: 1px solid @tableClassicColumnBorderColor1;
+      border-right: 1px solid @tableClassicColumnBorderColor2;
+      .btn-bgcolor-2(@tableClassicColumnBackgroundColor1, @tableClassicColumnBackgroundColor2);
+
+      &:first-child {
+        border-left: 1px solid @tableClassicColumnBorderColor2;
+      }
+    }
+  }
+
+  > tbody {
+    > tr {
+      background: @tableClassicRowBackgroundColor;
+
+      > td {
+        color: @tableClassicCellFontColor;
+        border-top: 1px solid @tableClassicCellBorderColor1;
+        border-bottom: 1px solid @tableClassicCellBorderColor2;
+        border-left: 1px solid @tableClassicCellBorderColor2;
+
+        &:first-child {
+          border-left: 1px solid @tableClassicCellBorderColor3;
+        }
+
+        &:last-child {
+          border-right: 1px solid @tableClassicCellBorderColor3;
+        }
+      }
+
+      > td.none {
+        background: @tableClassicNoneCellBackgroundColor;
+
+        > .msg {
+          text-shadow: @tableClassicNoneCellMessageTextShadow;
+        }
+      }
+
+      &:last-child > td {
+        border-bottom-width: 0px;
+      }
+
+      &.selected {
+        background: @tableClassicSelectedRowBackgroundColor;
+
+        > td {
+          color: @tableClassicSelectedRowFontColor;
+        }
+      }
+
+      &.checked {
+        background: @tableClassicCheckedRowBackgroundColor;
+
+        > td {
+          color: @tableClassicCheckedRowFontColor;
+        }
+      }
+    }
+
+    .expand-row();
+  }
+
+  // Table Style - White - Stripe
+  // --------------------------------------------------
+
+  &.table.stripe {
+    tr:nth-child(even) {
+      background: @tableClassicStripeRowBackgroundColor;
+    }
+  }
+
+  &.table.stripeless {
+    tr {
+      background: @tableClassicStripelessRowBackgroundColor !important;
+    }
+  }
+
+  .table.stripe;
+}
+.table.classic.hover {
+  > tbody > tr:hover {
+    background: @tableClassicHoverRowBackgroundColor;
+  }
+}
+
+.table.expand {
+  .table.classic;
+
+  > tbody {
+    > tr {
+      .btn-bgcolor-2(@tableExpandRowBackgroundColor1, @tableExpandRowBackgroundColor2) !important;
+
+      &.selected {
+        .btn-bgcolor-2(@tableExpandSelectedRowBackgroundColor1, @tableExpandSelectedRowBackgroundColor2) !important;
+
+        > td {
+          color: @tableExpandSelectedRowFontColor !important;
+        }
+      }
+
+      &.checked {
+        .btn-bgcolor-2(@tableExpandCheckedRowBackgroundColor1, @tableExpandCheckedRowBackgroundColor2) !important;
+
+        > td {
+          color: @tableExpandCheckedRowFontColor !important;
+        }
+      }
+    }
+  }
+}
+.table.expand.hover {
+  > tbody > tr:hover {
+    .btn-bgcolor-2(@tableExpandHoverRowBackgroundColor1, @tableExpandHoverRowBackgroundColor2) !important;
+  }
+}
+
+.table.simple {
+  border-bottom: 1px solid @tableSimpleBorderColor !important;
+
+  > thead {
+    th {
+      color: @tableSimpleColumnFontColor;
+      background: @tableSimpleColumnBackgroundColor;
+      border-top: 1px solid @tableSimpleColumnBorderColor;
+      border-bottom: 1px solid @tableSimpleColumnBorderColor;
+    }
+  }
+
+  > tbody {
+    > tr {
+      background: @tableSimpleRowBackgroundColor;
+
+      > td {
+        color: @tableSimpleCellFontColor;
+        border-bottom: 1px solid @tableSimpleCellBorderColor;
+        border-left: 1px solid @tableSimpleCellBorderColor;
+
+        &:first-child {
+          border-left-width: 0px;
+        }
+      }
+
+      > td.none {
+        border-bottom-width: 0px !important;
+        background: @tableSimpleNoneCellBackgroundColor;
+
+        > .msg {
+          text-shadow: @tableSimpleNoneCellMessageTextShadow;
+        }
+      }
+
+      &:last-child > td {
+        border-bottom-width: 0px;
+      }
+
+      &.selected {
+        background: @tableSimpleSelectedRowBackgroundColor;
+
+        > td {
+          color: @tableSimpleSelectedRowFontColor;
+        }
+      }
+
+      &.checked {
+        background: @tableSimpleCheckedRowBackgroundColor;
+
+        > td {
+          color: @tableSimpleCheckedRowFontColor;
+        }
+      }
+    }
+
+    .expand-row();
+  }
+
+  // Table Style - White - Stripe
+  // --------------------------------------------------
+
+  &.table.stripe {
+    tr:nth-child(even) {
+      background: @tableSimpleStripeRowBackgroundColor;
+    }
+  }
+
+  &.table.stripeless {
+    tr {
+      background: @tableSimpleStripelessRowBackgroundColor !important;
+    }
+  }
+
+  // Table Style - Headline
+  // --------------------------------------------------
+
+  &.table.headline {
+    > thead {
+      tr > th:not(:first-child) {
+        border-left: 1px solid @tableSimpleHeadlineColumnBorderColor;
+      }
+    }
+  }
+
+  .table.stripe;
+}
+.table.simple.hover {
+  > tbody > tr:hover {
+    background: @tableSimpleHoverRowBackgroundColor;
+  }
+}
+
+
+// Table Input-Cell
+// --------------------------------------------------
+.table {
+  > tbody td > .edit {
+    background-color: @tableEditCellBackgroundColor;
+    border: 1px solid @tableEditCellBorderColor;
+    .box-shadow(@tableEditCellBoxShadow);
+    color: @tableEditCellFontColor;
+
+    &:focus {
+      border-color: @tableEditCellFocusBorderColor;
+      outline: 0;
+      .box-shadow(@tableEditCellFocusBoxShadow);
+      .transition(@tableEditCellFocusTransition);
+    }
+  }
+}
+
+
+// Table Expend Row
+// --------------------------------------------------
+.expand-row() {
+  tr.open, tr.expand {
+    .btn-bgcolor-2(@tableExpandRowBackgroundColor, @tableExpandRowBackgroundColor) !important;
+
+    &:hover {
+      .btn-bgcolor-2(@tableExpandRowBackgroundColor, @tableExpandRowBackgroundColor) !important;
+    }
+  }
+
+  tr.open > td {
+    font-weight: bold;
+  }
+
+  tr.expand > td {
+    background: @tableExpandRowBackgroundColor;
+
+    &:hover {
+      background: @tableExpandRowBackgroundColor;
+    }
+  }
+}

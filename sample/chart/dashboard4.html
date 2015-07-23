@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="charset=utf-8;"/>
     <script src="../../lib/jquery-1.8.0.min.js"></script>
-    <script src="../../jui.js"></script>
+    <script src="../../dist/jui.js"></script>
 </head>
 <body >
 
@@ -148,8 +148,8 @@
             dy : 90
           }, {
             type : "tooltip",
-            format : function(k, v) {
-              return v;
+            format : function(d, k) {
+              return d[k];
             },
             brush : [ 0, 2, 3, 4 ]
           }],

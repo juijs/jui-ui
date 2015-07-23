@@ -1,0 +1,28 @@
+.tooltip {
+  opacity: @tooltipBackgroundOpacity;
+
+  > .message {
+	color: @tooltipMessageFontColor;
+	background-color: @tooltipBackgroundColor;
+  }
+
+  > .anchor {
+	 border-color: transparent;
+  }
+
+  &.top > .anchor {
+	border-top-color: @tooltipBackgroundColor;
+  }
+
+  &.bottom > .anchor {
+	border-bottom-color: @tooltipBackgroundColor;
+  }
+
+  &.left > .anchor {
+	border-left-color: @tooltipBackgroundColor;
+  }
+
+  &.right > .anchor {
+	border-right-color: @tooltipBackgroundColor;
+  }
+}

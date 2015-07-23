@@ -1,0 +1,32 @@
+.input {
+  color: @inputFontColor;
+  background-color: @inputBackgroundColor;
+  border: 1px solid @inputBorderColor;
+  text-shadow: @inputTextShadow;
+  .border-radius(@inputBorderRadius);
+  .box-shadow(@inputBoxShadow);
+
+  &:focus {
+    color: @inputFocusFontColor;
+    border-color: @inputFocusBorderColor;
+    background-color: @inputFocusBackgroundColor;
+    outline: 0;
+    .box-shadow(@inputFocusBoxShadow);
+    .transition(@inputFocusTransition);
+  }
+}
+
+.input[disabled], .input[readonly] {
+  cursor: not-allowed;
+  background-color: @inputDisabledBackgroundColor;
+}
+
+.input:focus:invalid {
+  color: @inputInvalidFontColor;
+  border-color: @inputInvalidBorderColor;
+
+  &:focus {
+    border-color: @inputInvalidFocusBorderColor;
+    .box-shadow(@inputInvalidFocusBoxShadow);
+  }
+}

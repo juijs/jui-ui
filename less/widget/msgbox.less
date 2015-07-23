@@ -1,0 +1,71 @@
+.msgbox {
+  position: absolute;
+  margin: 0 auto;
+  z-index: 2000;
+  min-width: 250px;
+  min-height: 150px;
+  font-size: 12px;
+  .border-radius(3px);
+
+  > .head {
+    position: relative;
+    padding: 7px 12px 7px 15px;
+      font-weight: bold;
+    .border-radius(3px 3px 0 0);
+
+    > .title {
+      display: inline-block;
+    }
+
+    > .subtext {
+      display: block;
+    }
+
+    > .close {
+       position: absolute;
+       cursor: pointer;
+       right: 12px;
+    }
+
+    > a {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
+  > .body {
+    position: relative;
+    overflow: auto;
+    padding: 15px 15px 18px 15px;
+    word-break: break-all;
+  }
+
+  > .resize {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    cursor: nw-resize;
+  }
+}
+
+// Detail Styles
+// ---------------------------
+.msgbox.detail {
+  > .head {
+    margin: 0 20px;
+    padding: 15px 0;
+
+    > .subtext {
+      margin-top: 4px;
+    }
+
+    > .close {
+      top: 15px;
+      right: 0px;
+    }
+  }
+
+  > .body {
+    padding: 15px 20px 20px 20px;
+  }
+}

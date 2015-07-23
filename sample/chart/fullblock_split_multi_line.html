@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    var chart = jui.include("chart.builder"),
+            time = jui.include("util.time");
+
+    var aday = 24 * 60 * 60 * 1000;
+
+    var data1 = [
+        { time : 1, value : Math.floor(Math.random() * 600) },
+        { time : 2, value : Math.floor(Math.random() * 600) },
+        { time : 3, value : Math.floor(Math.random() * 600) },
+        { time : 4, value : Math.floor(Math.random() * 600) }
+    ];
+    var last = data1[data1.length-1];
+    var data2 = [
+        { time : last.time, value : last.value },
+        { time : 5, value : Math.floor(Math.random() * 600) },
+        { time : 6, value : Math.floor(Math.random() * 600) },
+        { time : 7, value : Math.floor(Math.random() * 600) }
+    ];
+    last = data2[data2.length-1];
+    var data3 = [
+        { time : last.time, value : last.value },
+        { time : 8, value : Math.floor(Math.random() * 600) },
+        { time : 9, value : Math.floor(Math.random() * 600) },
+        { time : 10, value : Math.floor(Math.random() * 600) },
+        { time : 11, value : Math.floor(Math.random() * 600) }
+    ];
+
+    chart("#chart", {
+        height : 300,
+        axis : [{
+            x : {
+                type : "fullblock",
+                domain : function() {
+                    var arr = [];
+
+                    for(var i = 0; i < data1.length; i++) {
+                        arr.push(data1[i].time);
+                    }
+
+                    for(var i = 1; i < data2.length; i++) {
+                        arr.push(data2[i].time);
+                    }
+
+                    for(var i = 1; i < data3.length; i++) {
+                        arr.push(data3[i].time);
+                    }
+
+                    return arr;
+                }
+            },
+            y : {
+                type : "range",
+                step : 10,
+                domain : function(d) {
+                    return [0, 600];
+                },
+                format : function(value) {
+                    return value;
+                },
+                line : true
+            },
+            data : data1
+        }, {
+            x : {
+                domain : function() {
+                    var arr = [];
+
+                    for(var i = 0; i < data1.length; i++) {
+                        arr.push(data1.time);
+                    }
+                    return arr;
+                },
+                hide : true
+            },
+            y : {
+              hide : true
+            },
+            data : data1,
+            extend : 0,
+            area : {
+                width : "30%"
+            }
+        }, {
+            x : {
+                domain : function() {
+                    var arr = [];
+
+                    for(var i = 0; i < data2.length; i++) {
+                        arr.push(data2.time);
+                    }
+                    return arr;
+                },
+                hide : true
+            },
+            y : {
+                hide : true
+            },
+            data : data2,
+            extend : 0,
+            area : {
+                x : '30%',
+                width : "30%"
+            }
+        }, {
+            x : {
+                domain : function() {
+                    var arr = [];
+
+                    for(var i = 0; i < data3.length; i++) {
+                        arr.push(data3.time);
+                    }
+                    return arr;
+                },
+                hide : true
+            },
+            y : {
+                hide : true
+            },
+            data : data3,
+            extend : 0,
+            area : {
+                x : '60%',
+                width : "40%"
+            }
+        }],
+        brush : [{
+            type : "line",
+            target : "value",
+            axis : 1,
+            colors : function() { return '#ff0000'; }
+        },{
+            type : "line",
+            target : "value",
+            axis : 2,
+            colors : function() { return '#00ff00'; }
+        },{
+            type : "line",
+            target : "value",
+            axis : 3,
+            colors : function() { return '#0000ff'; }
+        }]
+    });
+
+</script>
+
+
+</body>
+</html>

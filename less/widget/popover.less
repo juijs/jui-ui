@@ -1,0 +1,98 @@
+@anchor-size: 8px;
+@anchor-inner-size: 7px;
+
+.popover {
+  position: absolute;
+  font-size: 12px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.popover > .head {
+  padding: 7px 15px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  font-weight: bold;
+}
+
+.popover > .body {
+  padding: 15px;
+
+  > .image {
+	float: left;
+	font-size: 16px;
+  }
+
+  > .image + .message {
+	margin-left: 24px;
+  }
+}
+
+.popover:after, .popover:before {
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.popover:after {
+  border-width: @anchor-inner-size;
+}
+.popover:before {
+  border-width: @anchor-size;
+}
+
+
+// popover Positions
+// --------------------------------------------------
+
+.popover.top:after, .popover.top:before {
+  top: 100%;
+  left: 50%;
+}
+
+.popover.bottom:after, .popover.bottom:before {
+  bottom: 100%;
+  left: 50%;
+}
+
+.popover.top:after, .popover.bottom:after {
+  margin-left: -@anchor-inner-size;
+}
+.popover.top:before, .popover.bottom:before {
+  margin-left: -@anchor-size;
+}
+
+.popover.left:after, .popover.left:before {
+  left: 100%;
+  top: 50%;
+}
+
+.popover.right:after, .popover.right:before {
+  right: 100%;
+  top: 50%;
+}
+
+.popover.left:after, .popover.right:after {
+  margin-top: -@anchor-inner-size;
+}
+.popover.left:before, .popover.right:before {
+  margin-top: -@anchor-size;
+}
+
+
+// popover Margins
+// --------------------------------------------------
+.popover.top {
+  margin-top: -@anchor-size;
+}
+.popover.bottom {
+  margin-top: @anchor-size;
+}
+.popover.left {
+  margin-left: -@anchor-size;
+}
+.popover.right {
+  margin-left: @anchor-size;
+}

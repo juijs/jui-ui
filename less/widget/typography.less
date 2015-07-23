@@ -1,0 +1,77 @@
+// headline
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  display: block;
+  font-weight: 500;
+
+  > small, .sub {
+    font-size: 75%;
+  }
+}
+
+.h1 {
+  font-size: 32px;
+
+  > small, .sub {
+    font-size: 65%;
+  }
+}
+
+.h2 {
+  font-size: 26px;
+
+  > small, .sub {
+    font-size: 65%;
+  }
+}
+
+.h3 {
+  font-size: 20px;
+
+  > small, .sub {
+    font-size: 65%;
+  }
+}
+
+.h4 {
+  font-size: 16px;
+}
+
+.h5 {
+  font-size: 14px;
+}
+
+.h6 {
+  font-size: 12px;
+}
+
+
+// hr
+.hr {
+  display: block;
+  height: 1px;
+}
+
+.h1 + .hr, .h2 + .hr, .h3 + .hr {
+  margin: 10px 0 24px 0;
+}
+
+.h4 + .hr, .h5 + .hr, .h6 + .hr {
+  margin: 8px 0 20px 0;
+}
+
+
+// blockquote
+.blockquote {
+  display: block;
+  font-size: 14px;
+  padding: 10px 20px;
+
+  > small {
+    font-size: 12px;
+  }
+}
+
+.blockquote.reverse {
+  text-align: right;
+  border-left-width: 0;
+}

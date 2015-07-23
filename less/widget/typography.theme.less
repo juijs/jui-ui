@@ -1,0 +1,30 @@
+// headline
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  color: @typographyHeadingFontColor;
+
+  > small, .sub {
+    color: @typographyHeadingSmallFontColor;
+  }
+}
+
+
+// hr
+.hr {
+  background: @typographyLineColor;
+}
+
+
+// blockquote
+.blockquote {
+  color: @typographyBlockquoteFontColor;
+  border-left: 1px solid @typographyBlockquoteBorderColor;
+  background-color: @typographyBlockquoteBackgroundColor;
+
+  > small {
+    color: @typographyBlockquoteSmallFontColor;
+  }
+}
+
+.blockquote.reverse {
+  border-right: 1px solid @typographyBlockquoteBorderColor;
+}
