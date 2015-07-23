@@ -1,5 +1,5 @@
-var jui = require('../../jui.node');
-var fs = require('fs');
+var jui = require("../../node"),
+    fs = require("fs");
 
 var chart = jui.create("chart.builder", $("<div></div>"), {
     width : 800,
@@ -12,7 +12,9 @@ var chart = jui.create("chart.builder", $("<div></div>"), {
         },
         y : {
             type : "range",
-            domain : function(d) {return [d.sales, d.profit]; },
+            domain : function(d) {
+                return Math.max(d.sales, d.profit);
+            },
             step : 10,
             line : true,
             orient : "right"
@@ -27,7 +29,7 @@ var chart = jui.create("chart.builder", $("<div></div>"), {
     }, 
     brush : {
         type : "column",
-        target : ["sales", "profit"]
+        target : [ "sales", "profit" ]
     }
 });
 
