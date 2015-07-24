@@ -240,6 +240,14 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
      * @param {Object} data Data of the selected button
      * @param {jQueryEvent} e The event object
      */
+
+	/**
+	 * @event click
+	 * Event that occurs when clicking on a button
+	 *
+	 * @param {Object} data Data of the selected button
+	 * @param {jQueryEvent} e The event object
+	 */
 	
 	return UI;
 });

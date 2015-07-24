@@ -1,27 +1,35 @@
 jui.define("uix.table.column", [ "jquery" ], function($) {
+
     /**
      * @class uix.table.column
-     * implements Table's Column Component
-     * @extends core
-     * @alias TableColumn
+     * @alias Table Column
      * @requires jquery
-     *
      */
     var Column = function(index) {
+        /** @property {HTMLElement} [element=null] TH element of a specified column */
         this.element = null;
+
+        /** @property {String} [order="asc"] Column sort state */
         this.order = "asc";
+
+        /** @property {Integer} [name=null] Column name */
         this.name = null;
-        this.data = []; // 자신의 컬럼 로우의 데이터 목록
-        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
+
+        /** @property {Array} data Data from all rows belonging for a specified column */
+        this.data = [];
+
+        /** @property {Array} list TD element of all rows belonging to a specified column */
+        this.list = [];
+
+        /** @property {Integer} index Column index */
         this.index = index;
+
+        /** @property {"show"/"hide"/"resize"} [type="show"] The current column state */
         this.type = "show";
-        this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
 
+        /** @property {Integer} [width=null] Column width */
+        this.width = null;
 
-        /**
-         * Public Methods
-         *
-         */
         this.hide = function() {
             this.type = "hide";
             $(this.element).hide();
@@ -38,37 +46,43 @@ jui.define("uix.table.column", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.row", [ "jquery" ], function($) {
+
     /**
      * @class uix.table.row
-     * implements Table's Row Component
-     * @extends core
-     * @alias TableRow
+     * @alias Table Row
      * @requires jquery
-     *
      */
     var Row = function(data, tplFunc, pRow) {
-        var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
+        var self = this,
+            cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
-        /**
-         * Public Properties
-         *
-         */
+        /** @property {Array} data Data of a specifiedrow. */
         this.data = data;
-        this.rownum = null;		// 현재 뎁스에서의 인덱스 키값
+
+        /** @property {Integer} [rownum=null] The unique number of a child row under the specified parent row if a parent row exists. */
+        this.rownum = null;
+
+        /** @property {String/Integer} [index=null] Index of a specified row. In the case of a tree structure, a depth is given. */
         this.index = null;		// 계층적 구조를 수용할 수 있는 키값
+
+        /** @property {HTMLElement} [element=null] TR element of a specified row. */
         this.element = null;
+
+        /** @property {Array} list List of TD elements of a specified row. */
         this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
 
+        /** @property {ui.table.row} parent Variable that refers to the parent row. */
         this.parent = (pRow) ? pRow : null;
+
+        /** @property {Array} children List of child rows. */
         this.children = [];
+
+        /** @property {Integer} [depth=0] The depth of the current row in the case of a tree structure. */
         this.depth = 0;
+
+        /** @property {"open"/"fold"} [type="fold"] State value that indicates whether a child row is shown or hidden. */
         this.type = "fold";
 
-
-        /**
-         * Private Methods
-         *
-         */
         function setIndex(rownum) {
             self.rownum = (!isNaN(rownum)) ? rownum : self.rownum;
 
@@ -139,12 +153,6 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
                 self.children[i].reload(i);
             }
         }
-
-
-        /**
-         * Public Methods
-         *
-         */
 
         this.reload = function(rownum, isUpdate, columns) {
             if(!isUpdate) setIndex(rownum); // 노드 인덱스 설정
@@ -287,17 +295,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
-    /**
-     * @class uix.table.base
-     * implements Table Base
-     * @extends core
-     * @alias TableBase
-     * @requires jquery
-     * @requires util.base
-     * @requires uix.table.column
-     * @requires uix.table.row
-     *
-     */
+
     var Base = function(handler, fields) {
         var self = this;
 
@@ -311,11 +309,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
         var isNone = false,
             iParser = _.index();
 
-
-        /**
-         * Private Methods
-         *
-         */
         function init() {
             toggleRowNone();
             initColumns();
@@ -505,11 +498,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             return true;
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
         this.appendRow = function() {
             var index = arguments[0], data = arguments[1];
             var result = null;
@@ -806,10 +794,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
 jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 
-    /**
-     * Common Logic
-     *
-     */
     _.resize(function() {
         var call_list = jui.get("table");
 
@@ -822,10 +806,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         }
     }, 1000);
 
-
     /**
      * @class uix.table
-     * implements Table Component
      * @extends core
      * @alias Table
      * @requires jquery
@@ -2206,7 +2188,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             rows: null, // @Deprecated
 
             /**
-             * @cfg {Boolean|Array} [colshow=false]
+             * @cfg {Boolean/Array} [colshow=false]
              * Sets a column index shown when the Show/Hide Column menu is enabled.
              */
             colshow: false,
@@ -2266,7 +2248,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             resize: false,
 
             /**
-             * @cfg {Boolean|Array} [sort=false]
+             * @cfg {Boolean/Array} [sort=false]
              * Determines whether to use the table sort function.
              */
             sort: false,
