@@ -7385,6 +7385,7 @@ jui.define("chart.theme.jennifer", [], function() {
 
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
@@ -7597,6 +7598,7 @@ jui.define("chart.theme.gradient", [], function() {
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#efefef",
@@ -7807,6 +7809,7 @@ jui.define("chart.theme.dark", [], function() {
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#464646",
@@ -8015,6 +8018,7 @@ jui.define("chart.theme.pastel", [], function() {
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
 		gridPatternColor : "#ababab",
 		gridPatternOpacity : 0.1,
 		gridBorderColor : "#bfbfbf",
@@ -8222,6 +8226,7 @@ jui.define("chart.theme.pattern", [], function() {
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
