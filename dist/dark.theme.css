@@ -678,6 +678,14 @@
   background-color: #ffffff;
   border: 1px solid #dcdcdc;
 }
+.jui .panel.close > .head {
+  -webkit-border-bottom-right-radius: 5px !important;
+  -moz-border-radius-bottomright: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  -webkit-border-bottom-left-radius: 5px !important;
+  -moz-border-radius-bottomleft: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
 .jui .tooltip {
   opacity: 0.9;
 }
