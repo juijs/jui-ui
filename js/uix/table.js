@@ -71,7 +71,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
         /** @property {Array} list List of TD elements of a specified row. */
         this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
 
-        /** @property {ui.table.row} parent Variable that refers to the parent row. */
+        /** @property {RowObject} parent Variable that refers to the parent row. */
         this.parent = (pRow) ? pRow : null;
 
         /** @property {Array} children List of child rows. */
