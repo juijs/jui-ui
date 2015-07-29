@@ -383,6 +383,24 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
      * @param {Object} data changed data
      * @param {EventObject} e The event object
      */
+
+	/**
+	 * @event click
+	 * Event which occurs when selecting a combo box
+	 *
+	 * @param {Object} data changed data
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event open
+	 * Event which occurs when opening a combo box
+	 */
+
+	/**
+	 * @event fold
+	 * Event which occurs when folding a combo box
+	 */
 	
 	return UI;
 });
