@@ -5170,6 +5170,14 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
      * @param {Object} data Data of the selected button
      * @param {jQueryEvent} e The event object
      */
+
+	/**
+	 * @event click
+	 * Event that occurs when clicking on a button
+	 *
+	 * @param {Object} data Data of the selected button
+	 * @param {jQueryEvent} e The event object
+	 */
 	
 	return UI;
 });
@@ -5558,6 +5566,24 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
      * @param {Object} data changed data
      * @param {EventObject} e The event object
      */
+
+	/**
+	 * @event click
+	 * Event which occurs when selecting a combo box
+	 *
+	 * @param {Object} data changed data
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event open
+	 * Event which occurs when opening a combo box
+	 */
+
+	/**
+	 * @event fold
+	 * Event which occurs when folding a combo box
+	 */
 	
 	return UI;
 });
@@ -8433,29 +8459,37 @@ jui.defineUI("uix.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _,
 	return UI;
 });
 jui.define("uix.table.column", [ "jquery" ], function($) {
+
     /**
      * @class uix.table.column
-     * implements Table's Column Component
-     * @extends core
-     * @alias TableColumn
+     * @alias Table Column
      * @requires jquery
-     *
      */
     var Column = function(index) {
+        /** @property {HTMLElement} [element=null] TH element of a specified column */
         this.element = null;
+
+        /** @property {String} [order="asc"] Column sort state */
         this.order = "asc";
+
+        /** @property {Integer} [name=null] Column name */
         this.name = null;
-        this.data = []; // 자신의 컬럼 로우의 데이터 목록
-        this.list = []; // 자신의 컬럼 로우 TD 태그 목록
+
+        /** @property {Array} data Data from all rows belonging for a specified column */
+        this.data = [];
+
+        /** @property {Array} list TD element of all rows belonging to a specified column */
+        this.list = [];
+
+        /** @property {Integer} index Column index */
         this.index = index;
+
+        /** @property {"show"/"hide"/"resize"} [type="show"] The current column state */
         this.type = "show";
-        this.width = null; // width 값이 마크업에 설정되어 있으면 최초 가로 크기 저장
 
+        /** @property {Integer} [width=null] Column width */
+        this.width = null;
 
-        /**
-         * Public Methods
-         *
-         */
         this.hide = function() {
             this.type = "hide";
             $(this.element).hide();
@@ -8472,37 +8506,43 @@ jui.define("uix.table.column", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.row", [ "jquery" ], function($) {
+
     /**
      * @class uix.table.row
-     * implements Table's Row Component
-     * @extends core
-     * @alias TableRow
+     * @alias Table Row
      * @requires jquery
-     *
      */
     var Row = function(data, tplFunc, pRow) {
-        var self = this, cellkeys = {}; // 숨겨진 컬럼 인덱스 키
+        var self = this,
+            cellkeys = {}; // 숨겨진 컬럼 인덱스 키
 
-        /**
-         * Public Properties
-         *
-         */
+        /** @property {Array} data Data of a specifiedrow. */
         this.data = data;
-        this.rownum = null;		// 현재 뎁스에서의 인덱스 키값
+
+        /** @property {Integer} [rownum=null] The unique number of a child row under the specified parent row if a parent row exists. */
+        this.rownum = null;
+
+        /** @property {String/Integer} [index=null] Index of a specified row. In the case of a tree structure, a depth is given. */
         this.index = null;		// 계층적 구조를 수용할 수 있는 키값
+
+        /** @property {HTMLElement} [element=null] TR element of a specified row. */
         this.element = null;
+
+        /** @property {Array} list List of TD elements of a specified row. */
         this.list = [];			// 자신의 로우에 포함된 TD 태그 목록
 
+        /** @property {RowObject} parent Variable that refers to the parent row. */
         this.parent = (pRow) ? pRow : null;
+
+        /** @property {Array} children List of child rows. */
         this.children = [];
+
+        /** @property {Integer} [depth=0] The depth of the current row in the case of a tree structure. */
         this.depth = 0;
+
+        /** @property {"open"/"fold"} [type="fold"] State value that indicates whether a child row is shown or hidden. */
         this.type = "fold";
 
-
-        /**
-         * Private Methods
-         *
-         */
         function setIndex(rownum) {
             self.rownum = (!isNaN(rownum)) ? rownum : self.rownum;
 
@@ -8573,12 +8613,6 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
                 self.children[i].reload(i);
             }
         }
-
-
-        /**
-         * Public Methods
-         *
-         */
 
         this.reload = function(rownum, isUpdate, columns) {
             if(!isUpdate) setIndex(rownum); // 노드 인덱스 설정
@@ -8721,17 +8755,7 @@ jui.define("uix.table.row", [ "jquery" ], function($) {
 
 
 jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.table.row" ], function($, _, Column, Row) {
-    /**
-     * @class uix.table.base
-     * implements Table Base
-     * @extends core
-     * @alias TableBase
-     * @requires jquery
-     * @requires util.base
-     * @requires uix.table.column
-     * @requires uix.table.row
-     *
-     */
+
     var Base = function(handler, fields) {
         var self = this;
 
@@ -8745,11 +8769,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
         var isNone = false,
             iParser = _.index();
 
-
-        /**
-         * Private Methods
-         *
-         */
         function init() {
             toggleRowNone();
             initColumns();
@@ -8939,11 +8958,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
             return true;
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
         this.appendRow = function() {
             var index = arguments[0], data = arguments[1];
             var result = null;
@@ -9240,10 +9254,6 @@ jui.define("uix.table.base", [ "jquery", "util.base", "uix.table.column", "uix.t
 
 jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.base" ], function($, _, dropdown, Base) {
 
-    /**
-     * Common Logic
-     *
-     */
     _.resize(function() {
         var call_list = jui.get("table");
 
@@ -9256,10 +9266,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         }
     }, 1000);
 
-
     /**
      * @class uix.table
-     * implements Table Component
      * @extends core
      * @alias Table
      * @requires jquery
@@ -10640,7 +10648,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             rows: null, // @Deprecated
 
             /**
-             * @cfg {Boolean|Array} [colshow=false]
+             * @cfg {Boolean/Array} [colshow=false]
              * Sets a column index shown when the Show/Hide Column menu is enabled.
              */
             colshow: false,
@@ -10700,7 +10708,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             resize: false,
 
             /**
-             * @cfg {Boolean|Array} [sort=false]
+             * @cfg {Boolean/Array} [sort=false]
              * Determines whether to use the table sort function.
              */
             sort: false,
@@ -10871,37 +10879,40 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
     return UI;
 });
 jui.define("uix.tree.node", [ "jquery" ], function($) {
+
     /**
      * @class uix.tree.node
      * implements Tree's Node
-     * @extends core
      * @alias TreeNode
      * @requires jquery
-     *
      */
     var Node = function(data, tplFunc) {
         var self = this;
 
-        /**
-         * Public Properties
-         *
-         */
-        this.data = data;			// 해당 노드의 데이터
-        this.element = null;		// 해당 노드의 엘리먼트
-        this.index = null;			// 계층적 구조를 수용할 수 있는 키값
-        this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
+        /** @property {Array} [data=null] Data of a specifiednode */
+        this.data = data;
 
-        this.parent = null;			// 부모 노드
-        this.children = [];		// 자식 노드들
-        this.depth = 0;				// 해당 노드의 뎁스
+        /** @property {HTMLElement} [element=null] LI element of a specified node */
+        this.element = null;
 
+        /** @property {Integer} [index=null] Index of a specified node */
+        this.index = null;
+
+        /** @property {Integer} [nodenum=null] Unique number of a specifiede node at the current depth */
+        this.nodenum = null;
+
+        /** @property {uix.tree.node} [parent=null] Variable that refers to the parent of the current node */
+        this.parent = null;
+
+        /** @property {Array} [children=null] List of child nodes of a specified node */
+        this.children = [];
+
+        /** @property {Integer} [depth=0] Depth of a specified node */
+        this.depth = 0;
+
+        /** @property {String} [type='open'] State value that indicates whether a child node is shown or hidden */
         this.type = "open";
 
-
-        /**
-         * Private Methods
-         *
-         */
         function setIndex(nodenum) {
             self.nodenum = (!isNaN(nodenum)) ? nodenum : self.nodenum;
 
@@ -10972,11 +10983,6 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
             }
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
         this.reload = function(nodenum, isUpdate) {
             setIndex(nodenum); // 노드 인덱스 설정
 
@@ -11083,16 +11089,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
 
 jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
-    /**
-     * @class uix.tree.base
-     * implements Tree Base
-     * @extends core
-     * @alias TreeBase
-     * @requires jquery
-     * @requires util.base
-     * @requires uix.tree.node
-     *
-     */
+
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -11101,10 +11098,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         var iParser = _.index();
 
-        /**
-         * Private Methods
-         *
-         */
+
         function createNode(data, no, pNode) {
             var node = new Node(data, $tpl.node);
 
@@ -11197,10 +11191,6 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
 
-        /**
-         * Public Methods
-         *
-         */
         this.appendNode = function() {
             var index = arguments[0], data = arguments[1];
 
@@ -11370,11 +11360,8 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		var dragIndex = { start: null, end: null },
             nodeIndex = null,
 			iParser = _.index();
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
+
 		function setNodeStatus(self, nodeList) {
 			for(var i = 0; i < nodeList.length; i++) {
 				var node = nodeList[i];
@@ -11593,13 +11580,8 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 				setEventNodes(self, [ self.uit.getRoot() ]);
 			}
 		}
-		
-		
-		/**
-		 * Public Methods
-		 *
-		 */
-		
+
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -11627,7 +11609,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 				this.fold();
 			}
 		}
-		
+
+        /**
+         * @method update
+         * Changes to the node at a specified index.
+         *
+         * @param {Integer} index
+         * @param {Array} data
+         */
 		this.update = function(index, data) {
             var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
                 index = (arguments.length == 2) ? arguments[0] : null;
@@ -11655,6 +11644,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
             reloadUI(this);
 		}
 
+        /**
+         * @method append
+         * Adds to a child node at a specified index.
+         *
+         * @param {Array/String} param1 index or data
+         * @param {Array} param2 null or data
+         */
 		this.append = function() {
 			var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
 				index = (arguments.length == 2) ? arguments[0] : null;
@@ -11668,7 +11664,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method insert
+         * Adds a node at a specified index.
+         *
+         * @param {String} index
+         * @param {Array} data
+         */
 		this.insert = function(index, data) {
 			var dataList = (data.length == undefined) ? [ data ] : data;
 			
@@ -11678,7 +11681,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method select
+         * Adds a node at a specified index.
+         *
+         * @param {String} index
+         * @return {NodeObject} node
+         */
 		this.select = function(index) {
 			var node = (index == null) ? this.uit.getRoot() : this.get(index);
 			
@@ -11689,6 +11699,10 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			return node;
 		}
 
+        /**
+         * @method unselect
+         * Removes the 'active' class from a selected node and gets an instance of the specified node.
+         */
         this.unselect = function() {
             if(nodeIndex == null) return;
             var node = this.get(nodeIndex);
@@ -11698,22 +11712,45 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
             return node;
         }
-		
+
+        /**
+         * @method remove
+         * Deletes a node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.remove = function(index) {
 			this.uit.removeNode(index);
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method reset
+         * Deletes all child nodes except for a root.
+         */
 		this.reset = function() {
 			this.uit.removeNodes();
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method move
+         * Moves a node at a specified index to the target index.
+         *
+         * @param {String} index
+         * @param {String} targetIndex
+         */
 		this.move = function(index, targetIndex) {
 			this.uit.moveNode(index, targetIndex);
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method open
+         * Shows a child node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.open = function(index, e) { // 로트 제외, 하위 모든 노드 대상
 			if(index == null && this.options.rootHide) return;
 			var isRoot = (index == null);
@@ -11723,7 +11760,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 			this.emit("open", [ (isRoot) ? this.uit.getRoot() : this.get(index), e ]);
 		}
-		
+
+        /**
+         * @method fold
+         * Folds up a child node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.fold = function(index, e) {
 			if(index == null && this.options.rootHide) return;
 			var isRoot = (index == null);
@@ -11733,7 +11776,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			this.emit("fold", [ (isRoot) ? this.uit.getRoot() : this.get(index), e ]);
 		}
-		
+
+        /**
+         * @method openAll
+         * Shows all child nodes at a specified index.
+         *
+         * @param {String} index
+         */
 		this.openAll = function(index) { // 로트 포함, 하위 모든 노드 대상
 			var self = this,
 				isRoot = (index == null);
@@ -11745,6 +11794,12 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			this.emit("openall", [ (isRoot) ? this.uit.getRoot() : this.get(index) ]);
 		}
 
+        /**
+         * @method foldAll
+         * Folds up all child nodes at a specified index.
+         *
+         * @param {String} index
+         */
 		this.foldAll = function(index) {
 			var self = this,
 				isRoot = (index == null);
@@ -11755,15 +11810,34 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 			this.emit("foldall", [ (isRoot) ? this.uit.getRoot() : this.get(index) ]);
 		}
-		
+
+        /**
+         * @method list
+         * Return all nodes of the root.
+         *
+         * @return {Array} nodes
+         */
 		this.list = function() {
 			return this.uit.getNode();
 		}
 
+        /**
+         * @method listAll
+         * Returns all child nodes.
+         *
+         * @return {Array} nodes
+         */
 		this.listAll = function() {
 			return this.uit.getNodeAll();
 		}
-		
+
+        /**
+         * @method listParent
+         * Returns all parent nodes at a specified index.
+         *
+         * @param {String} index
+         * @return {Array} nodes
+         */
 		this.listParents = function(index) {
 			var node = this.get(index),
 				parents = [];
@@ -11785,16 +11859,36 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			return parents.reverse();
 		}
 
+        /**
+         * @method get
+         * Gets a node at a specified index
+         *
+         * @param {String} index
+         * @return {NodeObject} node
+         */
 		this.get = function(index) {
 			if(index == null) return null;
 			return this.uit.getNode(index);
 		}
 
+        /**
+         * @method getAll
+         * Gets all nodes at a specified index including child nodes.
+         *
+         * @param {String} index
+         * @return {Array} nodes
+         */
 		this.getAll = function(index) {
 			if(index == null) return null;
 			return this.uit.getNodeAll(index);
 		}
 
+        /**
+         * @method activeIndex
+         * Gets the index of a node that is activated in an active state.
+         *
+         * @return {Integer} index
+         */
         this.activeIndex = function() {
             return nodeIndex;
         }
@@ -11802,13 +11896,77 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {NodeObject} [root=null]
+             * Adds a root node (required).
+             */
             root: null,
+
+            /**
+             * @cfg {Boolean} [rootHide=false]
+             * Hides a root node.
+             */
             rootHide: false,
+
+            /**
+             * @cfg {Boolean} [rootFold=false]
+             * Folds up a root node.
+             */
             rootFold: false,
+
+            /**
+             * @cfg {Boolean} [drag=false]
+             * It is possible to drag the movement of a node.
+             */
             drag: false,
+
+            /**
+             * @cfg {Boolean} [dragChild=true]
+             * It is possible to drag the node movement but the node is not changed to a child node of the target node.
+             */
             dragChild: true
         }
     }
+
+    /**
+     * @event select
+     * Event that occurs when a node is selected
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event open
+     * Event that occurs when a node is shown
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event fold
+     * Event that occurs when a node is hidden
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragstart
+     * Event that occurs when a node starts to move
+     *
+     * @param {Integer) index Node's index
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragend
+     * Event that occurs when the movement of a node is completed
+     *
+     * @param {Integer) index Node's index
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });
@@ -12137,10 +12295,6 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
 	var p_type = null;
 
-	/**
-	 * Common Logic
-	 * 
-	 */
 	_.resize(function() {
 		var call_list = jui.get("uix.xtable");
 		
@@ -12155,9 +12309,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
     /**
      * @class uix.xtable
-     * implements XTable for Large Data
      * @extends core
-     * @alias XTable
+     * @alias X-Table
      * @requires util.base
      * @requires ui.modal
      * @requires uix.table
@@ -12169,11 +12322,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		var ui_modal = null, page = 1;
         var is_loading = false, is_resize = false;
 		
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
 		function createTableList(self) { // 2
 			var exceptOpts = [ 
                "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
@@ -12463,11 +12612,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
         }
 		
 
-		/**
-		 * Public Methods
-		 * 
-		 */
-		
 		this.init = function() {
 			var opts = this.options;
 
@@ -12534,11 +12678,24 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 setColumnResizeScroll(this);
             }
 		}
-		
+
+		/**
+		 * @method select
+		 * Adds a selected class to a row at a specified index and gets an instance of the applicable row.
+		 *
+		 * @param {Integer} index
+		 * @return {RowObject} row
+		 */
 		this.select = function(index) {
 			return body.select(index);
 		}
-		
+
+		/**
+		 * @method update
+		 * Updates the list of rows or modifies the row at a specified index.
+		 *
+		 * @param {Array} rows
+		 */
 		this.update = function(dataList) {
 			rows = dataList;
 			
@@ -12552,7 +12709,11 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				this.sort(this.options.sortIndex, this.options.sortOrder, undefined, true);
 			}
 		}
-		
+
+		/**
+		 * @method next
+		 * Changes to the next page.
+		 */
 		this.next = function() {
 			var start = (page - 1) * this.options.bufferCount,
 				end = start + this.options.bufferCount;
@@ -12572,7 +12733,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				if(tmpDataList.length > 0) page++;
 			}
 		}
-		
+
+		/**
+		 * @method page
+		 * Changes to the page of at a specified index.
+		 *
+		 * @param {Integer} index
+		 */
 		this.page = function(pNo) {
 			if(this.options.buffer == "scroll") return false;
 			if(this.getPage() == pNo) return false;
@@ -12583,7 +12750,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			page = (pNo < 1) ? 1 : pNo;
 			this.next();
 		}
-		
+
+		/**
+		 * @method sort
+		 * Moves a row iat a specified index to the target index.
+		 *
+		 * @param {Integer} index
+		 * @param {String} order  "asc" or "desc"
+		 */
 		this.sort = function(index, order, e, isNotLoading) { // index는 컬럼 key 또는 컬럼 name
 			if(!this.options.fields || !this.options.sort || is_resize) return;
 			
@@ -12645,6 +12819,12 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		    }
 		}
 
+		/**
+		 * @method filter
+		 * Filters columns at a specified to locate rows that contain keywords in the cell value.
+		 *
+		 * @param {Function} callback
+		 */
         this.filter = function(callback) {
             if(typeof(callback) != "function") return;
 
@@ -12664,6 +12844,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             this.emit("filter", [ s_rows ]);
         }
 
+		/**
+		 * @method rollback
+		 * Returns filtered rows to the original state.
+		 */
         this.rollback = function() {
             if(o_rows != null) {
                 this.update(o_rows);
@@ -12671,24 +12855,42 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 o_rows = null;
             }
         }
-		
+
+		/**
+		 * @method clear
+		 * Remove all row elements.
+		 */
 		this.clear = function() {
 			page = 1;
 			body.uit.removeRows();
 			body.scroll();
 		}
-		
+
+		/**
+		 * @method clear
+		 * Remove all data
+		 */
 		this.reset = function() {
 			this.clear();
 			rows = [];
 		}
-		
+
+		/**
+		 * @method resize
+		 * Resets the inner scroll and columns of a table.
+		 */
 		this.resize = function() {
 			head.resizeColumns();
 			head.resize();
 			head.emit("colresize");
 		}
-		
+
+		/**
+		 * @method height
+		 * Sets the scroll based on the height of a table.
+		 *
+		 * @param {Integer} height
+		 */
 		this.height = function(h) {
 			if(this.options.buffer != "scroll") return;
 			
@@ -12697,32 +12899,76 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			setScrollEvent(this);
 		}
-		
+
+		/**
+		 * @method size
+		 * Gets the size of all the rows of a table.
+		 *
+		 * @return {Integer} size
+		 */
 		this.size = function() { // 차후 수정 (컬럼 * 로우 개수 * 바이트)
 			return rows.length;
 		}
 
+		/**
+		 * @method count
+		 * Gets the number of trows of a table.
+		 *
+		 * @return {Integer} count
+		 */
 		this.count = function() {
 			return rows.length;
 		}
-		
+
+		/**
+		 * @method list
+		 * Gets all the rows of a table.
+		 *
+		 * @return {Array} rows
+		 */
 		this.list = function() {
 			return body.list();
 		}
-		
+
+		/**
+		 * @method listColumn
+		 * Gets all columns.
+		 *
+		 * @return {Array} columns
+		 */
 		this.listColumn = function() {
 			return head.listColumn();
 		}
-		
+
+		/**
+		 * @method listData
+		 * Gets the data of all the rows of a table.
+		 *
+		 * @return {Array} datas
+		 */
 		this.listData = function() {
 			return rows;
 		}
-		
+
+		/**
+		 * @method get
+		 * Gets the row at the specified index.
+		 *
+		 * @param {Integer} index
+		 * @return {RowObject} row
+		 */
 		this.get = function(index) {
 			if(index == null) return null;
 			return body.get(index);
 		}
-		
+
+		/**
+		 * @method getColumn
+		 * Gets the column at the specified index.
+		 *
+		 * @param {"Integer"/"String"} key index or column key
+		 * @return {ColumnObject} column
+		 */
 		this.getColumn = function(index) {
 			return head.getColumn(index);
 		}
@@ -12730,46 +12976,102 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		this.getData = function(index) {
 			return rows[index];
 		}
-		
+
+		/**
+		 * @method showColumn
+		 * Shows the column index (or column name).
+		 *
+		 * @param {"Integer"/"String"} key index or column name
+		 */
 		this.showColumn = function(index) {
 			head.showColumn(index);
 		}
-		
+
+		/**
+		 * @method hideColumn
+		 * Hides the column index (or column name).
+		 *
+		 * @param {"Integer"/"String"} key index or column name
+		 */
 		this.hideColumn = function(index) {
 			head.hideColumn(index);
 		}
-		
+
+		/**
+		 * @method initColumns
+		 * It is possible to determine the index or name of the column to be shown in an array.
+		 *
+		 * @param {"Integer"/"String"} key index or column name
+		 */
 		this.initColumns = function(keys) {
 			head.initColumns(keys);
 			body.initColumns(keys);
 			head.emit("colresize");
 		}
-		
+
+		/**
+		 * @method showColumnMenu
+		 * Shows the Show/Hide Column menu at specified coordinates.
+		 *
+		 * @param {Integer} x
+		 */
 		this.showColumnMenu = function(x) {
 			head.showColumnMenu(x);
 		}
 
+		/**
+		 * @method hideColumnMenu
+		 * Hides the Show/Hide Column menu.
+		 */
         this.hideColumnMenu = function() {
             head.hideColumnMenu();
         }
 
+		/**
+		 * @method toggleColumnMenu
+		 * Shows or hides the Show/Hide Column menu.
+		 *
+		 * @param {Integer} x
+		 */
         this.toggleColumnMenu = function(x) {
             head.toggleColumnMenu(x);
         }
 
+		/**
+		 * @method showExpand
+		 * Shows the extended row area of a specified index.
+		 *
+		 * @param {Integer} index
+		 */
 		this.showExpand = function(index, obj) {
 			body.showExpand(index, obj);
 		}
-		
+
+		/**
+		 * @method hideExpand
+		 * Hides the extended row area of a specified index.
+		 */
 		this.hideExpand = function(index) {
 			if(index) body.hideExpand(index);
 			else body.hideExpand();
 		}
-		
+
+		/**
+		 * @method getExpand
+		 * Get a row in which the extended area is currently activated.
+		 *
+		 * @return {RowObject} row
+		 */
 		this.getExpand = function() {
 			return body.getExpand();
 		}
-		
+
+		/**
+		 * @method showLoading
+		 * Shows the loading screen for the specified delay time.
+		 *
+		 * @param {Integer} delay
+		 */
 		this.showLoading = function(delay) {
 			if(!ui_modal || is_loading) return;
 			
@@ -12785,13 +13087,21 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			}
 		}
 
+		/**
+		 * @method hideLoading
+		 * Hides the loading screen.
+		 */
 		this.hideLoading = function() {
 			if(!ui_modal || !is_loading) return;
 			
 			ui_modal.hide();
 			is_loading = false;
 		}
-		
+
+		/**
+		 * @method setCsv
+		 * Updates a table using a CVS string.
+		 */
 		this.setCsv = function(csv) {
             var opts = this.options;
 			if(!opts.fields && !opts.csv) return;
@@ -12801,7 +13111,11 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
 			this.update(_.csvToData(fields, csv, csvNumber));
 		}
-		
+
+		/**
+		 * @method setCsvFile
+		 * Updates a table using a CVS file.
+		 */
 		this.setCsvFile = function(file) {
 			if(!this.options.fields && !this.options.csv) return;
 			
@@ -12810,7 +13124,14 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 	            self.setCsv(csv);
 			});
 		}
-		
+
+		/**
+		 * @method getCsv
+		 * Gets the data of a table as a CSV string.
+		 *
+		 * @param {Boolean} isTree
+		 * @return {String} csv
+		 */
 		this.getCsv = function() {
 			if(!this.options.fields && !this.options.csv) return;
 			
@@ -12824,13 +13145,27 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				names: this.options.csvNames
 			});
 		}
-		
+
+		/**
+		 * @method getCsvBase64
+		 * Gets the data of a table as a CSV string encoded as base64.
+		 *
+		 * @param {Boolean} isTree
+		 * @return {String} base64
+		 */
 		this.getCsvBase64 = function() {
 			if(!this.options.fields && !this.options.csv) return;
 			
 			return _.csvToBase64(this.getCsv());
 		}
 
+		/**
+		 * @method downloadCsv
+		 * Downloads the data of a table as a CSV file.
+		 *
+		 * @param {String} name
+		 * @param {Boolean} isTree
+		 */
         this.downloadCsv = function(name) {
             if(_.typeCheck("string", name)) {
                 name = name.split(".")[0];
@@ -12844,7 +13179,15 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             a.click();
             a.parentNode.removeChild(a);
         }
-		
+
+		/**
+		 * @method rowFunc
+		 * Ir is possible to use a function for all row data applicable to the column (or column name) of a specified column (or column name). Currently only SUM and AVG are supported.
+		 *
+		 * @param {"sum"/"svg"} funcType
+		 * @param {Integer} columnIndex
+		 * @param {Function} callback
+		 */
 		this.rowFunc = function(type, index, callback) {
 			if(!this.options.fields) return;
 			
@@ -12876,11 +13219,23 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			return null;
 		}
-		
+
+		/**
+		 * @method getPage
+		 * Gets the current page of a table.
+		 *
+		 * @return {Ingeger} page
+		 */
 		this.getPage = function() {
 			return page - 1;
 		}
-		
+
+		/**
+		 * @method activeIndex
+		 * Gets the index of a row that is activated in an extended/modified/selected state.
+		 *
+		 * @return {Integer} index
+		 */
 		this.activeIndex = function() {
 			return body.activeIndex();
 		}
@@ -12888,31 +13243,236 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
     UI.setup = function() {
         return {
+			/**
+			 * @cfg {Array} [fields=null]
+			 * Sets the name of columns in the order of being displayed on the table screen.
+			 */
 			fields: null,
+
+			/**
+			 * @cfg {Array} [csv=null]
+			 * Sets the column key shown when converted to a CSV string.
+			 */
 			csv: null,
+
+			/**
+			 * @cfg {Array} [csvNames=null]
+			 * Sets the name of a column shown when converting to a CSV string, which must be defined in the same order as the CSV option.
+			 */
 			csvNames: null,
+
+			/**
+			 * @cfg {Array} [csvNumber=null]
+			 * Sets the column key to be changed to a number form when converted to a CSV string.
+			 */
 			csvNumber: null,
+
+			/**
+			 * @cfg {Array} [csvCount=10000]
+			 * Sets the maximum number of rows when creating a CSV string.
+			 */
 			csvCount: 10000,
+
+			/**
+			 * @cfg {Array} data
+			 * Sets the initial row list of a table.
+			 */
 			data: [],
+
+			/**
+			 * @cfg {Array} rows
+			 * Sets the initial row list of a table (@Deprecated).
+			 */
 			rows: null, // @Deprecated
+
+			/**
+			 * @cfg {Boolean/Array} [colshow=false]
+			 * Sets a column index shown when the Show/Hide Column menu is enabled.
+			 */
 			colshow: false,
+
+			/**
+			 * @cfg {Boolean} [expand=false]
+			 * Determines whether to use an extended row area.
+			 */
 			expand: false,
+
+			/**
+			 * @cfg {Boolean} [expandEvent=true]
+			 * Shows the extended area automatically when clicking on a row.
+			 */
 			expandEvent: true,
+
+			/**
+			 * @cfg {Boolean} [resize=false]
+			 * Determines whether to use the column resizing function.
+			 */
 			resize: false,
+
+			/**
+			 * @cfg {Integer} [scrollHeight=200]
+			 * Sets the reference height of a body area when using a table scroll.
+			 */
 			scrollHeight: 200,
+
+			/**
+			 * @cfg {Integer} [scrollWidth=0]
+			 * Sets the reference width of a body area when using a table scroll.
+			 */
 			scrollWidth: 0,
+
+			/**
+			 * @cfg {Integer} [width=0]
+			 * Sets the area of a table.
+			 */
 			width: 0,
+
+			/**
+			 * @cfg {String} [buffer='scroll'/'page'/'s-page']
+			 * Sets the buffer type of a table.
+			 */
 			buffer: "scroll",
+
+			/**
+			 * @cfg {Integer} [bufferCount=100]
+			 * Sets the number of rows per page.
+			 */
 			bufferCount: 100,
+
+			/**
+			 * @cfg {Boolean/Array} [sort=false]
+			 * Determines whether to use the table sort function.
+			 */
 			sort: false,
+
+			/**
+			 * @cfg {Boolean} [sortLoading=false]
+			 * Determines whether to show the loading screen when sorting a table.
+			 */
 			sortLoading: false,
+
+			/**
+			 * @cfg {Boolean} [sortCache=false]
+			 * Configures settings to ensure that the sort state can be maintained even when the table is updated.
+			 */
 			sortCache: false,
+
+			/**
+			 * @cfg {Integer} [sortIndex=null]
+			 * Determines whether to use the table sort function.
+			 */
 			sortIndex: null,
+
+			/**
+			 * @cfg {String} [sortOrder="asc"]
+			 * Determines whether to use the table sort function.
+			 */
 			sortOrder: "asc",
+
+			/**
+			 * @cfg {Boolean} [sortEvent=true]
+			 * Determines whether to use the sort function when you click on a column.
+			 */
 			sortEvent: true,
+
 			animate: false // @Deprecated
         }
     }
+
+	/**
+	 * @event select
+	 * Event that occurs when a row is selected (@Deprecated)
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event click
+	 * Event that occurs when a row is clicked
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event dblclick
+	 * Event that occurs when a row is double clicked
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event sort
+	 * Event that occurs when the table is sorted.
+	 *
+	 * @param {ColumnObject) column
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event scroll
+	 * Event that occurs when the scroll of a table is located at the lowermost position.
+	 *
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event rowmenu
+	 * Event that occurs when a row is right clicked.
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event colclick
+	 * Event that occurs when a column is clicked.
+	 *
+	 * @param {ColumnObject) column
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event colshow
+	 * Event that occurs when shown column is selected.
+	 *
+	 * @param {ColumnObject) column
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event colhide
+	 * Event that occurs when hidden column is selected.
+	 *
+	 * @param {ColumnObject) column
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event colresize
+	 * Event that occurs when the column resizing is activated.
+	 *
+	 * @param {ColumnObject) column
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event expand
+	 * Event that occurs when the extended row area is enabled.
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
+
+	/**
+	 * @event expandend
+	 * Event that occurs when the extended row area is disabled.
+	 *
+	 * @param {RowObject) row
+	 * @param {EventObject} e The event object
+	 */
 
 	return UI;
 });
@@ -22901,236 +23461,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
 	return DonutBrush;
 }, "chart.brush.pie");
-
-jui.define("chart.brush.clock", [ "util.math" ], function(math) {
-
-    /**
-     * @class chart.brush.clock 
-     * 
-     * implements clock brush 
-     *  
-     * @extends chart.brush.core  
-     * 
-     */
-	var ClockBrush = function() {
-        var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
-
-        /**
-         * @method drawInnerCircle 
-         *
-         * 내부 원 그리기 
-         *  
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element 
-         */
-        this.drawInnerCircle = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : 10
-            });
-            
-        }
-        
-        /**
-         * @method drawInnerCircle2
-         *
-         * 내부 원 그리기 2
-         *
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element
-         */        
-        this.drawInnerCircle2 = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : 5,
-                fill : 'white'
-            });
-            
-        }
-
-        /**
-         * @method drawOuterCircle
-         *
-         * 바깥 원 그리기
-         *
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element
-         */        
-        this.drawOuterCircle = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : w-10,
-                fill : 'transparent',
-                stroke : 'black',
-                "stroke-width" : 5
-            });
-        }
-        
-        
-        this.drawSecond = function(w, centerX, centerY, hour, minute, second, millis) {
-
-            var rate = 360 / 60; 
-            var milliRate = rate / 1000;
-
-            var radian = math.radian(rate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-20), radian );
-            
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black'
-                
-            });
-        }
-        
-        this.drawMinute = function(w, centerX, centerY, hour, minute, second, millis) {
-            var g = this.chart.svg.group().translate(centerX, centerY);
-            var rate = 360 / 60;
-            var secondRate = rate / 60;
-            var milliRate = secondRate / 1000;
-
-            var radian = math.radian(rate * minute + secondRate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-40), radian );
-
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black',
-                "stroke-width" : 5
-            });
-
-        }
-        
-        this.drawHour = function(w, centerX, centerY, hour, minute, second, millis) {
-            var rate = 360 / 12;
-            var minuteRate = rate / 60;
-            var secondRate = minuteRate / 60;
-            var milliRate = secondRate / 1000;
-
-            var radian = math.radian(rate * hour + minuteRate * minute + secondRate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-50), radian );
-
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black',
-                "stroke-width" : 7
-
-            });
-        }
-
-        this.drawLine = function(w, centerX, centerY) {
-
-            var g = this.chart.svg.group().translate(centerX, centerY);
-
-            var hourRate = 360 / 12;
-            var minuteRate = hourRate / 5;
-
-            for (var i = 1; i <= 12; i++) {
-                var radian = math.radian(hourRate * i);
-                var outer = math.rotate(0, -(w-10), radian);
-                var inner = math.rotate(0, -(w-20), radian);
-                var text = math.rotate(0, -(w-30), radian);
-
-                var line = this.chart.svg.line({
-                    x1 : outer.x,
-                    y1 : outer.y,
-                    x2 : inner.x,
-                    y2 : inner.y,
-                    stroke : 'black',
-                    "stroke-width" :  2
-                });
-
-                g.append(line);
-                var minRadian = math.radian(hourRate * (i-1));
-                for(var j = 1; j <= 4; j++) {
-                    var radian = minRadian + math.radian(minuteRate * j);
-                    var outer = math.rotate(0, -(w-10), radian);
-                    var inner = math.rotate(0, -(w-15), radian);
-
-                    var line = this.chart.svg.line({
-                        x1 : outer.x,
-                        y1 : outer.y,
-                        x2 : inner.x,
-                        y2 : inner.y,
-                        stroke : 'black',
-                        "stroke-width" :  2
-                    });
-
-                    g.append(line);
-
-                }
-
-                g.append(this.chart.text({
-                    x : text.x,
-                    y : text.y + 6,
-                    'text-anchor' : 'middle',
-                    stroke : 'black'
-                }, i));
-
-            }
-            
-            return g;
-            
-        }
-        
-		this.drawUnit = function(index, data, group) {
-            var obj = this.axis.c(index),
-                width = obj.width,
-                height = obj.height,
-                x = obj.x,
-                y = obj.y;
-
-            // center
-            w = Math.min(width, height) / 2;
-            centerX = width / 2 + x;
-            centerY = height / 2 + y;
-            
-            var date = new Date(),
-                hour = this.getValue(data, "hour", date.getHours()),
-                minute = this.getValue(data, "minute", date.getMinutes()),
-                second = this.getValue(data, "second", date.getSeconds()),
-                millis = date.getMilliseconds();
-
-            group.append(this.drawOuterCircle(w, centerX, centerY));
-            group.append(this.drawInnerCircle(w, centerX, centerY));
-            group.append(this.drawLine(w, centerX, centerY));
-            group.append(this.drawSecond(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawMinute(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawHour(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawInnerCircle2(w, centerX, centerY));
-            
-            return group; 
-		}
-
-        this.draw = function() {
-            var group = this.chart.svg.group();
-
-            this.eachData(function(i, data) {
-                this.drawUnit(i, data, group);
-            });
-
-            return group;
-        }
-	}
-
-	return ClockBrush;
-}, "chart.brush.core");
 
 jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
