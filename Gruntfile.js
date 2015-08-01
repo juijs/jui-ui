@@ -264,7 +264,7 @@ module.exports = function(grunt) {
             dist : "js/chart/icon/jennifer.js"
         },
         pattern : {
-            src : "img/pattern/*.png",
+            src : "dist/img/pattern/*.png",
             dist : "js/chart/pattern/jennifer.js"
         },
         pkg: grunt.file.readJSON("package.json")
