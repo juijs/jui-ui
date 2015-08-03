@@ -7423,6 +7423,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	pieBorderColor : "#ececec",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -7636,6 +7637,7 @@ jui.define("chart.theme.gradient", [], function() {
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -7848,6 +7850,7 @@ jui.define("chart.theme.dark", [], function() {
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#868686",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -8057,6 +8060,7 @@ jui.define("chart.theme.pastel", [], function() {
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : 11,
+		pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -8265,6 +8269,7 @@ jui.define("chart.theme.pattern", [], function() {
         bargaugeFontColor : "#333333",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -14700,6 +14705,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
                 c.text({
                     "font-size": c.theme("pieOuterFontSize"),
+                    fill: c.theme("pieOuterFontColor"),
                     "text-anchor": (isLeft) ? "end" : "start",
                     y: textY
                 }, text).translate(ex + (isLeft ? -3 : 3), ty);
