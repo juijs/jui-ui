@@ -5,10 +5,11 @@
 <META charset="UTF-8">
 <title>[JUI Library] - Support AMD Module</title>
 
-<link rel="stylesheet" href="../jui.css" />
+<link rel="stylesheet" href="../dist/jui.css" />
+<link rel="stylesheet" href="../dist/jennifer.theme.css" />
 <script src="../lib/require.js"></script>
 <script src="../lib/jquery-1.8.0.min.js"></script>
-<script src="../jui.js"></script>
+<script src="../dist/jui.js"></script>
 <script>
 $(function() {
   require(["ui.button"], function( Button) {
@@ -27,8 +28,8 @@ $(function() {
 </head>
 <body class="jui">
 <div id="btn_radio_1" class="group">
-  <a class="btn btn-small btn-gray-purple" value="true">On</a>
-  <a class="btn btn-small btn-gray-purple" value="false">Off</a>
+  <a class="btn small" value="true">On</a>
+  <a class="btn small" value="false">Off</a>
 </div>
 </body>
 </html>
