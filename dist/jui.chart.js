@@ -14869,6 +14869,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
 			attr['stroke-width']= outerRadius - innerRadius;
 
+            if (endAngle >= 360) { // bugfix : if angle is 360 , donut cang't show
+                endAngle = 359.9999;
+            }
+
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
 				dist = Math.abs(outerRadius - innerRadius);
