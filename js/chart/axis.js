@@ -518,6 +518,18 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     Axis.setup = function() {
 
+        /** @property {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
+        /** @property {chart.grid.core} [y=null] Sets a grid on the Y axis (see the grid tab). */
+        /** @property {chart.grid.core} [c=null] Sets a custom grid (see the grid tab). */
+        /** @property {chart.map} [map=null] Sets a chart map. */
+        /** @property {Array} [data=[]] Sets the row set data which constitute a chart. */
+        /** @property {Integer} [buffer=10000] Limits the number of elements shown on a chart. */
+        /** @property {Integer} [shift=1] Data shift count for the 'prev' or 'next' method of the chart builder. */
+        /** @property {Array} [origin=[]] [For read only] Original data initially set. */
+        /** @property {Integer} [page=1] [For read only] Page number of the data currently drawn. */
+        /** @property {Integer} [start=0] [For read only] Start index of the data currently drawn. */
+        /** @property {Integer} [end=0] [For read only] End index of the data currently drawn. */
+
         return {
             /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
             extend: null,

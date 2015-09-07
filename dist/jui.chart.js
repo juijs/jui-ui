@@ -442,7 +442,7 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			webkit: ('WebkitAppearance' in document.documentElement.style) ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
@@ -5645,6 +5645,18 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
     Axis.setup = function() {
 
+        /** @property {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
+        /** @property {chart.grid.core} [y=null] Sets a grid on the Y axis (see the grid tab). */
+        /** @property {chart.grid.core} [c=null] Sets a custom grid (see the grid tab). */
+        /** @property {chart.map} [map=null] Sets a chart map. */
+        /** @property {Array} [data=[]] Sets the row set data which constitute a chart. */
+        /** @property {Integer} [buffer=10000] Limits the number of elements shown on a chart. */
+        /** @property {Integer} [shift=1] Data shift count for the 'prev' or 'next' method of the chart builder. */
+        /** @property {Array} [origin=[]] [For read only] Original data initially set. */
+        /** @property {Integer} [page=1] [For read only] Page number of the data currently drawn. */
+        /** @property {Integer} [start=0] [For read only] Start index of the data currently drawn. */
+        /** @property {Integer} [end=0] [For read only] End index of the data currently drawn. */
+
         return {
             /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
             extend: null,
@@ -6114,10 +6126,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
-    /**
-     * Common Logic
-     *
-     */
     var win_width = 0;
 
     _.resize(function() {
@@ -6162,18 +6170,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
-        /**
-         * @method caculate
-         * 
-         * caculate chart's default area
-         *
-         * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
-         *
-         * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐
-         *
-         * @param {chart.builder} self
-         * @private  
-         */
         function calculate(self) {
             var max = self.svg.size();
 
@@ -6195,14 +6191,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _area = _chart;
         }
 
-        /**
-         * @method drawBefore 
-         * 
-         * option copy (brush, widget)
-         *  
-         * @param {chart.builder} self
-         * @private  
-         */
         function drawBefore(self) {
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -6214,12 +6202,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _hash = {};
         }
 
-        /**
-         * @method drawAxis 
-         * implements axis draw 
-         * @param {chart.builder} self 
-         * @private
-         */
         function drawAxis(self) {
             
             // 엑시스 리스트 얻어오기
@@ -6239,13 +6221,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method drawBrush
-         * brush 그리기
-         *
-         * brush 에 맞는 x, y 축(grid) 설정
-         * @private
-         */
         function drawBrush(self) {
             var draws = _brush;
 
@@ -6287,14 +6262,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method drawWidget 
-         * implements widget draw 
-         *  
-         * @param {chart.builder} self
-         * @param {Boolean} isAll  Whether redraw widget
-         * @private  
-         */
         function drawWidget(self, isAll) {
             var draws = _widget;
 
@@ -6328,12 +6295,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method setChartEvent
-         * define chart custom event
-         * @param {chart.builder} self
-         * @private
-         */
         function setChartEvent(self) {
             var elem = self.svg.root,
                 isMouseOver = false;
@@ -7040,11 +7001,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _defs.append(elem);
         }
 
-        /*
-         * Brush & Widget 관련 메소드
-         *
-         */
-
         /**
          * @method addBrush 
          * 
@@ -7173,11 +7129,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     UI.setup = function() {
         return {
-            
             /** @cfg  {String/Number} [width="100%"] chart width */ 
-            width: "100%", // chart 기본 넓이
+            width: "100%",
             /** @cfg  {String/Number} [height="100%"] chart height */
-            height: "100%", // chart 기본 높이
+            height: "100%",
             /** 
              * @cfg  {Object} padding chart padding 
              * @cfg  {Number} [padding.top=50] chart padding 
@@ -7223,115 +7178,175 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     }
 
     /**
-     * @event bg_click
-     * Real name ``` bg.click ```
-     * Event that occurs when clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
      */
 
     /**
      * @event chart_click
-     * Real name ``` chart.click ```
-     * Event that occurs when clicking on the chart area.
+     * Event that occurs when clicking on the chart area. (real name ``` chart.click ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event bg_rclick
-     * Real name ``` bg.rclick ```
-     * Event that occurs when right clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_rclick
-     * Real name ``` chart.rclick ```
-     * Event that occurs when right clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_dblclick
-     * Real name ``` bg.dblclick ```
-     * Event that occurs when clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_dblclick
-     * Real name ``` chart.dblclick ```
-     * Event that occurs when double clicking on the chart area.
+     * Event that occurs when double clicking on the chart area. (real name ``` chart.dblclick ```)
      * @param {jQueryEvent} e The event object.
      */
-
     /**
-     * @event bg_mousemove
-     * Real name ``` bg.mousemove```
-     * Event that occurs when moving the mouse over a chart margin.
+     * @event chart_rclick
+     * Event that occurs when right clicking on the chart area. (real name ``` chart.rclick ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event chart_mousemove
-     * Real name ``` chart.mousemove ```
-     * Event that occurs when moving the mouse over the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mousedown
-     * Real name ``` bg.mousedown ```
-     * Event that occurs when left clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_mousedown
-     * Real name ``` chart.mousedown ```
-     * Event that occurs when left clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mouseup
-     * Real name ``` bg.mouseup ```
-     * Event that occurs after left clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_mouseup
-     * Real name ``` chart.mouseup ```
-     * Event that occurs after left clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mouseover
-     * Real name ``` bg.mouseover ```
-     * Event that occurs when placing the mouse over a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_mouseover
-     * Real name ``` chart.mouseover ```
-     * Event that occurs when placing the mouse over the chart area.
+     * Event that occurs when placing the mouse over the chart area. (real name ``` chart.mouseover ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event bg_mouseout
-     * Real name ``` bg.mouseout ```
-     * Event that occurs when moving the mouse out of a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_mouseout
-     * Real name ``` chart.mouseout ```
-     * Event that occurs when placing the mouse over the chart area.
+     * Event that occurs when moving the mouse out of the chart area. (real name ``` chart.mouseout ```)
      * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mousemove
+     * Event that occurs when moving the mouse over the chart area. (real name ``` chart.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mousedown
+     * Event that occurs when left clicking on the chart area. (real name ``` chart.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mouseup
+     * Event that occurs after left clicking on the chart area. (real name ``` chart.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_click
+     * Event that occurs when clicking on the chart margin. (real name ``` bg.click ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_dblclick
+     * Event that occurs when double clicking on the chart margin. (real name ``` bg.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_rclick
+     * Event that occurs when right clicking on the chart margin. (real name ``` bg.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseover
+     * Event that occurs when placing the mouse over the chart margin. (real name ``` bg.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseout
+     * Event that occurs when moving the mouse out of the chart margin. (real name ``` bg.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mousemove
+     * Event that occurs when moving the mouse over the chart margin. (real name ``` bg.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mousedown
+     * Event that occurs when left clicking on the chart margin. (real name ``` bg.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseup
+     * Event that occurs after left clicking on the chart margin. (real name ``` bg.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event axis_click
+     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_dblclick
+     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_rclick
+     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseover
+     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseout
+     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousemove
+     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousedown
+     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseup
+     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
      */
 
     return UI;
