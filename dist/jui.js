@@ -14094,9 +14094,11 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = grid;
+                originAxis[type] = _.deppClone(grid);
+                cloneAxis[type] = _.deppClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
+                _.extend(cloneAxis[type], grid);
             }
 
             if(chart.isRender()) chart.render();
@@ -28775,7 +28777,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
 
                         // Date + Range
                         if(xType == "date" && yType == "range") {
-                            var date = d[axis.get("x").key];
+                            var date = d[axis.get("x").key || axis.x];
 
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueX.getTime() && date.getTime() <= endValueX.getTime()) &&
