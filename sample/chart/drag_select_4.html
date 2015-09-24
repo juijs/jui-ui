@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body >
+
+<div id="sqlscater"></div>
+
+<script id="script_code">
+    jui.ready([ "chart.builder" ], function(builder) {
+        var time = jui.include('util.time');
+
+        var period = 5;
+        var newDate = time.add(new Date(), time.minutes);
+        var end = newDate;
+        var starts = time.add(newDate, time.minutes,-period);
+
+        var chartData = [];
+
+        var chart = builder("#sqlscater", {
+            width : 700,
+            height : 640,
+            axis : {
+                x : {
+                    type : "date",
+                    domain : [starts, end ],
+                    interval : 1, // 단위 시간에 대한 간격 설정
+                    realtime : "minutes", // 단위 시간 설정
+                    format : "hh:mm"
+                },
+                y : {
+                    type : "range",
+                    domain : [ 0, 500 ],
+                    step : 10,
+                    line : true
+                }// data : chartData
+            },
+            brush : [{
+                type : "scatterpath",
+                target : ["a"],
+                size : 5
+            },
+                {
+                    type : "scatterpath",
+                    target : ["b"],
+                    size : 5
+                },
+                {
+                    type : "scatterpath",
+                    target : ["c"],
+                    colors : [ 2 ],
+                    size : 5,
+                    clip : true
+                }],
+            widget : [
+                {
+                    type : "title",
+                    text : "sample drag"
+                },
+                {
+                    type : "dragselect",
+                    dataType : "data", // or "area",
+                    brush : [0]
+
+                },
+                { type : "legend",filter:true }
+            ],
+            event : {
+                "dragselect.end": function(data) {
+                    console.log(arguments);
+                },
+                "click": function(data) {
+                    console.log("click ==>");
+                    console.log(data);
+                }
+            }
+        });
+
+        setInterval(function() {
+
+            newDate.setTime(newDate.getTime() + 1 * 1000)
+
+            var second = time.add(newDate, time.minutes);
+            var end = newDate;
+            var starts = time.add(newDate, time.minutes,-period);
+
+            chart.axis(0).updateGrid("x", {
+                domain : [starts, end ],
+                key: "time",
+                line : true
+            });
+
+            chart.axis(0).update(chartData);
+
+            getData();
+
+        }, 1000);
+
+        var getData = function(p) {
+            var time = new Date();
+
+            var gridObject = {
+                time : time,
+                a : parseInt(Math.random() * 500),
+                b : -1,
+                c : -1,
+            };
+
+            var gridObject1 = {
+                time : time,
+                a : -1,
+                b : parseInt(Math.random() * 500),
+                c : -1
+            };
+
+            var gridObject2 = {
+                time : time,
+                a : -1,
+                b : -1,
+                c : parseInt(Math.random() * 500)
+            };
+            chartData.push(gridObject);
+            chartData.push(gridObject1);
+            chartData.push(gridObject2);
+
+        };//end getData
+
+    });
+</script>
+
+</body>
+</html>
