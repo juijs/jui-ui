@@ -19047,6 +19047,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 max_height = 0,
                 brushes = getIndexArray(widget.brush);
 
+            var total_widthes = [];
+
             for(var i = 0; i < brushes.length; i++) {
                 var index = brushes[i];
 
@@ -19061,8 +19063,17 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     arr[k].icon.translate(x, y);
 
                     if (widget.orient == "bottom" || widget.orient == "top") {
-                        x += arr[k].width;
-                        total_width += arr[k].width;
+
+                        if (x + arr[k].width > chart.area('x2')) {
+                            x = 0;
+                            y += arr[k].height;
+                            max_height += arr[k].height;
+                            total_widthes.push(total_width);
+                            total_width = 0; 
+                        } else {
+                            x += arr[k].width;
+                            total_width += arr[k].width;
+                        }
 
                         if (max_height < arr[k].height) {
                             max_height = arr[k].height;
@@ -19076,6 +19087,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }
+                
+                if (total_width > 0) {
+                    total_widthes.push(total_width);
+                }
+                
+                total_width  = Math.max.apply(Math, total_widthes);
 
                 setLegendStatus(brush);
             }
@@ -20229,7 +20246,7 @@ jui.define("chart.widget.dragselect", [ "util.base" ], function(_) {
 
                         // Date + Range
                         if(xType == "date" && yType == "range") {
-                            var date = d[axis.get("x").key || axis.x];
+                            var date = d[axis.get("x").key];
 
                             if(_.typeCheck("date", date)) {
                                 if( (date.getTime() >= startValueX.getTime() && date.getTime() <= endValueX.getTime()) &&
