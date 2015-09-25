@@ -14094,9 +14094,11 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = grid;
+                originAxis[type] = _.deppClone(grid);
+                cloneAxis[type] = _.deppClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
+                _.extend(cloneAxis[type], grid);
             }
 
             if(chart.isRender()) chart.render();
@@ -27593,6 +27595,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 max_height = 0,
                 brushes = getIndexArray(widget.brush);
 
+            var total_widthes = [];
+
             for(var i = 0; i < brushes.length; i++) {
                 var index = brushes[i];
 
@@ -27607,8 +27611,17 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     arr[k].icon.translate(x, y);
 
                     if (widget.orient == "bottom" || widget.orient == "top") {
-                        x += arr[k].width;
-                        total_width += arr[k].width;
+
+                        if (x + arr[k].width > chart.area('x2')) {
+                            x = 0;
+                            y += arr[k].height;
+                            max_height += arr[k].height;
+                            total_widthes.push(total_width);
+                            total_width = 0; 
+                        } else {
+                            x += arr[k].width;
+                            total_width += arr[k].width;
+                        }
 
                         if (max_height < arr[k].height) {
                             max_height = arr[k].height;
@@ -27622,6 +27635,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }
+                
+                if (total_width > 0) {
+                    total_widthes.push(total_width);
+                }
+                
+                total_width  = Math.max.apply(Math, total_widthes);
 
                 setLegendStatus(brush);
             }
