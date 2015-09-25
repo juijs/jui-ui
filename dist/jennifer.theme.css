@@ -63,6 +63,22 @@
   -moz-box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
   box-shadow: inset 0 2px 5px -2px rgba(0,0,0,0.1), inset 0 -2px 5px -2px rgba(0,0,0,0.1);
 }
+.jui .accordion.simple > .title {
+  background-color: #fafafa;
+}
+.jui .accordion.simple > .title:hover:not(.active) {
+  background-color: #f5f5f5;
+}
+.jui .accordion.simple > .title.active {
+  background-color: #ffffff;
+  background-image: none;
+  cursor: default;
+}
+.jui .accordion.simple.accordion-white {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
 .jui .dropup ul,
 .jui .dropdown ul {
   background-color: #ffffff;
@@ -171,11 +187,9 @@
   border: 1px solid #cdcdcd;
   background: #ffffff;
 }
-.jui .datepicker > .head > .prev {
-  border-color: transparent #dcdcdc transparent transparent;
-}
-.jui .datepicker > .head > .next {
-  border-color: transparent transparent transparent #dcdcdc;
+.jui .datepicker > .head > .prev,
+.jui .datepicker > .head .next {
+  color: #dcdcdc;
 }
 .jui .datepicker > .head > .title {
   color: #333333;
@@ -212,11 +226,9 @@
 .jui .calendar > .head {
   border-bottom-color: #ebebeb;
 }
-.jui .calendar > .head > .prev {
-  border-color: transparent #dcdcdc transparent transparent;
-}
-.jui .calendar > .head > .next {
-  border-color: transparent transparent transparent #dcdcdc;
+.jui .calendar > .head > .prev,
+.jui .calendar > .head .next {
+  color: #dcdcdc;
 }
 .jui .calendar > .head > .title {
   color: #333333;
@@ -261,10 +273,22 @@
   cursor: default;
 }
 .jui .paging > .prev {
-  background-image: url("img/paging-list.png");
+  background-image: url("img/theme/jennifer/paging-list.png");
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
 }
 .jui .paging > .next {
-  background-image: url("img/paging-list.png");
+  background-image: url("img/theme/jennifer/paging-list.png");
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
 }
 .jui .navbar {
   border: 1px solid #c9c9c9;
@@ -311,6 +335,9 @@
   -webkit-box-shadow: 0 !important;
   -moz-box-shadow: 0 !important;
   box-shadow: 0 !important;
+}
+.jui .navbar.flat span {
+  color: #777777;
 }
 .jui .navbar.flat .line {
   background-color: #dcdcdc;
@@ -380,26 +407,26 @@
 .jui .pill.pill.top li.active > .anchor {
   position: absolute;
   left: 50%;
-  margin-left: -10px;
+  margin-left: -11px;
   width: 0;
   height: 0;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-bottom: 10px solid #e2e2e2;
+  border-right: 11px solid transparent;
+  border-left: 11px solid transparent;
+  border-bottom: 11px solid #e2e2e2;
 }
 .jui .pill.pill.top li.active > .anchor:after {
   position: absolute;
   left: 50%;
-  margin-left: -9px;
+  margin-left: -10px;
   width: 0;
   height: 0;
   content: "";
 }
 .jui .pill.pill.top li.active > .anchor:after {
   top: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-bottom: 9px solid #ffffff;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-bottom: 10px solid #ffffff;
 }
 .jui .pill.pill.bottom {
   border-top: 1px solid #e2e2e2;
@@ -407,27 +434,27 @@
 .jui .pill.pill.bottom li.active > .anchor {
   position: absolute;
   left: 50%;
-  margin-left: -10px;
+  margin-left: -11px;
   width: 0;
   height: 0;
-  top: -10px;
-  border-right: 10px solid transparent;
-  border-left: 10px solid transparent;
-  border-top: 10px solid #e2e2e2;
+  top: -11px;
+  border-right: 11px solid transparent;
+  border-left: 11px solid transparent;
+  border-top: 11px solid #e2e2e2;
 }
 .jui .pill.pill.bottom li.active > .anchor:after {
   position: absolute;
   left: 50%;
-  margin-left: -9px;
+  margin-left: -10px;
   width: 0;
   height: 0;
   content: "";
 }
 .jui .pill.pill.bottom li.active > .anchor:after {
   bottom: 2px;
-  border-right: 9px solid transparent;
-  border-left: 9px solid transparent;
-  border-top: 9px solid #ffffff;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-top: 10px solid #ffffff;
 }
 .jui .pill li.active [class^="icon-"],
 .jui .pill li.checked [class^="icon-"],
@@ -453,7 +480,7 @@
   background-position: -13px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow-file li.fold > i {
   width: 15px;
@@ -462,7 +489,7 @@
   background-position: 0px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow-file li.leaf > i {
   width: 15px;
@@ -471,10 +498,10 @@
   background-position: 0 0;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line-file li {
-  background: url("img/tree-line.gif") 0 0 no-repeat;
+  background: url("img/theme/jennifer/tree-line.gif") 0 0 no-repeat;
 }
 .jui ul.tree.line-file li.open > i {
   width: 16px;
@@ -483,7 +510,7 @@
   background-position: 0px -111px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line-file li.open.root > i {
   width: 16px;
@@ -492,7 +519,7 @@
   background-position: -16px -89px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line-file li.fold > i {
   width: 16px;
@@ -501,7 +528,7 @@
   background-position: -32px -67px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line-file li.fold.root > i {
   width: 16px;
@@ -510,7 +537,7 @@
   background-position: -48px -45px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow li.open > i {
   width: 15px;
@@ -519,7 +546,7 @@
   background-position: -13px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow li.fold > i {
   width: 15px;
@@ -528,7 +555,7 @@
   background-position: 0px -130px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow li.leaf > i {
   width: 15px;
@@ -537,10 +564,10 @@
   background-position: 0 0;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line li {
-  background: url("img/tree-line.gif") 0 0 no-repeat;
+  background: url("img/theme/jennifer/tree-line.gif") 0 0 no-repeat;
 }
 .jui ul.tree.line li.open > i {
   width: 16px;
@@ -549,7 +576,7 @@
   background-position: 0px -111px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line li.open.root > i {
   width: 16px;
@@ -558,7 +585,7 @@
   background-position: -16px -89px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line li.fold > i {
   width: 16px;
@@ -567,7 +594,7 @@
   background-position: -32px -67px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.line li.fold.root > i {
   width: 16px;
@@ -576,7 +603,7 @@
   background-position: -48px -45px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow-file li.open > a > i,
 .jui ul.tree.line-file li.open > a > i,
@@ -590,7 +617,7 @@
   background-position: -17px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow-file li.fold > a > i,
 .jui ul.tree.line-file li.fold > a > i,
@@ -604,7 +631,7 @@
   background-position: 0px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui ul.tree.arrow-file li.leaf > a > i,
 .jui ul.tree.line-file li.leaf > a > i,
@@ -618,7 +645,7 @@
   background-position: -36px -165px;
   display: inline-block;
   background-repeat: no-repeat;
-  background-image: url("img/tree-list.png");
+  background-image: url("img/theme/jennifer/tree-list.png");
 }
 .jui .panel {
   color: #333333;
@@ -1318,6 +1345,7 @@
   color: #ffffff;
   border-left: 1px solid #7e798c;
   border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
   background-color: #6d687e;
   background-image: -moz-linear-gradient(top, #6d687e 0%, #49435b 100%);
   background-image: linear-gradient(top, #6d687e 0%, #49435b 100%);
@@ -1327,6 +1355,9 @@
 }
 .jui .table.classic > thead th:first-child {
   border-left: 1px solid #4e4765;
+}
+.jui .table.classic > thead th:last-child {
+  border-right: 1px solid #4e4765;
 }
 .jui .table.classic > tbody > tr {
   background: #fafafa;
@@ -1410,6 +1441,7 @@
   color: #ffffff;
   border-left: 1px solid #7e798c;
   border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
   background-color: #6d687e;
   background-image: -moz-linear-gradient(top, #6d687e 0%, #49435b 100%);
   background-image: linear-gradient(top, #6d687e 0%, #49435b 100%);
@@ -1419,6 +1451,9 @@
 }
 .jui .table.expand > thead th:first-child {
   border-left: 1px solid #4e4765;
+}
+.jui .table.expand > thead th:last-child {
+  border-right: 1px solid #4e4765;
 }
 .jui .table.expand > tbody > tr {
   background: #fafafa;
@@ -1661,7 +1696,7 @@
   border: 1px solid #737373;
 }
 .jui .xtable > .loading {
-  background-image: url("img/xtable-loading.gif");
+  background-image: url("img/theme/jennifer/xtable-loading.gif");
 }
 .jui .combo > ul {
   background-color: #ffffff;

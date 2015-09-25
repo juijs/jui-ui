@@ -16,10 +16,15 @@ table.table {
       color: @tableClassicColumnFontColor;
       border-left: 1px solid @tableClassicColumnBorderColor1;
       border-right: 1px solid @tableClassicColumnBorderColor2;
+      border-top: 1px solid @tableClassicColumnBorderColor3;
       .btn-bgcolor-2(@tableClassicColumnBackgroundColor1, @tableClassicColumnBackgroundColor2);
 
       &:first-child {
-        border-left: 1px solid @tableClassicColumnBorderColor2;
+        border-left: 1px solid @tableClassicColumnBorderColor3;
+      }
+
+      &:last-child {
+        border-right: 1px solid @tableClassicColumnBorderColor3;
       }
     }
   }

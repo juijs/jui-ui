@@ -19,9 +19,13 @@
 
   > .prev {
 	background-image: url(@pagingListImageUrl);
+	.border-top-left-radius(@pagingBorderRadius);
+	.border-bottom-left-radius(@pagingBorderRadius);
   }
 
   > .next {
 	background-image: url(@pagingListImageUrl);
+	.border-top-right-radius(@pagingBorderRadius);
+	.border-bottom-right-radius(@pagingBorderRadius);
   }
 }
