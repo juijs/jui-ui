@@ -442,7 +442,7 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			webkit: ('WebkitAppearance' in document.documentElement.style) ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},

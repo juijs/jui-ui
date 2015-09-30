@@ -142,6 +142,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
                 c.text({
                     "font-size": c.theme("pieOuterFontSize"),
+                    fill: c.theme("pieOuterFontColor"),
                     "text-anchor": (isLeft) ? "end" : "start",
                     y: textY
                 }, text).translate(ex + (isLeft ? -3 : 3), ty);

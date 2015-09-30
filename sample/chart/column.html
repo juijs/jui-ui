@@ -121,7 +121,7 @@
         });
         /**/
 
-        c2 = chart("#chart,#chart2", {
+        c2 = chart("#chart", {
             width: "100%",
             height : 400,
             axis : {
@@ -144,8 +144,13 @@
             {
                 type : 'column',
                 display : "max",
+                target : "value",
                 active : 2,
-                activeEvent : "click"
+                activeEvent : "click",
+                colors : function() {
+                    console.log('color');
+                    return "";
+                }
             }],
             widget : {
                 type: "tooltip"
@@ -158,11 +163,12 @@
             }
         });
 
-        c2[0].get("axis", 0).update(data);
-        c2[0].render();
+        c2.get("axis", 0).update(data);
+        c2.render();
 
+        /*
         c2[1].get("axis", 0).update(data);
-        c2[1].render();
+        c2[1].render(); */
 
         table = table("#table", {
             fields: [ "min", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],

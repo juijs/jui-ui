@@ -1,35 +1,38 @@
 jui.define("uix.tree.node", [ "jquery" ], function($) {
+
     /**
      * @class uix.tree.node
      * implements Tree's Node
-     * @extends core
      * @alias TreeNode
      * @requires jquery
-     *
      */
     var Node = function(data, tplFunc) {
         var self = this;
 
-        /**
-         * Public Properties
-         *
-         */
-        this.data = data;			// 해당 노드의 데이터
-        this.element = null;		// 해당 노드의 엘리먼트
-        this.index = null;			// 계층적 구조를 수용할 수 있는 키값
-        this.nodenum = null;		// 현재 뎁스에서의 인덱스 키값
+        /** @property {Array} [data=null] Data of a specifiednode */
+        this.data = data;
 
-        this.parent = null;			// 부모 노드
-        this.children = [];		// 자식 노드들
-        this.depth = 0;				// 해당 노드의 뎁스
+        /** @property {HTMLElement} [element=null] LI element of a specified node */
+        this.element = null;
 
+        /** @property {Integer} [index=null] Index of a specified node */
+        this.index = null;
+
+        /** @property {Integer} [nodenum=null] Unique number of a specifiede node at the current depth */
+        this.nodenum = null;
+
+        /** @property {uix.tree.node} [parent=null] Variable that refers to the parent of the current node */
+        this.parent = null;
+
+        /** @property {Array} [children=null] List of child nodes of a specified node */
+        this.children = [];
+
+        /** @property {Integer} [depth=0] Depth of a specified node */
+        this.depth = 0;
+
+        /** @property {String} [type='open'] State value that indicates whether a child node is shown or hidden */
         this.type = "open";
 
-
-        /**
-         * Private Methods
-         *
-         */
         function setIndex(nodenum) {
             self.nodenum = (!isNaN(nodenum)) ? nodenum : self.nodenum;
 
@@ -100,11 +103,6 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
             }
         }
 
-
-        /**
-         * Public Methods
-         *
-         */
         this.reload = function(nodenum, isUpdate) {
             setIndex(nodenum); // 노드 인덱스 설정
 
@@ -211,16 +209,7 @@ jui.define("uix.tree.node", [ "jquery" ], function($) {
 
 
 jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function($, _, Node) {
-    /**
-     * @class uix.tree.base
-     * implements Tree Base
-     * @extends core
-     * @alias TreeBase
-     * @requires jquery
-     * @requires util.base
-     * @requires uix.tree.node
-     *
-     */
+
     var Base = function(handler) {
         var self = this, root = null;
 
@@ -229,10 +218,7 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
 
         var iParser = _.index();
 
-        /**
-         * Private Methods
-         *
-         */
+
         function createNode(data, no, pNode) {
             var node = new Node(data, $tpl.node);
 
@@ -325,10 +311,6 @@ jui.define("uix.tree.base", [ "jquery", "util.base", "uix.tree.node" ], function
         }
 
 
-        /**
-         * Public Methods
-         *
-         */
         this.appendNode = function() {
             var index = arguments[0], data = arguments[1];
 
@@ -498,11 +480,8 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 		var dragIndex = { start: null, end: null },
             nodeIndex = null,
 			iParser = _.index();
-		
-		/**
-		 * Private Methods
-		 * 
-		 */
+
+
 		function setNodeStatus(self, nodeList) {
 			for(var i = 0; i < nodeList.length; i++) {
 				var node = nodeList[i];
@@ -721,13 +700,8 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 				setEventNodes(self, [ self.uit.getRoot() ]);
 			}
 		}
-		
-		
-		/**
-		 * Public Methods
-		 *
-		 */
-		
+
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -755,7 +729,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 				this.fold();
 			}
 		}
-		
+
+        /**
+         * @method update
+         * Changes to the node at a specified index.
+         *
+         * @param {Integer} index
+         * @param {Array} data
+         */
 		this.update = function(index, data) {
             var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
                 index = (arguments.length == 2) ? arguments[0] : null;
@@ -783,6 +764,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
             reloadUI(this);
 		}
 
+        /**
+         * @method append
+         * Adds to a child node at a specified index.
+         *
+         * @param {Array/String} param1 index or data
+         * @param {Array} param2 null or data
+         */
 		this.append = function() {
 			var dataList = (arguments.length == 1) ? arguments[0] : arguments[1],
 				index = (arguments.length == 2) ? arguments[0] : null;
@@ -796,7 +784,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method insert
+         * Adds a node at a specified index.
+         *
+         * @param {String} index
+         * @param {Array} data
+         */
 		this.insert = function(index, data) {
 			var dataList = (data.length == undefined) ? [ data ] : data;
 			
@@ -806,7 +801,14 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method select
+         * Adds a node at a specified index.
+         *
+         * @param {String} index
+         * @return {NodeObject} node
+         */
 		this.select = function(index) {
 			var node = (index == null) ? this.uit.getRoot() : this.get(index);
 			
@@ -817,6 +819,10 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			return node;
 		}
 
+        /**
+         * @method unselect
+         * Removes the 'active' class from a selected node and gets an instance of the specified node.
+         */
         this.unselect = function() {
             if(nodeIndex == null) return;
             var node = this.get(nodeIndex);
@@ -826,22 +832,45 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
             return node;
         }
-		
+
+        /**
+         * @method remove
+         * Deletes a node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.remove = function(index) {
 			this.uit.removeNode(index);
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method reset
+         * Deletes all child nodes except for a root.
+         */
 		this.reset = function() {
 			this.uit.removeNodes();
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method move
+         * Moves a node at a specified index to the target index.
+         *
+         * @param {String} index
+         * @param {String} targetIndex
+         */
 		this.move = function(index, targetIndex) {
 			this.uit.moveNode(index, targetIndex);
 			reloadUI(this); // 차후에 개선
 		}
-		
+
+        /**
+         * @method open
+         * Shows a child node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.open = function(index, e) { // 로트 제외, 하위 모든 노드 대상
 			if(index == null && this.options.rootHide) return;
 			var isRoot = (index == null);
@@ -851,7 +880,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 			this.emit("open", [ (isRoot) ? this.uit.getRoot() : this.get(index), e ]);
 		}
-		
+
+        /**
+         * @method fold
+         * Folds up a child node at a specified index.
+         *
+         * @param {String} index
+         */
 		this.fold = function(index, e) {
 			if(index == null && this.options.rootHide) return;
 			var isRoot = (index == null);
@@ -861,7 +896,13 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			
 			this.emit("fold", [ (isRoot) ? this.uit.getRoot() : this.get(index), e ]);
 		}
-		
+
+        /**
+         * @method openAll
+         * Shows all child nodes at a specified index.
+         *
+         * @param {String} index
+         */
 		this.openAll = function(index) { // 로트 포함, 하위 모든 노드 대상
 			var self = this,
 				isRoot = (index == null);
@@ -873,6 +914,12 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			this.emit("openall", [ (isRoot) ? this.uit.getRoot() : this.get(index) ]);
 		}
 
+        /**
+         * @method foldAll
+         * Folds up all child nodes at a specified index.
+         *
+         * @param {String} index
+         */
 		this.foldAll = function(index) {
 			var self = this,
 				isRoot = (index == null);
@@ -883,15 +930,34 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
 			this.emit("foldall", [ (isRoot) ? this.uit.getRoot() : this.get(index) ]);
 		}
-		
+
+        /**
+         * @method list
+         * Return all nodes of the root.
+         *
+         * @return {Array} nodes
+         */
 		this.list = function() {
 			return this.uit.getNode();
 		}
 
+        /**
+         * @method listAll
+         * Returns all child nodes.
+         *
+         * @return {Array} nodes
+         */
 		this.listAll = function() {
 			return this.uit.getNodeAll();
 		}
-		
+
+        /**
+         * @method listParent
+         * Returns all parent nodes at a specified index.
+         *
+         * @param {String} index
+         * @return {Array} nodes
+         */
 		this.listParents = function(index) {
 			var node = this.get(index),
 				parents = [];
@@ -913,16 +979,36 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 			return parents.reverse();
 		}
 
+        /**
+         * @method get
+         * Gets a node at a specified index
+         *
+         * @param {String} index
+         * @return {NodeObject} node
+         */
 		this.get = function(index) {
 			if(index == null) return null;
 			return this.uit.getNode(index);
 		}
 
+        /**
+         * @method getAll
+         * Gets all nodes at a specified index including child nodes.
+         *
+         * @param {String} index
+         * @return {Array} nodes
+         */
 		this.getAll = function(index) {
 			if(index == null) return null;
 			return this.uit.getNodeAll(index);
 		}
 
+        /**
+         * @method activeIndex
+         * Gets the index of a node that is activated in an active state.
+         *
+         * @return {Integer} index
+         */
         this.activeIndex = function() {
             return nodeIndex;
         }
@@ -930,13 +1016,77 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 
     UI.setup = function() {
         return {
+            /**
+             * @cfg {NodeObject} [root=null]
+             * Adds a root node (required).
+             */
             root: null,
+
+            /**
+             * @cfg {Boolean} [rootHide=false]
+             * Hides a root node.
+             */
             rootHide: false,
+
+            /**
+             * @cfg {Boolean} [rootFold=false]
+             * Folds up a root node.
+             */
             rootFold: false,
+
+            /**
+             * @cfg {Boolean} [drag=false]
+             * It is possible to drag the movement of a node.
+             */
             drag: false,
+
+            /**
+             * @cfg {Boolean} [dragChild=true]
+             * It is possible to drag the node movement but the node is not changed to a child node of the target node.
+             */
             dragChild: true
         }
     }
+
+    /**
+     * @event select
+     * Event that occurs when a node is selected
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event open
+     * Event that occurs when a node is shown
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event fold
+     * Event that occurs when a node is hidden
+     *
+     * @param {NodeObject) node
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragstart
+     * Event that occurs when a node starts to move
+     *
+     * @param {Integer) index Node's index
+     * @param {EventObject} e The event object
+     */
+
+    /**
+     * @event dragend
+     * Event that occurs when the movement of a node is completed
+     *
+     * @param {Integer) index Node's index
+     * @param {EventObject} e The event object
+     */
 	
 	return UI;
 });

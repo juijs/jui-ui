@@ -146,16 +146,20 @@ jui.define("util.svg.element", [], function() {
             return this;
         }
 
-        this.html = function(html) {
+        this.html = function(html) { // @deprecated
             this.element.innerHTML = html;
 
             return this;
         }
 
         this.text = function(text) {
-            this.element.innerHTML = "";
-            this.element.appendChild(document.createTextNode(text));
+            var children = this.element.childNodes;
 
+            for(var i = 0; i < children.length; i++) {
+                this.element.removeChild(children[i]);
+            }
+
+            this.element.appendChild(document.createTextNode(text));
             return this;
         }
 

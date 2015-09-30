@@ -37,6 +37,7 @@ jui.define("chart.theme.pastel", [], function() {
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
 		gridPatternColor : "#ababab",
 		gridPatternOpacity : 0.1,
 		gridBorderColor : "#bfbfbf",
@@ -75,6 +76,7 @@ jui.define("chart.theme.pastel", [], function() {
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : 11,
+		pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,

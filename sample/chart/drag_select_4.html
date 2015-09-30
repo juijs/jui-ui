@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +6,6 @@
     <script src="../../dist/jui.js"></script>
 </head>
 <body >
-
 
 <div id="sqlscater"></div>
 
@@ -23,8 +21,8 @@
         var chartData = [];
 
         var chart = builder("#sqlscater", {
-            width : 500,
-            height : 240,
+            width : 700,
+            height : 640,
             axis : {
                 x : {
                     type : "date",
@@ -41,16 +39,34 @@
                 }// data : chartData
             },
             brush : [{
-                type : "scatter",
-                target : [ "a", "b", "c" ]
-            }],
+                type : "scatterpath",
+                target : ["a"],
+                size : 5
+            },
+                {
+                    type : "scatterpath",
+                    target : ["b"],
+                    size : 5
+                },
+                {
+                    type : "scatterpath",
+                    target : ["c"],
+                    colors : [ 2 ],
+                    size : 5,
+                    clip : true
+                }],
             widget : [
-                { type : "title", text : "Amount used Cache DB" },
+                {
+                    type : "title",
+                    text : "sample drag"
+                },
                 {
                     type : "dragselect",
-                    dataType : "data" // or "area"
+                    dataType : "data", // or "area",
+                    brush : [0]
+
                 },
-                { type : "legend",filter : true }
+                { type : "legend",filter:true }
             ],
             event : {
                 "dragselect.end": function(data) {
@@ -63,9 +79,7 @@
             }
         });
 
-
         setInterval(function() {
-
 
             newDate.setTime(newDate.getTime() + 1 * 1000)
 
@@ -86,14 +100,31 @@
         }, 1000);
 
         var getData = function(p) {
+            var time = new Date();
 
             var gridObject = {
-                time : new Date(),
+                time : time,
                 a : parseInt(Math.random() * 500),
+                b : -1,
+                c : -1,
+            };
+
+            var gridObject1 = {
+                time : time,
+                a : -1,
                 b : parseInt(Math.random() * 500),
+                c : -1
+            };
+
+            var gridObject2 = {
+                time : time,
+                a : -1,
+                b : -1,
                 c : parseInt(Math.random() * 500)
             };
             chartData.push(gridObject);
+            chartData.push(gridObject1);
+            chartData.push(gridObject2);
 
         };//end getData
 

@@ -54,6 +54,8 @@
 .panel {
   > .table.classic,
   > .xtable > .table.classic {
+    margin-top: -1px;
+
     > thead {
       th:first-child {
         .border-top-left-radius(0px);
@@ -68,8 +70,10 @@
 }
 
 .panel {
-  > .body.fit .table-classic,
+  > .body.fit .table.classic,
   > .body.fit .xtable > .table.classic {
+    margin-top: -1px;
+
     tr {
       > th:first-child {
         .border-top-left-radius(0px);
@@ -106,7 +110,7 @@
 }
 
 .panel > .foot > .tab {
-  margin-top: -3px;
+  margin-top: -2.5px;
 }
 
 
@@ -114,12 +118,8 @@
 // --------------------------------------------------
 
 .panel.close {
-  > .head {
-    .border-bottom-radius(5px);
-  }
-
   > *:not(.head) {
-    display: none;
+    display: none !important;
   }
 }
 

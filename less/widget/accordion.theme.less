@@ -26,3 +26,23 @@
     .box-shadow(@accordionContentBoxShadow);
   }
 }
+
+.accordion.simple {
+  > .title {
+    background-color: @accordionSimpleTitleBackgroundColor;
+
+    &:hover:not(.active) {
+      background-color: @accordionSimpleTitleHoverBackgroundColor;
+    }
+  }
+
+  > .title.active {
+    background-color: @accordionSimpleTitleActiveBackgroundColor;
+    background-image: none;
+    cursor: default;
+  }
+
+  &.accordion-white {
+    .box-shadow(none);
+  }
+}

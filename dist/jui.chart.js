@@ -442,7 +442,7 @@
 		 * @property {Boolean} browser.mozilla  Mozilla 브라우저 체크
 		 * @property {Boolean} browser.msie  IE 브라우저 체크 */
 		browser: {
-			webkit: (typeof window.webkitURL != "undefined") ? true : false,
+			webkit: ('WebkitAppearance' in document.documentElement.style) ? true : false,
 			mozilla: (typeof window.mozInnerScreenX != "undefined") ? true : false,
 			msie: (navigator.userAgent.indexOf("Trident") != -1) ? true : false
 		},
@@ -3617,16 +3617,20 @@ jui.define("util.svg.element", [], function() {
             return this;
         }
 
-        this.html = function(html) {
+        this.html = function(html) { // @deprecated
             this.element.innerHTML = html;
 
             return this;
         }
 
         this.text = function(text) {
-            this.element.innerHTML = "";
-            this.element.appendChild(document.createTextNode(text));
+            var children = this.element.childNodes;
 
+            for(var i = 0; i < children.length; i++) {
+                this.element.removeChild(children[i]);
+            }
+
+            this.element.appendChild(document.createTextNode(text));
             return this;
         }
 
@@ -5542,9 +5546,11 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = grid;
+                originAxis[type] = _.deppClone(grid);
+                cloneAxis[type] = _.deppClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
+                _.extend(cloneAxis[type], grid);
             }
 
             if(chart.isRender()) chart.render();
@@ -5640,6 +5646,18 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
     }
 
     Axis.setup = function() {
+
+        /** @property {chart.grid.core} [x=null] Sets a grid on the X axis (see the grid tab). */
+        /** @property {chart.grid.core} [y=null] Sets a grid on the Y axis (see the grid tab). */
+        /** @property {chart.grid.core} [c=null] Sets a custom grid (see the grid tab). */
+        /** @property {chart.map} [map=null] Sets a chart map. */
+        /** @property {Array} [data=[]] Sets the row set data which constitute a chart. */
+        /** @property {Integer} [buffer=10000] Limits the number of elements shown on a chart. */
+        /** @property {Integer} [shift=1] Data shift count for the 'prev' or 'next' method of the chart builder. */
+        /** @property {Array} [origin=[]] [For read only] Original data initially set. */
+        /** @property {Integer} [page=1] [For read only] Page number of the data currently drawn. */
+        /** @property {Integer} [start=0] [For read only] Start index of the data currently drawn. */
+        /** @property {Integer} [end=0] [For read only] End index of the data currently drawn. */
 
         return {
             /** @cfg {Integer} [extend=null]  Configures the index of an applicable grid group when intending to use already configured axis options. */
@@ -6110,10 +6128,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
 jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color", "chart.axis" ],
     function($, _, SVGUtil, ColorUtil, Axis) {
 
-    /**
-     * Common Logic
-     *
-     */
     var win_width = 0;
 
     _.resize(function() {
@@ -6158,18 +6172,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
 
-        /**
-         * @method caculate
-         * 
-         * caculate chart's default area
-         *
-         * padding 을 제외한 영역에서  x,y,x2,y2,width,height 속성을 구함
-         *
-         * 기본적으로 모든 브러쉬와 그리드는 계산된 영역안에서 그려짐
-         *
-         * @param {chart.builder} self
-         * @private  
-         */
         function calculate(self) {
             var max = self.svg.size();
 
@@ -6191,14 +6193,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _area = _chart;
         }
 
-        /**
-         * @method drawBefore 
-         * 
-         * option copy (brush, widget)
-         *  
-         * @param {chart.builder} self
-         * @private  
-         */
         function drawBefore(self) {
             _brush = _.deepClone(_options.brush);
             _widget = _.deepClone(_options.widget);
@@ -6210,12 +6204,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _hash = {};
         }
 
-        /**
-         * @method drawAxis 
-         * implements axis draw 
-         * @param {chart.builder} self 
-         * @private
-         */
         function drawAxis(self) {
             
             // 엑시스 리스트 얻어오기
@@ -6235,13 +6223,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method drawBrush
-         * brush 그리기
-         *
-         * brush 에 맞는 x, y 축(grid) 설정
-         * @private
-         */
         function drawBrush(self) {
             var draws = _brush;
 
@@ -6283,14 +6264,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method drawWidget 
-         * implements widget draw 
-         *  
-         * @param {chart.builder} self
-         * @param {Boolean} isAll  Whether redraw widget
-         * @private  
-         */
         function drawWidget(self, isAll) {
             var draws = _widget;
 
@@ -6324,12 +6297,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
 
-        /**
-         * @method setChartEvent
-         * define chart custom event
-         * @param {chart.builder} self
-         * @private
-         */
         function setChartEvent(self) {
             var elem = self.svg.root,
                 isMouseOver = false;
@@ -7036,11 +7003,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _defs.append(elem);
         }
 
-        /*
-         * Brush & Widget 관련 메소드
-         *
-         */
-
         /**
          * @method addBrush 
          * 
@@ -7169,11 +7131,10 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
     UI.setup = function() {
         return {
-            
             /** @cfg  {String/Number} [width="100%"] chart width */ 
-            width: "100%", // chart 기본 넓이
+            width: "100%",
             /** @cfg  {String/Number} [height="100%"] chart height */
-            height: "100%", // chart 기본 높이
+            height: "100%",
             /** 
              * @cfg  {Object} padding chart padding 
              * @cfg  {Number} [padding.top=50] chart padding 
@@ -7219,115 +7180,175 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     }
 
     /**
-     * @event bg_click
-     * Real name ``` bg.click ```
-     * Event that occurs when clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
      */
 
     /**
      * @event chart_click
-     * Real name ``` chart.click ```
-     * Event that occurs when clicking on the chart area.
+     * Event that occurs when clicking on the chart area. (real name ``` chart.click ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event bg_rclick
-     * Real name ``` bg.rclick ```
-     * Event that occurs when right clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_rclick
-     * Real name ``` chart.rclick ```
-     * Event that occurs when right clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_dblclick
-     * Real name ``` bg.dblclick ```
-     * Event that occurs when clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_dblclick
-     * Real name ``` chart.dblclick ```
-     * Event that occurs when double clicking on the chart area.
+     * Event that occurs when double clicking on the chart area. (real name ``` chart.dblclick ```)
      * @param {jQueryEvent} e The event object.
      */
-
     /**
-     * @event bg_mousemove
-     * Real name ``` bg.mousemove```
-     * Event that occurs when moving the mouse over a chart margin.
+     * @event chart_rclick
+     * Event that occurs when right clicking on the chart area. (real name ``` chart.rclick ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event chart_mousemove
-     * Real name ``` chart.mousemove ```
-     * Event that occurs when moving the mouse over the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mousedown
-     * Real name ``` bg.mousedown ```
-     * Event that occurs when left clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_mousedown
-     * Real name ``` chart.mousedown ```
-     * Event that occurs when left clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mouseup
-     * Real name ``` bg.mouseup ```
-     * Event that occurs after left clicking on a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event chart_mouseup
-     * Real name ``` chart.mouseup ```
-     * Event that occurs after left clicking on the chart area.
-     * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event bg_mouseover
-     * Real name ``` bg.mouseover ```
-     * Event that occurs when placing the mouse over a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_mouseover
-     * Real name ``` chart.mouseover ```
-     * Event that occurs when placing the mouse over the chart area.
+     * Event that occurs when placing the mouse over the chart area. (real name ``` chart.mouseover ```)
      * @param {jQueryEvent} e The event object.
      */
-
-    /**
-     * @event bg_mouseout
-     * Real name ``` bg.mouseout ```
-     * Event that occurs when moving the mouse out of a chart margin.
-     * @param {jQueryEvent} e The event object.
-     */
-
     /**
      * @event chart_mouseout
-     * Real name ``` chart.mouseout ```
-     * Event that occurs when placing the mouse over the chart area.
+     * Event that occurs when moving the mouse out of the chart area. (real name ``` chart.mouseout ```)
      * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mousemove
+     * Event that occurs when moving the mouse over the chart area. (real name ``` chart.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mousedown
+     * Event that occurs when left clicking on the chart area. (real name ``` chart.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event chart_mouseup
+     * Event that occurs after left clicking on the chart area. (real name ``` chart.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event bg_click
+     * Event that occurs when clicking on the chart margin. (real name ``` bg.click ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_dblclick
+     * Event that occurs when double clicking on the chart margin. (real name ``` bg.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_rclick
+     * Event that occurs when right clicking on the chart margin. (real name ``` bg.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseover
+     * Event that occurs when placing the mouse over the chart margin. (real name ``` bg.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseout
+     * Event that occurs when moving the mouse out of the chart margin. (real name ``` bg.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mousemove
+     * Event that occurs when moving the mouse over the chart margin. (real name ``` bg.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mousedown
+     * Event that occurs when left clicking on the chart margin. (real name ``` bg.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     */
+    /**
+     * @event bg_mouseup
+     * Event that occurs after left clicking on the chart margin. (real name ``` bg.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event axis_click
+     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_dblclick
+     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_rclick
+     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseover
+     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseout
+     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousemove
+     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousedown
+     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseup
+     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
      */
 
     return UI;
@@ -7385,6 +7406,7 @@ jui.define("chart.theme.jennifer", [], function() {
 
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
@@ -7422,6 +7444,7 @@ jui.define("chart.theme.jennifer", [], function() {
     	pieBorderColor : "#ececec",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -7597,6 +7620,7 @@ jui.define("chart.theme.gradient", [], function() {
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#efefef",
@@ -7634,6 +7658,7 @@ jui.define("chart.theme.gradient", [], function() {
         pieBorderColor : "white",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -7807,6 +7832,7 @@ jui.define("chart.theme.dark", [], function() {
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#464646",
@@ -7845,6 +7871,7 @@ jui.define("chart.theme.dark", [], function() {
     	pieBorderColor : "#232323",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#868686",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -8015,6 +8042,7 @@ jui.define("chart.theme.pastel", [], function() {
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
+		gridActiveBorderWidth : 1,
 		gridPatternColor : "#ababab",
 		gridPatternOpacity : 0.1,
 		gridBorderColor : "#bfbfbf",
@@ -8053,6 +8081,7 @@ jui.define("chart.theme.pastel", [], function() {
 		pieBorderColor : "white",
 		pieBorderWidth : 1,
         pieOuterFontSize : 11,
+		pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -8222,6 +8251,7 @@ jui.define("chart.theme.pattern", [], function() {
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
+        gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
         gridBorderColor : "#ebebeb",
@@ -8260,6 +8290,7 @@ jui.define("chart.theme.pattern", [], function() {
         bargaugeFontColor : "#333333",
         pieBorderWidth : 1,
         pieOuterFontSize : 11,
+        pieOuterFontColor : "#333",
         pieOuterLineColor : "#a9a9a9",
         pieOuterLineSize : 8,
         pieOuterLineRate : 1.3,
@@ -8393,16 +8424,239 @@ jui.define("chart.theme.pattern", [], function() {
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
-	return {}
+	return {
+    "10": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-10",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjEBRg6GhgcHFgUFLAxQYAaTkFzlvDQuIAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "11": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-11",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABJJREFUCNdjMDZgOHOAAQxwsQF00wXOMquS/QAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "12": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-12",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABBJREFUCNdj+P8BioAABxsAU88RaA20zg0AAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "01": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-01",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABVJREFUCNdjKC9g+P+B4e4FIImLDQBPxxNXosybYgAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "02": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-02",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABNJREFUCNdj6GhgAAIlBSCBiw0AUpID3xszyekAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "03": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-03",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQzwMACirge9PFNsFQAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "04": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-04",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAaGRkWFhUIIaslAAAAAXRSTlMAQObYZgAAACFJREFUCNdj6HBpYQABjw4wDeS7QPgtENrFxQNCe3SAKAC36AapdMh8ewAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "05": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-05",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA1JREFUCNdjWLWAIAIAFt8Ped1+QPcAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "06": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-06",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAALCwvdFFZtAAAAAXRSTlMAQObYZgAAAA9JREFUCNdj+P+BAQjwkgDijAubMqjSSAAAAABJRU5ErkJggg==",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "07": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-07",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAACVBMVEUAAAAAAAAMDAwvehODAAAAAXRSTlMAQObYZgAAAA5JREFUCNdjmDJlCikYAPO/FNGPw+TMAAAAAElFTkSuQmCC",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "08": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-08",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjKC9gePeA4e4Fht0bcLEBM1MRaPwhp7AAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    },
+    "09": {
+        "type": "pattern",
+        "attr": {
+            "id": "pattern-jennifer-09",
+            "width": 12,
+            "height": 12,
+            "patternUnits": "userSpaceOnUse"
+        },
+        "children": [
+            {
+                "type": "image",
+                "attr": {
+                    "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABZJREFUCNdjePeAobyAYfcGhrsXcLEBOSARaPIjMTsAAAAASUVORK5CYII=",
+                    "width": 12,
+                    "height": 12
+                }
+            }
+        ]
+    }
+}
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"facebook" : "\ue65c",
-		"googleplus" : "\ue65d",
-		"share" : "\ue65e",
-		"twitter" : "\ue65f",
-		"realtime" : "\ue640",
-		"connection" : "\ue65b",
 		"add-dir" : "\ue600",
 		"add-dir2" : "\ue601",
 		"align-center" : "\ue602",
@@ -8413,86 +8667,99 @@ jui.define("chart.icon.jennifer", [], function() {
 		"arrow1" : "\ue607",
 		"arrow2" : "\ue608",
 		"arrow3" : "\ue609",
-		"bold" : "\ue60a",
-		"calendar" : "\ue60b",
-		"caution" : "\ue60c",
-		"caution2" : "\ue60d",
-		"chart-area" : "\ue60e",
-		"chart-bar" : "\ue60f",
-		"chart-candle" : "\ue610",
-		"chart-column" : "\ue611",
-		"chart-gauge" : "\ue612",
-		"chart-line" : "\ue613",
-		"chart-radar" : "\ue614",
-		"chart-scatter" : "\ue615",
-		"chart" : "\ue616",
-		"check" : "\ue617",
-		"checkmark" : "\ue618",
-		"chevron-left" : "\ue619",
-		"chevron-right" : "\ue61a",
-		"close" : "\ue61b",
-		"dashboard" : "\ue61c",
-		"dashboardlist" : "\ue61d",
-		"db" : "\ue61e",
-		"device" : "\ue61f",
-		"document" : "\ue620",
-		"download" : "\ue621",
-		"edit" : "\ue622",
-		"etc" : "\ue623",
-		"exit" : "\ue624",
-		"gear" : "\ue625",
-		"help" : "\ue626",
-		"hide" : "\ue627",
-		"home" : "\ue628",
-		"html" : "\ue629",
-		"image" : "\ue62a",
-		"info-message" : "\ue62b",
-		"info" : "\ue62c",
-		"italic" : "\ue62d",
-		"jennifer-server" : "\ue62e",
-		"label" : "\ue62f",
-		"left" : "\ue630",
-		"link" : "\ue631",
-		"loading" : "\ue632",
-		"menu" : "\ue633",
-		"message" : "\ue634",
-		"minus" : "\ue635",
-		"monitoring" : "\ue636",
-		"more" : "\ue637",
-		"new-window" : "\ue638",
-		"orderedlist" : "\ue639",
-		"pause" : "\ue63a",
-		"play" : "\ue63b",
-		"plus" : "\ue63c",
-		"preview" : "\ue63d",
-		"printer" : "\ue63e",
-		"profile" : "\ue63f",
-		"refresh" : "\ue641",
-		"refresh2" : "\ue642",
-		"report-build" : "\ue643",
-		"report-link" : "\ue644",
-		"report" : "\ue645",
-		"resize" : "\ue646",
-		"return" : "\ue647",
-		"right" : "\ue648",
-		"rule" : "\ue649",
-		"save" : "\ue64a",
-		"search" : "\ue64b",
-		"server" : "\ue64c",
-		"statistics" : "\ue64d",
-		"stop" : "\ue64e",
-		"stoppage" : "\ue64f",
-		"table" : "\ue650",
-		"text" : "\ue651",
-		"textcolor" : "\ue652",
-		"tool" : "\ue653",
-		"trashcan" : "\ue654",
-		"underline" : "\ue655",
-		"unorderedlist" : "\ue656",
-		"upload" : "\ue657",
-		"user" : "\ue658",
-		"was" : "\ue659",
-		"ws" : "\ue65a"
+		"bell" : "\ue60a",
+		"blogger" : "\ue60b",
+		"bold" : "\ue60c",
+		"calendar" : "\ue60d",
+		"caution" : "\ue60e",
+		"caution2" : "\ue60f",
+		"chart-area" : "\ue610",
+		"chart-bar" : "\ue611",
+		"chart-candle" : "\ue612",
+		"chart-column" : "\ue613",
+		"chart-gauge" : "\ue614",
+		"chart-line" : "\ue615",
+		"chart-radar" : "\ue616",
+		"chart-scatter" : "\ue617",
+		"chart" : "\ue618",
+		"check" : "\ue619",
+		"checkmark" : "\ue61a",
+		"chevron-left" : "\ue61b",
+		"chevron-right" : "\ue61c",
+		"close" : "\ue61d",
+		"connection" : "\ue61e",
+		"dashboard" : "\ue61f",
+		"dashboardlist" : "\ue620",
+		"db" : "\ue621",
+		"device" : "\ue622",
+		"document" : "\ue623",
+		"download" : "\ue624",
+		"edit" : "\ue625",
+		"etc" : "\ue626",
+		"exit" : "\ue627",
+		"facebook" : "\ue628",
+		"gear" : "\ue629",
+		"github" : "\ue62a",
+		"googleplus" : "\ue62b",
+		"help" : "\ue62c",
+		"hide" : "\ue62d",
+		"home" : "\ue62e",
+		"html" : "\ue62f",
+		"image" : "\ue630",
+		"indent" : "\ue631",
+		"info-message" : "\ue632",
+		"info" : "\ue633",
+		"italic" : "\ue634",
+		"jennifer-server" : "\ue635",
+		"label" : "\ue636",
+		"left" : "\ue637",
+		"like" : "\ue638",
+		"line-height" : "\ue639",
+		"link" : "\ue63a",
+		"loading" : "\ue63b",
+		"menu" : "\ue63c",
+		"message" : "\ue63d",
+		"minus" : "\ue63e",
+		"monitoring" : "\ue63f",
+		"more" : "\ue640",
+		"new-window" : "\ue641",
+		"orderedlist" : "\ue642",
+		"outdent" : "\ue643",
+		"pause" : "\ue644",
+		"play" : "\ue645",
+		"plus" : "\ue646",
+		"preview" : "\ue647",
+		"printer" : "\ue648",
+		"profile" : "\ue649",
+		"realtime" : "\ue64a",
+		"refresh" : "\ue64b",
+		"refresh2" : "\ue64c",
+		"report-build" : "\ue64d",
+		"report-link" : "\ue64e",
+		"report" : "\ue64f",
+		"resize" : "\ue650",
+		"return" : "\ue651",
+		"right" : "\ue652",
+		"rule" : "\ue653",
+		"save" : "\ue654",
+		"search" : "\ue655",
+		"server" : "\ue656",
+		"share" : "\ue657",
+		"statistics" : "\ue658",
+		"stop" : "\ue659",
+		"stoppage" : "\ue65a",
+		"table" : "\ue65b",
+		"text" : "\ue65c",
+		"textcolor" : "\ue65d",
+		"tool" : "\ue65e",
+		"trashcan" : "\ue65f",
+		"twitter" : "\ue660",
+		"underline" : "\ue661",
+		"unorderedlist" : "\ue662",
+		"upload" : "\ue663",
+		"user" : "\ue664",
+		"was" : "\ue665",
+		"ws" : "\ue666"
 	}
 });
 jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
@@ -14462,6 +14729,7 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
                 c.text({
                     "font-size": c.theme("pieOuterFontSize"),
+                    fill: c.theme("pieOuterFontColor"),
                     "text-anchor": (isLeft) ? "end" : "start",
                     y: textY
                 }, text).translate(ex + (isLeft ? -3 : 3), ty);
@@ -14620,6 +14888,10 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 		    hasCircle = hasCircle || false;
 
 			attr['stroke-width']= outerRadius - innerRadius;
+
+            if (endAngle >= 360) { // bugfix : if angle is 360 , donut cang't show
+                endAngle = 359.9999;
+            }
 
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
@@ -14908,236 +15180,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
 	return DonutBrush;
 }, "chart.brush.pie");
-
-jui.define("chart.brush.clock", [ "util.math" ], function(math) {
-
-    /**
-     * @class chart.brush.clock 
-     * 
-     * implements clock brush 
-     *  
-     * @extends chart.brush.core  
-     * 
-     */
-	var ClockBrush = function() {
-        var w, centerX, centerY, startY, startX, outerRadius, innerRadius;
-
-        /**
-         * @method drawInnerCircle 
-         *
-         * 내부 원 그리기 
-         *  
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element 
-         */
-        this.drawInnerCircle = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : 10
-            });
-            
-        }
-        
-        /**
-         * @method drawInnerCircle2
-         *
-         * 내부 원 그리기 2
-         *
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element
-         */        
-        this.drawInnerCircle2 = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : 5,
-                fill : 'white'
-            });
-            
-        }
-
-        /**
-         * @method drawOuterCircle
-         *
-         * 바깥 원 그리기
-         *
-         * @param {Number} w
-         * @param {Number} centerX
-         * @param {Number} centerY
-         * @returns {util.svg.element} circle element
-         */        
-        this.drawOuterCircle = function(w, centerX, centerY) {
-            return this.chart.svg.circle({
-                cx : centerX,
-                cy : centerY,
-                r : w-10,
-                fill : 'transparent',
-                stroke : 'black',
-                "stroke-width" : 5
-            });
-        }
-        
-        
-        this.drawSecond = function(w, centerX, centerY, hour, minute, second, millis) {
-
-            var rate = 360 / 60; 
-            var milliRate = rate / 1000;
-
-            var radian = math.radian(rate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-20), radian );
-            
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black'
-                
-            });
-        }
-        
-        this.drawMinute = function(w, centerX, centerY, hour, minute, second, millis) {
-            var g = this.chart.svg.group().translate(centerX, centerY);
-            var rate = 360 / 60;
-            var secondRate = rate / 60;
-            var milliRate = secondRate / 1000;
-
-            var radian = math.radian(rate * minute + secondRate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-40), radian );
-
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black',
-                "stroke-width" : 5
-            });
-
-        }
-        
-        this.drawHour = function(w, centerX, centerY, hour, minute, second, millis) {
-            var rate = 360 / 12;
-            var minuteRate = rate / 60;
-            var secondRate = minuteRate / 60;
-            var milliRate = secondRate / 1000;
-
-            var radian = math.radian(rate * hour + minuteRate * minute + secondRate * second + milliRate * millis);
-            var obj = math.rotate(0, -(w-50), radian );
-
-            return this.chart.svg.line({
-                x1 : centerX,
-                y1 : centerY,
-                x2 : centerX + obj.x,
-                y2 : centerY + obj.y,
-                stroke : 'black',
-                "stroke-width" : 7
-
-            });
-        }
-
-        this.drawLine = function(w, centerX, centerY) {
-
-            var g = this.chart.svg.group().translate(centerX, centerY);
-
-            var hourRate = 360 / 12;
-            var minuteRate = hourRate / 5;
-
-            for (var i = 1; i <= 12; i++) {
-                var radian = math.radian(hourRate * i);
-                var outer = math.rotate(0, -(w-10), radian);
-                var inner = math.rotate(0, -(w-20), radian);
-                var text = math.rotate(0, -(w-30), radian);
-
-                var line = this.chart.svg.line({
-                    x1 : outer.x,
-                    y1 : outer.y,
-                    x2 : inner.x,
-                    y2 : inner.y,
-                    stroke : 'black',
-                    "stroke-width" :  2
-                });
-
-                g.append(line);
-                var minRadian = math.radian(hourRate * (i-1));
-                for(var j = 1; j <= 4; j++) {
-                    var radian = minRadian + math.radian(minuteRate * j);
-                    var outer = math.rotate(0, -(w-10), radian);
-                    var inner = math.rotate(0, -(w-15), radian);
-
-                    var line = this.chart.svg.line({
-                        x1 : outer.x,
-                        y1 : outer.y,
-                        x2 : inner.x,
-                        y2 : inner.y,
-                        stroke : 'black',
-                        "stroke-width" :  2
-                    });
-
-                    g.append(line);
-
-                }
-
-                g.append(this.chart.text({
-                    x : text.x,
-                    y : text.y + 6,
-                    'text-anchor' : 'middle',
-                    stroke : 'black'
-                }, i));
-
-            }
-            
-            return g;
-            
-        }
-        
-		this.drawUnit = function(index, data, group) {
-            var obj = this.axis.c(index),
-                width = obj.width,
-                height = obj.height,
-                x = obj.x,
-                y = obj.y;
-
-            // center
-            w = Math.min(width, height) / 2;
-            centerX = width / 2 + x;
-            centerY = height / 2 + y;
-            
-            var date = new Date(),
-                hour = this.getValue(data, "hour", date.getHours()),
-                minute = this.getValue(data, "minute", date.getMinutes()),
-                second = this.getValue(data, "second", date.getSeconds()),
-                millis = date.getMilliseconds();
-
-            group.append(this.drawOuterCircle(w, centerX, centerY));
-            group.append(this.drawInnerCircle(w, centerX, centerY));
-            group.append(this.drawLine(w, centerX, centerY));
-            group.append(this.drawSecond(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawMinute(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawHour(w, centerX, centerY, hour, minute, second, millis));
-            group.append(this.drawInnerCircle2(w, centerX, centerY));
-            
-            return group; 
-		}
-
-        this.draw = function() {
-            var group = this.chart.svg.group();
-
-            this.eachData(function(i, data) {
-                this.drawUnit(i, data, group);
-            });
-
-            return group;
-        }
-	}
-
-	return ClockBrush;
-}, "chart.brush.core");
 
 jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
@@ -19005,6 +19047,8 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                 max_height = 0,
                 brushes = getIndexArray(widget.brush);
 
+            var total_widthes = [];
+
             for(var i = 0; i < brushes.length; i++) {
                 var index = brushes[i];
 
@@ -19019,8 +19063,17 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                     arr[k].icon.translate(x, y);
 
                     if (widget.orient == "bottom" || widget.orient == "top") {
-                        x += arr[k].width;
-                        total_width += arr[k].width;
+
+                        if (x + arr[k].width > chart.area('x2')) {
+                            x = 0;
+                            y += arr[k].height;
+                            max_height += arr[k].height;
+                            total_widthes.push(total_width);
+                            total_width = 0; 
+                        } else {
+                            x += arr[k].width;
+                            total_width += arr[k].width;
+                        }
 
                         if (max_height < arr[k].height) {
                             max_height = arr[k].height;
@@ -19034,6 +19087,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
                         }
                     }
                 }
+                
+                if (total_width > 0) {
+                    total_widthes.push(total_width);
+                }
+                
+                total_width  = Math.max.apply(Math, total_widthes);
 
                 setLegendStatus(brush);
             }

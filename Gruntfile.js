@@ -116,7 +116,6 @@ module.exports = function(grunt) {
         "js/chart/brush/path.js",
         "js/chart/brush/pie.js",
         "js/chart/brush/donut.js", // extends pie
-        "js/chart/brush/clock.js",
         "js/chart/brush/scatter.js",
         "js/chart/brush/scatterpath.js",
         "js/chart/brush/bargauge.js",
@@ -233,10 +232,7 @@ module.exports = function(grunt) {
                 files: {
                     "dist/jui.min.css": "dist/jui.css",
                     "dist/jennifer.theme.min.css": "dist/jennifer.theme.css",
-                    "dist/dark.theme.min.css": "dist/dark.theme.css",
-
-                    // Old version (@Deprecated)
-                    "dist/jui.old.min.css": "dist/jui.old.css"
+                    "dist/dark.theme.min.css": "dist/dark.theme.css"
                 }
             }
         },
@@ -251,11 +247,6 @@ module.exports = function(grunt) {
                     ],
                     "dist/dark.theme.css" : [
                         "less/theme/dark.less"
-                    ],
-
-                    // Old version (@Deprecated)
-                    "dist/jui.old.css" : [
-                        "less.old/_main.less"
                     ]
                 }
             }
@@ -265,7 +256,7 @@ module.exports = function(grunt) {
             dist : "js/chart/icon/jennifer.js"
         },
         pattern : {
-            src : "img/pattern/*.png",
+            src : "dist/img/pattern/*.png",
             dist : "js/chart/pattern/jennifer.js"
         },
         pkg: grunt.file.readJSON("package.json")
