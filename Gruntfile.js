@@ -232,10 +232,7 @@ module.exports = function(grunt) {
                 files: {
                     "dist/jui.min.css": "dist/jui.css",
                     "dist/jennifer.theme.min.css": "dist/jennifer.theme.css",
-                    "dist/dark.theme.min.css": "dist/dark.theme.css",
-
-                    // Old version (@Deprecated)
-                    "dist/jui.old.min.css": "dist/jui.old.css"
+                    "dist/dark.theme.min.css": "dist/dark.theme.css"
                 }
             }
         },
@@ -250,11 +247,6 @@ module.exports = function(grunt) {
                     ],
                     "dist/dark.theme.css" : [
                         "less/theme/dark.less"
-                    ],
-
-                    // Old version (@Deprecated)
-                    "dist/jui.old.css" : [
-                        "less.old/_main.less"
                     ]
                 }
             }
