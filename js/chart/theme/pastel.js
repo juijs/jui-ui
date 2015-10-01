@@ -53,6 +53,7 @@ jui.define("chart.theme.pastel", [], function() {
 		tooltipPointBorderWidth : 1, // common
 		tooltipPointFontWeight : "bold", // common
 		tooltipPointFontSize : 11,
+		tooltipPointFontColor : "#333",
 		barFontSize : 11,
 		barFontColor : "#333",
 		barBorderColor : "none",

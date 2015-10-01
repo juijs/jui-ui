@@ -7422,6 +7422,7 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",
@@ -7635,6 +7636,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",
@@ -7848,6 +7850,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#868686",
         barFontSize : 11,
         barFontColor : "#868686",
         barBorderColor : "none",
@@ -8058,6 +8061,7 @@ jui.define("chart.theme.pastel", [], function() {
 		tooltipPointBorderWidth : 1, // common
 		tooltipPointFontWeight : "bold", // common
 		tooltipPointFontSize : 11,
+		tooltipPointFontColor : "#333",
 		barFontSize : 11,
 		barFontColor : "#333",
 		barBorderColor : "none",
@@ -8267,6 +8271,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "black",
@@ -11636,6 +11641,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             function draw() {
                 return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                     self.chart.text({
+                        fill : self.chart.theme("tooltipPointFontColor"),
                         "font-size" : self.chart.theme("tooltipPointFontSize"),
                         "font-weight" : self.chart.theme("tooltipPointFontWeight"),
                         "text-anchor" : "middle",

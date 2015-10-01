@@ -52,6 +52,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "black",

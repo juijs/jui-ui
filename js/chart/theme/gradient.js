@@ -58,6 +58,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",

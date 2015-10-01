@@ -56,6 +56,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             function draw() {
                 return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                     self.chart.text({
+                        fill : self.chart.theme("tooltipPointFontColor"),
                         "font-size" : self.chart.theme("tooltipPointFontSize"),
                         "font-weight" : self.chart.theme("tooltipPointFontWeight"),
                         "text-anchor" : "middle",

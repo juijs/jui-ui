@@ -1,11 +1,11 @@
 .navbar {
+  color: @navbarFontColor;
   border: 1px solid @navbarBorderColor;
   .btn-bgcolor-2(@navbarBackgroundColor1, @navbarBackgroundColor2);
   .box-shadow(@navbarBoxShadow);
 
   ul.nav {
     li {
-      color: @navbarListFontColor;
       text-shadow: @navbarListTextShadow;
 
       &.active {
@@ -15,7 +15,7 @@
       }
 
       a {
-        color: @navbarListLinkFontColor;
+        color: @navbarFontColor;
 
         &:focus, &:hover {
           background-color: @navbarListLinkFocusBackgroundColor;
@@ -34,10 +34,6 @@
   border: 1px solid @navbarFlatBorderColor !important;
   .btn-bgcolor-2(@navbarFlatBackgroundColor, @navbarFlatBackgroundColor) !important;
   .box-shadow(0) !important;
-
-  span {
-    color: @navbarFlatFontColor;
-  }
 
   .line {
     background-color: @navbarInlineLineColor;
