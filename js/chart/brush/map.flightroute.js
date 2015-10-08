@@ -2,7 +2,6 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.flightroute
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {

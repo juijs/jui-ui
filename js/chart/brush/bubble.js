@@ -8,18 +8,6 @@ jui.define("chart.brush.bubble", [], function() {
 	var BubbleBrush = function() {
         var self = this;
 
-        /**
-         * @method createBubble 
-         *  
-         *  util method for craete bubble
-         *   
-         * @private
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {GroupElement}
-         */
         this.createBubble = function(pos, color) {
             var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
@@ -37,15 +25,6 @@ jui.define("chart.brush.bubble", [], function() {
             return circle;
         }
 
-        /**
-         * @method drawBubble 
-         * 
-         * @protected  
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Array} points
-         * @return {GroupElement}
-         */
         this.drawBubble = function(points) {
             var g = this.chart.svg.group();
             
@@ -63,21 +42,10 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
-        /**
-         * @method draw 
-         * 
-         * @protected 
-         * @return {GroupElement}
-         */
         this.draw = function() {
             return this.drawBubble(this.getXY());
         }
 
-        /**
-         * @method drawAnimate
-         *
-         * @protected
-         */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
                 var c = elem.children[0];

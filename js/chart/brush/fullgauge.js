@@ -2,7 +2,6 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
-	 * implements full gauge brush
 	 * @extends chart.brush.donut
 	 */
 	var FullGaugeBrush = function() {

@@ -2,9 +2,6 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.splitline
-     *
-     * 분리된 영역의 선을 그리는 브러쉬
-     *
      * @extends chart.brush.core
      */
 	var SplitLineBrush = function() {

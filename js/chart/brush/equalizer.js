@@ -2,10 +2,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
     /**
      * @class chart.brush.equalizer 
-     *  
-     * implements equalizer brush 
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;

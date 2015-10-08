@@ -2,9 +2,6 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
     /**
      * @class chart.brush.fullstackcolumn 
-     * 
-     * implements fullstack column  
-     *  
      * @extends chart.brush.fullstackbar
      */
 	var FullStackColumnBrush = function(chart, axis, brush) {

@@ -584,5 +584,54 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
+    /**
+     * @event axis_click
+     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_dblclick
+     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_rclick
+     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseover
+     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseout
+     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousemove
+     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousedown
+     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseup
+     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+
     return Axis;
 });

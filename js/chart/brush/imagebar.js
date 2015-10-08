@@ -2,9 +2,6 @@ jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagebar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var ImageBarBrush = function() {

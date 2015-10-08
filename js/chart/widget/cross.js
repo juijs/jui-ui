@@ -3,7 +3,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.cross
-     * implements cross widget
      * @extends chart.widget.core
      * @alias CoreWidget
      * @requires util.base

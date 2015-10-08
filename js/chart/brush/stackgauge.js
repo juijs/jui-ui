@@ -2,9 +2,6 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.stackgauge
-	 *
-	 * stack 형태의 gauge 브러쉬
-	 *
 	 * @extends chart.brush.donut
 	 */
 	var StackGaugeBrush = function(chart, axis, brush) {

@@ -4935,9 +4935,6 @@ jui.define("util.svg",
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
-     *
-     * Base Draw Class
-     *
      * @alias Draw
      * @requires util.base
      * @requires jquery
@@ -5711,13 +5708,61 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
+    /**
+     * @event axis_click
+     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_dblclick
+     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_rclick
+     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseover
+     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseout
+     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousemove
+     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mousedown
+     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event axis_mouseup
+     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+
     return Axis;
 });
 
 jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
     /**
      * @class chart.grid.core
-     * Grid Core 객체
      * @extends chart.draw
      * @abstract
      */
@@ -5911,13 +5956,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method addEvent
-         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
-         *
-         * @param {Element} element
-         * @param {Object} obj
-         */
         function addEvent(elem, obj) {
             var chart = self.chart;
 
@@ -6051,15 +6089,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method drawGrid
-         * draw base grid structure
-         * @protected
-         * @param {chart.builder} chart
-         * @param {String} orient
-         * @param {String} cls
-         * @param {Map} map
-         */
         this.draw = function() {
             var root = this.chart.svg.group();
 
@@ -6089,14 +6118,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             };
         }
 
-        /**
-         * @method drawAfter
-         *
-         *
-         *
-         * @param {Object} obj
-         * @protected
-         */
         this.drawAfter = function(obj) {
             obj.root.attr({ "clip-path": "url(#" + this.axis.get("clipRectId") + ")" });
         }
@@ -6122,6 +6143,55 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             height: -1
         };
     }
+
+    /**
+     * @event map_click
+     * Event that occurs when clicking on the map area. (real name ``` map.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_dblclick
+     * Event that occurs when double clicking on the map area. (real name ``` map.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_rclick
+     * Event that occurs when right clicking on the map area. (real name ``` map.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseover
+     * Event that occurs when placing the mouse over the map area. (real name ``` map.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseout
+     * Event that occurs when moving the mouse out of the map area. (real name ``` map.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousemove
+     * Event that occurs when moving the mouse over the map area. (real name ``` map.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousedown
+     * Event that occurs when left clicking on the map area. (real name ``` map.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseup
+     * Event that occurs after left clicking on the map area. (real name ``` map.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
 
     return Map;
 }, "chart.draw"); 
@@ -7180,47 +7250,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     }
 
     /**
-     * @event click
-     * Event that occurs when clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event dblclick
-     * Event that occurs when double clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event rclick
-     * Event that occurs when right clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseover
-     * Event that occurs when placing the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseout
-     * Event that occurs when moving the mouse out of the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousemove
-     * Event that occurs when moving the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousedown
-     * Event that occurs when left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseup
-     * Event that occurs after left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-
-    /**
      * @event chart_click
      * Event that occurs when clicking on the chart area. (real name ``` chart.click ```)
      * @param {jQueryEvent} e The event object.
@@ -7300,55 +7329,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      * @event bg_mouseup
      * Event that occurs after left clicking on the chart margin. (real name ``` bg.mouseup ```)
      * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event axis_click
-     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_dblclick
-     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_rclick
-     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseover
-     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseout
-     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousemove
-     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousedown
-     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseup
-     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
      */
 
     return UI;
@@ -9415,11 +9395,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var BlockGrid = function() {
 
-		/**
-		 * @method top
-		 *
-		 * @protected
-		 */
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
@@ -9427,11 +9402,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method bottom
-		 *
-		 * @protected
-		 */
 		this.bottom = function(g) {
 			this.drawPattern("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
@@ -9439,11 +9409,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method left
-		 *
-		 * @protected
-		 */
 		this.left = function(g) {
 			this.drawPattern("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
@@ -9451,11 +9416,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method right
-		 *
-		 * @protected
-		 */
 		this.right = function(g) {
 			this.drawPattern("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
@@ -9463,11 +9423,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method initDomain
-		 * block grid 에 대한 domain 설정
-		 * @private
-		 */
 		this.initDomain = function() {
 
 			var domain = [];
@@ -9505,11 +9460,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
-		/**
-		 * @method drawBefore
-		 *
-		 * @protected
-		 */
 		this.drawBefore = function() {
 			var domain = this.initDomain(),
 				obj = this.getGridSize(),
@@ -9531,12 +9481,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = this.grid.reverse;
 		}
 
-		/**
-		 * @method draw
-		 *
-		 * @protected
-		 * @return {Mixed}
-		 */
 		this.draw = function() {
 			return this.drawGrid("block");
 		}
@@ -9560,9 +9504,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	/**
 	 * @class chart.grid.date
-	 *
-	 * implements date grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var DateGrid = function() {
@@ -9606,13 +9547,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			return (key) ? $.extend(new_scale, old_scale) : old_scale;
 		}
 
-
-		/**
-		 * date grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [],
 				interval = [];
@@ -9738,9 +9672,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 	/**
 	 * @class chart.grid.dateblock
-	 *
-	 * implements date block grid
-	 *
 	 * @extends chart.grid.date
 	 */
 	var DateBlockGrid = function() {
@@ -9756,12 +9687,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			return old_scale;
 		}
 
-		/**
-		 * date grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [],
 				interval = [];
@@ -9863,19 +9788,9 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
     /**
      * @class chart.grid.block
-     * Implements Block Grid
-     *
-     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] }
-     *
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
-
-        /**
-         * @method top
-         *
-         * @protected
-         */
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);
@@ -9883,44 +9798,24 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.drawBaseLine("top", g);
         }
 
-        /**
-         * @method bottom
-         *
-         * @protected
-         */
         this.bottom = function(g) {
             this.drawPattern("bottom", this.domain, this.points);
             this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
-        /**
-         * @method left
-         *
-         * @protected
-         */
         this.left = function(g) {
             this.drawPattern("left", this.domain, this.points);
             this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
-        /**
-         * @method right
-         *
-         * @protected
-         */
         this.right = function(g) {
             this.drawPattern("right", this.domain, this.points);
             this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
-        /**
-         * @method initDomain
-         * block grid 에 대한 domain 설정
-         * @private
-         */
         this.initDomain = function() {
 
             var domain = [];
@@ -9958,11 +9853,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
         }
 
-        /**
-         * @method drawBefore
-         *
-         * @protected
-         */
         this.drawBefore = function() {
             var domain = this.initDomain();
 
@@ -9986,12 +9876,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.reverse = this.grid.reverse;
         }
 
-        /**
-         * @method draw
-         *
-         * @protected
-         * @return {Mixed}
-         */
         this.draw = function() {
             return this.drawGrid("block");
         }
@@ -10016,9 +9900,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	/**
 	 * @class chart.grid.radar
-	 *
-	 * Radar 형태의 그리드
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RadarGrid = function() {
@@ -10110,11 +9991,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
             }
         }
 
-
-		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [];
 			if (_.typeCheck("string", this.grid.domain)) {
@@ -10315,9 +10191,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 	/**
 	 * @class chart.grid.range
-	 *
-	 * implements range grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RangeGrid = function() {
@@ -10376,12 +10249,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
 
-		/**
-		 * range grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 
 			var domain = [];
@@ -10565,9 +10432,6 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 
 	/**
 	 * @class chart.grid.log
-	 *
-	 * implements log grid
-	 *
 	 * @extends chart.grid.range
 	 */
 	var LogGrid = function() {
@@ -10618,9 +10482,7 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 		return {
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
-
 			step : 4,
-
 			nice : false
 		};
 	}
@@ -10632,9 +10494,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	/**
 	 * @class chart.grid.rule
-	 *
-	 * implements rule grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RuleGrid = function() {
@@ -10829,13 +10688,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
-        
-		/**
-		 * range grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
+
         this.initDomain = function() {
 
 			var domain = [];
@@ -11000,22 +10853,10 @@ jui.define("chart.grid.panel", [  ], function() {
 
     /**
      * @class chart.grid.panel
-     *
-     * implements default panel grid
-     *
      * @extends chart.grid.core
      */
     var PanelGrid = function() {
 
-        /**
-         * @method custom
-         *
-         * draw sample panel area
-         *
-         * @param {ChartBuilder} chart
-         * @param {SVGElement} g
-         * @protected
-         */
         this.custom = function(g) {
             var obj = this.scale(0);
 
@@ -11030,20 +10871,7 @@ jui.define("chart.grid.panel", [  ], function() {
             g.append(rect);
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
-
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function(axis) {
                 return function(i) {
 
@@ -11055,18 +10883,8 @@ jui.define("chart.grid.panel", [  ], function() {
                     }
                 }
             })(this.axis);
-
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("panel");
@@ -11080,9 +10898,6 @@ jui.define("chart.grid.table", [  ], function() {
 
     /**
      * @class chart.grid.table
-     *
-     * implements table grid 
-     *
      * @extends chart.grid.core
      */
     var TableGrid = function(chart, axis, grid) {
@@ -11141,15 +10956,6 @@ jui.define("chart.grid.table", [  ], function() {
             })(this.axis, row, column, rowUnit, columnUnit);
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @return {Object}
-         * @return {util.scale} return.scale  return scale be used in grid
-         * @return {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("table");
@@ -11174,12 +10980,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     /**
      * @class chart.grid.overlap
-     *
-     * implements overlap grid be used in multiple pie or donut chart
-     *
-     * @param chart
-     * @param axis
-     * @param grid
      * @extends chart.grid.core
      */
     var OverlapGrid = function() {
@@ -11227,15 +11027,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("overlap");
@@ -11257,9 +11048,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     /**
      * @class chart.grid.topologytable
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var TopologyTableGrid = function() {
@@ -11346,12 +11134,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
             }
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             area = this.chart.area();
             size = this.grid.space;
@@ -11368,12 +11150,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             }
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(index) {
                     var index = (_.typeCheck("string", index)) ? getDataIndex(index) : index;
@@ -11398,16 +11174,7 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             })(this.axis);
         }
-
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
+        
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid();
@@ -11430,9 +11197,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     /**
      * @class chart.grid.grid3d
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var Grid3D = function() {
@@ -11453,23 +11217,11 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             return attr;
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             depth = this.axis.get("depth");
             degree = this.axis.get("degree");
             radian = math.radian(360 - degree);
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(x, y, z, count) {
                     var step = _.typeCheck("integer", count) ? count : 1,
@@ -11500,15 +11252,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             this.scale.radian = radian;
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             var xRoot = this.axis.x.root,
                 yRoot = this.axis.y.root;
@@ -12113,15 +11856,53 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
+    /**
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+
 	return CoreBrush;
 }, "chart.draw"); 
 jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagebar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var ImageBarBrush = function() {
@@ -12236,9 +12017,6 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagecolumn
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var ImageColumnBrush = function() {
@@ -12324,9 +12102,6 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.patternbar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.core
      */
 	var PatternBarBrush = function() {
@@ -12420,9 +12195,6 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.patterncolumn
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var PatternColumnBrush = function() {
@@ -12484,25 +12256,14 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.brush.bar 
-     * implements bar brush 
+     * @class chart.brush.bar
+	 *
      * @extends chart.brush.core
      */
 	var BarBrush = function() {
 		var g;
 		var zeroX, height, half_height, bar_height;
 
-        /**
-         * bar style 을 얻어온다. 
-         *  
-         * @return {Object} bar 에 관련된 스타일을 리턴한다. 
-         * @return {String} return.borderColor  
-         * @return {Number} return.borderWidth  
-         * @return {Number} return.borderOpacity  
-         * @return {Number} return.borderRadius  
-         * @return {Number} return.disableOpacity  
-         * @return {String} return.circleColor  
-         */
 		this.getBarStyle = function() {
 			return {
 				borderColor: this.chart.theme("barBorderColor"),
@@ -12514,18 +12275,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method getBarElement 
-         *  
-         * 특정 위치에 맞는 bar element 를 생성한다. 
-         *  
-         * @param {Number} dataIndex
-         * @param {Number} targetIndex
-         * @param {Object} info
-         * @param {Number} info.width bar 넓이
-         * @param {Number} info.height bar 높이
-         * @return {util.svg.element}
-         */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
 				color = this.color(dataIndex, targetIndex),
@@ -12556,13 +12305,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			return r;
 		}
 
-        /**
-         * @method setActiveEffect 
-         * 
-         * 활성화(active)된 영역 표시   
-         *  
-         * @param {Number} r
-         */
 		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
 				cols = this.barList;
@@ -12577,11 +12319,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawBefore 
-         * 
-         * @protected 
-         */
 		this.drawBefore = function() {
 			var op = this.brush.outerPadding,
 				ip = this.brush.innerPadding,
@@ -12601,11 +12338,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawETC
-         * 
-         * @param {util.svg.element} group
-         */
 		this.drawETC = function(group) {
 			if(!_.typeCheck("array", this.barList)) return;
 
@@ -12769,9 +12501,6 @@ jui.define("chart.brush.column", [], function() {
 
     /**
      * @class chart.brush.column 
-     *
-     * implements column brush
-     *
      * @extends chart.brush.bar
      */
 	var ColumnBrush = function() {
@@ -13178,9 +12907,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	/**
 	 * @class chart.brush.stackbar
-	 *
-	 * stack 형태의 bar 브러쉬
-	 *
 	 * @extends chart.brush.bar
 	 *
 	 */
@@ -13316,9 +13042,6 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 	/**
 	 * @class chart.brush.stackcolumn
-	 *
-	 * stack 형태의 column 브러쉬
-	 *
 	 * @extends chart.brush.stackbar
 	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
@@ -13530,10 +13253,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
     /**
      * @class chart.brush.fullstackbar 
-     * 
-     * implements fullstack bar brush 
-     *  
-     * @extends chart.brush.stackbar 
+     * @extends chart.brush.stackbar
      */
 	var FullStackBarBrush = function(chart, axis, brush) {
 		var g, zeroX, height, bar_height;
@@ -13630,9 +13350,6 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
     /**
      * @class chart.brush.fullstackcolumn 
-     * 
-     * implements fullstack column  
-     *  
      * @extends chart.brush.fullstackbar
      */
 	var FullStackColumnBrush = function(chart, axis, brush) {
@@ -13932,18 +13649,6 @@ jui.define("chart.brush.bubble", [], function() {
 	var BubbleBrush = function() {
         var self = this;
 
-        /**
-         * @method createBubble 
-         *  
-         *  util method for craete bubble
-         *   
-         * @private
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {GroupElement}
-         */
         this.createBubble = function(pos, color) {
             var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
@@ -13961,15 +13666,6 @@ jui.define("chart.brush.bubble", [], function() {
             return circle;
         }
 
-        /**
-         * @method drawBubble 
-         * 
-         * @protected  
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Array} points
-         * @return {GroupElement}
-         */
         this.drawBubble = function(points) {
             var g = this.chart.svg.group();
             
@@ -13987,21 +13683,10 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
-        /**
-         * @method draw 
-         * 
-         * @protected 
-         * @return {GroupElement}
-         */
         this.draw = function() {
             return this.drawBubble(this.getXY());
         }
 
-        /**
-         * @method drawAnimate
-         *
-         * @protected
-         */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
                 var c = elem.children[0];
@@ -14104,9 +13789,6 @@ jui.define("chart.brush.candlestick", [], function() {
 
     /**
      * @class chart.brush.candlestick 
-     * 
-     * implements candlestick brush
-     *
      * @extends chart.brush.core
      */
     var CandleStickBrush = function() {
@@ -14192,9 +13874,6 @@ jui.define("chart.brush.ohlc", [], function() {
 
     /**
      * @class chart.brush.ohlc 
-     * 
-     * implments ohlc brush 
-     *  
      * @extends chart.brush.candlestick
      */
     var OHLCBrush = function(chart, axis, brush) {
@@ -14260,10 +13939,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
     /**
      * @class chart.brush.equalizer 
-     *  
-     * implements equalizer brush 
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;
@@ -14352,7 +14028,6 @@ jui.define("chart.brush.line", [], function() {
 
     /**
      * @class chart.brush.line
-     * implements line brush
      * @extends chart.brush.core
      */
 	var LineBrush = function() {
@@ -14547,9 +14222,6 @@ jui.define("chart.brush.path", [], function() {
 
     /**
      * @class chart.brush.path 
-     * 
-     * implements path brush  
-     *  
      * @extends chart.brush.core
      */
 	var PathBrush = function(chart, axis, brush) {
@@ -14595,9 +14267,6 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
 	/**
 	 * @class chart.brush.pie
-	 *
-	 * implements pie brush
-	 *
      * @extends chart.brush.core
 	 */
 	var PieBrush = function() {
@@ -14865,9 +14534,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
     /**
      * @class chart.brush.donut 
-     * 
-     * implements donut brush 
-     *  
      * @extends chart.brush.pie
      * 
      */
@@ -14875,21 +14541,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
         var self = this,
             cache_active = {};
 
-        /**
-         * @method drawDonut 
-         * 
-         * donut 을 그린다.
-         *   
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    hasCircle = hasCircle || false;
 
@@ -14951,21 +14602,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			return g;
 		}
 
-        /**
-         * @method drawDonut3d
-         *
-         * donut 을 그린다.
-         *
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
@@ -15191,9 +14827,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.scatter
-     *
-     * 점으로 이루어진 데이타를 표현하는 브러쉬
-     *
      * @extends chart.brush.core
      */
     var ScatterBrush = function() {
@@ -15224,15 +14857,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             };
         }
 
-        /**
-         * @method createScatter
-         *
-         * 좌표별 scatter 생성
-         *
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {util.svg.element}
-         */
         this.createScatter = function(pos, dataIndex, targetIndex, symbol) {
             var self = this,
                 elem = null,
@@ -15331,14 +14955,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             return elem;
         }
 
-        /**
-         * @method drawScatter
-         *
-         * scatter 그리기
-         *
-         * @param {Array} points
-         * @return {util.svg.element} g element 리턴
-         */
         this.drawScatter = function(points) {
             // hoverSync 옵션 처리를 위한 캐싱 처리
             this.cachedSymbol = {};
@@ -15440,11 +15056,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             }, text).translate(x, y);
         }
 
-        /**
-         * @method draw
-         *
-         * @return {util.svg.element}
-         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
@@ -15491,11 +15102,6 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     /**
      * @class chart.brush.scatterpath
-     *
-     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
-     *
-     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
-     *
      * @extends chart.brush.core
      *
      */
@@ -15569,18 +15175,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 jui.define("chart.brush.bargauge", [], function() {
 
     /**
-     * @class chart.brush.bargauge 
-     *
+     * @class chart.brush.bargauge
      * @extends chart.brush.core
      */
 	var BarGaugeBrush = function(chart, axis, brush) {
 
-        /**
-         * @method draw
-         * 
-         * @protected
-         * @return {TransformElement}
-         */
 		this.draw = function() {
             var group = chart.svg.group();
 
@@ -15659,10 +15258,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     /**
      * @class chart.brush.circlegauge 
-     * 
-     * implements circle gauge  
-     *
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var CircleGaugeBrush = function(chart, axis, brush) {
         var group;
@@ -15897,22 +15493,10 @@ jui.define("chart.brush.area", [], function() {
     /**
      * @class chart.brush.area
      *
-     * implements area brush
-     *
-     *
      * @extends chart.brush.line
      */
     var AreaBrush = function() {
 
-        /**
-         * @method drawArea 
-         * 
-         * draw area util method
-         *
-         * @param {Array} path  caculated xy points
-         * @return {TransformElement}
-         * @protected
-         */
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
                 y = this.axis.y(this.brush.startZero ? 0 : this.axis.y.min());
@@ -15945,21 +15529,10 @@ jui.define("chart.brush.area", [], function() {
             return g;
         }
 
-        /**
-         * @method draw 
-         * 
-         * @protected  
-         * @return {TransformElement}
-         */
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
 
-        /**
-         * @method drawAnimate
-         *
-         * @protected
-         */
         this.drawAnimate = function(root) {
             root.append(
                 this.chart.svg.animate({
@@ -15999,9 +15572,6 @@ jui.define("chart.brush.stackline", [], function() {
 
 	/**
 	 * @class chart.brush.stackline
-	 *
-	 * stack 형태의 line 브러쉬
-	 *
 	 * @extends chart.brush.line
 	 */
 	var StackLineBrush = function() {
@@ -16016,9 +15586,6 @@ jui.define("chart.brush.stackarea", [], function() {
 
 	/**
 	 * @class chart.brush.stackarea
-	 *
-	 * stack 형태의 area brush
-	 *
 	 * @extends chart.brush.area
 	 */
 	var StackAreaBrush = function() {
@@ -16034,9 +15601,6 @@ jui.define("chart.brush.stackscatter", [], function() {
 
 	/**
 	 * @class chart.brush.stackscatter
-	 *
-	 * stack 형태의 scatter 브러쉬
-	 *
 	 * @extends chart.brush.scatter
 	 */
 	var StackScatterBrush = function() {
@@ -16051,9 +15615,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.gauge 
-     * 
-     * implements gauge brush 
-     *  
      * @extends chart.brush.donut
      */
 	var GaugeBrush = function() {
@@ -16120,16 +15681,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
         }
 
-        /**
-         * @method drawUnit 
-         * 
-         * data 별 gague 를 그린다.
-         *  
-         * @param {Number} index
-         * @param {Object} data
-         * @param {util.svg.element} group
-         * @return {util.svg.element}
-         */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
 				value = this.getValue(data, "value", 0),
@@ -16182,7 +15733,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-
 			var group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
@@ -16190,7 +15740,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			});
 
 			return group;
-
 		}
 	}
 
@@ -16212,7 +15761,6 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
-	 * implements full gauge brush
 	 * @extends chart.brush.donut
 	 */
 	var FullGaugeBrush = function() {
@@ -16340,9 +15888,6 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.stackgauge
-	 *
-	 * stack 형태의 gauge 브러쉬
-	 *
 	 * @extends chart.brush.donut
 	 */
 	var StackGaugeBrush = function(chart, axis, brush) {
@@ -16445,9 +15990,6 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	/**
 	 * @class chart.brush.waterfall
-	 *
-	 * waterfall 형태의 브러쉬
-	 *
 	 * @extends chart.brush.core
 	 */
 	var WaterFallBrush = function(chart, axis, brush) {
@@ -16563,9 +16105,6 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.splitline
-     *
-     * 분리된 영역의 선을 그리는 브러쉬
-     *
      * @extends chart.brush.core
      */
 	var SplitLineBrush = function() {
@@ -16659,9 +16198,6 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.splitarea
-     *
-     * 분리된 영역의 브러쉬
-     *
      * @extends chart.brush.splitline
      */
     var SplitAreaBrush = function() {
@@ -16745,9 +16281,6 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
     /**
      * @class chart.brush.rangecolumn 
-     * 
-     * implements range column brush 
-     * 
      * @extends chart.brush.core
      */
 	var RangeColumnBrush = function(chart, axis, brush) {
@@ -16817,10 +16350,7 @@ jui.define("chart.brush.rangebar", [], function() {
 
     /**
      * @class chart.brush.rangebar 
-     * 
-     * implements range bar brush 
-     * 
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var RangeBarBrush = function(chart, axis, brush) {
 		var g, height, half_height, barHeight;
@@ -16892,9 +16422,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 
     /**
      * @class chart.brush.topologynode.edge
-     * 
-     * 토폴로지 Edge 표현 객체  
-     * 
+     *
      */
     var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
@@ -16937,7 +16465,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 jui.define("chart.brush.topologynode.edgemanager", [ "util.base" ], function(_) {
     /**
      * @class chart.brush.topologynode.edgemananger
-     * 토폴로지 Edge 관리자
+     *
      */
     var TopologyEdgeManager = function() {
         var list = [],
@@ -16978,8 +16506,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * TopologyNode Class
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
@@ -17464,14 +16991,25 @@ jui.define("chart.brush.topologynode",
         }
     }
 
+    /**
+     * @event topoloygy_nodeclick
+     * Event that occurs when click on the topology node. (real name ``` topoloygy.nodeclick ```)
+     * @param {Object} data The node data.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event topoloygy_edgeclick
+     * Event that occurs when click on the topology edge. (real name ``` topoloygy.edgeclick ```)
+     * @param {Object} data The edge data.
+     * @param {jQueryEvent} e The event object.
+     */
+
     return TopologyNode;
 }, "chart.brush.core");
 jui.define("chart.brush.focus", [], function() {
 	/**
 	 * @class chart.brush.focus
-	 *
-	 * implements focus brush
-	 *
 	 * @extends chart.brush.core
 	 */
 	var FocusBrush = function(chart, axis, brush) {
@@ -17568,10 +17106,7 @@ jui.define("chart.brush.focus", [], function() {
 jui.define("chart.brush.pin", [], function() {
     /**
      * @class chart.brush.pin  
-     * 
-     * implements pin brush  
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var PinBrush = function(chart, axis, brush) {
         var self = this;
@@ -17632,9 +17167,6 @@ jui.define("chart.brush.pin", [], function() {
 jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.brush.map.core
-     *
-     * implements core method for brush
-     *
      * @abstract
      * @extends chart.brush.core
      * @requires jquery
@@ -17649,7 +17181,6 @@ jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
@@ -17731,7 +17262,6 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapNoteBrush = function(chart, axis, brush) {
@@ -17823,7 +17353,6 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapBubbleBrush = function(chart, axis, brush) {
@@ -17920,7 +17449,6 @@ jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], functi
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapCompareBubbleBrush = function(chart, axis, brush) {
@@ -18075,7 +17603,6 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.flightroute
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {
@@ -18225,7 +17752,6 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.flightroute
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapMarkerBrush = function(chart, axis, brush) {
@@ -18282,7 +17808,6 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapWeatherBrush = function(chart, axis, brush) {
@@ -18481,7 +18006,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
 
     /**
      * @class chart.widget.tooltip
-     * implements tooltip widget
      * @extends chart.widget.core
      * @alias TooltipWidget
      * @requires jquery
@@ -18769,7 +18293,6 @@ jui.define("chart.widget.title", [], function() {
 
     /**
      * @class chart.widget.title
-     * implements title widget
      * @extends chart.widget.core
      * @alias TitleWidget
      *
@@ -18857,7 +18380,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
      * @requires util.base
      *
      */
-
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
         var colorIndex = {};
@@ -18921,12 +18443,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             chart.emit("legend.filter", [ target ]);
         }
 
-        /**
-         * brush 에서 생성되는 legend 아이콘 리턴 
-         * 
-         * @param {object} chart
-         * @param {object} brush
-         */
 		this.getLegendIcon = function(brush) {
             var arr = [],
                 data = brush.target,
@@ -19155,17 +18671,21 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         };
     }
 
+    /**
+     * @event legend_filter
+     * Event that occurs when the filter function of the legend widget is activated. (real name ``` legend.filter ```)
+     * @param {String} target The selected data field.
+     */
+
     return LegendWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.zoom
-     * implements zoom widget
      * @extends chart.widget.core
      * @alias ZoomWidget
      * @requires util.base
-     *
      */
     var ZoomWidget = function() {
         var self = this,
@@ -19842,7 +19362,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.cross
-     * implements cross widget
      * @extends chart.widget.core
      * @alias CoreWidget
      * @requires util.base
@@ -20004,10 +19523,7 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.topologyctrl
-     * 
-     * 토폴로지 이벤트 핸들러
-     * 
-     * @extends chart.widget.core 
+     * @extends chart.widget.core
      */
     var TopologyControlWidget = function(chart, axis, widget) {
         var self = this;

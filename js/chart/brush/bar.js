@@ -1,25 +1,14 @@
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.brush.bar 
-     * implements bar brush 
+     * @class chart.brush.bar
+	 *
      * @extends chart.brush.core
      */
 	var BarBrush = function() {
 		var g;
 		var zeroX, height, half_height, bar_height;
 
-        /**
-         * bar style 을 얻어온다. 
-         *  
-         * @return {Object} bar 에 관련된 스타일을 리턴한다. 
-         * @return {String} return.borderColor  
-         * @return {Number} return.borderWidth  
-         * @return {Number} return.borderOpacity  
-         * @return {Number} return.borderRadius  
-         * @return {Number} return.disableOpacity  
-         * @return {String} return.circleColor  
-         */
 		this.getBarStyle = function() {
 			return {
 				borderColor: this.chart.theme("barBorderColor"),
@@ -31,18 +20,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method getBarElement 
-         *  
-         * 특정 위치에 맞는 bar element 를 생성한다. 
-         *  
-         * @param {Number} dataIndex
-         * @param {Number} targetIndex
-         * @param {Object} info
-         * @param {Number} info.width bar 넓이
-         * @param {Number} info.height bar 높이
-         * @return {util.svg.element}
-         */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
 				color = this.color(dataIndex, targetIndex),
@@ -73,13 +50,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			return r;
 		}
 
-        /**
-         * @method setActiveEffect 
-         * 
-         * 활성화(active)된 영역 표시   
-         *  
-         * @param {Number} r
-         */
 		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
 				cols = this.barList;
@@ -94,11 +64,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawBefore 
-         * 
-         * @protected 
-         */
 		this.drawBefore = function() {
 			var op = this.brush.outerPadding,
 				ip = this.brush.innerPadding,
@@ -118,11 +83,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawETC
-         * 
-         * @param {util.svg.element} group
-         */
 		this.drawETC = function(group) {
 			if(!_.typeCheck("array", this.barList)) return;
 

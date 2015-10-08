@@ -2,10 +2,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     /**
      * @class chart.brush.circlegauge 
-     * 
-     * implements circle gauge  
-     *
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var CircleGaugeBrush = function(chart, axis, brush) {
         var group;

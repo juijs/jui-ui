@@ -2,19 +2,9 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
     /**
      * @class chart.grid.block
-     * Implements Block Grid
-     *
-     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] }
-     *
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
-
-        /**
-         * @method top
-         *
-         * @protected
-         */
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);
@@ -22,44 +12,24 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.drawBaseLine("top", g);
         }
 
-        /**
-         * @method bottom
-         *
-         * @protected
-         */
         this.bottom = function(g) {
             this.drawPattern("bottom", this.domain, this.points);
             this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
-        /**
-         * @method left
-         *
-         * @protected
-         */
         this.left = function(g) {
             this.drawPattern("left", this.domain, this.points);
             this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
-        /**
-         * @method right
-         *
-         * @protected
-         */
         this.right = function(g) {
             this.drawPattern("right", this.domain, this.points);
             this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
-        /**
-         * @method initDomain
-         * block grid 에 대한 domain 설정
-         * @private
-         */
         this.initDomain = function() {
 
             var domain = [];
@@ -97,11 +67,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
         }
 
-        /**
-         * @method drawBefore
-         *
-         * @protected
-         */
         this.drawBefore = function() {
             var domain = this.initDomain();
 
@@ -125,12 +90,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.reverse = this.grid.reverse;
         }
 
-        /**
-         * @method draw
-         *
-         * @protected
-         * @return {Mixed}
-         */
         this.draw = function() {
             return this.drawGrid("block");
         }

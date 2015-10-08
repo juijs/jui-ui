@@ -2,10 +2,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
     /**
      * @class chart.brush.fullstackbar 
-     * 
-     * implements fullstack bar brush 
-     *  
-     * @extends chart.brush.stackbar 
+     * @extends chart.brush.stackbar
      */
 	var FullStackBarBrush = function(chart, axis, brush) {
 		var g, zeroX, height, bar_height;
