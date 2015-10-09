@@ -16,13 +16,13 @@
             var rgb = color.HSVtoRGB(0, 100, 100);
 
             $(".color").css({
-                background: "rgb(" + rgb.join(",") + ")"
+                background : color.format(rgb, 'hex')
             });
 
             var hsv = color.RGBtoHSV(255, 255, 0);
-            $(".hsvColor").html(hsv.join(","));
+            $(".hsvColor").html(JSON.stringify(hsv));
             $(".hsvColor").css({
-                background: "rgb(" + color.HSVtoRGB(hsv[0], hsv[1], hsv[2]).join(",") + ")"
+                background: color.format(color.HSVtoRGB(hsv.h, hsv.s, hsv.v) , "hex")
             });
         });
     </script>

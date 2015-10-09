@@ -1,0 +1,55 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Button</title>
+
+<link rel="stylesheet" href="../../dist/jui.css" />
+<link rel="stylesheet" href="../../dist/jennifer.theme.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/util/color.js"></script>
+<script src="../../js/ui/colorpicker.js"></script>
+
+<script>
+    jui.ready([ "ui.colorpicker" ], function(colorpicker) {
+
+        colorpicker1 = colorpicker("#colorpicker1", {
+            event : {
+                "change" : function(c, rgb) {
+                    console.log(c, this.getColor("hex"));
+                }
+            }
+        });
+
+    });
+</script>
+
+</head>
+<body class="jui">
+
+<div id="colorpicker1">
+    <div class="colorpicker">
+        <div class="color">
+            <div class="saturation">
+                <div class="value">
+                    <div class="drag-pointer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hue">
+            <div class="hue-container">
+                <div class="drag-bar"></div>
+            </div>
+        </div>
+        <div class="opacity"></div>
+        <div class="information">
+            <input type="text" class="input" value="" readonly style="width:100%;height:100%;" /></div>
+    </div>
+</div>
+
+</body>
+</html>

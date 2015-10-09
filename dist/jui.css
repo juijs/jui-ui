@@ -3243,6 +3243,94 @@
 .jui .datepicker.large > table.body tr:first-child td {
   height: 33px;
 }
+.jui .colorpicker {
+  position: relative;
+  width: 178px;
+  height: 160px;
+  padding-top: 26px;
+  border: 1px solid black;
+}
+.jui .colorpicker .color {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 135px;
+  height: 135px;
+  border: 1px solid black;
+  overflow: hidden;
+}
+.jui .colorpicker .color .saturation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#ffffff), to(rgba(204, 154, 129, 0)));
+  background-image: -webkit-linear-gradient(left, #ffffff, rgba(204, 154, 129, 0));
+  background-image: -moz-linear-gradient(left, #ffffff, rgba(204, 154, 129, 0));
+  background-image: -o-linear-gradient(left, #ffffff, rgba(204, 154, 129, 0));
+  background-image: -ms-linear-gradient(left, #ffffff, rgba(204, 154, 129, 0));
+  background-image: linear-gradient(to right, #ffffff, rgba(204, 154, 129, 0));
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType = 1, startColorstr=#FFFFFFFF, endColorstr=#00CC9A81)";
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr='#FFFFFFFF', endColorstr='#00CC9A81');
+}
+.jui .colorpicker .color .saturation .value {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#000000), to(rgba(204, 154, 129, 0)));
+  background-image: -webkit-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
+  background-image: -moz-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
+  background-image: -o-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
+  background-image: -ms-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
+  background-image: linear-gradient(to top, #000000, rgba(204, 154, 129, 0));
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00CC9A81, endColorstr=#FF000000)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00CC9A81', endColorstr='#FF000000');
+}
+.jui .colorpicker .color .saturation .value .drag-pointer {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+  left: -5px;
+  top: -5px;
+}
+.jui .colorpicker .hue {
+  position: absolute;
+  top: 4px;
+  width: 20px;
+  left: 145px;
+  height: 135px;
+  border: 1px solid black;
+  background: -moz-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  background: -ms-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  background: -o-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  background: -webkit-gradient(linear, left top, left bottom, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
+  background: -webkit-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  background: linear-gradient(to bottom, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+}
+.jui .colorpicker .hue .hue-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.jui .colorpicker .hue .hue-container .drag-bar {
+  position: absolute;
+  cursor: pointer;
+  top: -3px;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-right: 5px solid black;
+}
+.jui .colorpicker .information {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  top: 145px;
+}
 .jui .calendar {
   position: relative;
   width: 100%;

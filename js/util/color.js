@@ -1,4 +1,4 @@
-jui.define("util.color", [], function() {
+jui.define("util.color", ["jquery"], function($) {
 
 	/**
 	 *  @class util.color
@@ -9,7 +9,79 @@ jui.define("util.color", [], function() {
 
 		regex  : /(linear|radial)\((.*)\)(.*)/i,
 
+		format : function(obj, type) {
+			if (type == 'hex') {
+				var r = obj.r.toString(16);
+				if (r < 10) r = "0" + r;
+
+				var g = obj.g.toString(16);
+				if (g < 10) g = "0" + g;
+
+				var b = obj.b.toString(16);
+				if (b < 10) b = "0" + b;
+
+				return "#" + [r,g,b].join("").toUpperCase();
+			} else if (type == 'rgb') {
+				if (typeof obj.a == 'undefined') {
+					return "rgb(" + [obj.r, obj.g, obj.b].join(",") + ")";
+				} else {
+					return "rgba(" + [obj.r, obj.g, obj.b, obj.a].join(",") + ")";
+				}
+			}
+
+			return obj;
+		},
+
+		scale : function() {
+			var startColor, endColor;
+
+			function func(t, type) {
+
+				var obj = {
+					r : parseInt(startColor.r + (endColor.r - startColor.r) * t, 10) ,
+					g : parseInt(startColor.g + (endColor.g - startColor.g) * t, 10),
+					b : parseInt(startColor.b + (endColor.b - startColor.b) * t, 10)
+				};
+
+				return self.format(obj, type);
+			}
+
+			func.domain = function(start, end) {
+				startColor = self.rgb(start);
+				endColor = self.rgb(end);
+
+				return func;
+			}
+
+			return func;
+		},
+
+		rgb : function (str) {
+			if (str.indexOf("rgb(") > -1) {
+				var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+					arr[i] = parseInt($.trim(arr[i]), 10);
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2]	};
+			} else if (str.indexOf("#") == 0) {
+
+				str = str.replace("#", "");
+				var arr = [];
+				for(var i = 0, len = str.length; i < len; i+=2) {
+					arr.push(parseInt(str.substr(i, 2), 16));
+				}
+				return { r : arr[0], g : arr[1], b : arr[2]	};
+			}
+		},
+
 		HSVtoRGB : function (H, S, V) {
+
+			if (H == 360) {
+				H = 0;
+			}
+
 			var C = S * V;
 			var X = C * (1 -  Math.abs((H/60) % 2 -1)  );
 			var m = V - C;
@@ -23,7 +95,11 @@ jui.define("util.color", [], function() {
 			else if (240 <= H && H < 300) { temp = [X, 0, C]; }
 			else if (300 <= H && H < 360) { temp = [C, 0, X]; }
 
-			return [(temp[0] + m) * 255,(temp[1] + m) * 255,(temp[2] + m) * 255];
+			return {
+				r : parseInt((temp[0] + m) * 255),
+				g : parseInt((temp[1] + m) * 255),
+				b : parseInt((temp[2] + m) * 255)
+			};
 		},
 
 		RGBtoHSV : function (R, G, B) {
@@ -54,7 +130,7 @@ jui.define("util.color", [], function() {
 
 			var V = MaxC;
 
-			return [H, S*100, V*100];
+			return { h : H, s : S, v :  V };
 		},
 
 		trim : function (str) {
