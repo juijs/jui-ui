@@ -6500,10 +6500,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			$(self.options.target).append($modal);
 			
 			// 루트 모달 옆으로 이동
-			if(self.options.target != "body") {
-				$(self.root).insertAfter($modal);
-			}
-			
+			$(self.root).insertAfter($modal);
+
 			// 모달 닫기 이벤트 걸기
 			self.addEvent($modal, "click", function(e) {
 				if(self.options.autoHide) {
