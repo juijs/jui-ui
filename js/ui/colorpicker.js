@@ -38,7 +38,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			$drag_bar = $root.find(".drag-bar");
 			$input = $root.find(".information input[type=text]");
 
-			setEvent();
+			this.initEvent();
 
 			initColor();
 		}
@@ -87,10 +87,15 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
 			var rgb = caculateColor();
 			var str = color.format(rgb, 'hex');
+			var fontColor = caculateFontColor();
 			$input.css({
 				background: str,
-				color : caculateFontColor()
+				color : fontColor
 			}).val(str);
+
+			$drag_pointer.css({
+				'border-color' : fontColor
+			});
 
 			self.emit("change", [ str, rgb ]);
 		}
@@ -185,38 +190,35 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			return "rgb(221,221,221)";
 		}
 
-		function setEvent() {
-			$color.on('mousedown', function(e) {
+		this.initEvent = function () {
+
+			this.addEvent($color, 'mousedown', function (e) {
 				e.preventDefault();
 				$color.data('isDown', true);
 				setMainColor(e);
 			});
 
-			$color.on('mouseup', function(e) {
-				e.preventDefault();
+			this.addEvent('body', 'mouseup', function(e) {
 				$color.data('isDown', false);
-			})
+			});
 
-			$color.on('mousemove', function(e) {
-				e.preventDefault();
+			this.addEvent('body', 'mousemove', function(e) {
 				if ($color.data('isDown')) {
 					setMainColor(e);
 				}
-			})
+			});
 
-			$hue.on('mousedown', function(e) {
+			this.addEvent($hue, 'mousedown', function(e) {
 				e.preventDefault();
 				$hue.data('isDown', true);
 				setHueColor(e);
 			});
 
-			$hue.on('mouseup', function(e) {
-				e.preventDefault();
+			this.addEvent('body', 'mouseup', function(e) {
 				$hue.data('isDown', false);
 			})
 
-			$hue.on('mousemove', function(e) {
-				e.preventDefault();
+			this.addEvent('body', 'mousemove', function(e) {
 				if ($hue.data('isDown')) {
 					setHueColor(e);
 				}
