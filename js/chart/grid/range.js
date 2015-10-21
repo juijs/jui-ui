@@ -1,4 +1,4 @@
-jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale, _) {
+jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], function(UtilScale, _, math) {
 
 	/**
 	 * @class chart.grid.range
@@ -128,13 +128,14 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.grid.min = min;
 
 			var unit;
-
+			var hasUnit = true;
 			if (_.typeCheck("function", this.grid.unit)) {
 				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
-				unit = Math.ceil((max - min) / this.grid.step);
+				unit = (max - min) / this.grid.step;
+				hasUnit = false;
 			}
 
 			if (unit == 0) {
@@ -143,18 +144,22 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var start = 0;
 
+				var fixed = math.fixed(unit);
 				while (start < max) {
-					start += unit;
+					start = fixed.plus(start, unit);
 				}
 
-        var end = start;
-        while (end > min) {
-          end -= unit;
-        }
+				var end = start;
+				while (end > min) {
+				  end = fixed.minus(end, unit);
+				}
         
 				domain = [end, start];
 
-				this.grid.step = (Math.abs(end - start) / unit);
+				if (hasUnit) {
+					this.grid.step = (Math.abs(end - start) / unit);
+				}
+
 			}
 
 			if (this.grid.reverse) {
