@@ -7976,6 +7976,15 @@ jui.defineUI("uix.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], funct
 			words = newWords;
 		}
 
+		/**
+		 * @method close
+		 * Close the active drop-down
+		 *
+		 */
+		this.close = function() {
+			if(ddUi) ddUi.hide();
+		}
+
         /**
          * @method list
          * Gets filtered words subject to autofill
