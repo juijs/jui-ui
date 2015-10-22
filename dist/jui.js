@@ -3275,7 +3275,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber, reverse) {
+			func.ticks = function(count, isNice, /** @deprecated */intNumber, reverse) {
 
 				//intNumber = intNumber || 10000;
 				reverse = reverse || false;
@@ -3286,12 +3286,12 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				}
 
 				var obj = math.nice(_domain[0], _domain[1], count || 10, isNice || false);
-				//intNumber = Math.pow(10, (obj.spacing + "").split(".")[1].length);
+
 				var arr = [];
 
-				var start = (reverse ? obj.max : obj.min)/* * intNumber*/;
-				var end = (reverse ? obj.min : obj.max)/* * intNumber*/;
-				var unit = obj.spacing/* * intNumber*/;
+				var start = (reverse ? obj.max : obj.min);
+				var end = (reverse ? obj.min : obj.max);
+				var unit = obj.spacing;
 				var fixed = math.fixed(unit);
 
 				while ((reverse ? end <= start : start <= end)) {
