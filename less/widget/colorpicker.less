@@ -1,17 +1,17 @@
 .colorpicker {
   position: relative;
-  width: 178px;
-  height: 160px;
+  width: 200px;
+  height: 150px;
   padding-top: 26px;
-  border: 1px solid black;
+  border: 1px solid #ececec;
+  .user-select(none);
 
   .color {
     position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 135px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
     height: 135px;
-    border: 1px solid black;
     overflow:hidden;
 
     .saturation {
@@ -47,7 +47,8 @@
           width:10px;
           height:10px;
           border-radius: 5px;
-          border: 1px solid black;
+          border: 1px solid #ffffff;
+          .box-shadow(0px 0px 5px rgba(0, 0, 0, 0.5));
           left:-5px;
           top:-5px;
         }
@@ -57,18 +58,18 @@
 
   .hue {
     position: absolute;
-    top: 4px;
-    width: 20px;
-    left: 145px;
-    height: 135px;
-    border: 1px solid black;
+    top: 142px;
+    height: 8px;
+    left: 12px;
+    right: 12px;
+    border: 1px solid #ececec;
 
-    background: -moz-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    background: -ms-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    background: -o-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    background: -webkit-gradient(linear, left top, left bottom, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
-    background: -webkit-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    background: linear-gradient(to bottom, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: -moz-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: -ms-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: -o-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: -webkit-gradient(linear, left top, right top, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
+    background: -webkit-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
 
     .hue-container {
       position: relative;
@@ -78,15 +79,16 @@
       .drag-bar {
         position:absolute;
         cursor:pointer;
-        top:-3px;
-        right:-8px;
-        width: 0;
-        height: 0;
-        border-top: 3px solid transparent;
-        border-bottom: 3px solid transparent;
+        top: 50% !important;
+        margin-top:-8px !important;
+        left:-3px;
+        width: 15px;
+        height: 15px;
 
-        border-right:5px solid black;
-
+        border-radius: 10px;
+        border: 1px solid #ececed;
+        .box-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+        background-color:#fff;
       }
     }
   }
@@ -96,6 +98,6 @@
     left: 4px;
     right: 4px;
     bottom: 4px;
-    top: 145px;
+    top: 160px;
   }
 }

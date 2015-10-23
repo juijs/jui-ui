@@ -1,7 +1,7 @@
 jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function($, _, color) {
 
-	
-	
+
+
 	/**
 	 * @class ui.colorpicker
 	 * @extends core
@@ -24,22 +24,56 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			{rgb : '#ff0000', start : 1}
 		];
 
+		this.selectDom = function (selector) {
+			var $dom = $root.find("." + selector);
+			return ($dom.length)  ? $dom : $("<div class='" + selector + "' />");
+		};
+
+		this.pos = function (e) {
+
+			if (_.isTouch) {
+				return e.originalEvent.touches[0];
+			}
+
+			return e;
+		}
 
 		this.init = function() {
 			self = this, opts = this.options;
 
 			$root = $(this.root);
 
-			$color = $root.find(".color");
-			$value = $root.find(".value");
-			$hue = $root.find(".hue");
-			$saturation = $root.find(".saturation");
-			$drag_pointer = $root.find(".drag-pointer");
-			$drag_bar = $root.find(".drag-bar");
-			$input = $root.find(".information input[type=text]");
+			this.$colorpicker = this.selectDom('colorpicker');
+
+			this.$color = this.selectDom('color');
+			this.$drag_pointer = this.selectDom('drag-pointer');
+			this.$value = this.selectDom('value');
+			this.$saturation = this.selectDom('saturation');
+
+			this.$hue = this.selectDom('hue');
+			this.$hueContainer = this.selectDom('hue-container');
+			this.$drag_bar = this.selectDom('drag-bar');
+
+			this.$opacity = this.selectDom('opacity');
+			this.$information = this.selectDom('information');
+
+			this.$value.html(this.$drag_pointer);
+			this.$saturation.html(this.$value);
+			this.$color.html(this.$saturation);
+
+
+
+			this.$hueContainer.html(this.$drag_bar);
+			this.$hue.html(this.$hueContainer);
+
+			this.$colorpicker.html(this.$color);
+			this.$colorpicker.append(this.$hue);
+			this.$colorpicker.append(this.$opacity);
+			this.$colorpicker.append(this.$information);
+
+			$root.html(this.$colorpicker);
 
 			this.initEvent();
-
 			initColor();
 		}
 
@@ -60,50 +94,46 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 		function initColor(c) {
 			var rgb = color.rgb(c || self.options.color);
 
-			$color.css({
+			self.$color.css({
 				background: self.options.color
 			});
 
 			var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b);
 
-			var x = $color.width() * hsv.s;
-			var y = $color.height() * (1-hsv.v);
+			var x = self.$color.width() * hsv.s;
+			var y = self.$color.height() * (1-hsv.v);
 
-			$drag_pointer.css({
+			self.$drag_pointer.css({
 				left : x - 5,
 				top : y - 5
 			}).data('pos', { x  : x, y : y });
 
-			var hueY = $hue.height() * (hsv.h / 360);
+			var hueX = self.$hue.width() * (hsv.h / 360);
 
-			$drag_bar.css({
-				top : hueY - 5  < 0 ? 0 : hueY - 5
-			}).data('pos', { y : hueY });
+			self.$drag_bar.css({
+				left : hueX - 7.5
+			}).data('pos', { x : hueX });
 
-			setInputColor();
+			//setInputColor();
+
 		}
 
 		function setInputColor() {
-
+			return;
 			var rgb = caculateColor();
 			var str = color.format(rgb, 'hex');
-			var fontColor = caculateFontColor();
-			$input.css({
+			this.$input.css({
 				background: str,
-				color : fontColor
+				color : caculateFontColor()
 			}).val(str);
-
-			$drag_pointer.css({
-				'border-color' : fontColor
-			});
 
 			self.emit("change", [ str, rgb ]);
 		}
 
 		function setMainColor(e) {
-			var offset = $color.offset();
-			var w = $color.width();
-			var h = $color.height();
+			var offset = self.$color.offset();
+			var w = self.$color.width();
+			var h = self.$color.height();
 
 			var x = e.clientX - offset.left;
 			var y = e.clientY - offset.top;
@@ -114,7 +144,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			if (y < 0) y = 0;
 			else if (y > h) y = h;
 
-			$drag_pointer.css({
+			self.$drag_pointer.css({
 				left: x - 5,
 				top: y - 5
 			}).data('pos', { x: x, y : y});
@@ -143,21 +173,27 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 		}
 
 		function setHueColor (e) {
-			var offset = $color.offset();
-			var h = $color.height();
+			var min = self.$hue.offset().left;
+			var max = min + self.$hue.width();
+			var current = self.pos(e).clientX;
 
-			var y = e.clientY - offset.top;
+			if (current < min) {
+				dist = 0;
+			} else if (current > max) {
+				dist = 100;
+			} else {
+				dist = (current - min) / (max - min) * 100;
+			}
 
-			if (y < 0) y = 0;
-			else if (y > h) y = h;
+			var x = (self.$hue.width() * (dist/100));
 
-			$drag_bar.css({
-				top: y - 5
-			}).data('pos', { y : y});
+			self.$drag_bar.css({
+				left: (x -Math.ceil(self.$drag_bar.width()/2)) + 'px'
+			}).data('pos', { x : x});
 
-			var hueColor = checkHueColor(y/h);
+			var hueColor = checkHueColor(dist/100);
 
-			$color.css({
+			self.$color.css({
 				background: hueColor
 			});
 
@@ -165,12 +201,15 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 		}
 
 		function caculateColor() {
-			var pos = $drag_pointer.data('pos') || { x : 0, y : 0 };
-			var huePos = $drag_bar.data('pos') || { y : 0 };
+			var pos = self.$drag_pointer.data('pos') || { x : 0, y : 0 };
+			var huePos = self.$drag_bar.data('pos') || { y : 0 };
 
-			var h = (huePos.y / $hue.height()) * 360;
-			var s = (pos.x / $color.width());
-			var v = (($color.height() - pos.y) / $color.height());
+			var width = self.$color.width();
+			var height = self.$color.height();
+
+			var h = (huePos.y / self.$hue.height()) * 360;
+			var s = (pos.x / width);
+			var v = ((height - pos.y) / height);
 
 			var rgb = color.HSVtoRGB(h, s, v);
 
@@ -178,11 +217,11 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 		}
 
 		function caculateFontColor() {
-			var pos = $drag_pointer.data('pos') || { x : 0, y : 0 };
-			var huePos = $drag_bar.data('pos') || { y : 0 };
+			var pos = self.$drag_pointer.data('pos') || { x : 0, y : 0 };
+			var huePos = self.$drag_bar.data('pos') || { y : 0 };
 
-			if (pos.x / $color.width() < .5) {
-				if (pos.y / $color.height() < .3) {
+			if (pos.x / self.$color.width() < .5) {
+				if (pos.y / self.$color.height() < .3) {
 					return "rgb(34, 34, 34)";
 				}
 			}
@@ -192,48 +231,46 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
 		this.initEvent = function () {
 
-			this.addEvent($color, 'mousedown', function (e) {
-				e.preventDefault();
-				$color.data('isDown', true);
+			this.$color.on('mousedown', function(e) {
+				self.$color.data('isDown', true);
 				setMainColor(e);
 			});
 
-			this.addEvent('body', 'mouseup', function(e) {
-				$color.data('isDown', false);
-			});
-
-			this.addEvent('body', 'mousemove', function(e) {
-				if ($color.data('isDown')) {
-					setMainColor(e);
-				}
-			});
-
-			this.addEvent($hue, 'mousedown', function(e) {
+			this.$drag_bar.on('mousedown', function(e) {
 				e.preventDefault();
-				$hue.data('isDown', true);
+				self.$hue.data('isDown', true);
+			});
+
+			this.$hueContainer.on('mousedown', function(e) {
+				self.$hue.data('isDown', true);
 				setHueColor(e);
 			});
 
-			this.addEvent('body', 'mouseup', function(e) {
-				$hue.data('isDown', false);
+			this.addEvent('body', 'mouseup', function (e) {
+				self.$color.data('isDown', false);
+				self.$hue.data('isDown', false);
 			})
 
-			this.addEvent('body', 'mousemove', function(e) {
-				if ($hue.data('isDown')) {
+			this.addEvent('body', 'mousemove', function (e) {
+				if (self.$color.data('isDown')) {
+					setMainColor(e);
+				}
+
+				if (self.$hue.data('isDown')) {
 					setHueColor(e);
 				}
-			})
+			});
 		}
 
 
 	}
 
-    UI.setup = function() {
-        return {
+	UI.setup = function() {
+		return {
 			type : 'full',
 			color : '#FF0000'
-        }
-    }
-	
+		}
+	}
+
 	return UI;
 });
