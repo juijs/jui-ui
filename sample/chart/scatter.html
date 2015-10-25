@@ -20,27 +20,42 @@
     jui.ready([ "chart.builder" ], function(chart) {
 
          chart("#chart", {
-            width: 400,
-            height : 400,
+            width: 640,
+            height : 480,
+            padding: 150,
             theme : "jennifer",
              axis : {
                  x : {
                      type : "block",
                      domain : [ "Q1", "Q2", "Q3", "Q4" ],
-                     line : true
+                     line : true,
+                     orient : "bottom"
                  },
                  y : {
                      type : "range",
                      domain : "total",
-                     step : 10
+                     step : 5,
+                     line : true,
+                     orient : "left"
+                 },
+                 z : {
+                    type : "block",
+                    domain : [ "Total", "Profit", "Sales" ]
                  },
                  data : [
                      { sales: 0, profit: 15, total: 20 },
                      { sales: 15, profit: 6, total: 20 },
                      { sales: 8, profit: 10, total: 20 },
                      { sales: 18, profit: 5, total: 20 }
-                 ]
+                 ],
+                 depth: 300,
+                 degree: {
+                     x: 0,
+                     y: 0,
+                     z: 0
+                 }
              },
+             /*/
              brush : {
                  type: "scatter",
                  size : 10,
@@ -53,29 +68,14 @@
                      return "resource/star.gif";
                  }
              },
-             /*/
-            event: {
-                click: function(obj, e) {
-                    console.log(obj);
-                },
-                mouseover: function(obj, e) {
-                    var $tooltip = $(this.tpl.tooltip(obj));
-
-                    $(this.root).append($tooltip);
-
-                    $tooltip.css({
-                        left: e.pageX - $tooltip.width() / 2,
-                        top: e.pageY - $tooltip.height() - 15
-                    });
-                },
-                mouseout: function(obj, e) {
-                    $(this.root).find(".tooltip").remove();
-                }
-            },
-            tpl: {
-                tooltip: $("#tpl_tooltip").html()
-            }
-            /**/
+             /**/
+             widget : {
+                 type : "rotate3d"
+             },
+             style : {
+                 gridXAxisBorderWidth: 1,
+                 gridYAxisBorderWidth: 1
+             }
         });
 	})
 </script>
