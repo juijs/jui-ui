@@ -22,7 +22,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polyg
 			}
 
 			if(color.indexOf("radial") == -1) {
-				color = this.chart.color("radial(20%,20%,50%,50%,50%) 0% " + ColorUtil.lighten(color, 0.7) + ",50% " + color);
+				color = this.chart.color("radial(40%,40%,100%,0%,0%) 0% " + ColorUtil.lighten(color, 0.7) + ",70% " + color);
 			}
 
 			var p = new PointPolygon(x, y, z);
