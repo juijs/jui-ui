@@ -53,7 +53,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function drawGridType(axis, k) {
-            if((k == "x" || k == "y" || k == "z" || k == "c") && !_.typeCheck("object", axis[k]))
+            if((k == "x" || k == "y" || k == "z") && !_.typeCheck("object", axis[k]))
                 return null;
 
             // 축 위치 설정
@@ -428,8 +428,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = _.deppClone(grid);
-                cloneAxis[type] = _.deppClone(grid);
+                originAxis[type] = _.deepClone(grid);
+                cloneAxis[type] = _.deepClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
                 _.extend(cloneAxis[type], grid);
