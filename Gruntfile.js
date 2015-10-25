@@ -57,9 +57,9 @@ module.exports = function(grunt) {
 
         // chart.polygon
         "js/chart/polygon/core.js",
-        "js/chart/polygon/gridface.js",
-        "js/chart/polygon/gridline.js",
-        "js/chart/polygon/gridpoint.js",
+        "js/chart/polygon/face.js",
+        "js/chart/polygon/line.js",
+        "js/chart/polygon/point.js",
 
         // chart.theme
         "js/chart/theme/jennifer.js",

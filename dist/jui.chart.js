@@ -7579,8 +7579,8 @@ jui.define("chart.polygon.core", [ "util.transform" ], function(Transform) {
 
     return PolygonCore;
 });
-jui.define("chart.polygon.gridface", [], function() {
-    var GridFacePolygon = function(type, width, height, depth) {
+jui.define("chart.polygon.face", [], function() {
+    var FacePolygon = function(type, width, height, depth) {
         var matrix = {
             center: [
                 new Float32Array([ 0, 0, depth, 1 ]),
@@ -7605,26 +7605,26 @@ jui.define("chart.polygon.gridface", [], function() {
         this.vertices = matrix[type];
     }
 
-    return GridFacePolygon;
+    return FacePolygon;
 }, "chart.polygon.core");
-jui.define("chart.polygon.gridline", [], function() {
-    var GridLinePolygon = function(x1, y1, d1, x2, y2, d2) {
+jui.define("chart.polygon.line", [], function() {
+    var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
         this.vertices = [
             new Float32Array([ x1, y1, d1, 1 ]),
             new Float32Array([ x2, y2, d2, 1 ])
         ]
     }
 
-    return GridLinePolygon;
+    return LinePolygon;
 }, "chart.polygon.core");
-jui.define("chart.polygon.gridpoint", [], function() {
-    var GridPointPolygon = function(x, y, d) {
+jui.define("chart.polygon.point", [], function() {
+    var PointPolygon = function(x, y, d) {
         this.vertices = [
             new Float32Array([ x, y, d, 1 ])
         ]
     }
 
-    return GridPointPolygon;
+    return PointPolygon;
 }, "chart.polygon.core");
 jui.define("chart.theme.jennifer", [], function() {
 
@@ -9302,8 +9302,8 @@ jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) 
 
     return Draw2DGrid;
 });
-jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.polygon.gridline", "chart.polygon.gridpoint" ],
-    function(_, GridFacePolygon, GridLinePolygon, GridPointPolygon) {
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, FacePolygon, LinePolygon, PointPolygon) {
 
     /**
      * @class chart.grid.draw3d
@@ -9378,14 +9378,14 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.
                 d = this.axis.depth;
 
             if(position == "center") {
-                p = new GridFacePolygon("center", w, h, d);
+                p = new FacePolygon("center", w, h, d);
             } else {
                 if(isTopOrBottom) {
                     h = (position == "bottom") ? h : 0;
-                    p = new GridFacePolygon("horizontal", w, h, d);
+                    p = new FacePolygon("horizontal", w, h, d);
                 } else {
                     w = (position == "right") ? w : 0;
-                    p = new GridFacePolygon("vertical", w, h, d);
+                    p = new FacePolygon("vertical", w, h, d);
                 }
             }
 
@@ -9408,20 +9408,20 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.
 
             if (position == "top") {
                 isDrawLine = this.checkDrawLineY(index, isLast);
-                l1 = new GridLinePolygon(xy, 0, 0, xy, 0, d);
-                l2 = new GridLinePolygon(xy, 0, d, xy, h, d);
+                l1 = new LinePolygon(xy, 0, 0, xy, 0, d);
+                l2 = new LinePolygon(xy, 0, d, xy, h, d);
             } else if (position == "bottom" ) {
                 isDrawLine = this.checkDrawLineY(index, isLast);
-                l1 = new GridLinePolygon(xy, h, 0, xy, h, d);
-                l2 = new GridLinePolygon(xy, h, d, xy, 0, d);
+                l1 = new LinePolygon(xy, h, 0, xy, h, d);
+                l2 = new LinePolygon(xy, h, d, xy, 0, d);
             } else if (position == "left") {
                 isDrawLine = this.checkDrawLineX(index, isLast);
-                l1 = new GridLinePolygon(0, xy, 0, 0, xy, d);
-                l2 = new GridLinePolygon(0, xy, d, w, xy, d);
+                l1 = new LinePolygon(0, xy, 0, 0, xy, d);
+                l2 = new LinePolygon(0, xy, d, w, xy, d);
             } else if (position == "right" ) {
                 isDrawLine = this.checkDrawLineX(index, isLast);
-                l1 = new GridLinePolygon(w, xy, 0, w, xy, d);
-                l2 = new GridLinePolygon(w, xy, d, 0, xy, d);
+                l1 = new LinePolygon(w, xy, 0, w, xy, d);
+                l2 = new LinePolygon(w, xy, d, 0, xy, d);
             }
 
             if(isDrawLine) {
@@ -9469,8 +9469,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.
             // z축 라인 드로잉
             for(var i = 1, len = ticks.length; i < len; i++) {
                 var t = i * (d / len),
-                    p1 = new GridLinePolygon(0, dy, t, w, dy, t),
-                    p2 = new GridLinePolygon(dx, 0, t, dx, h, t);
+                    p1 = new LinePolygon(0, dy, t, w, dy, t),
+                    p2 = new LinePolygon(dx, 0, t, dx, h, t);
 
                 this.calculate3d(p1, p2);
 
@@ -9520,7 +9520,7 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.
                 y = xy;
             }
 
-            var p = new GridPointPolygon(x, y, 0);
+            var p = new PointPolygon(x, y, 0);
             this.calculate3d(p);
 
             axis.append(this.getTextRotate(this.chart.text({
@@ -9554,7 +9554,7 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.gridface", "chart.
             for(var i = 0, len = ticks.length; i < len; i++) {
                 var domain = this.format(ticks[i], i),
                     t = i * (d / len) + half_band,
-                    p = new GridPointPolygon(x, y, t);
+                    p = new PointPolygon(x, y, t);
 
                 this.calculate3d(p);
 
