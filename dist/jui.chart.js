@@ -2463,19 +2463,23 @@ jui.define("util.math", [], function() {
 			};
 
 			func.plus = function (a, b) {
-				return Math.round(a * pow + b * pow) / pow;
+				return Math.round((a * pow) + (b * pow)) / pow;
 			};
 
 			func.minus = function (a, b) {
-				return Math.round(a * pow - b * pow) / pow;
+				return Math.round((a * pow) - (b * pow)) / pow;
 			};
 
 			func.multi = function (a, b) {
-				return Math.round(a * pow * b * pow) / pow;
+				return Math.round((a * pow) * (b * pow)) / pow;
 			};
 
 			func.div = function (a, b) {
-				return Math.round(a * pow / b * pow) / pow;
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
 			};
 
 			return func;
@@ -2488,19 +2492,29 @@ jui.define("util.math", [], function() {
 		},
 
 		plus : function (a, b) {
-			return this.round(a + b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
 		},
 
 		minus : function (a, b) {
-			return this.round(a - b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
 		},
 
 		multi : function (a, b) {
-			return this.round(a * b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
 		},
 
 		div : function (a, b) {
-			return this.round(a / b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
 		},
 
 		/**
@@ -3316,8 +3330,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
@@ -10387,8 +10401,18 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
-				unit = (max - min) / this.grid.step;
-				hasUnit = false;
+				unit = math.div((max - min), this.grid.step);   // (max - min) / this.grid.step
+				var firstNumber = math.remain((unit * 10),  10); // unit * 10 % 10
+				console.log(max, min, this.grid.step, unit);
+
+				if (firstNumber != 5) {
+					unit = Math.round(unit);
+				} else if (firstNumber > 5) {
+					unit = Math.ceil(unit);
+				}
+
+				console.log(max, min, this.grid.step, unit);
+
 			}
 
 			if (unit == 0) {
@@ -10409,9 +10433,7 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
         
 				domain = [end, start];
 
-				if (hasUnit) {
-					this.grid.step = (Math.abs(end - start) / unit);
-				}
+				this.grid.step = (Math.abs(end - start) / unit);
 
 			}
 

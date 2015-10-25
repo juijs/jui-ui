@@ -654,8 +654,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
