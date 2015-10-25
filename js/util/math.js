@@ -1,4 +1,4 @@
-jui.define("util.math", [], function() {
+jui.define("util.math", [ "util.base" ], function(_) {
 
 	/**
 	 * @class util.math
@@ -233,7 +233,59 @@ jui.define("util.math", [], function() {
 				range : _range,
 				spacing : _tickSpacing
 			}
-		}		
+		},
+
+		matrix: function(a, b) {
+			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+			function matrix(a, b) {
+				var m = [];
+
+				for(var i = 0, len = a.length; i < len; i++) {
+					var sum = 0;
+
+					for(var j = 0, len2 = a[i].length; j < len2; j++) {
+						sum += a[i][j] * b[j];
+					}
+
+					m.push(sum);
+				}
+
+				return m;
+			}
+
+
+			// 2x2 or 3x3 형태의 매트릭스 연산
+			function deepMatrix(a, b) {
+				var m = [], nm = [];
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					m[i] = [];
+					nm[i] = [];
+				}
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					for(var j = 0, len2 = b[i].length; j < len2; j++) {
+						m[j].push(b[i][j]);
+					}
+				}
+
+				for(var i = 0, len = m.length; i < len; i++) {
+					var mm = matrix(a, m[i]);
+
+					for(var j = 0, len2 = mm.length; j < len2; j++) {
+						nm[j].push(mm[j]);
+					}
+				}
+
+				return nm;
+			}
+
+			if(_.typeCheck("array", b[0])) {
+				return deepMatrix(a, b);
+			}
+
+			return matrix(a, b);
+		}
 	}
 
 	return self;
