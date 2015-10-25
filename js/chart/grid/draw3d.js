@@ -246,7 +246,7 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 y = (isTop) ? 0 : h;
 
             // z축 라인 드로잉
-            for(var i = 0; i < len; i++) {
+            for(var i = 0; i < ticks.length; i++) {
                 var domain = this.format(ticks[i], i),
                     t = i * (d / len) + moveZ,
                     p = new PointPolygon(x, y, t);

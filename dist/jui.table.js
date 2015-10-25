@@ -2463,19 +2463,23 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			};
 
 			func.plus = function (a, b) {
-				return Math.round(a * pow + b * pow) / pow;
+				return Math.round((a * pow) + (b * pow)) / pow;
 			};
 
 			func.minus = function (a, b) {
-				return Math.round(a * pow - b * pow) / pow;
+				return Math.round((a * pow) - (b * pow)) / pow;
 			};
 
 			func.multi = function (a, b) {
-				return Math.round(a * pow * b * pow) / pow;
+				return Math.round((a * pow) * (b * pow)) / pow;
 			};
 
 			func.div = function (a, b) {
-				return Math.round(a * pow / b * pow) / pow;
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
 			};
 
 			return func;
@@ -2488,19 +2492,29 @@ jui.define("util.math", [ "util.base" ], function(_) {
 		},
 
 		plus : function (a, b) {
-			return this.round(a + b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
 		},
 
 		minus : function (a, b) {
-			return this.round(a - b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
 		},
 
 		multi : function (a, b) {
-			return this.round(a * b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
 		},
 
 		div : function (a, b) {
-			return this.round(a / b, this.getFixed(a, b));
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
 		},
 
 		/**
@@ -3508,8 +3522,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
