@@ -234,16 +234,15 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
         }
 
         this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
-            var tickSize = this.chart.theme("gridTickBorderSize"),
-                tickPadding = this.chart.theme("gridTickPadding"),
+            var margin = this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
                 isLeft = (this.axis.get("y").orient == "left"),
                 isTop = (this.axis.get("x").orient == "top"),
                 len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
                 w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
-                x = (isLeft) ? w + tickSize + tickPadding : -(tickSize + tickPadding),
-                y = (isTop) ? 0 : h;
+                x = (isLeft) ? w + margin : -margin,
+                y = (isTop) ? -margin : h + margin;
 
             // z축 라인 드로잉
             for(var i = 0; i < ticks.length; i++) {

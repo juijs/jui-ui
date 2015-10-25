@@ -6,6 +6,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	 */
 	var DateGrid = function() {
 
+		this.center = function(g) {
+			this.drawCenter(g, this.ticks, this.values, null, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			this.drawTop(g, this.ticks, this.values, null, 0);

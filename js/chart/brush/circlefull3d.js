@@ -1,4 +1,5 @@
-jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(PointPolygon) {
+jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polygon.point" ],
+	function(_, ColorUtil, PointPolygon) {
 
 	/**
 	 * @class chart.brush.circlefull3d
@@ -7,13 +8,26 @@ jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(Point
 	var CircleFull3DBrush = function() {
 		this.createCircle = function(data, target, dataIndex, targetIndex) {
 			var color = this.color(dataIndex, targetIndex),
+				zkey = this.brush.zkey,
 				r = this.brush.size / 2,
 				x = this.axis.x(dataIndex),
 				y = this.axis.y(data[target]),
-				z = 0,
-				p = new PointPolygon(x, y, z);
+				z = null;
 
+			if(_.typeCheck("function", zkey)) {
+				var zk = zkey.call(this.chart, data);
+				z = this.axis.z(zk);
+			} else {
+				z = this.axis.z(data[zkey]);
+			}
+
+			if(color.indexOf("radial") == -1) {
+				color = this.chart.color("radial(20%,20%,50%,50%,50%) 0% " + ColorUtil.lighten(color, 0.7) + ",50% " + color);
+			}
+
+			var p = new PointPolygon(x, y, z);
 			this.calculate3d(p);
+
 			var elem = this.chart.svg.circle({
 				r: r,
 				fill: color,
@@ -44,6 +58,8 @@ jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(Point
 
 	CircleFull3DBrush.setup = function() {
 		return {
+			zkey: null,
+
 			/** @cfg {Number} [size=7]  Determines the size of a starter. */
 			size: 7,
 			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */

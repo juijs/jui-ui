@@ -18119,16 +18119,15 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
         }
 
         this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
-            var tickSize = this.chart.theme("gridTickBorderSize"),
-                tickPadding = this.chart.theme("gridTickPadding"),
+            var margin = this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
                 isLeft = (this.axis.get("y").orient == "left"),
                 isTop = (this.axis.get("x").orient == "top"),
                 len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
                 w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
-                x = (isLeft) ? w + tickSize + tickPadding : -(tickSize + tickPadding),
-                y = (isTop) ? 0 : h;
+                x = (isLeft) ? w + margin : -margin,
+                y = (isTop) ? -margin : h + margin;
 
             // z축 라인 드로잉
             for(var i = 0; i < ticks.length; i++) {
@@ -18712,6 +18711,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	 */
 	var DateGrid = function() {
 
+		this.center = function(g) {
+			this.drawCenter(g, this.ticks, this.values, null, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			this.drawTop(g, this.ticks, this.values, null, 0);
@@ -18995,6 +18999,10 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
+        this.center = function(g) {
+            this.drawCenter(g, this.domain, this.points, null, 0);
+            this.drawBaseLine("center", g);
+        }
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);
@@ -27128,7 +27136,8 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 	return MapWeatherBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(PointPolygon) {
+jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polygon.point" ],
+	function(_, ColorUtil, PointPolygon) {
 
 	/**
 	 * @class chart.brush.circlefull3d
@@ -27137,13 +27146,26 @@ jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(Point
 	var CircleFull3DBrush = function() {
 		this.createCircle = function(data, target, dataIndex, targetIndex) {
 			var color = this.color(dataIndex, targetIndex),
+				zkey = this.brush.zkey,
 				r = this.brush.size / 2,
 				x = this.axis.x(dataIndex),
 				y = this.axis.y(data[target]),
-				z = 0,
-				p = new PointPolygon(x, y, z);
+				z = null;
 
+			if(_.typeCheck("function", zkey)) {
+				var zk = zkey.call(this.chart, data);
+				z = this.axis.z(zk);
+			} else {
+				z = this.axis.z(data[zkey]);
+			}
+
+			if(color.indexOf("radial") == -1) {
+				color = this.chart.color("radial(20%,20%,50%,50%,50%) 0% " + ColorUtil.lighten(color, 0.7) + ",50% " + color);
+			}
+
+			var p = new PointPolygon(x, y, z);
 			this.calculate3d(p);
+
 			var elem = this.chart.svg.circle({
 				r: r,
 				fill: color,
@@ -27174,6 +27196,8 @@ jui.define("chart.brush.circlefull3d", [ "chart.polygon.point" ], function(Point
 
 	CircleFull3DBrush.setup = function() {
 		return {
+			zkey: null,
+
 			/** @cfg {Number} [size=7]  Determines the size of a starter. */
 			size: 7,
 			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
@@ -29585,7 +29609,7 @@ jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
                     dy = Math.floor((gapX / w) * DEGREE_LIMIT);
 
                 self.axis.degree.x = sdx + dx;
-                self.axis.degree.y = sdy + dy;
+                self.axis.degree.y = sdy - dy;
                 chart.render();
             }
 

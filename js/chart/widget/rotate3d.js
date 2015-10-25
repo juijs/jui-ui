@@ -44,7 +44,7 @@ jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
                     dy = Math.floor((gapX / w) * DEGREE_LIMIT);
 
                 self.axis.degree.x = sdx + dx;
-                self.axis.degree.y = sdy + dy;
+                self.axis.degree.y = sdy - dy;
                 chart.render();
             }
 

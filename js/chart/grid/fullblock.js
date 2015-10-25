@@ -5,6 +5,10 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
+        this.center = function(g) {
+            this.drawCenter(g, this.domain, this.points, null, 0);
+            this.drawBaseLine("center", g);
+        }
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);

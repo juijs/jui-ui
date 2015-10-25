@@ -22,7 +22,7 @@
          chart("#chart", {
             width: 640,
             height : 480,
-            padding: 150,
+            padding: 100,
             theme : "jennifer",
              axis : {
                  x : {
@@ -38,25 +38,16 @@
                      line : true,
                      orient : "left"
                  },
-                 /**/
                  z : {
                     type : "range",
-                    domain : [ 0, 20 ],
-                     step : 4
+                    domain : [ 0, 100 ],
+                    step : 4
                  },
-                 /**/
-
-                 /*/
-                 z : {
-                    type : "block",
-                     domain : [ "sales", "profit", "total" ]
-                 },
-                 /**/
                  data : [
-                     { sales: 0, profit: 15, total: 20 },
-                     { sales: 15, profit: 6, total: 20 },
-                     { sales: 8, profit: 10, total: 20 },
-                     { sales: 18, profit: 5, total: 20 }
+                     { sales: 0, profit: 15, total: 20, value: 80 },
+                     { sales: 15, profit: 6, total: 20, value: 50 },
+                     { sales: 8, profit: 10, total: 20, value: 60 },
+                     { sales: 18, profit: 5, total: 20, value: 15 }
                  ],
                  depth: 300,
                  degree: {
@@ -67,11 +58,17 @@
              },
              brush : {
                  type: "circlefull3d",
-                 size : 10
+                 target : [ "sales", "profit", "total" ],
+                 size : 10,
+                 zkey: function(data) {
+                     return data.value;
+                 }
              },
-             widget : {
+             widget : [{
                  type : "rotate3d"
-             },
+             }, {
+                 type : "tooltip"
+             }],
              style : {
                  gridXAxisBorderWidth: 1,
                  gridYAxisBorderWidth: 1
