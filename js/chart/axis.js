@@ -419,8 +419,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = _.deppClone(grid);
-                cloneAxis[type] = _.deppClone(grid);
+                originAxis[type] = _.deepClone(grid);
+                cloneAxis[type] = _.deepClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
                 _.extend(cloneAxis[type], grid);

@@ -14174,8 +14174,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = _.deppClone(grid);
-                cloneAxis[type] = _.deppClone(grid);
+                originAxis[type] = _.deepClone(grid);
+                cloneAxis[type] = _.deepClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
                 _.extend(cloneAxis[type], grid);
@@ -18958,15 +18958,12 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
 			} else {
 				unit = math.div((max - min), this.grid.step);   // (max - min) / this.grid.step
 				var firstNumber = math.remain((unit * 10),  10); // unit * 10 % 10
-				console.log(max, min, this.grid.step, unit);
 
 				if (firstNumber != 5) {
 					unit = Math.round(unit);
 				} else if (firstNumber > 5) {
 					unit = Math.ceil(unit);
 				}
-
-				console.log(max, min, this.grid.step, unit);
 
 			}
 
