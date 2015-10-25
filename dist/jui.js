@@ -17900,11 +17900,27 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             return axis;
         }
 
+        /**
+         * @method center
+         *
+         * draw center
+         *
+         * @param {chart.util.svg} g
+         * @param {Array} ticks
+         * @param {Array} values
+         * @param {Number} min
+         * @param {Function} checkActive
+         */
+        this.drawCenter = function(g, ticks, values, checkActive, moveZ) {
+            var axis = this.chart.svg.group();
+            this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            this.drawValueTextCenter(axis, ticks, values, checkActive, moveZ);
+
+            g.append(axis);
+        }
+
         this.drawBaseLine = function(position, g) {
             var axis = this.chart.svg.group();
-
-            this.drawValueLineCenter(position, axis);
-            this.drawValueTextCenter(position, axis);
             this.drawAxisLine(position, axis);
 
             g.append(axis);
@@ -18011,18 +18027,16 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             }
         }
 
-        this.drawValueLineCenter = function(position, axis) {
-            if(position != "center") return;
-
-            var w = this.axis.area("width"),
+        this.drawValueLineCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
                 dx = (this.axis.get("y").orient == "left") ? 0 : w,
-                dy = (this.axis.get("x").orient == "top") ? 0 : h,
-                ticks = this.ticks || this.domain;
+                dy = (this.axis.get("x").orient == "top") ? 0 : h;
 
             // z축 라인 드로잉
-            for(var i = 1, len = ticks.length; i < len; i++) {
+            for(var i = 1; i < len; i++) {
                 var t = i * (d / len),
                     p1 = new LinePolygon(0, dy, t, w, dy, t),
                     p2 = new LinePolygon(dx, 0, t, dx, h, t);
@@ -18090,15 +18104,12 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             }, domain)));
         }
 
-        this.drawValueTextCenter = function(position, axis) {
-            if(position != "center") return;
-
+        this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
             var tickSize = this.chart.theme("gridTickBorderSize"),
                 tickPadding = this.chart.theme("gridTickPadding"),
                 isLeft = (this.axis.get("y").orient == "left"),
                 isTop = (this.axis.get("x").orient == "top"),
-                ticks = this.ticks || this.domain,
-                half_band = this.half_band || 0,
+                len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
                 w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
@@ -18106,9 +18117,9 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 y = (isTop) ? 0 : h;
 
             // z축 라인 드로잉
-            for(var i = 0, len = ticks.length; i < len; i++) {
+            for(var i = 0; i < len; i++) {
                 var domain = this.format(ticks[i], i),
-                    t = i * (d / len) + half_band,
+                    t = i * (d / len) + moveZ,
                     p = new PointPolygon(x, y, t);
 
                 this.calculate3d(p);
@@ -18140,15 +18151,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "
 	 * @abstract
 	 */
 	var CoreGrid = function() {
-
-		/**
-		 * @method center
-		 *
-		 * @protected
-		 */
-		this.center = function(g) {
-			this.drawBaseLine("center", g);
-		}
 
 		/**
 		 * @method wrapper
@@ -18407,7 +18409,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "
 
 				g.append(axis);
 			}
-
 		}
 
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
@@ -18579,6 +18580,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 * @extends chart.grid.core
 	 */
 	var BlockGrid = function() {
+		this.center = function(g) {
+			this.drawCenter(g, this.domain, this.points, null, this.half_band);
+			this.drawBaseLine("center", g);
+		}
 
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
@@ -19379,6 +19384,16 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
 	 * @extends chart.grid.core
 	 */
 	var RangeGrid = function() {
+		this.center = function(g) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawCenter(g, this.ticks, this.values, function(tick) {
+				return tick == 0 && tick != min && tick != max;
+			}, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			var min = this.scale.min(),

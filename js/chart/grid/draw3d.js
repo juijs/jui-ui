@@ -29,11 +29,27 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             return axis;
         }
 
+        /**
+         * @method center
+         *
+         * draw center
+         *
+         * @param {chart.util.svg} g
+         * @param {Array} ticks
+         * @param {Array} values
+         * @param {Number} min
+         * @param {Function} checkActive
+         */
+        this.drawCenter = function(g, ticks, values, checkActive, moveZ) {
+            var axis = this.chart.svg.group();
+            this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            this.drawValueTextCenter(axis, ticks, values, checkActive, moveZ);
+
+            g.append(axis);
+        }
+
         this.drawBaseLine = function(position, g) {
             var axis = this.chart.svg.group();
-
-            this.drawValueLineCenter(position, axis);
-            this.drawValueTextCenter(position, axis);
             this.drawAxisLine(position, axis);
 
             g.append(axis);
@@ -140,18 +156,16 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             }
         }
 
-        this.drawValueLineCenter = function(position, axis) {
-            if(position != "center") return;
-
-            var w = this.axis.area("width"),
+        this.drawValueLineCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
                 dx = (this.axis.get("y").orient == "left") ? 0 : w,
-                dy = (this.axis.get("x").orient == "top") ? 0 : h,
-                ticks = this.ticks || this.domain;
+                dy = (this.axis.get("x").orient == "top") ? 0 : h;
 
             // z축 라인 드로잉
-            for(var i = 1, len = ticks.length; i < len; i++) {
+            for(var i = 1; i < len; i++) {
                 var t = i * (d / len),
                     p1 = new LinePolygon(0, dy, t, w, dy, t),
                     p2 = new LinePolygon(dx, 0, t, dx, h, t);
@@ -219,15 +233,12 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             }, domain)));
         }
 
-        this.drawValueTextCenter = function(position, axis) {
-            if(position != "center") return;
-
+        this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
             var tickSize = this.chart.theme("gridTickBorderSize"),
                 tickPadding = this.chart.theme("gridTickPadding"),
                 isLeft = (this.axis.get("y").orient == "left"),
                 isTop = (this.axis.get("x").orient == "top"),
-                ticks = this.ticks || this.domain,
-                half_band = this.half_band || 0,
+                len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
                 w = this.axis.area("width"),
                 h = this.axis.area("height"),
                 d = this.axis.depth,
@@ -235,9 +246,9 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 y = (isTop) ? 0 : h;
 
             // z축 라인 드로잉
-            for(var i = 0, len = ticks.length; i < len; i++) {
+            for(var i = 0; i < len; i++) {
                 var domain = this.format(ticks[i], i),
-                    t = i * (d / len) + half_band,
+                    t = i * (d / len) + moveZ,
                     p = new PointPolygon(x, y, t);
 
                 this.calculate3d(p);

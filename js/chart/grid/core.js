@@ -10,15 +10,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "
 	var CoreGrid = function() {
 
 		/**
-		 * @method center
-		 *
-		 * @protected
-		 */
-		this.center = function(g) {
-			this.drawBaseLine("center", g);
-		}
-
-		/**
 		 * @method wrapper
 		 * scale wrapper
 		 *
@@ -275,7 +266,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "
 
 				g.append(axis);
 			}
-
 		}
 
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
