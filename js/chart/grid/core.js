@@ -120,6 +120,12 @@ jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "
 						result.size = result.size - x2;
 					}
 				}
+			} else {
+				if(orient == "center") { // z축
+					result.start = 0;
+					result.size = depth;
+					result.end = depth;
+				}
 			}
 
 			return result;

@@ -243,4 +243,4 @@ jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) 
     }
 
     return Draw2DGrid;
-});
+}, "chart.draw");

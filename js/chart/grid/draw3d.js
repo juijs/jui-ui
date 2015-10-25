@@ -7,18 +7,6 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
      */
     var Draw3DGrid = function() {
 
-        this.calculate3d = function() {
-            var w = this.axis.area("width"),
-                h = this.axis.area("height"),
-                d = this.axis.depth,
-                r = this.axis.degree,
-                list = arguments;
-
-            for(var i = 0; i < list.length; i++) {
-                list[i].rotate(w, h, d, r);
-            }
-        }
-
         this.createGridX = function(position, index, x, isActive, isLast) {
             var line = this.getLineOption(),
                 axis = this.chart.svg.group();
@@ -270,4 +258,4 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
     }
 
     return Draw3DGrid;
-}, "chart.grid.core");
+}, "chart.draw");

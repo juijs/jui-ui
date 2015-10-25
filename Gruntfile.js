@@ -156,6 +156,9 @@ module.exports = function(grunt) {
         "js/chart/brush/map.marker.js",
         "js/chart/brush/map.weather.js",
 
+        // full 3d brush
+        "js/chart/brush/circlefull3d.js",
+
         // chart.widget
         "js/chart/widget/core.js",
         "js/chart/widget/tooltip.js",

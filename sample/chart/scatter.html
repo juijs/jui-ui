@@ -39,8 +39,9 @@
                      orient : "left"
                  },
                  z : {
-                    type : "block",
-                    domain : [ "Total", "Profit", "Sales" ]
+                    type : "range",
+                    domain : [ 0, 20 ],
+                     step : 5
                  },
                  data : [
                      { sales: 0, profit: 15, total: 20 },
@@ -55,20 +56,10 @@
                      z: 0
                  }
              },
-             /*/
              brush : {
-                 type: "scatter",
-                 size : 10,
-                 display : "min",
-                 activeEvent : "click",
-                 symbol : function(key, value) {
-                     if(key == "sales") return "circle";
-                     else if(key == "profit") return "rect";
-
-                     return "resource/star.gif";
-                 }
+                 type: "circlefull3d",
+                 size : 10
              },
-             /**/
              widget : {
                  type : "rotate3d"
              },
