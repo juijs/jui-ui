@@ -12,6 +12,19 @@ jui.define("chart.polygon.core", [ "util.transform" ], function(Transform) {
                 cz = depth / 2;
 
             this.vertices = t.merge(
+
+                // Perspective Matrix (fov, aspect, near, far)
+                [ "perspective", 70, 1, 1, 10000 ],
+
+                // LookAt Matrix (eye, target, up)
+                [
+                    "lookat",
+                    width, 0, depth,
+                    0, height, 0,
+                    1, 1, 1
+                ],
+
+                // Model Matrix
                 [ "move3d", cx, cy, cz ],
                 [ "rotate3dx", degree.x ],
                 [ "rotate3dy", degree.y ],

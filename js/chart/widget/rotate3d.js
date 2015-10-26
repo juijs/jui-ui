@@ -8,8 +8,7 @@ jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
      * @requires util.base
      */
     var Rotate3DWidget = function(chart, axis, widget) {
-        var self = this,
-            degree = null;
+        var self = this;
 
         function setScrollEvent(w, h) {
             var isMove = false,
