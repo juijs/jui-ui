@@ -2,9 +2,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.scatter
-     *
-     * 점으로 이루어진 데이타를 표현하는 브러쉬
-     *
      * @extends chart.brush.core
      */
     var ScatterBrush = function() {
@@ -35,15 +32,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             };
         }
 
-        /**
-         * @method createScatter
-         *
-         * 좌표별 scatter 생성
-         *
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {util.svg.element}
-         */
         this.createScatter = function(pos, dataIndex, targetIndex, symbol) {
             var self = this,
                 elem = null,
@@ -142,14 +130,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             return elem;
         }
 
-        /**
-         * @method drawScatter
-         *
-         * scatter 그리기
-         *
-         * @param {Array} points
-         * @return {util.svg.element} g element 리턴
-         */
         this.drawScatter = function(points) {
             // hoverSync 옵션 처리를 위한 캐싱 처리
             this.cachedSymbol = {};
@@ -251,11 +231,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             }, text).translate(x, y);
         }
 
-        /**
-         * @method draw
-         *
-         * @return {util.svg.element}
-         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }

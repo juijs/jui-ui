@@ -10,11 +10,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 */
 	var BlockGrid = function() {
 
-		/**
-		 * @method top
-		 *
-		 * @protected
-		 */
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
@@ -22,11 +17,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method bottom
-		 *
-		 * @protected
-		 */
 		this.bottom = function(g) {
 			this.drawPattern("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
@@ -34,11 +24,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method left
-		 *
-		 * @protected
-		 */
 		this.left = function(g) {
 			this.drawPattern("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
@@ -46,11 +31,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method right
-		 *
-		 * @protected
-		 */
 		this.right = function(g) {
 			this.drawPattern("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
@@ -58,11 +38,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method initDomain
-		 * block grid 에 대한 domain 설정
-		 * @private
-		 */
 		this.initDomain = function() {
 
 			var domain = [];
@@ -100,11 +75,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
-		/**
-		 * @method drawBefore
-		 *
-		 * @protected
-		 */
 		this.drawBefore = function() {
 			var domain = this.initDomain(),
 				obj = this.getGridSize(),
@@ -126,12 +96,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = this.grid.reverse;
 		}
 
-		/**
-		 * @method draw
-		 *
-		 * @protected
-		 * @return {Mixed}
-		 */
 		this.draw = function() {
 			return this.drawGrid("block");
 		}

@@ -7,7 +7,6 @@ jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], functi
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapCompareBubbleBrush = function(chart, axis, brush) {

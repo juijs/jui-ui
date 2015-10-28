@@ -2441,6 +2441,82 @@ jui.define("util.math", [], function() {
             }
 		},
 
+		getFixed : function (a, b) {
+			var aArr = (a+"").split(".");
+			var aLen = (aArr.length < 2) ? 0 : aArr[1].length;
+
+			var bArr = (b+"").split(".");
+			var bLen = (bArr.length < 2) ? 0 : bArr[1].length;
+
+			return (aLen > bLen) ? aLen : bLen;
+
+		},
+
+		fixed : function (fixed) {
+
+
+			var fixedNumber = this.getFixed(fixed, 0);
+			var pow = Math.pow(10, fixedNumber);
+
+			var func = function (value) {
+				return Math.round(value * pow) / pow;
+			};
+
+			func.plus = function (a, b) {
+				return Math.round((a * pow) + (b * pow)) / pow;
+			};
+
+			func.minus = function (a, b) {
+				return Math.round((a * pow) - (b * pow)) / pow;
+			};
+
+			func.multi = function (a, b) {
+				return Math.round((a * pow) * (b * pow)) / pow;
+			};
+
+			func.div = function (a, b) {
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
+			};
+
+			return func;
+		},
+
+		round: function (num, fixed) {
+			var fixedNumber = Math.pow(10, fixed);
+
+			return Math.round(num * fixedNumber) / fixedNumber;
+		},
+
+		plus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
+		},
+
+		minus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
+		},
+
+		multi : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
+		},
+
+		div : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
+		},
+
 		/**
 		 * 특정 구간의 값을 자동으로 계산 
 		 * 
@@ -2470,8 +2546,6 @@ jui.define("util.math", [], function() {
 				var exponent = Math.floor(Math.log(range) / Math.LN10);
 				var fraction = range / Math.pow(10, exponent);
 				var nickFraction;
-
-				//console.log(range, exponent, fraction, _ticks);
 
 				if (round) {
 					if (fraction < 1.5)
@@ -2504,6 +2578,7 @@ jui.define("util.math", [], function() {
 				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
 				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
 				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+
 			}
 
 			caculate();
@@ -3214,8 +3289,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber, reverse) {
-				intNumber = intNumber || 10000;
+			func.ticks = function(count, isNice, /** @deprecated */intNumber, reverse) {
+
+				//intNumber = intNumber || 10000;
 				reverse = reverse || false;
 				var max = func.max();
 
@@ -3227,18 +3303,18 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = (reverse ? obj.max : obj.min) * intNumber;
-				var end = (reverse ? obj.min : obj.max) * intNumber;
+				var start = (reverse ? obj.max : obj.min);
+				var end = (reverse ? obj.min : obj.max);
+				var unit = obj.spacing;
+				var fixed = math.fixed(unit);
+
 				while ((reverse ? end <= start : start <= end)) {
-
-					arr.push(start / intNumber);
-
-					var unit = obj.spacing * intNumber;
+					arr.push(start/* / intNumber*/);
 
 					if (reverse) {
-						start -= unit;
+						start = fixed.minus(start, unit);
 					} else {
-						start += unit;
+						start = fixed.plus(start, unit);
 					}
 
 				}
@@ -3254,8 +3330,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
@@ -5539,10 +5615,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			$(self.options.target).append($modal);
 			
 			// 루트 모달 옆으로 이동
-			if(self.options.target != "body") {
-				$(self.root).insertAfter($modal);
-			}
-			
+			$(self.root).insertAfter($modal);
+
 			// 모달 닫기 이벤트 걸기
 			self.addEvent($modal, "click", function(e) {
 				if(self.options.autoHide) {

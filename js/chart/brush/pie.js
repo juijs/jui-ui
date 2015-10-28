@@ -2,9 +2,6 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
 	/**
 	 * @class chart.brush.pie
-	 *
-	 * implements pie brush
-	 *
      * @extends chart.brush.core
 	 */
 	var PieBrush = function() {

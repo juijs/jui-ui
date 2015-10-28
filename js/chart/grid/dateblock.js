@@ -2,9 +2,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 	/**
 	 * @class chart.grid.dateblock
-	 *
-	 * implements date block grid
-	 *
 	 * @extends chart.grid.date
 	 */
 	var DateBlockGrid = function() {
@@ -20,12 +17,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			return old_scale;
 		}
 
-		/**
-		 * date grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [],
 				interval = [];

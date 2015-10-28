@@ -528,5 +528,46 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
+    /**
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+
 	return CoreBrush;
 }, "chart.draw"); 

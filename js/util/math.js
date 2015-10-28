@@ -99,6 +99,82 @@ jui.define("util.math", [], function() {
             }
 		},
 
+		getFixed : function (a, b) {
+			var aArr = (a+"").split(".");
+			var aLen = (aArr.length < 2) ? 0 : aArr[1].length;
+
+			var bArr = (b+"").split(".");
+			var bLen = (bArr.length < 2) ? 0 : bArr[1].length;
+
+			return (aLen > bLen) ? aLen : bLen;
+
+		},
+
+		fixed : function (fixed) {
+
+
+			var fixedNumber = this.getFixed(fixed, 0);
+			var pow = Math.pow(10, fixedNumber);
+
+			var func = function (value) {
+				return Math.round(value * pow) / pow;
+			};
+
+			func.plus = function (a, b) {
+				return Math.round((a * pow) + (b * pow)) / pow;
+			};
+
+			func.minus = function (a, b) {
+				return Math.round((a * pow) - (b * pow)) / pow;
+			};
+
+			func.multi = function (a, b) {
+				return Math.round((a * pow) * (b * pow)) / pow;
+			};
+
+			func.div = function (a, b) {
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
+			};
+
+			return func;
+		},
+
+		round: function (num, fixed) {
+			var fixedNumber = Math.pow(10, fixed);
+
+			return Math.round(num * fixedNumber) / fixedNumber;
+		},
+
+		plus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
+		},
+
+		minus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
+		},
+
+		multi : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
+		},
+
+		div : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
+		},
+
 		/**
 		 * 특정 구간의 값을 자동으로 계산 
 		 * 
@@ -128,8 +204,6 @@ jui.define("util.math", [], function() {
 				var exponent = Math.floor(Math.log(range) / Math.LN10);
 				var fraction = range / Math.pow(10, exponent);
 				var nickFraction;
-
-				//console.log(range, exponent, fraction, _ticks);
 
 				if (round) {
 					if (fraction < 1.5)
@@ -162,6 +236,7 @@ jui.define("util.math", [], function() {
 				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
 				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
 				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+
 			}
 
 			caculate();

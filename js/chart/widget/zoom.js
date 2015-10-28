@@ -2,11 +2,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.zoom
-     * implements zoom widget
      * @extends chart.widget.core
      * @alias ZoomWidget
      * @requires util.base
-     *
      */
     var ZoomWidget = function() {
         var self = this,

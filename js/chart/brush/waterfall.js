@@ -2,9 +2,6 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	/**
 	 * @class chart.brush.waterfall
-	 *
-	 * waterfall 형태의 브러쉬
-	 *
 	 * @extends chart.brush.core
 	 */
 	var WaterFallBrush = function(chart, axis, brush) {

@@ -2,9 +2,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     /**
      * @class chart.grid.grid3d
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var Grid3D = function() {
@@ -25,23 +22,11 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             return attr;
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             depth = this.axis.get("depth");
             degree = this.axis.get("degree");
             radian = math.radian(360 - degree);
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(x, y, z, count) {
                     var step = _.typeCheck("integer", count) ? count : 1,
@@ -72,15 +57,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             this.scale.radian = radian;
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             var xRoot = this.axis.x.root,
                 yRoot = this.axis.y.root;

@@ -2,7 +2,6 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapBubbleBrush = function(chart, axis, brush) {

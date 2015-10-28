@@ -2,9 +2,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	/**
 	 * @class chart.brush.stackbar
-	 *
-	 * stack 형태의 bar 브러쉬
-	 *
 	 * @extends chart.brush.bar
 	 *
 	 */

@@ -2,9 +2,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	/**
 	 * @class chart.grid.radar
-	 *
-	 * Radar 형태의 그리드
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RadarGrid = function() {
@@ -96,11 +93,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
             }
         }
 
-
-		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [];
 			if (_.typeCheck("string", this.grid.domain)) {

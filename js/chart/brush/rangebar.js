@@ -2,10 +2,7 @@ jui.define("chart.brush.rangebar", [], function() {
 
     /**
      * @class chart.brush.rangebar 
-     * 
-     * implements range bar brush 
-     * 
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var RangeBarBrush = function(chart, axis, brush) {
 		var g, height, half_height, barHeight;

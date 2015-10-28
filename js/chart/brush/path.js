@@ -2,9 +2,6 @@ jui.define("chart.brush.path", [], function() {
 
     /**
      * @class chart.brush.path 
-     * 
-     * implements path brush  
-     *  
      * @extends chart.brush.core
      */
 	var PathBrush = function(chart, axis, brush) {

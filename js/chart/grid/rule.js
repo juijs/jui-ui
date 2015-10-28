@@ -2,9 +2,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	/**
 	 * @class chart.grid.rule
-	 *
-	 * implements rule grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RuleGrid = function() {
@@ -199,13 +196,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
-        
-		/**
-		 * range grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
+
         this.initDomain = function() {
 
 			var domain = [];

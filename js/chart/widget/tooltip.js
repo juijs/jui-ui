@@ -3,7 +3,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
 
     /**
      * @class chart.widget.tooltip
-     * implements tooltip widget
      * @extends chart.widget.core
      * @alias TooltipWidget
      * @requires jquery

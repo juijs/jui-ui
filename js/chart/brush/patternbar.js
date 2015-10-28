@@ -2,9 +2,6 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.patternbar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.core
      */
 	var PatternBarBrush = function() {

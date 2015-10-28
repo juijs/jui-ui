@@ -2,9 +2,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     /**
      * @class chart.grid.topologytable
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var TopologyTableGrid = function() {
@@ -91,12 +88,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
             }
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             area = this.chart.area();
             size = this.grid.space;
@@ -113,12 +104,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             }
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(index) {
                     var index = (_.typeCheck("string", index)) ? getDataIndex(index) : index;
@@ -143,16 +128,7 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             })(this.axis);
         }
-
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
+        
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid();

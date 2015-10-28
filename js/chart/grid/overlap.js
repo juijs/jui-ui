@@ -2,12 +2,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     /**
      * @class chart.grid.overlap
-     *
-     * implements overlap grid be used in multiple pie or donut chart
-     *
-     * @param chart
-     * @param axis
-     * @param grid
      * @extends chart.grid.core
      */
     var OverlapGrid = function() {
@@ -55,15 +49,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("overlap");

@@ -1,10 +1,7 @@
 jui.define("chart.brush.pin", [], function() {
     /**
      * @class chart.brush.pin  
-     * 
-     * implements pin brush  
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var PinBrush = function(chart, axis, brush) {
         var self = this;
