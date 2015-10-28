@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <META charset="UTF-8">
+    <title>[JUI Library] - JavaScript/Table/API</title>
+
+
+    <link rel="stylesheet" href="../../dist/jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../js/util/color.js"></script>
+
+    <script>
+
+        jui.ready([ "util.color" ], function(color) {
+            var rgb = color.HSVtoRGB(0, 100, 100);
+
+            $(".color").css({
+                background : color.format(rgb, 'hex')
+            });
+
+            var hsv = color.RGBtoHSV(255, 255, 0);
+            $(".hsvColor").html(JSON.stringify(hsv));
+            $(".hsvColor").css({
+                background: color.format(color.HSVtoRGB(hsv.h, hsv.s, hsv.v) , "hex")
+            });
+        });
+    </script>
+    <style type="text/css">
+        .color {
+            display: inline-block;
+            width:30px;
+            height: 30px;
+            border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body class="jui">
+<h1>HSV to RGB</h1>
+<div class="color"></div>
+<div class="hsvColor"></div>
+</body>
+</html>
