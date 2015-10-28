@@ -183,6 +183,46 @@
   -moz-border-radius: 6px 6px 0 6px;
   border-radius: 6px 6px 0 6px;
 }
+.jui .datepicker {
+  border: 1px solid #cdcdcd;
+  background: #ffffff;
+}
+.jui .datepicker > .head > .prev,
+.jui .datepicker > .head .next {
+  color: #dcdcdc;
+}
+.jui .datepicker > .head > .title {
+  color: #333333;
+}
+.jui .datepicker > table.body {
+  border-top-color: #ebebeb;
+}
+.jui .datepicker > table.body th {
+  border-bottom: 1px solid #ebebeb;
+}
+.jui .datepicker > table.body th {
+  color: #c1c1c1;
+}
+.jui .datepicker > table.body td {
+  color: #333333;
+}
+.jui .datepicker > table.body td.none {
+  color: transparent;
+}
+.jui .datepicker > table.body td.now {
+  color: #6600cc;
+  font-weight: bold;
+}
+.jui .datepicker > table.body td.active {
+  color: #ffffff;
+  background-color: #9167ca;
+  -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
+  -moz-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
+}
+.jui .datepicker > table.body td:hover:not(.active):not(.none) {
+  background-color: #f8f3ff;
+}
 .jui .colorpicker {
   border: 1px solid #ececec;
 }
@@ -242,46 +282,6 @@
 }
 .jui .colorpicker .information .information-input {
   color: #000000;
-}
-.jui .datepicker {
-  border: 1px solid #cdcdcd;
-  background: #ffffff;
-}
-.jui .datepicker > .head > .prev,
-.jui .datepicker > .head .next {
-  color: #dcdcdc;
-}
-.jui .datepicker > .head > .title {
-  color: #333333;
-}
-.jui .datepicker > table.body {
-  border-top-color: #ebebeb;
-}
-.jui .datepicker > table.body th {
-  border-bottom: 1px solid #ebebeb;
-}
-.jui .datepicker > table.body th {
-  color: #c1c1c1;
-}
-.jui .datepicker > table.body td {
-  color: #333333;
-}
-.jui .datepicker > table.body td.none {
-  color: transparent;
-}
-.jui .datepicker > table.body td.now {
-  color: #6600cc;
-  font-weight: bold;
-}
-.jui .datepicker > table.body td.active {
-  color: #ffffff;
-  background-color: #9167ca;
-  -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
-  -moz-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
-  box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px;
-}
-.jui .datepicker > table.body td:hover:not(.active):not(.none) {
-  background-color: #f8f3ff;
 }
 .jui .calendar > .head {
   border-bottom-color: #ebebeb;
