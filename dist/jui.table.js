@@ -3344,15 +3344,37 @@ jui.define("util.color", ["jquery"], function($) {
 					arr[i] = parseInt($.trim(arr[i]), 10);
 				}
 
-				return { r : arr[0], g : arr[1], b : arr[2]	};
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			} else if (str.indexOf("rgba(") > -1) {
+					var arr = str.replace("rgba(", "").replace(")","").split(",");
+
+					for(var i = 0, len = arr.length; i < len; i++) {
+
+						if (len - 1 == i) {
+							arr[i] = parseFloat($.trim(arr[i]));
+						} else {
+							arr[i] = parseInt($.trim(arr[i]), 10);
+						}
+					}
+
+					return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
 			} else if (str.indexOf("#") == 0) {
 
 				str = str.replace("#", "");
+
 				var arr = [];
-				for(var i = 0, len = str.length; i < len; i+=2) {
-					arr.push(parseInt(str.substr(i, 2), 16));
+				if (str.length == 3) {
+					for(var i = 0, len = str.length; i < len; i++) {
+						var char = str.substr(i, 1);
+						arr.push(parseInt(char+char, 16));
+					}
+				} else {
+					for(var i = 0, len = str.length; i < len; i+=2) {
+						arr.push(parseInt(str.substr(i, 2), 16));
+					}
 				}
-				return { r : arr[0], g : arr[1], b : arr[2]	};
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
 			}
 		},
 

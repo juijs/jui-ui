@@ -55,7 +55,13 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			this.$drag_bar = this.selectDom('drag-bar');
 
 			this.$opacity = this.selectDom('opacity');
+			this.$opacityPattern = this.selectDom('opacity-pattern');
+			this.$opacityContainer = this.selectDom('opacity-container');
+			this.$opacity_drag_bar = this.selectDom('opacity-drag-bar');
+
 			this.$information = this.selectDom('information');
+			this.$informationColor = this.selectDom('information-color');
+			this.$informationInput = this.selectDom('information-input');
 
 			this.$value.html(this.$drag_pointer);
 			this.$saturation.html(this.$value);
@@ -65,6 +71,14 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
 			this.$hueContainer.html(this.$drag_bar);
 			this.$hue.html(this.$hueContainer);
+
+
+			this.$opacityContainer.html(this.$opacity_drag_bar);
+			this.$opacity.html(this.$opacityPattern);
+			this.$opacity.append(this.$opacityContainer);
+
+			this.$information.html(this.$informationColor);
+			this.$information.append(this.$informationInput);
 
 			this.$colorpicker.html(this.$color);
 			this.$colorpicker.append(this.$hue);
@@ -85,6 +99,12 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			var rgb = caculateColor();
 
 			if (type) {
+
+				if (type == 'hex') {
+					if (rgb.a < 1) {
+						type = 'rgb';
+					}
+				}
 				return color.format(rgb, type);
 			}
 
@@ -114,18 +134,24 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 				left : hueX - 7.5
 			}).data('pos', { x : hueX });
 
-			//setInputColor();
+			var opacityX = self.$opacity.width() * (rgb.a || 0);
 
+			self.$opacity_drag_bar.css({
+				left : opacityX - 7.5
+			}).data('pos', { x : opacityX });
+
+			setInputColor();
 		}
 
 		function setInputColor() {
-			return;
 			var rgb = caculateColor();
-			var str = color.format(rgb, 'hex');
-			this.$input.css({
-				background: str,
-				color : caculateFontColor()
-			}).val(str);
+			var str = self.getColor('hex');
+			console.log(str);
+			self.$informationColor.css({
+				background: str
+			});
+
+			self.$informationInput.html(str).val(str);
 
 			self.emit("change", [ str, rgb ]);
 		}
@@ -200,33 +226,47 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 			setInputColor();
 		}
 
+		function setOpacity (e) {
+			var min = self.$opacity.offset().left;
+			var max = min + self.$opacity.width();
+			var current = self.pos(e).clientX;
+
+			if (current < min) {
+				dist = 0;
+			} else if (current > max) {
+				dist = 100;
+			} else {
+				dist = (current - min) / (max - min) * 100;
+			}
+
+			var x = (self.$opacity.width() * (dist/100));
+
+			self.$opacity_drag_bar.css({
+				left: (x -Math.ceil(self.$opacity_drag_bar.width()/2)) + 'px'
+			}).data('pos', { x : x});
+
+			setInputColor();
+		}
+
 		function caculateColor() {
 			var pos = self.$drag_pointer.data('pos') || { x : 0, y : 0 };
-			var huePos = self.$drag_bar.data('pos') || { y : 0 };
+			var huePos = self.$drag_bar.data('pos') || { x : 0 };
+			var opacityPos = self.$opacity_drag_bar.data('pos') || { x : 0 };
 
 			var width = self.$color.width();
 			var height = self.$color.height();
 
-			var h = (huePos.y / self.$hue.height()) * 360;
+			var h = (huePos.x / self.$hue.width()) * 360;
 			var s = (pos.x / width);
 			var v = ((height - pos.y) / height);
 
+			var a = Math.round((opacityPos.x / self.$opacity.width()) * 100) / 100;
+
 			var rgb = color.HSVtoRGB(h, s, v);
 
+			rgb.a = a;
+
 			return rgb;
-		}
-
-		function caculateFontColor() {
-			var pos = self.$drag_pointer.data('pos') || { x : 0, y : 0 };
-			var huePos = self.$drag_bar.data('pos') || { y : 0 };
-
-			if (pos.x / self.$color.width() < .5) {
-				if (pos.y / self.$color.height() < .3) {
-					return "rgb(34, 34, 34)";
-				}
-			}
-
-			return "rgb(221,221,221)";
 		}
 
 		this.initEvent = function () {
@@ -241,14 +281,25 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 				self.$hue.data('isDown', true);
 			});
 
+			this.$opacity_drag_bar.on('mousedown', function(e) {
+				e.preventDefault();
+				self.$opacity.data('isDown', true);
+			});
+
 			this.$hueContainer.on('mousedown', function(e) {
 				self.$hue.data('isDown', true);
 				setHueColor(e);
 			});
 
+			this.$opacityContainer.on('mousedown', function(e) {
+				self.$opacity.data('isDown', true);
+				setOpacity(e);
+			});
+
 			this.addEvent('body', 'mouseup', function (e) {
 				self.$color.data('isDown', false);
 				self.$hue.data('isDown', false);
+				self.$opacity.data('isDown', false);
 			})
 
 			this.addEvent('body', 'mousemove', function (e) {
@@ -258,6 +309,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
 				if (self.$hue.data('isDown')) {
 					setHueColor(e);
+				}
+
+				if (self.$opacity.data('isDown')) {
+					setOpacity(e);
 				}
 			});
 		}
