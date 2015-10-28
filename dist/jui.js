@@ -2641,6 +2641,24 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			}
 
 			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
 		}
 	}
 
@@ -2649,7 +2667,6 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 jui.define("util.transform", [ "util.math" ], function(math) {
     var Transform = function(points) {
-
         function calculate(m) {
             for(var i = 0, count = points.length; i < count; i++) {
                 points[i] = math.matrix(m, points[i]);
@@ -2657,115 +2674,6 @@ jui.define("util.transform", [ "util.math" ], function(math) {
 
             return points;
         }
-
-        function makeFrustum(left, right, bottom, top, near, far) {
-            var x = 2 * near / (right - left);
-            var y = 2 * near / (top - bottom);
-
-            var a = ( right + left ) / ( right - left );
-            var b = ( top + bottom ) / ( top - bottom );
-            var c = - ( far + near ) / ( far - near );
-            var d = - 2 * far * near / ( far - near );
-
-            return [
-                [ x, 0, a, 0 ],
-                [ 0, y, b, 0 ],
-                [ 0, 0, c, d ],
-                [ 0, 0, -1, 0 ]
-            ];
-
-            /*/
-            te[ 0 ] = x;	te[ 4 ] = 0;	te[ 8 ] = a;	te[ 12 ] = 0;
-            te[ 1 ] = 0;	te[ 5 ] = y;	te[ 9 ] = b;	te[ 13 ] = 0;
-            te[ 2 ] = 0;	te[ 6 ] = 0;	te[ 10 ] = c;	te[ 14 ] = d;
-            te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = - 1;	te[ 15 ] = 0;
-            /**/
-        }
-
-        function makePerspective(fov, aspect, near, far) {
-            var ymax = near * Math.tan( math.radian( fov * 0.5 ) );
-            var ymin = - ymax;
-            var xmin = ymin * aspect;
-            var xmax = ymax * aspect;
-
-            return makeFrustum( xmin, xmax, ymin, ymax, near, far );
-        }
-
-        function lookAt(eye, center, up) {
-            var eye0 = eye[0],
-                eye1 = eye[1],
-                eye2 = eye[2],
-                up0 = up[0],
-                up1 = up[1],
-                up2 = up[2],
-                center0 = center[0],
-                center1 = center[1],
-                center2 = center[2];
-
-            //var x = vec3.create(), y = vec3.create(), z = vec3.create();
-            /*/
-            if (eye0 == center0 && eye1 == center1 && eye2 == center2) {
-                return mat4.identity();
-            }
-            /**/
-
-            var z0,z1,z2,l,x0,x1,x2,y0,y1,y2;
-
-            //vec3.direction(eye, center, z);
-            z0 = eye0 - center0;
-            z1 = eye1 - center1;
-            z2 = eye2 - center2;
-
-            // normalize (no check needed for 0 becuase of early return)
-            l = Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
-            z0 = z0/l;
-            z1 = z1/l;
-            z2 = z2/l;
-
-            //vec3.normalize(vec3.cross(up, z, x));
-            x0 = up1 * z2 - up2 * z1;
-            x1 = up2 * z0 - up0 * z2;
-            x2 = up0 * z1 - up1 * z0;
-            l = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
-
-            if (l == 0) {
-                x0 = 0;
-                x1 = 0;
-                x2 = 0;
-            } else {
-                x0 = x0/l;
-                x1 = x1/l;
-                x2 = x2/l;
-            };
-
-            //vec3.normalize(vec3.cross(z, x, y));
-            y0 = z1 * x2 - z2 * x1;
-            y1 = z2 * x0 - z0 * x2;
-            y2 = z0 * x1 - z1 * x0;
-            l = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
-
-            if (l == 0) {
-                y0 = 0;
-                y1 = 0;
-                y2 = 0;
-            } else {
-                y0 = y0/l;
-                y1 = y1/l;
-                y2 = y2/l;
-            }
-
-            return [
-                [ x0, y0, z0, 0 ],
-                [ x1, y1, z1, 0 ],
-                [ x2, y2, z2, 0 ],
-                [
-                    -(x0 * eye0 + x1 * eye1 + x2 * eye2),
-                    -(y0 * eye0 + y1 * eye1 + y2 * eye2),
-                    -(z0 * eye0 + z1 * eye1 + z2 * eye2),
-                    1
-                ]
-            ]
-        };
 
         // 매트릭스 맵
         this.matrix = function() {
@@ -2820,9 +2728,7 @@ jui.define("util.transform", [ "util.math" ], function(math) {
                     [ 0, 1, 0, 0 ],
                     [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
                     [ 0, 0, 0, 1 ]
-                ],
-                perspective: makePerspective(a[1], a[2], a[3], a[4]),
-                lookat: lookAt([ a[1], a[2], a[3] ], [ a[4], a[5], a[6] ], [ a[7], a[8], a[9] ])
+                ]
             }
 
             return map[type];
@@ -2868,10 +2774,6 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             return calculate(this.matrix("rotate3dy", angle));
         }
 
-        this.perspective3d = function(depth) {
-            return calculate(this.matrix("perspective3d", depth));
-        }
-
         // 임의의 행렬 처리
         this.custom = function(m) {
             return calculate(m);
@@ -2887,6 +2789,20 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             }
 
             return calculate(m);
+        }
+
+        // 행렬의 병합 (콜백 형태)
+        this.merge2 = function(callback) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                var a = callback.apply(null, points[i]),
+                    m = this.matrix.apply(this, a[0]);
+
+                for(var j = 1; j < a.length; j++) {
+                    m = math.matrix(m, this.matrix.apply(this, a[j]));
+                }
+
+                points[i] = math.matrix(m, points[i]);
+            }
         }
     }
 
@@ -15147,6 +15063,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
+        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -15937,6 +15854,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
+            if(_isDelay) return;
+
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -15964,8 +15883,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // 커스텀 이벤트 발생
             this.emit("render", [ _initialize ]);
 
-            // 초기화 설정
+            // 초기화 및 렌더링 체크 설정
             _initialize = true;
+            _isDelay = true;
+
+            console.log("waitting");
+
+            setTimeout(function() {
+                _isDelay = false;
+            }, _options.delay);
         }
 
         /**
@@ -16142,6 +16068,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
+            /** @cfg {Integer} [delay=100] The minimum delay of the chart rendering. */
+            delay: 100,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
@@ -16240,39 +16168,45 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     return UI;
 });
 
-jui.define("chart.polygon.core", [ "util.transform" ], function(Transform) {
+jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
     var PolygonCore = function() {
+        this.perspective = 0.9;
         this.vertices = [];
         this.faces = [];
         this.edges = [];
-        this.perspective = 1;
+
+        this.normalize = function() {
+            for(var i = 0; i < this.vertices.length; i++) {
+                var x = this.vertices[i][0],
+                    y = this.vertices[i][1],
+                    z = this.vertices[i][2],
+                    u = Math.sqrt(x*x + y*y + z*z);
+
+                this.vertices[i][0] /= u;
+                this.vertices[i][1] /= u;
+                this.vertices[i][2] /= u;
+            }
+        }
 
         this.rotate = function(width, height, depth, degree) {
             var t = new Transform(this.vertices),
+                p = this.perspective,
                 cx = width / 2,
                 cy = height / 2,
                 cz = depth / 2;
 
-            this.vertices = t.merge(
+            t.merge2(function(x, y, z, w) {
+                var s = math.scaleValue(z, 0, depth, 1, p);
 
-                // Perspective Matrix (fov, aspect, near, far)
-                [ "perspective", 70, 1, 1, 10000 ],
-
-                // LookAt Matrix (eye, target, up)
-                [
-                    "lookat",
-                    width, 0, depth,
-                    0, height, 0,
-                    1, 1, 1
-                ],
-
-                // Model Matrix
-                [ "move3d", cx, cy, cz ],
-                [ "rotate3dx", degree.x ],
-                [ "rotate3dy", degree.y ],
-                [ "rotate3dz", degree.z ],
-                [ "move3d", -cx, -cy, -cz ]
-            );
+                return [
+                    [ "move3d", cx, cy, cz ],
+                    [ "rotate3dx", degree.x ],
+                    [ "rotate3dy", degree.y ],
+                    [ "rotate3dz", degree.z ],
+                    [ "scale3d", s, s, 1 ],
+                    [ "move3d", -cx, -cy, -cz ]
+                ]
+            });
         }
     }
 
@@ -20859,42 +20793,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * 
-         * @method getScaleValue
-         *
-         * 값에 비례하여 반지름을 구하는 함수
-         *
-         * @param value
-         * @param minValue
-         * @param maxValue
-         * @param minRadius
-         * @param maxRadius
-         * @return {*}
-         */
-        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
-            // 최소/최대 값이 같을 경우 처리
-            minValue = (minValue == maxValue) ? 0 : minValue;
-
-            var range = maxRadius - minRadius,
-                tg = range * getPer();
-
-            function getPer() {
-                var range = maxValue - minValue,
-                    tg = value - minValue,
-                    per = tg / range;
-
-                return per;
-            }
-
-            return tg + minRadius;
-        }
-
-        /*
-         * 차트 데이터 핸들링 함수
-         *
-         */
-
-        /**
-         * 
          * @method eachData
          *
          * loop axis data
@@ -22989,7 +22887,7 @@ jui.define("chart.brush.fullstackcylinder3d", [], function() {
 	return FullStackCylinder3DBrush;
 }, "chart.brush.fullstackcolumn3d");
 
-jui.define("chart.brush.bubble", [], function() {
+jui.define("chart.brush.bubble", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble 
@@ -23000,7 +22898,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         this.createBubble = function(pos, color) {
-            var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
+            var radius = math.scaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
 
             circle.append(
@@ -23076,7 +22974,7 @@ jui.define("chart.brush.bubble", [], function() {
 
 	return BubbleBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.bubble3d", [], function() {
+jui.define("chart.brush.bubble3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble3d
@@ -23110,7 +23008,7 @@ jui.define("chart.brush.bubble3d", [], function() {
                         dy = Math.sin(this.axis.c.radian) * xy.depth,
                         startX = xy.x + dx / 2,
                         startY = xy.y - dy / 2,
-                        rate = this.getScaleValue(count - j, 1, count, 0.6, 1),
+                        rate = math.scaleValue(count - j, 1, count, 0.6, 1),
                         color = this.color(i, j);
 
                     var b = this.createBubble({
@@ -25107,7 +25005,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 	return GaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fullgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
@@ -25178,7 +25076,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			centerY = height / 2 + y;
 			outerRadius = w - this.brush.size;
 			innerRadius = outerRadius - this.brush.size;
-            textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
+            textScale = math.scaleValue(w, 40, 400, 1, 1.5);
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				stroke : this.chart.theme("gaugeBackgroundColor"),
@@ -26699,7 +26597,7 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 	return MapNoteBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.bubble", [ "util.base", "util.math" ], function(_, math) {
 
     /**
      * @class chart.brush.map.bubble
@@ -26750,7 +26648,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
             this.eachData(function(i, d) {
                 var value = axis.getValue(d, "value", 0),
-                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    size = math.scaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null)),
                     color = this.color(i, 0);
 
@@ -27254,8 +27152,8 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 	return MapWeatherBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polygon.point" ],
-	function(_, ColorUtil, PointPolygon) {
+jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+	function(_, MathUtil, ColorUtil, PointPolygon) {
 
 	/**
 	 * @class chart.brush.circlefull3d
@@ -27285,7 +27183,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polyg
 			this.calculate3d(p);
 
 			var elem = this.chart.svg.circle({
-				r: r,
+				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
 				cx: p.vertices[0][0],
 				cy: p.vertices[0][1]

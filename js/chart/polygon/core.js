@@ -1,36 +1,42 @@
-jui.define("chart.polygon.core", [ "util.transform" ], function(Transform) {
+jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
     var PolygonCore = function() {
+        this.perspective = 0.9;
         this.vertices = [];
         this.faces = [];
         this.edges = [];
-        this.perspective = 1;
+
+        this.normalize = function() {
+            for(var i = 0; i < this.vertices.length; i++) {
+                var x = this.vertices[i][0],
+                    y = this.vertices[i][1],
+                    z = this.vertices[i][2],
+                    u = Math.sqrt(x*x + y*y + z*z);
+
+                this.vertices[i][0] /= u;
+                this.vertices[i][1] /= u;
+                this.vertices[i][2] /= u;
+            }
+        }
 
         this.rotate = function(width, height, depth, degree) {
             var t = new Transform(this.vertices),
+                p = this.perspective,
                 cx = width / 2,
                 cy = height / 2,
                 cz = depth / 2;
 
-            this.vertices = t.merge(
+            t.merge2(function(x, y, z, w) {
+                var s = math.scaleValue(z, 0, depth, 1, p);
 
-                // Perspective Matrix (fov, aspect, near, far)
-                [ "perspective", 70, 1, 1, 10000 ],
-
-                // LookAt Matrix (eye, target, up)
-                [
-                    "lookat",
-                    width, 0, depth,
-                    0, height, 0,
-                    1, 1, 1
-                ],
-
-                // Model Matrix
-                [ "move3d", cx, cy, cz ],
-                [ "rotate3dx", degree.x ],
-                [ "rotate3dy", degree.y ],
-                [ "rotate3dz", degree.z ],
-                [ "move3d", -cx, -cy, -cz ]
-            );
+                return [
+                    [ "move3d", cx, cy, cz ],
+                    [ "rotate3dx", degree.x ],
+                    [ "rotate3dy", degree.y ],
+                    [ "rotate3dz", degree.z ],
+                    [ "scale3d", s, s, 1 ],
+                    [ "move3d", -cx, -cy, -cz ]
+                ]
+            });
         }
     }
 

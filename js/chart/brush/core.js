@@ -181,42 +181,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 
         /**
          * 
-         * @method getScaleValue
-         *
-         * 값에 비례하여 반지름을 구하는 함수
-         *
-         * @param value
-         * @param minValue
-         * @param maxValue
-         * @param minRadius
-         * @param maxRadius
-         * @return {*}
-         */
-        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
-            // 최소/최대 값이 같을 경우 처리
-            minValue = (minValue == maxValue) ? 0 : minValue;
-
-            var range = maxRadius - minRadius,
-                tg = range * getPer();
-
-            function getPer() {
-                var range = maxValue - minValue,
-                    tg = value - minValue,
-                    per = tg / range;
-
-                return per;
-            }
-
-            return tg + minRadius;
-        }
-
-        /*
-         * 차트 데이터 핸들링 함수
-         *
-         */
-
-        /**
-         * 
          * @method eachData
          *
          * loop axis data

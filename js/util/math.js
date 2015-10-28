@@ -299,6 +299,24 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			}
 
 			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
 		}
 	}
 

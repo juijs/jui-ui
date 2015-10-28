@@ -1,5 +1,5 @@
-jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polygon.point" ],
-	function(_, ColorUtil, PointPolygon) {
+jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+	function(_, MathUtil, ColorUtil, PointPolygon) {
 
 	/**
 	 * @class chart.brush.circlefull3d
@@ -29,7 +29,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.color", "chart.polyg
 			this.calculate3d(p);
 
 			var elem = this.chart.svg.circle({
-				r: r,
+				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
 				cx: p.vertices[0][0],
 				cy: p.vertices[0][1]
