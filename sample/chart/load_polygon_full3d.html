@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../../dist/jui.css" />
     <script src="../../lib/jquery-1.8.0.min.js"></script>
     <script src="../../dist/jui.js"></script>
+    <script src="polygon/airplane.js"></script>
 </head>
 <body class="jui">
 
@@ -17,52 +18,55 @@
 </script>
 
 <script>
+    /*
+     this.min = new Float32Array([
+     139.061, 32.0943, -17.7412
+     ]);
+
+     this.max = new Float32Array([
+     1654.93, 1319.95, 282.13
+     ]);
+     */
     jui.ready([ "chart.builder" ], function(chart) {
 
          chart("#chart", {
-            width: 640,
-            height : 480,
-            padding: 100,
+            width: 600,
+            height : 600,
             theme : "jennifer",
              axis : {
                  x : {
-                     type : "block",
-                     domain : [ "Q1", "Q2", "Q3", "Q4" ],
-                     line : true,
-                     orient : "bottom"
+                     type : "range",
+                     domain : [ 100, 1700 ],
+                     step : 4
                  },
                  y : {
                      type : "range",
-                     domain : "total",
-                     step : 5,
-                     line : true,
-                     orient : "left"
+                     domain : [ 0, 1400 ],
+                     step : 4
                  },
                  z : {
                     type : "range",
-                    domain : [ 0, 100 ],
-                    step : 4
+                    domain : [ -50, 300 ],
+                     step : 4
                  },
-                 data : [
-                     { sales: 0, profit: 15, total: 20, value: 80 },
-                     { sales: 15, profit: 6, total: 20, value: 50 },
-                     { sales: 8, profit: 10, total: 20, value: 60 },
-                     { sales: 18, profit: 5, total: 20, value: 15 }
-                 ],
-                 depth: 300
+                 depth: 300,
+                 degree: {
+                     x: 0,
+                     y: 0,
+                     z: 0
+                 }
              },
              brush : {
-                 type: "polygon.scatter",
-                 target : [ "sales", "profit", "total" ],
-                 size : 10,
-                 zkey: function(data) {
-                     return data.value;
+                 type: "polygon.core",
+                 id: "airplane",
+                 degree: {
+                     x: 60,
+                     y: 0,
+                     z: 0
                  }
              },
              widget : [{
                  type : "polygon.rotate"
-             }, {
-                 type : "tooltip"
              }],
              style : {
                  gridXAxisBorderWidth: 1,

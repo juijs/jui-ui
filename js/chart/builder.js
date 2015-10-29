@@ -868,8 +868,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _initialize = true;
             _isDelay = true;
 
-            console.log("waitting");
-
             setTimeout(function() {
                 _isDelay = false;
             }, _options.delay);

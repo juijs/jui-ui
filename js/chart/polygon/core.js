@@ -38,6 +38,38 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 ]
             });
         }
+
+        this.min = function() {
+            var obj = {
+                x: Number.MAX_VALUE,
+                y: Number.MAX_VALUE,
+                z: Number.MAX_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.min(obj.x, this.vertices[i][0]);
+                obj.y = Math.min(obj.y, this.vertices[i][1]);
+                obj.z = Math.min(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
+
+        this.max = function() {
+            var obj = {
+                x: Number.MIN_VALUE,
+                y: Number.MIN_VALUE,
+                z: Number.MIN_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.max(obj.x, this.vertices[i][0]);
+                obj.y = Math.max(obj.y, this.vertices[i][1]);
+                obj.z = Math.max(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
     }
 
     return PolygonCore;

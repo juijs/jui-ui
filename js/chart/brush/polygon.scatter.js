@@ -1,12 +1,13 @@
-jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+jui.define("chart.brush.polygon.scatter",
+	[ "util.base", "util.math", "util.color", "chart.polygon.point" ],
 	function(_, MathUtil, ColorUtil, PointPolygon) {
 
 	/**
-	 * @class chart.brush.circlefull3d
-	 * @extends chart.brush.core
+	 * @class chart.brush.polygon.scatter
+	 * @extends chart.brush.polygon.core
 	 */
-	var CircleFull3DBrush = function() {
-		this.createCircle = function(data, target, dataIndex, targetIndex) {
+	var PolygonScatterBrush = function() {
+		this.createScatter = function(data, target, dataIndex, targetIndex) {
 			var color = this.color(dataIndex, targetIndex),
 				zkey = this.brush.zkey,
 				r = this.brush.size / 2,
@@ -45,7 +46,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createCircle(datas[i], targets[j], i, j);
+					var p = this.createScatter(datas[i], targets[j], i, j);
 
 					this.addEvent(p, i, j);
 					g.append(p);
@@ -56,7 +57,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 		}
 	}
 
-	CircleFull3DBrush.setup = function() {
+		PolygonScatterBrush.setup = function() {
 		return {
 			zkey: null,
 
@@ -67,5 +68,5 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 		};
 	}
 
-	return CircleFull3DBrush;
-}, "chart.brush.core");
+	return PolygonScatterBrush;
+}, "chart.brush.polygon.core");

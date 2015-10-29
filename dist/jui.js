@@ -13960,7 +13960,11 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 r = this.axis.degree,
                 list = arguments;
 
-            for(var i = 0; i < list.length; i++) {
+            if(_.typeCheck("integer", r)) {
+                r = { x: r, y: r, z: r };
+            }
+
+            for (var i = 0; i < list.length; i++) {
                 list[i].rotate(w, h, d, r);
             }
         }
@@ -15887,8 +15891,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             _initialize = true;
             _isDelay = true;
 
-            console.log("waitting");
-
             setTimeout(function() {
                 _isDelay = false;
             }, _options.delay);
@@ -16168,97 +16170,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     return UI;
 });
 
-jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
-    var PolygonCore = function() {
-        this.perspective = 0.9;
-        this.vertices = [];
-        this.faces = [];
-        this.edges = [];
-
-        this.normalize = function() {
-            for(var i = 0; i < this.vertices.length; i++) {
-                var x = this.vertices[i][0],
-                    y = this.vertices[i][1],
-                    z = this.vertices[i][2],
-                    u = Math.sqrt(x*x + y*y + z*z);
-
-                this.vertices[i][0] /= u;
-                this.vertices[i][1] /= u;
-                this.vertices[i][2] /= u;
-            }
-        }
-
-        this.rotate = function(width, height, depth, degree) {
-            var t = new Transform(this.vertices),
-                p = this.perspective,
-                cx = width / 2,
-                cy = height / 2,
-                cz = depth / 2;
-
-            t.merge2(function(x, y, z, w) {
-                var s = math.scaleValue(z, 0, depth, 1, p);
-
-                return [
-                    [ "move3d", cx, cy, cz ],
-                    [ "rotate3dx", degree.x ],
-                    [ "rotate3dy", degree.y ],
-                    [ "rotate3dz", degree.z ],
-                    [ "scale3d", s, s, 1 ],
-                    [ "move3d", -cx, -cy, -cz ]
-                ]
-            });
-        }
-    }
-
-    return PolygonCore;
-});
-jui.define("chart.polygon.face", [], function() {
-    var FacePolygon = function(type, width, height, depth) {
-        var matrix = {
-            center: [
-                new Float32Array([ 0, 0, depth, 1 ]),
-                new Float32Array([ width, 0, depth, 1 ]),
-                new Float32Array([ width, height, depth, 1 ]),
-                new Float32Array([ 0, height, depth, 1 ])
-            ],
-            horizontal: [
-                new Float32Array([ 0, height, 0, 1 ]),
-                new Float32Array([ width, height, 0, 1 ]),
-                new Float32Array([ width, height, depth, 1 ]),
-                new Float32Array([ 0, height, depth, 1 ])
-            ],
-            vertical: [
-                new Float32Array([ width, 0, 0, 1 ]),
-                new Float32Array([ width, height, 0, 1 ]),
-                new Float32Array([ width, height, depth, 1 ]),
-                new Float32Array([ width, 0, depth, 1 ])
-            ]
-        };
-
-        this.vertices = matrix[type];
-    }
-
-    return FacePolygon;
-}, "chart.polygon.core");
-jui.define("chart.polygon.line", [], function() {
-    var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
-        this.vertices = [
-            new Float32Array([ x1, y1, d1, 1 ]),
-            new Float32Array([ x2, y2, d2, 1 ])
-        ]
-    }
-
-    return LinePolygon;
-}, "chart.polygon.core");
-jui.define("chart.polygon.point", [], function() {
-    var PointPolygon = function(x, y, d) {
-        this.vertices = [
-            new Float32Array([ x, y, d, 1 ])
-        ]
-    }
-
-    return PointPolygon;
-}, "chart.polygon.core");
 jui.define("chart.theme.jennifer", [], function() {
 
     /**
@@ -17690,6 +17601,129 @@ jui.define("chart.icon.jennifer", [], function() {
 		"ws" : "\ue969"
 	}
 });
+jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+    var PolygonCore = function() {
+        this.perspective = 0.9;
+        this.vertices = [];
+        this.faces = [];
+        this.edges = [];
+
+        this.normalize = function() {
+            for(var i = 0; i < this.vertices.length; i++) {
+                var x = this.vertices[i][0],
+                    y = this.vertices[i][1],
+                    z = this.vertices[i][2],
+                    u = Math.sqrt(x*x + y*y + z*z);
+
+                this.vertices[i][0] /= u;
+                this.vertices[i][1] /= u;
+                this.vertices[i][2] /= u;
+            }
+        }
+
+        this.rotate = function(width, height, depth, degree) {
+            var t = new Transform(this.vertices),
+                p = this.perspective,
+                cx = width / 2,
+                cy = height / 2,
+                cz = depth / 2;
+
+            t.merge2(function(x, y, z, w) {
+                var s = math.scaleValue(z, 0, depth, 1, p);
+
+                return [
+                    [ "move3d", cx, cy, cz ],
+                    [ "rotate3dx", degree.x ],
+                    [ "rotate3dy", degree.y ],
+                    [ "rotate3dz", degree.z ],
+                    [ "scale3d", s, s, 1 ],
+                    [ "move3d", -cx, -cy, -cz ]
+                ]
+            });
+        }
+
+        this.min = function() {
+            var obj = {
+                x: Number.MAX_VALUE,
+                y: Number.MAX_VALUE,
+                z: Number.MAX_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.min(obj.x, this.vertices[i][0]);
+                obj.y = Math.min(obj.y, this.vertices[i][1]);
+                obj.z = Math.min(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
+
+        this.max = function() {
+            var obj = {
+                x: Number.MIN_VALUE,
+                y: Number.MIN_VALUE,
+                z: Number.MIN_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.max(obj.x, this.vertices[i][0]);
+                obj.y = Math.max(obj.y, this.vertices[i][1]);
+                obj.z = Math.max(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
+    }
+
+    return PolygonCore;
+});
+jui.define("chart.polygon.face", [], function() {
+    var FacePolygon = function(type, width, height, depth) {
+        var matrix = {
+            center: [
+                new Float32Array([ 0, 0, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            horizontal: [
+                new Float32Array([ 0, height, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            vertical: [
+                new Float32Array([ width, 0, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ])
+            ]
+        };
+
+        this.vertices = matrix[type];
+    }
+
+    return FacePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.line", [], function() {
+    var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
+        this.vertices = [
+            new Float32Array([ x1, y1, d1, 1 ]),
+            new Float32Array([ x2, y2, d2, 1 ])
+        ]
+    }
+
+    return LinePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.point", [], function() {
+    var PointPolygon = function(x, y, d) {
+        this.vertices = [
+            new Float32Array([ x, y, d, 1 ])
+        ]
+    }
+
+    return PointPolygon;
+}, "chart.polygon.core");
 jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) {
 
     /**
@@ -27153,15 +27187,86 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 	return MapWeatherBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+jui.define("chart.brush.polygon.core", [], function() {
+    var PolygonCoreBrush = function() {
+        this.load = function(id) {
+            var Polygon = jui.include("chart.polygon." + id),
+                obj = new Polygon();
+
+            // 차트 전체 연산
+            this.calculate3d(obj);
+
+            return obj;
+        }
+
+        this.draw = function() {
+            var polygon = this.load(this.brush.id),
+                g = this.chart.svg.group(),
+                path = this.chart.svg.path({
+                    stroke: this.color(0),
+                    "stroke-width": 0.5,
+                    fill: this.color(0),
+                    "fill-opacity": 0.5
+                }),
+                cache = [];
+
+            for(var i = 0, len = polygon.vertices.length; i < len; i++) {
+                var vertex = polygon.vertices[i];
+                cache.push(new Float32Array([ this.axis.x(vertex[0]), this.axis.y(vertex[1]) ]));
+            }
+
+            for(var i = 0, len = polygon.faces.length; i < len; i++) {
+                var face = polygon.faces[i]
+
+                for (var j = 0, len2 = face.length; j < len2; j++) {
+                    var targetPoint = cache[face[j]];
+
+                    if (targetPoint) {
+                        var x = targetPoint[0],
+                            y = targetPoint[1];
+
+                        if (j == 0) {
+                            path.MoveTo(x, y);
+                        } else {
+                            if(j == face.length - 1) {
+                                var firstPoint = cache[face[0]],
+                                    x = firstPoint[0],
+                                    y = firstPoint[1];
+
+                                path.LineTo(x, y);
+                            } else {
+                                path.LineTo(x, y);
+                            }
+                        }
+                    }
+                }
+            }
+
+            g.append(path);
+
+            return g;
+        }
+    }
+
+    PolygonCoreBrush.setup = function() {
+        return {
+            id: null,
+            degree: null
+        }
+    }
+
+    return PolygonCoreBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.polygon.scatter",
+	[ "util.base", "util.math", "util.color", "chart.polygon.point" ],
 	function(_, MathUtil, ColorUtil, PointPolygon) {
 
 	/**
-	 * @class chart.brush.circlefull3d
-	 * @extends chart.brush.core
+	 * @class chart.brush.polygon.scatter
+	 * @extends chart.brush.polygon.core
 	 */
-	var CircleFull3DBrush = function() {
-		this.createCircle = function(data, target, dataIndex, targetIndex) {
+	var PolygonScatterBrush = function() {
+		this.createScatter = function(data, target, dataIndex, targetIndex) {
 			var color = this.color(dataIndex, targetIndex),
 				zkey = this.brush.zkey,
 				r = this.brush.size / 2,
@@ -27200,7 +27305,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createCircle(datas[i], targets[j], i, j);
+					var p = this.createScatter(datas[i], targets[j], i, j);
 
 					this.addEvent(p, i, j);
 					g.append(p);
@@ -27211,7 +27316,7 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 		}
 	}
 
-	CircleFull3DBrush.setup = function() {
+		PolygonScatterBrush.setup = function() {
 		return {
 			zkey: null,
 
@@ -27222,8 +27327,8 @@ jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color",
 		};
 	}
 
-	return CircleFull3DBrush;
-}, "chart.brush.core");
+	return PolygonScatterBrush;
+}, "chart.brush.polygon.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
@@ -29583,16 +29688,27 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
 
     return MapTooltipWidget;
 }, "chart.widget.tooltip");
-jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
+jui.define("chart.widget.polygon.core", [], function() {
+
+    /**
+     * @class chart.widget.polygon.core
+     * @extends chart.widget.core
+     */
+    var PolygonCoreWidget = function(chart, axis, widget) {
+    }
+
+    return PolygonCoreWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
     var DEGREE_LIMIT = 180;
 
     /**
-     * @class chart.widget.rotate3d
-     * @extends chart.widget.core
+     * @class chart.widget.polygon.rotate
+     * @extends chart.widget.polygon.core
      * @alias ScrollWidget
      * @requires util.base
      */
-    var Rotate3DWidget = function(chart, axis, widget) {
+    var PolygonRotateWdiget = function(chart, axis, widget) {
         var self = this;
 
         function setScrollEvent(w, h) {
@@ -29642,17 +29758,20 @@ jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
         }
 
         this.draw = function() {
+            var d = this.axis.degree;
+
+            if(_.typeCheck("integer", d)) { // 기본 각도 설정
+                this.axis.degree = { x: d, y: d, z: d };
+            }
+
             setScrollEvent(this.axis.area("width"), this.axis.area("height"));
 
             return chart.svg.group();
         }
     }
 
-    Rotate3DWidget.setup = function() {
-    }
-
-    return Rotate3DWidget;
-}, "chart.widget.core");
+    return PolygonRotateWdiget;
+}, "chart.widget.polygon.core");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     /**

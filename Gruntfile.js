@@ -55,12 +55,6 @@ module.exports = function(grunt) {
         "js/chart/map.js",
         "js/chart/builder.js",
 
-        // chart.polygon
-        "js/chart/polygon/core.js",
-        "js/chart/polygon/face.js",
-        "js/chart/polygon/line.js",
-        "js/chart/polygon/point.js",
-
         // chart.theme
         "js/chart/theme/jennifer.js",
         "js/chart/theme/gradient.js", // jennifer gradient style
@@ -73,6 +67,12 @@ module.exports = function(grunt) {
 
         // chart.icon
         "js/chart/icon/jennifer.js",
+
+        // chart.polygon
+        "js/chart/polygon/core.js",
+        "js/chart/polygon/face.js",
+        "js/chart/polygon/line.js",
+        "js/chart/polygon/point.js",
         
         // chart.grid
         "js/chart/grid/draw2d.js",
@@ -156,8 +156,9 @@ module.exports = function(grunt) {
         "js/chart/brush/map.marker.js",
         "js/chart/brush/map.weather.js",
 
-        // full 3d brush
-        "js/chart/brush/circlefull3d.js",
+        // polygon brush (full 3d)
+        "js/chart/brush/polygon.core.js",
+        "js/chart/brush/polygon.scatter.js",
 
         // chart.widget
         "js/chart/widget/core.js",
@@ -177,8 +178,9 @@ module.exports = function(grunt) {
         "js/chart/widget/map.control.js",
         "js/chart/widget/map.tooltip.js",
 
-        // full 3d widget
-        "js/chart/widget/rotate3d.js",
+        // polygon widget (full 3d)
+        "js/chart/widget/polygon.core.js",
+        "js/chart/widget/polygon.rotate.js",
 
         // chart wrapper
         "js/chartx/realtime.js",

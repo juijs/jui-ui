@@ -182,7 +182,11 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 r = this.axis.degree,
                 list = arguments;
 
-            for(var i = 0; i < list.length; i++) {
+            if(_.typeCheck("integer", r)) {
+                r = { x: r, y: r, z: r };
+            }
+
+            for (var i = 0; i < list.length; i++) {
                 list[i].rotate(w, h, d, r);
             }
         }
