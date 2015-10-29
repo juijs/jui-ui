@@ -2340,7 +2340,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	return UICore;
 });
-jui.define("util.math", [], function() {
+jui.define("util.math", [ "util.base" ], function(_) {
 
 	/**
 	 * @class util.math
@@ -2589,12 +2589,225 @@ jui.define("util.math", [], function() {
 				range : _range,
 				spacing : _tickSpacing
 			}
-		}		
+		},
+
+		matrix: function(a, b) {
+			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+			function matrix(a, b) {
+				var m = [];
+
+				for(var i = 0, len = a.length; i < len; i++) {
+					var sum = 0;
+
+					for(var j = 0, len2 = a[i].length; j < len2; j++) {
+						sum += a[i][j] * b[j];
+					}
+
+					m.push(sum);
+				}
+
+				return m;
+			}
+
+
+			// 2x2 or 3x3 형태의 매트릭스 연산
+			function deepMatrix(a, b) {
+				var m = [], nm = [];
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					m[i] = [];
+					nm[i] = [];
+				}
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					for(var j = 0, len2 = b[i].length; j < len2; j++) {
+						m[j].push(b[i][j]);
+					}
+				}
+
+				for(var i = 0, len = m.length; i < len; i++) {
+					var mm = matrix(a, m[i]);
+
+					for(var j = 0, len2 = mm.length; j < len2; j++) {
+						nm[j].push(mm[j]);
+					}
+				}
+
+				return nm;
+			}
+
+			if(_.typeCheck("array", b[0])) {
+				return deepMatrix(a, b);
+			}
+
+			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
+		}
 	}
 
 	return self;
 });
 
+jui.define("util.transform", [ "util.math" ], function(math) {
+    var Transform = function(points) {
+        function calculate(m) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                points[i] = math.matrix(m, points[i]);
+            }
+
+            return points;
+        }
+
+        // 매트릭스 맵
+        this.matrix = function() {
+            var a = arguments,
+                type = a[0];
+
+            var map = {
+                // 2D 행렬, 3x3
+                move: [
+                    [ 1, 0, a[1] ],
+                    [ 0, 1, a[2] ],
+                    [ 0, 0, 1 ]
+                ],
+                scale: [
+                    [ a[1], 0, 0 ],
+                    [ 0, a[2], 0 ],
+                    [ 0, 0, 1 ]
+                ],
+                rotate: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 1 ]
+                ],
+
+                // 3D 행렬, 4x4
+                move3d: [
+                    [ 1, 0, 0, a[1] ],
+                    [ 0, 1, 0, a[2] ],
+                    [ 0, 0, 1, a[3] ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                scale3d: [
+                    [ a[1], 0, 0, 0 ],
+                    [ 0, a[2], 0, 0 ],
+                    [ 0, 0, a[3], 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dz: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
+                    [ 0, 0, 1, 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dx: [
+                    [ 1, 0, 0, 0 ],
+                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dy: [
+                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, 1, 0, 0 ],
+                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ]
+            }
+
+            return map[type];
+        }
+
+        // 2차원 이동
+        this.move = function(dx, dy) {
+            return calculate(this.matrix("move", dx, dy));
+        }
+
+        // 3차원 이동
+        this.move3d = function(dx, dy, dz) {
+            return calculate(this.matrix("move3d", dx, dy, dz));
+        }
+
+        // 2차원 스케일
+        this.scale = function(sx, sy) {
+            return calculate(this.matrix("scale", sx, sy));
+        }
+
+        // 3차원 스케일
+        this.scale3d = function(sx, sy, sz) {
+            return calculate(this.matrix("scale3d", sx, sy, sz));
+        }
+
+        // 2차원 회전
+        this.rotate = function(angle) {
+            return calculate(this.matrix("rotate", angle));
+        }
+
+        // Z축 중심 3차원 회전 - 롤(ROLL)
+        this.rotate3dz = function(angle) {
+            return calculate(this.matrix("rotate3dz", angle));
+        }
+
+        // X축 중심 3차원 회전 - 롤(PITCH)
+        this.rotate3dx = function(angle) {
+            return calculate(this.matrix("rotate3dx", angle));
+        }
+
+        // Y축 중심 3차원 회전 - 요(YAW)
+        this.rotate3dy = function(angle) {
+            return calculate(this.matrix("rotate3dy", angle));
+        }
+
+        // 임의의 행렬 처리
+        this.custom = function(m) {
+            return calculate(m);
+        }
+
+        // 행렬의 병합
+        this.merge = function() {
+            var a = arguments,
+                m = this.matrix.apply(this, a[0]);
+
+            for(var i = 1; i < a.length; i++) {
+                m = math.matrix(m, this.matrix.apply(this, a[i]));
+            }
+
+            return calculate(m);
+        }
+
+        // 행렬의 병합 (콜백 형태)
+        this.merge2 = function(callback) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                var a = callback.apply(null, points[i]),
+                    m = this.matrix.apply(this, a[0]);
+
+                for(var j = 1; j < a.length; j++) {
+                    m = math.matrix(m, this.matrix.apply(this, a[j]));
+                }
+
+                points[i] = math.matrix(m, points[i]);
+            }
+        }
+    }
+
+    return Transform;
+});
 jui.define("util.time", [ "util.base" ], function(_) {
 
 	/**
@@ -13739,6 +13952,18 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 }
             }, "render");
         }
+
+        this.calculate3d = function() {
+            var w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                r = this.axis.degree,
+                list = arguments;
+
+            for(var i = 0; i < list.length; i++) {
+                list[i].rotate(w, h, d, r);
+            }
+        }
 	}
 
     Draw.setup = function() {
@@ -13808,7 +14033,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function drawGridType(axis, k) {
-            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y" || k == "z") && !_.typeCheck("object", axis[k]))
+                return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -13817,6 +14043,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
             } else if (k == "y") {
                 axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "z") {
+                axis[k].orient = "center";
             } else if (k == "c") {
                 axis[k].type = axis[k].type || "panel";
                 axis[k].orient = "custom";
@@ -13836,18 +14064,19 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             var elem = obj.render();
 
-            // 그리드 별 위치 선정하기
-            if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
-            } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
-            } else {
-                // custom
-                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            // 그리드 별 위치 선정하기 (z축이 없을 때)
+            if(!self.isFull3D()) {
+                if (axis[k].orient == "left") {
+                    elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "right") {
+                    elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "bottom") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y2") + axis[k].dist);
+                } else if (axis[k].orient == "top") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y") - axis[k].dist);
+                } else {
+                    if (elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+                }
             }
 
             elem.scale.type = axis[k].type;
@@ -14043,7 +14272,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 index : cloneAxis.index,
                 page : cloneAxis.page,
                 start : cloneAxis.start,
-                end : cloneAxis.end
+                end : cloneAxis.end,
+
+                degree : cloneAxis.degree,
+                depth : cloneAxis.depth
             });
 
             // 원본 데이터 설정
@@ -14100,6 +14332,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             _.extend(this, {
                 x : options.x,
                 y : options.y,
+                z : options.z,
                 c : options.c,
                 map : options.map
             });
@@ -14120,6 +14353,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
+            this.z = drawGridType(this, "z");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
         }
@@ -14270,6 +14504,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        this.isFull3D = function() {
+            return !_.typeCheck([ "undefined", "null" ], this.z);
+        }
+
         init();
     }
 
@@ -14295,6 +14533,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
+            /** @cfg {chart.grid.core} [z=null] Sets a grid on the Z axis (see the grid tab). */
+            z: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
             /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
@@ -14338,55 +14578,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             depth: 0
         }
     }
-
-    /**
-     * @event axis_click
-     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_dblclick
-     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_rclick
-     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseover
-     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseout
-     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousemove
-     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousedown
-     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseup
-     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
 
     return Axis;
 });
@@ -14872,6 +15063,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
+        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -15662,6 +15854,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
+            if(_isDelay) return;
+
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -15689,8 +15883,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // 커스텀 이벤트 발생
             this.emit("render", [ _initialize ]);
 
-            // 초기화 설정
+            // 초기화 및 렌더링 체크 설정
             _initialize = true;
+            _isDelay = true;
+
+            console.log("waitting");
+
+            setTimeout(function() {
+                _isDelay = false;
+            }, _options.delay);
         }
 
         /**
@@ -15867,6 +16068,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
+            /** @cfg {Integer} [delay=100] The minimum delay of the chart rendering. */
+            delay: 100,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
@@ -15965,6 +16168,97 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
     return UI;
 });
 
+jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+    var PolygonCore = function() {
+        this.perspective = 0.9;
+        this.vertices = [];
+        this.faces = [];
+        this.edges = [];
+
+        this.normalize = function() {
+            for(var i = 0; i < this.vertices.length; i++) {
+                var x = this.vertices[i][0],
+                    y = this.vertices[i][1],
+                    z = this.vertices[i][2],
+                    u = Math.sqrt(x*x + y*y + z*z);
+
+                this.vertices[i][0] /= u;
+                this.vertices[i][1] /= u;
+                this.vertices[i][2] /= u;
+            }
+        }
+
+        this.rotate = function(width, height, depth, degree) {
+            var t = new Transform(this.vertices),
+                p = this.perspective,
+                cx = width / 2,
+                cy = height / 2,
+                cz = depth / 2;
+
+            t.merge2(function(x, y, z, w) {
+                var s = math.scaleValue(z, 0, depth, 1, p);
+
+                return [
+                    [ "move3d", cx, cy, cz ],
+                    [ "rotate3dx", degree.x ],
+                    [ "rotate3dy", degree.y ],
+                    [ "rotate3dz", degree.z ],
+                    [ "scale3d", s, s, 1 ],
+                    [ "move3d", -cx, -cy, -cz ]
+                ]
+            });
+        }
+    }
+
+    return PolygonCore;
+});
+jui.define("chart.polygon.face", [], function() {
+    var FacePolygon = function(type, width, height, depth) {
+        var matrix = {
+            center: [
+                new Float32Array([ 0, 0, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            horizontal: [
+                new Float32Array([ 0, height, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            vertical: [
+                new Float32Array([ width, 0, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ])
+            ]
+        };
+
+        this.vertices = matrix[type];
+    }
+
+    return FacePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.line", [], function() {
+    var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
+        this.vertices = [
+            new Float32Array([ x1, y1, d1, 1 ]),
+            new Float32Array([ x2, y2, d2, 1 ])
+        ]
+    }
+
+    return LinePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.point", [], function() {
+    var PointPolygon = function(x, y, d) {
+        this.vertices = [
+            new Float32Array([ x, y, d, 1 ])
+        ]
+    }
+
+    return PointPolygon;
+}, "chart.polygon.core");
 jui.define("chart.theme.jennifer", [], function() {
 
     /**
@@ -16003,12 +16297,15 @@ jui.define("chart.theme.jennifer", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
     	gridXFontColor : "#333",
         gridYFontColor : "#333",
+        gridZFontColor : "#333",
         gridCFontColor : "#333",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#bfbfbf",
         gridYAxisBorderColor : "#bfbfbf",
@@ -16218,12 +16515,15 @@ jui.define("chart.theme.gradient", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#666",
         gridYFontColor : "#666",
+        gridZFontColor : "#666",
         gridCFontColor : "#666",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#efefef",
         gridYAxisBorderColor : "#efefef",
@@ -16431,12 +16731,15 @@ jui.define("chart.theme.dark", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#868686",
         gridYFontColor : "#868686",
+        gridZFontColor : "#868686",
         gridCFontColor : "#868686",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#464646",
         gridYAxisBorderColor : "#464646",
@@ -16642,12 +16945,15 @@ jui.define("chart.theme.pastel", [], function() {
 		// Grid styles
 		gridXFontSize : 11,
 		gridYFontSize : 11,
+		gridZFontSize : 10,
 		gridCFontSize : 11,
 		gridXFontColor : "#333",
 		gridYFontColor : "#333",
+		gridZFontColor : "#333",
 		gridCFontColor : "#333",
 		gridXFontWeight : "normal",
 		gridYFontWeight : "normal",
+		gridZFontWeight : "normal",
 		gridCFontWeight : "normal",
 		gridXAxisBorderColor : "#bfbfbf",
 		gridYAxisBorderColor : "#bfbfbf",
@@ -16852,12 +17158,15 @@ jui.define("chart.theme.pattern", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#333",
         gridYFontColor : "#333",
+        gridZFontColor : "#333",
         gridCFontColor : "#333",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#ebebeb",
         gridYAxisBorderColor : "#ebebeb",
@@ -17381,7 +17690,526 @@ jui.define("chart.icon.jennifer", [], function() {
 		"ws" : "\ue969"
 	}
 });
-jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) {
+
+    /**
+     * @class chart.grid.draw2d
+     * @abstract
+     */
+    var Draw2DGrid = function() {
+
+        this.createGridX = function(position, index, x, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group().translate(x, 0),
+                size = this.chart.theme("gridTickBorderSize");
+
+            axis.append(this.line({
+                y2 : (position == "bottom") ? size : -size,
+                stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
+                "stroke-width" : this.chart.theme("gridTickBorderWidth")
+            }));
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, isLast);
+            }
+
+            return axis;
+        }
+
+        this.createGridY = function(position, index, y, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group().translate(0, y),
+                size = this.chart.theme("gridTickBorderSize");
+
+            axis.append(this.line({
+                x2 : (position == "left") ? -size : size,
+                stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
+                "stroke-width" : this.chart.theme("gridTickBorderWidth")
+            }));
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, isLast);
+            }
+
+            return axis;
+        }
+
+        this.fillRectObject = function(g, line, position, x, y , width, height) {
+            if (line.type.indexOf("gradient") > -1) {
+                g.append(this.chart.svg.rect({
+                    x : x,
+                    y : y,
+                    height : height,
+                    width : width,
+                    fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+                    "fill-opacity" : this.chart.theme("gridPatternOpacity")
+                }));
+            } else if (line.type.indexOf("rect") > -1) {
+                g.append(this.chart.svg.rect({
+                    x : x,
+                    y : y,
+                    height : height,
+                    width : width,
+                    fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
+                    "fill-opacity" : this.chart.theme("gridPatternOpacity")
+                }));
+            }
+        }
+
+        /**
+         * @method drawAxisLine
+         * theme 이 적용된  axis line 리턴
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
+         */
+        this.drawAxisLine = function(position, g, attr) {
+            var isTopOrBottom = (position == "top" || position == "bottom");
+
+            g.append(this.chart.svg.line(_.extend({
+                x1 : 0,
+                y1 : 0,
+                x2 : 0,
+                y2 : 0,
+                stroke : this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
+                "stroke-width" : this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
+                "stroke-opacity" : 1
+            }, attr)));
+        }
+
+        this.drawPattern = function(position, ticks, values, isMove) {
+            if (this.grid.hide) return;
+            if (!position) return;
+            if (!ticks) return;
+            if (!values) return;
+
+            var line = this.getLineOption(),
+                isY = (position == "left" || position == "right");
+
+            var g = this.chart.svg.group({
+                "class" : "grid-pattern grid-pattern-" + this.grid.type
+            });
+
+            g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
+
+            if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
+                for(var i = 0; i < values.length-1; i += 2) {
+                    var dist = Math.abs(values[i+1] - values[i]),
+                        pos = values[i] - (isMove ?  dist/2 : 0 ),
+                        x = (isY) ? 0 : pos,
+                        y = (isY) ? pos : 0,
+                        width = (isY) ?  this.axis.area("width") : dist,
+                        height = (isY) ?  dist : this.axis.area("height");
+
+                    this.fillRectObject(g, line, position, x, y, width, height);
+                }
+            }
+        }
+
+        this.drawBaseLine = function(position, g) {
+            var obj = this.getGridSize(),
+                pos = {};
+
+            if (position == "bottom" || position == "top") {
+                pos = { x1 : obj.start, x2 : obj.end };
+            } else if (position == "left" || position == "right") {
+                pos = { y1 : obj.start, y2 : obj.end };
+            }
+
+            this.drawAxisLine(position, g, pos)
+        }
+
+        this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
+            var area = {},
+                isDrawLine = false;
+
+            if (position == "top") {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                area = { x1: 0, x2: 0, y1: 0, y2: this.axis.area("height") };
+            } else if (position == "bottom" ) {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                area = { x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
+            } else if (position == "left") {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                area = { x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0 };
+            } else if (position == "right" ) {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                area = { x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0 };
+            }
+
+            if(isDrawLine) {
+                var lineObject = this.line(_.extend({
+                    stroke: this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+                    "stroke-width": this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+                }, area));
+
+                if (line.type.indexOf("dashed") > -1) {
+                    lineObject.attr({ "stroke-dasharray": "5,5" });
+                }
+
+                axis.append(lineObject);
+            }
+        }
+
+        this.drawValueText = function(position, axis, index, xy, domain, move, isActive) {
+            if (this.grid.hideText) return;
+
+            if(position == "top") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: move,
+                    y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
+                    dy: this.chart.theme("gridXFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+                    "text-anchor": "middle",
+                    "font-size": this.chart.theme("gridXFontSize"),
+                    "font-weight": this.chart.theme("gridXFontWeight")
+                }, domain)));
+            } else if(position == "bottom") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: move,
+                    y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
+                    dy: this.chart.theme("gridXFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+                    "text-anchor": "middle",
+                    "font-size": this.chart.theme("gridXFontSize"),
+                    "font-weight": this.chart.theme("gridXFontWeight")
+                }, domain)));
+            } else if(position == "left") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
+                    y: move,
+                    dy: this.chart.theme("gridYFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+                    "text-anchor": "end",
+                    "font-size": this.chart.theme("gridYFontSize"),
+                    "font-weight": this.chart.theme("gridYFontWeight")
+                }, domain)));
+            } else if(position == "right") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
+                    y: move,
+                    dy: this.chart.theme("gridYFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+                    "text-anchor": "start",
+                    "font-size": this.chart.theme("gridYFontSize"),
+                    "font-weight": this.chart.theme("gridYFontWeight")
+                }, domain)));
+            }
+        }
+
+        this.drawImage = function(orient, g, tick, index, x, y) {
+            if (!_.typeCheck("function", this.grid.image)) return;
+
+            var opts = this.grid.image.apply(this.chart, [ tick, index ]);
+
+            if(_.typeCheck("object", opts)) {
+                var image = this.chart.svg.image({
+                    "xlink:href": opts.uri,
+                    width: opts.width,
+                    height: opts.height
+                });
+
+                if(orient == "top" || orient == "bottom") {
+                    image.attr({
+                        x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
+                    });
+                } else if(orient == "left" || orient == "right") {
+                    image.attr({
+                        y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
+                    })
+                }
+
+                if(orient == "bottom") {
+                    image.attr({ y: opts.dist });
+                } else if(orient == "top") {
+                    image.attr({ y: -(opts.dist + opts.height) });
+                } else if(orient == "left") {
+                    image.attr({ x: -(opts.dist + opts.width) });
+                } else if(orient == "right") {
+                    image.attr({ x: opts.dist });
+                }
+
+                image.translate(x, y)
+                g.append(image);
+            }
+        }
+    }
+
+    return Draw2DGrid;
+}, "chart.draw");
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, FacePolygon, LinePolygon, PointPolygon) {
+
+    /**
+     * @class chart.grid.draw3d
+     * @abstract
+     */
+    var Draw3DGrid = function() {
+
+        this.createGridX = function(position, index, x, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group();
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, x, isLast);
+            }
+
+            return axis;
+        }
+
+        this.createGridY = function(position, index, y, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group();
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, y, isLast);
+            }
+
+            return axis;
+        }
+
+        /**
+         * @method center
+         *
+         * draw center
+         *
+         * @param {chart.util.svg} g
+         * @param {Array} ticks
+         * @param {Array} values
+         * @param {Number} min
+         * @param {Function} checkActive
+         */
+        this.drawCenter = function(g, ticks, values, checkActive, moveZ) {
+            var axis = this.chart.svg.group();
+            this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            this.drawValueTextCenter(axis, ticks, values, checkActive, moveZ);
+
+            g.append(axis);
+        }
+
+        this.drawBaseLine = function(position, g) {
+            var axis = this.chart.svg.group();
+            this.drawAxisLine(position, axis);
+
+            g.append(axis);
+        }
+
+        /**
+         * @method axisLine
+         * theme 이 적용된  axis line 리턴
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
+         */
+        this.drawAxisLine = function(position, axis) {
+            var isTopOrBottom = (position == "top" || position == "bottom");
+
+            var face = this.chart.svg.polygon({
+                stroke: this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
+                "stroke-width": this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
+                "stroke-opacity" : 1,
+                fill: "#dcdcdc",
+                "fill-opacity": 0.2
+            });
+
+            var p = null,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth;
+
+            if(position == "center") {
+                p = new FacePolygon("center", w, h, d);
+            } else {
+                if(isTopOrBottom) {
+                    h = (position == "bottom") ? h : 0;
+                    p = new FacePolygon("horizontal", w, h, d);
+                } else {
+                    w = (position == "right") ? w : 0;
+                    p = new FacePolygon("vertical", w, h, d);
+                }
+            }
+
+            // 사각면 위치 계산 및 추가
+            this.calculate3d(p);
+            for(var i = 0; i < p.vertices.length; i++) {
+                face.point(p.vertices[i][0], p.vertices[i][1]);
+            }
+
+            axis.append(face);
+        }
+
+        this.drawValueLine = function(position, axis, isActive, line, index, xy, isLast) {
+            var isDrawLine = false,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                l1 = null,
+                l2 = null;
+
+            if (position == "top") {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                l1 = new LinePolygon(xy, 0, 0, xy, 0, d);
+                l2 = new LinePolygon(xy, 0, d, xy, h, d);
+            } else if (position == "bottom" ) {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                l1 = new LinePolygon(xy, h, 0, xy, h, d);
+                l2 = new LinePolygon(xy, h, d, xy, 0, d);
+            } else if (position == "left") {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                l1 = new LinePolygon(0, xy, 0, 0, xy, d);
+                l2 = new LinePolygon(0, xy, d, w, xy, d);
+            } else if (position == "right" ) {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                l1 = new LinePolygon(w, xy, 0, w, xy, d);
+                l2 = new LinePolygon(w, xy, d, 0, xy, d);
+            }
+
+            if(isDrawLine) {
+                // 폴리곤 계산
+                this.calculate3d(l1, l2);
+
+                var lo1 = this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: l1.vertices[0][0],
+                    y1: l1.vertices[0][1],
+                    x2: l1.vertices[1][0],
+                    y2: l1.vertices[1][1]
+                });
+
+                var lo2 = this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: l2.vertices[0][0],
+                    y1: l2.vertices[0][1],
+                    x2: l2.vertices[1][0],
+                    y2: l2.vertices[1][1]
+                });
+
+                if (line.type.indexOf("dashed") > -1) {
+                    lo1.attr({ "stroke-dasharray": "5,5" });
+                    lo2.attr({ "stroke-dasharray": "5,5" });
+                }
+
+                axis.append(lo1);
+                axis.append(lo2);
+            }
+        }
+
+        this.drawValueLineCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                dx = (this.axis.get("y").orient == "left") ? 0 : w,
+                dy = (this.axis.get("x").orient == "top") ? 0 : h;
+
+            // z축 라인 드로잉
+            for(var i = 1; i < len; i++) {
+                var t = i * (d / len),
+                    p1 = new LinePolygon(0, dy, t, w, dy, t),
+                    p2 = new LinePolygon(dx, 0, t, dx, h, t);
+
+                this.calculate3d(p1, p2);
+
+                axis.append(this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: p1.vertices[0][0],
+                    y1: p1.vertices[0][1],
+                    x2: p1.vertices[1][0],
+                    y2: p1.vertices[1][1]
+                }));
+
+                axis.append(this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: p2.vertices[0][0],
+                    y1: p2.vertices[0][1],
+                    x2: p2.vertices[1][0],
+                    y2: p2.vertices[1][1]
+                }));
+            }
+        }
+
+        this.drawValueText = function(position, axis, index, xy, domain) {
+            if (this.grid.hideText) return;
+
+            var isVertical = (position == "left" || position == "right");
+
+            var tickSize = this.chart.theme("gridTickBorderSize"),
+                tickPadding = this.chart.theme("gridTickPadding"),
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                x = 0,
+                y = 0;
+
+            if(position == "top") {
+                x = xy;
+                y = -(tickSize + tickPadding * 2);
+            } else if(position == "bottom") {
+                x = xy;
+                y = h + tickSize + tickPadding * 2;
+            } else if(position == "left") {
+                x = -(tickSize + tickPadding);
+                y = xy;
+            } else if(position == "right") {
+                x = w + tickSize + tickPadding;
+                y = xy;
+            }
+
+            var p = new PointPolygon(x, y, 0);
+            this.calculate3d(p);
+
+            axis.append(this.getTextRotate(this.chart.text({
+                x: p.vertices[0][0],
+                y: p.vertices[0][1],
+                dx: !isVertical ? this.chart.theme("gridXFontSize") / 3 : 0,
+                dy: isVertical ? this.chart.theme("gridYFontSize") / 3 : 0,
+                fill: this.chart.theme(isVertical ? "gridYFontColor" : "gridXFontColor"),
+                "text-anchor": isVertical ? (position == "left" ? "end" : "start") : "middle",
+                "font-size": this.chart.theme(isVertical ? "gridYFontSize" : "gridXFontSize"),
+                "font-weight": this.chart.theme(isVertical ? "gridYFontWeight" : "gridXFontWeight")
+            }, domain)));
+        }
+
+        this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var margin = this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
+                isLeft = (this.axis.get("y").orient == "left"),
+                isTop = (this.axis.get("x").orient == "top"),
+                len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                x = (isLeft) ? w + margin : -margin,
+                y = (isTop) ? -margin : h + margin;
+
+            // z축 라인 드로잉
+            for(var i = 0; i < ticks.length; i++) {
+                var domain = this.format(ticks[i], i),
+                    t = i * (d / len) + moveZ,
+                    p = new PointPolygon(x, y, t);
+
+                this.calculate3d(p);
+
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: p.vertices[0][0],
+                    y: p.vertices[0][1],
+                    fill: this.chart.theme("gridZFontColor"),
+                    "text-anchor": (isLeft) ? "start" : "end",
+                    "font-size": this.chart.theme("gridZFontSize"),
+                    "font-weight": this.chart.theme("gridZFontWeight")
+                }, domain)));
+            }
+        }
+
+        this.drawPattern = function() {}
+        this.drawImage = function() {}
+    }
+
+    return Draw3DGrid;
+}, "chart.draw");
+jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "chart.grid.draw3d" ],
+	function(_, math, Draw2D, Draw3D) {
+
 	/**
 	 * @class chart.grid.core
 	 * Grid Core 객체
@@ -17409,26 +18237,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		 */
 		this.wrapper = function(scale, key) {
 			return scale;
-		}
-
-		/**
-		 * @method axisLine
-		 * theme 이 적용된  axis line 리턴
-		 * @param {ChartBuilder} chart
-		 * @param {Object} attr
-		 */
-		this.axisLine = function(position, attr) {
-			var isTopOrBottom = (position == "top" || position == "bottom");
-
-			return this.chart.svg.line(_.extend({
-				x1 : 0,
-				y1 : 0,
-				x2 : 0,
-				y2 : 0,
-				stroke : this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
-				"stroke-width" : this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
-				"stroke-opacity" : 1
-			}, attr));
 		}
 
 		/**
@@ -17482,6 +18290,79 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return this.axis.data || [];
 		}
 
+		this.getGridSize = function() {
+			var orient = this.grid.orient,
+				depth = this.axis.depth,
+				degree = this.axis.degree,
+				axis = (orient == "left" || orient == "right") ? this.axis.area("y") : this.axis.area("x"),
+				max = (orient == "left" || orient == "right") ? this.axis.area("height") : this.axis.area("width"),
+				start = axis,
+				size = max,
+				end = start + size;
+
+			var result = {
+				start: start,
+				size: size,
+				end: end
+			};
+
+			if(!this.axis.isFull3D()) {
+				if(depth > 0 || degree > 0) {
+					var radian = math.radian(360 - degree),
+						x2 = Math.cos(radian) * depth,
+						y2 = Math.sin(radian) * depth;
+
+					if(orient == "left") {
+						result.start = result.start - y2;
+						result.size = result.size - y2;
+					} else if(orient == "bottom") {
+						result.end = result.end - x2;
+						result.size = result.size - x2;
+					}
+				}
+			} else {
+				if(orient == "center") { // z축
+					result.start = 0;
+					result.size = depth;
+					result.end = depth;
+				}
+			}
+
+			return result;
+		}
+
+		/**
+		 * @method getDefaultOffset
+		 *
+		 * get real size of grid
+		 *
+		 * @param {chart.builder} chart
+		 * @param {Strng} orient
+		 * @param {Object} grid             그리드 옵션
+		 * @return {Object}
+		 * @return {Number} return.start    시작 지점
+		 * @return {Number} return.size     그리드 넓이 또는 높이
+		 * @return {Number} return.end      마지막 지점
+		 */
+		this.getDefaultOffset = function() {
+			var orient = this.grid.orient,
+				area = this.axis.area();
+
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
+				start = axis,
+				size = max,
+				end = start + size;
+
+			return {
+				start: start,
+				size: size,
+				end: end
+			};
+		}
+
 		/**
 		 * @method getTextRotate
 		 * implement text rotate in grid text
@@ -17507,55 +18388,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return textElement;
 		}
 
-		/**
-		 * @method getGridSize
-		 *
-		 * get real size of grid
-		 *
-		 * @param {chart.builder} chart
-		 * @param {Strng} orient
-		 * @param {Object} grid             그리드 옵션
-		 * @return {Object}
-		 * @return {Number} return.start    시작 지점
-		 * @return {Number} return.size     그리드 넓이 또는 높이
-		 * @return {Number} return.end      마지막 지점
-		 */
-		this.getGridSize = function() {
-			var orient = this.grid.orient,
-				area = this.axis.area();
-
-			var width = area.width,
-				height = area.height,
-				axis = (orient == "left" || orient == "right") ? area.y : area.x,
-				max = (orient == "left" || orient == "right") ? height : width,
-				depth = this.axis.get("depth"),
-				degree = this.axis.get("degree"),
-				start = axis,
-				size = max,
-				end = start + size;
-
-			var result = {
-				start: start,
-				size: size,
-				end: end
-			};
-
-			if(depth > 0 || degree > 0) {
-				var radian = math.radian(360 - degree),
-					x2 = Math.cos(radian) * depth,
-					y2 = Math.sin(radian) * depth;
-
-				if(orient == "left") {
-					result.start = result.start - y2;
-					result.size = result.size - y2;
-				} else if(orient == "bottom") {
-					result.end = result.end - x2;
-					result.size = result.size - x2;
-				}
-			}
-
-			return result;
-		}
 
 		this.getLineOption = function() {
 			var line = this.grid.line;
@@ -17607,175 +18439,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return true;
 		}
 
-		this.createGridX = function(position, index, x, isActive, isLast) {
-			var line = this.getLineOption(),
-				axis = this.chart.svg.group().translate(x, 0),
-				size = this.chart.theme("gridTickBorderSize");
-
-			axis.append(this.line({
-				y2 : (position == "bottom") ? size : -size,
-				stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
-				"stroke-width" : this.chart.theme("gridTickBorderWidth")
-			}));
-
-			if (line) {
-				this.drawValueLine(position, axis, isActive, line, index, isLast);
-			}
-
-			return axis;
-		}
-
-		this.createGridY = function(position, index, y, isActive, isLast) {
-			var line = this.getLineOption(),
-				axis = this.chart.svg.group().translate(0, y),
-				size = this.chart.theme("gridTickBorderSize");
-
-			axis.append(this.line({
-				x2 : (position == "left") ? -size : size,
-				stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
-				"stroke-width" : this.chart.theme("gridTickBorderWidth")
-			}));
-
-			if (line) {
-				this.drawValueLine(position, axis, isActive, line, index, isLast);
-			}
-
-			return axis;
-		}
-
-		this.fillRectObject = function(g, line, position, x, y , width, height) {
-			if (line.type.indexOf("gradient") > -1) {
-				g.append(this.chart.svg.rect({
-					x : x,
-					y : y,
-					height : height,
-					width : width,
-					fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
-					"fill-opacity" : this.chart.theme("gridPatternOpacity")
-				}));
-			} else if (line.type.indexOf("rect") > -1) {
-				g.append(this.chart.svg.rect({
-					x : x,
-					y : y,
-					height : height,
-					width : width,
-					fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
-					"fill-opacity" : this.chart.theme("gridPatternOpacity")
-				}));
-			}
-		}
-
-		this.drawPattern = function(position, ticks, values, isMove) {
-			if (this.grid.hide) return;
-			if (!position) return;
-			if (!ticks) return;
-			if (!values) return;
-
-			var line = this.getLineOption(),
-				isY = (position == "left" || position == "right");
-
-			var g = this.chart.svg.group({
-				"class" : "grid-pattern grid-pattern-" + this.grid.type
-			});
-
-			g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
-
-			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
-				for(var i = 0; i < values.length-1; i += 2) {
-					var dist = Math.abs(values[i+1] - values[i]),
-						pos = values[i] - (isMove ?  dist/2 : 0 ),
-						x = (isY) ? 0 : pos,
-						y = (isY) ? pos : 0,
-						width = (isY) ?  this.axis.area("width") : dist,
-						height = (isY) ?  dist : this.axis.area("height");
-
-					this.fillRectObject(g, line, position, x, y, width, height);
-				}
-			}
-		}
-
-		this.drawBaseLine = function(position, g) {
-			var obj = this.getGridSize(),
-				pos = {};
-
-			if (position == "bottom" || position == "top") {
-				pos = { x1 : obj.start, x2 : obj.end };
-			} else if (position == "left" || position == "right") {
-				pos = { y1 : obj.start, y2 : obj.end };
-			}
-
-			g.append(this.axisLine(position, pos));
-		}
-
-		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
-			var area = {},
-				isDrawLine = false;
-
-			if (position == "top") {
-				isDrawLine = this.checkDrawLineY(index, isLast);
-				area = { x1: 0, x2: 0, y1: 0, y2: this.axis.area("height") };
-			} else if (position == "bottom" ) {
-				isDrawLine = this.checkDrawLineY(index, isLast);
-				area = { x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
-			} else if (position == "left") {
-				isDrawLine = this.checkDrawLineX(index, isLast);
-				area = { x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0 };
-			} else if (position == "right" ) {
-				isDrawLine = this.checkDrawLineX(index, isLast);
-				area = { x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0 };
-			}
-
-			if(isDrawLine) {
-				var lineObject = this.line(_.extend({
-					stroke: this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
-					"stroke-width": this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
-				}, area));
-
-				if (line.type.indexOf("dashed") > -1) {
-					lineObject.attr({ "stroke-dasharray": "5,5" });
-				}
-
-				axis.append(lineObject);
-			}
-		}
-
-		this.drawImage = function(orient, g, tick, index, x, y) {
-			if (!_.typeCheck("function", this.grid.image)) return;
-
-			var opts = this.grid.image.apply(this.chart, [ tick, index ]);
-
-			if(_.typeCheck("object", opts)) {
-				var image = this.chart.svg.image({
-					"xlink:href": opts.uri,
-					width: opts.width,
-					height: opts.height
-				});
-
-				if(orient == "top" || orient == "bottom") {
-					image.attr({
-						x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
-					});
-				} else if(orient == "left" || orient == "right") {
-					image.attr({
-						y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
-					})
-				}
-
-				if(orient == "bottom") {
-					image.attr({ y: opts.dist });
-				} else if(orient == "top") {
-					image.attr({ y: -(opts.dist + opts.height) });
-				} else if(orient == "left") {
-					image.attr({ x: -(opts.dist + opts.width) });
-				} else if(orient == "right") {
-					image.attr({ x: opts.dist });
-				}
-
-				image.translate(x, y)
-				g.append(image);
-			}
-		}
-
 		/**
 		 * @method top
 		 *
@@ -17808,22 +18471,10 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridX("top", i, x, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: moveX,
-						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("top", axis, i, values[i], domain, moveX, isActive);
 
 				g.append(axis);
 			}
-
 		}
 
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
@@ -17847,18 +18498,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridX("bottom", i, x, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: moveX,
-						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("bottom", axis, i, values[i], domain, moveX, isActive);
 
 				g.append(axis);
 			}
@@ -17885,21 +18525,9 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridY("left", i, y, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
-						y: moveY,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "end",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("left", axis, i, values[i], domain, moveY, isActive);
 
 				g.append(axis);
-
 			}
 		}
 
@@ -17924,18 +18552,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridY("right", i, y, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
-						y: moveY,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "start",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("right", axis, i, values[i], domain, moveY, isActive);
 
 				g.append(axis);
 			}
@@ -17953,13 +18570,15 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawGrid = function() {
 			// create group
 			var root = this.chart.svg.group(),
-				func = this[this.grid.orient];
+				func = this[this.grid.orient],
+				draw = (this.axis.isFull3D()) ? Draw3D : Draw2D;
 
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
 			// render axis
 			if(_.typeCheck("function", func)) {
+				draw.call(this);
 				func.call(this, root);
 			}
 
@@ -17977,13 +18596,12 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		/**
 		 * @method drawAfter
 		 *
-		 *
-		 *
 		 * @param {Object} obj
 		 * @protected
 		 */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
+			obj.root.translate(this.chart.area("x") , this.chart.area("y"));
 		}
 	}
 
@@ -18028,6 +18646,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 * @extends chart.grid.core
 	 */
 	var BlockGrid = function() {
+		this.center = function(g) {
+			this.drawCenter(g, this.domain, this.points, null, this.half_band);
+			this.drawBaseLine("center", g);
+		}
 
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
@@ -18141,6 +18763,11 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 	 * @extends chart.grid.core
 	 */
 	var DateGrid = function() {
+
+		this.center = function(g) {
+			this.drawCenter(g, this.ticks, this.values, null, 0);
+			this.drawBaseLine("center", g);
+		}
 
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
@@ -18425,6 +19052,10 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
+        this.center = function(g) {
+            this.drawCenter(g, this.domain, this.points, null, 0);
+            this.drawBaseLine("center", g);
+        }
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);
@@ -18828,6 +19459,16 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
 	 * @extends chart.grid.core
 	 */
 	var RangeGrid = function() {
+		this.center = function(g) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawCenter(g, this.ticks, this.values, function(tick) {
+				return tick == 0 && tick != min && tick != max;
+			}, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			var min = this.scale.min(),
@@ -20150,42 +20791,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 				p2 : p2
 			};
 		}
-
-        /**
-         * 
-         * @method getScaleValue
-         *
-         * 값에 비례하여 반지름을 구하는 함수
-         *
-         * @param value
-         * @param minValue
-         * @param maxValue
-         * @param minRadius
-         * @param maxRadius
-         * @return {*}
-         */
-        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
-            // 최소/최대 값이 같을 경우 처리
-            minValue = (minValue == maxValue) ? 0 : minValue;
-
-            var range = maxRadius - minRadius,
-                tg = range * getPer();
-
-            function getPer() {
-                var range = maxValue - minValue,
-                    tg = value - minValue,
-                    per = tg / range;
-
-                return per;
-            }
-
-            return tg + minRadius;
-        }
-
-        /*
-         * 차트 데이터 핸들링 함수
-         *
-         */
 
         /**
          * 
@@ -22283,7 +22888,7 @@ jui.define("chart.brush.fullstackcylinder3d", [], function() {
 	return FullStackCylinder3DBrush;
 }, "chart.brush.fullstackcolumn3d");
 
-jui.define("chart.brush.bubble", [], function() {
+jui.define("chart.brush.bubble", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble 
@@ -22294,7 +22899,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         this.createBubble = function(pos, color) {
-            var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
+            var radius = math.scaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
 
             circle.append(
@@ -22370,7 +22975,7 @@ jui.define("chart.brush.bubble", [], function() {
 
 	return BubbleBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.bubble3d", [], function() {
+jui.define("chart.brush.bubble3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble3d
@@ -22404,7 +23009,7 @@ jui.define("chart.brush.bubble3d", [], function() {
                         dy = Math.sin(this.axis.c.radian) * xy.depth,
                         startX = xy.x + dx / 2,
                         startY = xy.y - dy / 2,
-                        rate = this.getScaleValue(count - j, 1, count, 0.6, 1),
+                        rate = math.scaleValue(count - j, 1, count, 0.6, 1),
                         color = this.color(i, j);
 
                     var b = this.createBubble({
@@ -24401,7 +25006,7 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 	return GaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fullgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
@@ -24472,7 +25077,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			centerY = height / 2 + y;
 			outerRadius = w - this.brush.size;
 			innerRadius = outerRadius - this.brush.size;
-            textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
+            textScale = math.scaleValue(w, 40, 400, 1, 1.5);
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				stroke : this.chart.theme("gaugeBackgroundColor"),
@@ -25993,7 +26598,7 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 	return MapNoteBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.bubble", [ "util.base", "util.math" ], function(_, math) {
 
     /**
      * @class chart.brush.map.bubble
@@ -26044,7 +26649,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
             this.eachData(function(i, d) {
                 var value = axis.getValue(d, "value", 0),
-                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    size = math.scaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null)),
                     color = this.color(i, 0);
 
@@ -26547,6 +27152,78 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
 	return MapWeatherBrush;
 }, "chart.brush.map.core");
+
+jui.define("chart.brush.circlefull3d", [ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+	function(_, MathUtil, ColorUtil, PointPolygon) {
+
+	/**
+	 * @class chart.brush.circlefull3d
+	 * @extends chart.brush.core
+	 */
+	var CircleFull3DBrush = function() {
+		this.createCircle = function(data, target, dataIndex, targetIndex) {
+			var color = this.color(dataIndex, targetIndex),
+				zkey = this.brush.zkey,
+				r = this.brush.size / 2,
+				x = this.axis.x(dataIndex),
+				y = this.axis.y(data[target]),
+				z = null;
+
+			if(_.typeCheck("function", zkey)) {
+				var zk = zkey.call(this.chart, data);
+				z = this.axis.z(zk);
+			} else {
+				z = this.axis.z(data[zkey]);
+			}
+
+			if(color.indexOf("radial") == -1) {
+				color = this.chart.color("radial(40%,40%,100%,0%,0%) 0% " + ColorUtil.lighten(color, 0.7) + ",70% " + color);
+			}
+
+			var p = new PointPolygon(x, y, z);
+			this.calculate3d(p);
+
+			var elem = this.chart.svg.circle({
+				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
+				fill: color,
+				cx: p.vertices[0][0],
+				cy: p.vertices[0][1]
+			});
+
+			return elem;
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target;
+
+			for(var i = 0; i < datas.length; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					var p = this.createCircle(datas[i], targets[j], i, j);
+
+					this.addEvent(p, i, j);
+					g.append(p);
+				}
+			}
+
+			return g;
+		}
+	}
+
+	CircleFull3DBrush.setup = function() {
+		return {
+			zkey: null,
+
+			/** @cfg {Number} [size=7]  Determines the size of a starter. */
+			size: 7,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return CircleFull3DBrush;
+}, "chart.brush.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
@@ -28903,6 +29580,76 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
 
     return MapTooltipWidget;
 }, "chart.widget.tooltip");
+jui.define("chart.widget.rotate3d", [ "util.base" ], function (_) {
+    var DEGREE_LIMIT = 180;
+
+    /**
+     * @class chart.widget.rotate3d
+     * @extends chart.widget.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var Rotate3DWidget = function(chart, axis, widget) {
+        var self = this;
+
+        function setScrollEvent(w, h) {
+            var isMove = false,
+                mouseStartX = 0;
+                mouseStartY = 0,
+                sdx = 0,
+                sdy = 0;
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove) return;
+
+                isMove = true;
+                mouseStartX = e.chartX;
+                mouseStartY = e.chartY;
+                sdx = self.axis.degree.x;
+                sdy = self.axis.degree.y;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gapX = e.chartX - mouseStartX,
+                    gapY = e.chartY - mouseStartY,
+                    dx = Math.floor((gapY / h) * DEGREE_LIMIT),
+                    dy = Math.floor((gapX / w) * DEGREE_LIMIT);
+
+                self.axis.degree.x = sdx + dx;
+                self.axis.degree.y = sdy - dy;
+                chart.render();
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStartX = 0;
+                mouseStartY = 0;
+            }
+        }
+
+        this.draw = function() {
+            setScrollEvent(this.axis.area("width"), this.axis.area("height"));
+
+            return chart.svg.group();
+        }
+    }
+
+    Rotate3DWidget.setup = function() {
+    }
+
+    return Rotate3DWidget;
+}, "chart.widget.core");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     /**

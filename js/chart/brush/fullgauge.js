@@ -1,4 +1,4 @@
-jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fullgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
@@ -69,7 +69,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			centerY = height / 2 + y;
 			outerRadius = w - this.brush.size;
 			innerRadius = outerRadius - this.brush.size;
-            textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
+            textScale = math.scaleValue(w, 40, 400, 1, 1.5);
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				stroke : this.chart.theme("gaugeBackgroundColor"),

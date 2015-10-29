@@ -174,6 +174,18 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 }
             }, "render");
         }
+
+        this.calculate3d = function() {
+            var w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                r = this.axis.degree,
+                list = arguments;
+
+            for(var i = 0; i < list.length; i++) {
+                list[i].rotate(w, h, d, r);
+            }
+        }
 	}
 
     Draw.setup = function() {

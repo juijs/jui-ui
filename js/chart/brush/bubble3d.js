@@ -1,4 +1,4 @@
-jui.define("chart.brush.bubble3d", [], function() {
+jui.define("chart.brush.bubble3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble3d
@@ -32,7 +32,7 @@ jui.define("chart.brush.bubble3d", [], function() {
                         dy = Math.sin(this.axis.c.radian) * xy.depth,
                         startX = xy.x + dx / 2,
                         startY = xy.y - dy / 2,
-                        rate = this.getScaleValue(count - j, 1, count, 0.6, 1),
+                        rate = math.scaleValue(count - j, 1, count, 0.6, 1),
                         color = this.color(i, j);
 
                     var b = this.createBubble({

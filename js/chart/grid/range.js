@@ -5,6 +5,16 @@ jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], funct
 	 * @extends chart.grid.core
 	 */
 	var RangeGrid = function() {
+		this.center = function(g) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawCenter(g, this.ticks, this.values, function(tick) {
+				return tick == 0 && tick != min && tick != max;
+			}, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			var min = this.scale.min(),

@@ -1,4 +1,4 @@
-jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.bubble", [ "util.base", "util.math" ], function(_, math) {
 
     /**
      * @class chart.brush.map.bubble
@@ -49,7 +49,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
             this.eachData(function(i, d) {
                 var value = axis.getValue(d, "value", 0),
-                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    size = math.scaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null)),
                     color = this.color(i, 0);
 

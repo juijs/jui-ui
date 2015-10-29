@@ -53,7 +53,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function drawGridType(axis, k) {
-            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y" || k == "z") && !_.typeCheck("object", axis[k]))
+                return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -62,6 +63,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
             } else if (k == "y") {
                 axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "z") {
+                axis[k].orient = "center";
             } else if (k == "c") {
                 axis[k].type = axis[k].type || "panel";
                 axis[k].orient = "custom";
@@ -81,18 +84,19 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             var elem = obj.render();
 
-            // 그리드 별 위치 선정하기
-            if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
-            } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
-            } else {
-                // custom
-                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            // 그리드 별 위치 선정하기 (z축이 없을 때)
+            if(!self.isFull3D()) {
+                if (axis[k].orient == "left") {
+                    elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "right") {
+                    elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "bottom") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y2") + axis[k].dist);
+                } else if (axis[k].orient == "top") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y") - axis[k].dist);
+                } else {
+                    if (elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+                }
             }
 
             elem.scale.type = axis[k].type;
@@ -288,7 +292,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 index : cloneAxis.index,
                 page : cloneAxis.page,
                 start : cloneAxis.start,
-                end : cloneAxis.end
+                end : cloneAxis.end,
+
+                degree : cloneAxis.degree,
+                depth : cloneAxis.depth
             });
 
             // 원본 데이터 설정
@@ -345,6 +352,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             _.extend(this, {
                 x : options.x,
                 y : options.y,
+                z : options.z,
                 c : options.c,
                 map : options.map
             });
@@ -365,6 +373,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
+            this.z = drawGridType(this, "z");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
         }
@@ -515,6 +524,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        this.isFull3D = function() {
+            return !_.typeCheck([ "undefined", "null" ], this.z);
+        }
+
         init();
     }
 
@@ -540,6 +553,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
+            /** @cfg {chart.grid.core} [z=null] Sets a grid on the Z axis (see the grid tab). */
+            z: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
             /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
@@ -583,55 +598,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             depth: 0
         }
     }
-
-    /**
-     * @event axis_click
-     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_dblclick
-     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_rclick
-     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseover
-     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseout
-     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousemove
-     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousedown
-     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseup
-     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
 
     return Axis;
 });

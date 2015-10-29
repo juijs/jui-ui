@@ -1,4 +1,4 @@
-jui.define("chart.brush.bubble", [], function() {
+jui.define("chart.brush.bubble", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble 
@@ -9,7 +9,7 @@ jui.define("chart.brush.bubble", [], function() {
         var self = this;
 
         this.createBubble = function(pos, color) {
-            var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
+            var radius = math.scaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
 
             circle.append(

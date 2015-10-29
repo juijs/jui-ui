@@ -9,6 +9,10 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 * @extends chart.grid.core
 	 */
 	var BlockGrid = function() {
+		this.center = function(g) {
+			this.drawCenter(g, this.domain, this.points, null, this.half_band);
+			this.drawBaseLine("center", g);
+		}
 
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
