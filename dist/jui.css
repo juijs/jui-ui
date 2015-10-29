@@ -1547,6 +1547,9 @@
     transform: scale(1);
   }
 }
+.jui .icon-pin:before {
+  content: "\e945";
+}
 .jui .icon-add-dir:before {
   content: "\e900";
 }
@@ -1753,9 +1756,6 @@
 }
 .jui .icon-pause:before {
   content: "\e944";
-}
-.jui .icon-pin:before {
-  content: "\e945";
 }
 .jui .icon-play:before {
   content: "\e946";

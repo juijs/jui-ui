@@ -8718,6 +8718,7 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
+		"pin" : "\ue945",
 		"add-dir" : "\ue900",
 		"add-dir2" : "\ue901",
 		"align-center" : "\ue902",
@@ -8787,7 +8788,6 @@ jui.define("chart.icon.jennifer", [], function() {
 		"orderedlist" : "\ue942",
 		"outdent" : "\ue943",
 		"pause" : "\ue944",
-		"pin" : "\ue945",
 		"play" : "\ue946",
 		"plus" : "\ue947",
 		"preview" : "\ue948",
