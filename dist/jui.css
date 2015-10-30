@@ -3172,13 +3172,13 @@
   left: 5px;
 }
 .jui .datepicker > .head > .prev:before {
-  content: "\e61b";
+  content: "\e91b";
 }
 .jui .datepicker > .head > .next {
   right: 5px;
 }
 .jui .datepicker > .head > .next:before {
-  content: "\e61c";
+  content: "\e91c";
 }
 .jui .datepicker > table.body {
   width: 100%;
