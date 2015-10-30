@@ -31,6 +31,7 @@ module.exports = function(grunt) {
         "js/ui/tooltip.js",
         "js/ui/layout.js",
         "js/ui/accordion.js",
+        "js/ui/switch.js",
 
         "js/uix/autocomplete.js",
         "js/uix/tab.js",
