@@ -10,7 +10,7 @@
         border: 1px solid @switchBorderColor;
         border-radius: @switchBorderRadius;
         .switch-bar {
-            transition: @switchBackgroundTransition;
+            .transition(@switchBackgroundTransition);
             background: @switchOffBackgroundColor;
         }
     }
@@ -25,7 +25,7 @@
         border: 1px solid @switchHandleBorderColor;
         box-shadow: @switchHandleBoxShadow;
         background: @switchHandleBackgroundColor;
-        transition: @switchTransition;
+        .transition(@switchTransition);
     }
 
     &.on {
@@ -89,6 +89,7 @@
             .handle {
                 left: 100%;
                 margin-left: -@switchInnerWidth - @switchInnerPadding/4;
+                border: 1px solid @switchOnBackgroundColor;
             }
         }
 

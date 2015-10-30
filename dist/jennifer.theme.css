@@ -1744,7 +1744,7 @@
   border: 1px solid #737373;
 }
 .jui .switch {
-  width: 40px;
+  width: 50px;
   height: 26px;
   margin-left: 10px;
   margin-right: 10px;
@@ -1756,7 +1756,10 @@
   border-radius: 20px;
 }
 .jui .switch .switch-area .switch-bar {
-  transition: all 1s ease;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
   background: #ececec;
 }
 .jui .switch .handle {
@@ -1769,7 +1772,10 @@
   border: 1px solid #ececec;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   background: #ffffff;
-  transition: all 0.7s ease;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 .jui .switch.on .switch-area .switch-bar {
   background: #a57ff2;
@@ -1779,7 +1785,7 @@
   margin-left: -25px;
 }
 .jui .switch.small {
-  width: 32px;
+  width: 40px;
   height: 20.8px;
   padding-left: 8px;
   padding-right: 8px;
@@ -1807,29 +1813,30 @@
   padding-right: 0;
 }
 .jui .switch.inner .handle {
-  margin-top: -10px;
-  left: 2px;
+  margin-top: -11.5px;
+  left: 1px;
   margin-left: 0px;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 }
 .jui .switch.inner.on .handle {
   left: 100%;
-  margin-left: -23px;
+  margin-left: -24.5px;
+  border: 1px solid #a57ff2;
 }
 .jui .switch.inner.small .switch-area {
   border-radius: 16px;
 }
 .jui .switch.inner.small .handle {
-  margin-top: -7.8px;
-  left: 2px;
-  width: 15.6px;
-  height: 15.6px;
+  margin-top: -9.1px;
+  left: 1px;
+  width: 18.2px;
+  height: 18.2px;
 }
 .jui .switch.inner.small.on .handle {
   left: 100%;
-  margin-left: -18.6px;
+  margin-left: -19.7px;
 }
 @font-face {
   font-family: "jennifer";

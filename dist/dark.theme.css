@@ -1756,6 +1756,9 @@
   border-radius: 20px;
 }
 .jui .switch .switch-area .switch-bar {
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
   transition: all 1s ease;
   background: #ececec;
 }
@@ -1769,6 +1772,9 @@
   border: 1px solid #ececec;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   background: #ffffff;
+  -webkit-transition: all 0.7s ease;
+  -moz-transition: all 0.7s ease;
+  -o-transition: all 0.7s ease;
   transition: all 0.7s ease;
 }
 .jui .switch.on .switch-area .switch-bar {
@@ -1817,6 +1823,7 @@
 .jui .switch.inner.on .handle {
   left: 100%;
   margin-left: -23px;
+  border: 1px solid #a57ff2;
 }
 .jui .switch.inner.small .switch-area {
   border-radius: 16px;
