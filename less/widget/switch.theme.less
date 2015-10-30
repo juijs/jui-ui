@@ -1,0 +1,118 @@
+.switch {
+    width: @switchWidth;
+    height: @switchHeight;
+    margin-left:@switchMargin;
+    margin-right:@switchMargin;
+    padding-left: @switchPadding;
+    padding-right: @switchPadding;
+
+    .switch-area {
+        border: 1px solid @switchBorderColor;
+        border-radius: @switchBorderRadius;
+        .switch-bar {
+            transition: @switchBackgroundTransition;
+            background: @switchOffBackgroundColor;
+        }
+    }
+
+    .handle {
+        margin-top: -(@switchHandleHeight/2);
+        left: 0;
+        margin-left: -(@switchHandleWidth/2) + @switchPadding;
+        width: @switchHandleWidth;
+        height: @switchHandleHeight;
+        border-radius: @switchHandleBorderRadius;
+        border: 1px solid @switchHandleBorderColor;
+        box-shadow: @switchHandleBoxShadow;
+        background: @switchHandleBackgroundColor;
+        transition: @switchTransition;
+    }
+
+    &.on {
+
+        .switch-area {
+            .switch-bar {
+                background: @switchOnBackgroundColor;
+            }
+        }
+        .handle {
+            left: 100%;
+            margin-left: -(@switchHandleWidth/2)-@switchPadding;
+        }
+    }
+
+    &.small {
+        width: @switchWidth * @switchSmallRate;
+        height: @switchHeight * @switchSmallRate;
+        padding-left: @switchPadding * @switchSmallRate;
+        padding-right: @switchPadding * @switchSmallRate;
+        display:inline-block;
+
+        .switch-area {
+            border-radius: @switchBorderRadius * @switchSmallRate;
+
+        }
+
+        .handle {
+            margin-top: -((@switchHandleHeight * @switchSmallRate)/2);
+            left: 0;
+            margin-left: -((@switchHandleWidth * @switchSmallRate)/2) + (@switchPadding * @switchSmallRate);
+            width: @switchHandleWidth * @switchSmallRate;
+            height: @switchHandleHeight * @switchSmallRate;
+            border-radius: @switchHandleBorderRadius * @switchSmallRate;
+        }
+
+        &.on {
+            .handle {
+                left: 100%;
+                margin-left: -((@switchHandleWidth * @switchSmallRate)/2) - (@switchPadding * @switchSmallRate);
+            }
+        }
+    }
+
+    &.inner {
+        margin-left:0;
+        margin-right:0;
+        padding-left: 0;
+        padding-right: 0;
+
+        .handle {
+            margin-top: -(@switchInnerWidth/2) + @switchInnerPadding/4;
+            left: @switchInnerPadding/2;
+            margin-left:0px;
+            width: @switchInnerWidth - @switchInnerPadding/2;
+            height: @switchInnerHeight - @switchInnerPadding/2;
+            box-shadow: @switchInnerHandleBoxShadow;
+        }
+
+        &.on {
+            .handle {
+                left: 100%;
+                margin-left: -@switchInnerWidth - @switchInnerPadding/4;
+            }
+        }
+
+
+
+        &.small {
+            .switch-area {
+                border-radius: @switchBorderRadius * @switchSmallRate;
+            }
+
+            .handle {
+                margin-top: -((@switchInnerHeight * @switchSmallRate)/2) + @switchInnerPadding/4;
+                left: @switchInnerPadding/2;
+                width: @switchInnerWidth * @switchSmallRate - @switchInnerPadding/2;
+                height: @switchInnerWidth * @switchSmallRate - @switchInnerPadding/2;
+            }
+
+            &.on {
+                .handle {
+                    left: 100%;
+                    margin-left: -(@switchInnerWidth * @switchSmallRate) - @switchInnerPadding/4;
+                }
+            }
+        }
+    }
+
+}
