@@ -1,10 +1,10 @@
 .switch {
     width: @switchWidth;
     height: @switchHeight;
-    margin-left:@switchMargin;
-    margin-right:@switchMargin;
-    padding-left: @switchPadding;
-    padding-right: @switchPadding;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 
     .area {
         border: 1px solid @switchBorderColor;
@@ -18,7 +18,7 @@
     .handle {
         margin-top: -(@switchHandleHeight/2);
         left: 0;
-        margin-left: -(@switchHandleWidth/2) + @switchPadding;
+        margin-left: -(@switchHandleWidth/2) + 10px;
         width: @switchHandleWidth;
         height: @switchHandleHeight;
         border-radius: @switchHandleBorderRadius;
@@ -36,7 +36,7 @@
         }
         .handle {
             left: 100%;
-            margin-left: -(@switchHandleWidth/2)-@switchPadding;
+            margin-left: -(@switchHandleWidth/2) - 10px;
         }
     }
 
@@ -52,15 +52,15 @@
 
     /* Inner type switch */
     &.inner {
-        margin-left:0;
-        margin-right:0;
+        margin-left: 0;
+        margin-right: 0;
         padding-left: 0;
         padding-right: 0;
 
         .handle {
             margin-top: -(@switchInnerWidth/2) + @switchInnerPadding/4;
             left: @switchInnerPadding/2;
-            margin-left:0px;
+            margin-left: 0px;
             width: @switchInnerWidth - @switchInnerPadding/2;
             height: @switchInnerHeight - @switchInnerPadding/2;
             box-shadow: @switchInnerHandleBoxShadow;
@@ -88,8 +88,8 @@
     .switch-outer-size(@rate) {
         width: @switchWidth * @rate;
         height: @switchHeight * @rate;
-        padding-left: @switchPadding * @rate;
-        padding-right: @switchPadding * @rate;
+        padding-left: 10px * @rate;
+        padding-right: 10px * @rate;
         display:inline-block;
 
         .area {
@@ -99,7 +99,7 @@
         .handle {
             margin-top: -((@switchHandleHeight * @rate)/2);
             left: 0;
-            margin-left: -((@switchHandleWidth * @rate)/2) + (@switchPadding * @rate);
+            margin-left: -((@switchHandleWidth * @rate)/2) + (10px * @rate);
             width: @switchHandleWidth * @rate;
             height: @switchHandleHeight * @rate;
             border-radius: @switchHandleBorderRadius * @rate;
@@ -108,7 +108,7 @@
         &.on {
             .handle {
                 left: 100%;
-                margin-left: -((@switchHandleWidth * @rate)/2) - (@switchPadding * @rate);
+                margin-left: -((@switchHandleWidth * @rate)/2) - (10px * @rate);
             }
         }
     }
