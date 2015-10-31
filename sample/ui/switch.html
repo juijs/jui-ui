@@ -15,7 +15,7 @@
 
     <script>
         jui.ready([ "ui.switch" ], function(s) {
-            var sw = s(".switch");
+            sw = s(".switch");
 
             //sw.setValue(true);
 
@@ -31,15 +31,12 @@
 <body class="jui">
 
 <h1>Switch Default Style</h1>
-
-<div class="switch" data-value="false"> </div>
-
-<div class="switch small" data-value="true">  </div>
+<div class="switch"></div>
+<div class="switch small" checked></div>
 
 <h1>Switch Inner Style</h1>
-<div class="switch inner"> </div>
-
-<div class="switch inner small" data-value="true"> </div>
+<div class="switch inner"></div>
+<div class="switch inner small" checked></div>
 
 </body>
 </html>

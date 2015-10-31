@@ -2,17 +2,15 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
 
     /**
-     * @class ui.combo
+     * @class ui.switch
      * @extends core
-     * @alias Combo Box
+     * @alias Switch button
      * @requires jquery
      * @requires util.base
      */
     var UI = function() {
-        var self = this;
-
-        function selectDom(selector) {
-            var $dom = $(self.root).find('.' + selector);
+        function selectDom(root, selector) {
+            var $dom = $(root).find('.' + selector);
 
             if (!$dom.length) {
                 $dom = $("<div />").addClass(selector);
@@ -21,61 +19,51 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
             return $dom;
         }
 
-        this.data = function (key) {
-            return $(this.root).data(key) || this.options[key];
-        };
-
         this.init = function() {
+            var self = this,
+                opts = this.options;
 
+            var $left = selectDom(this.root, "left"),
+                $right = selectDom(this.root, "right"),
+                $area = selectDom(this.root, "switch-area"),
+                $bar = selectDom(this.root, "switch-bar"),
+                $handle = selectDom(this.root, "handle");
 
-            this.$left = selectDom('left');
-            this.$right = selectDom('right');
-            this.$area = selectDom('switch-area');
-            this.$bar = selectDom('switch-bar');
-            this.$handle = selectDom('handle');
+            $bar.html($left),
+            $bar.append($right),
+            $area.html($bar);
 
-            this.$bar.html(this.$left);
-            this.$bar.append(this.$right);
+            $(this.root).html($area).append($handle);
 
-            this.$area.html(this.$bar);
-
-            $(this.root).html(this.$area).append(this.$handle);
-
-            this.initEvent();
-
-            this.setValue(this.data('value'));
-        };
-
-        this.initEvent = function () {
-            this.addEvent(this.$left, 'click', function (e) {
-                self.setValue(false);
+            this.addEvent(this.root, opts.toggleEvent, function(e) {
+                self.toggle();
             });
 
-            this.addEvent(this.$right, 'click', function (e) {
-                self.setValue(true);
-            });
+            if(opts.checked || $(this.root).attr("checked")) {
+                $(this.root).addClass("on");
+            }
         }
 
         this.getValue = function() {
-            return $(this.root).hasClass('on');
-        };
+            return $(this.root).hasClass("on");
+        }
 
-        this.setValue = function (value) {
-            $(this.root).toggleClass('on', !!value);
-            this.emit('change');
-        };
+        this.setValue = function(value) {
+            $(this.root).toggleClass("on", !!value);
+            this.emit("change");
+        }
 
-        this.toggle = function () {
+        this.toggle = function() {
             this.setValue(!this.getValue());
         }
     };
 
     UI.setup = function() {
         return {
-            value : false
+            checked: false,
+            toggleEvent: "click"
         }
     }
-
 
     return UI;
 });
