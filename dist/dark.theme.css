@@ -1750,12 +1750,13 @@
   margin-right: 10px;
   padding-left: 10px;
   padding-right: 10px;
+  /* Inner type switch */
 }
-.jui .switch .switch-area {
+.jui .switch .area {
   border: 1px solid #ececec;
   border-radius: 20px;
 }
-.jui .switch .switch-area .switch-bar {
+.jui .switch .area .bar {
   -webkit-transition: all 1s ease;
   -moz-transition: all 1s ease;
   -o-transition: all 1s ease;
@@ -1777,12 +1778,34 @@
   -o-transition: all 0.7s ease;
   transition: all 0.7s ease;
 }
-.jui .switch.on .switch-area .switch-bar {
+.jui .switch.on .area .bar {
   background: #a57ff2;
 }
 .jui .switch.on .handle {
   left: 100%;
   margin-left: -25px;
+}
+.jui .switch.mini {
+  width: 24px;
+  height: 15.6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  display: inline-block;
+}
+.jui .switch.mini .area {
+  border-radius: 12px;
+}
+.jui .switch.mini .handle {
+  margin-top: -9px;
+  left: 0;
+  margin-left: -3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9.6px;
+}
+.jui .switch.mini.on .handle {
+  left: 100%;
+  margin-left: -15px;
 }
 .jui .switch.small {
   width: 32px;
@@ -1791,7 +1814,7 @@
   padding-right: 8px;
   display: inline-block;
 }
-.jui .switch.small .switch-area {
+.jui .switch.small .area {
   border-radius: 16px;
 }
 .jui .switch.small .handle {
@@ -1805,6 +1828,28 @@
 .jui .switch.small.on .handle {
   left: 100%;
   margin-left: -20px;
+}
+.jui .switch.large {
+  width: 48px;
+  height: 31.2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  display: inline-block;
+}
+.jui .switch.large .area {
+  border-radius: 24px;
+}
+.jui .switch.large .handle {
+  margin-top: -18px;
+  left: 0;
+  margin-left: -6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 19.2px;
+}
+.jui .switch.large.on .handle {
+  left: 100%;
+  margin-left: -30px;
 }
 .jui .switch.inner {
   margin-left: 0;
@@ -1825,7 +1870,20 @@
   margin-left: -23px;
   border: 1px solid #a57ff2;
 }
-.jui .switch.inner.small .switch-area {
+.jui .switch.inner.mini .area {
+  border-radius: 12px;
+}
+.jui .switch.inner.mini .handle {
+  margin-top: -5.6px;
+  left: 2px;
+  width: 11.2px;
+  height: 11.2px;
+}
+.jui .switch.inner.mini.on .handle {
+  left: 100%;
+  margin-left: -14.2px;
+}
+.jui .switch.inner.small .area {
   border-radius: 16px;
 }
 .jui .switch.inner.small .handle {
@@ -1837,6 +1895,19 @@
 .jui .switch.inner.small.on .handle {
   left: 100%;
   margin-left: -18.6px;
+}
+.jui .switch.inner.large .area {
+  border-radius: 24px;
+}
+.jui .switch.inner.large .handle {
+  margin-top: -12.2px;
+  left: 2px;
+  width: 24.4px;
+  height: 24.4px;
+}
+.jui .switch.inner.large.on .handle {
+  left: 100%;
+  margin-left: -27.4px;
 }
 @font-face {
   font-family: "jennifer";

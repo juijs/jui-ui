@@ -25,8 +25,8 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
             var $left = selectDom(this.root, "left"),
                 $right = selectDom(this.root, "right"),
-                $area = selectDom(this.root, "switch-area"),
-                $bar = selectDom(this.root, "switch-bar"),
+                $area = selectDom(this.root, "area"),
+                $bar = selectDom(this.root, "bar"),
                 $handle = selectDom(this.root, "handle");
 
             $bar.html($left),
