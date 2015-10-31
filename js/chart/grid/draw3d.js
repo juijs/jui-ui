@@ -41,8 +41,13 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
          * @param {Function} checkActive
          */
         this.drawCenter = function(g, ticks, values, checkActive, moveZ) {
-            var axis = this.chart.svg.group();
-            this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            var axis = this.chart.svg.group(),
+                line = this.getLineOption();
+
+            if(line) {
+                this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            }
+
             this.drawValueTextCenter(axis, ticks, values, checkActive, moveZ);
 
             g.append(axis);
