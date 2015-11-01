@@ -67,14 +67,21 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
          * @param {Object} attr
          */
         this.drawAxisLine = function(position, axis) {
-            var isTopOrBottom = (position == "top" || position == "bottom");
+            var isTopOrBottom = (position == "top" || position == "bottom"),
+                borderColor = (isTopOrBottom) ? "gridXAxisBorderColor" : "gridYAxisBorderColor",
+                borderWidth = (isTopOrBottom) ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth";
+
+            if(position == "center") {
+                borderColor = "gridZAxisBorderColor";
+                borderWidth = "gridZAxisBorderWidth";
+            }
 
             var face = this.chart.svg.polygon({
-                stroke: this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
-                "stroke-width": this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
+                stroke: this.chart.theme(borderColor),
+                "stroke-width": this.chart.theme(borderWidth),
                 "stroke-opacity" : 1,
-                fill: "#dcdcdc",
-                "fill-opacity": 0.2
+                fill: this.chart.theme("gridFaceBackgroundColor"),
+                "fill-opacity": this.chart.theme("gridFaceBackgroundOpacity")
             });
 
             var p = null,

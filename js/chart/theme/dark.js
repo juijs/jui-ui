@@ -38,8 +38,14 @@ jui.define("chart.theme.dark", [], function() {
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#464646",
         gridYAxisBorderColor : "#464646",
+        gridZAxisBorderColor : "#464646",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",

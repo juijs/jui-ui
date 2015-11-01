@@ -7665,8 +7665,14 @@ jui.define("chart.theme.jennifer", [], function() {
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#bfbfbf",
         gridYAxisBorderColor : "#bfbfbf",
+        gridZAxisBorderColor : "#bfbfbf",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -7889,8 +7895,14 @@ jui.define("chart.theme.gradient", [], function() {
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#efefef",
         gridYAxisBorderColor : "#efefef",
+        gridZAxisBorderColor : "#efefef",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -8111,8 +8123,14 @@ jui.define("chart.theme.dark", [], function() {
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#464646",
         gridYAxisBorderColor : "#464646",
+        gridZAxisBorderColor : "#464646",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
@@ -8331,8 +8349,14 @@ jui.define("chart.theme.pastel", [], function() {
 		gridCFontWeight : "normal",
 		gridXAxisBorderColor : "#bfbfbf",
 		gridYAxisBorderColor : "#bfbfbf",
+		gridZAxisBorderColor : "#bfbfbf",
 		gridXAxisBorderWidth : 2,
 		gridYAxisBorderWidth : 2,
+		gridZAxisBorderWidth : 2,
+
+		// Full 3D 전용 테마
+		gridFaceBackgroundColor: "#dcdcdc",
+		gridFaceBackgroundOpacity: 0.3,
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
@@ -8550,8 +8574,14 @@ jui.define("chart.theme.pattern", [], function() {
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#ebebeb",
         gridYAxisBorderColor : "#ebebeb",
+        gridZAxisBorderColor : "#ebebeb",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -9540,14 +9570,21 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
          * @param {Object} attr
          */
         this.drawAxisLine = function(position, axis) {
-            var isTopOrBottom = (position == "top" || position == "bottom");
+            var isTopOrBottom = (position == "top" || position == "bottom"),
+                borderColor = (isTopOrBottom) ? "gridXAxisBorderColor" : "gridYAxisBorderColor",
+                borderWidth = (isTopOrBottom) ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth";
+
+            if(position == "center") {
+                borderColor = "gridZAxisBorderColor";
+                borderWidth = "gridZAxisBorderWidth";
+            }
 
             var face = this.chart.svg.polygon({
-                stroke: this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
-                "stroke-width": this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
+                stroke: this.chart.theme(borderColor),
+                "stroke-width": this.chart.theme(borderWidth),
                 "stroke-opacity" : 1,
-                fill: "#dcdcdc",
-                "fill-opacity": 0.2
+                fill: this.chart.theme("gridFaceBackgroundColor"),
+                "fill-opacity": this.chart.theme("gridFaceBackgroundOpacity")
             });
 
             var p = null,
