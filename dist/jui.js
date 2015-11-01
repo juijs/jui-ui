@@ -8196,8 +8196,8 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
             var $left = selectDom(this.root, "left"),
                 $right = selectDom(this.root, "right"),
-                $area = selectDom(this.root, "switch-area"),
-                $bar = selectDom(this.root, "switch-bar"),
+                $area = selectDom(this.root, "area"),
+                $bar = selectDom(this.root, "bar"),
                 $handle = selectDom(this.root, "handle");
 
             $bar.html($left),
@@ -16461,7 +16461,13 @@ jui.define("chart.theme.jennifer", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -16680,7 +16686,13 @@ jui.define("chart.theme.gradient", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -16897,7 +16909,13 @@ jui.define("chart.theme.dark", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -17111,7 +17129,13 @@ jui.define("chart.theme.pastel", [], function() {
 		// Map Widgets
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
-		mapControlScrollLineColor : "#fff"
+		mapControlScrollLineColor : "#fff",
+
+		// Polygon Brushes
+		polygonColumnBackgroundOpacity: 0.6,
+		polygonColumnBorderOpacity: 0.5,
+		polygonScatterRadialOpacity: 0.7,
+		polygonScatterBackgroundOpacity: 0.8
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -17325,7 +17349,13 @@ jui.define("chart.theme.pattern", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -17792,6 +17822,32 @@ jui.define("chart.polygon.point", [], function() {
     }
 
     return PointPolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.cube", [], function() {
+    var CubePolygon = function(x, y, z, w, h, d) {
+        this.vertices = [
+            new Float32Array([ x,       y,      z,      1 ]),
+            new Float32Array([ x + w,   y,      z,      1 ]),
+            new Float32Array([ x + w,   y,      z + d,  1 ]),
+            new Float32Array([ x,       y,      z + d,  1 ]),
+
+            new Float32Array([ x,       y + h,  z,      1 ]),
+            new Float32Array([ x + w,   y + h,  z,      1 ]),
+            new Float32Array([ x + w,   y + h,  z + d,  1 ]),
+            new Float32Array([ x,       y + h,  z + d,  1 ]),
+        ];
+
+        this.faces = [
+            new Float32Array([ 0, 1, 2, 3 ]),
+            new Float32Array([ 3, 2, 6, 7 ]),
+            new Float32Array([ 0, 3, 7, 4 ]),
+            new Float32Array([ 1, 2, 6, 5 ]),
+            new Float32Array([ 0, 1, 5, 4 ]),
+            new Float32Array([ 4, 5, 6, 7 ])
+        ];
+    }
+
+    return CubePolygon;
 }, "chart.polygon.core");
 jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) {
 
@@ -27356,7 +27412,12 @@ jui.define("chart.brush.polygon.scatter",
 			}
 
 			if(color.indexOf("radial") == -1) {
-				color = this.chart.color("radial(40%,40%,100%,0%,0%) 0% " + ColorUtil.lighten(color, 0.7) + ",70% " + color);
+				color = this.chart.color(
+					"radial(40%,40%,100%,0%,0%) 0% " +
+					ColorUtil.lighten(color, this.chart.theme("polygonScatterRadialOpacity")) +
+					",70% " +
+					color
+				);
 			}
 
 			var p = new PointPolygon(x, y, z);
@@ -27365,6 +27426,7 @@ jui.define("chart.brush.polygon.scatter",
 			var elem = this.chart.svg.circle({
 				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
+				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
 				cx: p.vertices[0][0],
 				cy: p.vertices[0][1]
 			});
@@ -27402,6 +27464,91 @@ jui.define("chart.brush.polygon.scatter",
 	}
 
 	return PolygonScatterBrush;
+}, "chart.brush.polygon.core");
+
+jui.define("chart.brush.polygon.column",
+	[ "util.base", "util.math", "util.color", "chart.polygon.cube" ],
+	function(_, MathUtil, ColorUtil, CubePolygon) {
+
+	/**
+	 * @class chart.brush.polygon.column
+	 * @extends chart.brush.polygon.core
+	 */
+	var PolygonColumnBrush = function() {
+		this.createColumn = function(data, target, dataIndex, targetIndex) {
+			var g = this.chart.svg.group(),
+				w = this.brush.width,
+				h = this.brush.height,
+				x = this.axis.x(dataIndex) - w/2,
+				y = this.axis.y(data[target]),
+				yy = this.axis.y(0),
+				z = this.axis.z(targetIndex) - h/2,
+				p = new CubePolygon(x, yy, z, w, y - yy, h),
+				color = this.color(targetIndex);
+
+			// 3D 좌표 계산
+			this.calculate3d(p);
+
+			for(var i = 0; i < p.faces.length; i++) {
+				var key = p.faces[i];
+
+				var face = this.chart.svg.polygon({
+					fill: color,
+					"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
+					stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
+					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+				});
+
+				for(var j = 0; j < key.length; j++) {
+					var value = p.vertices[key[j]];
+					face.point(value[0], value[1]);
+				}
+
+				g.append(face);
+			}
+
+			return g;
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target,
+				groups = [];
+
+			for(var i = 0; i < datas.length; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					var p = this.createColumn(datas[i], targets[j], i, j);
+
+					this.addEvent(p, i, j);
+
+					if(!groups[j]) groups[j] = [];
+					groups[j].push(p);
+				}
+			}
+
+			for(var i = groups.length - 1; i >= 0; i--) {
+				for(var j = 0; j < groups[i].length; j++) {
+					g.append(groups[i][j]);
+				}
+			}
+
+			return g;
+		}
+	}
+
+	PolygonColumnBrush.setup = function() {
+		return {
+			/** @cfg {Number} [width=50]  Determines the size of a starter. */
+			width: 50,
+			/** @cfg {Number} [height=50]  Determines the size of a starter. */
+			height: 50,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return PolygonColumnBrush;
 }, "chart.brush.polygon.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {

@@ -23,7 +23,12 @@ jui.define("chart.brush.polygon.scatter",
 			}
 
 			if(color.indexOf("radial") == -1) {
-				color = this.chart.color("radial(40%,40%,100%,0%,0%) 0% " + ColorUtil.lighten(color, 0.7) + ",70% " + color);
+				color = this.chart.color(
+					"radial(40%,40%,100%,0%,0%) 0% " +
+					ColorUtil.lighten(color, this.chart.theme("polygonScatterRadialOpacity")) +
+					",70% " +
+					color
+				);
 			}
 
 			var p = new PointPolygon(x, y, z);
@@ -32,6 +37,7 @@ jui.define("chart.brush.polygon.scatter",
 			var elem = this.chart.svg.circle({
 				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
+				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
 				cx: p.vertices[0][0],
 				cy: p.vertices[0][1]
 			});
