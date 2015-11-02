@@ -24,6 +24,7 @@ module.exports = function(grunt) {
         "js/ui/button.js",
         "js/ui/combo.js",
         "js/ui/datepicker.js",
+        "js/ui/colorpicker.js",
         "js/ui/dropdown.js",
         "js/ui/modal.js",
         "js/ui/notify.js",
@@ -32,6 +33,7 @@ module.exports = function(grunt) {
         "js/ui/layout.js",
         "js/ui/accordion.js",
         "js/ui/switch.js",
+        "js/ui/slider.js",
 
         "js/uix/autocomplete.js",
         "js/uix/tab.js",
