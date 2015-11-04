@@ -291,8 +291,8 @@
   border-bottom-right-radius: 5px;
 }
 .jui .navbar {
-  color: #777777;
-  border: 1px solid #c9c9c9;
+  color: #333333;
+  border: 1px solid #d9d9d9;
   background-color: #ffffff;
   background-image: -moz-linear-gradient(top, #ffffff 0%, #e6e6e6 100%);
   background-image: linear-gradient(top, #ffffff 0%, #e6e6e6 100%);
@@ -314,7 +314,7 @@
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
 }
 .jui .navbar ul.nav li a {
-  color: #777777;
+  color: #333333;
 }
 .jui .navbar ul.nav li a:focus,
 .jui .navbar ul.nav li a:hover {
@@ -751,9 +751,9 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,.075);
-  -moz-box-shadow: 0 2px 6px rgba(0,0,0,.075);
-  box-shadow: 0 2px 6px rgba(0,0,0,.075);
+  -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,.2);
+  -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.2);
+  box-shadow: 0 0 5px 1px rgba(0,0,0,.2);
 }
 .jui .popover.popover > .head {
   border-bottom-color: #cacaca;
@@ -1020,9 +1020,10 @@
 .jui .window {
   color: #333333;
   background-color: #ffffff;
-  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  border: none;
+  -webkit-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
 }
 .jui .window > .head {
   color: #333333;
@@ -1099,6 +1100,7 @@
 .jui .input[readonly] {
   cursor: not-allowed;
   background-color: #eeeeee;
+  color: #333333;
 }
 .jui .input:focus:invalid {
   color: #b94a48;

@@ -292,7 +292,7 @@
 }
 .jui .navbar {
   color: #d5d5d5;
-  border: 1px solid #353535;
+  border: 1px solid #404040;
   background-color: #303030;
   background-image: -moz-linear-gradient(top, #303030 0%, #272727 100%);
   background-image: linear-gradient(top, #303030 0%, #272727 100%);
@@ -354,22 +354,22 @@
   border: 1px solid #6f6f6f;
 }
 .jui .tab li.active > a {
-  color: #d5d5d5;
-  background-color: #1c1c1c;
-  background-image: -moz-linear-gradient(top, #1c1c1c 0%, #1c1c1c 100%);
-  background-image: linear-gradient(top, #1c1c1c 0%, #1c1c1c 100%);
-  background-image: -webkit-linear-gradient(top, #1c1c1c 0%, #1c1c1c 100%);
-  background-image: -o-linear-gradient(top, #1c1c1c 0%, #1c1c1c 100%);
-  background-image: -ms-linear-gradient(top, #1c1c1c 0%, #1c1c1c 100%);
+  color: #ffffff;
+  background-color: #835acc;
+  background-image: -moz-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -webkit-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -o-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -ms-linear-gradient(top, #835acc 0%, #835acc 100%);
 }
 .jui .tab li.checked > a {
   color: #ffffff;
-  background-color: #6c43c4;
-  background-image: -moz-linear-gradient(top, #6c43c4 0%, #6c43c4 100%);
-  background-image: linear-gradient(top, #6c43c4 0%, #6c43c4 100%);
-  background-image: -webkit-linear-gradient(top, #6c43c4 0%, #6c43c4 100%);
-  background-image: -o-linear-gradient(top, #6c43c4 0%, #6c43c4 100%);
-  background-image: -ms-linear-gradient(top, #6c43c4 0%, #6c43c4 100%);
+  background-color: #835acc;
+  background-image: -moz-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -webkit-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -o-linear-gradient(top, #835acc 0%, #835acc 100%);
+  background-image: -ms-linear-gradient(top, #835acc 0%, #835acc 100%);
 }
 .jui .tab.tab.top {
   border-bottom: 1px solid #595959;
@@ -392,7 +392,7 @@
 }
 .jui .pill li.active > a {
   color: #ffffff;
-  background: #6c43c4;
+  background: #4d4d4d;
 }
 .jui .pill li.checked > a {
   color: #ffffff;
@@ -464,7 +464,7 @@
 .jui ul.tree li.active > a,
 .jui ul.tree li.active > span,
 .jui ul.tree li.active > div {
-  color: #835acd;
+  color: #a870fc;
   font-weight: bold;
 }
 .jui ul.tree .drag.on {
@@ -671,11 +671,11 @@
   background-image: -webkit-linear-gradient(top, #303030 0%, #272727 100%);
   background-image: -o-linear-gradient(top, #303030 0%, #272727 100%);
   background-image: -ms-linear-gradient(top, #303030 0%, #272727 100%);
-  border: 1px solid #3e3e3e;
+  border: 1px solid #4d4d4d;
 }
 .jui .panel > .body {
   background-color: #1c1c1c;
-  border: 1px solid #313131;
+  border: 1px solid #4d4d4d;
 }
 .jui .panel.close > .head {
   -webkit-border-bottom-right-radius: 5px !important;
@@ -747,13 +747,13 @@
   color: #d5d5d5;
   background-color: #151515;
   opacity: 0.95;
-  border-color: #595959;
+  border-color: #505050;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 6px 10px rgba(0,0,0,.6);
-  -moz-box-shadow: 0 6px 10px rgba(0,0,0,.6);
-  box-shadow: 0 6px 10px rgba(0,0,0,.6);
+  -webkit-box-shadow: 1px 1px 10px 1px rgba(0,0,0,.8);
+  -moz-box-shadow: 1px 1px 10px 1px rgba(0,0,0,.8);
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.8);
 }
 .jui .popover.popover > .head {
   border-bottom-color: #343434;
@@ -762,25 +762,25 @@
   border-top-color: #151515;
 }
 .jui .popover.popover.top:before {
-  border-top-color: #595959;
+  border-top-color: #505050;
 }
 .jui .popover.popover.bottom:after {
   border-bottom-color: #151515;
 }
 .jui .popover.popover.bottom:before {
-  border-bottom-color: #595959;
+  border-bottom-color: #505050;
 }
 .jui .popover.popover.left:after {
   border-left-color: #151515;
 }
 .jui .popover.popover.left:before {
-  border-left-color: #595959;
+  border-left-color: #505050;
 }
 .jui .popover.popover.right:after {
   border-right-color: #151515;
 }
 .jui .popover.popover.right:before {
-  border-right-color: #595959;
+  border-right-color: #505050;
 }
 .jui .notify {
   opacity: 0.9;
@@ -1019,7 +1019,8 @@
 }
 .jui .window {
   color: #d5d5d5;
-  background-color: #292929;
+  background-color: #222222;
+  border: none;
   -webkit-box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.8);
   -moz-box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.8);
   box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.8);
@@ -1034,7 +1035,7 @@
   background-image: -ms-linear-gradient(top, #242424 0%, #111111 100%);
 }
 .jui .window > .body {
-  background-color: #292929;
+  background-color: #222222;
   border-top: 1px solid #353535;
 }
 .jui .window > .body::-webkit-scrollbar {
@@ -1068,7 +1069,7 @@
   background-image: -webkit-linear-gradient(top, #242424 0%, #111111 100%);
   background-image: -o-linear-gradient(top, #242424 0%, #111111 100%);
   background-image: -ms-linear-gradient(top, #242424 0%, #111111 100%);
-  border-top: 1px solid #353535;
+  border-top: 1px solid #404040;
 }
 .jui .input {
   color: #d5d5d5;
@@ -1084,7 +1085,7 @@
 }
 .jui .input:focus {
   color: #d5d5d5;
-  border-color: #9358ff;
+  border-color: #a870fc;
   background-color: #NANNAN0A;
   outline: 0;
   -webkit-box-shadow: inset 0 4px 5px -5px rgba(0,0,0,0.3), 0 0 1px 1px rgba(136,74,228,.095);
@@ -1099,6 +1100,7 @@
 .jui .input[readonly] {
   cursor: not-allowed;
   background-color: #2a2a2a;
+  color: #d5d5d5;
 }
 .jui .input:focus:invalid {
   color: #ff4141;
@@ -1744,7 +1746,7 @@
   border: 1px solid #686868;
 }
 .jui .switch {
-  width: 40px;
+  width: 50px;
   height: 26px;
   margin-left: 5px;
   margin-right: 5px;
@@ -1757,10 +1759,10 @@
   border-radius: 20px;
 }
 .jui .switch .area .bar {
-  -webkit-transition: all 1s ease;
-  -moz-transition: all 1s ease;
-  -o-transition: all 1s ease;
-  transition: all 1s ease;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
   background: #ececec;
 }
 .jui .switch .handle {
@@ -1773,10 +1775,10 @@
   border: 1px solid #ececec;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   background: #ffffff;
-  -webkit-transition: all 0.7s ease;
-  -moz-transition: all 0.7s ease;
-  -o-transition: all 0.7s ease;
-  transition: all 0.7s ease;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 .jui .switch.on .area .bar {
   background: #a57ff2;
@@ -1786,7 +1788,7 @@
   margin-left: -25px;
 }
 .jui .switch.mini {
-  width: 24px;
+  width: 30px;
   height: 15.6px;
   padding-left: 6px;
   padding-right: 6px;
@@ -1808,7 +1810,7 @@
   margin-left: -15px;
 }
 .jui .switch.small {
-  width: 32px;
+  width: 40px;
   height: 20.8px;
   padding-left: 8px;
   padding-right: 8px;
@@ -1830,7 +1832,7 @@
   margin-left: -20px;
 }
 .jui .switch.large {
-  width: 48px;
+  width: 60px;
   height: 31.2px;
   padding-left: 12px;
   padding-right: 12px;
@@ -1858,56 +1860,56 @@
   padding-right: 0;
 }
 .jui .switch.inner .handle {
-  margin-top: -10px;
-  left: 2px;
+  margin-top: -11.5px;
+  left: 1px;
   margin-left: 0px;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 }
 .jui .switch.inner.on .handle {
   left: 100%;
-  margin-left: -23px;
+  margin-left: -24.5px;
   border: 1px solid #a57ff2;
 }
 .jui .switch.inner.mini .area {
   border-radius: 12px;
 }
 .jui .switch.inner.mini .handle {
-  margin-top: -5.6px;
-  left: 2px;
-  width: 11.2px;
-  height: 11.2px;
+  margin-top: -6.7px;
+  left: 1px;
+  width: 13.4px;
+  height: 13.4px;
 }
 .jui .switch.inner.mini.on .handle {
   left: 100%;
-  margin-left: -14.2px;
+  margin-left: -14.9px;
 }
 .jui .switch.inner.small .area {
   border-radius: 16px;
 }
 .jui .switch.inner.small .handle {
-  margin-top: -7.8px;
-  left: 2px;
-  width: 15.6px;
-  height: 15.6px;
+  margin-top: -9.1px;
+  left: 1px;
+  width: 18.2px;
+  height: 18.2px;
 }
 .jui .switch.inner.small.on .handle {
   left: 100%;
-  margin-left: -18.6px;
+  margin-left: -19.7px;
 }
 .jui .switch.inner.large .area {
   border-radius: 24px;
 }
 .jui .switch.inner.large .handle {
-  margin-top: -12.2px;
-  left: 2px;
-  width: 24.4px;
-  height: 24.4px;
+  margin-top: -13.9px;
+  left: 1px;
+  width: 27.8px;
+  height: 27.8px;
 }
 .jui .switch.inner.large.on .handle {
   left: 100%;
-  margin-left: -27.4px;
+  margin-left: -29.3px;
 }
 .jui .slider .track {
   background: #ececec;
