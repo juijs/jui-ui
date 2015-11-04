@@ -1909,6 +1909,20 @@
   left: 100%;
   margin-left: -27.4px;
 }
+.jui .slider .track {
+  background: #ececec;
+  border-radius: 3px;
+}
+.jui .slider .track .progress {
+  background: #9167ca;
+  border-radius: 3px;
+}
+.jui .slider .track .handle {
+  border-radius: 20px;
+  border: 1px solid #bebebe;
+  background: #ffffff;
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+}
 @font-face {
   font-family: "jennifer";
   src: url("img/icon-list.eot") format("embedded-opentype"), url("img/icon-list.woff") format("woff"), url("img/icon-list.ttf") format("truetype"), url("img/icon-list.svg") format("svg");

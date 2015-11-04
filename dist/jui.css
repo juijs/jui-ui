@@ -3692,3 +3692,112 @@
 .jui .switch.on .switch-bar {
   left: 0px;
 }
+.jui.slider-cursor {
+  cursor: move;
+}
+.jui .slider {
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.jui .slider .tooltip-track {
+  position: absolute;
+  display: none;
+}
+.jui .slider .track {
+  position: absolute;
+}
+.jui .slider .track .progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.jui .slider .track .handle {
+  width: 13px;
+  height: 13px;
+  border-radius: 20px;
+  position: absolute;
+}
+.jui .slider.horizontal {
+  overflow: hidden;
+  width: 100%;
+  height: 30px;
+}
+.jui .slider.horizontal.has-tooltip {
+  height: 60px;
+}
+.jui .slider.horizontal.has-tooltip .track {
+  top: 40px;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track {
+  display: block;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track .tooltip {
+  min-width: 50px;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track .tooltip .message {
+  text-align: center;
+}
+.jui .slider.horizontal .tooltip-track {
+  left: 15px;
+  right: 15px;
+  top: 0px;
+  height: 30px;
+}
+.jui .slider.horizontal .track {
+  left: 15px;
+  right: 15px;
+  top: 50%;
+  margin-top: -3px;
+  height: 6px;
+}
+.jui .slider.horizontal .track .handle {
+  top: 50%;
+  margin-top: -7px;
+  left: 50%;
+  margin-left: -7px;
+}
+.jui .slider.vertical {
+  width: 30px;
+  height: 100%;
+}
+.jui .slider.vertical.has-tooltip {
+  width: 60px;
+}
+.jui .slider.vertical.has-tooltip .tooltip-track {
+  display: block;
+}
+.jui .slider.vertical.has-tooltip .tooltip-track .tooltip {
+  min-width: 50px;
+}
+.jui .slider.vertical.has-tooltip .tooltip-track .tooltip .message {
+  text-align: center;
+}
+.jui .slider.vertical .tooltip-track {
+  top: 15px;
+  bottom: 15px;
+  left: 40px;
+}
+.jui .slider.vertical .track {
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+  margin-left: -3px;
+  width: 6px;
+}
+.jui .slider.vertical .track .handle {
+  bottom: 50%;
+  margin-bottom: -7px;
+  left: 50%;
+  margin-left: -7px;
+}
+.jui .slider.vertical .track .progress {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 50%;
+  bottom: 0px;
+}
