@@ -3567,30 +3567,176 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	return self;
 });
 
-jui.define("util.color", [], function() {
+jui.define("util.color", ["jquery"], function($) {
 
 	/**
 	 *  @class util.color
-     * color parser for chart
+	 * color parser for chart
 	 * @singleton
 	 */
 	var self = {
-		
+
 		regex  : /(linear|radial)\((.*)\)(.*)/i,
-		
-		trim : function (str) {
-			return (str || "").replace(/^\s+|\s+$/g, '');	
+
+		format : function(obj, type) {
+			if (type == 'hex') {
+				var r = obj.r.toString(16);
+				if (r < 10) r = "0" + r;
+
+				var g = obj.g.toString(16);
+				if (g < 10) g = "0" + g;
+
+				var b = obj.b.toString(16);
+				if (b < 10) b = "0" + b;
+
+				return "#" + [r,g,b].join("").toUpperCase();
+			} else if (type == 'rgb') {
+				if (typeof obj.a == 'undefined') {
+					return "rgb(" + [obj.r, obj.g, obj.b].join(",") + ")";
+				} else {
+					return "rgba(" + [obj.r, obj.g, obj.b, obj.a].join(",") + ")";
+				}
+			}
+
+			return obj;
 		},
 
-        /**
-         * @method lighten 
-         * 
-         * rgb 컬러 밝은 농도로 변환  
-         *  
-         * @param {String} color   RGB color code 
-         * @param {Number} rate 밝은 농도 
-         * @return {String}
-         */
+		scale : function() {
+			var startColor, endColor;
+
+			function func(t, type) {
+
+				var obj = {
+					r : parseInt(startColor.r + (endColor.r - startColor.r) * t, 10) ,
+					g : parseInt(startColor.g + (endColor.g - startColor.g) * t, 10),
+					b : parseInt(startColor.b + (endColor.b - startColor.b) * t, 10)
+				};
+
+				return self.format(obj, type);
+			}
+
+			func.domain = function(start, end) {
+				startColor = self.rgb(start);
+				endColor = self.rgb(end);
+
+				return func;
+			}
+
+			return func;
+		},
+
+		rgb : function (str) {
+			if (str.indexOf("rgb(") > -1) {
+				var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+					arr[i] = parseInt($.trim(arr[i]), 10);
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			} else if (str.indexOf("rgba(") > -1) {
+				var arr = str.replace("rgba(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+
+					if (len - 1 == i) {
+						arr[i] = parseFloat($.trim(arr[i]));
+					} else {
+						arr[i] = parseInt($.trim(arr[i]), 10);
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+			} else if (str.indexOf("#") == 0) {
+
+				str = str.replace("#", "");
+
+				var arr = [];
+				if (str.length == 3) {
+					for(var i = 0, len = str.length; i < len; i++) {
+						var char = str.substr(i, 1);
+						arr.push(parseInt(char+char, 16));
+					}
+				} else {
+					for(var i = 0, len = str.length; i < len; i+=2) {
+						arr.push(parseInt(str.substr(i, 2), 16));
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			}
+		},
+
+		HSVtoRGB : function (H, S, V) {
+
+			if (H == 360) {
+				H = 0;
+			}
+
+			var C = S * V;
+			var X = C * (1 -  Math.abs((H/60) % 2 -1)  );
+			var m = V - C;
+
+			var temp = [];
+
+			if (0 <= H && H < 60) { temp = [C, X, 0]; }
+			else if (60 <= H && H < 120) { temp = [X, C, 0]; }
+			else if (120 <= H && H < 180) { temp = [0, C, X]; }
+			else if (180 <= H && H < 240) { temp = [0, X, C]; }
+			else if (240 <= H && H < 300) { temp = [X, 0, C]; }
+			else if (300 <= H && H < 360) { temp = [C, 0, X]; }
+
+			return {
+				r : parseInt((temp[0] + m) * 255),
+				g : parseInt((temp[1] + m) * 255),
+				b : parseInt((temp[2] + m) * 255)
+			};
+		},
+
+		RGBtoHSV : function (R, G, B) {
+			var R1 = R / 255;
+			var G1 = G / 255;
+			var B1 = B / 255;
+
+			var MaxC = Math.max(R1, G1, B1);
+			var MinC = Math.min(R1, G1, B1);
+
+			var DeltaC = MaxC - MinC;
+
+			var H = 0;
+
+			if (DeltaC == 0) { H = 0; }
+			else if (MaxC == R1) {
+				H = 60 * (( (G1 - B1) / DeltaC) % 6);
+			} else if (MaxC == G1) {
+				H  = 60 * (( (B1 - R1) / DeltaC) + 2);
+			} else if (MaxC == B1) {
+				H  = 60 * (( (R1 - G1) / DeltaC) + 4);
+			}
+
+			var S = 0;
+
+			if (MaxC == 0) S = 0;
+			else S = DeltaC / MaxC;
+
+			var V = MaxC;
+
+			return { h : H, s : S, v :  V };
+		},
+
+		trim : function (str) {
+			return (str || "").replace(/^\s+|\s+$/g, '');
+		},
+
+		/**
+		 * @method lighten
+		 *
+		 * rgb 컬러 밝은 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 밝은 농도
+		 * @return {String}
+		 */
 		lighten : function(color, rate) {
 			color = color.replace(/[^0-9a-f]/gi, '');
 			rate = rate || 0;
@@ -3605,15 +3751,15 @@ jui.define("util.color", [], function() {
 			return "#" + rgb.join("");
 		},
 
-        /**
-         * @method darken
-         *
-         * rgb 컬러 어두운 농도로 변환
-         *
-         * @param {String} color   RGB color code
-         * @param {Number} rate 어두운 농도
-         * @return {String}
-         */
+		/**
+		 * @method darken
+		 *
+		 * rgb 컬러 어두운 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 어두운 농도
+		 * @return {String}
+		 */
 		darken : function(color, rate) {
 			return this.lighten(color, -rate)
 		},
@@ -3629,46 +3775,46 @@ jui.define("util.color", [], function() {
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
-		
+
 		/**
-		 * @method parseGrident 
-         *
-         * gradient parser
-		 * 
+		 * @method parseGrident
+		 *
+		 * gradient parser
+		 *
 		 *      @example
 		 *      linear(left) #fff,#000
 		 *      linear(right) #fff,50 yellow,black
 		 *      radial(50%,50%,50%,50,50)
-		 *  
- 		 * @param {String} color
+		 *
+		 * @param {String} color
 		 */
 		parseGradient : function(color) {
 			var matches = color.match(this.regex);
-			
-			if (!matches) return color; 
-			
+
+			if (!matches) return color;
+
 			var type = this.trim(matches[1]);
 			var attr = this.parseAttr(type, this.trim(matches[2]));
 			var stops = this.parseStop(this.trim(matches[3]));
-			
+
 			var obj = { type : type + "Gradient", attr : attr, children : stops };
 
-			return obj; 
-			
+			return obj;
+
 		},
-		
+
 		parseStop : function(stop) {
 			var stop_list = stop.split(",");
-			
+
 			var stops = [];
-			
+
 			for(var i = 0, len = stop_list.length; i < len; i++) {
 				var stop = stop_list[i];
-				
+
 				var arr = stop.split(" ");
-				
+
 				if (arr.length == 0) continue;
-				
+
 				if (arr.length == 1) {
 					stops.push({ type : "stop", attr : {"stop-color" : arr[0] } })
 				} else if (arr.length == 2) {
@@ -3677,87 +3823,86 @@ jui.define("util.color", [], function() {
 					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] } })
 				}
 			}
-			
+
 			var start = -1;
-			var end = -1; 
+			var end = -1;
 			for(var i = 0, len = stops.length; i < len; i++) {
 				var stop = stops[i];
-				
+
 				if (i == 0) {
-					if (!stop.offset) stop.offset = 0; 
+					if (!stop.offset) stop.offset = 0;
 				} else if (i == len - 1) {
 					if (!stop.offset) stop.offset = 1;
 				}
-				
+
 				if (start == -1 && typeof stop.offset == 'undefined') {
 					start = i;
 				} else if (end == -1 && typeof stop.offset == 'undefined') {
-					end = i; 
-					
+					end = i;
+
 					var count = end - start;
-					
-					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;  
-					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;  
-					 
+
+					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;
+					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;
+
 					var dist = endOffset - startOffset
-					var value = dist/ count; 
-					
-					var offset = startOffset + value; 
+					var value = dist/ count;
+
+					var offset = startOffset + value;
 					for(var index = start + 1; index < end; index++) {
-						stops[index].offset = offset; 
-						
-						offset += value; 
-					} 
-					
+						stops[index].offset = offset;
+
+						offset += value;
+					}
+
 					start = end;
-					end = -1; 
+					end = -1;
 				}
 			}
-			
+
 			return stops;
 		},
-		
+
 		parseAttr : function(type, str) {
-			
-			
+
+
 			if (type == 'linear') {
 				switch(str) {
-				case "":
-				case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" }; 
-				case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str }; 
-				case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str }; 
-				case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str }; 
-				case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str }; 
-				case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
-				default : 
-					var arr = str.split(",");
-					for(var i = 0, len = arr.length; i < len; i++) {
-						if (arr[i].indexOf("%") == -1)
-							arr[i] = parseFloat(arr[i]);
-					}
-					
-					return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };  
-				}				
+					case "":
+					case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" };
+					case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str };
+					case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str };
+					case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str };
+					case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					default :
+						var arr = str.split(",");
+						for(var i = 0, len = arr.length; i < len; i++) {
+							if (arr[i].indexOf("%") == -1)
+								arr[i] = parseFloat(arr[i]);
+						}
+
+						return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };
+				}
 			} else {
 				var arr = str.split(",");
 				for(var i = 0, len = arr.length; i < len; i++) {
-					
+
 					if (arr[i].indexOf("%") == -1)
 						arr[i] = parseFloat(arr[i]);
 				}
-				
+
 				return { cx : arr[0], cy : arr[1],r : arr[2], fx : arr[3], fy : arr[4] };
 			}
 
 		}
-	
+
 	}
 
 	return self;
 });
-
 jui.define("util.svg.element", [], function() {
     /**
      * @class util.svg.element
@@ -6325,6 +6470,336 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
      *
      * @param {EventObject} e The event object
      */
+
+    return UI;
+});
+jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function($, _, color) {
+
+
+
+    /**
+     * @class ui.colorpicker
+     * @extends core
+     * @alias ColorPicker
+     * @requires jquery
+     * @requires util.base
+     * @requires util.color
+     */
+    var UI = function() {
+
+        var self, opts;
+        var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar;
+        var hue_color = [
+            {rgb : '#ff0000', start : .0},
+            {rgb : '#ffff00', start : .17},
+            {rgb : '#00ff00', start : .33},
+            {rgb : '#00ffff', start : .50},
+            {rgb : '#0000ff', start : .67},
+            {rgb : '#ff00ff', start : .83},
+            {rgb : '#ff0000', start : 1}
+        ];
+
+        this.selectDom = function (selector) {
+            var $dom = $root.find("." + selector);
+            return ($dom.length)  ? $dom : $("<div class='" + selector + "' />");
+        };
+
+        this.pos = function (e) {
+
+            if (_.isTouch) {
+                return e.originalEvent.touches[0];
+            }
+
+            return e;
+        }
+
+        this.init = function() {
+            self = this, opts = this.options;
+
+            $root = $(this.root);
+
+            this.$colorpicker = this.selectDom('colorpicker');
+
+            this.$color = this.selectDom('color');
+            this.$drag_pointer = this.selectDom('drag-pointer');
+            this.$value = this.selectDom('value');
+            this.$saturation = this.selectDom('saturation');
+
+            this.$hue = this.selectDom('hue');
+            this.$hueContainer = this.selectDom('hue-container');
+            this.$drag_bar = this.selectDom('drag-bar');
+
+            this.$opacity = this.selectDom('opacity');
+            this.$opacityPattern = this.selectDom('opacity-pattern');
+            this.$opacityContainer = this.selectDom('opacity-container');
+            this.$opacity_drag_bar = this.selectDom('opacity-drag-bar');
+
+            this.$information = this.selectDom('information');
+            this.$informationColor = this.selectDom('information-color');
+            this.$informationInput = this.selectDom('information-input');
+
+            this.$value.html(this.$drag_pointer);
+            this.$saturation.html(this.$value);
+            this.$color.html(this.$saturation);
+
+
+
+            this.$hueContainer.html(this.$drag_bar);
+            this.$hue.html(this.$hueContainer);
+
+
+            this.$opacityContainer.html(this.$opacity_drag_bar);
+            this.$opacity.html(this.$opacityPattern);
+            this.$opacity.append(this.$opacityContainer);
+
+            this.$information.html(this.$informationColor);
+            this.$information.append(this.$informationInput);
+
+            this.$colorpicker.html(this.$color);
+            this.$colorpicker.append(this.$hue);
+            this.$colorpicker.append(this.$opacity);
+            this.$colorpicker.append(this.$information);
+
+            $root.html(this.$colorpicker);
+
+            this.initEvent();
+            initColor();
+        }
+
+        this.setColor = function (c) {
+            initColor(c);
+        }
+
+        this.getColor = function(type) {
+            var rgb = caculateColor();
+
+            if (type) {
+
+                if (type == 'hex') {
+                    if (rgb.a < 1) {
+                        type = 'rgb';
+                    }
+                }
+                return color.format(rgb, type);
+            }
+
+            return rgb;
+        }
+
+        function initColor(c) {
+            var rgb = color.rgb(c || self.options.color);
+
+            self.$color.css({
+                background: self.options.color
+            });
+
+            var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b);
+
+            var x = self.$color.width() * hsv.s;
+            var y = self.$color.height() * (1-hsv.v);
+
+            self.$drag_pointer.css({
+                left : x - 5,
+                top : y - 5
+            }).data('pos', { x  : x, y : y });
+
+            var hueX = self.$hue.width() * (hsv.h / 360);
+
+            self.$drag_bar.css({
+                left : hueX - 7.5
+            }).data('pos', { x : hueX });
+
+            var opacityX = self.$opacity.width() * (rgb.a || 0);
+
+            self.$opacity_drag_bar.css({
+                left : opacityX - 7.5
+            }).data('pos', { x : opacityX });
+
+            setInputColor();
+        }
+
+        function setInputColor() {
+            var rgb = caculateColor();
+            var str = self.getColor('hex');
+            self.$informationColor.css({
+                background: str
+            });
+
+            self.$informationInput.html(str).val(str);
+
+            self.emit("change", [ str, rgb ]);
+        }
+
+        function setMainColor(e) {
+            var offset = self.$color.offset();
+            var w = self.$color.width();
+            var h = self.$color.height();
+
+            var x = e.clientX - offset.left;
+            var y = e.clientY - offset.top;
+
+            if (x < 0) x = 0;
+            else if (x > w) x = w;
+
+            if (y < 0) y = 0;
+            else if (y > h) y = h;
+
+            self.$drag_pointer.css({
+                left: x - 5,
+                top: y - 5
+            }).data('pos', { x: x, y : y});
+
+            setInputColor();
+        }
+
+        function checkHueColor(p) {
+            var startColor, endColor;
+
+            for(var i = 0; i < hue_color.length;i++) {
+                if (hue_color[i].start >= p) {
+                    startColor = hue_color[i-1];
+                    endColor = hue_color[i];
+                    break;
+                }
+            }
+
+            if (startColor && endColor) {
+                var scale = color.scale().domain(startColor.rgb, endColor.rgb);
+
+                return scale((p - startColor.start)/(endColor.start - startColor.start), 'hex');
+            }
+
+            return null;
+        }
+
+        function setHueColor (e) {
+            var min = self.$hue.offset().left;
+            var max = min + self.$hue.width();
+            var current = self.pos(e).clientX;
+
+            if (current < min) {
+                dist = 0;
+            } else if (current > max) {
+                dist = 100;
+            } else {
+                dist = (current - min) / (max - min) * 100;
+            }
+
+            var x = (self.$hue.width() * (dist/100));
+
+            self.$drag_bar.css({
+                left: (x -Math.ceil(self.$drag_bar.width()/2)) + 'px'
+            }).data('pos', { x : x});
+
+            var hueColor = checkHueColor(dist/100);
+
+            self.$color.css({
+                background: hueColor
+            });
+
+            setInputColor();
+        }
+
+        function setOpacity (e) {
+            var min = self.$opacity.offset().left;
+            var max = min + self.$opacity.width();
+            var current = self.pos(e).clientX;
+
+            if (current < min) {
+                dist = 0;
+            } else if (current > max) {
+                dist = 100;
+            } else {
+                dist = (current - min) / (max - min) * 100;
+            }
+
+            var x = (self.$opacity.width() * (dist/100));
+
+            self.$opacity_drag_bar.css({
+                left: (x -Math.ceil(self.$opacity_drag_bar.width()/2)) + 'px'
+            }).data('pos', { x : x});
+
+            setInputColor();
+        }
+
+        function caculateColor() {
+            var pos = self.$drag_pointer.data('pos') || { x : 0, y : 0 };
+            var huePos = self.$drag_bar.data('pos') || { x : 0 };
+            var opacityPos = self.$opacity_drag_bar.data('pos') || { x : 0 };
+
+            var width = self.$color.width();
+            var height = self.$color.height();
+
+            var h = (huePos.x / self.$hue.width()) * 360;
+            var s = (pos.x / width);
+            var v = ((height - pos.y) / height);
+
+            var a = Math.round((opacityPos.x / self.$opacity.width()) * 100) / 100;
+
+            var rgb = color.HSVtoRGB(h, s, v);
+
+            rgb.a = a;
+
+            return rgb;
+        }
+
+        this.initEvent = function () {
+
+            this.$color.on('mousedown', function(e) {
+                self.$color.data('isDown', true);
+                setMainColor(e);
+            });
+
+            this.$drag_bar.on('mousedown', function(e) {
+                e.preventDefault();
+                self.$hue.data('isDown', true);
+            });
+
+            this.$opacity_drag_bar.on('mousedown', function(e) {
+                e.preventDefault();
+                self.$opacity.data('isDown', true);
+            });
+
+            this.$hueContainer.on('mousedown', function(e) {
+                self.$hue.data('isDown', true);
+                setHueColor(e);
+            });
+
+            this.$opacityContainer.on('mousedown', function(e) {
+                self.$opacity.data('isDown', true);
+                setOpacity(e);
+            });
+
+            this.addEvent('body', 'mouseup', function (e) {
+                self.$color.data('isDown', false);
+                self.$hue.data('isDown', false);
+                self.$opacity.data('isDown', false);
+            })
+
+            this.addEvent('body', 'mousemove', function (e) {
+                if (self.$color.data('isDown')) {
+                    setMainColor(e);
+                }
+
+                if (self.$hue.data('isDown')) {
+                    setHueColor(e);
+                }
+
+                if (self.$opacity.data('isDown')) {
+                    setOpacity(e);
+                }
+            });
+        }
+
+
+    }
+
+    UI.setup = function() {
+        return {
+            type : 'full',
+            color : '#FF0000'
+        }
+    }
 
     return UI;
 });
