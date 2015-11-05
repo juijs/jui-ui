@@ -1985,6 +1985,586 @@
 .jui .colorpicker .information .information-input {
   color: #000000;
 }
+@-webkit-keyframes progress {
+  from {
+    background-position: 50% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-moz-keyframes progress {
+  from {
+    background-position: 50% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-ms-keyframes progress {
+  from {
+    background-position: 50% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@keyframes progress {
+  from {
+    background-position: 50% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-webkit-keyframes progress-vertical {
+  from {
+    background-position: 0 50%;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-moz-keyframes progress-vertical {
+  from {
+    background-position: 0 50%;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-ms-keyframes progress-vertical {
+  from {
+    background-position: 0 50%;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@keyframes progress-vertical {
+  from {
+    background-position: 0 50%;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+.jui .progress {
+  height: 30px;
+}
+.jui .progress .area {
+  height: 12px;
+  margin-top: -7px;
+  border: 1px solid #a57ff2;
+  border-radius: 15px;
+  padding: 1px;
+}
+.jui .progress .area .bar {
+  background: #a57ff2;
+  border-radius: 15px;
+}
+.jui .progress .area .bar.striped {
+  background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  -webkit-background-size: 12px 12px;
+  background-size: 12px 12px;
+}
+.jui .progress .area .bar.striped.animated {
+  -webkit-animation: progress 2s linear infinite;
+  -moz-animation: progress 2s linear infinite;
+  -o-animation: progress 2s linear infinite;
+  animation: progress 2s linear infinite;
+  /* SPIN */
+  /* Flash */
+  /* BOUNCE */
+  /* FLOAT */
+  /* PULSE */
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@-moz-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-ms-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -moz-transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-10px);
+  }
+  60% {
+    -moz-transform: translateY(-10px);
+  }
+}
+@-webkit-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -webkit-transform: translateY(0);
+  }
+  40% {
+    -webkit-transform: translateY(-10px);
+  }
+  60% {
+    -webkit-transform: translateY(-10px);
+  }
+}
+@-ms-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -ms-transform: translateY(0);
+  }
+  40% {
+    -ms-transform: translateY(-10px);
+  }
+  60% {
+    -ms-transform: translateY(-10px);
+  }
+}
+@keyframes bounce {
+  0%,
+  10%,
+  20%,
+  50%,
+  80% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+@-moz-keyframes float {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-6px);
+  }
+  100% {
+    -moz-transform: translateY(0);
+  }
+}
+@-webkit-keyframes float {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-6px);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+  }
+}
+@-ms-keyframes float {
+  0% {
+    -ms-transform: translateY(0);
+  }
+  50% {
+    -ms-transform: translateY(-6px);
+  }
+  100% {
+    -ms-transform: translateY(0);
+  }
+}
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@-moz-keyframes pulse {
+  0% {
+    -moz-transform: scale(1.1);
+  }
+  50% {
+    -moz-transform: scale(0.8);
+  }
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(0.8);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+@-ms-keyframes pulse {
+  0% {
+    -ms-transform: scale(1.1);
+  }
+  50% {
+    -ms-transform: scale(0.8);
+  }
+  100% {
+    -ms-transform: scale(1);
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.jui .progress.simple .area {
+  background-color: #ececec;
+  height: 9px;
+}
+.jui .progress.vertical {
+  width: 30px;
+}
+.jui .progress.vertical.simple .area {
+  width: 10px;
+}
+.jui .progress.vertical .area {
+  width: 12px;
+  margin-left: -6px;
+}
+.jui .progress.vertical .area .bar {
+  border: 1px solid #ffffff;
+  width: 10px;
+}
+.jui .progress.vertical .area .bar.striped {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  -webkit-background-size: 12px 12px;
+  background-size: 12px 12px;
+}
+.jui .progress.vertical .area .bar.striped.animated {
+  -webkit-animation: progress-vertical 2s linear infinite;
+  -moz-animation: progress-vertical 2s linear infinite;
+  -o-animation: progress-vertical 2s linear infinite;
+  animation: progress-vertical 2s linear infinite;
+  /* SPIN */
+  /* Flash */
+  /* BOUNCE */
+  /* FLOAT */
+  /* PULSE */
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@-moz-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-ms-keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@keyframes flash {
+  0%,
+  100%,
+  50% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -moz-transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-10px);
+  }
+  60% {
+    -moz-transform: translateY(-10px);
+  }
+}
+@-webkit-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -webkit-transform: translateY(0);
+  }
+  40% {
+    -webkit-transform: translateY(-10px);
+  }
+  60% {
+    -webkit-transform: translateY(-10px);
+  }
+}
+@-ms-keyframes bounce {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    -ms-transform: translateY(0);
+  }
+  40% {
+    -ms-transform: translateY(-10px);
+  }
+  60% {
+    -ms-transform: translateY(-10px);
+  }
+}
+@keyframes bounce {
+  0%,
+  10%,
+  20%,
+  50%,
+  80% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+@-moz-keyframes float {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-6px);
+  }
+  100% {
+    -moz-transform: translateY(0);
+  }
+}
+@-webkit-keyframes float {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-6px);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+  }
+}
+@-ms-keyframes float {
+  0% {
+    -ms-transform: translateY(0);
+  }
+  50% {
+    -ms-transform: translateY(-6px);
+  }
+  100% {
+    -ms-transform: translateY(0);
+  }
+}
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@-moz-keyframes pulse {
+  0% {
+    -moz-transform: scale(1.1);
+  }
+  50% {
+    -moz-transform: scale(0.8);
+  }
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(0.8);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+@-ms-keyframes pulse {
+  0% {
+    -ms-transform: scale(1.1);
+  }
+  50% {
+    -ms-transform: scale(0.8);
+  }
+  100% {
+    -ms-transform: scale(1);
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 @font-face {
   font-family: "jennifer";
   src: url("img/icon-list.eot") format("embedded-opentype"), url("img/icon-list.woff") format("woff"), url("img/icon-list.ttf") format("truetype"), url("img/icon-list.svg") format("svg");

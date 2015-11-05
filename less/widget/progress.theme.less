@@ -1,0 +1,146 @@
+@-webkit-keyframes progress {
+    from {
+        background-position: @progressAnimatedDist 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@-moz-keyframes progress {
+    from {
+        background-position: @progressAnimatedDist 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@-ms-keyframes progress {
+    from {
+        background-position: @progressAnimatedDist 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@keyframes progress {
+    from {
+        background-position: @progressAnimatedDist 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+
+
+@-webkit-keyframes progress-vertical {
+    from {
+        background-position: 0 @progressAnimatedDist;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@-moz-keyframes progress-vertical {
+    from {
+        background-position: 0 @progressAnimatedDist;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@-ms-keyframes progress-vertical {
+    from {
+        background-position: 0 @progressAnimatedDist;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@keyframes progress-vertical {
+    from {
+        background-position: 0 @progressAnimatedDist;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+.progress {
+    height: @progressHeight;
+
+    .area {
+        height: @progressAreaHeight;
+        margin-top:-(@progressAreaHeight/2) - @progressAreaBorder;
+        border:@progressAreaBorder solid @progressColor;
+        border-radius: @progressBorderRadius;
+        padding: @progressAreaPadding;
+
+        .bar {
+            background:@progressColor;
+            border-radius: @progressBorderRadius;
+
+            &.striped {
+                background-image: -webkit-linear-gradient(135deg,@progressStripeColor 25%,transparent 25%,transparent 50%,@progressStripeColor 50%,@progressStripeColor 75%,transparent 75%,transparent);
+                background-image: -o-linear-gradient(135deg,@progressStripeColor 25%,transparent 25%,transparent 50%,@progressStripeColor 50%,@progressStripeColor 75%,transparent 75%,transparent);
+                background-image: linear-gradient(135deg,@progressStripeColor 25%,transparent 25%,transparent 50%,@progressStripeColor 50%,@progressStripeColor 75%,transparent 75%,transparent);
+                -webkit-background-size: @progressAreaHeight @progressAreaHeight;
+                background-size: @progressAreaHeight @progressAreaHeight;
+
+                &.animated {
+                    .animation(progress @progressAnimatedTime linear infinite);
+                }
+            }
+        }
+    }
+
+    &.simple {
+        .area {
+            background-color:@progressBackgroundColor;
+            height: @progressAreaHeight - @progressAreaBorder - 2*@progressAreaPadding;
+        }
+
+    }
+
+
+    &.vertical {
+        width: @progressHeight;
+
+        &.simple {
+            .area {
+                width: @progressAreaHeight - 2*@progressAreaPadding;
+            }
+        }
+
+        .area {
+            width: @progressAreaHeight;
+            margin-left:-(@progressAreaHeight/2);
+
+            .bar {
+                border: 1px solid @progressBarBorderColor;
+                width:@progressAreaHeight - (@progressAreaBorder*2);
+
+                &.striped {
+                    background-image: -webkit-linear-gradient(45deg,@progressStripeColor 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+                    background-image: -o-linear-gradient(45deg,@progressStripeColor 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+                    background-image: linear-gradient(45deg,@progressStripeColor 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+                    -webkit-background-size: @progressAreaHeight @progressAreaHeight;
+                    background-size: @progressAreaHeight @progressAreaHeight;
+
+                    &.animated {
+                        .animation(progress-vertical @progressAnimatedTime linear infinite);
+                    }
+                }
+
+            }
+
+        }
+
+    }
+}

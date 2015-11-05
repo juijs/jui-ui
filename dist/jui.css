@@ -3925,3 +3925,78 @@
   -o-user-select: text;
   user-select: text;
 }
+.jui .progress {
+  position: relative;
+  width: 100%;
+}
+.jui .progress .area {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.jui .progress .area .bar {
+  float: left;
+  width: 0%;
+  height: 100%;
+  transition: all 0.7s linear;
+}
+.jui .progress .area .bar:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .progress .area .bar:not(:last-child) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.jui .progress.flat .area {
+  border-radius: 0px;
+}
+.jui .progress.flat .area .bar {
+  border-radius: 0px;
+}
+.jui .progress.simple .area {
+  border: 0px;
+  padding: 0px;
+}
+.jui .progress.vertical {
+  height: 100%;
+}
+.jui .progress.vertical.simple .area {
+  height: 100%;
+}
+.jui .progress.vertical.simple .area .bar {
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  border: 0px;
+}
+.jui .progress.vertical .area {
+  top: 0px;
+  bottom: 0px;
+  margin-top: 0px;
+  height: 100%;
+  left: 50%;
+}
+.jui .progress.vertical .area .bar {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  left: 0;
+  right: 0;
+  position: absolute;
+  bottom: 0px;
+  height: 10%;
+}
+.jui .progress.vertical .area .bar:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+.jui .progress.vertical .area .bar:not(:last-child) {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
