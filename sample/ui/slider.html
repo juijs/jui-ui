@@ -18,23 +18,37 @@
         jui.ready([ "ui.slider" ], function(slider) {
             slider(".h .slider", {
                 event : {
-                    change : function (value, preValue) {
-                        console.log(this, value, preValue);
+                    change : function (type, value, preValue) {
+                        console.log(type, value, preValue);
                     }
-                }
+                },
+                from: 5,
+                min: 0,
+                max: 10,
+                step: 0.5,
+                tooltip: true
             });
 
             slider(".v .slider", {
-                orient : 'vertical'
+                orient : 'vertical',
+                min: 100,
+                max: 1000,
+                step: 10
             });
 
             slider(".double .slider", {
-                type : 'double'
+                type : 'double',
+                from: 1,
+                to: 5,
+                min: -10,
+                max: 10
             });
 
             slider(".double-v .slider", {
                 type : 'double',
-                orient : 'vertical'
+                orient : 'vertical',
+                from: 1,
+                to: 3
             });
         });
 
@@ -52,13 +66,13 @@
 
         <div style="overflow:auto;">
             <div class="h">
-                <div class="slider" data-min="0" data-max="10" data-value="1" data-step="0.5"></div>
-                <div class="slider" data-min="-10" data-max="10" data-value="10"></div>
+                <div class="slider"></div>
+                <div class="slider"></div>
             </div>
 
 
             <div class='v' style="height:300px;float:left;">
-                <div class="slider" data-min="100" data-max="1000" data-value="500" data-step="10">
+                <div class="slider">
 
                 </div>
             </div>
@@ -67,18 +81,27 @@
         <h1>Double Type</h1>
         <div style="overflow:auto;">
             <div class="double">
-                <div class="slider" data-from="1" data-to="5" data-min="-10" data-max="10"></div>
+                <div class="slider"></div>
             </div>
 
             <div class='double-v' style="width:300px;height:300px;float:left;">
-                <div class="slider" data-from="1" data-to="3" >
-
-                </div>
+                <div class="slider"></div>
             </div>
 
         </div>
 
 
+    </div>
+</section>
+
+
+<section>
+    <h1>Only style</h1>
+    <div class="slider horizontal">
+        <div class="track">
+            <div class="progress" style="width: 50%;"></div>
+            <div class="handle from" style="left: 50%;"></div>
+        </div>
     </div>
 </section>
 

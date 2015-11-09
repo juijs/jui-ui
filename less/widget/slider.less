@@ -4,13 +4,7 @@
 
 .slider {
     position: relative;
-
     .user-select(none);
-
-    .tooltip-track {
-        position: absolute;
-        display: none;
-    }
 
     .track {
         position: absolute;
@@ -35,32 +29,6 @@
         width: 100%;
         height: 30px;
 
-        &.has-tooltip {
-            height: 60px;
-
-            .track {
-                top: 40px
-            }
-
-            .tooltip-track {
-                display: block;
-
-                .tooltip {
-                    min-width: 50px;
-                    .message {
-                        text-align: center;
-                    }
-                }
-            }
-        }
-
-        .tooltip-track {
-            left: 15px;
-            right: 15px;
-            top: 0px;
-            height: 30px;
-        }
-
         .track {
             left: 15px;
             right: 15px;
@@ -80,27 +48,6 @@
     &.vertical {
         width: 30px;
         height: 100%;
-
-        &.has-tooltip {
-            width: 60px;
-
-            .tooltip-track {
-                display: block;
-
-                .tooltip {
-                    min-width: 50px;
-                    .message {
-                        text-align: center;
-                    }
-                }
-            }
-        }
-
-        .tooltip-track {
-            top: 15px;
-            bottom: 15px;
-            left: 40px;
-        }
 
         .track {
             top: 15px;
@@ -124,6 +71,55 @@
                 bottom: 0px;
             }
 
+        }
+    }
+}
+
+.slider { // 스크립트 툴팁 전용
+    .tooltip-track {
+        position: absolute;
+        display: none;
+    }
+
+    &.horizontal {
+        &.has-tooltip {
+            height: 60px;
+
+            .track {
+                top: 40px
+            }
+
+            .tooltip-track {
+                display: block;
+                left: 15px;
+                right: 15px;
+                top: 6px;
+
+                .tooltip {
+                    min-width: 50px;
+                    .message {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+
+    &.vertical {
+        width: 60px;
+
+        .tooltip-track {
+            display: block;
+            top: 15px;
+            bottom: 15px;
+            left: 35px;
+
+            .tooltip {
+                min-width: 50px;
+                .message {
+                    text-align: center;
+                }
+            }
         }
     }
 }

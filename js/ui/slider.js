@@ -8,61 +8,52 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
     var UI = function() {
-        var self, $root, $track, $handle, $toHandle, $tooltipTrack, $progress;
+        var self, isVertical, preFromValue, preToValue;
+        var $root, $track, $handle, $toHandle, $tooltipTrack, $progress;
         var $tooltip, $tooltipMessage, $tooltip2, $tooltipMessage2;
 
-        this.init = function() {
-            self = this;
-            $root = $(this.root);
-
-            this.isVertical = (this.options.orient == 'vertical');
-            this.initElement();
-            this.initEvent();
-            this.setValue();
+        function min() {
+            return $root.data('min') || self.options.min;
         }
 
-        this.min = function () {
-            return $root.data('min') || this.options.min;
+        function max() {
+            return $root.data('max') || self.options.max;
         }
 
-        this.max = function () {
-            return $root.data('max') || this.options.max;
+        function step() {
+            return $root.data('step') || self.options.step;
         }
 
-        this.step = function () {
-            return $root.data('step') || this.options.step;
+        function type() {
+            return $root.data('type') || self.options.type;
         }
 
-        this.type = function () {
-            return $root.data('type') || this.options.type;
+        function isDouble() {
+            return type() == 'double';
         }
 
-        this.isDouble = function () {
-            return this.type() == 'double';
+        function isSingle() {
+            return type() == 'single';
         }
 
-        this.isSingle = function () {
-            return this.type() == 'single';
+        function isShowProgress() {
+
+            return $root.data('progress') == false ? false : self.options.progress;
         }
 
-        this.isShowProgress = function () {
-
-            return $root.data('progress') == false ? false : this.options.progress;
+        function isShowTooltip() {
+            return $root.data('tooltip') == false ? false : self.options.tooltip;
         }
 
-        this.isShowTooltip = function () {
-            return $root.data('tooltip') == false ? false : this.options.tooltip;
-        }
-
-        this.getTooltip = function (type) {
+        function getTooltip(type) {
             return (type == 'from') ? $tooltip : $tooltip2;
         }
 
-        this.getTooltipMessage = function (type) {
+        function getTooltipMessage(type) {
             return (type == 'from') ? $tooltipMessage : $tooltipMessage2;
         }
 
-        this.getHandle = function (type) {
+        function getHandle(type) {
             if (type == 'to') {
                 return $toHandle;
             }
@@ -70,94 +61,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             return $handle;
         }
 
-        this.setValue = function (from, to) {
-            from = from || $root.data('from') || this.options.from;
-            var min = this.min();
-            var max = this.max();
-
-            var dist = (from - min) / (max - min) * 100;
-
-            this.setViewStatus(dist, 'from');
-
-            if (this.isDouble()) {
-                to = to || $root.data('to') || this.options.to;
-                dist2 = (to - min) / (max - min) * 100;
-
-                this.setViewStatus(dist2, 'to');
-            }
-        }
-
-        this.getValue = function(dist) {
-            var min = this.min();
-            var max = this.max();
-            if (typeof dist == 'undefined') {
-
-                if (this.isVertical) {
-                    dist = parseFloat($handle.css('bottom'))/$track.height();
-                } else {
-                    dist = parseFloat($handle.css('left'))/$track.width();
-                }
-
-            }
-            var value = (min + (max - min) * dist);
-            var temp = value % this.step();
-
-            value = value - temp;
-
-            if (temp >= this.step()/2) {
-                value += this.step();
-            }
-
-            //TODO: rounding number
-            //value = value.toFixed(2);
-
-            return value;
-        };
-
-
-        this.initElement = function () {
-
-            $root.addClass(this.options.orient);
-
-            $track = $("<div class='track' />");
-            $tooltipTrack = $("<div class='tooltip-track' />");
-            $progress = $("<div class='progress' />");
-
-            if (!this.isShowProgress()) {
-                $progress.hide();
-            }
-
-            $handle = $("<div class='handle from' />");
-
-            $track.html($progress);
-            $track.append($handle);
-
-            if (this.isDouble()) {
-                $toHandle = $("<div class='handle to' />");
-                $track.append($toHandle);
-            }
-
-            var tooltip_orient = this.isVertical ? 'right': 'top';
-
-            $tooltip = $('<div class="tooltip '+tooltip_orient+'"><div class="message" /></div>').hide();
-            $tooltipMessage = $tooltip.find(".message");
-
-            $tooltip2 = $('<div class="tooltip '+tooltip_orient+'"><div class="message" /></div>').hide();
-            $tooltipMessage2 = $tooltip2.find(".message");
-
-            $tooltipTrack.html($tooltip);
-            $tooltipTrack.append($tooltip2);
-
-            $root.html($track);
-            $root.append($tooltipTrack);
-
-            if (this.isShowTooltip()) {
-                $root.addClass('has-tooltip');
-            }
-        }
-
-        this.pos = function (e) {
-
+        function pos(e) {
             if (_.isTouch) {
                 return e.originalEvent.touches[0];
             }
@@ -169,18 +73,15 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             return $node[0].style[key];
         }
 
-        this.setProgressBar = function () {
-
-            if (this.isSingle()) {
-                if (this.isVertical) {
+        function setProgressBar() {
+            if (isSingle()) {
+                if (isVertical) {
                     $progress.height(getStyleValue($handle, 'bottom')).css({ bottom : 0 });
                 } else {
                     $progress.width(getStyleValue($handle, 'left'));
                 }
             } else {
-
-                if (this.isVertical) {
-
+                if (isVertical) {
                     var toDist = parseFloat(getStyleValue($toHandle, 'bottom').replace('%', ''));
                     var fromDist = parseFloat(getStyleValue($handle, 'bottom').replace('%', ''));
 
@@ -188,7 +89,6 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                         bottom : fromDist + '%'
                     });
                 } else {
-
                     var toDist = parseFloat(getStyleValue($toHandle, 'left').replace('%', ''));
                     var fromDist = parseFloat(getStyleValue($handle, 'left').replace('%', ''));
 
@@ -196,19 +96,13 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                         left : fromDist + '%'
                     });
                 }
-
             }
-
-
         }
 
-        this.checkMaxFromTo = function (dist, type) {
-
-            if (this.isDouble()) {
-
+        function checkMaxFromTo(dist, type) {
+            if (isDouble()) {
                 if (type == 'from') {
-
-                    if (this.isVertical) {
+                    if (isVertical) {
                         var toDist = parseFloat(getStyleValue($toHandle, 'bottom').replace('%', ''));
                         if (dist >=  toDist) {
                             dist = toDist;
@@ -219,9 +113,8 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                             dist = toDist;
                         }
                     }
-
                 } else if (type == 'to') {
-                    if (this.isVertical) {
+                    if (isVertical) {
                         var fromDist = parseFloat(getStyleValue($handle, 'bottom').replace('%', ''));
                         if (dist <=  fromDist) {
                             dist = fromDist;
@@ -238,46 +131,40 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             return dist;
         }
 
-        this.setViewStatus = function (dist, type) {
-            var value = this.getValue(dist/100);
+        function setViewStatus(dist, type) {
+            var value = self.getValue(dist/100);
 
-            var min = this.min();
-            var max = this.max();
+            if (value < min()) value = min();
+            if (value > max()) value = max();
 
-
-            if (value < min) value = min;
-            if (value > max) value = max;
-
-            dist = (value - min) / (max - min) * 100;
-            dist = this.checkMaxFromTo(dist, type);
+            dist = (value - min()) / (max() - min()) * 100;
+            dist = checkMaxFromTo(dist, type);
 
             // redefine value
-            value = this.getValue(dist/100);
+            value = self.getValue(dist/100);
 
             var percent = dist + '%';
+            var $handle = getHandle(type)
 
-            var $handle = this.getHandle(type)
-
-            if (this.isVertical) {
+            if (isVertical) {
                 $handle.css({ bottom : percent });
             } else {
                 $handle.css({ left : percent });
             }
 
-            this.setProgressBar();
+            setProgressBar();
 
-            if (this.isShowTooltip()) {
+            if (isShowTooltip()) {
+                var $tooltip = getTooltip(type);
+                var $tooltipMessage = getTooltipMessage(type);
 
-                var $tooltip = this.getTooltip(type);
-                var $tooltipMessage = this.getTooltipMessage(type);
-
-                if (_.typeCheck("function", this.options.format)) {
-                    value = this.options.format.call(this, value);
+                if (_.typeCheck("function", self.options.format)) {
+                    value = self.options.format.call(self, value);
                 }
 
                 $tooltipMessage.html(value);
 
-                if (this.isVertical) {
+                if (isVertical) {
                     $tooltip.css({
                         bottom : $track.height() * (dist / 100),
                         'margin-bottom' : -1 * ($tooltip.height()/2)
@@ -312,27 +199,27 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             }
 
             if (type == 'from') {
-                if (this.preFromValue != value) {
-                    this.emit("change", [type, value, this.preFromValue]);
-                    this.preFromValue = value;
+                if (preFromValue != value) {
+                    self.emit("change", [ { type: type, from: value, to: preFromValue } ]);
+                    preFromValue = value;
                 }
             } else if (type == 'to') {
-                if (this.preToValue != value) {
-                    this.emit("change", [type, value, this.preToValue]);
-                    this.preToValue = value;
+                if (preToValue != value) {
+                    self.emit("change", [ { type: type, from: preToValue, to: value } ]);
+                    preToValue = value;
                 }
             }
 
-        };
+        }
 
-        this.setHandlePosition = function (e, type) {
+        function setHandlePosition(e, type) {
             var min, max, current;
             var dist = undefined;
-            var self = this;
+
             if (self.options.orient == 'vertical') {
                 min = $track.offset().top - $("body").scrollTop();
                 max = min + $track.height();
-                current = self.pos(e).clientY;
+                current = pos(e).clientY;
 
                 if (current <= min) {
                     dist = 100;
@@ -340,13 +227,11 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                     dist = 0;
                 } else {
                     dist = (max - current) / (max - min) * 100;
-
                 }
-
             } else {
                 min = $track.offset().left;
                 max = min + $track.width();
-                current = self.pos(e).clientX;
+                current = pos(e).clientX;
 
                 if (current < min) {
                     dist = 0;
@@ -354,41 +239,76 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                     dist = 100;
                 } else {
                     dist = (current - min) / (max - min) * 100;
-
                 }
             }
 
-            self.setViewStatus(dist, type);
+            setViewStatus(dist, type);
         }
 
-        this.initEvent = function () {
-            var self = this;
-            this.addEvent($handle, 'mousedown', function(e) {
+        function initElement() {
+            $root.addClass(self.options.orient);
+
+            $track = $("<div class='track' />");
+            $tooltipTrack = $("<div class='tooltip-track' />");
+            $progress = $("<div class='progress' />");
+
+            if (!isShowProgress()) {
+                $progress.hide();
+            }
+
+            $handle = $("<div class='handle from' />");
+            $track.html($progress);
+            $track.append($handle);
+
+            if (isDouble()) {
+                $toHandle = $("<div class='handle to' />");
+                $track.append($toHandle);
+            }
+
+            var tooltip_orient = isVertical ? 'right': 'top';
+
+            $tooltip = $('<div class="tooltip '+tooltip_orient+'"><div class="message" /></div>').hide();
+            $tooltipMessage = $tooltip.find(".message");
+
+            $tooltip2 = $('<div class="tooltip '+tooltip_orient+'"><div class="message" /></div>').hide();
+            $tooltipMessage2 = $tooltip2.find(".message");
+
+            $tooltipTrack.html($tooltip);
+            $tooltipTrack.append($tooltip2);
+
+            $root.html($track);
+            $root.append($tooltipTrack);
+
+            if (isShowTooltip()) {
+                $root.addClass('has-tooltip');
+            }
+        }
+
+        function initEvent() {
+            self.addEvent($handle, 'mousedown', function(e) {
                 $handle.data('select', true);
                 $("body").addClass("slider-cursor");
             });
 
-            if (this.isDouble()) {
-                this.addEvent($toHandle, 'mousedown', function(e) {
+            if (isDouble()) {
+                self.addEvent($toHandle, 'mousedown', function(e) {
                     $toHandle.data('select', true);
                     $("body").addClass("slider-cursor");
                 });
             }
 
-            this.addEvent($track, 'mousedown', function(e) {
-
+            self.addEvent($track, 'mousedown', function(e) {
                 $("body").addClass("slider-cursor");
 
                 if (self.options.type == 'single') {
                     $handle.data('select', true);
-                    self.setHandlePosition(e, 'from');
+                    setHandlePosition(e, 'from');
                 } else {
                     //TODO: if type is double, check position
                 }
-
             });
 
-            this.addEvent('body', 'mouseup', function(e) {
+            self.addEvent('body', 'mouseup', function(e) {
                 $handle.data('select', false);
                 if (self.options.type == 'double') {
                     $toHandle.data('select', false);
@@ -397,16 +317,65 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                 $("body").removeClass("slider-cursor");
             });
 
-            this.addEvent('body', 'mousemove', function(e) {
+            self.addEvent('body', 'mousemove', function(e) {
                 if ($handle.data('select')) {
-                    self.setHandlePosition(e, 'from');
+                    setHandlePosition(e, 'from');
                 } else if (self.options.type == 'double' && $toHandle.data('select')) {
-                    self.setHandlePosition(e, 'to');
+                    setHandlePosition(e, 'to');
                 }
             });
-
         }
 
+        this.init = function() {
+            self = this;
+            $root = $(this.root);
+
+            isVertical = (this.options.orient == 'vertical');
+            initElement();
+            initEvent();
+            this.setValue();
+        }
+
+        this.setValue = function (from, to) {
+            from = from || $root.data('from') || this.options.from;
+
+            var dist = (from - min()) / (max() - min()) * 100,
+                dist2;
+
+            setViewStatus(dist, 'from');
+
+            if (isDouble()) {
+                to = to || $root.data('to') || this.options.to;
+                dist2 = (to - min()) / (max() - min()) * 100;
+
+                setViewStatus(dist2, 'to');
+            }
+        }
+
+        this.getValue = function(dist) {
+            if (typeof dist == 'undefined') {
+
+                if (isVertical) {
+                    dist = parseFloat($handle.css('bottom'))/$track.height();
+                } else {
+                    dist = parseFloat($handle.css('left'))/$track.width();
+                }
+            }
+
+            var value = (min() + (max() - min()) * dist);
+            var temp = value % step();
+
+            value = value - temp;
+
+            if (temp >= step()/2) {
+                value += step();
+            }
+
+            //TODO: rounding number
+            //value = value.toFixed(2);
+
+            return value;
+        }
     }
 
     UI.setup = function() {
