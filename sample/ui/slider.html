@@ -41,14 +41,24 @@
                 from: 1,
                 to: 5,
                 min: -10,
-                max: 10
+                max: 10,
+                event : {
+                    change : function () {
+                        console.log('from : ' + this.getFromValue() + " ~ to : " + this.getToValue());
+                    }
+                }
             });
 
             slider(".double-v .slider", {
                 type : 'double',
                 orient : 'vertical',
                 from: 1,
-                to: 3
+                to: 3,
+                event : {
+                    change : function () {
+                        console.log('from : ' + this.getFromValue() + " ~ to : " + this.getToValue());
+                    }
+                }
             });
         });
 

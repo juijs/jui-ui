@@ -352,6 +352,14 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
+        /**
+         * @method getValue
+         *
+         * get value from percent
+         *
+         * @param {Number} [dist]  if dist is not exists, return FromHandle's Value
+         * @returns {Number}
+         */
         this.getValue = function(dist) {
             if (typeof dist == 'undefined') {
 
@@ -375,6 +383,37 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             //value = value.toFixed(2);
 
             return value;
+        }
+
+        /**
+         * @method getFromValue
+         *
+         * get FromHandle's value
+         *
+         * @return {Number}
+         */
+        this.getFromValue = function() {
+            return this.getValue();
+        }
+
+        /**
+         * @method getToValue
+         *
+         * get ToHandle's value
+         *
+         * @return {Number}
+         */
+        this.getToValue = function () {
+
+            var dist;
+
+            if (isVertical) {
+                dist = parseFloat($toHandle.css('bottom'))/$track.height();
+            } else {
+                dist = parseFloat($toHandle.css('left'))/$track.width();
+            }
+
+            return this.getValue(dist);
         }
     }
 
