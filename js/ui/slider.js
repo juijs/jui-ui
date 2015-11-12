@@ -132,7 +132,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
         }
 
         function setViewStatus(dist, type) {
-            var value = self.getValue(dist/100);
+            var value = getValue(dist/100);
 
             if (value < min()) value = min();
             if (value > max()) value = max();
@@ -141,7 +141,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             dist = checkMaxFromTo(dist, type);
 
             // redefine value
-            value = self.getValue(dist/100);
+            value = getValue(dist/100);
 
             var percent = dist + '%';
             var $handle = getHandle(type)
@@ -245,6 +245,31 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             setViewStatus(dist, type);
         }
 
+        function getValue(dist) {
+            if (typeof dist == 'undefined') {
+
+                if (isVertical) {
+                    dist = parseFloat($handle.css('bottom'))/$track.height();
+                } else {
+                    dist = parseFloat($handle.css('left'))/$track.width();
+                }
+            }
+
+            var value = (min() + (max() - min()) * dist);
+            var temp = value % step();
+
+            value = value - temp;
+
+            if (temp >= step()/2) {
+                value += step();
+            }
+
+            //TODO: rounding number
+            //value = value.toFixed(2);
+
+            return value;
+        }
+
         function initElement() {
             $root.addClass(self.options.orient);
 
@@ -333,75 +358,54 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             isVertical = (this.options.orient == 'vertical');
             initElement();
             initEvent();
-            this.setValue();
-        }
 
-        this.setValue = function (from, to) {
-            from = from || $root.data('from') || this.options.from;
-
-            var dist = (from - min()) / (max() - min()) * 100,
-                dist2;
-
-            setViewStatus(dist, 'from');
-
-            if (isDouble()) {
-                to = to || $root.data('to') || this.options.to;
-                dist2 = (to - min()) / (max() - min()) * 100;
-
-                setViewStatus(dist2, 'to');
-            }
+            this.setFromValue();
+            this.setToValue();
         }
 
         /**
-         * @method getValue
+         * @method setFromValue
+         * set FromHandle's value
          *
-         * get value from percent
-         *
-         * @param {Number} [dist]  if dist is not exists, return FromHandle's Value
-         * @returns {Number}
+         * @param {Number}
          */
-        this.getValue = function(dist) {
-            if (typeof dist == 'undefined') {
+        this.setFromValue = function(value) {
+            var from = value || $root.data("from") || this.options.from,
+                dist = (from - min()) / (max() - min()) * 100;
 
-                if (isVertical) {
-                    dist = parseFloat($handle.css('bottom'))/$track.height();
-                } else {
-                    dist = parseFloat($handle.css('left'))/$track.width();
-                }
+            setViewStatus(dist, "from");
+        }
+
+        /**
+         * @method setToValue
+         * set ToHandle's value
+         *
+         * @param {Number}
+         */
+        this.setToValue = function(value) {
+            if (isDouble()) {
+                var to = value || $root.data("to") || this.options.to,
+                    dist = (to - min()) / (max() - min()) * 100;
+
+                setViewStatus(dist,"to");
             }
-
-            var value = (min() + (max() - min()) * dist);
-            var temp = value % step();
-
-            value = value - temp;
-
-            if (temp >= step()/2) {
-                value += step();
-            }
-
-            //TODO: rounding number
-            //value = value.toFixed(2);
-
-            return value;
         }
 
         /**
          * @method getFromValue
-         *
          * get FromHandle's value
          *
-         * @return {Number}
+         * @return {Number} value
          */
         this.getFromValue = function() {
-            return this.getValue();
+            return getValue();
         }
 
         /**
          * @method getToValue
-         *
          * get ToHandle's value
          *
-         * @return {Number}
+         * @return {Number} value
          */
         this.getToValue = function () {
 
@@ -413,7 +417,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                 dist = parseFloat($toHandle.css('left'))/$track.width();
             }
 
-            return this.getValue(dist);
+            return getValue(dist);
         }
     }
 

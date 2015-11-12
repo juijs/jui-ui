@@ -2816,6 +2816,12 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	 */
 	var self = {
 
+		//constant
+		MILLISECOND : 1000,
+		MINUTE : 1000 * 60,
+		HOUR : 1000 * 60 * 60,
+		DAY : 1000 * 60 * 60 * 24,
+
 		// unit
 		years : "years",
 		months : "months",
@@ -2825,6 +2831,22 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		seconds : "seconds",
 		milliseconds : "milliseconds",
 		weeks : "weeks",
+
+		diff : function (type, a, b) {
+			var milliseconds =  (+a) - (+b);
+
+			if (type == 'seconds') {
+				return Math.abs(Math.floor(milliseconds / self.MILLISECOND));
+			} else if (type == 'minutes') {
+				return Math.abs(Math.floor(milliseconds / self.MINUTE));
+			} else if (type == 'hours') {
+				return Math.abs(Math.floor(milliseconds / self.HOUR));
+			} else if (type == 'days') {
+				return Math.abs(Math.floor(milliseconds / self.DAY));
+			}
+
+			return milliseconds;
+		},
 
 		/**
 		 * 시간 더하기 
@@ -8847,7 +8869,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
         }
 
         function setViewStatus(dist, type) {
-            var value = self.getValue(dist/100);
+            var value = getValue(dist/100);
 
             if (value < min()) value = min();
             if (value > max()) value = max();
@@ -8856,7 +8878,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             dist = checkMaxFromTo(dist, type);
 
             // redefine value
-            value = self.getValue(dist/100);
+            value = getValue(dist/100);
 
             var percent = dist + '%';
             var $handle = getHandle(type)
@@ -8960,6 +8982,31 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             setViewStatus(dist, type);
         }
 
+        function getValue(dist) {
+            if (typeof dist == 'undefined') {
+
+                if (isVertical) {
+                    dist = parseFloat($handle.css('bottom'))/$track.height();
+                } else {
+                    dist = parseFloat($handle.css('left'))/$track.width();
+                }
+            }
+
+            var value = (min() + (max() - min()) * dist);
+            var temp = value % step();
+
+            value = value - temp;
+
+            if (temp >= step()/2) {
+                value += step();
+            }
+
+            //TODO: rounding number
+            //value = value.toFixed(2);
+
+            return value;
+        }
+
         function initElement() {
             $root.addClass(self.options.orient);
 
@@ -9048,48 +9095,66 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
             isVertical = (this.options.orient == 'vertical');
             initElement();
             initEvent();
-            this.setValue();
+
+            this.setFromValue();
+            this.setToValue();
         }
 
-        this.setValue = function (from, to) {
-            from = from || $root.data('from') || this.options.from;
+        /**
+         * @method setFromValue
+         * set FromHandle's value
+         *
+         * @param {Number}
+         */
+        this.setFromValue = function(value) {
+            var from = value || $root.data("from") || this.options.from,
+                dist = (from - min()) / (max() - min()) * 100;
 
-            var dist = (from - min()) / (max() - min()) * 100,
-                dist2;
+            setViewStatus(dist, "from");
+        }
 
-            setViewStatus(dist, 'from');
-
+        /**
+         * @method setToValue
+         * set ToHandle's value
+         *
+         * @param {Number}
+         */
+        this.setToValue = function(value) {
             if (isDouble()) {
-                to = to || $root.data('to') || this.options.to;
-                dist2 = (to - min()) / (max() - min()) * 100;
+                var to = value || $root.data("to") || this.options.to,
+                    dist = (to - min()) / (max() - min()) * 100;
 
-                setViewStatus(dist2, 'to');
+                setViewStatus(dist,"to");
             }
         }
 
-        this.getValue = function(dist) {
-            if (typeof dist == 'undefined') {
+        /**
+         * @method getFromValue
+         * get FromHandle's value
+         *
+         * @return {Number} value
+         */
+        this.getFromValue = function() {
+            return getValue();
+        }
 
-                if (isVertical) {
-                    dist = parseFloat($handle.css('bottom'))/$track.height();
-                } else {
-                    dist = parseFloat($handle.css('left'))/$track.width();
-                }
+        /**
+         * @method getToValue
+         * get ToHandle's value
+         *
+         * @return {Number} value
+         */
+        this.getToValue = function () {
+
+            var dist;
+
+            if (isVertical) {
+                dist = parseFloat($toHandle.css('bottom'))/$track.height();
+            } else {
+                dist = parseFloat($toHandle.css('left'))/$track.width();
             }
 
-            var value = (min() + (max() - min()) * dist);
-            var temp = value % step();
-
-            value = value - temp;
-
-            if (temp >= step()/2) {
-                value += step();
-            }
-
-            //TODO: rounding number
-            //value = value.toFixed(2);
-
-            return value;
+            return getValue(dist);
         }
     }
 
