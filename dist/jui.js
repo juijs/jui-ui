@@ -8937,12 +8937,12 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
 
             if (type == 'from') {
                 if (preFromValue != value) {
-                    self.emit("change", [ { type: type, from: value, to: preFromValue } ]);
+                    self.emit("change", [ { type: type, from: value, to: self.getToValue() } ]);
                     preFromValue = value;
                 }
             } else if (type == 'to') {
                 if (preToValue != value) {
-                    self.emit("change", [ { type: type, from: preToValue, to: value } ]);
+                    self.emit("change", [ { type: type, from: self.getFromValue(), to: value } ]);
                     preToValue = value;
                 }
             }
