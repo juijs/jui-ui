@@ -11,7 +11,6 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
      * @requires util.color
      */
     var UI = function() {
-
         var self, opts;
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar;
         var hue_color = [
@@ -24,13 +23,14 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             {rgb : '#ff0000', start : 1}
         ];
 
-        this.selectDom = function (selector) {
-            var $dom = $root.find("." + selector);
-            return ($dom.length)  ? $dom : $("<div class='" + selector + "' />");
+        this.selectDom = function (selector, tag) {
+            var tag = !tag ? "div" : tag,
+                $dom = $root.find("." + selector);
+
+            return ($dom.length)  ? $dom : $("<" + tag + " class='" + selector + "' />");
         };
 
         this.pos = function (e) {
-
             if (_.isTouch) {
                 return e.originalEvent.touches[0];
             }
@@ -50,39 +50,55 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             this.$value = this.selectDom('value');
             this.$saturation = this.selectDom('saturation');
 
+            this.$control = this.selectDom('control');
+            this.$controlColor = this.selectDom('color');
             this.$hue = this.selectDom('hue');
-            this.$hueContainer = this.selectDom('hue-container');
+            this.$hueContainer = this.selectDom('container');
             this.$drag_bar = this.selectDom('drag-bar');
-
             this.$opacity = this.selectDom('opacity');
-            this.$opacityPattern = this.selectDom('opacity-pattern');
-            this.$opacityContainer = this.selectDom('opacity-container');
-            this.$opacity_drag_bar = this.selectDom('opacity-drag-bar');
+            this.$opacityPattern = this.selectDom('pattern');
+            this.$opacityContainer = this.selectDom('container');
+            this.$opacityInput = this.selectDom('input', 'input');
+            this.$opacity_drag_bar = this.selectDom('drag-bar2');
 
             this.$information = this.selectDom('information');
-            this.$informationColor = this.selectDom('information-color');
-            this.$informationInput = this.selectDom('information-input');
+            this.$informationTitle1 = this.selectDom('title').html("HEX");
+            this.$informationTitle2 = this.selectDom('title').html("R");
+            this.$informationTitle3 = this.selectDom('title').html("G");
+            this.$informationTitle4 = this.selectDom('title').html("B");
+            this.$informationInput1 = this.selectDom('input', 'input');
+            this.$informationInput2 = this.selectDom('input', 'input');
+            this.$informationInput3 = this.selectDom('input', 'input');
+            this.$informationInput4 = this.selectDom('input', 'input');
 
             this.$value.html(this.$drag_pointer);
             this.$saturation.html(this.$value);
             this.$color.html(this.$saturation);
 
 
-
             this.$hueContainer.html(this.$drag_bar);
             this.$hue.html(this.$hueContainer);
-
 
             this.$opacityContainer.html(this.$opacity_drag_bar);
             this.$opacity.html(this.$opacityPattern);
             this.$opacity.append(this.$opacityContainer);
 
-            this.$information.html(this.$informationColor);
-            this.$information.append(this.$informationInput);
+            this.$control.append(this.$hue);
+            this.$control.append(this.$opacity);
+            this.$control.append(this.$opacityInput);
+            this.$control.append(this.$controlColor);
+
+            this.$information.append(this.$informationInput1);
+            this.$information.append(this.$informationInput2);
+            this.$information.append(this.$informationInput3);
+            this.$information.append(this.$informationInput4);
+            this.$information.append(this.$informationTitle1);
+            this.$information.append(this.$informationTitle2);
+            this.$information.append(this.$informationTitle3);
+            this.$information.append(this.$informationTitle4);
 
             this.$colorpicker.html(this.$color);
-            this.$colorpicker.append(this.$hue);
-            this.$colorpicker.append(this.$opacity);
+            this.$colorpicker.append(this.$control);
             this.$colorpicker.append(this.$information);
 
             $root.html(this.$colorpicker);
@@ -144,13 +160,19 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
         }
 
         function setInputColor() {
-            var rgb = caculateColor();
-            var str = self.getColor('hex');
-            self.$informationColor.css({
-                background: str
+            var rgb = caculateColor(),
+                str = self.getColor('hex');
+
+            self.$controlColor.css({
+                background: str,
+                border: "1px solid rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")"
             });
 
-            self.$informationInput.html(str).val(str);
+            self.$informationInput1.val(str);
+            self.$informationInput2.val(rgb.r);
+            self.$informationInput3.val(rgb.g);
+            self.$informationInput4.val(rgb.b);
+            self.$opacityInput.val(Math.floor(rgb.a * 100) + "%");
 
             self.emit("change", [ str, rgb ]);
         }

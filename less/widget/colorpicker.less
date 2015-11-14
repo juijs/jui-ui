@@ -1,23 +1,26 @@
 .colorpicker {
     position: relative;
-    width: 180px;
-    .user-select(none);
+    width: 226px;
+    .border-radius(3px);
 
-    .color {
+    > .color {
         position: relative;
-        height: 120px;
+        height: 145px;
         overflow:hidden;
         cursor:pointer;
+        .border-top-radius(3px);
 
         .saturation {
             position: relative;
             width:100%;
             height:100%;
+            .border-top-radius(3px);
 
             .value {
                 position: relative;
                 width:100%;
                 height:100%;
+                .border-top-radius(3px);
 
                 .drag-pointer {
                     position: absolute;
@@ -31,87 +34,131 @@
         }
     }
 
-    .drag-bar, .opacity-drag-bar {
-        position:absolute;
-        cursor:pointer;
-        top: 50% !important;
-        margin-top:-7px !important;
-        left:-3px;
-        width: 13px;
-        height: 13px;
-
-        .border-radius(10px);
-    }
-
-    .hue {
+    > .control {
         position: relative;
-        padding-top:8px;
-        padding-bottom:8px;
-        padding-left:12px;
-        padding-right:12px;
-        .box-sizing(border-box);
-        cursor:pointer;
+        padding: 18px 0px 20px 0px;
 
-        .hue-container {
-            position: relative;
-            width:100%;
-            height:8px;
-        }
-    }
-
-    .opacity {
-        position: relative;
-        padding-top:8px;
-        padding-bottom:8px;
-        padding-left:12px;
-        padding-right:12px;
-        .box-sizing(border-box);
-        cursor:pointer;
-
-        .opacity-pattern {
+        > .color {
             position: absolute;
-            top:8px;
-            bottom:8px;
-            left:12px;
-            right:12px;
-            z-index:1;
+            left: 11px;
+            top: 24px;
+            width: 30px;
+            height: 30px;
+            .border-radius(50%);
+            .box-sizing(border-box);
         }
 
-        .opacity-container {
+        > .hue {
             position: relative;
-            width:100%;
-            height:8px;
-            z-index:2;
+            padding: 8px 12px;
+            margin: 0px 0px 0px 45px;
+            .box-sizing(border-box);
+            cursor:pointer;
 
+            > .container {
+                position: relative;
+                width: 157px;
+                height:6px;
+            }
+        }
+
+        > .opacity {
+            position: relative;
+            width: 143px;
+            padding: 8px 12px;
+            margin: 0px 0px 0px 45px;
+            .box-sizing(border-box);
+            cursor:pointer;
+
+            > .pattern {
+                position: absolute;
+                top: 8px;
+                bottom: 8px;
+                left: 12px;
+                right: 12px;
+                z-index: 1;
+            }
+
+            > .container {
+                position: relative;
+                width: 100%;
+                height: 3px;
+                z-index: 2;
+            }
+        }
+
+        > .input {
+            position: absolute;
+            font-size: 10px;
+            right: 10px;
+            bottom: 20px;
+            width: 30px;
+            height: 20px;
+            padding: 0 0 0 2px;
+        }
+
+        .drag-bar, .drag-bar2 {
+            position: absolute;
+            cursor: pointer;
+            top: 50% !important;
+            margin-top: -7px !important;
+            left: -3px;
+            width: 12px;
+            height: 12px;
+            .border-radius(50px);
         }
     }
 
-    .information {
+    > .information {
         position: relative;
-        height:25px;
-        padding:5px;
+        height: 37px;
+        padding: 15px 0px 20px 10px;
         .box-sizing(padding-box);
 
-        .information-color {
-            position:relative;
-            float:left;
-            width: 25px;
-            height:100%;
-            .box-sizing(border-box);
-        }
-
-        .information-input {
-            position:relative;
-            float:left;
-            margin-left:5px;
-            width:100px;
-            height:100%;
-            font-size:13px;
-            line-height:24px;
-            border:1px solid transparent;
+        > .input {
+            position: absolute;
+            font-size: 10px;
+            height: 20px;
+            bottom: 20px;
+            padding: 0 0 0 2px;
             .box-sizing(border-box);
             .user-select(text);
+
+            &:nth-child(1) {
+                width: 78px;
+                left: 10px;
+            }
+            &:nth-child(2) {
+                width: 30px;
+                right: 74px;
+            }
+            &:nth-child(3) {
+                width: 30px;
+                right: 42px;
+            }
+            &:nth-child(4) {
+                width: 30px;
+                right: 10px;
+            }
         }
 
+        > .title {
+            position: absolute;
+            font-size: 11px;
+            top: 15px;
+
+            &:nth-child(5) {
+                left: 10px;
+            }
+            &:nth-child(6) {
+                left: 123px;
+            }
+            &:nth-child(7) {
+                left: 155px;
+            }
+            &:nth-child(8) {
+                left: 187px;
+            }
+        }
     }
 }

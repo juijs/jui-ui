@@ -18,11 +18,10 @@
 
 .colorpicker {
     border: 1px solid @colorpickerBorderColor;
+    .box-shadow(0 0px 10px 0px rgba(0,0,0,0.12));
 
-    .color {
-
+    > .color {
         .saturation {
-
             #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
 
             .value {
@@ -37,43 +36,48 @@
         }
     }
 
-    .drag-bar, .opacity-drag-bar {
-        border: 1px solid @colorpickerDragPointerBorderColor;
-        .box-shadow(@colorpickerDragPointerBoxShadow);
-        background-color:@colorpickerDragPointerBackgroundColor;
-    }
+    > .control {
+        > .hue {
+            > .container {
+                background: -moz-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -ms-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -o-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -webkit-gradient(linear, left top, right top, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
+                background: -webkit-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+            }
+        }
 
-    .hue {
-        .hue-container {
-            background: -moz-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-            background: -ms-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-            background: -o-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-            background: -webkit-gradient(linear, left top, right top, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
-            background: -webkit-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-            background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+        > .opacity {
+            > .pattern {
+                background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2NctWrVfwYkEBYWxojMZ6SDAmT7QGx0K1EcRBsFAADeG/3M/HteAAAAAElFTkSuQmCC) repeat;
+            }
 
+            > .container {
+                .opacity_gradient(@colorpickerOpacityPatternFromColor, @colorpickerOpacityPatternToColor);
+            }
+        }
+
+        > .input {
+            color: @colorpickerInputFontColor;
+        }
+
+        .drag-bar, .drag-bar2 {
+            border: 1px solid @colorpickerDragPointerBorderColor;
+            .box-shadow(@colorpickerDragPointerBoxShadow);
+            background-color:@colorpickerDragPointerBackgroundColor;
         }
     }
 
-    .opacity {
-        .opacity-pattern {
-            background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2NctWrVfwYkEBYWxojMZ6SDAmT7QGx0K1EcRBsFAADeG/3M/HteAAAAAElFTkSuQmCC) repeat;
-        }
+    > .information {
+        border-top: 1px solid @colorpickerInformationBorderColor;
 
-        .opacity-container {
-            .opacity_gradient(@colorpickerOpacityPatternFromColor, @colorpickerOpacityPatternToColor);
-        }
-    }
-
-    .information {
-
-        .information-color {
-            border:1px solid @colorpickerInformationBorderColor;
-        }
-
-        .information-input {
+        > .title {
             color: @colorpickerFontColor;
         }
 
+        > .input {
+            color: @colorpickerInputFontColor;
+        }
     }
 }

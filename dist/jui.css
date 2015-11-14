@@ -3798,30 +3798,46 @@
 }
 .jui .colorpicker {
   position: relative;
-  width: 180px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
+  width: 226px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
-.jui .colorpicker .color {
+.jui .colorpicker > .color {
   position: relative;
-  height: 120px;
+  height: 145px;
   overflow: hidden;
   cursor: pointer;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-right-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
 }
-.jui .colorpicker .color .saturation {
+.jui .colorpicker > .color .saturation {
   position: relative;
   width: 100%;
   height: 100%;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-right-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
 }
-.jui .colorpicker .color .saturation .value {
+.jui .colorpicker > .color .saturation .value {
   position: relative;
   width: 100%;
   height: 100%;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-right-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
 }
-.jui .colorpicker .color .saturation .value .drag-pointer {
+.jui .colorpicker > .color .saturation .value .drag-pointer {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -3831,47 +3847,48 @@
   left: -5px;
   top: -5px;
 }
-.jui .colorpicker .drag-bar,
-.jui .colorpicker .opacity-drag-bar {
+.jui .colorpicker > .control {
+  position: relative;
+  padding: 18px 0px 20px 0px;
+}
+.jui .colorpicker > .control > .color {
   position: absolute;
-  cursor: pointer;
-  top: 50% !important;
-  margin-top: -7px !important;
-  left: -3px;
-  width: 13px;
-  height: 13px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
+  left: 11px;
+  top: 24px;
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-.jui .colorpicker .hue {
+.jui .colorpicker > .control > .hue {
   position: relative;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 8px 12px;
+  margin: 0px 0px 0px 45px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   cursor: pointer;
 }
-.jui .colorpicker .hue .hue-container {
+.jui .colorpicker > .control > .hue > .container {
   position: relative;
-  width: 100%;
-  height: 8px;
+  width: 157px;
+  height: 6px;
 }
-.jui .colorpicker .opacity {
+.jui .colorpicker > .control > .opacity {
   position: relative;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 12px;
-  padding-right: 12px;
+  width: 143px;
+  padding: 8px 12px;
+  margin: 0px 0px 0px 45px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   cursor: pointer;
 }
-.jui .colorpicker .opacity .opacity-pattern {
+.jui .colorpicker > .control > .opacity > .pattern {
   position: absolute;
   top: 8px;
   bottom: 8px;
@@ -3879,38 +3896,48 @@
   right: 12px;
   z-index: 1;
 }
-.jui .colorpicker .opacity .opacity-container {
+.jui .colorpicker > .control > .opacity > .container {
   position: relative;
   width: 100%;
-  height: 8px;
+  height: 3px;
   z-index: 2;
 }
-.jui .colorpicker .information {
+.jui .colorpicker > .control > .input {
+  position: absolute;
+  font-size: 10px;
+  right: 10px;
+  bottom: 20px;
+  width: 30px;
+  height: 20px;
+  padding: 0 0 0 2px;
+}
+.jui .colorpicker > .control .drag-bar,
+.jui .colorpicker > .control .drag-bar2 {
+  position: absolute;
+  cursor: pointer;
+  top: 50% !important;
+  margin-top: -7px !important;
+  left: -3px;
+  width: 12px;
+  height: 12px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+}
+.jui .colorpicker > .information {
   position: relative;
-  height: 25px;
-  padding: 5px;
+  height: 37px;
+  padding: 15px 0px 20px 10px;
   -webkit-box-sizing: padding-box;
   -moz-box-sizing: padding-box;
   box-sizing: padding-box;
 }
-.jui .colorpicker .information .information-color {
-  position: relative;
-  float: left;
-  width: 25px;
-  height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.jui .colorpicker .information .information-input {
-  position: relative;
-  float: left;
-  margin-left: 5px;
-  width: 100px;
-  height: 100%;
-  font-size: 13px;
-  line-height: 24px;
-  border: 1px solid transparent;
+.jui .colorpicker > .information > .input {
+  position: absolute;
+  font-size: 10px;
+  height: 20px;
+  bottom: 20px;
+  padding: 0 0 0 2px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -3919,6 +3946,39 @@
   -ms-user-select: text;
   -o-user-select: text;
   user-select: text;
+}
+.jui .colorpicker > .information > .input:nth-child(1) {
+  width: 78px;
+  left: 10px;
+}
+.jui .colorpicker > .information > .input:nth-child(2) {
+  width: 30px;
+  right: 74px;
+}
+.jui .colorpicker > .information > .input:nth-child(3) {
+  width: 30px;
+  right: 42px;
+}
+.jui .colorpicker > .information > .input:nth-child(4) {
+  width: 30px;
+  right: 10px;
+}
+.jui .colorpicker > .information > .title {
+  position: absolute;
+  font-size: 11px;
+  top: 15px;
+}
+.jui .colorpicker > .information > .title:nth-child(5) {
+  left: 10px;
+}
+.jui .colorpicker > .information > .title:nth-child(6) {
+  left: 123px;
+}
+.jui .colorpicker > .information > .title:nth-child(7) {
+  left: 155px;
+}
+.jui .colorpicker > .information > .title:nth-child(8) {
+  left: 187px;
 }
 .jui .progress {
   position: relative;
