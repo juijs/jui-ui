@@ -3815,7 +3815,7 @@
   -moz-border-radius-topleft: 3px;
   border-top-left-radius: 3px;
 }
-.jui .colorpicker > .color .saturation {
+.jui .colorpicker > .color > .saturation {
   position: relative;
   width: 100%;
   height: 100%;
@@ -3826,7 +3826,7 @@
   -moz-border-radius-topleft: 3px;
   border-top-left-radius: 3px;
 }
-.jui .colorpicker > .color .saturation .value {
+.jui .colorpicker > .color > .saturation > .value {
   position: relative;
   width: 100%;
   height: 100%;
@@ -3837,7 +3837,7 @@
   -moz-border-radius-topleft: 3px;
   border-top-left-radius: 3px;
 }
-.jui .colorpicker > .color .saturation .value .drag-pointer {
+.jui .colorpicker > .color > .saturation > .value > .drag-pointer {
   position: absolute;
   width: 10px;
   height: 10px;

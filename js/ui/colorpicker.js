@@ -19,7 +19,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff00ff', start : .83 },
             { rgb : '#ff0000', start : 1 }
         ];
-        var $root, $colorpicker, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
+        var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
             $control, $controlColor, $hueContainer, $opacity, $opacityPattern, $opacityContainer,
             $opacityInput, $opacity_drag_bar, $information, $informationTitle1, $informationTitle2,
             $informationTitle3, $informationTitle4, $informationInput1, $informationInput2,
@@ -254,9 +254,6 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             self = this, opts = this.options;
 
             $root = $(this.root);
-
-            $colorpicker = selectDom('colorpicker');
-
             $color = selectDom('color');
             $drag_pointer = selectDom('drag-pointer');
             $value = selectDom('value');
@@ -308,11 +305,9 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $information.append($informationTitle3);
             $information.append($informationTitle4);
 
-            $colorpicker.html($color);
-            $colorpicker.append($control);
-            $colorpicker.append($information);
-
-            $root.html($colorpicker);
+            $root.html($color);
+            $root.append($control);
+            $root.append($information);
 
             initEvent();
             initColor();

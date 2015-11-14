@@ -1931,7 +1931,7 @@
   -moz-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
   box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
 }
-.jui .colorpicker > .color .saturation {
+.jui .colorpicker > .color > .saturation {
   background-color: rgba(204, 154, 129, 0);
   background-image: -moz-linear-gradient(left, #ffffff, rgba(204, 154, 129, 0));
   background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#ffffff), to(rgba(204, 154, 129, 0)));
@@ -1941,7 +1941,7 @@
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#00cc9a81', GradientType=1);
 }
-.jui .colorpicker > .color .saturation .value {
+.jui .colorpicker > .color > .saturation > .value {
   background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#000000), to(rgba(204, 154, 129, 0)));
   background-image: -webkit-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
   background-image: -moz-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
@@ -1949,7 +1949,7 @@
   background-image: -ms-linear-gradient(bottom, #000000, rgba(204, 154, 129, 0));
   background-image: linear-gradient(to top, #000000, rgba(204, 154, 129, 0));
 }
-.jui .colorpicker > .color .saturation .value .drag-pointer {
+.jui .colorpicker > .color > .saturation > .value > .drag-pointer {
   border: 1px solid #ffffff;
   -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.05);

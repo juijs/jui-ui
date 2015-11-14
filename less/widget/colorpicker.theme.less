@@ -21,14 +21,13 @@
     .box-shadow(0 0px 10px 0px rgba(0,0,0,0.12));
 
     > .color {
-        .saturation {
+        > .saturation {
             #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
 
-            .value {
-
+            > .value {
                 .value_gradient(@colorpickerValueFromColor, @colorpickerValueToColor);
 
-                .drag-pointer {
+                > .drag-pointer {
                     border: 1px solid @colorpickerValueDragPointerBorderColor;
                     .box-shadow(@colorpickerDragPointerBoxShadow);
                 }
