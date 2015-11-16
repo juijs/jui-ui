@@ -54,7 +54,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 			activePage = (pNo > lastPage) ? lastPage : pNo;
 			activePage = (pNo < 1) ? 1 : pNo;
 			
-			if(lastPage < start + end + 1) {
+			if(lastPage < start + end) {
 				for(var i = lastPage - end + 1; i < lastPage + 1; i++) {
 					pages.push(i);
 				}
