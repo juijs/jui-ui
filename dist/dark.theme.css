@@ -1927,9 +1927,6 @@
 }
 .jui .colorpicker {
   border: 1px solid #ececec;
-  -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
-  -moz-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
 }
 .jui .colorpicker > .color > .saturation {
   background-color: rgba(204, 154, 129, 0);

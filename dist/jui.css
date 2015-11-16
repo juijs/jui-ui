@@ -3799,51 +3799,30 @@
 .jui .colorpicker {
   position: relative;
   width: 226px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
 }
 .jui .colorpicker > .color {
   position: relative;
   height: 145px;
   overflow: hidden;
   cursor: pointer;
-  -webkit-border-top-right-radius: 3px;
-  -moz-border-radius-topright: 3px;
-  border-top-right-radius: 3px;
-  -webkit-border-top-left-radius: 3px;
-  -moz-border-radius-topleft: 3px;
-  border-top-left-radius: 3px;
 }
 .jui .colorpicker > .color > .saturation {
   position: relative;
   width: 100%;
   height: 100%;
-  -webkit-border-top-right-radius: 3px;
-  -moz-border-radius-topright: 3px;
-  border-top-right-radius: 3px;
-  -webkit-border-top-left-radius: 3px;
-  -moz-border-radius-topleft: 3px;
-  border-top-left-radius: 3px;
 }
 .jui .colorpicker > .color > .saturation > .value {
   position: relative;
   width: 100%;
   height: 100%;
-  -webkit-border-top-right-radius: 3px;
-  -moz-border-radius-topright: 3px;
-  border-top-right-radius: 3px;
-  -webkit-border-top-left-radius: 3px;
-  -moz-border-radius-topleft: 3px;
-  border-top-left-radius: 3px;
 }
 .jui .colorpicker > .color > .saturation > .value > .drag-pointer {
   position: absolute;
   width: 10px;
   height: 10px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
   left: -5px;
   top: -5px;
 }

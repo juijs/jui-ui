@@ -6583,8 +6583,8 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
         }
 
         function setHueColor(e) {
-            var min = $hue.offset().left;
-            var max = min + $hue.width();
+            var min = $hueContainer.offset().left;
+            var max = min + $hueContainer.width();
             var current = pos(e).clientX;
 
             if (current < min) {
