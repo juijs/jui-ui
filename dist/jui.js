@@ -6765,6 +6765,11 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 setOpacity(e);
             });
 
+            self.addEvent($informationInput1, 'keydown', function(e) {
+                if(e.which < 65 || e.which > 70) {
+                    return checkNumberKey(e);
+                }
+            });
             self.addEvent($informationInput1, 'keyup', function(e) {
                 var code = $(this).val();
 
