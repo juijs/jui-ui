@@ -1755,7 +1755,7 @@
   /* Inner type switch */
 }
 .jui .switch .area {
-  border: 1px solid #ececec;
+  border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: 20px;
 }
 .jui .switch .area .bar {
@@ -1772,8 +1772,8 @@
   width: 30px;
   height: 30px;
   border-radius: 16px;
-  border: 1px solid #ececec;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
   background: #ffffff;
   -webkit-transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
@@ -1781,7 +1781,7 @@
   transition: all 0.25s ease;
 }
 .jui .switch.on .area .bar {
-  background: #a57ff2;
+  background: #ab7cff;
 }
 .jui .switch.on .handle {
   left: 100%;
@@ -1865,12 +1865,12 @@
   margin-left: 0px;
   width: 23px;
   height: 23px;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 .jui .switch.inner.on .handle {
   left: 100%;
   margin-left: -24.5px;
-  border: 1px solid #a57ff2;
+  border: 1px solid #ab7cff;
 }
 .jui .switch.inner.mini .area {
   border-radius: 12px;
@@ -1916,12 +1916,12 @@
   border-radius: 3px;
 }
 .jui .slider .track .progress {
-  background: #9167ca;
+  background: #ab7cff;
   border-radius: 3px;
 }
 .jui .slider .track .handle {
   border-radius: 20px;
-  border: 1px solid #bebebe;
+  border: 1px solid #ab7cff;
   background: #ffffff;
   box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
 }

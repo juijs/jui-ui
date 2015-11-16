@@ -1755,7 +1755,7 @@
   /* Inner type switch */
 }
 .jui .switch .area {
-  border: 1px solid #ececec;
+  border: 1px solid #202020;
   border-radius: 20px;
 }
 .jui .switch .area .bar {
@@ -1763,7 +1763,7 @@
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   transition: all 0.25s ease;
-  background: #ececec;
+  background: #000000;
 }
 .jui .switch .handle {
   margin-top: -15px;
@@ -1772,16 +1772,16 @@
   width: 30px;
   height: 30px;
   border-radius: 16px;
-  border: 1px solid #ececec;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  background: #ffffff;
+  border: 1px solid #000000;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  background: #2d2d2d;
   -webkit-transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   transition: all 0.25s ease;
 }
 .jui .switch.on .area .bar {
-  background: #a57ff2;
+  background: #ab7cff;
 }
 .jui .switch.on .handle {
   left: 100%;
@@ -1865,12 +1865,12 @@
   margin-left: 0px;
   width: 23px;
   height: 23px;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 .jui .switch.inner.on .handle {
   left: 100%;
   margin-left: -24.5px;
-  border: 1px solid #a57ff2;
+  border: 1px solid #ab7cff;
 }
 .jui .switch.inner.mini .area {
   border-radius: 12px;
@@ -1912,28 +1912,28 @@
   margin-left: -29.3px;
 }
 .jui .slider .track {
-  background: #ececec;
+  background: #333333;
   border-radius: 3px;
 }
 .jui .slider .track .progress {
-  background: #9167ca;
+  background: #ab7cff;
   border-radius: 3px;
 }
 .jui .slider .track .handle {
   border-radius: 20px;
-  border: 1px solid #bebebe;
-  background: #ffffff;
+  border: 1px solid #ab7cff;
+  background: #1c1c1c;
   box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
 }
 .jui .colorpicker {
-  border: 1px solid #ececec;
-  background-color: #000000;
+  border: 1px solid #4d4d4d;
+  background-color: #1c1c1c;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
-  -moz-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.8);
 }
 .jui .colorpicker > .color {
   -webkit-border-top-right-radius: 5px;
@@ -1984,27 +1984,27 @@
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #000000);
 }
 .jui .colorpicker > .control > .input {
-  color: #333333;
+  color: #c0c0c0;
 }
 .jui .colorpicker > .control > .empty {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2NctWrVfwYkEBYWxojMZ6SDAmT7QGx0K1EcRBsFAADeG/3M/HteAAAAAElFTkSuQmCC") repeat;
 }
 .jui .colorpicker > .control .drag-bar,
 .jui .colorpicker > .control .drag-bar2 {
-  border: 1px solid #ececed;
+  border: 1px solid #4d4d4d;
   -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  background-color: #ffffff;
+  background-color: #3d3d3d;
 }
 .jui .colorpicker > .information {
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid #3d3d3d;
 }
 .jui .colorpicker > .information > .title {
-  color: #a3a3a3;
+  color: #666666;
 }
 .jui .colorpicker > .information > .input {
-  color: #333333;
+  color: #c0c0c0;
 }
 @-webkit-keyframes progress {
   from {
@@ -2076,18 +2076,18 @@
 .jui .progress .area {
   height: 12px;
   margin-top: -7px;
-  border: 1px solid #a57ff2;
+  border: 1px solid #ab7cff;
   border-radius: 15px;
   padding: 1px;
 }
 .jui .progress .area .bar {
-  background: #a57ff2;
+  background: #ab7cff;
   border-radius: 15px;
 }
 .jui .progress .area .bar.striped {
-  background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.12) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.12) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.12) 75%, transparent 75%, transparent);
   -webkit-background-size: 12px 12px;
   background-size: 12px 12px;
 }
@@ -2327,7 +2327,7 @@
   }
 }
 .jui .progress.simple .area {
-  background-color: #ececec;
+  background-color: #333333;
   height: 9px;
 }
 .jui .progress.vertical {
@@ -2345,9 +2345,9 @@
   width: 10px;
 }
 .jui .progress.vertical .area .bar.striped {
-  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   -webkit-background-size: 12px 12px;
   background-size: 12px 12px;
 }
