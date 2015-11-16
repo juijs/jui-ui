@@ -15,71 +15,55 @@
 
     <script>
         jui.ready([ "ui.progress" ], function(progress) {
-            var p = progress(".test", { value : 50, type: 'flat', striped: true });
+            var p = progress(".progress", {
+                value : 50,
+                striped : true,
+                animated : true
+            });
 
             for(var i = 0; i < p.length;i++) {
                 (function(p) {
-                    p.setAnimated(true);
-
-                    var isBool = true;
-                    setInterval(function() {
-                        p.setAnimated(isBool = !isBool);
-                    }, 2000);
                 })(p[i]);
-
             }
-
-
         });
     </script>
 </head>
 
 <body class="jui">
 
-<div style="width:300px" class="test">
+<h1>No Body 1</h1>
+<div style="width:300px;">
+    <div class='progress flat'></div>
 </div>
 
-<div style="height:150px;float:left;" class="test" data-orient="vertical" data-type="flat simple">
-
+<h1>No Body 2</h1>
+<div style="width:300px;">
+    <div class='progress simple'></div>
 </div>
 
-<div style="width:300px;clear:both;"></div>
 <h1>Flat</h1>
 <div style="width:300px;">
-
     <div class='progress flat'>
         <div class='area'>
             <div class='bar' style="width:30%"></div>
         </div>
     </div>
-
 </div>
 
 <h1>Simple</h1>
 <div style="width:300px">
-
     <div class='progress simple'>
         <div class='area'>
             <div class='bar striped' style="width:100%"></div>
         </div>
     </div>
-
 </div>
+
 <h1>Simple & Flat</h1>
 <div style="width:300px">
-
     <div class='progress simple flat'>
         <div class='area'>
             <div class='bar striped' style="width:50%"></div>
-        </div>
-    </div>
-</div>
-<h1>Simple & Flat & Animated</h1>
-<div style="width:300px">
-
-    <div class='progress simple flat'>
-        <div class='area'>
-            <div class='bar striped animated' style="width:50%"></div>
         </div>
     </div>
 </div>

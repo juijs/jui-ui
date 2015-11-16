@@ -9209,34 +9209,34 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
      * @requires util.base
      */
     var UI = function() {
-        var self, $root, $progress, $area, $bar;
+        var self, $root, $area, $bar;
 
         function min() {
-            return $root.data('min') || self.options.min;
+            return self.options.min;
         }
 
         function max() {
-            return $root.data('max') || self.options.max;
+            return self.options.max;
         }
 
         function orient() {
-            return $root.data('orient') || self.options.orient;
+            return self.options.orient;
         }
 
         function type() {
-            return $root.data('type') || self.options.type;
+            return self.options.type;
         }
 
         function animated() {
-            return $root.data('animated') || self.options.animated;
+            return self.options.animated;
         }
 
         function striped() {
-            return $root.data('striped') || self.options.striped;
+            return self.options.striped;
         }
 
         function value() {
-            return $root.data('value') || self.options.value;
+            return self.options.value;
         }
 
         function setBarSize(percent) {
@@ -9260,17 +9260,22 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
 
 
         function initElement() {
-            $progress = $("<div class='progress' />").addClass(orient()).addClass(type());
-            $area = $("<div class='area' />");
-            $bar = $("<div class='bar' />");
+            $root.addClass(orient()).addClass(type());
+
+            $area = $root.find(".area");
+            $bar = $root.find(".bar");
+
+            if($area.size() == 0 && $bar.size() == 0) {
+                $area = $("<div class='area' />");
+                $bar = $("<div class='bar' />");
+
+                $area.html($bar);
+                $root.html($area);
+            }
 
             self.setValue();
             self.setStriped();
             self.setAnimated();
-
-            $area.html($bar);
-            $progress.html($area);
-            $root.html($progress);
         }
 
         this.init = function () {
