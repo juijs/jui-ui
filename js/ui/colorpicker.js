@@ -25,18 +25,21 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $informationTitle3, $informationTitle4, $informationInput1, $informationInput2,
             $informationInput3, $informationInput4;
 
-        function setInputColor(isEvent) {
+        function setInputColor(evtType) {
             var rgb = calculateColor(),
                 str = self.getColor('hex');
 
             if(!isNaN(rgb.r) && !isNaN(rgb.g) && !isNaN(rgb.b)) {
                 $controlColor.css("background-color", str);
-                $informationInput1.val(str);
 
-                if(!isEvent) {
+                if(evtType == undefined || evtType != "RGB") {
                     $informationInput2.val(rgb.r);
                     $informationInput3.val(rgb.g);
                     $informationInput4.val(rgb.b);
+                }
+
+                if(evtType == undefined || evtType != "HEX") {
+                    $informationInput1.val(str);
                 }
 
                 $opacityInput.val(Math.floor(rgb.a * 100) + "%");
@@ -206,10 +209,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 r: parseInt($informationInput2.val()),
                 g: parseInt($informationInput3.val()),
                 b: parseInt($informationInput4.val())
-            }, "hex"), true);
+            }, "hex"), "RGB");
         }
 
-        function initColor(newColor, isEvent) {
+        function initColor(newColor, evtType) {
             var c = newColor || self.options.color,
                 rgb = color.rgb(c);
 
@@ -236,49 +239,49 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 left : opacityX - 7.5
             }).data('pos', { x : opacityX });
 
-            setInputColor(isEvent);
+            setInputColor(evtType);
         }
 
         function initEvent() {
-            $color.on('mousedown', function(e) {
+            self.addEvent($color, 'mousedown', function(e) {
                 $color.data('isDown', true);
                 setMainColor(e);
             });
 
-            $drag_bar.on('mousedown', function(e) {
+            self.addEvent($drag_bar, 'mousedown', function(e) {
                 e.preventDefault();
                 $hue.data('isDown', true);
             });
 
-            $opacity_drag_bar.on('mousedown', function(e) {
+            self.addEvent($opacity_drag_bar, 'mousedown', function(e) {
                 e.preventDefault();
                 $opacity.data('isDown', true);
             });
 
-            $hueContainer.on('mousedown', function(e) {
+            self.addEvent($hueContainer, 'mousedown', function(e) {
                 $hue.data('isDown', true);
                 setHueColor(e);
             });
 
-            $opacityContainer.on('mousedown', function(e) {
+            self.addEvent($opacityContainer, 'mousedown', function(e) {
                 $opacity.data('isDown', true);
                 setOpacity(e);
             });
 
-            $informationInput1.on('keyup', function(e) {
+            self.addEvent($informationInput1, 'keyup', function(e) {
                 var code = $(this).val();
 
-                if(code.charAt(0) == "#" && code.length == 7) {
-                    self.setColor(code);
+                if(code.charAt(0) == '#' && code.length == 7) {
+                    initColor(code, 'HEX');
                 }
             });
 
-            $informationInput2.on('keydown', checkNumberKey);
-            $informationInput2.on('keyup', setRGBtoHexColor);
-            $informationInput3.on('keydown', checkNumberKey);
-            $informationInput3.on('keyup', setRGBtoHexColor);
-            $informationInput4.on('keydown', checkNumberKey);
-            $informationInput4.on('keyup', setRGBtoHexColor);
+            self.addEvent($informationInput2, 'keydown', checkNumberKey);
+            self.addEvent($informationInput2, 'keyup', setRGBtoHexColor);
+            self.addEvent($informationInput3, 'keydown', checkNumberKey);
+            self.addEvent($informationInput3, 'keyup', setRGBtoHexColor);
+            self.addEvent($informationInput4, 'keydown', checkNumberKey);
+            self.addEvent($informationInput4, 'keyup', setRGBtoHexColor);
 
             self.addEvent('body', 'mouseup', function (e) {
                 $color.data('isDown', false);
@@ -326,10 +329,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $informationTitle2 = selectDom('div', { 'class': 'title' }).html("R");
             $informationTitle3 = selectDom('div', { 'class': 'title' }).html("G");
             $informationTitle4 = selectDom('div', { 'class': 'title' }).html("B");
-            $informationInput1 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 7, 'tabindex': 1 });
-            $informationInput2 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 2  });
-            $informationInput3 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 3  });
-            $informationInput4 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 4  });
+            $informationInput1 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 7 });
+            $informationInput2 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3  });
+            $informationInput3 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3  });
+            $informationInput4 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3  });
 
             $value.html($drag_pointer);
             $saturation.html($value);
