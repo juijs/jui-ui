@@ -3830,7 +3830,8 @@
   position: relative;
   padding: 18px 0px 20px 0px;
 }
-.jui .colorpicker > .control > .color {
+.jui .colorpicker > .control > .color,
+.jui .colorpicker > .control > .empty {
   position: absolute;
   left: 11px;
   top: 24px;

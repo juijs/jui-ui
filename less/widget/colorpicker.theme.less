@@ -18,10 +18,12 @@
 
 .colorpicker {
     border: 1px solid @colorpickerBorderColor;
-    .border-radius(@colorpcikerBorderRadius);
+    background-color: @colorpickerBackgroundColor;
+    .border-radius(@colorpickerBorderRadius);
+    .box-shadow(@colorpickerBoxShadow);
 
     > .color {
-        .border-top-radius(@colorpcikerBorderRadius);
+        .border-top-right-radius(@colorpickerBorderRadius);
 
         > .saturation {
             #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
@@ -51,7 +53,7 @@
 
         > .opacity {
             > .pattern {
-                background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2NctWrVfwYkEBYWxojMZ6SDAmT7QGx0K1EcRBsFAADeG/3M/HteAAAAAElFTkSuQmCC) repeat;
+                background: url(@colorpickerPatternImageUrl) repeat;
             }
 
             > .container {
@@ -61,6 +63,10 @@
 
         > .input {
             color: @colorpickerInputFontColor;
+        }
+
+        > .empty {
+            background: url(@colorpickerPatternImageUrl) repeat;
         }
 
         .drag-bar, .drag-bar2 {

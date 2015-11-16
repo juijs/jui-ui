@@ -6517,7 +6517,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff0000', start : 1 }
         ];
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
-            $control, $controlColor, $hueContainer, $opacity, $opacityPattern, $opacityContainer,
+            $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityPattern, $opacityContainer,
             $opacityInput, $opacity_drag_bar, $information, $informationTitle1, $informationTitle2,
             $informationTitle3, $informationTitle4, $informationInput1, $informationInput2,
             $informationInput3, $informationInput4;
@@ -6527,8 +6527,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 str = self.getColor('hex');
 
             $controlColor.css({
-                background: str,
-                border: "1px solid rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")"
+                background: str
             });
 
             $informationInput1.val(str);
@@ -6757,6 +6756,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $saturation = selectDom('saturation');
 
             $control = selectDom('control');
+            $controlPattern = selectDom('empty');
             $controlColor = selectDom('color');
             $hue = selectDom('hue');
             $hueContainer = selectDom('container');
@@ -6791,6 +6791,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $control.append($hue);
             $control.append($opacity);
             $control.append($opacityInput);
+            $control.append($controlPattern);
             $control.append($controlColor);
 
             $information.append($informationInput1);
