@@ -9243,19 +9243,19 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
         }
 
         function setBarSize(percent) {
-            if (orient() == 'vertical') {
-                $bar.height(percent + '%');
+            if (orient() == "vertical") {
+                $bar.height(percent + "%");
             } else {
-                $bar.width(percent + '%');
+                $bar.width(percent + "%");
             }
         }
 
         function getBarSize() {
             var percent;
-            if (orient() == 'vertical') {
-                percent = $bar.css('height');
+            if (orient() == "vertical") {
+                percent = $bar.css("height");
             } else {
-                percent = $bar.css('width');
+                percent = $bar.css("width");
             }
 
             return percent;
@@ -9268,12 +9268,14 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
             $area = $root.find(".area");
             $bar = $root.find(".bar");
 
-            if($area.size() == 0 && $bar.size() == 0) {
+            if($area.size() == 0) {
                 $area = $("<div class='area' />");
-                $bar = $("<div class='bar' />");
-
-                $area.html($bar);
                 $root.html($area);
+            }
+
+            if($bar.size() == 0) {
+                $bar = $("<div class='bar' />");
+                $area.html($bar);
             }
 
             self.setValue();
@@ -9289,36 +9291,36 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.setAnimated = function(isAnimated) {
-            if (typeof isAnimated == 'undefined') {
-                $bar.toggleClass('animated', animated());
+            if (typeof isAnimated == "undefined") {
+                $bar.toggleClass("animated", animated());
             } else {
-                $bar.toggleClass('animated', isAnimated);
+                $bar.toggleClass("animated", isAnimated);
             }
         }
 
         this.setStriped = function(isStriped) {
-            if (typeof isStriped == 'undefined') {
-                $bar.toggleClass('striped', striped());
+            if (typeof isStriped == "undefined") {
+                $bar.toggleClass("striped", striped());
             } else {
-                $bar.toggleClass('striped', isStriped);
+                $bar.toggleClass("striped", isStriped);
             }
         }
 
         this.setValue = function(v) {
-            var v = (typeof v == 'undefined') ? value() : v,
+            var v = (typeof v == "undefined") ? value() : v,
                 percent = (v - min()) / (max() - min()) * 100;
 
             setBarSize(percent);
         }
 
         this.getValue = function() {
-            return min() + (max() - min()) * (parseFloat(getBarSize().replace('%', '')) / 100);
+            return min() + (max() - min()) * (parseFloat(getBarSize().replace("%", "")) / 100);
         }
     }
 
     UI.setup = function() {
         return {
-            type: '',       // simple or flat
+            type: "",       // simple or flat
             orient : "horizontal", // or vertical,
             min : 0,
             max : 100,

@@ -18,8 +18,11 @@
 
 .colorpicker {
     border: 1px solid @colorpickerBorderColor;
+    .border-radius(@colorpcikerBorderRadius);
 
     > .color {
+        .border-top-radius(@colorpcikerBorderRadius);
+
         > .saturation {
             #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
 

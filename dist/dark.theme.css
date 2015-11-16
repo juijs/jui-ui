@@ -1927,6 +1927,17 @@
 }
 .jui .colorpicker {
   border: 1px solid #ececec;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+}
+.jui .colorpicker > .color {
+  -webkit-border-top-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  border-top-right-radius: 0px;
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
 }
 .jui .colorpicker > .color > .saturation {
   background-color: rgba(204, 154, 129, 0);
