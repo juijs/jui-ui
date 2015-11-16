@@ -8722,7 +8722,7 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
                 self.toggle();
             });
 
-            if(opts.checked || $(this.root).attr("checked")) {
+            if(opts.checked) {
                 $(this.root).addClass("on");
             }
         }
@@ -8733,7 +8733,7 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
         this.setValue = function(value) {
             $(this.root).toggleClass("on", !!value);
-            this.emit("change");
+            this.emit("change", [ value ]);
         }
 
         this.toggle = function() {
