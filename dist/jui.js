@@ -8765,19 +8765,19 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
         var $tooltip, $tooltipMessage, $tooltip2, $tooltipMessage2;
 
         function min() {
-            return $root.data('min') || self.options.min;
+            return self.options.min;
         }
 
         function max() {
-            return $root.data('max') || self.options.max;
+            return self.options.max;
         }
 
         function step() {
-            return $root.data('step') || self.options.step;
+            return self.options.step;
         }
 
         function type() {
-            return $root.data('type') || self.options.type;
+            return self.options.type;
         }
 
         function isDouble() {
@@ -9139,7 +9139,7 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                 var to = value || $root.data("to") || this.options.to,
                     dist = (to - min()) / (max() - min()) * 100;
 
-                setViewStatus(dist,"to");
+                setViewStatus(dist, "to");
             }
         }
 
@@ -9160,22 +9160,25 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
          * @return {Number} value
          */
         this.getToValue = function () {
-
             var dist;
 
-            if (isVertical) {
-                dist = parseFloat($toHandle.css('bottom'))/$track.height();
-            } else {
-                dist = parseFloat($toHandle.css('left'))/$track.width();
+            if(isDouble()) {
+                if (isVertical) {
+                    dist = parseFloat($toHandle.css("bottom")) / $track.height();
+                } else {
+                    dist = parseFloat($toHandle.css("left")) / $track.width();
+                }
+
+                return getValue(dist);
             }
 
-            return getValue(dist);
+            return getValue();
         }
     }
 
     UI.setup = function() {
         return {
-            type : 'single', // or double
+            type : "single", // or double
             orient : "horizontal", // or vertical,
             min : 0,
             max : 10,
