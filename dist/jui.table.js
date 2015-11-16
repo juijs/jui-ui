@@ -3696,7 +3696,7 @@ jui.define("util.color", ["jquery"], function($) {
 			}
 
 			var C = S * V;
-			var X = C * (1 -  Math.abs((H/60) % 2 -1)  );
+			var X = C * (1 -  Math.abs(Math.floor(H/60) % 2 -1)  );
 			var m = V - C;
 
 			var temp = [];
