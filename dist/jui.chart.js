@@ -8308,7 +8308,7 @@ jui.define("chart.theme.dark", [], function() {
         gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
-        gridBorderColor : "#464646",
+        gridBorderColor : "#868686",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridBorderOpacity : 1,
