@@ -191,10 +191,21 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 g = $informationInput3.val(),
                 b = $informationInput4.val();
 
+            if(r == "" || g == "" || b == "") return;
+
+            if(parseInt(r) > 255) $informationInput2.val(255);
+            else $informationInput2.val(parseInt(r));
+
+            if(parseInt(g) > 255) $informationInput3.val(255);
+            else $informationInput3.val(parseInt(g));
+
+            if(parseInt(b) > 255) $informationInput4.val(255);
+            else $informationInput4.val(parseInt(b));
+
             initColor(color.format({
-                r: parseInt(r),
-                g: parseInt(g),
-                b: parseInt(b)
+                r: parseInt($informationInput2.val()),
+                g: parseInt($informationInput3.val()),
+                b: parseInt($informationInput4.val())
             }, "hex"), true);
         }
 
