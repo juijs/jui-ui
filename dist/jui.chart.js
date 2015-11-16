@@ -7501,11 +7501,15 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 초기화 및 렌더링 체크 설정
             _initialize = true;
-            _isDelay = true;
 
-            setTimeout(function() {
-                _isDelay = false;
-            }, _options.delay);
+            // 렌더링 딜레이 설정
+            if(_options.delay > 0) {
+                _isDelay = true;
+
+                setTimeout(function () {
+                    _isDelay = false;
+                }, _options.delay);
+            }
         }
 
         /**
@@ -7682,8 +7686,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
-            /** @cfg {Integer} [delay=100] The minimum delay of the chart rendering. */
-            delay: 100,
+            /** @cfg {Integer} [delay=0] The minimum delay of the chart rendering. */
+            delay: 0,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
