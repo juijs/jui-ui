@@ -20,26 +20,28 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff0000', start : 1 }
         ];
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
-            $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityPattern, $opacityContainer,
+            $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityContainer,
             $opacityInput, $opacity_drag_bar, $information, $informationTitle1, $informationTitle2,
             $informationTitle3, $informationTitle4, $informationInput1, $informationInput2,
             $informationInput3, $informationInput4;
 
-        function setInputColor() {
-            var rgb = caculateColor(),
+        function setInputColor(isEvent) {
+            var rgb = calculateColor(),
                 str = self.getColor('hex');
 
-            $controlColor.css({
-                background: str
-            });
+            if(!isNaN(rgb.r) && !isNaN(rgb.g) && !isNaN(rgb.b)) {
+                $controlColor.css("background-color", str);
+                $informationInput1.val(str);
 
-            $informationInput1.val(str);
-            $informationInput2.val(rgb.r);
-            $informationInput3.val(rgb.g);
-            $informationInput4.val(rgb.b);
-            $opacityInput.val(Math.floor(rgb.a * 100) + "%");
+                if(!isEvent) {
+                    $informationInput2.val(rgb.r);
+                    $informationInput3.val(rgb.g);
+                    $informationInput4.val(rgb.b);
+                }
 
-            self.emit("change", [ str, rgb ]);
+                $opacityInput.val(Math.floor(rgb.a * 100) + "%");
+                self.emit("change", [str, rgb]);
+            }
         }
 
         function setMainColor(e) {
@@ -104,10 +106,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             }).data('pos', { x : x});
 
             var hueColor = checkHueColor(dist/100);
-
-            $color.css({
-                background: hueColor
-            });
+            $color.css("background-color", hueColor);
 
             setInputColor();
         }
@@ -134,7 +133,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             setInputColor();
         }
 
-        function caculateColor() {
+        function calculateColor() {
             var pos = $drag_pointer.data('pos') || { x : 0, y : 0 };
             var huePos = $drag_bar.data('pos') || { x : 0 };
             var opacityPos = $opacity_drag_bar.data('pos') || { x : 0 };
@@ -155,11 +154,15 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             return rgb;
         }
 
-        function selectDom(selector, tag) {
+        function selectDom(tag, attr) {
             var tag = !tag ? "div" : tag,
-                $dom = $root.find("." + selector);
+                $dom = $("<" + tag + " />");
 
-            return ($dom.length)  ? $dom : $("<" + tag + " class='" + selector + "' />");
+            if(typeof(attr) == "object") {
+                $dom.attr(attr);
+            }
+
+            return $dom;
         };
 
         function pos(e) {
@@ -170,17 +173,40 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             return e;
         }
 
-        function initColor(c) {
-            var rgb = color.rgb(c || self.options.color);
+        function checkNumberKey(e) {
+            var code = e.which,
+                isExcept = false;
 
-            $color.css({
-                background: self.options.color
-            });
+            if(code == 37 || code == 39 || code == 8 || code == 46 || code == 9)
+                isExcept = true;
 
-            var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b);
+            if(!isExcept && (code < 48 || code > 57))
+                return false;
 
-            var x = $color.width() * hsv.s;
-            var y = $color.height() * (1-hsv.v);
+            return true;
+        }
+
+        function setRGBtoHexColor(e) {
+            var r = $informationInput2.val(),
+                g = $informationInput3.val(),
+                b = $informationInput4.val();
+
+            initColor(color.format({
+                r: parseInt(r),
+                g: parseInt(g),
+                b: parseInt(b)
+            }, "hex"), true);
+        }
+
+        function initColor(newColor, isEvent) {
+            var c = newColor || self.options.color,
+                rgb = color.rgb(c);
+
+            $color.css("background-color", c);
+
+            var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
+                x = $color.width() * hsv.s,
+                y = $color.height() * (1-hsv.v);
 
             $drag_pointer.css({
                 left : x - 5,
@@ -199,7 +225,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 left : opacityX - 7.5
             }).data('pos', { x : opacityX });
 
-            setInputColor();
+            setInputColor(isEvent);
         }
 
         function initEvent() {
@@ -228,11 +254,26 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 setOpacity(e);
             });
 
+            $informationInput1.on('keyup', function(e) {
+                var code = $(this).val();
+
+                if(code.charAt(0) == "#" && code.length == 7) {
+                    self.setColor(code);
+                }
+            });
+
+            $informationInput2.on('keydown', checkNumberKey);
+            $informationInput2.on('keyup', setRGBtoHexColor);
+            $informationInput3.on('keydown', checkNumberKey);
+            $informationInput3.on('keyup', setRGBtoHexColor);
+            $informationInput4.on('keydown', checkNumberKey);
+            $informationInput4.on('keyup', setRGBtoHexColor);
+
             self.addEvent('body', 'mouseup', function (e) {
                 $color.data('isDown', false);
                 $hue.data('isDown', false);
                 $opacity.data('isDown', false);
-            })
+            });
 
             self.addEvent('body', 'mousemove', function (e) {
                 if ($color.data('isDown')) {
@@ -253,32 +294,31 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             self = this, opts = this.options;
 
             $root = $(this.root);
-            $color = selectDom('color');
-            $drag_pointer = selectDom('drag-pointer');
-            $value = selectDom('value');
-            $saturation = selectDom('saturation');
+            $color = selectDom('div', { 'class': 'color' });
+            $drag_pointer = selectDom('div', { 'class': 'drag-pointer' });
+            $value = selectDom('div', { 'class': 'value' });
+            $saturation = selectDom('div', { 'class': 'saturation' });
 
-            $control = selectDom('control');
-            $controlPattern = selectDom('empty');
-            $controlColor = selectDom('color');
-            $hue = selectDom('hue');
-            $hueContainer = selectDom('container');
-            $drag_bar = selectDom('drag-bar');
-            $opacity = selectDom('opacity');
-            $opacityPattern = selectDom('pattern');
-            $opacityContainer = selectDom('container');
-            $opacityInput = selectDom('input', 'input');
-            $opacity_drag_bar = selectDom('drag-bar2');
+            $control = selectDom('div', { 'class': 'control' });
+            $controlPattern = selectDom('div', { 'class': 'empty' });
+            $controlColor = selectDom('div', { 'class': 'color' });
+            $hue = selectDom('div', { 'class': 'hue' });
+            $hueContainer = selectDom('div', { 'class': 'container' });
+            $drag_bar = selectDom('div', { 'class': 'drag-bar' });
+            $opacity = selectDom('div', { 'class': 'opacity' });
+            $opacityContainer = selectDom('div', { 'class': 'container' });
+            $opacityInput = selectDom('input', { 'class': 'input', 'type': 'text', 'disabled': true });
+            $opacity_drag_bar = selectDom('div', { 'class': 'drag-bar2' });
 
-            $information = selectDom('information');
-            $informationTitle1 = selectDom('title').html("HEX");
-            $informationTitle2 = selectDom('title').html("R");
-            $informationTitle3 = selectDom('title').html("G");
-            $informationTitle4 = selectDom('title').html("B");
-            $informationInput1 = selectDom('input', 'input');
-            $informationInput2 = selectDom('input', 'input');
-            $informationInput3 = selectDom('input', 'input');
-            $informationInput4 = selectDom('input', 'input');
+            $information = selectDom('div', { 'class': 'information' });
+            $informationTitle1 = selectDom('div', { 'class': 'title' }).html("HEX");
+            $informationTitle2 = selectDom('div', { 'class': 'title' }).html("R");
+            $informationTitle3 = selectDom('div', { 'class': 'title' }).html("G");
+            $informationTitle4 = selectDom('div', { 'class': 'title' }).html("B");
+            $informationInput1 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 7, 'tabindex': 1 });
+            $informationInput2 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 2  });
+            $informationInput3 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 3  });
+            $informationInput4 = selectDom('input', { 'class': 'input', 'type': 'text', 'maxlength': 3, 'tabindex': 4  });
 
             $value.html($drag_pointer);
             $saturation.html($value);
@@ -288,8 +328,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $hue.html($hueContainer);
 
             $opacityContainer.html($opacity_drag_bar);
-            $opacity.html($opacityPattern);
-            $opacity.append($opacityContainer);
+            $opacity.html($opacityContainer);
 
             $control.append($hue);
             $control.append($opacity);
@@ -314,12 +353,12 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             initColor();
         }
 
-        this.setColor = function(c) {
-            initColor(c);
+        this.setColor = function(hex) {
+            initColor(hex);
         }
 
         this.getColor = function(type) {
-            var rgb = caculateColor();
+            var rgb = calculateColor();
 
             if (type) {
 

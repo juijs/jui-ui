@@ -1939,6 +1939,9 @@
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topright: 5px;
   border-top-right-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
 }
 .jui .colorpicker > .color > .saturation {
   background-color: rgba(204, 154, 129, 0);
@@ -1972,16 +1975,8 @@
   background: -webkit-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
   background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
 }
-.jui .colorpicker > .control > .opacity > .pattern {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2NctWrVfwYkEBYWxojMZ6SDAmT7QGx0K1EcRBsFAADeG/3M/HteAAAAAElFTkSuQmCC") repeat;
-}
 .jui .colorpicker > .control > .opacity > .container {
-  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(rgba(0, 0, 0, 0)), to(#000000));
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), #000000);
-  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), #000000);
-  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), #000000);
-  background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), #000000);
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #000000);
+  background: #4d4d4d;
 }
 .jui .colorpicker > .control > .input {
   color: #c0c0c0;
@@ -2341,7 +2336,7 @@
   margin-left: -6px;
 }
 .jui .progress.vertical .area .bar {
-  border: 1px solid #ffffff;
+  border: 1px solid #1c1c1c;
   width: 10px;
 }
 .jui .progress.vertical .area .bar.striped {

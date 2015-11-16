@@ -23,7 +23,7 @@
     .box-shadow(@colorpickerBoxShadow);
 
     > .color {
-        .border-top-right-radius(@colorpickerBorderRadius);
+        .border-top-radius(@colorpickerBorderRadius);
 
         > .saturation {
             #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
@@ -52,12 +52,8 @@
         }
 
         > .opacity {
-            > .pattern {
-                background: url(@colorpickerPatternImageUrl) repeat;
-            }
-
             > .container {
-                .opacity_gradient(@colorpickerOpacityPatternFromColor, @colorpickerOpacityPatternToColor);
+                background: @colorpickerOpacityBackgroundColor;
             }
         }
 
