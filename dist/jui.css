@@ -3862,6 +3862,9 @@
   position: relative;
   width: 157px;
   height: 6px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 .jui .colorpicker > .control > .opacity {
   position: relative;
@@ -3906,8 +3909,7 @@
 }
 .jui .colorpicker > .information {
   position: relative;
-  height: 37px;
-  padding: 15px 0px 20px 10px;
+  height: 73px;
   -webkit-box-sizing: padding-box;
   -moz-box-sizing: padding-box;
   box-sizing: padding-box;
