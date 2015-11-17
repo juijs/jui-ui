@@ -47,6 +47,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
             } else {
                 var str = self.getColor('hex');
+
                 $informationInput1.val(str);
 
                 rgb = color.rgb($informationInput1.val());
