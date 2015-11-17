@@ -3710,9 +3710,9 @@ jui.define("util.color", ["jquery"], function($) {
 			else if (300 <= H && H < 360) { temp = [C, 0, X]; }
 
 			return {
-				r : parseInt((temp[0] + m) * 255),
-				g : parseInt((temp[1] + m) * 255),
-				b : parseInt((temp[2] + m) * 255)
+				r : Math.ceil((temp[0] + m) * 255),
+				g : Math.ceil((temp[1] + m) * 255),
+				b : Math.ceil((temp[2] + m) * 255)
 			};
 		},
 
@@ -6550,6 +6550,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
             } else {
                 var str = self.getColor('hex');
+
                 $informationInput1.val(str);
 
                 rgb = color.rgb($informationInput1.val());
