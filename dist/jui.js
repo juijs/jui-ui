@@ -6526,7 +6526,8 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
         function setInputColor(evtType) {
 
             if (evtType == 'HEX') {
-                var rgb = color.rgb(str);
+                var rgb = color.rgb($informationInput1.val());
+
                 $informationInput2.val(rgb.r);
                 $informationInput3.val(rgb.g);
                 $informationInput4.val(rgb.b);
