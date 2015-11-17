@@ -6522,6 +6522,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff00ff', start : .83 },
             { rgb : '#ff0000', start : 1 }
         ];
+
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
             $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityContainer,
             $opacityInput, $opacity_drag_bar, $information, $informationTitle1, $informationTitle2,
@@ -6529,26 +6530,20 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $informationInput3, $informationInput4;
 
         function setInputColor(evtType) {
-
-            if (evtType == 'HEX') {
+            if (evtType == 'hex') {
                 var rgb = color.rgb($informationInput1.val());
 
                 $informationInput2.val(rgb.r);
                 $informationInput3.val(rgb.g);
                 $informationInput4.val(rgb.b);
-            } else if (evtType == 'RGB') {
-
+            } else if (evtType == 'rgb') {
                 $informationInput1.val(color.format({
                     r : parseInt($informationInput2.val(), 10),
                     g : parseInt($informationInput3.val(), 10),
                     b : parseInt($informationInput4.val(), 10)
                 }, 'hex'));
-
             } else {
-                // init color without rgb or hex
-                var rgb = calculateColor(),
-                    str = self.getColor('hex');
-
+                var str = self.getColor('hex');
                 $informationInput1.val(str);
 
                 var rgb = color.rgb($informationInput1.val());
@@ -6561,7 +6556,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $controlColor.css("background-color", self.getColor('hex'));
 
             $opacityInput.val(Math.floor(sampleColor.a * 100) + "%");
-            self.emit("change", [color.format(self.getColor(), 'hex'), sampleColor]);
+            self.emit("change", [ color.format(self.getColor(), 'hex' ), sampleColor ]);
         }
 
         function setMainColor(e) {
@@ -6661,8 +6656,6 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             var width = $color.width();
             var height = $color.height();
 
-            console.log(huePos);
-
             var h = (huePos.x / $hue.width()) * 360;
             var s = (pos.x / width);
             var v = ((height - pos.y) / height);
@@ -6726,7 +6719,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 r: parseInt($informationInput2.val()),
                 g: parseInt($informationInput3.val()),
                 b: parseInt($informationInput4.val())
-            }, "hex"), "RGB");
+            }, "hex"), "rgb");
         }
 
         function initColor(newColor, evtType) {
@@ -6734,8 +6727,6 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 rgb = color.rgb(c);
 
             $color.css("background-color", c);
-
-            console.log(newColor, c);
 
             var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
                 x = $color.width() * hsv.s,
@@ -6747,9 +6738,6 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             }).data('pos', { x  : x, y : y });
 
             var hueX = $hue.width() * (hsv.h / 360);
-
-            console.log($hue.width(), hsv);
-            console.log(hueX);
 
             $drag_bar.css({
                 left : hueX - 7.5
@@ -6803,7 +6791,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 var code = $(this).val();
 
                 if(code.charAt(0) == '#' && code.length == 7) {
-                    initColor(code, 'HEX');
+                    initColor(code, 'hex');
                 }
             });
 
@@ -6898,15 +6886,24 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             initColor();
         }
 
-        this.setColor = function(hex) {
-            initColor(hex);
+        this.setColor = function(value) {
+            if(typeof(value) == "object") {
+                if(!value.r || !value.g || !value.b)
+                    return;
+
+                initColor(color.format(value, "hex"));
+            } else if(typeof(value) == "string") {
+                if(value.length != 7 || value.charAt(0) != "#")
+                    return;
+
+                initColor(value);
+            }
         }
 
         this.getColor = function(type) {
             var rgb = calculateColor();
 
             if (type) {
-
                 if (type == 'hex') {
                     if (rgb.a < 1) {
                         type = 'rgb';
