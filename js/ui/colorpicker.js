@@ -54,10 +54,11 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 $informationInput4.val(rgb.b);
             }
 
+            var sampleColor = calculateColor();
             $controlColor.css("background-color", self.getColor('hex'));
 
-            $opacityInput.val(Math.floor(rgb.a * 100) + "%");
-            self.emit("change", [str, rgb]);
+            $opacityInput.val(Math.floor(sampleColor.a * 100) + "%");
+            self.emit("change", [color.format(self.getColor(), 'hex'), sampleColor]);
         }
 
         function setMainColor(e) {
@@ -157,14 +158,14 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             var width = $color.width();
             var height = $color.height();
 
+            console.log(huePos);
+
             var h = (huePos.x / $hue.width()) * 360;
             var s = (pos.x / width);
             var v = ((height - pos.y) / height);
 
             var a = Math.round((opacityPos.x / $opacity.width()) * 100) / 100;
-
             var rgb = color.HSVtoRGB(h, s, v);
-
             rgb.a = a;
 
             return rgb;
@@ -231,6 +232,8 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
             $color.css("background-color", c);
 
+            console.log(newColor, c);
+
             var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
                 x = $color.width() * hsv.s,
                 y = $color.height() * (1-hsv.v);
@@ -241,6 +244,9 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             }).data('pos', { x  : x, y : y });
 
             var hueX = $hue.width() * (hsv.h / 360);
+
+            console.log($hue.width(), hsv);
+            console.log(hueX);
 
             $drag_bar.css({
                 left : hueX - 7.5

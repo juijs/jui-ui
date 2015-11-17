@@ -3717,6 +3717,7 @@ jui.define("util.color", ["jquery"], function($) {
 		},
 
 		RGBtoHSV : function (R, G, B) {
+
 			var R1 = R / 255;
 			var G1 = G / 255;
 			var B1 = B / 255;
@@ -3735,6 +3736,10 @@ jui.define("util.color", ["jquery"], function($) {
 				H  = 60 * (( (B1 - R1) / DeltaC) + 2);
 			} else if (MaxC == B1) {
 				H  = 60 * (( (R1 - G1) / DeltaC) + 4);
+			}
+
+			if (H < 0) {
+				H = 360 + H;
 			}
 
 			var S = 0;
