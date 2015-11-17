@@ -1887,7 +1887,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 if (e.type.toLowerCase().indexOf("animation") != -1)
                     settingEventAnimation(e);
                 else {
-                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+					// body, window, document 경우에만 이벤트 중첩이 가능
+                    if (e.target != "body" && e.target != window && e.target != document) {
                         $(e.target).off(e.type);
                     }
 
