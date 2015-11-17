@@ -26,25 +26,37 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $informationInput3, $informationInput4;
 
         function setInputColor(evtType) {
-            var rgb = calculateColor(),
-                str = self.getColor('hex');
 
-            if(!isNaN(rgb.r) && !isNaN(rgb.g) && !isNaN(rgb.b)) {
-                $controlColor.css("background-color", str);
+            if (evtType == 'HEX') {
+                var rgb = color.rgb(str);
+                $informationInput2.val(rgb.r);
+                $informationInput3.val(rgb.g);
+                $informationInput4.val(rgb.b);
+            } else if (evtType == 'RGB') {
 
-                if(evtType == undefined || evtType != "RGB") {
-                    $informationInput2.val(rgb.r);
-                    $informationInput3.val(rgb.g);
-                    $informationInput4.val(rgb.b);
-                }
+                $informationInput1.val(color.format({
+                    r : parseInt($informationInput2.val(), 10),
+                    g : parseInt($informationInput3.val(), 10),
+                    b : parseInt($informationInput4.val(), 10)
+                }, 'hex'));
 
-                if(evtType == undefined || evtType != "HEX") {
-                    $informationInput1.val(str);
-                }
+            } else {
+                // init color without rgb or hex
+                var rgb = calculateColor(),
+                    str = self.getColor('hex');
 
-                $opacityInput.val(Math.floor(rgb.a * 100) + "%");
-                self.emit("change", [str, rgb]);
+                $informationInput1.val(str);
+
+                var rgb = color.rgb($informationInput1.val());
+                $informationInput2.val(rgb.r);
+                $informationInput3.val(rgb.g);
+                $informationInput4.val(rgb.b);
             }
+
+            $controlColor.css("background-color", self.getColor('hex'));
+
+            $opacityInput.val(Math.floor(rgb.a * 100) + "%");
+            self.emit("change", [str, rgb]);
         }
 
         function setMainColor(e) {
@@ -248,6 +260,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 setMainColor(e);
             });
 
+            self.addEvent($color, 'mouseup', function(e) {
+                $color.data('isDown', false);
+            });
+
             self.addEvent($drag_bar, 'mousedown', function(e) {
                 e.preventDefault();
                 $hue.data('isDown', true);
@@ -288,13 +304,13 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             self.addEvent($informationInput4, 'keydown', checkNumberKey);
             self.addEvent($informationInput4, 'keyup', setRGBtoHexColor);
 
-            self.addEvent('body', 'mouseup', function (e) {
+            self.addEvent(document, 'mouseup', function (e) {
                 $color.data('isDown', false);
                 $hue.data('isDown', false);
                 $opacity.data('isDown', false);
             });
 
-            self.addEvent('body', 'mousemove', function (e) {
+            self.addEvent(document, 'mousemove', function (e) {
                 if ($color.data('isDown')) {
                     setMainColor(e);
                 }
